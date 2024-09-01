@@ -1,2 +1,0 @@
-# ScribeLec
- interactive lecture viewer
