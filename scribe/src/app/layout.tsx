@@ -4,12 +4,12 @@
  * @AshokSaravanan222
  * 09.01.2024
  */
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,12 +18,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <ColorSchemeScript />
+      </head>
+      <body>
+        <MantineProvider>
+          {/* Mantine components must be wrapped by MantineProvider */}
+          <Notifications />
+          {children}
+        </MantineProvider>
+      </body>
     </html>
   );
 }
