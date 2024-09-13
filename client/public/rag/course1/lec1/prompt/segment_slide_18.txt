@@ -1,0 +1,11 @@
+ASPECTS OF LANGUAGES
+primitive constructs
+◦English: words
+◦programming language: numbers, strings, simple 
+operators
+6.0001 LECTURE 1 18
+Word Cloud copyright Michael Twardos , All Right Reserved. This content is excluded from our
+Creative  Commons license. For more information, see  https://ocw.mit.edu/help/faq-fair-use/ .Word Cloud copyright unknown, All Right  Reserved.
+This content is excluded from  our Creative
+Commons  license. For more  information, see
+https://ocw.mit.edu/help/faq-fair-use/ .

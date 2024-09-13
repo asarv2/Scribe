@@ -1,0 +1,8 @@
+ASPECTS OF LANGUAGES
+static semantics is which syntactically valid strings 
+have meaning
+◦English: "I are hungry" syntactically valid
+but static semantic error
+◦programming language: 3.2*5 syntactically valid
+3+"hi" static semantic error
+6.0001 LECTURE 1 20

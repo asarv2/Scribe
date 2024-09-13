@@ -1,0 +1,9 @@
+SIMPLE OPERATIONS
+parentheses used to tell Python to do these 
+operations first
+operator precedence without parentheses
+◦**
+◦*
+◦/
+◦+ and –executed left to right, as appear in expression
+6.0001 LECTURE 1 30

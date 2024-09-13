@@ -1,0 +1,7 @@
+WHAT IS A RECIPE
+1) sequence of simple steps
+2) flow of control process that specifies when each 
+step is executed
+3) a means of determining when to stop
+1+2+3 = an algorithm !
+6.0001 LECTURE 1 12

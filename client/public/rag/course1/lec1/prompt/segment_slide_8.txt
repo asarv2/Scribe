@@ -1,0 +1,9 @@
+TOPICS
+represent knowledge with data structures
+iteration and recursion as computational metaphors
+abstraction of procedures and data types
+organize and modularize systems using object classes 
+and methods
+different classes of algorithms , searching and sorting
+complexity of algorithms
+6.0001 LECTURE 1 8

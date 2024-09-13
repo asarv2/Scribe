@@ -1,0 +1,9 @@
+BASIC PRIMITIVES
+Turing showed that you can compute anything using 6 
+primitives
+modern programming languages have more 
+convenient set of primitives
+can abstract methods to create new primitives
+anything computable in one language is computable in 
+any other programming language
+6.0001 LECTURE 1 16

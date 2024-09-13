@@ -1,0 +1,11 @@
+WHAT DOES A COMPUTER DO
+Fundamentally:
+◦performs calculations
+a billion calculations per second!
+◦remembers results
+100s of gigabytes of storage!
+What kinds of calculations?
+◦built -into the language
+◦ones that you define as the programmer
+computers only know what you tell them
+6.0001 LECTURE 1 9

@@ -1,0 +1,6 @@
+EXPRESSIONS
+combine objects and operators to form expressions
+an expression has a value , which has a type
+syntax for a simple expression
+<object> <operator> <object>
+6.0001 LECTURE 1 28

@@ -1,0 +1,5 @@
+MIT OpenCourseWare
+https://ocw.mit.edu
+6.0001 Introduction to Computer Science and Programming in Python
+Fall  2016
+For information about citing these materials or our Terms of Use, visit: https:// ocw.mit.edu/terms .

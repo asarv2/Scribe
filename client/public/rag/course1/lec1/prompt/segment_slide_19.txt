@@ -1,0 +1,7 @@
+ASPECTS OF LANGUAGES
+syntax
+◦English: "cat dog boy "    not syntactically valid
+"cat hugs boy" syntactically valid
+◦programming language: "hi"5not syntactically valid
+3.2*5syntactically valid
+6.0001 LECTURE 1 19

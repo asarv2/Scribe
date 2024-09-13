@@ -1,0 +1,11 @@
+BINDING VARIABLES AND 
+VALUES
+equal sign is an assignment of a value to a variable 
+name
+pi = 3.14159
+pi_approx = 22/7
+value stored in computer memory
+an assignment binds name to value
+retrieve value associated with name or variable by 
+invoking the name, by typing pi
+6.0001 LECTURE 1 31
