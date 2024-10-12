@@ -10,6 +10,7 @@ import '@mantine/notifications/styles.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import type { Metadata } from "next";
+import { ReactQueryClientProvider } from '../components/ReactQueryClientProvider';
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,11 +28,12 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>
-          {/* Mantine components must be wrapped by MantineProvider */}
-          <Notifications />
-          {children}
-        </MantineProvider>
+        <ReactQueryClientProvider>
+          <MantineProvider>
+            <Notifications />
+            {children}
+          </MantineProvider>
+        </ReactQueryClientProvider>
       </body>
     </html>
   );

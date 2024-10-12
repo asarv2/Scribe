@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Kaltura Video Player</title>
+</head>
+
+<body>
+    <div id="kaltura_player" style="width: 560px;height: 395px"></div>
+    <script type="text/javascript"
+        src="https://cdnapisec.kaltura.com/p/983291/embedPlaykitJs/uiconf_id/28052051"></script>
+    <script type="text/javascript">
+        try {
+            var kalturaPlayer = KalturaPlayer.setup({
+                targetId: "kaltura_player",
+                provider: {
+                    partnerId: 983291,
+                    uiConfId: 28052051
+                }
+            });
+            kalturaPlayer.loadMedia({ entryId: '1_ifwncvqk' });
+        } catch (e) {
+            console.error(e.message)
+        }
+    </script>
+
+</body>
+
+</html>
