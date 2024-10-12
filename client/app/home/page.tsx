@@ -13,6 +13,9 @@ import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Summary from "../../components/Summary";
 import { SummaryData } from "../../types";
+import useSupabaseBrowser from "../../utils/supabase/supabase-browser";
+import { getDocs } from "../../utils/queries/get-docs";
+import { useQuery } from "@tanstack/react-query";
 
 const exampleData: SummaryData = [
     {
@@ -127,9 +130,12 @@ const exampleData: SummaryData = [
 ]
 
 export default function Home() {
+    const supabase = useSupabaseBrowser();
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState<string>(""); // Store responses
+
+    const lectureId = "3ae57d24-8426-44c3-816b-f23e3ae04d0b"
 
     const handleClick = async () => {
         setLoading(true);
@@ -160,6 +166,12 @@ export default function Home() {
     };
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    const { data: documents, isLoading: loadingDocs } = useQuery({
+        queryKey: ["documents", lectureId],
+        queryFn: () => getDocs(supabase, lectureId),
+    });
+
 
 
     return (

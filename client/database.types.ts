@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      classes: {
+        Row: {
+          class_code: string
+          created_at: string
+          id: string
+          title: string
+        }
+        Insert: {
+          class_code?: string
+          created_at?: string
+          id?: string
+          title?: string
+        }
+        Update: {
+          class_code?: string
+          created_at?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           content: string | null
@@ -29,6 +50,73 @@ export type Database = {
           metadata?: Json | null
         }
         Relationships: []
+      }
+      embeddings: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string
+          id: string
+          lecture: string
+          timestamp: number
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          embedding: string
+          id?: string
+          lecture?: string
+          timestamp?: number
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string
+          id?: string
+          lecture?: string
+          timestamp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "embeddings_lecture_fkey"
+            columns: ["lecture"]
+            isOneToOne: false
+            referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lectures: {
+        Row: {
+          class: string
+          created_at: string
+          id: string
+          lecture_number: number
+          name: string
+        }
+        Insert: {
+          class?: string
+          created_at?: string
+          id?: string
+          lecture_number?: number
+          name?: string
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          id?: string
+          lecture_number?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lectures_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

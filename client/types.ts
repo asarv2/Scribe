@@ -2,11 +2,12 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 
 export type TypedSupabaseClient = SupabaseClient<Database>
-export type Document = Database["public"]["Tables"]["documents"]["Row"]
 
-export type DocumentMetatdata = {
-    source: string,
-    timestamp: number
+export type Doc = Database["public"]["Tables"]["embeddings"]["Row"]
+
+export type DocData = {
+    content: Database["public"]["Tables"]["embeddings"]["Row"]["content"],
+    timestamp: Database["public"]["Tables"]["embeddings"]["Row"]["timestamp"]
 }
 
 export type SummaryData = {
