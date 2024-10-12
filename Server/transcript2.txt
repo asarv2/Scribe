@@ -1,0 +1,252 @@
+
+[27.98s]:  you  you  you
+
+[117.14s]:  good morning  So let's look at them, 17.4.  Today, we'll look at this pretty important result
+
+[129.24s]:  called Green's theorem.  So what the Green's theorem allows us to do  is to trade a line integral for a double integral,
+
+[140.54s]:  then vice versa.  And it's named after a mathematician named George Green.  So the way this thing works is like this.
+
+[151.66s]:  Suppose we have a two-dimensional vector field.  I'll call this thing fg again.  The quantity partial derivative of g, or really
+
+[175.76s]:  the vector, I should say, partial derivative of g  with respect to x minus the partial derivative of f  with respect to y times the unit vector k.
+
+[191.70s]:  So this is a two-dimensional vector field.  So this vector actually points out of the plane.  Another way to write that is 0, 0, gx minus fy.
+
+[204.92s]:  This should look kind of familiar from last time.  We'll get to that in a little bit.  We call this the curl of the vector field f.
+
+[225.76s]:  And usually we write this as the curl, and then right next  to it, the vector field's name.  OK, so let's go to curl.
+
+[237.68s]:  So as the name implies, this measures some kind of things  making a curved motion.  And what it actually does is it gives us
+
+[246.00s]:  a feel of how much rotation is going on in the vector field.  If I take its magnitude, if I take the magnitude of the curl,  which is just the magnitude of this thing here, right?
+
+[263.48s]:  So it's gx minus fy.  Like I said, it's a measure of rotation in the vector field f.  For example, if you look at this vector field,
+
+[291.58s]:  we've seen this a couple times the vector field's x comma y.  This vector field, if you remember,  is a radial outward vector field.
+
+[314.80s]:  So this thing points straight out.  And then the farther we go away from the origin,  the greater the magnitude.
+
+[330.96s]:  So something like this.  From looking at the picture here, we don't see any rotation.  This thing just goes radially straight out.
+
+[347.30s]:  There is no rotation whatsoever.  And if you take the curl of this thing,  the curl of this vector field, if I use this formula right here,
+
+[361.36s]:  I get 0, 0, and gx.  Once again, don't forget, this is f, and this is g, right?  So gx is 0 because there's no x minus fy, fy is 0 also.
+
+[379.38s]:  And here we get a 0 vector.  And of course, its magnitude is 0.  So it's telling us there's no rotation,
+
+[389.34s]:  and that's confirmed by visual inspection.  So this is indicating no rotation, which is, like I said,  confirmed by visual inspection.
+
+[417.12s]:  If we take one that has rotation, that we can actually see,  you will see that the curl gives us a non-zero quantity.  This one right here has rotation.
+
+[443.00s]:  We've seen that one before too.  This is the one that does this kind of thing.  Again, it gets longer as we move away from the origin,
+
+[469.66s]:  but it preserves this kind of counterclockwise rotation.  We see a rotation.  So if we take the curl, you'll find out
+
+[488.00s]:  that we get a non-zero curl out of this.  Let's try taking the curl of this.  The curl of f is again 0, 0.
+
+[499.64s]:  And then, again, following the definition here,  gx minus fy, we get 0, 0.  gx is 1.
+
+[512.44s]:  Minus fy is negative 1, right?  So we get 0, 0, 2.  Its magnitude is not 0.
+
+[523.58s]:  The curl of the f, that's an f, sorry, is equal to 2,  which is not 0, indicating a rotation.  Okay, so the summary here is that the curl,
+
+[548.34s]:  measures rotation.  If this thing is not 0, we have a rotation.  Now, but we have also seen this quantity before.
+
+[559.24s]:  We saw this last time.  This is how we check if a two-dimensional vector field is conservative, right?  So from last time, if the vector field is f, g, then f is conservative.
+
+[590.36s]:  If gx is equal to fy, right, which indicates gx minus fy is equal to 0.  So now, if you tie these together, this is telling us that a conservative  vector field does not have a rotation.
+
+[610.08s]:  Otherwise, we would have a non-zero curl.  So putting this all together, this means if f is conservative,  then the magnitude of the curl is equal to 0.
+
+[636.02s]:  Or we say that a conservative vector field  is what's called irrotational.  A conservative vector field does not have rotation.
+
+[665.76s]:  Okay, does that make sense?  Any question?  Okay, so now in addition to calculating all these things to check
+
+[675.58s]:  whether a vector field is conservative, a lot of times you can look at the  vector field and get a pretty good idea whether we're dealing with a conservative  or a non-conservative vector field.
+
+[689.90s]:  Now we understand what the curl does.  Let's look at what Green's theorem says.  So I write down the statement of the Green's theorem
+
+[704.02s]:  and then we'll look at why that is true.  Green's theorem says that if, again, a two-dimensional vector field,  f g, and c is what's called a simple closed path.
+
+[739.02s]:  Simple in this context means that the path does not cross over itself.  If it crosses over itself, then it's not considered a simple path  and there are some complications to that, but we're not going to worry about that.
+
+[752.58s]:  So c is a simple closed path traversed once  in the counterclockwise direction.  Then Green's theorem says that the integral
+
+[785.76s]:  f dot dr, the lying integral, which we can also write it as, remember, f dx plus g dy.  And a lot of times you've seen either the homework or in a textbook,  we put a circle over the integral and you probably could guess what it means.
+
+[811.56s]:  So the circle over the integral means it's a closed path.  You end up where you started.  That's what the circle over that means.
+
+[824.98s]:  How we calculate that is exactly the same like we do with any lying integral.  So anyway, the Green's theorem says that this can be traded for a double integral  over some region r of the quantity partial of g with respect to x minus partial of f with respect to y dA.
+
+[849.70s]:  Okay, so what is r?  Suppose we have a path like this.  This is our c and we'll go encounter clockwise like that.
+
+[871.34s]:  Then the region that's enclosed by that curve, that is r.  So that's the region r we're talking about.  So this is saying that we can trade a lying integral on the boundary for a double integral of a certain quantity inside the region.
+
+[899.96s]:  Okay, so Green's theorem allows us to trade a double integral of a certain kind of double integral for a lying integral  or a lying integral for a certain kind of double integral.  We can go in both directions and depending on the functions we're dealing with, one could be easier than the other.
+
+[917.64s]:  But the bigger point here is that it gives us an option to deal with these two things.  Okay, so let's see why this is true.  So if you look at the left-hand side, let's look at this thing left to right.
+
+[946.44s]:  So the left-hand side is a lying integral on the boundary, right?  And this thing is accumulating the vector field along the path.  That also gives us the circulation on the boundary.
+
+[990.64s]:  So interpretation could be the work going along around the boundary.  Now how does that turn into what it says on the right-hand side?  The right side, the double integral over the region R of the quantity GX minus FYDA.
+
+[1026.12s]:  We saw the thing we're integrating here.  This, remember, is the magnitude of the curl of the vector field, which measures rotation.  So on the right-hand side, we can interpret this as the accumulation of the net rotation on that inside our region.
+
+[1057.92s]:  So this is accumulating rotation on the region R.  And here's what it's really doing. It's going from point to point inside the region.  And everywhere we go, we accumulate rotation.
+
+[1087.34s]:  All right, so here's my region R.  So if you imagine, I divide this region R into many, many smaller parts.  And what happens is that inside each of these smaller grid, there is a rotation going on, like this.
+
+[1132.44s]:  Inside each grid, there is rotation. And we accumulate all of that inside all of these little grids.  So over the place. And they all go counterclockwise.  That's the default direction that we look at.
+
+[1158.16s]:  Okay, now look at what happens. Let's take the bottom four here, for example.  Let's look at the bottom four here. If you look at what's going on here, we have the four grids.  And on each boundary here, we have this rotation going on.
+
+[1183.82s]:  It's going this way, going this way, going that way, for all of them.  They all have this going counterclockwise.  What ends up happening is that notice when we go to get the boundary between two boxes, we have one going up, one going down.
+
+[1210.74s]:  What happens is that these two end up canceling each other.  One thing happening here, they cancel on the boundary. They cancel on the boundary.  So rotations cancel on the boundary of two boxes.
+
+[1240.30s]:  Two boxes. There we go. So what ends up happening is that the net effect, net thing ends up looking like a screen.  So this ends up looking like this.  As if the only things that matter are what's happening on the boundary.
+
+[1271.08s]:  Okay, so if you carry this out for all of these boxes, notice what happens after everything is all accumulated,  and you can see that everything that happens in the inside this region ends up canceling.  So this entire thing, after we accumulate it all of it,
+
+[1293.60s]:  after canceling inside, this thing ends up like  my outline of that region, and then we just go around the boundary, right outside on the boundary going around.  Because all the interior ones ends up canceling because each grid has equal and opposite things flowing around.
+
+[1332.72s]:  So everything cancels, we end up getting this.  So the only thing that ends up happening is the flow on the boundary, which is precisely what we were calculating on the left side of Green's theorem.  So this accumulates F, a lone boundary, which is the left side of the theorem.
+
+[1369.02s]:  Okay, so that's a very informal but very, I guess, physical way to kind of see why the theorem is true.  How we can trade a lying integral on the boundary for an accumulation inside the enclosed region.  Okay, so that's what Green's theorem says.
+
+[1389.36s]:  Any question?  All right, so let's try this on something.  Here in my vector field is y plus 2, x squared plus 1.
+
+[1437.44s]:  And the path I want to take is minus 1, 2, minus 1, 1 to the point 1, 1.  A lone y is equal to x squared.  Then I want to go back to minus 1, 1.
+
+[1463.58s]:  This time alone.  Alone, y is equal to 2 minus x squared.  Okay, so here's where I start.
+
+[1497.36s]:  I want to go to 1, 1, which is right here.  So my first part of my trip is going along the parabola this way.  Okay, then I want to go, so this is y is equal to x squared.
+
+[1519.66s]:  Then I want to go back to where I started this time traveling along a different parabola.  It opens upside down like this.  And the vertex of that parabola is at y is equal to 2, right here.
+
+[1540.54s]:  Okay, so I want to do this in two ways.  First, we'll do the lying integral way.  We'll see what we get, and then we'll do the same thing but this time using Green's theorem.
+
+[1553.24s]:  We'll find out which one is more, I guess, easier to manage and of course verify that  we do get the same thing.  So...
+
+[1586.38s]:  Okay, so the first the old way.  We parameterized each of the two curves.  We'll call the first trip here C1, the second part of that trip, we'll call that C2.
+
+[1599.14s]:  Parametrizing each one of them.  So C1 should be the simple one.  We can do t comma t squared with t going from minus 1 to 1.
+
+[1613.84s]:  That does the trick.  C2, very similar, we can go minus t and then 2 minus t squared.  And then t going from minus 1 to 1 also.
+
+[1636.38s]:  So both of these will get, will describe the path we take.  Okay, C1 and C2 respectively.  Okay, so then f dot r prime dt.
+
+[1653.90s]:  First we do the C1 part, so we do minus 1 to 1.  My vector field is tt squared for x and y, right?  So t squared plus 2 and then x squared plus 1.
+
+[1675.54s]:  Dot it with the tangent vector 1 comma 2t dt.  So that's the C1 portion.  Now the C2 portion, C minus 1 to 1.
+
+[1697.32s]:  X and y replacing x and y.  So y plus 2 is 2 minus t squared plus 2.  So that's what, 4 minus t squared, right?
+
+[1711.22s]:  And then x squared plus 1, t squared plus 1.  Dot it with the tangent vector dt.  So that's the C2 portion.
+
+[1735.06s]:  Any question with either of those two parts?  We've done this several times already.  Should be okay with these two, right?
+
+[1746.84s]:  Good?  Okay?  Good.
+
+[1752.82s]:  All right, so let's quickly finish up the calculation.  First one, after simplifying, by taking the dot product,  really, we get 2t cubed plus t squared plus 2t plus 2 dt.
+
+[1779.54s]:  And then the second one is, again, minus 1 to 1, minus 2t cubed plus t squared minus 2t minus 4.  Both of these are easy integrals to do.  So we should end up getting, I believe the first one is 14 over 3.
+
+[1805.70s]:  And the second one is negative 22 over 3.  So net minus 8 over 3.  Okay, not terrible.
+
+[1820.32s]:  We had to parameterize the good old parameterization and then split into 2.  No big deal there.  And it's not terribly hard to do either.
+
+[1831.92s]:  But now we have an option.  If for any reason you don't want to do the line integral way,  we now can trade that integral for a double integral of a certain quantity.
+
+[1856.50s]:  Green theorem says we can trade the line integral for a double integral of gx minus fy dA.  Right?  So let's take a look at our vector field.
+
+[1888.40s]:  gx minus fy is 2x minus 1.  So it's not a terrible function to deal with.  Let's now take a look at our.
+
+[1907.80s]:  I'll restate the curve we got, the two curves we have.  This is y is equal to x squared.  This is y is equal to 2 minus x squared.
+
+[1922.70s]:  And we're going from minus 1 to 1.  So I can describe my region R as x going from minus 1 to 1.  Right?
+
+[1933.94s]:  And then y is bounded below by x squared and bounded above by 2 minus x squared.  So my double integral over that region R of gx minus fy dA becomes minus 1 to 1 for x  and then x squared to 2 minus x squared for y.
+
+[1961.50s]:  And then the quantity I integrate is 2x minus 1.  And then dy dx.  Okay?
+
+[1977.08s]:  If I carry out my first round of integration, I gain a y and I evaluate and I end up getting 2x minus 1  times 2 minus x squared minus x squared.  So that's 2 minus 2x squared.
+
+[1994.62s]:  And if I multiply this out, I get negative 4x cubed plus 2x squared plus 4x minus 2 dx.  And you can notice that a lot of these other we put together, things end up looking quite alike.  And to no one's surprise, this ends up being exactly the same thing.
+
+[2022.52s]:  Not saying one is easier than the other.  There are two very different kinds of calculation.  A single integral involving parameterization and double integral involving formulating the region.
+
+[2034.52s]:  Both have their own potential difficult parts.  But now we have an important option.  Important result that allows us to trade one for the other.
+
+[2048.80s]:  If we have a complicated line integral, hopefully the double integral is easier to do.  Conversely, if we have a complicated double integral, maybe we can reformulate that as a line integral.  Any question?
+
+[2081.76s]:  Okay, good.  Now I want to go back to Green's theorem.  And we can tweak that a little bit to make it do something else for us.
+
+[2121.40s]:  We can actually, for example, if you have a certain region R, you want to find its area.  Normally we do a double or single integral, but we can actually trade it and do it as a line integral.  Like I said earlier, we now have the capability to trade a certain line integral into a double integral and vice versa.
+
+[2141.02s]:  So here's what Green's theorem says.  dx fdx plus gdy turns into double integral of R, gx minus fy da.  Look at the right-hand side.
+
+[2163.90s]:  If gx minus fy is equal to one, then the right side is just double integral of R over R of da, which is equal to the area of the region R.  Okay?  So what we can do here is we can come up with a vector field such that this is true.
+
+[2206.02s]:  Come up with a vector field, f is equal to f comma g, such that gx minus fy is equal to one.  There are lots of possibilities.  One possibility is f is equal to negative one-half y, one-half x.
+
+[2239.94s]:  You can see gx is one-half, fy is minus one-half, one-half minus one-half gives me a one.  And there are other possibilities. It doesn't matter. It doesn't matter.  So here's my f, here's my g.
+
+[2261.86s]:  So we use these on the left side.  So this thing now turns into integral fdx plus gdy, which is equal to minus one-half y dx plus one-half x dy.  If I take out the one-half and then rearrange a little bit, I get x dy minus y dx.
+
+[2303.40s]:  Okay? So this gives us the area of the region R.  Okay?  Okay, so that's one case where we can replace a double integral with a lying integral.
+
+[2327.20s]:  If we've seen an example replacing a lying integral with a double integral, we can go this back and forth.  So this is one particular application of Green's theorem.  Questions?
+
+[2365.18s]:  Okay.  Okay, so...  Green's theorem, the one we've been looking at, where we do fdx plus gdy equal to double integral over R of gx minus fy da.
+
+[2406.70s]:  It's based on using the unit tangent capital T on the left-hand side.  What we can do if we reformulate everything, but this time we'll use the unit normal instead of unit tangent.  If we use the unit normal capital N instead of the unit tangent capital T,
+
+[2463.96s]:  we end up with a slightly different looking thing.  We end up getting the close integral of fdy minus gdx equal to the double integral of R over R of fx plus gy da.  Notice it looks a little bit different from the standard Green's theorem.
+
+[2494.70s]:  fdx, gdy, positive, and then negative here.  In the alternative formulation using the unit normal, we get a negative sign on the left, fdy minus gdx.  Things kind of move around a little bit.
+
+[2511.34s]:  We expect that because we replace one vector with another.  Of course, we don't expect things to look the same.  What I want to look at here is this quantity on the right, this thing.
+
+[2532.50s]:  In the standard formulation, remember the right-hand side gives us the curl.  The right-hand side is the curl of the vector field.  In this alternative formulation, the right-hand side, this is called the divergence.
+
+[2552.40s]:  The divergence of the vector field f, which we write as div lowercase and then the vector field's name.  In quote-unquote standard Green's theorem, remember the right-hand side is the curl.  The curl measures rotation. The divergence measures if things are changing in volume inside a vector field.
+
+[2604.62s]:  The divergence measures the change of a small volume as it travels in the vector field.  Measures the change.  Change.
+
+[2654.20s]:  In this alternative Green's theorem, form we get the flux.  Remember, flux measures how things flow through a certain shape.  The standard one can be interpreted as work.
+
+[2681.62s]:  In this one, we can interpret this integral as the flux.  Let me illustrate the divergence using a simple vector field.  Let's come up with a very, very simple vector field.
+
+[2714.72s]:  This is x, 0.  The divergence of this vector field is fx plus gy.  That's 1 plus 0 is equal to 1.
+
+[2737.62s]:  One indicates that we expect the volume to increase as if a small box travels down the stream with a vector field.  The rate of increase in the volume of a small, I call that, box as it moves  in the vector field is positive.
+
+[2779.22s]:  Positive one gets bigger as it moves down the stream.  You can see that if you look at the vector field that I've come up with.  The vector field has no y component.
+
+[2797.60s]:  It only moves to the right.  As we move down the stream, it gets longer and longer and longer.  These things will end up looking like that.
+
+[2812.54s]:  The more we go, the longer the arrows get because the greater the magnitude is.  Now look at the small box right here.  If you look at that small box, on the left hand side has a smaller magnitude than the right hand side.
+
+[2865.54s]:  If you look at the magnitude on the left, then the right.  It ends up being stretched.  That little box as it travels down the stream is going to end up looking like that.
+
+[2891.10s]:  The right side is being tucked along with a greater force than the left.  The volume increases, which means a positive divergence.  Today we will look at two very important quantities that we will revisit later on.
+
+[2923.70s]:  The divergence and the curl.  The curl measures rotation in the vector field.  More importantly, if the vector field is conservative, then the curl is zero.
+
+[2940.32s]:  This also agrees with what we know from last time.  If the vector field is conservative, in Green's theorem, the right hand side is zero.  The left hand side is the circulation.
+
+[2951.96s]:  Furthermore, on the left hand side, we end and start at the same place.  We know from last time that if the vector field is conservative and we start and end in the same place, then the circulation is zero.  They agree with what we know already.
+
+[2969.26s]:  Green's theorem doesn't necessarily make the calculation easier.  The important thing here to keep in mind is now we have an option.  A very important option.
+
+[2978.98s]:  We can choose to do a line integral or we can choose to do a particular kind of double integral.  And vice versa.  That's a very important option that we didn't have before.
+
+[2990.38s]:  And now we do.  The alternative form of Green's theorem is much, much less important.  So the thing with divergence in Green's theorem, this is much less important than the standard form.
+
+[3002.68s]:  So the really the takeaway is the standard form of Green's theorem.  Okay?  Questions?
+
+[3023.16s]:  Okay, let's end it there today.  Have a good weekend.  See you Monday.
+
+[3236.44s]:  Thank you.
