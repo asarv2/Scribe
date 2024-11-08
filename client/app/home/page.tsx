@@ -12,10 +12,14 @@ import { answerQuestion, createQuestion } from "../../utils/services/question";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Summary from "../../components/Summary";
-import { SummaryData } from "../../types";
+import { DocData, SummaryData } from "../../types";
 import useSupabaseBrowser from "../../utils/supabase/supabase-browser";
 import { getDocs } from "../../utils/queries/get-docs";
 import { useQuery } from "@tanstack/react-query";
+import NewSummary from "../../components/NewSummary";
+import Markdown from 'markdown-to-jsx'
+
+const lectureLength = 3239 // in seconds
 
 const exampleData: SummaryData = [
     {
@@ -134,18 +138,28 @@ export default function Home() {
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState<string>(""); // Store responses
+    const [learnMoreBubbles, setLearnMoreBubbles] = useState<number[]>([]);
+
+    const [startSeconds, setStartSeconds] = useState<number>(0);
 
     const lectureId = "3ae57d24-8426-44c3-816b-f23e3ae04d0b"
 
     const handleClick = async () => {
         setLoading(true);
+        setResponse("");
+        setLearnMoreBubbles([]);
         try {
             if (!value) {
                 throw new Error("Please enter a question");
             }
 
-            const response = await answerQuestion(value);
+            const { response, documents: docIds } = await answerQuestion(value);
+            const docs = docIds.map((docId) => documents?.find((doc) => doc.id === docId)).filter((doc) => doc !== undefined);
+            const timestamps = docs.map((doc) => doc.timestamp);
+            console.log("timestamps", timestamps);
+
             setResponse(response)
+            setLearnMoreBubbles(timestamps)
 
             notifications.show({
                 title: "Question asked",
@@ -165,6 +179,50 @@ export default function Home() {
         }
     };
 
+    const calculateKeyPress = (seconds: number, lectureLength: number) => {
+        // should find the percentage of the lecture that has been completed
+        // map percenrage ranges to keys (0-10% -> HOME, 10-20% -> 1, 20-30% -> 2, 30-40% -> 3, 40-50% -> 4, 50-60% -> 5, 60-70% -> 6, 70-80% -> 7, 80-90% -> 8, 90-100% -> 9)
+        const percentage = seconds / lectureLength
+        if (percentage <= 0.1) {
+            return "Home"
+        } else if (percentage <= 0.2) {
+            return "1"
+        } else if (percentage <= 0.3) {
+            return "2"
+        } else if (percentage <= 0.4) {
+            return "3"
+        } else if (percentage <= 0.5) {
+            return "4"
+        } else if (percentage <= 0.6) {
+            return "5"
+        } else if (percentage <= 0.7) {
+            return "6"
+        } else if (percentage <= 0.8) {
+            return "7"
+        } else if (percentage <= 0.9) {
+            return "8"
+        } else {
+            return "9"
+        }
+    }
+
+    const handlePlayerClick = (seconds: number) => {
+        window.scrollTo(0, 0);
+        setStartSeconds(seconds)
+    };
+
+    const renderLearnMore = (timestamp: number) => {
+        return (
+            <Button onClick={() => handlePlayerClick(timestamp)} color="orange">{formatTimestamp(timestamp)}</Button>
+        )
+    }
+
+    const formatTimestamp = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.round(seconds % 60)
+        return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
+    }
+
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
     const { data: documents, isLoading: loadingDocs } = useQuery({
@@ -178,24 +236,53 @@ export default function Home() {
         <>
             <HeaderSimple />
             <Container fluid>
-                <SimpleGrid cols={isMobile ? 1 : 2}>
-                    <Stack>
-                        {/* <VideoPlayer /> */}
-                        <AspectRatio ratio={16 / 9} >
-                            <iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/983291/sp/98329100/embedIframeJs/uiconf_id/29134031/partner_id/983291?iframeembed=true&playerId=kaltura_player&entry_id=1_ugzuv5ip&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_57ol4cmw" width="100%" height="100%" allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-downloads allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" title="Spring 2023 - MA261 - Chen (7:30)"></iframe>
-                        </AspectRatio>
-                        {isMobile && <Summary data={exampleData} />}
+                <SimpleGrid
+                    cols={isMobile ? 1 : 2}
+                    spacing="md"
+                >
+                    {/* Left Column with Sticky Video Player */}
+                    <Box style={{ position: 'sticky', top: 0 }}>
                         <Stack>
-                            <Input size="md" radius="md" placeholder="Your question here..." value={value} onChange={(e) => {
-                                setValue(e.currentTarget.value);
-                            }} disabled={loading} />
-                            <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleClick}>Ask Question</Button>
-                            <Text>{response}</Text>
+                            <AspectRatio ratio={16 / 9}>
+                                <iframe
+                                    id="kaltura_player"
+                                    src={`https://cdnapisec.kaltura.com/p/983291/sp/98329100/embedIframeJs/uiconf_id/29134031/partner_id/983291?iframeembed=true&playerId=kaltura_player&entry_id=1_ugzuv5ip&flashvars[streamerType]=auto&flashvars[localizationCode]=en&flashvars[chapters.plugin]=true&flashvars[chapters.layout]=vertical&flashvars[chapters.thumbnailRotator]=false&flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&flashvars[Kaltura.addCrossoriginToIframe]=true&flashvars[autoPlay]=true&flashvars[mediaProxy.mediaPlayFrom]=${startSeconds}`}
+                                    width="100%"
+                                    height="100%"
+                                    allow="autoplay *; fullscreen *; encrypted-media *"
+                                    title="Spring 2023 - MA261 - Chen (7:30)"
+                                ></iframe>
+                            </AspectRatio>
+                            <Stack>
+                                <Input
+                                    size="md"
+                                    radius="md"
+                                    placeholder="Your question here..."
+                                    value={value}
+                                    onChange={(e) => {
+                                        setValue(e.currentTarget.value);
+                                    }}
+                                    disabled={loading}
+                                />
+                                <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleClick}>
+                                    Ask Question
+                                </Button>
+                                <Markdown>{response}</Markdown>
+                                <Group>
+                                    {learnMoreBubbles.sort(
+                                        (a, b) => a - b
+                                    ).map((timestamp) => renderLearnMore(timestamp))}
+                                </Group>
+                            </Stack>
+                            {isMobile && <NewSummary documents={documents ?? []} loading={loadingDocs} clickPlayer={handlePlayerClick} />}
                         </Stack>
-                    </Stack>
-                    {!isMobile && <Summary data={exampleData} />}
+                    </Box>
+
+                    {/* Right Column with Scrollable Summary */}
+                    {!isMobile && <NewSummary documents={documents ?? []} loading={loadingDocs} clickPlayer={handlePlayerClick} />}
                 </SimpleGrid>
             </Container>
+
         </>
     );
 }

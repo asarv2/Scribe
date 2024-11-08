@@ -24,6 +24,7 @@
     "kaltura-client": "^20.7.3",
     "kaltura-typescript-client": "file:./public/KalturaGeneratedAPIClientsTypescript-19.3.0.tar.gz",
     "langchain": "^0.3.2",
+    "markdown-to-jsx": "^7.5.0",
     "next": "14.2.7",
     "openai": "^4.57.0",
     "react": "^18",
