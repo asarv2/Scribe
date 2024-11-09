@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { Container, Group, Burger } from '@mantine/core';
+import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
@@ -25,37 +25,94 @@ const links = [
 ];
 
 export function HeaderSimple() {
-    const [opened, { toggle }] = useDisclosure(false);
+    const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const pathname = usePathname();
 
     const items = links.map((link) => (
-        <Link
-            key={link.label}
-            href={link.link}
-            className={classes.link}
-            data-active={pathname === link.link || undefined}
-        >
-            {link.label}
-        </Link>
+        <Box p={2}>
+            <Link
+                key={link.label}
+                href={link.link}
+                className={classes.link}
+                data-active={pathname === link.link || undefined}
+            >
+                {link.label}
+            </Link>
+        </Box>
     ));
 
     return (
-        <header className={classes.header}>
-            <Container size="md" className={classes.inner}>
-                <Link href="/">
-                    <Image
-                        src="/images/logo.png"
-                        alt="Logo"
-                        width={100}
-                        height={20}
-                    />
-                </Link>
-                <Group gap={5} visibleFrom="xs">
-                    {items}
-                </Group>
+        <>
+            <header className={classes.header}>
+                <Container size="md" className={classes.inner}>
+                    <Link href="/">
+                        <Image
+                            src="/images/logo.png"
+                            alt="Logo"
+                            width={100}
+                            height={20}
+                        />
+                    </Link>
+                    <Group gap={5} visibleFrom="xs">
+                        {items}
+                    </Group>
 
-                <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-            </Container>
-        </header>
+                    <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="xs" size="sm" />
+                </Container>
+            </header>
+
+            <Drawer.Root
+                opened={drawerOpened}
+                onClose={closeDrawer}
+                size="50%"
+                padding="md"
+                hiddenFrom="sm"
+                zIndex={1000000}
+            >
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>
+                        <Drawer.Title>
+                            <Link href="/" passHref>
+                                <Image
+                                    src="/images/logo.png"
+                                    alt="Logo"
+                                    width={100}
+                                    height={20}
+                                />
+                            </Link>
+                        </Drawer.Title>
+                        <Drawer.CloseButton />
+                    </Drawer.Header>
+                    <Drawer.Body>
+                        <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md" p={4}>
+                            <Divider my="sm" />
+                            {items}
+                        </ScrollArea>
+                    </Drawer.Body>
+                </Drawer.Content>
+            </Drawer.Root >
+
+            {/* <Drawer
+                opened={drawerOpened}
+                onClose={closeDrawer}
+                size="lg"
+                padding="md"
+                hiddenFrom="sm"
+                zIndex={1000000}
+            >
+                <Drawer.Header>
+                    <Drawer.Title>Drawer title</Drawer.Title>
+                    <Drawer.CloseButton />
+                </Drawer.Header>
+
+                <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
+                    <Divider my="sm" />
+
+                    {items}
+
+                </ScrollArea>
+            </Drawer> */}
+        </>
     );
 }
