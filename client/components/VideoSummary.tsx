@@ -10,19 +10,20 @@ import { Skeleton } from "@mantine/core";
 import Link from "next/link";
 
 
-type NewSummaryProps = {
+type VideoSummaryProps = {
+    lectureLength: number
     documents: DocData[]
     loading: boolean
     clickPlayer: (timestamp: number) => void
 }
 
 // should be 10 headings
-const headings = ["Introduction", "Section 2", "Section 3", "Section 4", "Section 5", "Section 6", "Section 7", "Section 8", "Section 9", "Section 10"]
+const headings = ["Section 1", "Section 2", "Section 3", "Section 4", "Section 5", "Section 6", "Section 7", "Section 8", "Section 9", "Section 10"]
 
-const lectureLength = 3239 // in seconds
-const headingsSplit: number[] = [Math.round(lectureLength / 10), Math.round(lectureLength / 10) * 2, Math.round(lectureLength / 10) * 3, Math.round(lectureLength / 10) * 4, Math.round(lectureLength / 10) * 5, Math.round(lectureLength / 10) * 6, Math.round(lectureLength / 10) * 7, Math.round(lectureLength / 10) * 8, Math.round(lectureLength / 10) * 9, Math.round(lectureLength / 10) * 10]
 
-export default function NewSummary({ documents, loading, clickPlayer }: NewSummaryProps) {
+export default function VideoSummary({ documents, loading, clickPlayer, lectureLength }: VideoSummaryProps) {
+    
+    const headingsSplit: number[] = [Math.round(lectureLength / 10), Math.round(lectureLength / 10) * 2, Math.round(lectureLength / 10) * 3, Math.round(lectureLength / 10) * 4, Math.round(lectureLength / 10) * 5, Math.round(lectureLength / 10) * 6, Math.round(lectureLength / 10) * 7, Math.round(lectureLength / 10) * 8, Math.round(lectureLength / 10) * 9, Math.round(lectureLength / 10) * 10]
 
     const formatTimestamp = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);

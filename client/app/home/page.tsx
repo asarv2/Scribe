@@ -11,14 +11,13 @@ import { useState } from "react";
 import { answerQuestion, createQuestion } from "../../utils/services/question";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
-import Summary from "../../components/Summary";
 import { DocData, SummaryData } from "../../types";
 import useSupabaseBrowser from "../../utils/supabase/supabase-browser";
 import { getDocs } from "../../utils/queries/get-docs";
 import { useQuery } from "@tanstack/react-query";
-import NewSummary from "../../components/NewSummary";
 import Markdown from 'markdown-to-jsx'
 import { createQuery } from "../../utils/services/query";
+import VideoSummary from "../../components/VideoSummary";
 
 const lectureLength = 3239 // in seconds
 
@@ -159,7 +158,7 @@ export default function Home() {
             const timestamps = docs.map((doc) => doc.timestamp);
             console.log("timestamps", timestamps);
 
-            const {success, error} = await createQuery(value, response);
+            const {success, error} = await createQuery(value, response, lectureId);
             if (!success) {
                 throw new Error(error);
             }
@@ -280,12 +279,12 @@ export default function Home() {
                                     ).map((timestamp) => renderLearnMore(timestamp))}
                                 </Group>
                             </Stack>
-                            {isMobile && <NewSummary documents={documents ?? []} loading={loadingDocs} clickPlayer={handlePlayerClick} />}
+                            {isMobile && <VideoSummary documents={documents ?? []} loading={loadingDocs} clickPlayer={handlePlayerClick} lectureLength={3239}/>}
                         </Stack>
                     </Box>
 
                     {/* Right Column with Scrollable Summary */}
-                    {!isMobile && <NewSummary documents={documents ?? []} loading={loadingDocs} clickPlayer={handlePlayerClick} />}
+                    {!isMobile && <VideoSummary documents={documents ?? []} loading={loadingDocs} clickPlayer={handlePlayerClick} lectureLength={3239} />}
                 </SimpleGrid>
             </Container>
 
