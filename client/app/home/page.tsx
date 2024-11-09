@@ -18,6 +18,7 @@ import { getDocs } from "../../utils/queries/get-docs";
 import { useQuery } from "@tanstack/react-query";
 import NewSummary from "../../components/NewSummary";
 import Markdown from 'markdown-to-jsx'
+import { createQuery } from "../../utils/services/query";
 
 const lectureLength = 3239 // in seconds
 
@@ -157,6 +158,11 @@ export default function Home() {
             const docs = docIds.map((docId) => documents?.find((doc) => doc.id === docId)).filter((doc) => doc !== undefined);
             const timestamps = docs.map((doc) => doc.timestamp);
             console.log("timestamps", timestamps);
+
+            const {success, error} = await createQuery(value, response);
+            if (!success) {
+                throw new Error(error);
+            }
 
             setResponse(response)
             setLearnMoreBubbles(timestamps)

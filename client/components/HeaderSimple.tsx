@@ -13,7 +13,7 @@ import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
 
 const links = [
-    { link: '/home', label: 'Home' },
+    { link: '/home', label: 'MA261' },
 ];
 
 export function HeaderSimple() {
