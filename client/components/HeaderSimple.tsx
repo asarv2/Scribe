@@ -8,10 +8,10 @@
 import { useState } from 'react';
 import { Container, Group, Burger } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 // const links = [
 //     { link: '/home', label: 'MA261' },
@@ -43,7 +43,12 @@ export function HeaderSimple() {
         <header className={classes.header}>
             <Container size="md" className={classes.inner}>
                 <Link href="/">
-                    <MantineLogo size={28}/>
+                    <Image
+                        src="/images/logo.png"
+                        alt="Logo"
+                        width={100}
+                        height={20}
+                    />
                 </Link>
                 <Group gap={5} visibleFrom="xs">
                     {items}
