@@ -22,7 +22,7 @@ const headings = ["Section 1", "Section 2", "Section 3", "Section 4", "Section 5
 
 
 export default function VideoSummary({ documents, loading, clickPlayer, lectureLength }: VideoSummaryProps) {
-    
+
     const headingsSplit: number[] = [Math.round(lectureLength / 10), Math.round(lectureLength / 10) * 2, Math.round(lectureLength / 10) * 3, Math.round(lectureLength / 10) * 4, Math.round(lectureLength / 10) * 5, Math.round(lectureLength / 10) * 6, Math.round(lectureLength / 10) * 7, Math.round(lectureLength / 10) * 8, Math.round(lectureLength / 10) * 9, Math.round(lectureLength / 10) * 10]
 
     const formatTimestamp = (seconds: number) => {
@@ -41,12 +41,16 @@ export default function VideoSummary({ documents, loading, clickPlayer, lectureL
                     const documentsInHeading = documents.filter((document) => document.timestamp <= timestamp && document.timestamp > headingsSplit[index - 1] || (index === 0 && document.timestamp <= timestamp))
                     return (
                         <div key={timestamp + index}>
-                            <h2>{formatTimestamp(timestampBefore)}{headings[index]}</h2>
+                            {/* <h2>{formatTimestamp(timestampBefore)}{headings[index]}</h2> */}
                             {documentsInHeading.map((document, index) => {
                                 const words = (document.content.split(" "))
                                 if (words.length <= 10) {
                                     return;
                                 }
+
+                                return (
+                                    <p>{formatTimestamp(document.timestamp)} {document.content}</p>
+                                )
 
                                 if (index % 3 === 0) {
                                     return (

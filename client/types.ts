@@ -8,6 +8,7 @@ export type Doc = Database["public"]["Tables"]["embeddings"]["Row"]
 export type DocData = {
     id: Database["public"]["Tables"]["embeddings"]["Row"]["id"],
     content: Database["public"]["Tables"]["embeddings"]["Row"]["content"],
+    lecture: Database["public"]["Tables"]["embeddings"]["Row"]["lecture"],
     timestamp: Database["public"]["Tables"]["embeddings"]["Row"]["timestamp"]
 }
 

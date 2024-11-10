@@ -19,8 +19,8 @@ import Image from 'next/image';
 
 const links = [
     { link: '/classes/cfe37701-9a73-4416-ba01-81e28989e64c', label: 'MA261' },
-    { link: '/classes/77867dcc-0a42-45be-b2d5-0f5dc76abb83', label: '2K1' },
     { link: '/classes/ce907bb8-f51e-4933-b9a2-d042c5b05e67', label: 'MA 421' },
+    { link: '/classes/77867dcc-0a42-45be-b2d5-0f5dc76abb83', label: '2K1' },
     { link: '/classes/15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
 ];
 

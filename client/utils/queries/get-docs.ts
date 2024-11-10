@@ -3,7 +3,7 @@ import { DocData, TypedSupabaseClient } from "../../types";
 export async function getDocs(client: TypedSupabaseClient, lectureId: string): Promise<DocData[] | undefined> {
     const { data, error } = await client
         .from("embeddings")
-        .select("id, content, timestamp")
+        .select("id, content, timestamp, lecture")
         .eq("lecture", lectureId)
         .order("timestamp", { ascending: true });
 
@@ -27,7 +27,7 @@ export async function getClassDocs(client: TypedSupabaseClient, classId: string)
 
     const { data, error } = await client
         .from("embeddings")
-        .select("id, content, timestamp")
+        .select("id, content, timestamp, lecture")
         .in("lecture", lectureIds)
         .order("timestamp", { ascending: true });
 

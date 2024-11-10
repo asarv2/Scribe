@@ -10,6 +10,13 @@ import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 
+const {
+  GoogleGenerativeAI,
+} = require("@google/generative-ai");
+
+const apiKey = process.env.GOOGLE_API_KEY;
+const genAI = new GoogleGenerativeAI(apiKey);
+
 // Create Supabase client
 const cookieStore = cookies();
 const supabase = useSupabaseServer(cookieStore);
@@ -33,9 +40,8 @@ const llm = new ChatGoogleGenerativeAI({
 });
 
 
-export const answerQuestion = async (question: string): Promise<{response: string, documents: string[]}> => {
+export const answerQuestion = async (question: string): Promise<{ response: string, documents: string[] }> => {
   // Create a retriever
-
   try {
     const retriever = vectorStore.asRetriever({
       searchType: "similarity",
@@ -61,12 +67,61 @@ export const answerQuestion = async (question: string): Promise<{response: strin
     console.log(langchainDocs);
     const documents = langchainDocs.map((doc) => doc.metadata.document_id).filter((doc) => doc !== undefined);
     // Return the generated answer
-    return {response: response.answer, documents: documents};
+    return { response: response.answer, documents: documents };
   } catch (error) {
     console.error(error);
     throw new Error("Failed to answer question");
   }
 };
+
+
+export const findRelevantDocuments = async (question: string): Promise<string[]> => {
+  const retriever = vectorStore.asRetriever({
+    searchType: "similarity",
+    k: 6,
+  });
+  // find the documents that match closest to the question
+  const langchainDocs = await retriever.invoke(question)
+  console.log(langchainDocs);
+  const documents = langchainDocs.map((doc) => doc.metadata.document_id).filter((doc) => doc !== undefined);
+  return documents;
+}
+
+
+
+export const answerSlideQuestion = async (question: string, context: string, imageUrls: string[]): Promise<{ response: string }> => {
+  // prompting gemini with all information
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash-8b",
+      systemInstruction: "You the teacher of the class: , teaching the following lecture on the topic: . Students will ask questions about the lecture content, which will be provided below. You emphasize teaching the theory and how the content works, rather than providing a solution, since you do not know the extent of the student's knowledge. Be sure to respond with an answer that is clear and concise, while still being through.",
+    });
+
+    const images = await Promise.all(imageUrls.map(async (url) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+      const base64String = Buffer.from(arrayBuffer).toString('base64');
+      return {
+        inlineData: {
+          data: base64String,
+          mimeType: "image/png",
+        },
+      }
+    }));
+
+    const prompt = "Answer the student's question: " + question + " based on the following context: " + context;
+    const result = await model.generateContent([prompt, ...images]);
+    const rawOutput = result.response.text()
+    return { response: rawOutput };
+
+  } catch (error) {
+    console.error(error);
+    return { response: "Could not answer question" };
+  }
+
+
+}
 
 
 import OpenAI from "openai/index.mjs";
