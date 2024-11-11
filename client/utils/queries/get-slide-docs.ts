@@ -1,11 +1,11 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getLectures(client: TypedSupabaseClient, classId: string) {
+export async function getSlideDocs(client: TypedSupabaseClient, slideId: string) {
     const {data, error} = await client
-        .from("lectures")
+        .from("embeddings_slide")
         .select("*")
-        .eq("class", classId)
-        .order("created_at", {ascending: true});
+        .eq("slide", slideId)
+        .order("page", {ascending: true});
     
     if (error) {
         throw new Error(error.message);

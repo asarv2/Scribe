@@ -9,6 +9,9 @@ import { TaskType } from "@google/generative-ai";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { cookies } from "next/headers";
+import useSupabaseServer from "../supabase/supabase-server";
 
 const {
   GoogleGenerativeAI,
@@ -27,12 +30,6 @@ const embeddings = new GoogleGenerativeAIEmbeddings({
   title: "Math Lecture Transcripts",
 });
 
-const vectorStore = new SupabaseVectorStore(embeddings, {
-  client: supabase,
-  tableName: "embeddings",
-  queryName: "match_embeddings",
-});
-
 // Initialize the LLM (Gemini's model)
 const llm = new ChatGoogleGenerativeAI({
   model: "gemini-1.5-flash-8b", // Replace with the appropriate Gemini model name
@@ -43,6 +40,13 @@ const llm = new ChatGoogleGenerativeAI({
 export const answerQuestion = async (question: string): Promise<{ response: string, documents: string[] }> => {
   // Create a retriever
   try {
+
+    const vectorStore = new SupabaseVectorStore(embeddings, {
+      client: supabase,
+      tableName: "embeddings_lecture",
+      queryName: "match_embeddings_lecture",
+    });
+
     const retriever = vectorStore.asRetriever({
       searchType: "similarity",
       k: 6,
@@ -75,10 +79,16 @@ export const answerQuestion = async (question: string): Promise<{ response: stri
 };
 
 
-export const findRelevantDocuments = async (question: string): Promise<string[]> => {
+export const findRelevantNoteDocuments = async (question: string): Promise<string[]> => {
+  const vectorStore = new SupabaseVectorStore(embeddings, {
+    client: supabase,
+    tableName: "embeddings_slide",
+    queryName: "match_embeddings_slide",
+  });
+
   const retriever = vectorStore.asRetriever({
     searchType: "similarity",
-    k: 6,
+    k: 3,
   });
   // find the documents that match closest to the question
   const langchainDocs = await retriever.invoke(question)
@@ -124,19 +134,43 @@ export const answerSlideQuestion = async (question: string, context: string, ima
 }
 
 
-import OpenAI from "openai/index.mjs";
-import { createBrowserClient, createServerClient } from "@supabase/ssr";
-import useSupabaseServer from "../supabase/supabase-server";
-import { cookies } from "next/headers";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { DocData } from "../../types";
-export const createQuestion = async (question: string) => {
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      { "role": "user", "content": `Answer this question: ${question}` }
-    ]
-  });
-  return completion.choices[0].message.content
-}
+export const answerTextbookQuestion = async (question: string): Promise<{ response: string, documents: string[] }> => {
+  // Create a retriever
+  try {
+
+    const vectorStore = new SupabaseVectorStore(embeddings, {
+      client: supabase,
+      tableName: "embeddings_textbook",
+      queryName: "match_embeddings_textbook",
+    });
+
+    const retriever = vectorStore.asRetriever({
+      searchType: "similarity",
+      k: 6,
+    });
+
+    // Create the RetrievalQA chain
+    const prompt = ChatPromptTemplate.fromTemplate(`Answer the user's question: {input} based on the following context {context}`);
+
+    const combineDocsChain = await createStuffDocumentsChain({
+      llm,
+      prompt,
+    });
+
+    const retrievalChain = await createRetrievalChain({
+      combineDocsChain,
+      retriever,
+    });
+
+    // Call the chain with the question
+    const response = await retrievalChain.invoke({ input: question });
+    const langchainDocs = response.context
+    console.log(langchainDocs);
+    const documents = langchainDocs.map((doc) => doc.metadata.document_id).filter((doc) => doc !== undefined);
+    // Return the generated answer
+    return { response: response.answer, documents: documents };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to answer question");
+  }
+};

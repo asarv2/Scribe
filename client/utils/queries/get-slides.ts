@@ -1,8 +1,8 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getLectures(client: TypedSupabaseClient, classId: string) {
+export async function getSlides(client: TypedSupabaseClient, classId: string) {
     const {data, error} = await client
-        .from("lectures")
+        .from("slides")
         .select("*")
         .eq("class", classId)
         .order("created_at", {ascending: true});

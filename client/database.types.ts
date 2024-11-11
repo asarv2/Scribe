@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      chapters: {
+        Row: {
+          chapter_number: number
+          created_at: string
+          id: string
+          page_number: number
+          textbook: string
+          title: string
+        }
+        Insert: {
+          chapter_number?: number
+          created_at?: string
+          id?: string
+          page_number?: number
+          textbook?: string
+          title?: string
+        }
+        Update: {
+          chapter_number?: number
+          created_at?: string
+          id?: string
+          page_number?: number
+          textbook?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapters_textbook_fkey"
+            columns: ["textbook"]
+            isOneToOne: false
+            referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       classes: {
         Row: {
           class_code: string
@@ -51,14 +86,13 @@ export type Database = {
         }
         Relationships: []
       }
-      embeddings: {
+      embeddings_lecture: {
         Row: {
           content: string
           created_at: string
           embedding: string
           id: string
           lecture: string
-          metadata: Json
           timestamp: number
         }
         Insert: {
@@ -67,7 +101,6 @@ export type Database = {
           embedding: string
           id?: string
           lecture?: string
-          metadata?: Json
           timestamp?: number
         }
         Update: {
@@ -76,7 +109,6 @@ export type Database = {
           embedding?: string
           id?: string
           lecture?: string
-          metadata?: Json
           timestamp?: number
         }
         Relationships: [
@@ -85,6 +117,76 @@ export type Database = {
             columns: ["lecture"]
             isOneToOne: false
             referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      embeddings_slide: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string
+          id: string
+          page: number
+          slide: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          embedding: string
+          id: string
+          page?: number
+          slide?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string
+          id?: string
+          page?: number
+          slide?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "embeddings_slide_slide_fkey"
+            columns: ["slide"]
+            isOneToOne: false
+            referencedRelation: "slides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      embeddings_textbook: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string
+          id: string
+          page: number
+          subchapter: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          embedding: string
+          id: string
+          page?: number
+          subchapter?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string
+          id?: string
+          page?: number
+          subchapter?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "textbook_embeddings_subchapter_fkey"
+            columns: ["subchapter"]
+            isOneToOne: false
+            referencedRelation: "subchapters"
             referencedColumns: ["id"]
           },
         ]
@@ -124,23 +226,136 @@ export type Database = {
       queries: {
         Row: {
           answer: string | null
+          class: string | null
           created_at: string
           id: number
           question: string | null
         }
         Insert: {
           answer?: string | null
+          class?: string | null
           created_at?: string
           id?: number
           question?: string | null
         }
         Update: {
           answer?: string | null
+          class?: string | null
           created_at?: string
           id?: number
           question?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "queries_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      slides: {
+        Row: {
+          class: string
+          created_at: string
+          id: string
+          name: string
+          note_number: number
+        }
+        Insert: {
+          class?: string
+          created_at?: string
+          id?: string
+          name?: string
+          note_number?: number
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          id?: string
+          name?: string
+          note_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "slides_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subchapters: {
+        Row: {
+          chapter: string
+          created_at: string
+          id: string
+          page_number: number
+          section_number: number
+          title: string
+        }
+        Insert: {
+          chapter?: string
+          created_at?: string
+          id?: string
+          page_number?: number
+          section_number?: number
+          title?: string
+        }
+        Update: {
+          chapter?: string
+          created_at?: string
+          id?: string
+          page_number?: number
+          section_number?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subchapters_chapter_fkey"
+            columns: ["chapter"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      textbooks: {
+        Row: {
+          author: string
+          class: string | null
+          created_at: string
+          id: string
+          pages: number
+          title: string
+        }
+        Insert: {
+          author: string
+          class?: string | null
+          created_at?: string
+          id?: string
+          pages: number
+          title: string
+        }
+        Update: {
+          author?: string
+          class?: string | null
+          created_at?: string
+          id?: string
+          pages?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "textbooks_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       waitlist: {
         Row: {
@@ -273,7 +488,47 @@ export type Database = {
             }
             Returns: unknown
           }
-      match_embeddings: {
+      match_documents: {
+        Args: {
+          query_embedding: string
+          match_threshold: number
+          match_count: number
+        }
+        Returns: {
+          id: string
+          content: string
+          similarity: number
+        }[]
+      }
+      match_embeddings_lecture: {
+        Args: {
+          query_embedding: string
+          match_count?: number
+          filter?: Json
+        }
+        Returns: {
+          id: string
+          content: string
+          metadata: Json
+          embedding: Json
+          similarity: number
+        }[]
+      }
+      match_embeddings_slide: {
+        Args: {
+          query_embedding: string
+          match_count?: number
+          filter?: Json
+        }
+        Returns: {
+          id: string
+          content: string
+          metadata: Json
+          embedding: Json
+          similarity: number
+        }[]
+      }
+      match_embeddings_textbook: {
         Args: {
           query_embedding: string
           match_count?: number

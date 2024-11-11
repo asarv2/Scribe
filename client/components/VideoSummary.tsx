@@ -5,21 +5,17 @@
  * 11-08-2024
  */
 
-import { DocData } from "../types";
+import { Lecture, LectureData } from "@/types";
 import { Skeleton } from "@mantine/core";
 import Link from "next/link";
 
 
 type VideoSummaryProps = {
     lectureLength: number
-    documents: DocData[]
+    documents: LectureData[]
     loading: boolean
     clickPlayer: (timestamp: number) => void
 }
-
-// should be 10 headings
-const headings = ["Section 1", "Section 2", "Section 3", "Section 4", "Section 5", "Section 6", "Section 7", "Section 8", "Section 9", "Section 10"]
-
 
 export default function VideoSummary({ documents, loading, clickPlayer, lectureLength }: VideoSummaryProps) {
 

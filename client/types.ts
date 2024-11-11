@@ -3,14 +3,15 @@ import { Database } from "./database.types";
 
 export type TypedSupabaseClient = SupabaseClient<Database>
 
-export type Doc = Database["public"]["Tables"]["embeddings"]["Row"]
+export type Lecture = Database["public"]["Tables"]["lectures"]["Row"]
+export type Slide = Database["public"]["Tables"]["slides"]["Row"]
+export type Textbook = Database["public"]["Tables"]["textbooks"]["Row"]
 
-export type DocData = {
-    id: Database["public"]["Tables"]["embeddings"]["Row"]["id"],
-    content: Database["public"]["Tables"]["embeddings"]["Row"]["content"],
-    lecture: Database["public"]["Tables"]["embeddings"]["Row"]["lecture"],
-    timestamp: Database["public"]["Tables"]["embeddings"]["Row"]["timestamp"]
-}
+export type Chapter = Database["public"]["Tables"]["chapters"]["Row"]
+
+export type LectureData = Database["public"]["Tables"]["embeddings_lecture"]["Row"]
+export type SlideData = Database["public"]["Tables"]["embeddings_slide"]["Row"]
+export type TextbookData = Database["public"]["Tables"]["embeddings_textbook"]["Row"]
 
 export type SummaryData = {
     heading: string,
