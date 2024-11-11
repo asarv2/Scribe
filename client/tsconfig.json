@@ -15,14 +15,6 @@
     "plugins": [
       {
         "name": "next"
-      }, {
-        "name": "kaltura",
-        "options": {
-          "libraryName": "kaltura-typescript-client/src/api/types",
-          "libraryDirectory": "",
-          "camel2DashComponentName": false,
-          "transformToDefaultImport": false
-        }
       }
     ],
     "paths": {
