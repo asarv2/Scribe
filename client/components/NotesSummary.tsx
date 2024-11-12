@@ -6,45 +6,33 @@
  */
 
 import { Slide, SlideData } from "@/types"
+import { getSummaries } from "@/utils/queries/get-summary"
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
 import { AspectRatio, Box, Card, Group, SimpleGrid, Skeleton, Text } from "@mantine/core"
+import { useQuery } from "@tanstack/react-query"
+import Markdown from "markdown-to-jsx"
 import Image from "next/image"
 
 type NoteSummaryProps = {
     classId: string
-    documents: SlideData[]
-    loading: boolean
-    clickPageNumber: (pageNumber: number) => void
+    documentId: string
 }
 
-export default function NotesSummary({ classId, documents, loading, clickPageNumber }: NoteSummaryProps) {
+export default function NotesSummary({ classId, documentId }: NoteSummaryProps) {
+    const supabase = useSupabaseBrowser();
 
     // want each of the images to be square in grid
+
+    const { data: summaries, isLoading: loadingSummaries } = useQuery({
+        queryKey: ["summaries", documentId],
+        queryFn: () => getSummaries(supabase, documentId),
+    });
+
     return (
-        <Skeleton visible={loading}>
-            <SimpleGrid cols={3}>
-                {documents.map((document) => {
-                    const imageURL = `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.slide}/images/page_${document.page}.png`
-                    return (
-                        <Card shadow="sm" padding="lg" radius="md" withBorder key={document.id} onClick={() => clickPageNumber(document.page - 1)} style={{ cursor: "pointer" }}>
-                            <Card.Section>
-                                <AspectRatio ratio={16 / 9}>
-                                    <Image
-                                        src={imageURL}
-                                        alt={`Page ${document.page}`}
-                                        width={200}
-                                        height={200}
-                                    />
-                                </AspectRatio>
-                            </Card.Section>
-
-                            <Group justify="space-between" mt="md" mb="xs">
-                                <Text fw={500}>Slide {document.page}</Text>
-                            </Group>
-
-                        </Card>
-                    )
-                })}
-            </SimpleGrid>
+        <Skeleton visible={loadingSummaries}>
+            {summaries?.map((summary, index) => (
+                <Markdown>{summary?.content}</Markdown>
+            ))}
         </Skeleton>
     )
 }

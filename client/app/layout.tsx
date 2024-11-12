@@ -28,12 +28,12 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <ReactQueryClientProvider>
-          <MantineProvider>
-            <Notifications />
-            {children}
-          </MantineProvider>
-        </ReactQueryClientProvider>
+          <ReactQueryClientProvider>
+            <MantineProvider>
+              <Notifications />
+              {children}
+            </MantineProvider>
+          </ReactQueryClientProvider>
       </body>
     </html>
   );

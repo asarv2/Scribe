@@ -7,7 +7,7 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query";
-import { AspectRatio, Box, Button, Center, Container, em, Group, Input, SimpleGrid, Stack, Text } from "@mantine/core";
+import { AspectRatio, Box, Button, Center, Container, em, Group, Input, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
@@ -19,6 +19,7 @@ import { answerSlideQuestion, findRelevantNoteDocuments } from "@/utils/services
 import { createQuery } from "@/utils/services/query";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import NotesSummary from "@/components/NotesSummary";
+import Link from "next/link";
 
 
 export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
@@ -34,7 +35,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
     const slideId = params.slideId;
 
     const handlePageClick = (pageNumber: number) => {
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
         setPageNumber(pageNumber)
     }
 
@@ -114,49 +115,72 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
         <>
             <HeaderSimple />
             <Container fluid>
-                <SimpleGrid
-                    cols={isMobile ? 1 : 2}
-                    spacing="md"
-                >
-                    {/* Left Column with Sticky Video Player */}
-                    <Box style={{ position: 'sticky', top: 0 }}>
-                        <Stack>
-                            <AspectRatio ratio={16 / 9}>
-                                <Image
-                                    src={getActiveImage(pageNumber)}
-                                    alt={`Page ${pageNumber + 1}`}
-                                    width={500}
-                                    height={500}
-                                />
-                            </AspectRatio>
+                <Stack>
+                    <Link href={`${window.location.origin}/classes/${classId}`}><Button>Back</Button></Link>
+                    <Text fw={700} size="xl">{classId} - {slideId}</Text>
+                    <SimpleGrid
+                        cols={isMobile ? 1 : 2}
+                        spacing="md"
+                    >
+                        {/* Left Column with Sticky Video Player */}
+                        <Box>
                             <Stack>
-                                <Input
-                                    size="md"
-                                    radius="md"
-                                    placeholder="Your question here..."
-                                    value={value}
-                                    onChange={(e) => {
-                                        setValue(e.currentTarget.value);
-                                    }}
-                                    disabled={loading}
-                                />
-                                <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleNotesClick}>
-                                    Ask Question
-                                </Button>
-                                <Markdown>{response}</Markdown>
+                                <AspectRatio ratio={1}>
+                                    <Image
+                                        src={getActiveImage(pageNumber)}
+                                        alt={`Page ${pageNumber + 1}`}
+                                        width={500}
+                                        height={500}
+                                    />
+                                </AspectRatio>
                                 <Group>
-                                    {learnMoreBubbles.sort(
-                                        (a, b) => a - b
-                                    ).map((timestamp, index) => renderLearnMorePage(timestamp, index))}
+                                    {documents?.map((doc) => (
+                                        <Box
+                                            key={doc.id}
+                                            style={{
+                                                cursor: "pointer",
+                                                border: `2px solid ${doc.page === pageNumber + 1 ? "blue" : "transparent"}`,
+                                            }}
+                                            onClick={() => handlePageClick(doc.page - 1)}
+                                        >
+                                            <Image
+                                                src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${doc.slide}/images/page_${doc.page}.png`}
+                                                alt={`Page ${doc.page}`}
+                                                width={50}
+                                                height={50}
+                                            />
+                                        </Box>
+                                    ))}
                                 </Group>
+                                <Stack>
+                                    <Input
+                                        size="md"
+                                        radius="md"
+                                        placeholder="Your question here..."
+                                        value={value}
+                                        onChange={(e) => {
+                                            setValue(e.currentTarget.value);
+                                        }}
+                                        disabled={loading}
+                                    />
+                                    <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleNotesClick}>
+                                        Ask Question
+                                    </Button>
+                                    <Markdown>{response}</Markdown>
+                                    <Group>
+                                        {learnMoreBubbles.sort(
+                                            (a, b) => a - b
+                                        ).map((timestamp, index) => renderLearnMorePage(timestamp, index))}
+                                    </Group>
+                                </Stack>
+                                {isMobile && <NotesSummary classId={classId} documentId={slideId} />}
                             </Stack>
-                            {isMobile && <NotesSummary documents={documents ?? []} loading={loadingDocs} clickPageNumber={handlePageClick} classId={classId} />}
-                        </Stack>
-                    </Box>
+                        </Box>
 
-                    {/* Right Column with Scrollable Summary */}
-                    {!isMobile && <NotesSummary documents={documents ?? []} loading={loadingDocs} clickPageNumber={handlePageClick} classId={classId} />}
-                </SimpleGrid>
+                        {/* Right Column with Scrollable Summary */}
+                        {!isMobile && <NotesSummary documentId={slideId} classId={classId} />}
+                    </SimpleGrid>
+                </Stack>
             </Container>
 
         </>

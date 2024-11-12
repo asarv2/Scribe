@@ -18,9 +18,9 @@ import Image from 'next/image';
 // ];
 
 const links = [
-    { link: '/classes/cfe37701-9a73-4416-ba01-81e28989e64c/lecture/3ae57d24-8426-44c3-816b-f23e3ae04d0b', label: 'MA 261' },
-    { link: '/classes/ce907bb8-f51e-4933-b9a2-d042c5b05e67/slide/81889307-ead4-4863-8691-0e7bf5cf3825', label: 'MA 421' },
-    { link: '/classes/593fee30-d135-4972-8beb-6c6243619e88/textbook/e8944344-2248-472d-9a8c-56a85c76bcba', label: 'MA 341' },
+    // { link: '/classes/cfe37701-9a73-4416-ba01-81e28989e64c/lecture/3ae57d24-8426-44c3-816b-f23e3ae04d0b', label: 'MA 261' },
+    { link: '/classes/ce907bb8-f51e-4933-b9a2-d042c5b05e67', label: 'MA 421' },
+    // { link: '/classes/593fee30-d135-4972-8beb-6c6243619e88/textbook/e8944344-2248-472d-9a8c-56a85c76bcba', label: 'MA 341' },
     // { link: '/classes/77867dcc-0a42-45be-b2d5-0f5dc76abb83', label: '2K1' },
     // { link: '/classes/15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
 ];
@@ -35,7 +35,7 @@ export function HeaderSimple() {
                 key={link.label}
                 href={link.link}
                 className={classes.link}
-                data-active={pathname === link.link || undefined}
+                data-active={pathname.includes(link.link) || undefined}
             >
                 {link.label}
             </Link>

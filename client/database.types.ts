@@ -134,7 +134,7 @@ export type Database = {
           content?: string
           created_at?: string
           embedding: string
-          id: string
+          id?: string
           page?: number
           slide?: string
         }
@@ -163,15 +163,15 @@ export type Database = {
           embedding: string
           id: string
           page: number
-          subchapter: string
+          textbook: string
         }
         Insert: {
           content?: string
           created_at?: string
           embedding: string
-          id: string
+          id?: string
           page?: number
-          subchapter?: string
+          textbook?: string
         }
         Update: {
           content?: string
@@ -179,14 +179,14 @@ export type Database = {
           embedding?: string
           id?: string
           page?: number
-          subchapter?: string
+          textbook?: string
         }
         Relationships: [
           {
-            foreignKeyName: "textbook_embeddings_subchapter_fkey"
-            columns: ["subchapter"]
+            foreignKeyName: "embeddings_textbook_textbook_fkey"
+            columns: ["textbook"]
             isOneToOne: false
-            referencedRelation: "subchapters"
+            referencedRelation: "textbooks"
             referencedColumns: ["id"]
           },
         ]
@@ -322,6 +322,35 @@ export type Database = {
           },
         ]
       }
+      summaries: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          slide: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          slide?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          slide?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "summaries_slide_fkey"
+            columns: ["slide"]
+            isOneToOne: false
+            referencedRelation: "slides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       textbooks: {
         Row: {
           author: string
@@ -350,6 +379,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "textbooks_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      topics: {
+        Row: {
+          class: string
+          content: string
+          created_at: string
+          id: string
+          parent: string
+          title: string
+        }
+        Insert: {
+          class?: string
+          content?: string
+          created_at?: string
+          id?: string
+          parent?: string
+          title?: string
+        }
+        Update: {
+          class?: string
+          content?: string
+          created_at?: string
+          id?: string
+          parent?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "topics_class_fkey"
             columns: ["class"]
             isOneToOne: false
             referencedRelation: "classes"
