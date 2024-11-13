@@ -23,10 +23,10 @@ import Image from "next/image";
 import { getSlides } from "@/utils/queries/get-slides";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { Map } from '@/components/Map'
-import { CALCULUS_MAP } from "@/utils/map/map-tree";
 import { ReactFlowProvider } from "reactflow";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LINEAR_PROGRAMMING_MAP } from "@/utils/map/map-tree";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -91,7 +91,7 @@ export default function Class({ params }: { params: { classId: string } }) {
 							open()
 						}}
 					/> */}
-                    <Map rootNode={CALCULUS_MAP} />
+                    <Map rootNode={LINEAR_PROGRAMMING_MAP} />
                 </ReactFlowProvider>
             </div>
 

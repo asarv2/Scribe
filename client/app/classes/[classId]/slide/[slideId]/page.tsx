@@ -30,6 +30,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState<string>(""); // Store responses
+    const [responseQuestion, setResponseQuestion] = useState<string>(""); // Store question asked
     const [learnMoreBubbles, setLearnMoreBubbles] = useState<number[]>([]);
     const pathname = usePathname();
 
@@ -46,7 +47,10 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
 
     const renderLearnMorePage = (pageNumber: number, index: number) => {
         return (
-            <Button onClick={() => handlePageClick(pageNumber)} color="orange" key={`learn-more-${pageNumber}-${index}`}>Slide {pageNumber}</Button>
+            <Button onClick={() => {
+                window.scrollTo(0, 200);
+                handlePageClick(pageNumber - 1)
+            }} color="orange" key={`learn-more-${pageNumber}-${index}`}>Slide {pageNumber}</Button>
         )
     }
 
@@ -71,6 +75,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
 
         setLoading(true);
         setResponse("");
+        setResponseQuestion("");
         setLearnMoreBubbles([]);
         try {
             if (!value) {
@@ -87,7 +92,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
             const pages = docs.map((doc) => doc.page);
             console.log("pages", pages);
 
-            const images = docs.map((doc) => `/${classId}/${doc.slide}/page_${doc.page}.png`).filter((image) => image !== undefined)
+            const images = docs.map((doc) => `${window.location.origin}/${classId}/${doc.slide}/page_${doc.page}.png`).filter((image) => image !== undefined)
 
             const context = docs.map((doc) => doc.content).join("\n");
 
@@ -100,6 +105,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
             }
 
             setResponse(response)
+            setResponseQuestion(value);
             setLearnMoreBubbles(pages.slice(0, 3));
 
             notifications.show({
@@ -198,24 +204,35 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                             </Box>
                                         ))}
                                     </Flex>
-                                    <Group w={"100%"}>
-                                        <Input
-                                            size="md"
-                                            radius="md"
-                                            placeholder="Have any questions?"
-                                            value={value}
-                                            onChange={(e) => {
-                                                setValue(e.currentTarget.value);
-                                            }}
-                                            disabled={loading}
-                                        />
-                                        <ActionIcon color="blue" onClick={handleNotesClick} loading={loading}>
-                                            <IconArrowUp size={24} />
-                                        </ActionIcon>
+                                    <Group>
+                                        <Flex w="100%" gap="xs" align={"center"}>
+                                            <Input
+                                                size="md"
+                                                radius="md"
+                                                placeholder="Have any questions?"
+                                                value={value}
+                                                onChange={(e) => {
+                                                    setValue(e.currentTarget.value);
+                                                }}
+                                                disabled={loading}
+                                                style={{ flexGrow: 1 }} // Makes the input take up as much width as possible
+                                            />
+                                            <ActionIcon
+                                                color="blue"
+                                                onClick={handleNotesClick}
+                                                loading={loading}
+                                                size="lg" // Optional: Adjust size if needed
+                                            >
+                                                <IconArrowUp size={24} />
+                                            </ActionIcon>
+                                        </Flex>
                                         {/* <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleNotesClick}>
                                             Ask Question
                                         </Button> */}
-                                        <Markdown>{response}</Markdown>
+                                        {responseQuestion.length !== 0 && response.length !== 0  && <Card padding="md" shadow="xs">
+                                            <Text fw={700} size="md">Q: {responseQuestion}</Text>
+                                            <Markdown>{response}</Markdown>
+                                        </Card>}
                                         <Group>
                                             {learnMoreBubbles.sort(
                                                 (a, b) => a - b

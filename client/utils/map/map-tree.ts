@@ -194,3 +194,69 @@ export const CALCULUS_MAP: MapNode = {
 		},
 	],
 }
+
+export const LINEAR_PROGRAMMING_MAP: MapNode = {
+	"id": "8a2f987a-563f-432a-a85f-1234567890ab",
+	"keyword": "Linear Programming",
+	"children": [
+		{
+			"id": "12345678-90ab-cdef-0123-4567890abcdef",
+			"keyword": "Regression Analysis",
+			"children": [
+				{
+					"id": "91234567-89ab-cdef-0123-4567890abcdef",
+					"keyword": "Linear Regression",
+					"children": [
+						{"id": "11111111-2222-3333-4444-555555555555", "keyword": "Least Squares"},
+						{"id": "22222222-3333-4444-5555-666666666666", "keyword": "Error Functions (L1, L2, L∞)"},
+						{"id": "33333333-4444-5555-6666-777777777777", "keyword": "Normal Equations"}
+					]
+				},
+				{
+					"id": "abcdeffed-cba9-8765-4321-098765432100",
+					"keyword": "Other Regression Techniques"
+				}
+			]
+		},
+		{
+			"id": "abcdef01-2345-6789-0123-4567890abcdef",
+			"keyword": "Binary Classification",
+			"children": [
+				{
+					"id": "fedcba98-7654-3210-9876-543210987654",
+					"keyword": "Hyperplane Separation",
+					"children": [
+						{"id": "12345678-90ab-cdef-0123-4567890abcdef", "keyword": "Maximizing Margin"}
+					]
+				}
+			]
+		},
+		{
+			"id": "09876543-2109-8765-4321-098765432100",
+			"keyword": "Integer Programming",
+			"children": [
+				{"id": "11111111-2222-3333-4444-555555555555", "keyword": "Branch and Bound"},
+				{"id": "22222222-3333-4444-5555-666666666666", "keyword": "Gomory Cuts"}
+			]
+		},
+		{
+			"id": "12345678-90ab-cdef-0123-4567890abcdef",
+			"keyword": "Convex Analysis",
+			"children": [
+				{"id": "91234567-89ab-cdef-0123-4567890abcdef", "keyword": "Convex Sets"},
+				{"id": "abcdeffed-cba9-8765-4321-098765432100", "keyword": "Convex Hulls"},
+				{"id": "fedcba98-7654-3210-9876-543210987654", "keyword": "Separation Theorem"},
+				{"id": "12345678-90ab-cdef-0123-4567890abcdef", "keyword": "Farkas' Lemma"}
+			]
+		},
+		{
+			"id": "09876543-2109-8765-4321-098765432100",
+			"keyword": "Network Flow",
+			"children": [
+				{"id": "11111111-2222-3333-4444-555555555555", "keyword": "Spanning Trees"},
+				{"id": "22222222-3333-4444-5555-666666666666", "keyword": "Primal and Dual Variables"},
+				{"id": "33333333-4444-5555-6666-777777777777", "keyword": "Complementary Slackness"}
+			]
+		}
+	]
+}
