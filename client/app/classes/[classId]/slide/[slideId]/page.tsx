@@ -7,7 +7,7 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query";
-import { AspectRatio, Box, Button, Center, Container, em, Group, Input, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
+import { ActionIcon, Anchor, AspectRatio, Box, Breadcrumbs, Button, Card, Center, Container, Divider, em, Flex, Grid, Group, Input, SimpleGrid, Skeleton, Space, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
@@ -20,6 +20,10 @@ import { createQuery } from "@/utils/services/query";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import NotesSummary from "@/components/NotesSummary";
 import Link from "next/link";
+import { getClass } from "@/utils/queries/get-class";
+import { getSlide } from "@/utils/queries/get-slide";
+import { usePathname } from "next/navigation";
+import { IconArrowLeft, IconArrowUp } from "@tabler/icons-react";
 
 
 export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
@@ -27,6 +31,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState<string>(""); // Store responses
     const [learnMoreBubbles, setLearnMoreBubbles] = useState<number[]>([]);
+    const pathname = usePathname();
 
     const [pageNumber, setPageNumber] = useState<number>(0);
 
@@ -46,6 +51,16 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
     }
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    const { data: classData, isLoading: loadingClass } = useQuery({
+        queryKey: ["class", classId],
+        queryFn: () => getClass(supabase, classId),
+    });
+
+    const { data: slide, isLoading: loadingSlide } = useQuery({
+        queryKey: ["slide", slideId],
+        queryFn: () => getSlide(supabase, slideId),
+    });
 
     const { data: documents, isLoading: loadingDocs } = useQuery({
         queryKey: ["slideDocuments", slideId],
@@ -72,7 +87,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
             const pages = docs.map((doc) => doc.page);
             console.log("pages", pages);
 
-            const images = docs.map((doc) => `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${doc.slide}/images/page_${doc.page}.png`).filter((image) => image !== undefined)
+            const images = docs.map((doc) => `/${classId}/${doc.slide}/page_${doc.page}.png`).filter((image) => image !== undefined)
 
             const context = docs.map((doc) => doc.content).join("\n");
 
@@ -108,78 +123,117 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
 
     const getActiveImage = (pageNumber: number) => {
         const activeDocument = documents?.find((doc) => doc.page === pageNumber + 1);
-        return activeDocument ? `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${activeDocument.slide}/images/page_${activeDocument.page}.png` : "";
+        return activeDocument ? `/${classId}/${activeDocument.slide}/page_${activeDocument.page}.png` : "";
     }
+
+    // const items = pathname.split("/").map((path, index) => (
+    //     <Anchor href={path} key={index}>
+    //       {path}
+    //     </Anchor>
+    //   ));
 
     return (
         <>
             <HeaderSimple />
             <Container fluid>
                 <Stack>
-                    <Link href={`${window.location.origin}/classes/${classId}`}><Button>Back</Button></Link>
-                    <Text fw={700} size="xl">{classId} - {slideId}</Text>
-                    <SimpleGrid
-                        cols={isMobile ? 1 : 2}
-                        spacing="md"
-                    >
+                    {/* <Breadcrumbs>{items}</Breadcrumbs> */}
+                    <Group w={"100%"}>
+                        <Link href={`${window.location.origin}/classes/${classId}`}>
+                            <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                        </Link>
+                        <Text size="xl" fw={700} mb={6}>{classData?.title}</Text>
+                    </Group>
+
+                    <Text fw={700} size="lg">L{slide?.note_number} - {slide?.name}</Text>
+                    <Divider />
+                    <Grid>
                         {/* Left Column with Sticky Video Player */}
-                        <Box>
-                            <Stack>
-                                <AspectRatio ratio={1}>
-                                    <Image
-                                        src={getActiveImage(pageNumber)}
-                                        alt={`Page ${pageNumber + 1}`}
-                                        width={500}
-                                        height={500}
-                                    />
-                                </AspectRatio>
-                                <Group>
-                                    {documents?.map((doc) => (
-                                        <Box
-                                            key={doc.id}
-                                            style={{
-                                                cursor: "pointer",
-                                                border: `2px solid ${doc.page === pageNumber + 1 ? "blue" : "transparent"}`,
-                                            }}
-                                            onClick={() => handlePageClick(doc.page - 1)}
-                                        >
-                                            <Image
-                                                src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${doc.slide}/images/page_${doc.page}.png`}
-                                                alt={`Page ${doc.page}`}
-                                                width={50}
-                                                height={50}
-                                            />
-                                        </Box>
-                                    ))}
-                                </Group>
+                        <Grid.Col span={isMobile ? 12 : 6}>
+                            <Box style={{ position: isMobile ? "static" : "sticky", top: "1rem" }}>
                                 <Stack>
-                                    <Input
-                                        size="md"
-                                        radius="md"
-                                        placeholder="Your question here..."
-                                        value={value}
-                                        onChange={(e) => {
-                                            setValue(e.currentTarget.value);
+                                    <Card shadow="xs" padding="md" pos="relative">
+                                        <AspectRatio ratio={1}>
+                                            <Image
+                                                src={getActiveImage(pageNumber)}
+                                                alt={`Page ${pageNumber + 1}`}
+                                                width={500}
+                                                height={500}
+                                            />
+                                        </AspectRatio>
+                                        <Box
+                                            pos="absolute"
+                                            bottom={10}
+                                            right={10}
+                                            p={2}
+                                            style={{
+                                                zIndex: 100,
+                                            }}
+                                        >
+                                            <Text size="sm">Slide {pageNumber + 1}</Text>
+                                        </Box>
+                                    </Card>
+                                    <Flex
+                                        gap={"0.5rem"}
+                                        style={{
+                                            overflowX: "auto",  // Enables horizontal scrolling
                                         }}
-                                        disabled={loading}
-                                    />
-                                    <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleNotesClick}>
-                                        Ask Question
-                                    </Button>
-                                    <Markdown>{response}</Markdown>
-                                    <Group>
-                                        {learnMoreBubbles.sort(
-                                            (a, b) => a - b
-                                        ).map((timestamp, index) => renderLearnMorePage(timestamp, index))}
+                                    >
+                                        {documents?.map((doc) => (
+                                            <Box
+                                                key={doc.id}
+                                                style={{
+                                                    cursor: "pointer",
+                                                    border: `2px solid ${doc.page === pageNumber + 1 ? "blue" : "transparent"}`,
+                                                    flexShrink: 0,  // Prevents the items from shrinking
+                                                }}
+                                                onClick={() => handlePageClick(doc.page - 1)}
+                                            >
+                                                <Image
+                                                    src={`/${classId}/${doc.slide}/page_${doc.page}.png`}
+                                                    alt={`Page ${doc.page}`}
+                                                    width={50}
+                                                    height={50}
+                                                />
+                                            </Box>
+                                        ))}
+                                    </Flex>
+                                    <Group w={"100%"}>
+                                        <Input
+                                            size="md"
+                                            radius="md"
+                                            placeholder="Have any questions?"
+                                            value={value}
+                                            onChange={(e) => {
+                                                setValue(e.currentTarget.value);
+                                            }}
+                                            disabled={loading}
+                                        />
+                                        <ActionIcon color="blue" onClick={handleNotesClick} loading={loading}>
+                                            <IconArrowUp size={24} />
+                                        </ActionIcon>
+                                        {/* <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleNotesClick}>
+                                            Ask Question
+                                        </Button> */}
+                                        <Markdown>{response}</Markdown>
+                                        <Group>
+                                            {learnMoreBubbles.sort(
+                                                (a, b) => a - b
+                                            ).map((timestamp, index) => renderLearnMorePage(timestamp, index))}
+                                        </Group>
                                     </Group>
+                                    {isMobile && <NotesSummary classId={classId} documentId={slideId} />}
                                 </Stack>
-                                {isMobile && <NotesSummary classId={classId} documentId={slideId} />}
-                            </Stack>
-                        </Box>
+                            </Box>
+                        </Grid.Col>
 
                         {/* Right Column with Scrollable Summary */}
-                        {!isMobile && <NotesSummary documentId={slideId} classId={classId} />}
-                    </SimpleGrid>
+                        <Grid.Col span={isMobile ? 12 : 6}>
+                            {!isMobile && <Box>
+                                <Text fw={700} size="lg">Summary</Text>
+                                <NotesSummary documentId={slideId} classId={classId} /></Box>}
+                        </Grid.Col>
+                    </Grid>
                 </Stack>
             </Container>
 

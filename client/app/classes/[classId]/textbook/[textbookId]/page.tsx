@@ -113,7 +113,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                     <Box style={{ position: 'sticky', top: 0 }}>
                         <Stack>
                             <AspectRatio ratio={16 / 9}>
-                                <PDFViewer pdfUrl={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/ce907bb8-f51e-4933-b9a2-d042c5b05e67/e8944344-2248-472d-9a8c-56a85c76bcba/textbook.pdf?t=2024-11-11T17%3A32%3A04.604Z`} pageNumber={pageNumber} setPageNumber={setPageNumber} />
+                                <PDFViewer pdfUrl={`/ce907bb8-f51e-4933-b9a2-d042c5b05e67/e8944344-2248-472d-9a8c-56a85c76bcba/textbook.pdf?t=2024-11-11T17%3A32%3A04.604Z`} pageNumber={pageNumber} setPageNumber={setPageNumber} />
                             </AspectRatio>
                             <Stack>
                                 <Input
