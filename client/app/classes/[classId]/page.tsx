@@ -23,12 +23,12 @@ import Image from "next/image";
 import { getSlides } from "@/utils/queries/get-slides";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { Map } from '@/components/Map'
-import { ReactFlowProvider } from "reactflow";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP } from "@/utils/map/map-tree";
 import { NodeDetail } from "@/components/NodeDetail";
 import { getMap } from "@/utils/queries/get-map";
+import { ReactFlowProvider } from "@xyflow/react";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -53,8 +53,6 @@ export default function Class({ params }: { params: { classId: string } }) {
         queryKey: ["slides", classId],
         queryFn: () => getSlides(supabase, classId)
     })
-
-    console.log("Printing map", map)
 
     return (
         <>
@@ -88,9 +86,9 @@ export default function Class({ params }: { params: { classId: string } }) {
             </div>
 
             {/* Want a panel on the right hand side showing all of the lectures*/}
-            <div style={{ position: "fixed", left: "5vw", top: "10vh", backgroundColor: theme.primaryColor === "dark" ? theme.colors.dark[7] : theme.colors.gray[0], padding: 20, overflowY: "scroll" }}>
+            <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "70vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
                 <SimpleGrid cols={1}>
-                    {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "md"}> L{slide.note_number} - {slide.name}</Button></Link>)}
+                    {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)}
                 </SimpleGrid>
             </div>
 

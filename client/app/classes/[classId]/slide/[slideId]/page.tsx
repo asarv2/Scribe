@@ -26,7 +26,7 @@ import { usePathname } from "next/navigation";
 import { IconArrowLeft, IconArrowRight, IconArrowUp, IconChevronLeft, IconChevronRight, IconDownload, IconReload } from '@tabler/icons-react';
 import { getSummaries } from "@/utils/queries/get-summary";
 import jsPDF from 'jspdf';
-
+import { marked } from 'marked';
 
 export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
 
@@ -49,8 +49,6 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
 
     const handleRegenerate = async () => {
         try {
-
-
             // regenerate summary, invalidate the cache
 
 
@@ -76,13 +74,39 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
             }
             const currentSummary = summaries[currentSummaryIndex];
 
-            const doc = new jsPDF({
-                unit: 'px',
-                hotfixes: ['px_scaling'],
-            });
+            const doc = new jsPDF('p', 'pt', 'a4');
+            const content = currentSummary.content;
 
-            // Save the PDF
-            doc.save(`${slide?.name || 'summary'}.pdf`);
+            // Convert Markdown to HTML
+            const htmlContent = `
+            <style>
+              body {
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 12pt;
+                line-height: 1.2;
+              }
+            </style>
+            ${marked(content)}
+          `;
+
+            // Adjust page width
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+
+            doc.html(htmlContent, {
+                x: 40,
+                y: 40,
+                width: pageWidth - 80, // Account for margins
+                windowWidth: pageWidth,
+                margin: [20, 20],
+                callback: function (doc) {
+                    doc.save(`${slide?.name || 'summary'}.pdf`);
+                },
+            });
 
             notifications.show({
                 title: 'Download',
@@ -98,6 +122,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
             });
         }
     };
+
 
 
     const handlePrevSummary = () => {

@@ -8,9 +8,11 @@
 
 import ELK, { ElkNode, LayoutOptions } from 'elkjs/lib/elk.bundled.js'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
-import ReactFlow, {
+import {
+	ReactFlow,
 	Background,
 	BackgroundVariant,
+	ControlButton,
 	Controls,
 	Edge,
 	Node,
@@ -18,8 +20,8 @@ import ReactFlow, {
 	useEdgesState,
 	useNodesState,
 	useReactFlow,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
 import { NodeComponent } from '@/components/NodeComponent'
 import { FlatMapNode, MapNode } from '@/utils/map/map-tree'
@@ -117,8 +119,6 @@ const createEdge = (mapNode: MapNode): Edge[] => {
 			id: `${node.id}-edge`,
 			source: node.id,
 			target: node.parentId!,
-			targetHandle: node.id,
-			sourceHandle: node.parentId!,
 		}))
 }
 
@@ -163,7 +163,7 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 			fitViewOptions={{ padding: 20 }}
 			nodeTypes={NODE_TYPES}
 			onNodeClick={(e, n) => {
-				onNodeClick?.(n.id, n.data.label, n.data.description)
+				onNodeClick?.(n.id, n.data.label as string, n.data.description as string)
 			}}
 		>
 			<Controls showInteractive={true} />
