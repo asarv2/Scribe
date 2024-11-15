@@ -23,7 +23,7 @@ import Link from "next/link";
 import { getClass } from "@/utils/queries/get-class";
 import { getSlide } from "@/utils/queries/get-slide";
 import { usePathname } from "next/navigation";
-import { IconArrowLeft, IconArrowUp } from "@tabler/icons-react";
+import { IconArrowLeft, IconArrowRight, IconArrowUp } from '@tabler/icons-react';
 
 
 export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
@@ -34,16 +34,21 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
     const [learnMoreBubbles, setLearnMoreBubbles] = useState<number[]>([]);
     const pathname = usePathname();
 
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+
     const [pageNumber, setPageNumber] = useState<number>(0);
 
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
     const slideId = params.slideId;
 
-    const handlePageClick = (pageNumber: number) => {
-        // window.scrollTo(0, 0);
-        setPageNumber(pageNumber)
-    }
+    const handlePageClick = (newPageNumber: number) => {
+        if (newPageNumber < 0 || newPageNumber >= (documents?.length ?? 0)) {
+            return;
+        }
+        setPageNumber(newPageNumber);
+    };
 
     const renderLearnMorePage = (pageNumber: number, index: number) => {
         return (
@@ -138,6 +143,40 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
     //     </Anchor>
     //   ));
 
+    const handleSwipe = (touchEndX: number) => {
+        if (touchStartX !== null) {
+            const deltaX = touchStartX - touchEndX;
+            const minSwipeDistance = 50; // Minimum distance for a swipe
+
+            if (deltaX > minSwipeDistance) {
+                // Swipe left (next page)
+                handlePageClick(pageNumber + 1);
+            } else if (deltaX < -minSwipeDistance) {
+                // Swipe right (previous page)
+                handlePageClick(pageNumber - 1);
+            }
+        }
+        setTouchStartX(null);
+    };
+
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'ArrowLeft') {
+                handlePageClick(pageNumber - 1);
+            } else if (event.key === 'ArrowRight') {
+                handlePageClick(pageNumber + 1);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [pageNumber, documents]);
+
+
+
     return (
         <>
             <HeaderSimple />
@@ -145,28 +184,79 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                 <Stack>
                     {/* <Breadcrumbs>{items}</Breadcrumbs> */}
                     <Group w={"100%"}>
-                        <Link href={`${window.location.origin}/classes/${classId}`}>
+                        <Link href={`/classes/${classId}`}>
                             <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                         </Link>
-                        <Text size="xl" fw={700} mb={6}>{classData?.title}</Text>
+                        <Text size="xl" fw={700} mb={6}>{slide?.name}</Text>
                     </Group>
-
-                    <Text fw={700} size="lg">L{slide?.note_number} - {slide?.name}</Text>
-                    <Divider />
                     <Grid>
                         {/* Left Column with Sticky Video Player */}
                         <Grid.Col span={isMobile ? 12 : 6}>
-                            <Box style={{ position: isMobile ? "static" : "sticky", top: "1rem" }}>
+                            <Box
+                                style={{ position: 'relative', width: '100%', height: 400 }}
+                                onTouchStart={(e) => {
+                                    setTouchStartX(e.changedTouches[0].clientX);
+                                }}
+                                onTouchEnd={(e) => {
+                                    const touchEndX = e.changedTouches[0].clientX;
+                                    handleSwipe(touchEndX);
+                                }}
+                            >
                                 <Stack>
-                                    <Card shadow="xs" padding="md" pos="relative">
-                                        <AspectRatio ratio={1}>
+                                    <Card padding="md" pos="relative" withBorder>
+                                        <Box
+                                            style={{ position: 'relative', width: '100%', height: 400 }}
+                                            onTouchStart={(e) => {
+                                                setTouchStartX(e.changedTouches[0].clientX);
+                                            }}
+                                            onTouchEnd={(e) => {
+                                                const touchEndX = e.changedTouches[0].clientX;
+                                                handleSwipe(touchEndX);
+                                            }}
+                                        >
                                             <Image
                                                 src={getActiveImage(pageNumber)}
                                                 alt={`Page ${pageNumber + 1}`}
-                                                width={500}
-                                                height={500}
+                                                fill
+                                                style={{ objectFit: 'contain' }}
                                             />
-                                        </AspectRatio>
+                                            {/* Left Arrow */}
+                                            <ActionIcon
+                                                size="xl"
+                                                variant="filled"
+                                                color="gray"
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '50%',
+                                                    left: 10,
+                                                    transform: 'translateY(-50%)',
+                                                    zIndex: 100,
+                                                }}
+                                                onClick={() => handlePageClick(pageNumber - 1)}
+                                                disabled={pageNumber === 0}
+                                                aria-label="Previous Slide"
+                                            >
+                                                <IconArrowLeft size={32} />
+                                            </ActionIcon>
+                                            {/* Right Arrow */}
+                                            <ActionIcon
+                                                size="xl"
+                                                variant="filled"
+                                                color="gray"
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '50%',
+                                                    right: 10,
+                                                    transform: 'translateY(-50%)',
+                                                    zIndex: 100,
+                                                }}
+                                                onClick={() => handlePageClick(pageNumber + 1)}
+                                                disabled={pageNumber === (documents ? documents.length - 1 : 0)}
+                                                aria-label="Next Slide"
+                                            >
+                                                <IconArrowRight size={32} />
+                                            </ActionIcon>
+                                        </Box>
                                         <Box
                                             pos="absolute"
                                             bottom={10}
@@ -179,27 +269,31 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                             <Text size="sm">Slide {pageNumber + 1}</Text>
                                         </Box>
                                     </Card>
+
                                     <Flex
-                                        gap={"0.5rem"}
+                                        gap="0.5rem"
                                         style={{
-                                            overflowX: "auto",  // Enables horizontal scrolling
+                                            overflowX: 'auto', // Enables horizontal scrolling
                                         }}
                                     >
                                         {documents?.map((doc) => (
                                             <Box
                                                 key={doc.id}
                                                 style={{
-                                                    cursor: "pointer",
-                                                    border: `2px solid ${doc.page === pageNumber + 1 ? "blue" : "transparent"}`,
-                                                    flexShrink: 0,  // Prevents the items from shrinking
+                                                    cursor: 'pointer',
+                                                    border: `2px solid ${doc.page === pageNumber + 1 ? 'blue' : 'transparent'}`,
+                                                    width: 50,
+                                                    height: 50,
+                                                    position: 'relative',
+                                                    flexShrink: 0, // Prevents the items from shrinking
                                                 }}
                                                 onClick={() => handlePageClick(doc.page - 1)}
                                             >
                                                 <Image
                                                     src={`/${classId}/${doc.slide}/page_${doc.page}.png`}
                                                     alt={`Page ${doc.page}`}
-                                                    width={50}
-                                                    height={50}
+                                                    fill
+                                                    style={{ objectFit: 'cover' }}
                                                 />
                                             </Box>
                                         ))}
@@ -214,8 +308,13 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                                 onChange={(e) => {
                                                     setValue(e.currentTarget.value);
                                                 }}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        handleNotesClick();
+                                                    }
+                                                }}
                                                 disabled={loading}
-                                                style={{ flexGrow: 1 }} // Makes the input take up as much width as possible
+                                                style={{ flexGrow: 1 }}
                                             />
                                             <ActionIcon
                                                 color="blue"
@@ -229,7 +328,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                         {/* <Button variant="filled" loading={loading} loaderProps={{ type: 'dots' }} onClick={handleNotesClick}>
                                             Ask Question
                                         </Button> */}
-                                        {responseQuestion.length !== 0 && response.length !== 0  && <Card padding="md" shadow="xs">
+                                        {responseQuestion.length !== 0 && response.length !== 0 && <Card padding="md" shadow="xs">
                                             <Text fw={700} size="md">Q: {responseQuestion}</Text>
                                             <Markdown>{response}</Markdown>
                                         </Card>}
@@ -246,9 +345,8 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
 
                         {/* Right Column with Scrollable Summary */}
                         <Grid.Col span={isMobile ? 12 : 6}>
-                            {!isMobile && <Box>
-                                <Text fw={700} size="lg">Summary</Text>
-                                <NotesSummary documentId={slideId} classId={classId} /></Box>}
+                            {!isMobile &&
+                                <NotesSummary documentId={slideId} classId={classId} />}
                         </Grid.Col>
                     </Grid>
                 </Stack>

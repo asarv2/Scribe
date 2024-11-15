@@ -29,10 +29,10 @@ export default function NotesSummary({ classId, documentId }: NoteSummaryProps) 
     });
 
     return (
-        <Skeleton visible={loadingSummaries}>
+        <Card withBorder mah={600} style={{overflowY: "auto"}}>
             {summaries?.map((summary, index) => (
                 <Markdown>{summary?.content}</Markdown>
             ))}
-        </Skeleton>
+        </Card>
     )
 }

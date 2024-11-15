@@ -9,8 +9,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getLectures } from "../../../utils/queries/get-lectures";
 import useSupabaseBrowser from "../../../utils/supabase/supabase-browser";
-import { AspectRatio, Box, Button, Center, Container, em, Flex, Group, Input, LoadingOverlay, SimpleGrid, Skeleton, Stack, Text, useMantineTheme } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { AspectRatio, Box, Button, Center, Container, em, Flex, Group, Input, Loader, LoadingOverlay, Modal, SimpleGrid, Skeleton, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Suspense, useEffect, useState } from "react";
 import { answerQuestion, answerSlideQuestion, } from "../../../utils/services/question";
 import { notifications } from '@mantine/notifications';
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -26,11 +26,14 @@ import { Map } from '@/components/Map'
 import { ReactFlowProvider } from "reactflow";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LINEAR_PROGRAMMING_MAP } from "@/utils/map/map-tree";
+import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP } from "@/utils/map/map-tree";
+import { NodeDetail } from "@/components/NodeDetail";
+import { getMap } from "@/utils/queries/get-map";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
     const [opened, { open, close }] = useDisclosure(false)
+    const [openNodeId, setOpenNodeId] = useState<string>()
     const [openNodeLabel, setOpenNodeLabel] = useState<string>()
     const [openNodeDescription, setOpenNodeDescription] = useState<string>()
     const theme = useMantineTheme()
@@ -41,26 +44,17 @@ export default function Class({ params }: { params: { classId: string } }) {
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-    // const { data: lectures, isLoading: loadingLectures } = useQuery({
-    //     queryKey: ["lectures", classId],
-    //     queryFn: () => getLectures(supabase, classId),
-    // });
+    const { data: map, isLoading: loadingMap } = useQuery({
+        queryKey: ["map", classId],
+        queryFn: () => getMap(supabase, classId)
+    })
 
     const { data: slides, isLoading: loadingSlides } = useQuery({
         queryKey: ["slides", classId],
-        queryFn: () => getSlides(supabase, classId),
-    });
+        queryFn: () => getSlides(supabase, classId)
+    })
 
-    // const { data: textbooks, isLoading: loadingTextbooks } = useQuery({
-    //     queryKey: ["textbooks", classId],
-    //     queryFn: () => getTextbooks(supabase, classId),
-    // });
-
-    // console.log("slides", slides)
-
-
-
-
+    console.log("Printing map", map)
 
     return (
         <>
@@ -80,18 +74,16 @@ export default function Class({ params }: { params: { classId: string } }) {
             </Container> */}
             <div style={{ width: "100vw", height: "100vh" }}>
                 <ReactFlowProvider>
-                    <LoadingOverlay />
-                    {/* <Map
-						key={query.dataUpdatedAt}
-						rootNode={data.output}
-						onNodeClick={(label, description) => {
-							console.log(label, description)
-							setOpenNodeLabel(label)
-							setOpenNodeDescription(description)
-							open()
-						}}
-					/> */}
-                    <Map rootNode={LINEAR_PROGRAMMING_MAP} />
+                    {map && <Map
+                        rootNode={map}
+                        onNodeClick={(topicId, label, description) => {
+                            console.log(topicId, label, description)
+                            setOpenNodeId(topicId)
+                            setOpenNodeLabel(label)
+                            setOpenNodeDescription(description)
+                            open()
+                        }}
+                    />}
                 </ReactFlowProvider>
             </div>
 
@@ -101,6 +93,38 @@ export default function Class({ params }: { params: { classId: string } }) {
                     {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "md"}> L{slide.note_number} - {slide.name}</Button></Link>)}
                 </SimpleGrid>
             </div>
+
+            <Modal
+                opened={opened}
+                onClose={close}
+                title={<h3>{openNodeLabel}</h3>}
+                centered
+                overlayProps={{
+                    color:
+                        theme.primaryColor === 'dark'
+                            ? theme.colors.dark[9]
+                            : theme.colors.gray[2],
+                    opacity: 0.25,
+                    blur: 2,
+                }}
+                transitionProps={{ transition: 'fade', duration: 200 }}
+            >
+                <Stack>
+                    <Text>{openNodeDescription}</Text>
+
+                    {
+                        <Suspense
+                            fallback={
+                                <Center>
+                                    <Loader />
+                                </Center>
+                            }
+                        >
+                            {openNodeId && <NodeDetail topicId={openNodeId} />}
+                        </Suspense>
+                    }
+                </Stack>
+            </Modal>
         </>
     );
 }

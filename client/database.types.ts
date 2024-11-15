@@ -392,7 +392,9 @@ export type Database = {
           content: string
           created_at: string
           id: string
-          parent: string
+          lectures: string[]
+          map_id: string
+          map_parent: string | null
           title: string
         }
         Insert: {
@@ -400,7 +402,9 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
-          parent?: string
+          lectures?: string[]
+          map_id: string
+          map_parent?: string | null
           title?: string
         }
         Update: {
@@ -408,7 +412,9 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
-          parent?: string
+          lectures?: string[]
+          map_id?: string
+          map_parent?: string | null
           title?: string
         }
         Relationships: [

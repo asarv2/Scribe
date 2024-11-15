@@ -195,6 +195,11 @@ export const CALCULUS_MAP: MapNode = {
 	],
 }
 
+export const LINEAR_PROGRAMMING_V2_MAP: MapNode = { 'keyword': 'Linear Programming', 'description': 'Linear programming is a mathematical method for optimizing a linear objective function subject to linear constraints.', 'children': [{ 'keyword': 'Network Flow', 'description': 'Network flow is a system of interconnected nodes and arcs representing a network, where flow refers to the movement of something along the arcs.', 'children': [{ 'keyword': 'Spanning Trees', 'description': 'A spanning tree is a subset of arcs that connects all nodes without forming any cycles, crucial for finding basic solutions in network flow problems.', 'id': 'e765098f-9508-4f21-9142-a8320a290877' }, { 'keyword': 'Primal and Dual Variables', 'description': 'Primal and dual variables represent flow and costs in the network, linked by complementary slackness in an optimal solution.', 'id': '819fbd9d-c86b-4621-90b7-c26eb70e4bfe' }], 'id': '8d7e7b32-1adf-47d2-a1b5-2ababa9ccb8d' }, { 'keyword': 'Farkas Lemma', 'description': 'The Farkas Lemma is a theorem in linear algebra and optimization that provides a way to determine if a system of linear inequalities has a solution.', 'children': [{ 'keyword': 'Linear Inequality', 'description': 'A linear inequality is an inequality involving linear expressions.', 'id': '9591ea0b-c56d-4262-b412-326a8926bf6c' }, { 'keyword': 'Linear Programming', 'description': 'Linear programming is a mathematical method for optimizing a linear objective function subject to linear constraints.', 'id': 'ce3e5e5b-a628-4437-bc9a-55c3dc04eb32' }], 'id': '71f9ed3b-7621-402f-a93f-4ba56c6850cc' }, { 'keyword': 'Linear Regression', 'description': 'Linear regression is a statistical method used to model the relationship between a dependent variable and one or more independent variables, aiming to find a function that best predicts the dependent variable given the independent variables.', 'children': [{ 'keyword': 'Least Squares', 'description': 'Least squares is a method within regression that minimizes the sum of the squared differences between observed and predicted values.', 'id': '6ae6c24e-813f-4812-8c63-e8fdb025b07c' }, { 'keyword': 'Binary Classification', 'description': 'Binary classification is a type of supervised machine learning where the goal is to categorize data points into two distinct classes.', 'id': 'c1c0ce1a-5a2b-452f-8c26-359332647bbb' }], 'id': 'f3eb14c7-228c-4dcc-8004-4201bec04860' }, { 'keyword': 'Integer Programming', 'description': 'Integer programming is a type of optimization problem where some or all of the decision variables must take integer values.', 'children': [{ 'keyword': 'Branch and Bound', 'description': 'Branch and bound is a systematic search algorithm for integer programming that explores possible solutions by branching on fractional variables and bounding the search space.', 'id': '378fafd5-afa7-47c0-a9ce-d2f126c3090b' }, { 'keyword': 'Gomory Cuts', 'description': 'Gomory cuts are constraints derived from the fractional parts of the linear programming relaxation solution to eliminate fractional solutions while preserving the feasible region for integer solutions.', 'id': '39ecaf1c-464f-471a-9310-2f0b819d946b' }], 'id': '09abad20-d40e-4bac-924c-428147e47e6b' }, { 'keyword': 'Convex Analysis', 'description': "Convex analysis is the study of convex sets, convex hulls, and the separation theorem, with Farkas' Lemma as a crucial tool in linear programming.", 'children': [{ 'keyword': 'Convex Set', 'description': 'A convex set is a set where any line segment connecting two points in the set lies entirely within the set.', 'id': 'd5c01148-befe-40e5-b4ca-e061a1c1a701' }, { 'keyword': 'Convex Hull', 'description': 'The convex hull is the smallest convex set containing a given set of points.', 'id': '34cf36e2-a1f3-4da7-a41f-31d512fb924b' }], 'id': '960cce20-5e90-437c-aafb-47cf31b0fead' }], 'id': 'a7f72e24-7014-418b-842c-8af63568e083' }
+
+
+
+
 export const LINEAR_PROGRAMMING_MAP: MapNode = {
 	"id": "8a2f987a-563f-432a-a85f-1234567890ab",
 	"keyword": "Linear Programming",
@@ -207,9 +212,9 @@ export const LINEAR_PROGRAMMING_MAP: MapNode = {
 					"id": "91234567-89ab-cdef-0123-4567890abcdef",
 					"keyword": "Linear Regression",
 					"children": [
-						{"id": "11111111-2222-3333-4444-555555555555", "keyword": "Least Squares"},
-						{"id": "22222222-3333-4444-5555-666666666666", "keyword": "Error Functions (L1, L2, L∞)"},
-						{"id": "33333333-4444-5555-6666-777777777777", "keyword": "Normal Equations"}
+						{ "id": "11111111-2222-3333-4444-555555555555", "keyword": "Least Squares" },
+						{ "id": "22222222-3333-4444-5555-666666666666", "keyword": "Error Functions (L1, L2, L∞)" },
+						{ "id": "33333333-4444-5555-6666-777777777777", "keyword": "Normal Equations" }
 					]
 				},
 				{
@@ -226,7 +231,7 @@ export const LINEAR_PROGRAMMING_MAP: MapNode = {
 					"id": "fedcba98-7654-3210-9876-543210987654",
 					"keyword": "Hyperplane Separation",
 					"children": [
-						{"id": "12345678-90ab-cdef-0123-4567890abcdef", "keyword": "Maximizing Margin"}
+						{ "id": "12345678-90ab-cdef-0123-4567890abcdef", "keyword": "Maximizing Margin" }
 					]
 				}
 			]
@@ -235,27 +240,27 @@ export const LINEAR_PROGRAMMING_MAP: MapNode = {
 			"id": "09876543-2109-8765-4321-098765432100",
 			"keyword": "Integer Programming",
 			"children": [
-				{"id": "11111111-2222-3333-4444-555555555555", "keyword": "Branch and Bound"},
-				{"id": "22222222-3333-4444-5555-666666666666", "keyword": "Gomory Cuts"}
+				{ "id": "11111111-2222-3333-4444-555555555555", "keyword": "Branch and Bound" },
+				{ "id": "22222222-3333-4444-5555-666666666666", "keyword": "Gomory Cuts" }
 			]
 		},
 		{
 			"id": "12345678-90ab-cdef-0123-4567890abcdef",
 			"keyword": "Convex Analysis",
 			"children": [
-				{"id": "91234567-89ab-cdef-0123-4567890abcdef", "keyword": "Convex Sets"},
-				{"id": "abcdeffed-cba9-8765-4321-098765432100", "keyword": "Convex Hulls"},
-				{"id": "fedcba98-7654-3210-9876-543210987654", "keyword": "Separation Theorem"},
-				{"id": "12345678-90ab-cdef-0123-4567890abcdef", "keyword": "Farkas' Lemma"}
+				{ "id": "91234567-89ab-cdef-0123-4567890abcdef", "keyword": "Convex Sets" },
+				{ "id": "abcdeffed-cba9-8765-4321-098765432100", "keyword": "Convex Hulls" },
+				{ "id": "fedcba98-7654-3210-9876-543210987654", "keyword": "Separation Theorem" },
+				{ "id": "12345678-90ab-cdef-0123-4567890abcdef", "keyword": "Farkas' Lemma" }
 			]
 		},
 		{
 			"id": "09876543-2109-8765-4321-098765432100",
 			"keyword": "Network Flow",
 			"children": [
-				{"id": "11111111-2222-3333-4444-555555555555", "keyword": "Spanning Trees"},
-				{"id": "22222222-3333-4444-5555-666666666666", "keyword": "Primal and Dual Variables"},
-				{"id": "33333333-4444-5555-6666-777777777777", "keyword": "Complementary Slackness"}
+				{ "id": "11111111-2222-3333-4444-555555555555", "keyword": "Spanning Trees" },
+				{ "id": "22222222-3333-4444-5555-666666666666", "keyword": "Primal and Dual Variables" },
+				{ "id": "33333333-4444-5555-6666-777777777777", "keyword": "Complementary Slackness" }
 			]
 		}
 	]

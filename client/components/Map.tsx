@@ -124,7 +124,7 @@ const createEdge = (mapNode: MapNode): Edge[] => {
 
 export type MapProps = {
 	rootNode: MapNode
-	onNodeClick?: (nodeLabel: string, description: string) => void
+	onNodeClick?: (id: string, nodeLabel: string, description: string) => void
 }
 
 export const Map: React.FC<PropsWithChildren<MapProps>> = ({
@@ -162,7 +162,9 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 			fitView
 			fitViewOptions={{ padding: 20 }}
 			nodeTypes={NODE_TYPES}
-			onNodeClick={(e, n) => onNodeClick?.(n.data.label, n.data.description)}
+			onNodeClick={(e, n) => {
+				onNodeClick?.(n.id, n.data.label, n.data.description)
+			}}
 		>
 			<Controls showInteractive={true} />
 			<Background variant={BackgroundVariant.Dots} gap={16} size={1} />
