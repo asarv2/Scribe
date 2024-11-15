@@ -29,6 +29,10 @@ import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP } from "@/utils/map/m
 import { NodeDetail } from "@/components/NodeDetail";
 import { getMap } from "@/utils/queries/get-map";
 import { ReactFlowProvider } from "@xyflow/react";
+import { IconPlus } from "@tabler/icons-react";
+import { getUser } from "@/utils/queries/get-user";
+import { User } from "@supabase/supabase-js";
+import AddLectureModal from "@/components/AddLectureModal";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -53,6 +57,13 @@ export default function Class({ params }: { params: { classId: string } }) {
         queryKey: ["slides", classId],
         queryFn: () => getSlides(supabase, classId)
     })
+
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+
 
     return (
         <>
@@ -89,6 +100,7 @@ export default function Class({ params }: { params: { classId: string } }) {
             <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "70vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
                 <SimpleGrid cols={1}>
                     {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)}
+                    <AddLectureModal user={user} isMobile={isMobile ?? true}/>
                 </SimpleGrid>
             </div>
 
