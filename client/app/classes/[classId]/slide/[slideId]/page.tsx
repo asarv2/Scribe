@@ -7,7 +7,10 @@
 "use client"
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ActionIcon, Anchor, AspectRatio, Box, Breadcrumbs, Button, Card, Center, Container, Divider, em, Flex, Grid, Group, Input, SimpleGrid, Skeleton, Space, Stack, Text, Tooltip } from "@mantine/core";
+import {
+    ActionIcon, Anchor, AspectRatio, Box, Breadcrumbs, Button, Card, Center, Container, Divider, em, Flex, Grid, Group, Input, SimpleGrid, Skeleton, Space, Stack, Text, Tooltip
+    , FloatingIndicator, Tabs
+} from "@mantine/core";
 import { useEffect, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
@@ -31,6 +34,9 @@ import DeleteLectureModal from "@/components/DeleteLectureModal";
 import { getUser } from "@/utils/queries/get-user";
 import { getSlides } from "@/utils/queries/get-slides";
 import { createSummary } from "@/utils/services/summary";
+import classes from "@/public/assets/Demo.module.css"
+import QuestionSolution from "@/components/QuestionSolution";
+import { getQuestions } from "@/utils/queries/get-questions";
 
 export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
     const queryClient = useQueryClient();
@@ -76,6 +82,11 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
         queryFn: () => getSummaries(supabase, slideId),
     });
 
+    const { data: questions, isLoading: loadingQuestions} = useQuery({
+        queryKey: ["questions", slideId],
+        queryFn: () => getQuestions(supabase, slideId),
+    });
+
     const { data: slide, isLoading: loadingSlide } = useQuery({
         queryKey: ["slide", slideId],
         queryFn: () => getSlide(supabase, slideId),
@@ -86,7 +97,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
         queryFn: () => getSlideDocs(supabase, slideId),
     });
 
-    const {data: classData, isLoading: loadingClassData} = useQuery({
+    const { data: classData, isLoading: loadingClassData } = useQuery({
         queryKey: ["class", classId],
         queryFn: () => getClass(supabase, classId)
     })
@@ -319,7 +330,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                 />
                             </Box>
                             <Box>
-                                <Card withBorder mah={600} style={{ overflowY: 'auto' }}>
+                                <Card withBorder style={{ overflowY: 'auto' }} mah={1037}>
                                     <Skeleton visible={loadingSummaries || regenerateLoading}>
                                         <Markdown>{summaries[currentSummaryIndex]?.content}</Markdown>
                                     </Skeleton>
@@ -560,21 +571,26 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                         </Group>
                                     </Group> */}
                                     {isMobile && renderSummary()}
+                                    <QuestionSolution questions={questions ?? []} />
                                 </Stack>
                             </Box>
+
                         </Grid.Col>
 
                         <Grid.Col span={isMobile ? 12 : 6}>
                             {!isMobile && renderSummary()}
                         </Grid.Col>
                     </Grid>
-                    <Divider />
                 </Stack>
             </Container>
 
         </>
     );
+
+
 }
+
+
 
 
 

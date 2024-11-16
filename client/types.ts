@@ -7,6 +7,8 @@ export type Lecture = Database["public"]["Tables"]["lectures"]["Row"]
 export type Slide = Database["public"]["Tables"]["slides"]["Row"]
 export type Textbook = Database["public"]["Tables"]["textbooks"]["Row"]
 
+export type Question = Database["public"]["Tables"]["questions"]["Row"]
+
 export type Chapter = Database["public"]["Tables"]["chapters"]["Row"]
 export type Topic = Database["public"]["Tables"]["topics"]["Row"]
 export type Summary = Database["public"]["Tables"]["summaries"]["Row"]

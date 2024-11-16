@@ -101,10 +101,18 @@ export default function Class({ params }: { params: { classId: string } }) {
             </div>
 
             {/* Want a panel on the right hand side showing all of the lectures*/}
-            <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "70vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
+            <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
                 <SimpleGrid cols={1}>
                     {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)}
                     <AddLectureModal user={user} isMobile={isMobile ?? true} classId={classId} noteCount={slides?.length ?? 0} currentMap={map ?? null} className={classData?.title ?? ""} />
+                </SimpleGrid>
+            </div>
+
+
+            <div style={{ position: "fixed", left: "0", top: "35vh", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
+                <SimpleGrid cols={1}>
+                    {/* {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)} */}
+                    {/* <AddQuestionsModal user={user} isMobile={isMobile ?? true} classId={classId} noteCount={slides?.length ?? 0} currentMap={map ?? null} className={classData?.title ?? ""} /> */}
                 </SimpleGrid>
             </div>
 

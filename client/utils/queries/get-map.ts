@@ -36,6 +36,8 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
     }
 
     // Start building the tree from the root topic
+    // const rootTopics = topics.filter(topic => topic.map_parent == null)
+    // console.log(rootTopics)
     const rootTopic = topics.find(topic => topic.map_parent === null);
     if (!rootTopic) {
         return null;

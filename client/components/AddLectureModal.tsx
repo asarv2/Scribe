@@ -14,12 +14,13 @@ import { notifications } from "@mantine/notifications"
 import { createSlide } from "@/utils/services/lecture"
 import { uploadLectureImages } from "@/utils/services/storage"
 import { useQueryClient } from "@tanstack/react-query"
-import { generateSummary, generateTopics, storeSlideDocuments } from "@/utils/services/gemini"
+import { generateSlideQuestions, generateSummary, generateTopics, storeSlideDocuments } from "@/utils/services/gemini"
 import { createSummary } from "@/utils/services/summary"
 import { Topic } from "@/types"
 import { MapNode } from "@/utils/map/map-tree"
 import { createTopics } from "@/utils/services/topics"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
+import { createSlideQuestions } from "@/utils/services/questions"
 
 type AddLectureModalProps = {
     className: string
@@ -40,7 +41,7 @@ export default function AddLectureModal({ classId, isMobile, user, noteCount, cu
     const supabase = useSupabaseBrowser();
 
     const isProfessor = (user: User | undefined) => {
-        return user && user.email === "sarava18@purdue.edu"
+        return user && user.email === "asiladie@purdue.edu"
     }
 
     const handleAddLecture = async () => {
@@ -163,6 +164,26 @@ export default function AddLectureModal({ classId, isMobile, user, noteCount, cu
             } else {
                 queryClient.invalidateQueries({
                     queryKey: ["map", classId]
+                });
+            }
+
+            // generate the practice questions from the topics
+            setLoadingText("Generating practice questions...");
+            const questionResponse = await generateSlideQuestions(className, textSummaries, imgPaths);
+            if (!questionResponse) {
+                throw new Error("Failed to generate practice questions");
+            }
+            console.log("Practice Questions: ", questionResponse);
+            const questions = questionResponse.questions;
+
+            // save to supabase
+            setLoadingText("Saving practice questions...");
+            const { success: practiceSuccess, error: practiceError } = await createSlideQuestions(slideId, questions);
+            if (!practiceSuccess) {
+                throw new Error(practiceError);
+            } else {
+                queryClient.invalidateQueries({
+                    queryKey: ["questions", classId]
                 });
             }
             

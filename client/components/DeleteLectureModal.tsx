@@ -30,7 +30,7 @@ export default function DeleteLectureModal({ slideId, user, slideTitle, classId 
     const router = useRouter()
 
     const isProfessor = (user: User | undefined) => {
-        return user && user.email === "sarava18@purdue.edu"
+        return user && user.email === "asiladie@purdue.edu"
     }
 
     const handleDeleteClass = async () => {

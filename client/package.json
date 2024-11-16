@@ -49,6 +49,7 @@
     "postcss": "^8.4.43",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
+    "supabase": "^1.219.2",
     "typescript": "^5"
   }
 }

@@ -75,7 +75,7 @@ export type Database = {
         Insert: {
           content?: string | null
           embedding?: string | null
-          id: string
+          id?: string
           metadata?: Json | null
         }
         Update: {
@@ -223,6 +223,70 @@ export type Database = {
           },
         ]
       }
+      practice_exams: {
+        Row: {
+          class: string
+          created_at: string
+          id: string
+          name: string
+          slides: string[]
+        }
+        Insert: {
+          class: string
+          created_at?: string
+          id?: string
+          name?: string
+          slides?: string[]
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          id?: string
+          name?: string
+          slides?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "practice_exams_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      practice_questions: {
+        Row: {
+          created_at: string
+          id: string
+          practice_exam: string
+          question: string
+          solution: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          practice_exam?: string
+          question?: string
+          solution?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          practice_exam?: string
+          question?: string
+          solution?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "practice_questions_practice_exam_fkey"
+            columns: ["practice_exam"]
+            isOneToOne: false
+            referencedRelation: "practice_exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       queries: {
         Row: {
           answer: string | null
@@ -251,6 +315,38 @@ export type Database = {
             columns: ["class"]
             isOneToOne: false
             referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questions: {
+        Row: {
+          created_at: string
+          id: string
+          question: string
+          slide: string
+          solution: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          question?: string
+          slide?: string
+          solution?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          question?: string
+          slide?: string
+          solution?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_slide_fkey"
+            columns: ["slide"]
+            isOneToOne: false
+            referencedRelation: "slides"
             referencedColumns: ["id"]
           },
         ]

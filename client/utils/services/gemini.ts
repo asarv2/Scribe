@@ -13,7 +13,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 import { BaseMessage, BaseMessageLike } from '@langchain/core/messages';
-import { SlideData, Summary, Topic } from "@/types";
+import { Slide, SlideData, Summary, Topic } from "@/types";
 import { MapNode } from "../map/map-tree";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { v4 as uuidv4 } from 'uuid';
@@ -279,9 +279,10 @@ export const generateTopics = async (classId: string, className: string, summari
 
   const content = summaries.join("\n");
   const systemPrompt = 'You are an educational assistant that generates a mindmap to help a student gain a visual understanding of the course: ' + className + '. Your task is to\n' +
-    '1. Find the central lecture topics, which are enclosed in the <START: Lecture Name | Lecture ID> and <END> tags.\n' +
-    '2. come up with 2 related terminologies, keywords, or concepts that branches out from your central topic.\n' +
-    '3. Add the realted lectures (ids) for each of the topics. The central topic should have all of the lectures found in the content. If one of the topics is itself a lecture, you can add its own id to "lectures". It is possible that some topics may have lectures that are a part of another branch. It is not possible for a topic to have no lectures. \n' +
+    '1. The primary topic, which will branch out into all other nodes is: ' + className + '\n' +
+    '2. Find the central lecture topic(s), which are enclosed in the <START: Lecture Name | Lecture ID> and <END> tags. These will branch out from the primary topic\n' +
+    '3. come up with 2 related terminologies, keywords, or concepts that branches out for each central topic. E.g. if there is only one central lecture topic you find in tags, then only make 2 bracnhes.\n' +
+    '4. Add the realted lectures (ids) for each of the topics. The central topic should have all of the lectures found in the content. If one of the topics is itself a lecture, you can add its own id to "lectures". It is possible that some topics may have lectures that are a part of another branch. It is not possible for a topic to have no lectures. \n' +
     'After coming up with the related words, repeat the same process for each of the words, so it keeps branching out. Here are the rules you must keep.\n' +
     '\n' +
     '-You MUST only output your result in a nested JSON format with keys "keyword", "description", and "children".\n' +
@@ -435,6 +436,61 @@ export const storeSlideDocuments = async (slideId: string, textSummaries: string
 
   await vectorStore.addDocuments(documents);
   return { success: true, error: "" };
+}
+
+export const generateSlideQuestions = async (className: string, textSummaries: string[], imgPaths: string[]): Promise<{
+  questions: { question: string, solution: string }[]
+} | undefined> => {
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash-8b",
+    systemInstruction: `You are a teaching assistant for the course: ${className}. Your task is to generate practice questions based on the content provided. The questions should be challenging and test the student's understanding of the material.` +
+    "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>",
+  });
+
+  const images = await Promise.all(imgPaths.map(async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const base64String = Buffer.from(arrayBuffer).toString('base64');
+    return {
+      inlineData: {
+        data: base64String,
+        mimeType: "image/png",
+      },
+    }
+  }));
+
+  const interleavedContent = textSummaries.flatMap((textSummary, index) => {
+    return [(`Page ${index + 1}: ${textSummary}`), images[index]];
+  });
+
+  const prompt = `Generate 3 practice questions with the corresponding solutions based on the following content: ${className}`;
+  const result = await model.generateContent([prompt, ...interleavedContent]);
+  const rawOutput = result.response.text()
+  console.log(rawOutput);
+
+  const questions = rawOutput.split("<QUESTION>").slice(1);
+  const questionsList = questions.map((question) => {
+    const split = question.split("<SOLUTION>");
+    const formattedQuestion = split[0].replace("</QUESTION>", "").trim();
+    const formattedSolution = split[1].replace("</SOLUTION>", "").trim();
+    return {
+      question: formattedQuestion,
+      solution: formattedSolution,
+    }
+  });
+  return {questions: questionsList};
+}
+
+
+export const generatePracticeExam = async (className: string, textSummaries: string[][], imgPaths: string[][]): Promise<{
+  questions: { question: string, solution: string }[]
+} | undefined> => {
+  return { questions: [
+    {question: "What is the definition of a derivative?", solution: "The derivative of a function is the rate at which the function is changing at a given point."},
+    {question: "What is the definition of an integral?", solution: "The integral of a function is the area under the curve of the function."},
+    {question: "What is the chain rule?", solution: "The chain rule is a formula for computing the derivative of the composition of two or more functions."},
+  ]}
 }
 
 
