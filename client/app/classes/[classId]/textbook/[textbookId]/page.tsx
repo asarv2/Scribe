@@ -18,7 +18,7 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getTextbookDocs } from "@/utils/queries/get-textbook-docs";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import TextbookSummary from "@/components/TextbookSummary";
-import { answerTextbookQuestion } from "@/utils/services/question";
+import { answerTextbookQuestion } from "@/utils/services/gemini";
 import { getTextbookChapters } from "@/utils/queries/get-textbook-chapters";
 import { getTextbookDocuments } from "@/utils/services/textbook";
 import { createQuery } from "@/utils/services/query";

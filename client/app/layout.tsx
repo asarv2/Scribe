@@ -7,10 +7,9 @@
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { Notifications } from '@mantine/notifications';
+import { ColorSchemeScript } from '@mantine/core';
 import type { Metadata } from "next";
-import { ReactQueryClientProvider } from '../components/ReactQueryClientProvider';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: "Scribe",
@@ -28,12 +27,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-          <ReactQueryClientProvider>
-            <MantineProvider>
-              <Notifications />
-              {children}
-            </MantineProvider>
-          </ReactQueryClientProvider>
+          <Providers>{children}</Providers>
       </body>
     </html>
   );

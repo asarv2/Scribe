@@ -18,7 +18,7 @@ import { HeaderSimple } from "../../../../../components/HeaderSimple";
 import VideoSummary from "@/components/VideoSummary";
 import Image from "next/image";
 import { getLectureDocs } from "@/utils/queries/get-lecture-docs";
-import { answerQuestion } from "@/utils/services/question";
+import { answerQuestion } from "@/utils/services/gemini";
 
 
 export default function Lecture({ params }: { params: { classId: string, lectureId: string } }) {

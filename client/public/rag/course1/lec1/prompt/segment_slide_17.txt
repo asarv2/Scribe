@@ -1,8 +1,0 @@
-CREATING RECIPES
-a programming language provides a set of primitive 
-operations
-expressions are complex but legal combinations of 
-primitives in a programming language
-expressions and computations have values and 
-meanings in a programming language
-6.0001 LECTURE 1 17

@@ -1,8 +1,0 @@
-PROGRAMMING vs MATH
-in programming, you do not “solve for x”
-pi = 3.14159
-radius = 2.2
-# area of circle
-area = pi*(radius**2)
-radius = radius+1
-6.0001 LECTURE 1 33

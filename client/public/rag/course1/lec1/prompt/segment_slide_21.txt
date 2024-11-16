@@ -1,9 +1,0 @@
-ASPECTS OF LANGUAGES
-semantics is the meaning associated with a 
-syntactically correct string of symbols with no static 
-semantic errors
-◦English: can have many meanings "Flying planes 
-can be dangerous"
-◦programming languages: have only one meaning but may 
-not be what programmer intended
-6.0001 LECTURE 1 21

@@ -4,6 +4,7 @@ export type MapNode = {
 	keyword: string
 	description?: string
 	children?: MapNode[]
+	lectures?: string[]
 }
 
 export type FlatMapNode = {

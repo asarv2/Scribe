@@ -1,7 +1,7 @@
 import { Topic, TypedSupabaseClient } from "../../types";
 import { MapNode } from "../map/map-tree";
 
-export async function getMap(client: TypedSupabaseClient, classId: string): Promise<MapNode | undefined> {
+export async function getMap(client: TypedSupabaseClient, classId: string): Promise<MapNode | null> {
     const { data: topics, error } = await client
         .from("topics")
         .select("*")
@@ -11,14 +11,14 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
         throw new Error(error.message);
     }
     if (!topics) {
-        return undefined;
+        return null;
     }
 
     // Helper function to build the tree recursively
-    function buildTree(topics: Topic[], nodeId: string): MapNode | undefined {
+    function buildTree(topics: Topic[], nodeId: string): MapNode | null {
         const nodeData = topics.find(topic => topic.map_id === nodeId);
         if (!nodeData) {
-            return undefined;
+            return null;
         }
 
         // Find child nodes of the current node
@@ -30,6 +30,7 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
             id: nodeData.id,
             keyword: nodeData.title,
             description: nodeData.content,
+            lectures: nodeData.lectures,
             children: children.filter(child => child !== undefined) as MapNode[],
         };
     }
@@ -37,9 +38,9 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
     // Start building the tree from the root topic
     const rootTopic = topics.find(topic => topic.map_parent === null);
     if (!rootTopic) {
-        return undefined;
+        return null;
     }
 
-    const rootNode: MapNode | undefined = buildTree(topics, rootTopic.map_id);
+    const rootNode: MapNode | null = buildTree(topics, rootTopic.map_id);
     return rootNode;
 }

@@ -11,7 +11,7 @@ import { getLectures } from "../../../utils/queries/get-lectures";
 import useSupabaseBrowser from "../../../utils/supabase/supabase-browser";
 import { AspectRatio, Box, Button, Center, Container, em, Flex, Group, Input, Loader, LoadingOverlay, Modal, SimpleGrid, Skeleton, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Suspense, useEffect, useState } from "react";
-import { answerQuestion, answerSlideQuestion, } from "../../../utils/services/question";
+import { answerQuestion, answerSlideQuestion, } from "../../../utils/services/gemini";
 import { notifications } from '@mantine/notifications';
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import Markdown from 'markdown-to-jsx'
@@ -33,6 +33,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { getUser } from "@/utils/queries/get-user";
 import { User } from "@supabase/supabase-js";
 import AddLectureModal from "@/components/AddLectureModal";
+import { getClass } from "@/utils/queries/get-class";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -63,6 +64,11 @@ export default function Class({ params }: { params: { classId: string } }) {
         queryFn: () => getUser(supabase),
     })
 
+    const {data: classData, isLoading: loadingClassData} = useQuery({
+        queryKey: ["class", classId],
+        queryFn: () => getClass(supabase, classId)
+    })
+
 
 
     return (
@@ -82,25 +88,23 @@ export default function Class({ params }: { params: { classId: string } }) {
                 </SimpleGrid>
             </Container> */}
             <div style={{ width: "100vw", height: "100vh" }}>
-                <ReactFlowProvider>
-                    {map && <Map
-                        rootNode={map}
-                        onNodeClick={(topicId, label, description) => {
-                            console.log(topicId, label, description)
-                            setOpenNodeId(topicId)
-                            setOpenNodeLabel(label)
-                            setOpenNodeDescription(description)
-                            open()
-                        }}
-                    />}
-                </ReactFlowProvider>
+                {map && <Map
+                    rootNode={map}
+                    onNodeClick={(topicId, label, description) => {
+                        console.log(topicId, label, description)
+                        setOpenNodeId(topicId)
+                        setOpenNodeLabel(label)
+                        setOpenNodeDescription(description)
+                        open()
+                    }}
+                />}
             </div>
 
             {/* Want a panel on the right hand side showing all of the lectures*/}
             <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "70vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
                 <SimpleGrid cols={1}>
                     {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)}
-                    <AddLectureModal user={user} isMobile={isMobile ?? true}/>
+                    <AddLectureModal user={user} isMobile={isMobile ?? true} classId={classId} noteCount={slides?.length ?? 0} currentMap={map ?? null} className={classData?.title ?? ""} />
                 </SimpleGrid>
             </div>
 

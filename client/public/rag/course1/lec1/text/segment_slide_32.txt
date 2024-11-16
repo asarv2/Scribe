@@ -1,1 +1,0 @@
- That's the last thing. Next lecture we're going to talk about adding control flow to our programs. So how do you tell the computer to do one thing or another? All right.

@@ -20,6 +20,7 @@ import Image from 'next/image';
 const links = [
     // { link: '/classes/cfe37701-9a73-4416-ba01-81e28989e64c/lecture/3ae57d24-8426-44c3-816b-f23e3ae04d0b', label: 'MA 261' },
     { link: '/classes/ce907bb8-f51e-4933-b9a2-d042c5b05e67', label: 'MA 421' },
+    { link: '/classes/cfe37701-9a73-4416-ba01-81e28989e64c', label: 'MA 261' },
     { link: '/login', label: 'Professor' },
     // { link: '/classes/593fee30-d135-4972-8beb-6c6243619e88/textbook/e8944344-2248-472d-9a8c-56a85c76bcba', label: 'MA 341' },
     // { link: '/classes/77867dcc-0a42-45be-b2d5-0f5dc76abb83', label: '2K1' },

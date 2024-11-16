@@ -1,8 +1,0 @@
-ABSTRACTING EXPRESSIONS
-why give names to values of expressions?
-to reuse names instead of values
-easier to change code later
-pi = 3.14159
-radius = 2.2
-area = pi*(radius**2)
-6.0001 LECTURE 1 32

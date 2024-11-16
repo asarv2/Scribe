@@ -259,6 +259,7 @@ export type Database = {
         Row: {
           class: string
           created_at: string
+          deleted: boolean
           id: string
           name: string
           note_number: number
@@ -266,6 +267,7 @@ export type Database = {
         Insert: {
           class?: string
           created_at?: string
+          deleted?: boolean
           id?: string
           name?: string
           note_number?: number
@@ -273,6 +275,7 @@ export type Database = {
         Update: {
           class?: string
           created_at?: string
+          deleted?: boolean
           id?: string
           name?: string
           note_number?: number

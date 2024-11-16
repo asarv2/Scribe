@@ -1,8 +1,0 @@
-PRINTING TO CONSOLE
-to show output from code to a user, use print
-command
-In [11]: 3+2
-Out[11]: 5
-In [12]: print(3+2 )
-5
-6.0001 LECTURE 1 27
