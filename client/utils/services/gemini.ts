@@ -493,4 +493,12 @@ export const generatePracticeExam = async (className: string, textSummaries: str
   ]}
 }
 
+export const regeneratePracticeExam = async (className: string, textSummaries: string[][], imgPaths: string[][], pastQuestions: { question: string, solution: string }[]): Promise<{
+  questions: { question: string, solution: string }[]
+} | undefined> => {
+  return { questions: [
+    {question: "What is the definition of a derivative?", solution: "The derivative of a function is the rate at which the function is changing at a given point."},
+  ]}
+}
+
 

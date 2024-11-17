@@ -31,6 +31,7 @@
     "jspdf": "^2.5.2",
     "kaltura-client": "^20.7.3",
     "langchain": "^0.3.2",
+    "lodash": "^4.17.21",
     "markdown-to-jsx": "^7.5.0",
     "marked": "^15.0.0",
     "next": "14.2.7",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@types/html-to-pdfmake": "^2.4.4",
+    "@types/lodash": "^4.17.13",
     "@types/node": "^20",
     "@types/pdfmake": "^0.2.9",
     "@types/react": "^18",

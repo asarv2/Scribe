@@ -34,6 +34,11 @@ import { getUser } from "@/utils/queries/get-user";
 import { User } from "@supabase/supabase-js";
 import AddLectureModal from "@/components/AddLectureModal";
 import { getClass } from "@/utils/queries/get-class";
+import AddQuestionsModal from "@/components/AddQuestionsModal";
+import { PracticeExam } from "@/types";
+import { getPracticeExams } from "@/utils/queries/get-practice-exams";
+import { isProfessor } from "@/utils/lecture/isProfessor";
+import { differenceBy, intersectionBy, uniqBy } from "lodash";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -43,11 +48,13 @@ export default function Class({ params }: { params: { classId: string } }) {
     const [openNodeDescription, setOpenNodeDescription] = useState<string>()
     const theme = useMantineTheme()
     const pathname = usePathname()
+    const [pastExams, setPastExams] = useState<PracticeExam[]>([])
 
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
 
     const { data: map, isLoading: loadingMap } = useQuery({
         queryKey: ["map", classId],
@@ -64,29 +71,45 @@ export default function Class({ params }: { params: { classId: string } }) {
         queryFn: () => getUser(supabase),
     })
 
-    const {data: classData, isLoading: loadingClassData} = useQuery({
+    const { data: classData, isLoading: loadingClassData } = useQuery({
         queryKey: ["class", classId],
         queryFn: () => getClass(supabase, classId)
     })
 
+    const { data: practiceExams, isLoading: loadingPracticeExams } = useQuery({
+        queryKey: ["practiceExams", classId],
+        queryFn: () => getPracticeExams(supabase, classId)
+    })
 
+    // Load past exams from localStorage on component mount
+    useEffect(() => {
+        const savedExams = localStorage.getItem(`pastExams-${classId}`);
+        if (savedExams) {
+            setPastExams(JSON.parse(savedExams));
+        }
+    }, [classId]);
+
+    // Function to get current exams
+    const getCurrentExams = (practiceExams: PracticeExam[] | undefined) => {
+        // want to remove all exams from pastExams if they are not present in practiceExams
+        if (practiceExams) {
+            // first find all the ones that are the common between the two
+            const newPastExams = intersectionBy(practiceExams, pastExams, 'id')
+
+            // should only see thier personal exams and the ones the professor has created
+            const allExams = [...newPastExams, ...(practiceExams ?? []).filter((exam) => exam.professor)]
+            const noDuplicateIds = uniqBy(allExams, 'id')
+            return noDuplicateIds
+        } else {
+            return []
+        }
+    };
 
     return (
         <>
             <div style={{ position: "fixed", width: "100vw", zIndex: 100 }}>
                 <HeaderSimple />
             </div>
-            {/* <Container fluid>
-                <SimpleGrid cols={5}>
-                    {lectures?.map((lecture) => <Text>{lecture.name}</Text>)}
-                </SimpleGrid>
-                <SimpleGrid cols={5}>
-                    {slides?.map((slide) => <Text>{slide.name}</Text>)}
-                </SimpleGrid>
-                <SimpleGrid cols={5}>
-                    {textbooks?.map((textbook) => <Text>{textbook.title}</Text>)}
-                </SimpleGrid>
-            </Container> */}
             <div style={{ width: "100vw", height: "100vh" }}>
                 {map && <Map
                     rootNode={map}
@@ -100,19 +123,35 @@ export default function Class({ params }: { params: { classId: string } }) {
                 />}
             </div>
 
-            {/* Want a panel on the right hand side showing all of the lectures*/}
             <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
                 <SimpleGrid cols={1}>
                     {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)}
-                    <AddLectureModal user={user} isMobile={isMobile ?? true} classId={classId} noteCount={slides?.length ?? 0} currentMap={map ?? null} className={classData?.title ?? ""} />
+                    <AddLectureModal user={user ?? undefined} isMobile={isMobile ?? true} classId={classId} noteCount={slides?.length ?? 0} currentMap={map ?? null} className={classData?.title ?? ""} />
                 </SimpleGrid>
             </div>
 
-
             <div style={{ position: "fixed", left: "0", top: "35vh", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
                 <SimpleGrid cols={1}>
-                    {/* {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)} */}
-                    {/* <AddQuestionsModal user={user} isMobile={isMobile ?? true} classId={classId} noteCount={slides?.length ?? 0} currentMap={map ?? null} className={classData?.title ?? ""} /> */}
+                    {getCurrentExams(practiceExams).map((exam, i) => (
+                        <Button key={i} size={isMobile ? "compact-xs" : "sm"} component={Link} href={`${pathname}/practice-exam/${exam.id}`}>{exam.name}</Button>
+                    ))}
+                    <AddQuestionsModal
+                        slides={slides ?? []}
+                        slideId={""}
+                        classId={classId}
+                        isMobile={isMobile ?? true}
+                        user={user ?? undefined}
+                        onExamGenerated={(exam) => {
+                            const savedExams = localStorage.getItem(`pastExams-${classId}`);
+                            const savedExamsParsed = savedExams ? JSON.parse(savedExams) : [];
+                            const updatedExams = [...savedExamsParsed, exam];
+                            localStorage.setItem(
+                                `pastExams-${classId}`,
+                                JSON.stringify(updatedExams)
+                            );
+                            setPastExams(updatedExams);
+                        }}
+                    />
                 </SimpleGrid>
             </div>
 

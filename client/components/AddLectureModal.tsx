@@ -21,6 +21,7 @@ import { MapNode } from "@/utils/map/map-tree"
 import { createTopics } from "@/utils/services/topics"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
 import { createSlideQuestions } from "@/utils/services/questions"
+import { isProfessor } from "@/utils/lecture/isProfessor"
 
 type AddLectureModalProps = {
     className: string
@@ -39,10 +40,6 @@ export default function AddLectureModal({ classId, isMobile, user, noteCount, cu
     const [loadingText, setLoadingText] = useState("");
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
-
-    const isProfessor = (user: User | undefined) => {
-        return user && user.email === "asiladie@purdue.edu"
-    }
 
     const handleAddLecture = async () => {
         setLoading(true);
@@ -215,7 +212,7 @@ export default function AddLectureModal({ classId, isMobile, user, noteCount, cu
 
     return (
         <>
-            {isProfessor(user) && <Button size={isMobile ? "compact-xs" : "sm"} leftSection={<IconPlus size={20} />} color="teal" onClick={open}>Add Lecture</Button>}
+            {isProfessor(user, classId) && <Button size={isMobile ? "compact-xs" : "sm"} leftSection={<IconPlus size={20} />} color="teal" onClick={open}>Add Lecture</Button>}
 
             <Modal opened={opened} onClose={onModalClose} title="Add New Lecture" centered>
                 <Stack>

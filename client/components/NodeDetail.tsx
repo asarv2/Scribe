@@ -39,7 +39,7 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ topicId }) => {
                 <Card withBorder>
                     <Skeleton visible={loadingLectures}>
                         <Stack>
-                            {lectures && lectures.map(lecture => (
+                            {lectures && lectures.length > 0 ? lectures.map(lecture => (
                                 <Link href={`${window.location.origin}/classes/${lecture.class}/slide/${lecture.id}`} key={lecture.id}>
                                     <Button
                                         color='teal'
@@ -47,7 +47,7 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ topicId }) => {
                                         L{lecture.note_number} - {lecture.name}
                                     </Button>
                                 </Link>
-                            ))}
+                            )) : <Text>No lectures found.</Text>}
                         </Stack>
                     </Skeleton>
                 </Card>

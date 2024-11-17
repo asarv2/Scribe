@@ -227,22 +227,28 @@ export type Database = {
         Row: {
           class: string
           created_at: string
+          deleted: boolean
           id: string
           name: string
+          professor: boolean
           slides: string[]
         }
         Insert: {
           class: string
           created_at?: string
+          deleted?: boolean
           id?: string
           name?: string
+          professor?: boolean
           slides?: string[]
         }
         Update: {
           class?: string
           created_at?: string
+          deleted?: boolean
           id?: string
           name?: string
+          professor?: boolean
           slides?: string[]
         }
         Relationships: [

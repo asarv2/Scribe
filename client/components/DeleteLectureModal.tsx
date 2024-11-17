@@ -15,6 +15,7 @@ import { createSlide, deleteSlide } from "@/utils/services/lecture"
 import { uploadLectureImages } from "@/utils/services/storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { isProfessor } from "@/utils/lecture/isProfessor"
 
 type DeleteLectureModalProps = {
     classId: string
@@ -28,10 +29,6 @@ export default function DeleteLectureModal({ slideId, user, slideTitle, classId 
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
-
-    const isProfessor = (user: User | undefined) => {
-        return user && user.email === "asiladie@purdue.edu"
-    }
 
     const handleDeleteClass = async () => {
         setLoading(true);
@@ -69,7 +66,7 @@ export default function DeleteLectureModal({ slideId, user, slideTitle, classId 
 
     return (
         <>
-            {isProfessor(user) && <Tooltip label="Delete Lecture"><IconTrash size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {isProfessor(user, classId) && <Tooltip label="Delete Lecture"><IconTrash size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
             <Modal opened={opened} onClose={close} title="Delete Lecture" centered>
                 <Stack>

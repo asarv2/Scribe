@@ -5,7 +5,7 @@
  * 11-15-2024
  */
 
-import { Button, Input, Modal, Stack, Text } from "@mantine/core"
+import { Button, Group, Input, Modal, Stack, Text } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { User } from "@supabase/supabase-js"
 import { IconPlus } from "@tabler/icons-react"
@@ -16,12 +16,13 @@ import { uploadLectureImages } from "@/utils/services/storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { generatePracticeExam, generateSummary, generateTopics, storeSlideDocuments } from "@/utils/services/gemini"
 import { createSummary } from "@/utils/services/summary"
-import { Slide, Topic } from "@/types"
+import { PracticeExam, Slide, Topic } from "@/types"
 import { MapNode } from "@/utils/map/map-tree"
 import { createTopics } from "@/utils/services/topics"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
-import { createPracticeQuestions } from "@/utils/services/questions"
+import { createPracticeExam, createPracticeQuestions } from "@/utils/services/questions"
 import { useRouter } from "next/navigation"
+import { isProfessor } from "@/utils/lecture/isProfessor"
 
 type AddQuestionsModalProps = {
     slides: Slide[]
@@ -29,65 +30,79 @@ type AddQuestionsModalProps = {
     classId: string
     isMobile: boolean
     user: User | undefined
+    onExamGenerated: (exam: PracticeExam) => void
 }
 
-export default function AddQuestionsModal({ classId, isMobile, slideId, user, slides }: AddQuestionsModalProps) {
+export default function AddQuestionsModal({ classId, isMobile, slideId, user, slides, onExamGenerated }: AddQuestionsModalProps) {
+    const [title, setTitle] = useState<string>();
     const [opened, { open, close }] = useDisclosure(false);
-
+    const [numQuestions, setNumQuestions] = useState<string>();
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("");
     const [selected, setSelected] = useState<string[]>([]);
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const router = useRouter();
+    const professor = isProfessor(user, classId);
 
-    const isProfessor = (user: User | undefined) => {
-        return user && user.email === "asiladie@purdue.edu"
-    }
 
     const handleAddQuestions = async () => {
         setLoading(true);
         try {
+            if (!title || !numQuestions) {
+                throw new Error("Please enter a title and number of questions");
+            }
+            // generate the practice exam
+            setLoadingText("Generating practice exam...");
+            const practiceExamResponse = await createPracticeExam(classId, title, selected, professor);
+            if (!practiceExamResponse) {
+                throw new Error("Failed to generate practice exam");
+            } else {
+                queryClient.invalidateQueries({
+                    queryKey: ["practiceExams", classId]
+                });
+            }
+            console.log("Practice Exam: ", practiceExamResponse);
 
-            // generate practice questions
-            // generate the practice questions from the topics
+            // generate the practice questions
             setLoadingText("Generating practice questions...");
-            const questionResponse = await generatePracticeExam("", [], []);
-            if (!questionResponse) {
+            const questions = await generatePracticeExam(classId, [], []); // TODO: add the images
+            if (!questions) {
                 throw new Error("Failed to generate practice questions");
             }
-            console.log("Practice Questions: ", questionResponse);
-            const questions = questionResponse.questions;
 
             // save to supabase
             setLoadingText("Saving practice questions...");
-            const { success: practiceSuccess, error: practiceError } = await createPracticeQuestions(slideId, questions);
+            const { success: practiceSuccess, error: practiceError } = await createPracticeQuestions(practiceExamResponse.id, questions.questions);
             if (!practiceSuccess) {
                 throw new Error(practiceError);
             } else {
                 queryClient.invalidateQueries({
-                    queryKey: ["questions", classId]
+                    queryKey: ["practiceQuestions", classId]
                 });
             }
 
+            if (!professor) {
+                onExamGenerated(practiceExamResponse)
+            }
 
-            const questionId = ""
             notifications.show({
                 title: "Questions added",
                 message: "You have successfully questions",
                 color: "blue",
             });
-            // router.push(`/classes/${classId}/questions/${questionId}`);
+            router.push(`/classes/${classId}/practice-exam/${practiceExamResponse.id}`);
 
         } catch (error: any) {
             console.error(error);
             notifications.show({
-                title: "Failed to add lecture",
+                title: "Failed to add questions",
                 message: error.message,
                 color: "red",
             })
         } finally {
             setLoading(false);
+            setLoadingText("");
             onModalClose();
         }
 
@@ -95,19 +110,53 @@ export default function AddQuestionsModal({ classId, isMobile, slideId, user, sl
 
     const onModalClose = () => {
         setSelected([]);
+        setNumQuestions(undefined);
+        setTitle(undefined)
         close();
     }
 
     return (
         <>
-            {isProfessor(user) && <Button size={isMobile ? "compact-xs" : "sm"} leftSection={<IconPlus size={20} />} color="teal" onClick={open}>Practice Questions</Button>}
-
-            <Modal opened={opened} onClose={onModalClose} title="Practice Questions" centered>
+            <Button size={isMobile ? "compact-xs" : "sm"} leftSection={<IconPlus size={20} />} color="teal" onClick={open}>Practice Questions</Button>
+            <Modal opened={opened} onClose={onModalClose} title="Add Practice Questions" centered>
                 <Stack>
+                    <Text>Title</Text>
+                    <Input 
+                        placeholder="Enter a title for the practice exam"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <Text>Select Slides</Text>
                     <Stack>
-                        {slides.map((slide) => <Button onClick={() => setSelected([...selected, slide.id])}>{slide.name}</Button>)}
+                        {slides.map((slide) => 
+                        <Group key={slide.id}>
+                            <Button
+                                onClick={() => {
+                                    if (selected.includes(slide.id)) {
+                                        setSelected(selected.filter(id => id !== slide.id));
+                                    } else {
+                                        setSelected([...selected, slide.id]);
+                                    }
+                                }}
+                                variant={selected.includes(slide.id) ? "filled" : "outline"}
+                            >
+                                L{slide.note_number} - {slide.name}
+                            </Button>
+                        </Group>)}
                     </Stack>
-                    <Button onClick={handleAddQuestions} disabled={selected.length === 0} loading={loading}>Submit</Button>
+                    <Text>Number of Questions</Text>
+                    <Input
+                        placeholder="Enter how many questions you want to generate"
+                        value={numQuestions}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            // Only allow integers
+                            if (value === '' || /^\d+$/.test(value)) {
+                                setNumQuestions(value);
+                            }
+                        }}
+                    />
+                    <Button onClick={handleAddQuestions} disabled={selected.length === 0 || !title || !numQuestions} loading={loading}>Submit</Button>
                     <Text>{loadingText}</Text>
                 </Stack>
             </Modal>

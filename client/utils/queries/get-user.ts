@@ -5,5 +5,5 @@ export async function getUser(client: TypedSupabaseClient) {
     if (error) {
         throw new Error(error.message);
     }
-    return data.session?.user
+    return data.session?.user ?? null
 }
