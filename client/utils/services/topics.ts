@@ -16,7 +16,7 @@ export const createTopics = async (classId: string, topics: {title: string, cont
             content: topic.content,
             map_parent: topic.mapParent,
             map_id: topic.mapId,
-            lectures: topic.lectures
+            lectures: topic.lectures,
         }
     });
     const { data, error } = await supabase

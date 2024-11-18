@@ -278,64 +278,140 @@ export const generateTopics = async (classId: string, className: string, summari
   const currentTopics: string = currentMap ? JSON.stringify(currentMapNode) : "";
 
   const content = summaries.join("\n");
-  const systemPrompt = 'You are an educational assistant that generates a mindmap to help a student gain a visual understanding of the course: ' + className + '. Your task is to\n' +
-    '1. The primary topic, which will branch out into all other nodes is: ' + className + '\n' +
-    '2. Find the central lecture topic(s), which are enclosed in the <START: Lecture Name | Lecture ID> and <END> tags. These will branch out from the primary topic\n' +
-    '3. come up with 2 related terminologies, keywords, or concepts that branches out for each central topic. E.g. if there is only one central lecture topic you find in tags, then only make 2 bracnhes.\n' +
-    '4. Add the realted lectures (ids) for each of the topics. The central topic should have all of the lectures found in the content. If one of the topics is itself a lecture, you can add its own id to "lectures". It is possible that some topics may have lectures that are a part of another branch. It is not possible for a topic to have no lectures. \n' +
-    'After coming up with the related words, repeat the same process for each of the words, so it keeps branching out. Here are the rules you must keep.\n' +
-    '\n' +
-    '-You MUST only output your result in a nested JSON format with keys "keyword", "description", and "children".\n' +
-    '-Do not add anything else to the output.\n' +
-    'An example is given below (for the course: Calculus) to help your understanding. In the example below, the content of most descriptions were abbreviated for the sake of space but you must give a one-sentence definition for the keywords for all keywords in the actual output. Only output your result like the given example delimited inside ### but DO NOT INCLUDE THE DELIMITER IN YOUR OUTPUT.\n' +
-    'Example>\n' +
-    'OUTPUT:\n' +
-    '###\n' +
-    '{"keyword":"Calculus","description":"Calculus is a branch of mathematics that studies continuous change, primarily through derivatives and integrals.", "lectures":["518c8677-5681-492b-b61d-34439ac87af2"],\n' +
-    '"children":[{"keyword":"Differential Calculus","description":"Differential Calculus focuses on the concept of a derivative, which represents an instantaneous rate of change.",\n' +
-    '"lectures":["518c8677-5681-492b-b61d-34439ac87af2", "5ff75655-f3ec-4119-ad38-ceb9eebedc8f"],\n' +
-    '"children":[{"keyword":"Limits","description":"..."},\n' +
-    '{"keyword":"Derivatives","description":"...",\n' +
-    '"children":[{"keyword":"Chain Rule","description":"..."},\n' +
-    '{"keyword":"Implicit Differentiation","description":"..."},\n' +
-    '{"keyword":"Partial Differentiation","description":"..."}]},\n' +
-    '{"keyword":"Applications of Derivatives","description":"...",\n' +
-    '"children":[{"keyword":"Optimization","description":"..."},\n' +
-    '{"keyword":"Related Rates","description":"..."},\n' +
-    '{"keyword":"Tangent Lines","description":"..."},\n' +
-    '{"keyword":"L Hôpitals Rule","description":"..."}]}]},\n' +
-    '{"keyword":"Integral Calculus","description":"...",\n' +
-    '"children":[{"keyword":"Antiderivatives","description":"..."},\n' +
-    '{"keyword":"Definite Integrals","description":"...",\n' +
-    '"children":[{"keyword":"Fundamental Theorem of Calculus","description":"..."},\n' +
-    '{"keyword":"Area between Curves","description":"..."}]},\n' +
-    '{"keyword":"Applications of Integrals","description":"...",\n' +
-    '"children":[{"keyword":"Area under Curves","description":"..."},\n' +
-    '{"keyword":"Volume of Solids","description":"..."},\n' +
-    '{"keyword":"Work and Accumulation","description":"..."},\n' +
-    '{"keyword":"Arc Length","description":"..."}]}]},\n' +
-    '{"keyword":"Multivariable Calculus","description":"...",\n' +
-    '"children":[{"keyword":"Partial Derivatives","description":"..."},\n' +
-    '{"keyword":"Multiple Integrals","description":"...",\n' +
-    '"children":[{"keyword":"Double Integrals","description":"..."},\n' +
-    '{"keyword":"Triple Integrals","description":"..."}]},\n' +
-    '{"keyword":"Vector Calculus","description":"...",\n' +
-    '"children":[{"keyword":"Gradient","description":"..."},\n' +
-    '{"keyword":"Divergence","description":"..."},\n' +
-    '{"keyword":"Curl","description":"..."},\n' +
-    '{"keyword":"Stokes Theorem","description":"..."},\n' +
-    '{"keyword":"Greens Theorem","description":"..."}]}]},\n' +
-    '{"keyword":"Sequences and Series","description":"...",\n' +
-    '"children":[{"keyword":"Convergence and Divergence","description":"..."},\n' +
-    '{"keyword":"Taylor Series","description":"..."},\n' +
-    '{"keyword":"Power Series","description":"..."}]},\n' +
-    '{"keyword":"Differential Equations","description":"...",\n' +
-    '"children":[{"keyword":"First-Order Differential Equations","description":"..."},\n' +
-    '{"keyword":"Second-Order Differential Equations","description":"..."},\n' +
-    '{"keyword":"Systems of Differential Equations","description":"..."},\n' +
-    '{"keyword":"Boundary Value Problems","description":"..."}]}]}\n' +
-    '###\n';
+  const systemPrompt = `You are an educational assistant that generates mindmaps to help students visually understand ${className}.
 
+  TASK:
+  Generate a hierarchical knowledge map following these requirements:
+
+  1. Root Node
+  - Primary topic must be: "${className}"
+  - This will be the root that all other nodes branch from
+
+  2. Structure
+  - Parse lecture topics from content marked with <START: Lecture Name | Lecture ID> and <END> tags
+  - These become first-level branches from the root
+  - Generate exactly 2 related subtopics/concepts for each lecture topic
+  - Subtopics should be key terminology or fundamental concepts
+  - THE MAXIMUM DEPTH OF THE TREE IS 2, DO NOT BREAK THIS RULE
+
+  3. Lecture References
+  - Root node should include ALL lecture IDs found in content
+  - Lecture topics should reference their own ID
+  - Subtopics may have 0 or more relevant lecture IDs
+
+  4. Output Format
+  - Must be valid JSON with these keys for each node:
+    - "keyword": Topic name
+    - "description": One clear, concise definitional sentence
+    - "children": Array of child nodes
+    - "lectures": Array of relevant lecture IDs
+  - No additional text or formatting
+
+  Here are two example inputs and their expected outputs:
+
+  Example 1:
+  INPUT:
+  Course: Calculus
+  <START: Limits | 123e4567-e89b-12d3-a456-426614174000> and <END>
+
+  OUTPUT:
+  {
+    "keyword": "Calculus",
+    "description": "Calculus is a branch of mathematics that studies continuous change, primarily through derivatives and integrals.",
+    "lectures": ["123e4567-e89b-12d3-a456-426614174000"],
+    "children": [
+      {
+        "keyword": "Limits",
+        "description": "Limits describe the value that a function approaches as the input approaches a specified point.",
+        "lectures": ["123e4567-e89b-12d3-a456-426614174000"],
+        "children": [
+          {
+            "keyword": "One-Sided Limits",
+            "description": "One-sided limits evaluate the behavior of a function as it approaches a specific point from one direction (left or right).",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174000"]
+          },
+          {
+            "keyword": "Limit Laws",
+            "description": "Limit laws are rules and properties used to evaluate the limits of functions systematically.",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174000"]
+          }
+        ]
+      }
+    ]
+  }
+
+  Example 2:
+  INPUT:
+  Course: Linear Algebra
+  <START: Matrix Operations | 123e4567-e89b-12d3-a456-426614174002> and <END>
+  <START: Vector Spaces | 123e4567-e89b-12d3-a456-426614174003> and <END>
+  <START: Eigenvalues and Eigenvectors | 123e4567-e89b-12d3-a456-426614174004> and <END>
+
+  OUTPUT:
+  {
+    "keyword": "Linear Algebra",
+    "description": "Linear Algebra is the study of vectors, vector spaces, linear mappings, and systems of linear equations.",
+    "lectures": ["123e4567-e89b-12d3-a456-426614174002", "123e4567-e89b-12d3-a456-426614174003", "123e4567-e89b-12d3-a456-426614174004"],
+    "children": [
+      {
+        "keyword": "Matrix Operations",
+        "description": "Matrix operations involve mathematical procedures like addition, multiplication, and inversion of matrices.",
+        "lectures": ["123e4567-e89b-12d3-a456-426614174002"],
+        "children": [
+          {
+            "keyword": "Matrix Multiplication",
+            "description": "Matrix multiplication combines rows of one matrix with columns of another to produce a new matrix.",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174002"]
+          },
+          {
+            "keyword": "Determinants",
+            "description": "The determinant is a scalar value that can be computed from the elements of a square matrix.",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174002"]
+          }
+        ]
+      },
+      {
+        "keyword": "Vector Spaces",
+        "description": "Vector spaces are mathematical structures formed by vectors, which can be scaled and added together.",
+        "lectures": ["123e4567-e89b-12d3-a456-426614174003"],
+        "children": [
+          {
+            "keyword": "Basis and Dimension",
+            "description": "A basis is a set of linearly independent vectors that spans a vector space; dimension is the number of basis vectors.",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174003"]
+          },
+          {
+            "keyword": "Linear Transformations",
+            "description": "Linear transformations are mappings between vector spaces that preserve vector addition and scalar multiplication.",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174003"]
+          }
+        ]
+      },
+      {
+        "keyword": "Eigenvalues and Eigenvectors",
+        "description": "Eigenvalues and eigenvectors are scalars and vectors that satisfy the equation Ax = λx for a linear transformation A.",
+        "lectures": ["123e4567-e89b-12d3-a456-426614174004"],
+        "children": [
+          {
+            "keyword": "Characteristic Equation",
+            "description": "The characteristic equation is used to find the eigenvalues of a matrix.",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174004"]
+          },
+          {
+            "keyword": "Diagonalization",
+            "description": "Diagonalization is the process of transforming a matrix into a diagonal form.",
+            "lectures": ["123e4567-e89b-12d3-a456-426614174004"]
+          }
+        ]
+      }
+    ]
+  }
+
+  Focus on:
+  - Clear, educational definitions
+  - Logical hierarchical relationships
+  - Accurate lecture ID references
+  - Valid JSON structure`
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash-8b",
     systemInstruction: systemPrompt,
@@ -444,7 +520,7 @@ export const generateSlideQuestions = async (className: string, textSummaries: s
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash-8b",
     systemInstruction: `You are a teaching assistant for the course: ${className}. Your task is to generate practice questions based on the content provided. The questions should be challenging and test the student's understanding of the material.` +
-    "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>",
+      "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>",
   });
 
   const images = await Promise.all(imgPaths.map(async (url) => {
@@ -479,26 +555,30 @@ export const generateSlideQuestions = async (className: string, textSummaries: s
       solution: formattedSolution,
     }
   });
-  return {questions: questionsList};
+  return { questions: questionsList };
 }
 
 
 export const generatePracticeExam = async (className: string, textSummaries: string[][], imgPaths: string[][]): Promise<{
   questions: { question: string, solution: string }[]
 } | undefined> => {
-  return { questions: [
-    {question: "What is the definition of a derivative?", solution: "The derivative of a function is the rate at which the function is changing at a given point."},
-    {question: "What is the definition of an integral?", solution: "The integral of a function is the area under the curve of the function."},
-    {question: "What is the chain rule?", solution: "The chain rule is a formula for computing the derivative of the composition of two or more functions."},
-  ]}
+  return {
+    questions: [
+      { question: "What is the definition of a derivative?", solution: "The derivative of a function is the rate at which the function is changing at a given point." },
+      { question: "What is the definition of an integral?", solution: "The integral of a function is the area under the curve of the function." },
+      { question: "What is the chain rule?", solution: "The chain rule is a formula for computing the derivative of the composition of two or more functions." },
+    ]
+  }
 }
 
 export const regeneratePracticeExam = async (className: string, textSummaries: string[][], imgPaths: string[][], pastQuestions: { question: string, solution: string }[]): Promise<{
   questions: { question: string, solution: string }[]
 } | undefined> => {
-  return { questions: [
-    {question: "What is the definition of a derivative?", solution: "The derivative of a function is the rate at which the function is changing at a given point."},
-  ]}
+  return {
+    questions: [
+      { question: "What is the definition of a derivative?", solution: "The derivative of a function is the rate at which the function is changing at a given point." },
+    ]
+  }
 }
 
 

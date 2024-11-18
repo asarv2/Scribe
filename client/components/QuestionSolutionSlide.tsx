@@ -17,6 +17,7 @@ import { regeneratePracticeExam } from "@/utils/services/gemini";
 import { createSlideQuestions } from "@/utils/services/questions";
 import { jsPDF } from "jspdf";
 import { marked } from "marked";
+import Markdown from "markdown-to-jsx";
 
 
 type QuestionSolutionSliderops = {
@@ -169,8 +170,8 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
                         <Flex direction="column" gap="md">
                             {questions && questions.length > 0 ? questions.map(
                                 (question, index) => (
-                                    <Box key={index}>
-                                        <h3>{index + 1}. {question.question}</h3>
+                                    <Box key={index}>   
+                                        <h3><Markdown>{`${index + 1}. ${question.question}`}</Markdown></h3>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No questions found.</Text></Box>}
@@ -181,8 +182,8 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
                             {questions && questions.length > 0 ? questions.map(
                                 (question, index) => (
                                     <Box key={index}>
-                                        <h3>{index + 1}. {question.question}</h3>
-                                        <Text c="red" size="lg" fw={500}>{question.solution}</Text>
+                                        <h3><Markdown>{`${index + 1}. ${question.question}`}</Markdown></h3>
+                                        <Text c="red" size="lg" fw={500}><Markdown>{question.solution}</Markdown></Text>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No solutions found.</Text></Box>}
