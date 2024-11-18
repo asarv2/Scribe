@@ -27,7 +27,7 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
             .map(child => buildTree(topics, child.map_id));
 
         return {
-            id: nodeData.id,
+            id: nodeData.map_id,
             keyword: nodeData.title,
             description: nodeData.content,
             lectures: nodeData.lectures,

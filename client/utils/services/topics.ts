@@ -20,9 +20,10 @@ export const createTopics = async (classId: string, topics: {title: string, cont
         }
     });
     const { data, error } = await supabase
-        .from('topics')
-        .insert([...mappedTopics]);
-
+        .from("topics")
+        .upsert([...mappedTopics], {
+            onConflict: "map_id",
+        })
     if (error) {
         return { success: false, error: error.message };
     }
