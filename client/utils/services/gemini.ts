@@ -575,25 +575,52 @@ export const generatePracticeExam = async (
     questions: { question: string; solution: string }[];
   } | undefined
 > => {
-  return {
-    questions: [
-      {
-        question: "What is the definition of a derivative?",
-        solution:
-          "The derivative of a function is the rate at which the function is changing at a given point.",
-      },
-      {
-        question: "What is the definition of an integral?",
-        solution:
-          "The integral of a function is the area under the curve of the function.",
-      },
-      {
-        question: "What is the chain rule?",
-        solution:
-          "The chain rule is a formula for computing the derivative of the composition of two or more functions.",
-      },
-    ],
-  };
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash-8b",
+    systemInstruction:
+      `You are a teaching assistant for the course: ${className}. Your task is to generate practice questions based on the content provided. The questions should be challenging and test the student's understanding of the material.` +
+      "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>. When writing mathematical equations, use LaTeX format.",
+  });
+
+  // Process all pages of images
+  const processedImages = await Promise.all(
+    imgPaths.flat().map(async (url) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+      const base64String = Buffer.from(arrayBuffer).toString("base64");
+      return {
+        inlineData: {
+          data: base64String,
+          mimeType: "application/pdf",
+        },
+      };
+    })
+  );
+
+  // Combine text summaries and images into content
+  const flattenedSummaries = textSummaries.flat();
+  const interleavedContent = flattenedSummaries.flatMap((textSummary, index) => {
+    return [`Page ${index + 1}: ${textSummary}`, processedImages[index]];
+  });
+
+  const prompt =
+    `Generate 3 practice questions with the corresponding solutions based on the following content: ${className}`;
+  const result = await model.generateContent([prompt, ...interleavedContent]);
+  const rawOutput = result.response.text();
+
+  const questions = rawOutput.split("<QUESTION>").slice(1);
+  const questionsList = questions.map((question) => {
+    const split = question.split("<SOLUTION>");
+    const formattedQuestion = split[0].replace("</QUESTION>", "").trim();
+    const formattedSolution = split[1].replace("</SOLUTION>", "").trim();
+    return {
+      question: formattedQuestion,
+      solution: formattedSolution,
+    };
+  });
+
+  return { questions: questionsList };
 };
 
 export const regeneratePracticeExam = async (

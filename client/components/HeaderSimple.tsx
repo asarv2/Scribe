@@ -32,7 +32,7 @@ export function HeaderSimple() {
     const pathname = usePathname();
 
     const items = links.map((link) => (
-        <Box p={2}>
+        <Box p={2} key={link.label}>
             <Link
                 key={link.label}
                 href={link.link}
