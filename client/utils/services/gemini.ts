@@ -208,8 +208,7 @@ export const generateSummary = async (className: string, textSummaries: string[]
         4. Any important symbols, notations, or visual patterns and their meanings
         5. The overall relationship between textual and visual information
         6. Include easy to understand definitions of key terms
-        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world
-        8. Your output should be in markdown format.`;
+        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world`;
   const result = await model.generateContent([prompt, ...interleavedContent]);
   const rawOutput = result.response.text()
   return rawOutput;
@@ -247,8 +246,7 @@ export const regenerateSummary = async (classId: string, className: string, docu
         4. Any important symbols, notations, or visual patterns and their meanings
         5. The overall relationship between textual and visual information
         6. Include easy to understand definitions of key terms
-        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world
-        8. Your output should be in markdown format.`;
+        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world`;
 
   const result = await model.generateContent([prompt, ...interleavedContent]);
   const rawOutput = result.response.text()
