@@ -291,6 +291,7 @@ export const generateTopics = async (
     mapParent: string | null;
     mapId: string;
     lectures: string[];
+    newNode: boolean;
   }[] | undefined
 > => {
   interface Node {
@@ -395,6 +396,16 @@ export const generateTopics = async (
   const cleaned = rawOutput.slice(7, -4);
   let output = JSON.parse(cleaned) as Node;
 
+  // Track existing node keywords for determining what's new
+  const existingNodeKeywords = new Set<string>();
+  if (currentMap) {
+    const collectKeywords = (node: MapNode) => {
+      existingNodeKeywords.add(node.keyword);
+      node.children?.forEach(collectKeywords);
+    };
+    collectKeywords(currentMap);
+  }
+
   // If there's an existing map, merge the new content with it
   if (currentMap) {
     const existingNode = convertMapNodeToNode(currentMap);
@@ -460,12 +471,19 @@ export const generateTopics = async (
 
   const flatList = flattenTree(output);
   return flatList.map((node) => {
+    // A node is new if:
+    // 1. There is no existing map, or
+    // 2. The node's keyword wasn't in the existing map (except for the root node when there is an existing map)
+    const isNewNode = !currentMap || 
+      (!existingNodeKeywords.has(node.title) && !(currentMap && node.map_parent === null));
+
     return {
       title: node.title,
       content: node.content,
       mapParent: node.map_parent,
       mapId: node.map_id,
       lectures: node.lectures,
+      newNode: isNewNode,
     };
   });
 };
