@@ -4,7 +4,7 @@ export async function getTopic(client: TypedSupabaseClient, topicId: string) {
     const { data, error } = await client
         .from("topics")
         .select("*")
-        .eq("id", topicId)
+        .eq("map_id", topicId)
         .single()
 
     if (error) {
