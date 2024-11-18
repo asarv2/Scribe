@@ -126,7 +126,7 @@ export default function AddQuestionsModal({ classId, isMobile, slideId, user, sl
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
-                    <Text>Select Slides</Text>
+                    <Text>Select Lectures</Text>
                     <Stack>
                         {slides.map((slide) => 
                         <Group key={slide.id}>
