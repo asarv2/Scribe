@@ -377,7 +377,7 @@ export const generateTopics = async (classId: string, className: string, summari
   ): FlatNode[] {
     const mapId = uuidv4();
     const nodeDict: FlatNode = {
-      map_id: rootId ?? mapId,
+      map_id: mapId,
       map_parent: parentId,
       title: node.keyword,
       content: node.description,
@@ -397,28 +397,15 @@ export const generateTopics = async (classId: string, className: string, summari
   }
 
   const flatList = flattenTree(output);
-  if (rootId) {
-    const rootlessFlatList = flatList.filter((node) => node.map_id !== rootId)
-    return rootlessFlatList.map((node) => {
-      return {
-        title: node.title,
-        content: node.content,
-        mapParent: node.map_parent,
-        mapId: node.map_id,
-        lectures: node.lectures,
-      };
-    });
-  } else {
-    return flatList.map((node) => {
-      return {
-        title: node.title,
-        content: node.content,
-        mapParent: node.map_parent,
-        mapId: node.map_id,
-        lectures: node.lectures,
-      };
-    });
-  }
+  return flatList.map((node) => {
+    return {
+      title: node.title,
+      content: node.content,
+      mapParent: node.map_parent,
+      mapId: node.map_parent === null ? (rootId ?? node.map_id) : node.map_id,
+      lectures: node.lectures,
+    };
+  });
 }
 
 export const storeSlideDocuments = async (slideId: string, textSummaries: string[]) => {
