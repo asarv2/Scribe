@@ -39,7 +39,8 @@
     "pdfjs-dist": "^4.8.69",
     "pdfmake": "^0.2.15",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-latex-next": "^3.0.0"
   },
   "devDependencies": {
     "@types/html-to-pdfmake": "^2.4.4",

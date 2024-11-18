@@ -19,6 +19,8 @@ import Markdown from "markdown-to-jsx"
 import { marked } from "marked"
 import Image from "next/image"
 import { useState } from "react"
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
 
 type NoteSummaryProps = {
     classId: string

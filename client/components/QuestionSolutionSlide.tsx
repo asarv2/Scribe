@@ -18,6 +18,8 @@ import { createSlideQuestions } from "@/utils/services/questions";
 import { jsPDF } from "jspdf";
 import { marked } from "marked";
 import Markdown from "markdown-to-jsx";
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
 
 
 type QuestionSolutionSliderops = {
@@ -171,7 +173,7 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
                             {questions && questions.length > 0 ? questions.map(
                                 (question, index) => (
                                     <Box key={index}>   
-                                        <h3><Markdown>{`${index + 1}. ${question.question}`}</Markdown></h3>
+                                        <h3><Latex>{`${index + 1}. ${question.question}`}</Latex></h3>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No questions found.</Text></Box>}
@@ -182,8 +184,8 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
                             {questions && questions.length > 0 ? questions.map(
                                 (question, index) => (
                                     <Box key={index}>
-                                        <h3><Markdown>{`${index + 1}. ${question.question}`}</Markdown></h3>
-                                        <Text c="red" size="lg" fw={500}><Markdown>{question.solution}</Markdown></Text>
+                                        <h3><Latex>{`${index + 1}. ${question.question}`}</Latex></h3>
+                                        <Text c="red" size="lg" fw={500}><Latex>{question.solution}</Latex></Text>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No solutions found.</Text></Box>}

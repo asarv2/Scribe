@@ -208,8 +208,8 @@ export const generateSummary = async (className: string, textSummaries: string[]
         4. Any important symbols, notations, or visual patterns and their meanings
         5. The overall relationship between textual and visual information
         6. Include easy to understand definitions of key terms
-        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world`;
-
+        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world
+        8. Your output should be in markdown format.`;
   const result = await model.generateContent([prompt, ...interleavedContent]);
   const rawOutput = result.response.text()
   return rawOutput;
@@ -247,7 +247,8 @@ export const regenerateSummary = async (classId: string, className: string, docu
         4. Any important symbols, notations, or visual patterns and their meanings
         5. The overall relationship between textual and visual information
         6. Include easy to understand definitions of key terms
-        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world`;
+        7. If possible include easy to understand examples of this being applied in the world, or with things similar in the real world
+        8. Your output should be in markdown format.`;
 
   const result = await model.generateContent([prompt, ...interleavedContent]);
   const rawOutput = result.response.text()
@@ -258,7 +259,6 @@ export const generateTopics = async (classId: string, className: string, summari
   // in any case, we will have to apply the same algorithm to parse out the topics from the summary.
   // if we are just adding new ones, than we should extract this at the final step
   interface Node {
-    id?: string;
     keyword: string;
     description: string;
     children: Node[];
@@ -267,7 +267,6 @@ export const generateTopics = async (classId: string, className: string, summari
 
   function convertMapNodeToNode(mapNode: MapNode): Node {
     return {
-      id: mapNode.id,
       keyword: mapNode.keyword,
       description: mapNode.description || "",
       lectures: mapNode.lectures || [],
@@ -275,7 +274,9 @@ export const generateTopics = async (classId: string, className: string, summari
     };
   }
   const currentMapNode: Node | null = currentMap ? convertMapNodeToNode(currentMap) : null;
-  const currentTopics: string = currentMap ? JSON.stringify(currentMapNode) : "";
+  const currentTopics: string = currentMap ? JSON.stringify(currentMapNode) : ""; // not using currently
+
+  const rootId = currentMap ? currentMap.id : null;
 
   const content = summaries.join("\n");
   const systemPrompt = `You are an educational assistant that generates mindmaps to help students visually understand ${className}.
@@ -340,73 +341,6 @@ export const generateTopics = async (classId: string, className: string, summari
     ]
   }
 
-  Example 2:
-  INPUT:
-  Course: Linear Algebra
-  <START: Matrix Operations | 123e4567-e89b-12d3-a456-426614174002> and <END>
-  <START: Vector Spaces | 123e4567-e89b-12d3-a456-426614174003> and <END>
-  <START: Eigenvalues and Eigenvectors | 123e4567-e89b-12d3-a456-426614174004> and <END>
-
-  OUTPUT:
-  {
-    "keyword": "Linear Algebra",
-    "description": "Linear Algebra is the study of vectors, vector spaces, linear mappings, and systems of linear equations.",
-    "lectures": ["123e4567-e89b-12d3-a456-426614174002", "123e4567-e89b-12d3-a456-426614174003", "123e4567-e89b-12d3-a456-426614174004"],
-    "children": [
-      {
-        "keyword": "Matrix Operations",
-        "description": "Matrix operations involve mathematical procedures like addition, multiplication, and inversion of matrices.",
-        "lectures": ["123e4567-e89b-12d3-a456-426614174002"],
-        "children": [
-          {
-            "keyword": "Matrix Multiplication",
-            "description": "Matrix multiplication combines rows of one matrix with columns of another to produce a new matrix.",
-            "lectures": ["123e4567-e89b-12d3-a456-426614174002"]
-          },
-          {
-            "keyword": "Determinants",
-            "description": "The determinant is a scalar value that can be computed from the elements of a square matrix.",
-            "lectures": ["123e4567-e89b-12d3-a456-426614174002"]
-          }
-        ]
-      },
-      {
-        "keyword": "Vector Spaces",
-        "description": "Vector spaces are mathematical structures formed by vectors, which can be scaled and added together.",
-        "lectures": ["123e4567-e89b-12d3-a456-426614174003"],
-        "children": [
-          {
-            "keyword": "Basis and Dimension",
-            "description": "A basis is a set of linearly independent vectors that spans a vector space; dimension is the number of basis vectors.",
-            "lectures": ["123e4567-e89b-12d3-a456-426614174003"]
-          },
-          {
-            "keyword": "Linear Transformations",
-            "description": "Linear transformations are mappings between vector spaces that preserve vector addition and scalar multiplication.",
-            "lectures": ["123e4567-e89b-12d3-a456-426614174003"]
-          }
-        ]
-      },
-      {
-        "keyword": "Eigenvalues and Eigenvectors",
-        "description": "Eigenvalues and eigenvectors are scalars and vectors that satisfy the equation Ax = λx for a linear transformation A.",
-        "lectures": ["123e4567-e89b-12d3-a456-426614174004"],
-        "children": [
-          {
-            "keyword": "Characteristic Equation",
-            "description": "The characteristic equation is used to find the eigenvalues of a matrix.",
-            "lectures": ["123e4567-e89b-12d3-a456-426614174004"]
-          },
-          {
-            "keyword": "Diagonalization",
-            "description": "Diagonalization is the process of transforming a matrix into a diagonal form.",
-            "lectures": ["123e4567-e89b-12d3-a456-426614174004"]
-          }
-        ]
-      }
-    ]
-  }
-
   Focus on:
   - Clear, educational definitions
   - Logical hierarchical relationships
@@ -418,7 +352,6 @@ export const generateTopics = async (classId: string, className: string, summari
   });
 
   const prompt = 'Here is the lecture content for ' + className + ':' + content + '\n' +
-    "Additionally, here is the current map that you can build upon. If it is empty, this means you should construct it from scratch. CURRENT MAP: \n" + currentTopics +
     "YOUR OUTPUT: "
 
   const result = await model.generateContent([prompt]);
@@ -444,7 +377,7 @@ export const generateTopics = async (classId: string, className: string, summari
   ): FlatNode[] {
     const mapId = uuidv4();
     const nodeDict: FlatNode = {
-      map_id: node.id ?? mapId,
+      map_id: rootId ?? mapId,
       map_parent: parentId,
       title: node.keyword,
       content: node.description,
@@ -464,12 +397,9 @@ export const generateTopics = async (classId: string, className: string, summari
   }
 
   const flatList = flattenTree(output);
-  if (currentMapNode) {
-    const originalFlatList = flattenTree(currentMapNode);
-    const newTopics = flatList.filter((node) => {
-      return !originalFlatList.some((originalNode) => originalNode.map_id === node.map_id);
-    });
-    return newTopics.map((node) => {
+  if (rootId) {
+    const rootlessFlatList = flatList.filter((node) => node.map_id !== rootId)
+    return rootlessFlatList.map((node) => {
       return {
         title: node.title,
         content: node.content,
@@ -520,7 +450,7 @@ export const generateSlideQuestions = async (className: string, textSummaries: s
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash-8b",
     systemInstruction: `You are a teaching assistant for the course: ${className}. Your task is to generate practice questions based on the content provided. The questions should be challenging and test the student's understanding of the material.` +
-      "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>",
+      "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>. When writing mathematical equations, use LaTeX format.",
   });
 
   const images = await Promise.all(imgPaths.map(async (url) => {
