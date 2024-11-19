@@ -160,44 +160,35 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
             {
                 summaries && summaries.length > 0 ? (
                     <>
+                        <Card withBorder style={{ overflowY: 'auto' }} mah={1150}>
+                            <Flex justify="space-between">
+                                <Title order={3}>Summary</Title>
+                                <Group>
+                                    <Tooltip label="Regenerate">
+                                        <IconReload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleRegenerate} />
+                                    </Tooltip>
+                                    <Tooltip label="Download PDF">
+                                        <IconDownload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleDownload} />
+                                    </Tooltip>
+                                </Group>
+                            </Flex>
+                            <Skeleton visible={loadingSummaries || regenerateLoading}>
+                                <Markdown>{summaries[currentSummaryIndex]?.content}</Markdown>
+                            </Skeleton>
+                        </Card>
                         <Flex justify="space-between" align="center" gap="sm">
-                            <Box>
+                            {summaries && summaries.length > 1 ? <Group gap="xs">
                                 <IconChevronLeft
-                                    size={24}
+                                    size={18}
                                     color={currentSummaryIndex > 0 ? 'black' : 'gray'}
                                     style={{ cursor: currentSummaryIndex > 0 ? 'pointer' : 'default' }}
                                     onClick={currentSummaryIndex > 0 ? handlePrevSummary : undefined}
                                 />
-                            </Box>
-                            <Box>
-                                <Card withBorder style={{ overflowY: 'auto' }} mah={1150}>
-                                    <Flex justify="space-between">
-                                        <Title order={3}>Summary</Title>
-                                        <Group>
-                                            <Tooltip label="Regenerate">
-                                                <IconReload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleRegenerate} />
-                                            </Tooltip>
-                                            <Tooltip label="Download PDF">
-                                                <IconDownload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleDownload} />
-                                            </Tooltip>
-                                        </Group>
-                                    </Flex>
-                                    <Skeleton visible={loadingSummaries || regenerateLoading}>
-                                        <Markdown>{summaries[currentSummaryIndex]?.content}</Markdown>
-                                    </Skeleton>
-                                </Card>
-                                <Flex justify="space-between" align="center" gap="sm">
-                                    <Text size="sm">
-                                        {new Date(summaries[currentSummaryIndex].created_at).toLocaleString()}
-                                    </Text>
-                                    <Text size="sm">
-                                        {currentSummaryIndex + 1} of {summaries.length}
-                                    </Text>
-                                </Flex>
-                            </Box>
-                            <Box>
+                                <Text size="sm">
+                                    {currentSummaryIndex + 1} / {summaries.length}
+                                </Text>
                                 <IconChevronRight
-                                    size={24}
+                                    size={18}
                                     color={
                                         summaries && currentSummaryIndex < summaries.length - 1 ? 'black' : 'gray'
                                     }
@@ -213,7 +204,11 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
                                             : undefined
                                     }
                                 />
-                            </Box>
+                            </Group> : <Box />}
+
+                            <Text size="sm">
+                                {new Date(summaries[currentSummaryIndex].created_at).toLocaleString()}
+                            </Text>
                         </Flex>
                     </>
                 ) : (

@@ -352,52 +352,16 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                             </Box>
                                         ))}
                                     </Flex>
-                                    {/* <Group>
-                                        <Flex w="100%" gap="xs" align={"center"}>
-                                            <Input
-                                                size="md"
-                                                radius="md"
-                                                placeholder="Have any questions?"
-                                                value={value}
-                                                onChange={(e) => {
-                                                    setValue(e.currentTarget.value);
-                                                }}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        handleNotesClick();
-                                                    }
-                                                }}
-                                                disabled={loading}
-                                                style={{ flexGrow: 1 }}
-                                            />
-                                            <ActionIcon
-                                                color="blue"
-                                                onClick={handleNotesClick}
-                                                loading={loading}
-                                                size="lg" // Optional: Adjust size if needed
-                                            >
-                                                <IconArrowUp size={24} />
-                                            </ActionIcon>
-                                        </Flex>
-                                        {responseQuestion.length !== 0 && response.length !== 0 && <Card padding="md" shadow="xs">
-                                            <Text fw={700} size="md">Q: {responseQuestion}</Text>
-                                            <Markdown>{response}</Markdown>
-                                        </Card>}
-                                        <Group>
-                                            {learnMoreBubbles.sort(
-                                                (a, b) => a - b
-                                            ).map((timestamp, index) => renderLearnMorePage(timestamp, index))}
-                                        </Group>
-                                    </Group> */}
                                     {isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />} 
                                     <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
                                 </Stack>
                             </Box>
-
+                            {/* <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} /> */}
                         </Grid.Col>
 
                         <Grid.Col span={isMobile ? 12 : 6}>
                             {!isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />}
+                            {/* <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} /> */}
                         </Grid.Col>
                     </Grid>
                 </Stack>
