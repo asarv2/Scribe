@@ -44,7 +44,7 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
 
     const handleRegenerate = async () => {
         setRegenerateLoading(true);
-        try {   
+        try {
 
             if (!slideQuestions || slideQuestions.length === 0) {
                 throw new Error('No documents available to regenerate summary.');
@@ -148,8 +148,8 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
 
     return (
         <Skeleton visible={regenerateLoading}>
-            <Card withBorder>
-                <Tabs variant="none" value={tabValue} onChange={setTabValue} pos="relative" h={500} style={{ overflowY: 'auto' }}>
+            <Card withBorder h={600}>
+                <Tabs variant="none" value={tabValue} onChange={setTabValue} pos="relative" style={{ overflowY: 'auto' }}>
                     <Flex justify="space-between">
                         <Tabs.List ref={setRootRef}>
                             <Tabs.Tab value="1" ref={setControlRef('1')} className={classes.tab}>
@@ -179,7 +179,7 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
                         <Flex direction="column" gap="md">
                             {questions && questions.length > 0 ? questions.map(
                                 (question, index) => (
-                                    <Box key={index}>   
+                                    <Box key={index}>
                                         <h3><Latex>{`${index + 1}. ${question.question}`}</Latex></h3>
                                     </Box>
                                 )
@@ -200,6 +200,11 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
                     </Tabs.Panel>
                 </Tabs>
             </Card >
+            {/* <Flex justify="end" align="center" gap="sm">
+                <Text size="sm">
+                    {new Date(slideQuestions?.[0]?.created_at ?? "").toLocaleString()}
+                </Text>
+            </Flex> */}
         </Skeleton>
     )
 

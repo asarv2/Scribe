@@ -160,7 +160,7 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
             {
                 summaries && summaries.length > 0 ? (
                     <>
-                        <Card withBorder style={{ overflowY: 'auto' }} mah={1150}>
+                        <Card withBorder style={{ overflowY: 'auto' }} h={600}>
                             <Flex justify="space-between">
                                 <Title order={3}>Summary</Title>
                                 <Group>
@@ -176,7 +176,7 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
                                 <Markdown>{summaries[currentSummaryIndex]?.content}</Markdown>
                             </Skeleton>
                         </Card>
-                        <Flex justify="space-between" align="center" gap="sm">
+                        {/* <Flex justify="space-between" align="center" gap="sm">
                             {summaries && summaries.length > 1 ? <Group gap="xs">
                                 <IconChevronLeft
                                     size={18}
@@ -209,7 +209,7 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
                             <Text size="sm">
                                 {new Date(summaries[currentSummaryIndex].created_at).toLocaleString()}
                             </Text>
-                        </Flex>
+                        </Flex> */}
                     </>
                 ) : (
                     <Text>No summaries available.</Text>

@@ -265,7 +265,7 @@ export const regenerateSummary = async (
 
   const lastSummary = previousSummaries[previousSummaries.length - 1];
   const prompt =
-    `Regenerate the follwing prompt, but take a different approach to what your response was last time. LAST RESPONSE: ${lastSummary}. YOUR PROMPT: Please provide a thorough analysis of this document, including both text and visual elements. Focus on:
+    `Regenerate the follwing prompt, but generate new, different problems comapred to last time. LAST RESPONSE: ${lastSummary}. YOUR PROMPT: Please provide a thorough analysis of this document, including both text and visual elements. Focus on:
         1. Main concepts and ideas from the text
         2. Description and interpretation of any diagrams, charts, or visual elements
         3. How the visual elements support or illustrate the text content

@@ -248,7 +248,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                     </Group> */}
                     <Grid>
                         <Grid.Col span={isMobile ? 12 : 6}>
-                            <Box
+                            {/* <Box
                                 style={{ position: 'relative', width: '100%', height: 400 }}
                                 onTouchStart={(e) => {
                                     setTouchStartX(e.changedTouches[0].clientX);
@@ -355,12 +355,13 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                     {isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />} 
                                     <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
                                 </Stack>
-                            </Box>
+                            </Box> */}
                             {/* <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} /> */}
+                            <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />
                         </Grid.Col>
-
                         <Grid.Col span={isMobile ? 12 : 6}>
-                            {!isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />}
+                            <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
+                            {/* {!isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />} */}
                             {/* <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} /> */}
                         </Grid.Col>
                     </Grid>
