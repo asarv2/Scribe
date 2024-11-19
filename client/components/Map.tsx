@@ -81,7 +81,7 @@ const NODE_TYPES = {
 	keyword: NodeComponent,
 }
 
-const flattenMapNode = (node: MapNode): FlatMapNode[] => {
+export const flattenMapNode = (node: MapNode): FlatMapNode[] => {
 	const { children, ...nodeWithoutChildren } = node
 	if (!children) return [nodeWithoutChildren]
 	return [

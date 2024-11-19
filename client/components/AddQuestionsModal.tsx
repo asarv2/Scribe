@@ -23,17 +23,19 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
 import { createPracticeExam, createPracticeQuestions } from "@/utils/services/questions"
 import { useRouter } from "next/navigation"
 import { isProfessor } from "@/utils/lecture/isProfessor"
+import { getSlideDocs } from "@/utils/queries/get-slide-docs"
 
 type AddQuestionsModalProps = {
     slides: Slide[]
     slideId: string
     classId: string
+    className: string
     isMobile: boolean
     user: User | undefined
     onExamGenerated: (exam: PracticeExam) => void
 }
 
-export default function AddQuestionsModal({ classId, isMobile, slideId, user, slides, onExamGenerated }: AddQuestionsModalProps) {
+export default function AddQuestionsModal({ classId, isMobile, slideId, user, slides, className, onExamGenerated }: AddQuestionsModalProps) {
     const [title, setTitle] = useState<string>();
     const [opened, { open, close }] = useDisclosure(false);
     const [numQuestions, setNumQuestions] = useState<string>();
@@ -54,7 +56,7 @@ export default function AddQuestionsModal({ classId, isMobile, slideId, user, sl
             }
             // generate the practice exam
             setLoadingText("Generating practice exam...");
-            const practiceExamResponse = await createPracticeExam(classId, title, selected, professor);
+            const practiceExamResponse = await createPracticeExam(classId, title, selected, professor, Number(numQuestions));
             if (!practiceExamResponse) {
                 throw new Error("Failed to generate practice exam");
             } else {
@@ -66,7 +68,19 @@ export default function AddQuestionsModal({ classId, isMobile, slideId, user, sl
 
             // generate the practice questions
             setLoadingText("Generating practice questions...");
-            const questions = await generatePracticeExam(classId, [], []); // TODO: add the images
+
+            const textSummaries: string[][] = [];
+            const imgPaths: string[][] = [];
+            for (const slide of slides) {
+                const documents = await getSlideDocs(supabase, slide.id);
+                const slideTextSummaries = documents?.map(d => d.content).filter(content => content !== undefined) as string[];
+                const slideImgPaths = documents?.map(d => `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${slide.id}/page_${d.page}.png`).filter(path => path !== undefined) as string[];
+                textSummaries.push(slideTextSummaries);
+                imgPaths.push(slideImgPaths);
+            }
+
+
+            const questions = await generatePracticeExam(classId, textSummaries, imgPaths, Number(numQuestions)); // TODO: add the images
             if (!questions) {
                 throw new Error("Failed to generate practice questions");
             }

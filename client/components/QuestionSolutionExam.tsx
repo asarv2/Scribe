@@ -20,19 +20,23 @@ import { createPracticeQuestions } from "@/utils/services/questions";
 import { jsPDF } from "jspdf";
 import { marked } from "marked";
 import Markdown from "markdown-to-jsx";
+import { getSlideDocs } from "@/utils/queries/get-slide-docs";
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 
 
 type QuestionSolutionExamProps = {
     className: string
+    classId: string
     questions: { question: string, solution: string }[]
     practiceExam: PracticeExam | undefined
     practiceQuestions: PracticeQuestion[] | undefined
 
 }
 
-export default function QuestionSolutionExam({ className, questions, practiceExam, practiceQuestions }: QuestionSolutionExamProps) {
+export default function QuestionSolutionExam({ className, classId, questions, practiceExam, practiceQuestions }: QuestionSolutionExamProps) {
     const [regenerateLoading, setRegenerateLoading] = useState(false);
     const queryClient = useQueryClient();
+    const supabase = useSupabaseBrowser()
 
     const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
     const [tabValue, setTabValue] = useState<string | null>('1');
@@ -52,7 +56,18 @@ export default function QuestionSolutionExam({ className, questions, practiceExa
             if (!practiceExam) {
                 throw new Error('Practice exam data not available');
             }
-            const summary = await regeneratePracticeExam(className, [], [], practiceQuestions);
+
+            const textSummaries: string[][] = [];
+            const imgPaths: string[][] = [];
+            for (const slide of practiceExam.slides) {
+                const documents = await getSlideDocs(supabase, slide);
+                const slideTextSummaries = documents?.map(d => d.content).filter(content => content !== undefined) as string[];
+                const slideImgPaths = documents?.map(d => `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${slide}/page_${d.page}.png`).filter(path => path !== undefined) as string[];
+                textSummaries.push(slideTextSummaries);
+                imgPaths.push(slideImgPaths);
+            }
+
+            const summary = await regeneratePracticeExam(className, textSummaries, imgPaths, practiceQuestions, practiceExam.num_questions);
             if (!summary) {
                 throw new Error('Failed to regenerate summary');
             }

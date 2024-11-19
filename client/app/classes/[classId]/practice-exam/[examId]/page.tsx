@@ -22,7 +22,6 @@ import { PracticeExam } from "@/types";
 import { isProfessor } from "@/utils/lecture/isProfessor";
 import { getUser } from "@/utils/queries/get-user";
 import DeleteExamModal from "@/components/DeleteExamModal";
-import { createPracticeExam, createPracticeQuestions } from "@/utils/services/questions";
 import { regeneratePracticeExam } from "@/utils/services/gemini";
 import jsPDF from "jspdf";
 import { marked } from "marked";
@@ -78,6 +77,7 @@ export default function PracticeExamPage({ params }: { params: { examId: string,
                         </Group>
                     </Flex>
                         <QuestionSolutionExam
+                            classId={params.classId}
                             className={classData?.title ?? ""}
                             questions={
                             practiceQuestions

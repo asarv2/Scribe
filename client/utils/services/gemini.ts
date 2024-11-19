@@ -103,7 +103,7 @@ export const findRelevantNoteDocuments = async (
   const langchainDocs = await retriever.invoke(question);
   console.log(langchainDocs);
   const documents = langchainDocs.map((doc) => doc.metadata.document_id).filter(
-    (doc) => doc !== undefined
+    (doc) => doc !== undefined,
   );
   return documents;
 };
@@ -411,17 +411,27 @@ export const generateTopics = async (
     const existingNode = convertMapNodeToNode(currentMap);
 
     // Merge lectures arrays from new output into existing root node
-    existingNode.lectures = Array.from(new Set([...existingNode.lectures, ...output.lectures]));
+    existingNode.lectures = Array.from(
+      new Set([...existingNode.lectures, ...output.lectures]),
+    );
 
     // Add new children to existing map while preserving current ones
     output.children.forEach((newChild) => {
-      const existingChild = existingNode.children.find(child => child.keyword === newChild.keyword);
+      const existingChild = existingNode.children.find((child) =>
+        child.keyword === newChild.keyword
+      );
       if (existingChild) {
         // Merge lectures if the topic already exists
-        existingChild.lectures = Array.from(new Set([...existingChild.lectures, ...newChild.lectures]));
+        existingChild.lectures = Array.from(
+          new Set([...existingChild.lectures, ...newChild.lectures]),
+        );
         // Merge children while preserving existing ones
-        newChild.children.forEach(newGrandchild => {
-          if (!existingChild.children.some(child => child.keyword === newGrandchild.keyword)) {
+        newChild.children.forEach((newGrandchild) => {
+          if (
+            !existingChild.children.some((child) =>
+              child.keyword === newGrandchild.keyword
+            )
+          ) {
             existingChild.children.push(newGrandchild);
           }
         });
@@ -474,8 +484,9 @@ export const generateTopics = async (
     // A node is new if:
     // 1. There is no existing map, or
     // 2. The node's keyword wasn't in the existing map (except for the root node when there is an existing map)
-    const isNewNode = !currentMap || 
-      (!existingNodeKeywords.has(node.title) && !(currentMap && node.map_parent === null));
+    const isNewNode = !currentMap ||
+      (!existingNodeKeywords.has(node.title) &&
+        !(currentMap && node.map_parent === null));
 
     return {
       title: node.title,
@@ -546,9 +557,16 @@ export const generateSlideQuestions = async (
   const interleavedContent = textSummaries.flatMap((textSummary, index) => {
     return [`Page ${index + 1}: ${textSummary}`, images[index]];
   });
-
+  // const prompt =
+  //   `Generate 3 practice questions with the corresponding solutions based on the following content: ${className}.` +
+  //   "Focus on the key concepts and theories discussed in the content. Make the questions in incresing difficulty order, where the first question is very simple, the second is moderate, and the third is challenging." +
+  //   "I want the solutions to be easy to understand and clear, while still being thorough. Make sure to include the solutions in the same format as the questions." +
+  //   "Remember to include the content in the questions, so the student can understand the context of the question." +
+  //   "When creating the questions, think about the key concepts and theories that the student should understand." +
+  //   "When creting the solution, dont assume the student knows everything, but also dont assume they know nothing.";
   const prompt =
     `Generate 3 practice questions with the corresponding solutions based on the following content: ${className}`;
+
   const result = await model.generateContent([prompt, ...interleavedContent]);
   const rawOutput = result.response.text();
   console.log(rawOutput);
@@ -570,6 +588,7 @@ export const generatePracticeExam = async (
   className: string,
   textSummaries: string[][],
   imgPaths: string[][],
+  numQuestions: number,
 ): Promise<
   {
     questions: { question: string; solution: string }[];
@@ -595,17 +614,28 @@ export const generatePracticeExam = async (
           mimeType: "application/pdf",
         },
       };
-    })
+    }),
   );
 
   // Combine text summaries and images into content
   const flattenedSummaries = textSummaries.flat();
-  const interleavedContent = flattenedSummaries.flatMap((textSummary, index) => {
-    return [`Page ${index + 1}: ${textSummary}`, processedImages[index]];
-  });
+  const interleavedContent = flattenedSummaries.flatMap(
+    (textSummary, index) => {
+      return [`Page ${index + 1}: ${textSummary}`, processedImages[index]];
+    },
+  );
 
   const prompt =
-    `Generate 3 practice questions with the corresponding solutions based on the following content: ${className}`;
+    `Generate a practice midterm consisting of ${numQuestions} questions based on the content of ${className}. The practice midterm should:
+  
+  Question Structure: Focus on the key concepts, theories, and ideas discussed in the content. Present the questions in increasing order of difficulty, starting with fundamental concepts and progressing to more advanced or applied topics. Clearly state the context of each question, ensuring it is relevant and tied to the class material. Incorporate a variety of question types, such as multiple-choice, short answer, calculations, proofs, or scenario-based problems. 
+
+  Solution Structure: Provide thorough and easy-to-understand solutions for each question. Include detailed steps, explanations, or reasoning for arriving at the solution. Avoid assuming the student knows everything but also do not assume they know nothing—strike a balance by explaining intermediate steps where necessary. Highlight any tips, common pitfalls, or alternative approaches for solving the problem.
+  
+  Additional Instructions: Use clear and concise language, ensuring that both the questions and solutions are approachable for students. Organize the questions and solutions in the same format for consistency. Ensure that the solutions not only provide the correct answer but also reinforce the concepts and skills being tested.
+    
+  Content Breakdown: Each question should address a specific concept or set of related concepts.Cover a broad range of topics within the class content to ensure comprehensive preparation.Include a note or brief summary before particularly challenging questions to contextualize their importance or difficulty.`;
+
   const result = await model.generateContent([prompt, ...interleavedContent]);
   const rawOutput = result.response.text();
 
@@ -628,18 +658,127 @@ export const regeneratePracticeExam = async (
   textSummaries: string[][],
   imgPaths: string[][],
   pastQuestions: { question: string; solution: string }[],
+  numQuestions: number,
 ): Promise<
   {
     questions: { question: string; solution: string }[];
   } | undefined
 > => {
-  return {
-    questions: [
-      {
-        question: "What is the definition of a derivative?",
-        solution:
-          "The derivative of a function is the rate at which the function is changing at a given point.",
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash-8b",
+    systemInstruction:
+      `You are a teaching assistant for the course: ${className}. Your task is to generate practice questions based on the content provided. The questions should be challenging and test the student's understanding of the material.` +
+      "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>. When writing mathematical equations, use LaTeX format.",
+  });
+
+  // Process all pages of images
+  const processedImages = await Promise.all(
+    imgPaths.flat().map(async (url) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+      const base64String = Buffer.from(arrayBuffer).toString("base64");
+      return {
+        inlineData: {
+          data: base64String,
+          mimeType: "application/pdf",
+        },
+      };
+    }),
+  );
+
+  // Combine text summaries and images into content
+  const flattenedSummaries = textSummaries.flat();
+  const interleavedContent = flattenedSummaries.flatMap(
+    (textSummary, index) => {
+      return [`Page ${index + 1}: ${textSummary}`, processedImages[index]];
+    },
+  );
+
+  const prompt =
+    `Generate a practice midterm consisting of ${numQuestions} questions based on the content of ${className}. You have previously generated the following questions: ${
+      pastQuestions.map((question) => question.question).join(", ")
+    }, so make sure to not repeat any questions. 
+
+  The practice midterm should:
+  
+  Question Structure: Focus on the key concepts, theories, and ideas discussed in the content. Present the questions in increasing order of difficulty, starting with fundamental concepts and progressing to more advanced or applied topics. Clearly state the context of each question, ensuring it is relevant and tied to the class material. Incorporate a variety of question types, such as multiple-choice, short answer, calculations, proofs, or scenario-based problems. 
+
+  Solution Structure: Provide thorough and easy-to-understand solutions for each question. Include detailed steps, explanations, or reasoning for arriving at the solution. Avoid assuming the student knows everything but also do not assume they know nothing—strike a balance by explaining intermediate steps where necessary. Highlight any tips, common pitfalls, or alternative approaches for solving the problem.
+  
+  Additional Instructions: Use clear and concise language, ensuring that both the questions and solutions are approachable for students. Organize the questions and solutions in the same format for consistency. Ensure that the solutions not only provide the correct answer but also reinforce the concepts and skills being tested.
+    
+  Content Breakdown: Each question should address a specific concept or set of related concepts.Cover a broad range of topics within the class content to ensure comprehensive preparation.Include a note or brief summary before particularly challenging questions to contextualize their importance or difficulty.`;
+
+  const result = await model.generateContent([prompt, ...interleavedContent]);
+  const rawOutput = result.response.text();
+
+  const questions = rawOutput.split("<QUESTION>").slice(1);
+  const questionsList = questions.map((question) => {
+    const split = question.split("<SOLUTION>");
+    const formattedQuestion = split[0].replace("</QUESTION>", "").trim();
+    const formattedSolution = split[1].replace("</SOLUTION>", "").trim();
+    return {
+      question: formattedQuestion,
+      solution: formattedSolution,
+    };
+  });
+
+  return { questions: questionsList };
+};
+
+export const regenerateSlideQuestions = async (
+  className: string,
+  textSummaries: string[],
+  imgPaths: string[],
+  pastQuestions: { question: string; solution: string }[],
+) => {
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash-8b",
+    systemInstruction:
+      `You are a teaching assistant for the course: ${className}. Your task is to generate practice questions based on the content provided. The questions should be challenging and test the student's understanding of the material.` +
+      "Seperate your questions in <QUESTION> and <SOLUTION> tags. For example, <QUESTION>What is the definition of a derivative?</QUESTION><SOLUTION>The derivative of a function is the rate at which the function is changing at a given point.</SOLUTION>. When writing mathematical equations, use LaTeX format.",
+  });
+
+  const images = await Promise.all(imgPaths.map(async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const base64String = Buffer.from(arrayBuffer).toString("base64");
+    return {
+      inlineData: {
+        data: base64String,
+        mimeType: "image/png",
       },
-    ],
-  };
+    };
+  }));
+
+  const interleavedContent = textSummaries.flatMap((textSummary, index) => {
+    return [`Page ${index + 1}: ${textSummary}`, images[index]];
+  });
+  const prompt =
+    `Generate 3 practice questions with the corresponding solutions based on the following content: ${className}. You have previously generated the following questions: ${
+      pastQuestions.map((question) => question.question).join(", ")
+    }, so make sure to not repeat any questions.` +
+    "Focus on the key concepts and theories discussed in the content. Make the questions in incresing difficulty order, where the first question is very simple, the second is moderate, and the third is challenging." +
+    "I want the solutions to be easy to understand and clear, while still being thorough. Make sure to include the solutions in the same format as the questions." +
+    "Remember to include the content in the questions, so the student can understand the context of the question." +
+    "When creating the questions, think about the key concepts and theories that the student should understand." +
+    "When creting the solution, dont assume the student knows everything, but also dont assume they know nothing.";
+
+  const result = await model.generateContent([prompt, ...interleavedContent]);
+  const rawOutput = result.response.text();
+  console.log(rawOutput);
+
+  const questions = rawOutput.split("<QUESTION>").slice(1);
+  const questionsList = questions.map((question) => {
+    const split = question.split("<SOLUTION>");
+    const formattedQuestion = split[0].replace("</QUESTION>", "").trim();
+    const formattedSolution = split[1].replace("</SOLUTION>", "").trim();
+    return {
+      question: formattedQuestion,
+      solution: formattedSolution,
+    };
+  });
+  return { questions: questionsList };
 };

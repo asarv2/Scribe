@@ -15,23 +15,17 @@ import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 
 export type NodeDetailProps = {
-    topicId: string
+    lectureIds: string[]
 }
 
-export const NodeDetail: React.FC<NodeDetailProps> = ({ topicId }) => {
+export const NodeDetail: React.FC<NodeDetailProps> = ({ lectureIds }) => {
     const supabase = useSupabaseBrowser();
-
-    const { data: topic, isLoading: loadingTopic } = useQuery({
-        queryKey: ["topic", topicId],
-        queryFn: () => getTopic(supabase, topicId)
-    })
 
 
     const { data: lectures, isLoading: loadingLectures } = useQuery({
-        queryKey: ["lectures", ...(topic ? topic.lectures : [])],
-        queryFn: () => getTopicLectures(supabase, (topic ? topic.lectures : [])),
-        enabled: !!topic
-    }) // need to rearrange the code as soon as the front end works.
+        queryKey: ["lectures", ...lectureIds],
+        queryFn: () => getTopicLectures(supabase, lectureIds),
+    })
 
     return (
         <Paper>

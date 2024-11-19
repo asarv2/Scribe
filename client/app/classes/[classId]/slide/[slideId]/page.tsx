@@ -390,7 +390,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                                         </Group>
                                     </Group> */}
                                     {isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />} 
-                                    <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} />
+                                    <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
                                 </Stack>
                             </Box>
 

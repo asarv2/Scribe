@@ -22,10 +22,10 @@ import NotesSummary from "../../../components/NotesSummary";
 import Image from "next/image";
 import { getSlides } from "@/utils/queries/get-slides";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
-import { Map } from '@/components/Map'
+import { flattenMapNode, Map } from '@/components/Map'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP } from "@/utils/map/map-tree";
+import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP, LP_MAP, LP_MAP_CHAT } from "@/utils/map/map-tree";
 import { NodeDetail } from "@/components/NodeDetail";
 import { getMap } from "@/utils/queries/get-map";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -56,10 +56,11 @@ export default function Class({ params }: { params: { classId: string } }) {
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
 
-    const { data: map, isLoading: loadingMap } = useQuery({
-        queryKey: ["map", classId],
-        queryFn: () => getMap(supabase, classId)
-    })
+    // const { data: map, isLoading: loadingMap } = useQuery({
+    //     queryKey: ["map", classId],
+    //     queryFn: () => getMap(supabase, classId)
+    // })
+    const map = LP_MAP_CHAT
 
     const { data: slides, isLoading: loadingSlides } = useQuery({
         queryKey: ["slides", classId],
@@ -114,7 +115,6 @@ export default function Class({ params }: { params: { classId: string } }) {
                 {map && <Map
                     rootNode={map}
                     onNodeClick={(topicId, label, description) => {
-                        console.log(topicId, label, description)
                         setOpenNodeId(topicId)
                         setOpenNodeLabel(label)
                         setOpenNodeDescription(description)
@@ -139,6 +139,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                         slides={slides ?? []}
                         slideId={""}
                         classId={classId}
+                        className={classData?.title ?? ""}
                         isMobile={isMobile ?? true}
                         user={user ?? undefined}
                         onExamGenerated={(exam) => {
@@ -181,7 +182,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                                 </Center>
                             }
                         >
-                            {openNodeId && <NodeDetail topicId={openNodeId} />}
+                            {openNodeId && <NodeDetail lectureIds={flattenMapNode(map).find((node) => node.id === openNodeId)?.lectures ?? []} />}
                         </Suspense>
                     }
                 </Stack>

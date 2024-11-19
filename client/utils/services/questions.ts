@@ -19,11 +19,11 @@ export const createSlideQuestions = async (slideId: string, questions: { questio
     return { success: true, error: "" };
 }
 
-export const createPracticeExam = async (classId: string, name: string, slideIds: string[], professor: boolean) => {
+export const createPracticeExam = async (classId: string, name: string, slideIds: string[], professor: boolean, numQuestions: number) => {
     const supabase = useSupabaseServer(cookies());
     const { data, error } = await supabase
         .from("practice_exams")
-        .insert({ class: classId, slides: slideIds, name: name, professor: professor })
+        .insert({ class: classId, slides: slideIds, name: name, professor: professor, num_questions: numQuestions })
         .select("*")
         .single();
     if (error) {

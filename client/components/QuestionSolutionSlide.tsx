@@ -12,8 +12,8 @@ import { IconReload } from "@tabler/icons-react";
 import { IconDownload } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
-import { Slide, SlideQuestion } from "@/types";
-import { regeneratePracticeExam } from "@/utils/services/gemini";
+import { Slide, SlideData, SlideQuestion } from "@/types";
+import { generateSlideQuestions, regeneratePracticeExam, regenerateSlideQuestions } from "@/utils/services/gemini";
 import { createSlideQuestions } from "@/utils/services/questions";
 import { jsPDF } from "jspdf";
 import { marked } from "marked";
@@ -27,9 +27,10 @@ type QuestionSolutionSliderops = {
     questions: { question: string, solution: string }[]
     slide: Slide | undefined
     slideQuestions: SlideQuestion[] | undefined
+    documents: SlideData[] | undefined
 }
 
-export default function QuestionSolutionSlide({ className, questions, slide, slideQuestions }: QuestionSolutionSliderops) {
+export default function QuestionSolutionSlide({ className, questions, slide, slideQuestions, documents }: QuestionSolutionSliderops) {
     const [regenerateLoading, setRegenerateLoading] = useState(false);
     const queryClient = useQueryClient();
 
@@ -51,10 +52,16 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
             if (!slide) {
                 throw new Error('Slide data not available');
             }
-            const summary = await regeneratePracticeExam(className, [], [], slideQuestions);
+
+            const textSummaries = documents?.map(d => d.content).filter(content => content !== undefined) as string[];
+            const imgPaths = documents?.map(d => `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${slide.class}/${slide.id}/page_${d.page}.png`).filter(path => path !== undefined) as string[];
+            console.log(textSummaries, imgPaths);
+
+            const summary = await regenerateSlideQuestions(className, textSummaries, imgPaths, slideQuestions);
             if (!summary) {
                 throw new Error('Failed to regenerate summary');
             }
+
 
             const created = await createSlideQuestions(slide.id, summary.questions);
             if (!created) {

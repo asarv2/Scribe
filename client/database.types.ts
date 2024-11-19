@@ -230,6 +230,7 @@ export type Database = {
           deleted: boolean
           id: string
           name: string
+          num_questions: number
           professor: boolean
           slides: string[]
         }
@@ -239,6 +240,7 @@ export type Database = {
           deleted?: boolean
           id?: string
           name?: string
+          num_questions?: number
           professor?: boolean
           slides?: string[]
         }
@@ -248,6 +250,7 @@ export type Database = {
           deleted?: boolean
           id?: string
           name?: string
+          num_questions?: number
           professor?: boolean
           slides?: string[]
         }
