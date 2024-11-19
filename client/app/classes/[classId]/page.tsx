@@ -25,7 +25,7 @@ import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { flattenMapNode, Map } from '@/components/Map'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP, LP_MAP, LP_MAP_CHAT } from "@/utils/map/map-tree";
+import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP, LP_MAP, LP_MAP_CHAT, LP_MAP_CHAT_EDIT, LP_MAP_CHAT_V2, LP_MAP_CHAT_V3 } from "@/utils/map/map-tree";
 import { NodeDetail } from "@/components/NodeDetail";
 import { getMap } from "@/utils/queries/get-map";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -60,7 +60,7 @@ export default function Class({ params }: { params: { classId: string } }) {
     //     queryKey: ["map", classId],
     //     queryFn: () => getMap(supabase, classId)
     // })
-    const map = LP_MAP_CHAT
+    const map = LP_MAP_CHAT_EDIT
 
     const { data: slides, isLoading: loadingSlides } = useQuery({
         queryKey: ["slides", classId],

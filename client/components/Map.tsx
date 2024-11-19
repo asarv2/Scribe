@@ -145,7 +145,7 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 					getLayoutedElements({
 						'elk.algorithm': 'org.eclipse.elk.stress',
 						// @ts-ignore
-						'org.eclipse.elk.stress.desiredEdgeLength': 200,
+						'org.eclipse.elk.stress.desiredEdgeLength': 300,
 					}),
 				100,
 			)

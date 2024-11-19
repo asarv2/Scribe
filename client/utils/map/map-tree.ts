@@ -197,6 +197,982 @@ export const CALCULUS_MAP: MapNode = {
 	],
 }
 
+export const LP_MAP_CHAT_V3 = {
+    "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "keyword": "Linear Programming",
+    "description": "Linear programming is a mathematical method for achieving the best outcome in a model whose requirements are represented by linear relationships.",
+    "lectures": ["99c85304-93a7-4d4e-a1fd-931f219ae490"],
+    "children": [
+        {
+            "id": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+            "keyword": "Fundamental Methods",
+            "description": "Core methods and concepts in linear programming, including the Simplex Method, Dual Simplex Method, and matrix representations.",
+            "lectures": [
+                "53a2414d-8647-4238-b29b-c8d829f01956",
+                "d4750711-22f1-4639-8ab6-1e2393e88f68",
+                "24870d1e-c0cc-4c33-bdb6-aae0c0957dd3",
+                "4bcb992c-ced5-454f-83c0-9478e6183b62"
+            ],
+            "children": [
+                {
+                    "id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+                    "keyword": "Simplex Method",
+                    "description": "An iterative algorithm used to solve linear programming problems by systematically evaluating vertices of the feasible region.",
+                    "lectures": [
+                        "53a2414d-8647-4238-b29b-c8d829f01956",
+                        "d4750711-22f1-4639-8ab6-1e2393e88f68",
+                        "24870d1e-c0cc-4c33-bdb6-aae0c0957dd3",
+                        "4bcb992c-ced5-454f-83c0-9478e6183b62"
+                    ],
+                    "children": [
+                        {
+                            "id": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+                            "keyword": "Graphical Representation of Constraints",
+                            "description": "Visual depiction of constraints by plotting the feasible region that satisfies all constraints.",
+                            "lectures": ["53a2414d-8647-4238-b29b-c8d829f01956"],
+                            "children": []
+                        },
+                        {
+                            "id": "5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+                            "keyword": "Feasible Region and Vertices",
+                            "description": "The feasible region is the set of all possible solutions satisfying all constraints; vertices represent critical points for finding the optimal solution.",
+                            "lectures": ["53a2414d-8647-4238-b29b-c8d829f01956"],
+                            "children": []
+                        },
+                        {
+                            "id": "6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+                            "keyword": "Simplex Method Efficiency",
+                            "description": "Analyzing the performance of the Simplex method in average and worst-case scenarios.",
+                            "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                            "children": [
+                                {
+                                    "id": "7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+                                    "keyword": "Average-Case Performance",
+                                    "description": "Evaluating the typical number of iterations required for different problem sizes.",
+                                    "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "8b9c0d1e-2f3a-4b5c-6d7e-8f9a0b1c2d3e",
+                                    "keyword": "Worst-Case Scenarios",
+                                    "description": "Exploring theoretical limitations of the algorithm in specific situations.",
+                                    "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f",
+                            "keyword": "Simplex Matrix",
+                            "description": "Matrix representation of LP problems used in the Simplex algorithm's iterative process.",
+                            "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                            "children": [
+                                {
+                                    "id": "0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5g",
+                                    "keyword": "Matrix Representation of LP Problems",
+                                    "description": "Using matrices to represent constraints and objective functions.",
+                                    "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5g6h",
+                                    "keyword": "Simplex Algorithm Iterations",
+                                    "description": "Step-by-step process of modifying the matrix to find the optimal solution.",
+                                    "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5g6h7i",
+                            "keyword": "Dual Simplex Method",
+                            "description": "A variation of the Simplex Method used when the initial solution is not feasible but the dual problem is.",
+                            "lectures": ["4bcb992c-ced5-454f-83c0-9478e6183b62"],
+                            "children": [
+                                {
+                                    "id": "3a4b5c6d-7e8f-9a0b-1c2d-3e4f5g6h7i8j",
+                                    "keyword": "Simplex Method Variations",
+                                    "description": "Variations like the Dual Simplex Method and Phase I Algorithm used in specific scenarios.",
+                                    "lectures": ["4bcb992c-ced5-454f-83c0-9478e6183b62"],
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+        },
+        {
+                "id": "423e4567-e89b-12d3-a456-42661417400d",
+                "keyword": "Duality and Theoretical Foundations",
+                "description": "Exploring the duality principles and theoretical underpinnings of linear programming.",
+                "lectures": [
+                    "df805eda-39bb-4147-b9da-ade25bb4908d",
+                    "0eec1a18-09b9-41d4-8d83-d346669cd75e",
+                    "b1f987e0-f002-4932-b835-3ad3ade23b22",
+                    "b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"
+                ],
+                "children": [
+                    {
+                        "id": "523e4567-e89b-12d3-a456-42661417400e",
+                        "keyword": "Duality in Linear Programming",
+                        "description": "Every linear programming problem has a corresponding dual problem; solving one provides insights into the other.",
+                        "lectures": [
+                            "df805eda-39bb-4147-b9da-ade25bb4908d",
+                            "0eec1a18-09b9-41d4-8d83-d346669cd75e",
+                            "f9f4f8f5-b140-4c60-b3d9-05c422f461f0",
+                            "dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"
+                        ],
+                        "children": [
+                            {
+                                "id": "623e4567-e89b-12d3-a456-42661417400f",
+                                "keyword": "Primal and Dual Problems",
+                                "description": "Pairs of LP problems where one is the original and the other has a reversed objective function and constraints.",
+                                "lectures": ["df805eda-39bb-4147-b9da-ade25bb4908d"],
+                                "children": []
+                            },
+                            {
+                                "id": "723e4567-e89b-12d3-a456-426614174010",
+                                "keyword": "Complementary Slackness",
+                                "description": "A theorem relating primal and dual variables at optimality.",
+                                "lectures": ["df805eda-39bb-4147-b9da-ade25bb4908d"],
+                                "children": []
+                            },
+                            {
+                                "id": "823e4567-e89b-12d3-a456-426614174011",
+                                "keyword": "General Duality",
+                                "description": "Establishing correspondence between a primal problem and its dual, where solving one solves the other.",
+                                "lectures": ["0eec1a18-09b9-41d4-8d83-d346669cd75e"],
+                                "children": [
+                                    {
+                                        "id": "923e4567-e89b-12d3-a456-426614174012",
+                                        "keyword": "Applications of Duality",
+                                        "description": "Real-world applications like resource allocation and supply chain management.",
+                                        "lectures": ["0eec1a18-09b9-41d4-8d83-d346669cd75e"],
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "a23e4567-e89b-12d3-a456-426614174013",
+                                "keyword": "Duality Examples",
+                                "description": "Examples highlighting the connection between minimization and maximization problems.",
+                                "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                                "children": [
+                                    {
+                                        "id": "b23e4567-e89b-12d3-a456-426614174014",
+                                        "keyword": "Diet Problem",
+                                        "description": "Determining the optimal mix of foods to meet dietary needs at the lowest cost.",
+                                        "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "c23e4567-e89b-12d3-a456-426614174015",
+                                        "keyword": "Dual Relationship",
+                                        "description": "Connecting minimization problems to their corresponding maximization problems.",
+                                        "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "d23e4567-e89b-12d3-a456-426614174016",
+                                "keyword": "Duality Sensitivity Analysis",
+                                "description": "Analyzing how changes in constraints affect the optimal solution, focusing on primal-dual relationships.",
+                                "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                                "children": [
+                                    {
+                                        "id": "e23e4567-e89b-12d3-a456-426614174017",
+                                        "keyword": "Primal-Dual Relationship",
+                                        "description": "Fundamental connection between a maximization and its corresponding minimization problem.",
+                                        "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "f23e4567-e89b-12d3-a456-426614174018",
+                                        "keyword": "Sensitivity Analysis Techniques",
+                                        "description": "Methods to evaluate the impact of changes in constraints or coefficients.",
+                                        "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "523e4567-e89b-12d3-a456-426614174019",
+                        "keyword": "Convex Analysis and Farkas Lemma",
+                        "description": "Studying convex sets and the Farkas Lemma, foundational for solving optimization problems.",
+                        "lectures": [
+                            "b1f987e0-f002-4932-b835-3ad3ade23b22",
+                            "b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"
+                        ],
+                        "children": [
+                            {
+                                "id": "623e4567-e89b-12d3-a456-42661417401a",
+                                "keyword": "Convex Analysis",
+                                "description": "Studies convex sets, combinations, hulls, and separation theorems.",
+                                "lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+                                "children": [
+                                    {
+                                        "id": "723e4567-e89b-12d3-a456-42661417401b",
+                                        "keyword": "Convex Sets & Combinations",
+                                        "description": "Defines convex sets and their relationships with contained points.",
+                                        "lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "823e4567-e89b-12d3-a456-42661417401c",
+                                        "keyword": "Separation Theorems & Convex Hulls",
+                                        "description": "Tools for analyzing and solving optimization problems involving convex sets.",
+                                        "lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "923e4567-e89b-12d3-a456-42661417401d",
+                                "keyword": "Farkas Lemma",
+                                "description": "Establishes a relationship between the solvability of a system of linear inequalities and the existence of a particular solution.",
+                                "lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+                                "children": [
+                                    {
+                                        "id": "a23e4567-e89b-12d3-a456-42661417401e",
+                                        "keyword": "Feasibility",
+                                        "description": "Condition where a non-negative solution exists to satisfy the inequalities.",
+                                        "lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "b23e4567-e89b-12d3-a456-42661417401f",
+                                        "keyword": "Infeasibility",
+                                        "description": "Condition indicating the original system is not solvable.",
+                                        "lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "623e4567-e89b-12d3-a456-426614174020",
+                "keyword": "Applications and Advanced Topics",
+                "description": "Practical applications and advanced concepts in linear programming, including sensitivity analysis, integer programming, network flow, and regression.",
+                "lectures": [
+                    "9c83bfa8-d773-4ace-b84a-21f7d814b33c",
+                    "866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81",
+                    "6a3bce7c-84d0-438b-8428-c5a79d404f85",
+                    "b07f46a7-cbf0-41b4-823a-4e8374f61b01",
+                    "f242d8c5-a635-4384-b3bb-ed7a94a9b980",
+                    "fb8a8493-d3e8-4197-81dd-fd398b8080fb"
+                ],
+                "children": [
+                    {
+                        "id": "723e4567-e89b-12d3-a456-426614174021",
+                        "keyword": "Sensitivity and Parametric Analysis",
+                        "description": "Determining how changes in input data affect the optimal solution through sensitivity and parametric analysis.",
+                        "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                        "children": [
+                            {
+                                "id": "823e4567-e89b-12d3-a456-426614174022",
+                                "keyword": "Sensitivity Analysis",
+                                "description": "Analyzing the impact of parameter changes on the optimal solution.",
+                                "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                                "children": [
+                                    {
+                                        "id": "923e4567-e89b-12d3-a456-426614174023",
+                                        "keyword": "Impact of Parameter Changes",
+                                        "description": "Examining how changes in coefficients or RHS affect the solution.",
+                                        "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "a23e4567-e89b-12d3-a456-426614174024",
+                                        "keyword": "Optimal Solution Stability",
+                                        "description": "Evaluating the robustness of the optimal solution to small changes.",
+                                        "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "b23e4567-e89b-12d3-a456-426614174025",
+                                "keyword": "Parametric Analysis",
+                                "description": "Exploring how the optimal solution shifts as parameters vary over a range.",
+                                "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                                "children": [
+                                    {
+                                        "id": "c23e4567-e89b-12d3-a456-426614174026",
+                                        "keyword": "Objective Function Parameter Variations",
+                                        "description": "Examining the impact of changes in objective function parameters.",
+                                        "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "d23e4567-e89b-12d3-a456-426614174027",
+                                        "keyword": "Constraint Parameter Variations",
+                                        "description": "Evaluating how changes in constraints alter the optimal solution.",
+                                        "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "823e4567-e89b-12d3-a456-426614174028",
+                        "keyword": "Integer Programming",
+                        "description": "Optimization problems where some or all variables must be integer values.",
+                        "lectures": [
+                            "866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81",
+                            "6a3bce7c-84d0-438b-8428-c5a79d404f85"
+                        ],
+                        "children": [
+                            {
+                                "id": "923e4567-e89b-12d3-a456-426614174029",
+                                "keyword": "Integer Programming Methods",
+                                "description": "Methods for solving integer programming problems.",
+                                "lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+                                "children": [
+                                    {
+                                        "id": "a23e4567-e89b-12d3-a456-42661417402a",
+                                        "keyword": "Branch-and-Bound Method",
+                                        "description": "Systematically explores solution space by creating subproblems and bounding them.",
+                                        "lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "b23e4567-e89b-12d3-a456-42661417402b",
+                                        "keyword": "Gomory Cuts",
+                                        "description": "Technique used to refine feasible region and force integer solutions.",
+                                        "lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+                                        "children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "c23e4567-e89b-12d3-a456-42661417402c",
+                                "keyword": "Integer Programming Examples",
+                                "description": "Applications requiring integer solutions in areas like scheduling and resource allocation.",
+                                "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                                "children": [
+                                    {
+                                        "id": "d23e4567-e89b-12d3-a456-42661417402d",
+                                        "keyword": "Maximum Weight Matching",
+                                        "description": "Optimizing the assignment of tasks or resources for best outcome.",
+                                        "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "e23e4567-e89b-12d3-a456-42661417402e",
+                                        "keyword": "Machine Scheduling and Knapsack Problems",
+                                        "description": "Scheduling tasks and optimizing resource allocation in constrained scenarios.",
+                                        "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "923e4567-e89b-12d3-a456-42661417402f",
+                        "keyword": "Network Flow",
+                        "description": "Optimizing movement through networks of interconnected points.",
+                        "lectures": [
+                            "b07f46a7-cbf0-41b4-823a-4e8374f61b01",
+                            "f242d8c5-a635-4384-b3bb-ed7a94a9b980",
+                            "0ce8c393-2665-4132-ae76-5b409dc704e6"
+                        ],
+                        "children": [
+                            {
+                                "id": "a23e4567-e89b-12d3-a456-426614174030",
+                                "keyword": "Formulation as a Linear Program",
+                                "description": "Expressing network flow problems as optimization problems with linear objectives and constraints.",
+                                "lectures": ["b07f46a7-cbf0-41b4-823a-4e8374f61b01"],
+                                "children": []
+                            },
+                            {
+                                "id": "b23e4567-e89b-12d3-a456-426614174031",
+                                "keyword": "Spanning Trees and Optimality",
+                                "description": "Spanning trees serve as starting points for optimization algorithms.",
+                                "lectures": [
+                                    "b07f46a7-cbf0-41b4-823a-4e8374f61b01",
+                                    "0ce8c393-2665-4132-ae76-5b409dc704e6"
+                                ],
+                                "children": [
+                                    {
+                                        "id": "c23e4567-e89b-12d3-a456-426614174032",
+                                        "keyword": "Network Simplex Method",
+                                        "description": "Specialized algorithm leveraging spanning trees to optimize flow.",
+                                        "lectures": ["0ce8c393-2665-4132-ae76-5b409dc704e6"],
+                                        "children": [
+                                            {
+                                                "id": "d23e4567-e89b-12d3-a456-426614174033",
+                                                "keyword": "Spanning Tree Optimization",
+                                                "description": "Using spanning trees for efficiently optimizing flows.",
+                                                "lectures": ["0ce8c393-2665-4132-ae76-5b409dc704e6"],
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "c23e4567-e89b-12d3-a456-426614174034",
+                                "keyword": "Network Applications",
+                                "description": "Optimizing resource flow through networks, including transportation and shortest paths.",
+                                "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                                "children": [
+                                    {
+                                        "id": "d23e4567-e89b-12d3-a456-426614174035",
+                                        "keyword": "Transportation Problems",
+                                        "description": "Minimizing cost of transporting resources from origins to destinations.",
+                                        "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "e23e4567-e89b-12d3-a456-426614174036",
+                                        "keyword": "Shortest Path Problems",
+                                        "description": "Finding optimal routes between two points in a network.",
+                                        "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "d23e4567-e89b-12d3-a456-426614174037",
+                        "keyword": "Linear Regression",
+                        "description": "Modeling the relationship between dependent and independent variables.",
+                        "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                        "children": [
+                            {
+                                "id": "e23e4567-e89b-12d3-a456-426614174038",
+                                "keyword": "Regression Techniques",
+                                "description": "Methods of calculating estimates for a regression line.",
+                                "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                                "children": []
+                            },
+                            {
+                                "id": "f23e4567-e89b-12d3-a456-426614174039",
+                                "keyword": "Linear Models",
+                                "description": "Using linear equations to find best-fit coefficients.",
+                                "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+
+
+
+export const LP_MAP_CHAT_V2 = {
+    "id": "a1f3e5c6-7b8d-4e9f-a0b1-c2d3e4f5a6b7",
+    "keyword": "Linear Programming",
+    "description": "Linear programming is a mathematical method for achieving the best outcome in a model whose requirements are represented by linear relationships.",
+    "lectures": ["99c85304-93a7-4d4e-a1fd-931f219ae490"],
+    "children": [
+        {
+            "id": "b2c4d6e8-9f0a-1b2c-3d4e-5f6a7b8c9d0e",
+            "keyword": "Fundamental Concepts and Methods",
+            "description": "Core methods and concepts in linear programming, including the Simplex Method, Duality, and Convex Analysis.",
+            "lectures": [
+                "53a2414d-8647-4238-b29b-c8d829f01956",
+                "d4750711-22f1-4639-8ab6-1e2393e88f68",
+                "df805eda-39bb-4147-b9da-ade25bb4908d",
+                "0eec1a18-09b9-41d4-8d83-d346669cd75e",
+                "24870d1e-c0cc-4c33-bdb6-aae0c0957dd3",
+                "b1f987e0-f002-4932-b835-3ad3ade23b22",
+                "b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96",
+                "4bcb992c-ced5-454f-83c0-9478e6183b62",
+                "f9f4f8f5-b140-4c60-b3d9-05c422f461f0",
+                "dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"
+            ],
+            "children": [
+                {
+                    "id": "c3d5e7f9-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
+                    "keyword": "Simplex Method",
+                    "description": "An iterative algorithm used to solve linear programming problems by systematically evaluating vertices of the feasible region.",
+                    "lectures": [
+                        "53a2414d-8647-4238-b29b-c8d829f01956",
+                        "d4750711-22f1-4639-8ab6-1e2393e88f68",
+                        "24870d1e-c0cc-4c33-bdb6-aae0c0957dd3",
+                        "4bcb992c-ced5-454f-83c0-9478e6183b62"
+                    ],
+                    "children": [
+                        {
+                            "id": "d4e6f8a0-1b2c-3d4e-5f6a-7b8c9d0e1f2a",
+                            "keyword": "Graphical Representation of Constraints",
+                            "description": "Visual depiction of constraints by plotting the feasible region that satisfies all constraints.",
+                            "lectures": ["53a2414d-8647-4238-b29b-c8d829f01956"],
+                            "children": []
+                        },
+                        {
+                            "id": "e5f7a9b1-2c3d-4e5f-6a7b-8c9d0e1f2a3b",
+                            "keyword": "Feasible Region and Vertices",
+                            "description": "The feasible region is the set of all possible solutions satisfying all constraints; vertices represent critical points for finding the optimal solution.",
+                            "lectures": ["53a2414d-8647-4238-b29b-c8d829f01956"],
+                            "children": []
+                        },
+                        {
+                            "id": "f6a8b0c2-3d4e-5f6a-7b8c-9d0e1f2a3b4c",
+                            "keyword": "Simplex Method Efficiency",
+                            "description": "Analyzing the performance of the Simplex method in average and worst-case scenarios.",
+                            "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                            "children": [
+                                {
+                                    "id": "a7b9c1d3-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+                                    "keyword": "Average-Case Performance",
+                                    "description": "Evaluating the typical number of iterations required for different problem sizes.",
+                                    "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "b8c0d2e4-5f6a-7b8c-9d0e-1f2a3b4c5d6e",
+                                    "keyword": "Worst-Case Scenarios",
+                                    "description": "Exploring theoretical limitations of the algorithm in specific situations.",
+                                    "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "c9d1e3f5-6a7b-8c9d-0e1f-2a3b4c5d6e7f",
+                            "keyword": "Simplex Matrix",
+                            "description": "Matrix representation of LP problems used in the Simplex algorithm's iterative process.",
+                            "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                            "children": [
+                                {
+                                    "id": "d0e2f4a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a",
+                                    "keyword": "Matrix Representation of LP Problems",
+                                    "description": "Using matrices to represent constraints and objective functions.",
+                                    "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "e1f3a5b7-8c9d-0e1f-2a3b-4c5d6e7f8a9b",
+                                    "keyword": "Simplex Algorithm Iterations",
+                                    "description": "Step-by-step process of modifying the matrix to find the optimal solution.",
+                                    "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "f2a4b6c8-9d0e-1f2a-3b4c-5d6e7f8a9b0c",
+                            "keyword": "Dual Simplex Method",
+                            "description": "A variation of the Simplex Method used when the initial solution is not feasible but the dual problem is.",
+                            "lectures": ["4bcb992c-ced5-454f-83c0-9478e6183b62"],
+                            "children": [
+                                {
+                                    "id": "a3b5c7d9-0e1f-2a3b-4c5d-6e7f8a9b0c1d",
+                                    "keyword": "Simplex Method Variations",
+                                    "description": "Variations like the Dual Simplex Method and Phase I Algorithm used in specific scenarios.",
+                                    "lectures": ["4bcb992c-ced5-454f-83c0-9478e6183b62"],
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "b4c6d8e0-1f2a-3b4c-5d6e-7f8a9b0c1d2e",
+                    "keyword": "Duality in Linear Programming",
+                    "description": "Every linear programming problem has a corresponding dual problem; solving one provides insights into the other.",
+                    "lectures": [
+                        "df805eda-39bb-4147-b9da-ade25bb4908d",
+                        "0eec1a18-09b9-41d4-8d83-d346669cd75e",
+                        "f9f4f8f5-b140-4c60-b3d9-05c422f461f0",
+                        "dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"
+                    ],
+                    "children": [
+                        {
+                            "id": "c5d7e9f1-2a3b-4c5d-6e7f-8a9b0c1d2e3f",
+                            "keyword": "Primal and Dual Problems",
+                            "description": "Pairs of LP problems where one is the original and the other has a reversed objective function and constraints.",
+                            "lectures": ["df805eda-39bb-4147-b9da-ade25bb4908d"],
+                            "children": []
+                        },
+                        {
+                            "id": "d6e8f0a2-3b4c-5d6e-7f8a-9b0c1d2e3f4a",
+                            "keyword": "Complementary Slackness",
+                            "description": "A theorem relating primal and dual variables at optimality.",
+                            "lectures": ["df805eda-39bb-4147-b9da-ade25bb4908d"],
+                            "children": []
+                        },
+                        {
+                            "id": "e7f9a1b3-4c5d-6e7f-8a9b-0c1d2e3f4a5b",
+                            "keyword": "General Duality",
+                            "description": "Establishing correspondence between a primal problem and its dual, where solving one solves the other.",
+                            "lectures": ["0eec1a18-09b9-41d4-8d83-d346669cd75e"],
+                            "children": [
+                                {
+                                    "id": "f8a0b2c4-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
+                                    "keyword": "Applications of Duality",
+                                    "description": "Real-world applications like resource allocation and supply chain management.",
+                                    "lectures": ["0eec1a18-09b9-41d4-8d83-d346669cd75e"],
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "a9b1c3d5-6e7f-8a9b-0c1d-2e3f4a5b6c7d",
+                            "keyword": "Duality Examples",
+                            "description": "Examples highlighting the connection between minimization and maximization problems.",
+                            "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                            "children": [
+                                {
+                                    "id": "b0c2d4e6-7f8a-9b0c-1d2e-3f4a5b6c7d8e",
+                                    "keyword": "Diet Problem",
+                                    "description": "Determining the optimal mix of foods to meet dietary needs at the lowest cost.",
+                                    "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "c1d3e5f7-8a9b-0c1d-2e3f-4a5b6c7d8e9f",
+                                    "keyword": "Dual Relationship",
+                                    "description": "Connecting minimization problems to their corresponding maximization problems.",
+                                    "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "d2e4f6a8-9b0c-1d2e-3f4a-5b6c7d8e9f0a",
+                            "keyword": "Duality Sensitivity Analysis",
+                            "description": "Analyzing how changes in constraints affect the optimal solution, focusing on primal-dual relationships.",
+                            "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                            "children": [
+                                {
+                                    "id": "e3f5a7b9-0c1d-2e3f-4a5b-6c7d8e9f0a1b",
+                                    "keyword": "Primal-Dual Relationship",
+                                    "description": "Fundamental connection between a maximization and its corresponding minimization problem.",
+                                    "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "f4a6b8c0-1d2e-3f4a-5b6c-7d8e9f0a1b2c",
+                                    "keyword": "Sensitivity Analysis Techniques",
+                                    "description": "Methods to evaluate the impact of changes in constraints or coefficients.",
+                                    "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "e5f7a9c1-2e3f-4a5b-6c7d-8e9f0a1b2c3d",
+                    "keyword": "Convex Analysis and Farkas Lemma",
+                    "description": "Studying convex sets and the Farkas Lemma, foundational for solving optimization problems.",
+                    "lectures": [
+                        "b1f987e0-f002-4932-b835-3ad3ade23b22",
+                        "b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"
+                    ],
+                    "children": [
+                        {
+                            "id": "f6a8b0d2-3f4a-5b6c-7d8e-9f0a1b2c3d4e",
+                            "keyword": "Convex Analysis",
+                            "description": "Studies convex sets, combinations, hulls, and separation theorems.",
+                            "lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+                            "children": [
+                                {
+                                    "id": "a7b9c1e3-4a5b-6c7d-8e9f-0a1b2c3d4e5f",
+                                    "keyword": "Convex Sets & Combinations",
+                                    "description": "Defines convex sets and their relationships with contained points.",
+                                    "lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "b8c0d2f4-5b6c-7d8e-9f0a-1b2c3d4e5f6a",
+                                    "keyword": "Separation Theorems & Convex Hulls",
+                                    "description": "Tools for analyzing and solving optimization problems involving convex sets.",
+                                    "lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "c9d1e3a5-6c7d-8e9f-0a1b-2c3d4e5f6a7b",
+                            "keyword": "Farkas Lemma",
+                            "description": "Establishes a relationship between the solvability of a system of linear inequalities and the existence of a particular solution.",
+                            "lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+                            "children": [
+                                {
+                                    "id": "d0e2f4b6-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
+                                    "keyword": "Feasibility",
+                                    "description": "Condition where a non-negative solution exists to satisfy the inequalities.",
+                                    "lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+                                    "children": []
+                                },
+                                {
+                                    "id": "e1f3a5c7-8e9f-0a1b-2c3d-4e5f6a7b8c9d",
+                                    "keyword": "Infeasibility",
+                                    "description": "Condition indicating the original system is not solvable.",
+                                    "lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "f7a9c1d3-4a5b-6c7d-8e9f-0a1b2c3d4e5f",
+            "keyword": "Sensitivity and Parametric Analysis",
+            "description": "Determining how changes in input data affect the optimal solution.",
+            "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+            "children": [
+                {
+                    "id": "a8b0c2d4-5b6c-7d8e-9f0a-1b2c3d4e5f6a",
+                    "keyword": "Sensitivity Analysis",
+                    "description": "Analyzing the impact of parameter changes on the optimal solution.",
+                    "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                    "children": [
+                        {
+                            "id": "b9c1d3e5-6c7d-8e9f-0a1b-2c3d4e5f6a7b",
+                            "keyword": "Impact of Parameter Changes",
+                            "description": "Examining how changes in coefficients or RHS affect the solution.",
+                            "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                            "children": []
+                        },
+                        {
+                            "id": "c0d2e4f6-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
+                            "keyword": "Optimal Solution Stability",
+                            "description": "Evaluating the robustness of the optimal solution to small changes.",
+                            "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "d1e3f5a7-8e9f-0a1b-2c3d-4e5f6a7b8c9d",
+                    "keyword": "Parametric Analysis",
+                    "description": "Exploring how the optimal solution shifts as parameters vary over a range.",
+                    "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                    "children": [
+                        {
+                            "id": "e2f4a6b8-9f0a-1b2c-3d4e-5f6a7b8c9d0e",
+                            "keyword": "Objective Function Parameter Variations",
+                            "description": "Examining the impact of changes in objective function parameters.",
+                            "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                            "children": []
+                        },
+                        {
+                            "id": "f3a5b7c9-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
+                            "keyword": "Constraint Parameter Variations",
+                            "description": "Evaluating how changes in constraints alter the optimal solution.",
+                            "lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "a9c1d3e5-6c7d-8e9f-0a1b-2c3d4e5f6a7b",
+            "keyword": "Integer Programming",
+            "description": "Optimization problems where some or all variables must be integer values.",
+            "lectures": [
+                "866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81",
+                "6a3bce7c-84d0-438b-8428-c5a79d404f85"
+            ],
+            "children": [
+                {
+                    "id": "b0d2e4f6-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
+                    "keyword": "Integer Programming Methods",
+                    "description": "Methods for solving integer programming problems.",
+                    "lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+                    "children": [
+                        {
+                            "id": "c1e3f5a7-8e9f-0a1b-2c3d-4e5f6a7b8c9d",
+                            "keyword": "Branch-and-Bound Method",
+                            "description": "Systematically explores solution space by creating subproblems and bounding them.",
+                            "lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+                            "children": []
+                        },
+                        {
+                            "id": "d2f4a6b8-9f0a-1b2c-3d4e-5f6a7b8c9d0e",
+                            "keyword": "Gomory Cuts",
+                            "description": "Technique used to refine feasible region and force integer solutions.",
+                            "lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "e3a5b7c9-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
+                    "keyword": "Integer Programming Examples",
+                    "description": "Applications requiring integer solutions in areas like scheduling and resource allocation.",
+                    "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                    "children": [
+                        {
+                            "id": "f4b6c8d0-1b2c-3d4e-5f6a-7b8c9d0e1f2a",
+                            "keyword": "Maximum Weight Matching",
+                            "description": "Optimizing the assignment of tasks or resources for best outcome.",
+                            "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                            "children": []
+                        },
+                        {
+                            "id": "a5c7d9e1-2c3d-4e5f-6a7b-8c9d0e1f2a3b",
+                            "keyword": "Machine Scheduling and Knapsack Problems",
+                            "description": "Scheduling tasks and optimizing resource allocation in constrained scenarios.",
+                            "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "b6d8e0f2-3d4e-5f6a-7b8c-9d0e1f2a3b4c",
+            "keyword": "Network Flow",
+            "description": "Optimizing movement through networks of interconnected points.",
+            "lectures": [
+                "b07f46a7-cbf0-41b4-823a-4e8374f61b01",
+                "f242d8c5-a635-4384-b3bb-ed7a94a9b980",
+                "0ce8c393-2665-4132-ae76-5b409dc704e6"
+            ],
+            "children": [
+                {
+                    "id": "c7e9f1a3-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+                    "keyword": "Formulation as a Linear Program",
+                    "description": "Expressing network flow problems as optimization problems with linear objectives and constraints.",
+                    "lectures": ["b07f46a7-cbf0-41b4-823a-4e8374f61b01"],
+                    "children": []
+                },
+                {
+                    "id": "d8f0a2b4-5f6a-7b8c-9d0e-1f2a3b4c5d6e",
+                    "keyword": "Spanning Trees and Optimality",
+                    "description": "Spanning trees serve as starting points for optimization algorithms.",
+                    "lectures": [
+                        "b07f46a7-cbf0-41b4-823a-4e8374f61b01",
+                        "0ce8c393-2665-4132-ae76-5b409dc704e6"
+                    ],
+                    "children": [
+                        {
+                            "id": "e9a1b3c5-6a7b-8c9d-0e1f-2a3b4c5d6e7f",
+                            "keyword": "Network Simplex Method",
+                            "description": "Specialized algorithm leveraging spanning trees to optimize flow.",
+                            "lectures": ["0ce8c393-2665-4132-ae76-5b409dc704e6"],
+                            "children": [
+                                {
+                                    "id": "f0b2c4d6-7b8c-9d0e-1f2a-3b4c5d6e7f8a",
+                                    "keyword": "Spanning Tree Optimization",
+                                    "description": "Using spanning trees for efficiently optimizing flows.",
+                                    "lectures": ["0ce8c393-2665-4132-ae76-5b409dc704e6"],
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "a1c3d5e7-8c9d-0e1f-2a3b-4c5d6e7f8a9b",
+                    "keyword": "Network Applications",
+                    "description": "Optimizing resource flow through networks, including transportation and shortest paths.",
+                    "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                    "children": [
+                        {
+                            "id": "b2d4e6f8-9d0e-1f2a-3b4c-5d6e7f8a9b0c",
+                            "keyword": "Transportation Problems",
+                            "description": "Minimizing cost of transporting resources from origins to destinations.",
+                            "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                            "children": []
+                        },
+                        {
+                            "id": "c3e5f7a9-0e1f-2a3b-4c5d-6e7f8a9b0c1d",
+                            "keyword": "Shortest Path Problems",
+                            "description": "Finding optimal routes between two points in a network.",
+                            "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "d4f6a8b0-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
+            "keyword": "Applications of Linear Programming",
+            "description": "Practical applications including production planning, portfolio optimization, regression, and classification.",
+            "lectures": [
+                "6a3bce7c-84d0-438b-8428-c5a79d404f85",
+                "fb8a8493-d3e8-4197-81dd-fd398b8080fb"
+            ],
+            "children": [
+                {
+                    "id": "e5a7c9d1-6e7f-8a9b-0c1d-2e3f4a5b6c7d",
+                    "keyword": "Production Planning",
+                    "description": "Optimizing production levels to meet demand while considering costs.",
+                    "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                    "children": []
+                },
+                {
+                    "id": "f6b8d0e2-7f8a-9b0c-1d2e-3f4a5b6c7d8e",
+                    "keyword": "Portfolio Selection",
+                    "description": "Maximizing returns while managing risk through resource allocation.",
+                    "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                    "children": []
+                },
+                {
+                    "id": "a7c9e1f3-8a9b-0c1d-2e3f-4a5b6c7d8e9f",
+                    "keyword": "Linear Regression",
+                    "description": "Modeling the relationship between dependent and independent variables.",
+                    "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                    "children": [
+                        {
+                            "id": "b8d0f2a4-9b0c-1d2e-3f4a-5b6c7d8e9f0a",
+                            "keyword": "Regression Techniques",
+                            "description": "Methods of calculating estimates for a regression line.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        },
+                        {
+                            "id": "c9e1a3b5-0c1d-2e3f-4a5b-6c7d8e9f0a1b",
+                            "keyword": "Linear Models",
+                            "description": "Using linear equations to find best-fit coefficients.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "d0f2b4c6-1d2e-3f4a-5b6c-7d8e9f0a1b2c",
+                    "keyword": "Binary Classification and Geometric Optimization",
+                    "description": "Assigning data points into categories using geometric optimization.",
+                    "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                    "children": [
+                        {
+                            "id": "e1a3c5d7-2e3f-4a5b-6c7d-8e9f0a1b2c3d",
+                            "keyword": "Data Separation",
+                            "description": "Finding optimal separating line or hyperplane between categories.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        },
+                        {
+                            "id": "f2b4d6e8-3f4a-5b6c-7d8e-9f0a1b2c3d4e",
+                            "keyword": "Geometric Optimization",
+                            "description": "Maximizing or minimizing distances between classes using geometric methods.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+
 
 export const LP_MAP_CHAT: MapNode = {
     "id": "e8b8f656-2b8a-4c3d-99e0-9f8e1f0b7c5d",
@@ -672,6 +1648,490 @@ export const LP_MAP_CHAT: MapNode = {
                         }
                     ]
                 }
+            ]
+        }
+    ]
+}
+
+
+export const LP_MAP_CHAT_EDIT: MapNode = {
+    "id": "e8b8f656-2b8a-4c3d-99e0-9f8e1f0b7c5d",
+    "keyword": "Linear Programming",
+    "description": "Linear programming is a mathematical method for achieving the best outcome in a model whose requirements are represented by linear relationships.",
+    "lectures": ["99c85304-93a7-4d4e-a1fd-931f219ae490"],
+    "children": [
+        {
+            "id": "a5f6b0c1-9c2e-4b8a-8d5c-5a6d0c7f8e9b",
+            "keyword": "Simplex Method",
+            "description": "An iterative algorithm used to solve linear programming problems by systematically evaluating vertices of the feasible region.",
+            "lectures": [
+                "53a2414d-8647-4238-b29b-c8d829f01956",
+                "d4750711-22f1-4639-8ab6-1e2393e88f68",
+                "24870d1e-c0cc-4c33-bdb6-aae0c0957dd3",
+                "4bcb992c-ced5-454f-83c0-9478e6183b62"
+            ],
+            "children": [
+                {
+                    "id": "c7d8e9f0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+                    "keyword": "Graphical Representation",
+                    "description": "Visual depiction of constraints by plotting the feasible region that satisfies all constraints.",
+                    "lectures": ["53a2414d-8647-4238-b29b-c8d829f01956"],
+                    "children": []
+                },
+                {
+                    "id": "d0e1f2a3-4b5c-6d7e-8f9a-0b1c2d3e4f5g",
+                    "keyword": "Feasible Region",
+                    "description": "The feasible region is the set of all possible solutions satisfying all constraints; vertices represent critical points for finding the optimal solution.",
+                    "lectures": ["53a2414d-8647-4238-b29b-c8d829f01956"],
+                    "children": []
+                },
+                {
+                    "id": "e1f2a3b4-5c6d-7e8f-9a0b-1c2d3e4f5g6h",
+                    "keyword": "Simplex Method Efficiency",
+                    "description": "Analyzing the performance of the Simplex method in average and worst-case scenarios.",
+                    "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                    "children": [
+                        {
+                            "id": "f2a3b4c5-6d7e-8f9a-0b1c-2d3e4f5g6h7i",
+                            "keyword": "Average-Case Performance",
+                            "description": "Evaluating the typical number of iterations required for different problem sizes.",
+                            "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                            "children": []
+                        },
+                        {
+                            "id": "a3b4c5d6-7e8f-9a0b-1c2d-3e4f5g6h7i8j",
+                            "keyword": "Worst-Case Scenarios",
+                            "description": "Exploring theoretical limitations of the algorithm in specific situations.",
+                            "lectures": ["d4750711-22f1-4639-8ab6-1e2393e88f68"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "b4c5d6e7-8f9a-0b1c-2d3e-4f5g6h7i8j9k",
+                    "keyword": "Simplex Matrix",
+                    "description": "Matrix representation of LP problems used in the Simplex algorithm's iterative process.",
+                    "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                    "children": [
+                        {
+                            "id": "c5d6e7f8-9a0b-1c2d-3e4f-5g6h7i8j9k0l",
+                            "keyword": "Matrix Representation",
+                            "description": "Using matrices to represent constraints and objective functions.",
+                            "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                            "children": []
+                        },
+                        {
+                            "id": "d6e7f8g9-a0b1-c2d3-e4f5-g6h7i8j9k0l1",
+                            "keyword": "Simplex Algorithm",
+                            "description": "Step-by-step process of modifying the matrix to find the optimal solution.",
+                            "lectures": ["24870d1e-c0cc-4c33-bdb6-aae0c0957dd3"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "e7f8g9h0-b1c2-d3e4-f5g6-h7i8j9k0l1m2",
+                    "keyword": "Dual Simplex Method",
+                    "description": "A variation of the Simplex Method used when the initial solution is not feasible but the dual problem is.",
+                    "lectures": ["4bcb992c-ced5-454f-83c0-9478e6183b62"],
+                    "children": [
+                        {
+                            "id": "f8g9h0i1-c2d3-e4f5-g6h7-i8j9k0l1m2n3",
+                            "keyword": "Simplex Method Variations",
+                            "description": "Variations like the Dual Simplex Method and Phase I Algorithm used in specific scenarios.",
+                            "lectures": ["4bcb992c-ced5-454f-83c0-9478e6183b62"],
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "g9h0i1j2-d3e4-f5g6-h7i8-j9k0l1m2n3o4",
+            "keyword": "Duality",
+            "description": "Every linear programming problem has a corresponding dual problem; solving one provides insights into the other.",
+            "lectures": [
+                "df805eda-39bb-4147-b9da-ade25bb4908d",
+                "0eec1a18-09b9-41d4-8d83-d346669cd75e",
+                "f9f4f8f5-b140-4c60-b3d9-05c422f461f0",
+                "dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"
+            ],
+            "children": [
+                {
+                    "id": "h0i1j2k3-e4f5-g6h7-i8j9-k0l1m2n3o4p5",
+                    "keyword": "Primal and Dual",
+                    "description": "Pairs of LP problems where one is the original and the other has a reversed objective function and constraints.",
+                    "lectures": ["df805eda-39bb-4147-b9da-ade25bb4908d"],
+                    "children": []
+                },
+                {
+                    "id": "i1j2k3l4-f5g6-h7i8-j9k0-l1m2n3o4p5q6",
+                    "keyword": "Complementary Slackness",
+                    "description": "A theorem relating primal and dual variables at optimality.",
+                    "lectures": ["df805eda-39bb-4147-b9da-ade25bb4908d"],
+                    "children": []
+                },
+                {
+                    "id": "j2k3l4m5-g6h7-i8j9-k0l1-m2n3o4p5q6r7",
+                    "keyword": "General Duality",
+                    "description": "Establishing correspondence between a primal problem and its dual, where solving one solves the other.",
+                    "lectures": ["0eec1a18-09b9-41d4-8d83-d346669cd75e"],
+                    "children": [
+                        {
+                            "id": "k3l4m5n6-h7i8-j9k0-l1m2-n3o4p5q6r7s8",
+                            "keyword": "Applications of Duality",
+                            "description": "Real-world applications like resource allocation and supply chain management.",
+                            "lectures": ["0eec1a18-09b9-41d4-8d83-d346669cd75e"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "l4m5n6o7-i8j9-k0l1-m2n3-o4p5q6r7s8t9",
+                    "keyword": "Duality Examples",
+                    "description": "Examples highlighting the connection between minimization and maximization problems.",
+                    "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                    "children": [
+                        {
+                            "id": "m5n6o7p8-j9k0-l1m2-n3o4-p5q6r7s8t9u0",
+                            "keyword": "Diet Problem",
+                            "description": "Determining the optimal mix of foods to meet dietary needs at the lowest cost.",
+                            "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                            "children": []
+                        },
+                        {
+                            "id": "n6o7p8q9-k0l1-m2n3-o4p5-q6r7s8t9u0v1",
+                            "keyword": "Dual Relationship",
+                            "description": "Connecting minimization problems to their corresponding maximization problems.",
+                            "lectures": ["f9f4f8f5-b140-4c60-b3d9-05c422f461f0"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "o7p8q9r0-l1m2-n3o4-p5q6-r7s8t9u0v1w2",
+                    "keyword": "Duality Sensitivity",
+                    "description": "Analyzing how changes in constraints affect the optimal solution, focusing on primal-dual relationships.",
+                    "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                    "children": [
+                        {
+                            "id": "p8q9r0s1-m2n3-o4p5-q6r7-s8t9u0v1w2x3",
+                            "keyword": "Primal-Dual",
+                            "description": "Fundamental connection between a maximization and its corresponding minimization problem.",
+                            "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                            "children": []
+                        },
+                        {
+                            "id": "q9r0s1t2-n3o4-p5q6-r7s8-t9u0v1w2x3y4",
+                            "keyword": "Sensitivity",
+                            "description": "Methods to evaluate the impact of changes in constraints or coefficients.",
+                            "lectures": ["dcc06a69-f8f1-4b75-b9ca-cecd6c82ba90"],
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+
+		{
+            "id": "m1n2o3p4-j5k6-l7m8-n9o0-p1q2r3s4t5u6",
+            "keyword": "Network Flow",
+            "description": "Optimizing movement through networks of interconnected points.",
+            "lectures": [
+                "b07f46a7-cbf0-41b4-823a-4e8374f61b01",
+                "f242d8c5-a635-4384-b3bb-ed7a94a9b980",
+                "0ce8c393-2665-4132-ae76-5b409dc704e6"
+            ],
+            "children": [
+                {
+                    "id": "n2o3p4q5-k6l7-m8n9-o0p1-q2r3s4t5u6v7",
+                    "keyword": "Formulation as a Linear Program",
+                    "description": "Expressing network flow problems as optimization problems with linear objectives and constraints.",
+                    "lectures": ["b07f46a7-cbf0-41b4-823a-4e8374f61b01"],
+                    "children": []
+                },
+                {
+                    "id": "o3p4q5r6-l7m8-n9o0-p1q2-r3s4t5u6v7w8",
+                    "keyword": "Spanning Trees and Optimality",
+                    "description": "Spanning trees serve as starting points for optimization algorithms.",
+                    "lectures": [
+                        "b07f46a7-cbf0-41b4-823a-4e8374f61b01",
+                        "0ce8c393-2665-4132-ae76-5b409dc704e6"
+                    ],
+                    "children": [
+                        {
+                            "id": "p4q5r6s7-m8n9-o0p1-q2r3-s4t5u6v7w8x9",
+                            "keyword": "Network Simplex Method",
+                            "description": "Specialized algorithm leveraging spanning trees to optimize flow.",
+                            "lectures": ["0ce8c393-2665-4132-ae76-5b409dc704e6"],
+                            "children": [
+                                {
+                                    "id": "q5r6s7t8-n9o0-p1q2-r3s4-t5u6v7w8x9y0",
+                                    "keyword": "Spanning Tree Optimization",
+                                    "description": "Using spanning trees for efficiently optimizing flows.",
+                                    "lectures": ["0ce8c393-2665-4132-ae76-5b409dc704e6"],
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "r6s7t8u9-o0p1-q2r3-s4t5-u6v7w8x9y0z1",
+                    "keyword": "Network Applications",
+                    "description": "Optimizing resource flow through networks, including transportation and shortest paths.",
+                    "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                    "children": [
+                        {
+                            "id": "s7t8u9v0-p1q2-r3s4-t5u6-v7w8x9y0z1a2",
+                            "keyword": "Transportation Problems",
+                            "description": "Minimizing cost of transporting resources from origins to destinations.",
+                            "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                            "children": []
+                        },
+                        {
+                            "id": "t8u9v0w1-q2r3-s4t5-u6v7-w8x9y0z1a2b3",
+                            "keyword": "Shortest Path Problems",
+                            "description": "Finding optimal routes between two points in a network.",
+                            "lectures": ["f242d8c5-a635-4384-b3bb-ed7a94a9b980"],
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+		{
+            "id": "u9v0w1x2-r3s4-t5u6-v7w8-x9y0z1a2b3c4",
+            "keyword": "Applications of Linear Programming",
+            "description": "Practical applications including production planning, portfolio optimization, regression, and classification.",
+            "lectures": [
+                "6a3bce7c-84d0-438b-8428-c5a79d404f85",
+                "fb8a8493-d3e8-4197-81dd-fd398b8080fb",
+				"9c83bfa8-d773-4ace-b84a-21f7d814b33c",
+				"b1f987e0-f002-4932-b835-3ad3ade23b22",
+				"866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81",
+				"6a3bce7c-84d0-438b-8428-c5a79d404f85",
+				"b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"
+            ],
+            "children": [
+                {
+                    "id": "v0w1x2y3-s4t5-u6v7-w8x9-y0z1a2b3c4d5",
+                    "keyword": "Production Planning",
+                    "description": "Optimizing production levels to meet demand while considering costs.",
+                    "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                    "children": []
+                },
+                {
+                    "id": "w1x2y3z4-t5u6-v7w8-x9y0-z1a2b3c4d5e6",
+                    "keyword": "Portfolio Selection",
+                    "description": "Maximizing returns while managing risk through resource allocation.",
+                    "lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+                    "children": []
+                },
+                {
+                    "id": "x2y3z4a5-u6v7-w8x9-y0z1-a2b3c4d5e6f7",
+                    "keyword": "Linear Regression",
+                    "description": "Modeling the relationship between dependent and independent variables.",
+                    "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                    "children": [
+                        {
+                            "id": "y3z4a5b6-v7w8-x9y0-z1a2-b3c4d5e6f7g8",
+                            "keyword": "Regression Techniques",
+                            "description": "Methods of calculating estimates for a regression line.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        },
+                        {
+                            "id": "z4a5b6c7-w8x9-y0z1-a2b3-c4d5e6f7g8h9",
+                            "keyword": "Linear Models",
+                            "description": "Using linear equations to find best-fit coefficients.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "id": "a5b6c7d8-x9y0-z1a2-b3c4-d5e6f7g8h9i0",
+                    "keyword": "Binary Classification and Geometric Optimization",
+                    "description": "Assigning data points into categories using geometric optimization.",
+                    "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                    "children": [
+                        {
+                            "id": "b6c7d8e9-y0z1-a2b3-c4d5-e6f7g8h9i0j1",
+                            "keyword": "Data Separation",
+                            "description": "Finding optimal separating line or hyperplane between categories.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        },
+                        {
+                            "id": "c7d8e9f0-z1a2-b3c4-d5e6-f7g8h9i0j1k2",
+                            "keyword": "Geometric Optimization",
+                            "description": "Maximizing or minimizing distances between classes using geometric methods.",
+                            "lectures": ["fb8a8493-d3e8-4197-81dd-fd398b8080fb"],
+                            "children": []
+                        }
+                    ]
+                },
+				{
+					"id": "r0s1t2u3-o4p5-q6r7-s8t9-u0v1w2x3y4z5",
+					"keyword": "Sensitivity and Parametric Analysis",
+					"description": "Determining how changes in input data affect the optimal solution.",
+					"lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+					"children": [
+						{
+							"id": "s1t2u3v4-p5q6-r7s8-t9u0-v1w2x3y4z5a6",
+							"keyword": "Sensitivity",
+							"description": "Analyzing the impact of parameter changes on the optimal solution.",
+							"lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+							"children": [
+								{
+									"id": "t2u3v4w5-q6r7-s8t9-u0v1-w2x3y4z5a6b7",
+									"keyword": "Impact of Parameter Changes",
+									"description": "Examining how changes in coefficients or RHS affect the solution.",
+									"lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+									"children": []
+								},
+								{
+									"id": "u3v4w5x6-r7s8-t9u0-v1w2-x3y4z5a6b7c8",
+									"keyword": "Optimal Solution Stability",
+									"description": "Evaluating the robustness of the optimal solution to small changes.",
+									"lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+									"children": []
+								}
+							]
+						},
+						{
+							"id": "v4w5x6y7-s8t9-u0v1-w2x3-y4z5a6b7c8d9",
+							"keyword": "Parametric Analysis",
+							"description": "Exploring how the optimal solution shifts as parameters vary over a range.",
+							"lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+							"children": [
+								{
+									"id": "w5x6y7z8-t9u0-v1w2-x3y4-z5a6b7c8d9e0",
+									"keyword": "Objective Function Parameter Variations",
+									"description": "Examining the impact of changes in objective function parameters.",
+									"lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+									"children": []
+								},
+								{
+									"id": "x6y7z8a9-u0v1-w2x3-y4z5-a6b7c8d9e0f1",
+									"keyword": "Constraint Parameter Variations",
+									"description": "Evaluating how changes in constraints alter the optimal solution.",
+									"lectures": ["9c83bfa8-d773-4ace-b84a-21f7d814b33c"],
+									"children": []
+								}
+							]
+						}
+					]
+				},{
+					"id": "y7z8a9b0-v1w2-x3y4-z5a6-b7c8d9e0f1g2",
+					"keyword": "Convex Analysis and Farkas Lemma",
+					"description": "Studying convex sets and the Farkas Lemma, foundational for solving optimization problems.",
+					"lectures": [
+						"b1f987e0-f002-4932-b835-3ad3ade23b22",
+						"b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"
+					],
+					"children": [
+						{
+							"id": "z8a9b0c1-w2x3-y4z5-a6b7-c8d9e0f1g2h3",
+							"keyword": "Convex Analysis",
+							"description": "Studies convex sets, combinations, hulls, and separation theorems.",
+							"lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+							"children": [
+								{
+									"id": "a9b0c1d2-x3y4-z5a6-b7c8-d9e0f1g2h3i4",
+									"keyword": "Convex Sets & Combinations",
+									"description": "Defines convex sets and their relationships with contained points.",
+									"lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+									"children": []
+								},
+								{
+									"id": "b0c1d2e3-y4z5-a6b7-c8d9-e0f1g2h3i4j5",
+									"keyword": "Separation Theorems & Convex Hulls",
+									"description": "Tools for analyzing and solving optimization problems involving convex sets.",
+									"lectures": ["b1f987e0-f002-4932-b835-3ad3ade23b22"],
+									"children": []
+								}
+							]
+						},
+						{
+							"id": "c1d2e3f4-z5a6-b7c8-d9e0-f1g2h3i4j5k6",
+							"keyword": "Farkas Lemma",
+							"description": "Establishes a relationship between the solvability of a system of linear inequalities and the existence of a particular solution.",
+							"lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+							"children": [
+								{
+									"id": "d2e3f4g5-a6b7-c8d9-e0f1-g2h3i4j5k6l7",
+									"keyword": "Feasibility",
+									"description": "Condition where a non-negative solution exists to satisfy the inequalities.",
+									"lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+									"children": []
+								},
+								{
+									"id": "e3f4g5h6-b7c8-d9e0-f1g2-h3i4j5k6l7m8",
+									"keyword": "Infeasibility",
+									"description": "Condition indicating the original system is not solvable.",
+									"lectures": ["b1c3b0cf-1b3a-407c-8f0d-32cf24c42f96"],
+									"children": []
+								}
+							]
+						}
+					]
+				},         {
+					"id": "f4g5h6i7-c8d9-e0f1-g2h3-i4j5k6l7m8n9",
+					"keyword": "Integer Programming",
+					"description": "Optimization problems where some or all variables must be integer values.",
+					"lectures": [
+						"866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81",
+						"6a3bce7c-84d0-438b-8428-c5a79d404f85"
+					],
+					"children": [
+						{
+							"id": "g5h6i7j8-d9e0-f1g2-h3i4-j5k6l7m8n9o0",
+							"keyword": "Integer Programming Methods",
+							"description": "Methods for solving integer programming problems.",
+							"lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+							"children": [
+								{
+									"id": "h6i7j8k9-e0f1-g2h3-i4j5-k6l7m8n9o0p1",
+									"keyword": "Branch-and-Bound Method",
+									"description": "Systematically explores solution space by creating subproblems and bounding them.",
+									"lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+									"children": []
+								},
+								{
+									"id": "i7j8k9l0-f1g2-h3i4-j5k6-l7m8n9o0p1q2",
+									"keyword": "Gomory Cuts",
+									"description": "Technique used to refine feasible region and force integer solutions.",
+									"lectures": ["866ea1ec-8c7b-4802-bbb4-2ad5a0a2ee81"],
+									"children": []
+								}
+							]
+						},
+						{
+							"id": "j8k9l0m1-g2h3-i4j5-k6l7-m8n9o0p1q2r3",
+							"keyword": "Integer Programming Examples",
+							"description": "Applications requiring integer solutions in areas like scheduling and resource allocation.",
+							"lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+							"children": [
+								{
+									"id": "k9l0m1n2-h3i4-j5k6-l7m8-n9o0p1q2r3s4",
+									"keyword": "Maximum Weight Matching",
+									"description": "Optimizing the assignment of tasks or resources for best outcome.",
+									"lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+									"children": []
+								},
+								{
+									"id": "l0m1n2o3-i4j5-k6l7-m8n9-o0p1q2r3s4t5",
+									"keyword": "Machine Scheduling and Knapsack Problems",
+									"description": "Scheduling tasks and optimizing resource allocation in constrained scenarios.",
+									"lectures": ["6a3bce7c-84d0-438b-8428-c5a79d404f85"],
+									"children": []
+								}
+							]
+						}
+					]
+				}
             ]
         }
     ]
