@@ -1,0 +1,62 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Summary</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        margin: 20px;
+                        background-color: #f9f9f9;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        background: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #444;
+                    }
+                    h2 {
+                        border-bottom: 2px solid #ddd;
+                        padding-bottom: 5px;
+                        color: #555;
+                        page-break-before: always;
+                    }
+                    ul {
+                        padding-left: 20px;
+                    }
+                    li {
+                        margin: 5px 0;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 20px;
+                        font-size: 0.9em;
+                        color: #777;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Summary</h1>
+            <h2>Key Terms</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=1'>Simplex Method</a>: An iterative algorithm used to solve linear programming problems by moving from one vertex of the feasible region to another until an optimal solution is found.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=1'>Slack Variable</a>: A non-negative variable added to a less-than-or-equal-to constraint to transform it into an equality constraint.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=2'>Feasible Region</a>: The set of all points that satisfy all the constraints of a linear programming problem.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=4'>Vertex</a>: A point where two or more constraint boundaries intersect in the feasible region of a linear programming problem. Vertices represent potential optimal solutions.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=9'>Basic Variable</a>: In the Simplex method, a variable that is expressed in terms of non-basic variables in a dictionary.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Non-basic Variable</a>: In the Simplex method, a variable set to zero in a given iteration of the algorithm.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=9'>Pivot Operation</a>: The process of exchanging a basic and a non-basic variable in the Simplex method to move to a new vertex in the feasible region.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=26'>Dictionary</a>: A representation of a linear programming problem where basic variables are expressed as functions of non-basic variables.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=32'>Auxiliary Problem</a>: A modified linear programming problem introduced to find an initial feasible solution when the origin is not feasible in the original problem.</li>
+</ul>
+<h2>Problem Types</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=32'>Finding an Initial Feasible Solution</a>: The problem of finding a feasible solution when the origin is not in the feasible region is addressed by introducing an auxiliary problem. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=2'>Solving Linear Programs Graphically in Two Dimensions</a>: This problem involves finding the optimal solution to a linear program by graphically identifying the feasible region and its vertices. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=1'>Solving Linear Programs Using the Simplex Method</a>: This problem focuses on using the simplex method to iteratively improve a solution by moving from one vertex to another in the feasible region until the optimal solution is found. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=26'>Using Dictionaries to Represent and Solve Linear Programs</a>: This problem involves using dictionaries to represent the linear program, where basic variables are expressed in terms of non-basic variables, and iteratively updating the dictionary through pivot operations to find the optimal solution. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=30'>Handling Infeasible Origins in Linear Programming</a>: This problem addresses situations where the origin is not a feasible solution, requiring the use of an auxiliary problem to find an initial feasible solution before applying the simplex method. </li>
+</ul>
+<h2>Algorithm Solutions</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Simplex Method</a>: Iteratively move from one vertex of the feasible region to another by setting non-basic variables to zero and choosing a new set of (non)basic variables to improve the objective function. This corresponds to moving from vertex to vertex in the graphical representation.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=9'>Pivot Operation</a>: Interchange one basic and one non-basic variable in the dictionary to move to a new vertex in the feasible region, updating the equations and objective function accordingly.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=32'>Auxiliary Problem</a>: Introduce a new variable $x_0$ and modify constraints to create a new problem where the origin is feasible. Solve this problem to find a feasible solution for the original problem, then proceed with the Simplex method.</li>
+</ul>

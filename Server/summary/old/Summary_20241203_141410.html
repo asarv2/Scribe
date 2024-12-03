@@ -1,0 +1,77 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Summary</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        margin: 20px;
+                        background-color: #f9f9f9;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        background: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #444;
+                    }
+                    h2 {
+                        border-bottom: 2px solid #ddd;
+                        padding-bottom: 5px;
+                        color: #555;
+                        page-break-before: always;
+                    }
+                    ul {
+                        padding-left: 20px;
+                    }
+                    li {
+                        margin: 5px 0;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 20px;
+                        font-size: 0.9em;
+                        color: #777;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Summary</h1>
+            <h2>Key Terms</h2>
+<ul>
+<li>Dictionary <a href='26'>Dictionary</a>: A representation of a linear programming problem where basic variables are expressed as functions of non-basic variables.</li><li>Auxiliary Problem <a href='32'>Auxiliary Problem</a>: A modified linear programming problem introduced to find a feasible starting point for the Simplex method when the origin is not feasible.</li>
+<li>Complementary Slackness <a href='22'>Complementary Slackness</a>: A condition that holds at the optimal solution of a linear programming problem and its dual, stating that the product of a primal variable and its corresponding dual slack variable is zero. </li>
+<li>Smallest Ball Problem <a href='22'>Smallest Ball Problem</a>: Finding the smallest radius ball that encloses a set of points in a d-dimensional space. </li>
+<li>Machine Scheduling <a href='22'>Machine Scheduling</a>: The problem of assigning jobs to machines to minimize the total completion time.</li><li>Knapsack Problem <a href='24'>Knapsack Problem</a>: The problem of selecting a subset of items with weights and values to maximize the total value without exceeding a weight capacity.</li><li>Cutting Stock Problem <a href='25'>Cutting Stock Problem</a>: The problem of cutting large rolls of material into smaller rolls to minimize waste.</li><li>Sparse Solutions of Linear System <a href='30'>Sparse Solutions of Linear System</a>: Finding a solution to a linear system with a limited number of non-zero elements.</li><li>$l_1$ Norm <a href='34'>$l_1$ Norm</a>: The sum of the absolute values of the elements of a vector.</li>
+<li>Subtrees (Ι and ΙΙ) <a href='34'>Subtrees (Ι and ΙΙ)</a>: Two disjoint trees resulting from removing a leaving arc from a spanning tree in the dual network simplex method.</li><li>Parametric Self-Dual Method <a href='45'>Parametric Self-Dual Method</a>: A method that interweaves primal and dual pivot steps to solve linear programming problems by reducing a perturbation parameter.</li>
+</ul>
+<h2>Problem Types</h2>
+<ul>
+<li>Finding an Initial Feasible Solution <a href='32'>Finding an Initial Feasible Solution</a>:  The problem of finding a feasible solution to start the Simplex method, especially when the origin is not feasible. An auxiliary problem is introduced to find a feasible starting point. </li><li>Handling Infeasible Origins <a href='30'>Handling Infeasible Origins</a>:  Addressing situations where the origin (0,0) is not a feasible solution to the linear programming problem. This requires the use of an auxiliary problem to find a feasible starting point for the Simplex method. </li>
+<li>Deriving Complementary Slackness from Primal-Dual Relationships <a href='22'>Deriving Complementary Slackness from Primal-Dual Relationships</a>: This problem involves demonstrating the complementary slackness conditions by manipulating the equations representing the primal and dual objective functions. </li>
+<li>Understanding Complementary Slackness <a href='22'>Understanding Complementary Slackness</a>: This problem involves understanding and applying the complementary slackness conditions, which relate the optimal solutions of the primal and dual problems. </li>
+<li>Finding the Smallest Enclosing Ball <a href='22'>Finding the Smallest Enclosing Ball</a>: This problem aims to find the smallest radius ball that contains all given points in a d-dimensional space. </li>
+<li>Machine Scheduling <a href='22'>Machine Scheduling</a>: Determining the optimal order to process printing jobs on different machines to minimize the total processing time. </li><li>Knapsack Problem <a href='24'>Knapsack Problem</a>: Selecting a subset of items with weights and values to maximize the total value while not exceeding a weight capacity. </li><li>Cutting Stock Problem <a href='25'>Cutting Stock Problem</a>: Determining how to cut large rolls of paper into smaller rolls of various widths to minimize waste while meeting customer demands. </li><li>Sparse Solutions of Linear System <a href='30'>Sparse Solutions of Linear System</a>: Finding a solution to an underdetermined system of linear equations that has a limited number of non-zero elements. </li>
+<li>Applying the Primal Simplex Method to Network Flows <a href='22'>Applying the Primal Simplex Method to Network Flows</a>: This problem involves using the primal simplex method to iteratively improve a feasible tree solution until an optimal solution is found. </li>
+<li>Dual Network Simplex Method <a href='32'>Dual Network Simplex Method</a>: This problem involves finding an optimal solution starting from a dual feasible but not necessarily primal feasible solution. </li><li>Handling Infeasible Solutions <a href='45'>Handling Infeasible Solutions</a>: This problem addresses strategies for finding feasible solutions when the initial solution is infeasible, either primal or dual. </li>
+<li>Setting up a Linear Program for Solution <a href='22'>Setting up a Linear Program for Solution</a>: This problem involves formulating a linear program in matrix form, identifying the basis and non-basic variables, and preparing it for solution using an algorithm like the simplex method. </li>
+</ul>
+<h2>Algorithm Solutions</h2>
+<ul>
+<li>Auxiliary Problem <a href='32'>Auxiliary Problem</a>:  Introduce a new variable $x_0$ and modify constraints to create a new problem where the origin is feasible. Solve this auxiliary problem to find a feasible solution for the original problem. If the optimal solution to the auxiliary problem has $x_0 = 0$, then this solution is feasible for the original problem.</li>
+<li>Complementary Slackness <a href='22'>Complementary Slackness</a>: If $x^$ is optimal for (P) and $\lambda^$ is optimal for (D), then $x^_i \lambda^_i = 0$ for all $i$</li>
+<li>Machine Scheduling <a href='23'>Machine Scheduling</a>: $\min \pi$ s.t. $\sum_{i \in M} x_{ij} = 1$ for $j \in J$, $\sum_{j \in J} d_{ij} x_{ij} \le \pi$ for $i \in M$, $x_{ij} \in \{0, 1\}$ for all $i, j$ </li><li>Knapsack Problem <a href='24'>Knapsack Problem</a>: maximize $\sum_{j=1}^n c_j x_j$ subject to $\sum_{j=1}^n a_j x_j \le b$, $x_j \in \{0, 1\}$, $j = 1, 2, \dots, n$ </li><li>Cutting Stock Problem <a href='29'>Cutting Stock Problem</a>: $\min x_1 + x_2 + \dots + x_{12}$ subject to  constraints based on cutting patterns $P_i$ and demand for each roll width </li><li>Sparse Solutions of Linear System <a href='34'>Sparse Solutions of Linear System</a>: $\min \|x\|_1$ s.t. $Ax = b$ </li>
+<li>Primal Simplex Method for Network Flows <a href='22'>Primal Simplex Method for Network Flows</a>: Iteratively identify an entering variable (arc with most negative reduced cost), a leaving variable (arc in the cycle formed by the entering variable and the spanning tree), update the spanning tree, and update primal and dual variables until all dual slacks are non-negative.</li>
+<li>Network Simplex Method (Dual) <a href='32'>Network Simplex Method (Dual)</a>: Find a spanning tree T. Iteratively choose a leaving arc with $x_{ij} < 0$. The entering arc bridges the two subtrees in the opposite direction of the leaving arc and has the smallest dual slack. </li><li>Two-Phased Network Simplex Method <a href='45'>Two-Phased Network Simplex Method</a>:  Artificially alter costs to ensure dual feasibility of an initial tree solution, then use the primal network simplex method to find an optimal solution. Alternatively, alter supplies to ensure primal feasibility, find a dual feasible solution, and then use the dual network simplex method to optimize. </li><li>Parametric Self-Dual Network Simplex Method <a href='45'>Parametric Self-Dual Network Simplex Method</a>: Intertwine primal and dual pivots to reduce a perturbation parameter μ from ∞ to 0. </li>
+</ul>
