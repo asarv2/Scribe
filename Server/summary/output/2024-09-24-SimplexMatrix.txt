@@ -1,0 +1,556 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex in Matrix Notation}
+
+\begin{align*}
+\max \ \ & \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ & \mathbf{A} \mathbf{x} \le \mathbf{b} \\
+& \mathbf{x} \ge \mathbf{0}
+\end{align*}
+$\mathbf{x} \in \mathbb{R}^n$, $\mathbf{c} \in \mathbb{R}^n$ \\
+$\mathbf{A} \in \mathbb{R}^{m \times n}$, $\mathbf{b} \in \mathbb{R}^m$
+
+\vspace{1cm}
+
+\begin{align*}
+\max \ \ & \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ & \mathbf{w} = \mathbf{b} - \mathbf{A} \mathbf{x} \\
+& \mathbf{x}, \mathbf{w} \ge \mathbf{0}
+\end{align*}
+$\mathbf{w} \in \mathbb{R}^m$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents two equivalent formulations of a linear programming problem in matrix notation.  The top formulation is the standard form, where the objective function is to maximize $\mathbf{c}^T \mathbf{x}$ subject to the constraints $\mathbf{A} \mathbf{x} \le \mathbf{b}$ and $\mathbf{x} \ge \mathbf{0}$.  The bottom formulation introduces a slack variable $\mathbf{w}$ to convert the inequality constraint to an equality constraint, making the problem more suitable for simplex method implementation.  The slide also defines the dimensions of the vectors and matrices involved ($\mathbf{x} \in \mathbb{R}^n$, $\mathbf{c} \in \mathbb{R}^n$, $\mathbf{A} \in \mathbb{R}^{m \times n}$, $\mathbf{b} \in \mathbb{R}^m$, $\mathbf{w} \in \mathbb{R}^m$).  The red arrows indicate a transformation between the two formulations. This is likely the first step in a lecture series explaining the simplex method in matrix form.
+
+
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex in Matrix Notation}
+
+\begin{align*}
+\max \ \ & \mathbf{z}(\mathbf{x}) = \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ & \mathbf{A} \mathbf{x} \le \mathbf{b} \\
+& \mathbf{x} \ge \mathbf{0}
+\end{align*}
+$\mathbf{x} \in \mathbb{R}^n$, $\mathbf{c} \in \mathbb{R}^n$ \\
+$\mathbf{A} \in \mathbb{R}^{m \times n}$, $\mathbf{b} \in \mathbb{R}^m$
+
+\vspace{1cm}
+
+\begin{align*}
+\max \ \ & \mathbf{z}(\mathbf{x}) = \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ & \mathbf{w} = \mathbf{b} - \mathbf{A} \mathbf{x} \\
+& \mathbf{x}, \mathbf{w} \ge \mathbf{0}
+\end{align*}
+$\mathbf{w} \in \mathbb{R}^m$
+
+\vspace{1cm}
+
+\begin{align*}
+\max \ \ & \mathbf{z}(\mathbf{x}) = \overline{\mathbf{z}} + \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ & \overline{\mathbf{w}} = \overline{\mathbf{b}} - \mathbf{A} \mathbf{x} \\
+& \mathbf{x}, \overline{\mathbf{w}} \ge \mathbf{0}
+\end{align*}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of linear programming in matrix notation, focusing on the transformation of the problem for simplex iterations.  It introduces a new formulation, where the objective function now includes a constant term $\overline{\mathbf{z}}$.  The constraint $\mathbf{w} = \mathbf{b} - \mathbf{A} \mathbf{x}$ is replaced by $\overline{\mathbf{w}} = \overline{\mathbf{b}} - \mathbf{A} \mathbf{x}$.  The notation suggests a transition to a specific form of the simplex method, where the initial solution is not necessarily all zeros. The arrows and text "Simplex iterates" indicate that this is a step in the simplex algorithm.  The introduction of the overlined variables ($\overline{\mathbf{z}}$, $\overline{\mathbf{w}}$, $\overline{\mathbf{b}}$) suggests a shift from the initial problem formulation to a form suitable for the iterative steps of the simplex method.  The slide is likely part of a lecture explaining how the simplex method works in matrix form.
+
+
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex in Matrix Notation}
+
+\begin{align*}
+\max \ \ &\mathbf{z}(\mathbf{x}) = \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ & \mathbf{A} \mathbf{x} + \mathbf{w} = \mathbf{b} \\
+& \mathbf{x}, \mathbf{w} \ge \mathbf{0}
+\end{align*}
+$m \times (n+m)$  $\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$
+$\mathbf{x} \in \mathbb{R}^n$, $\mathbf{c} \in \mathbb{R}^n$, $\mathbf{w} \in \mathbb{R}^m$
+$\mathbf{A} \in \mathbb{R}^{m \times n}$, $\mathbf{b} \in \mathbb{R}^m$
+
+\vspace{1cm}
+
+\begin{align*}
+\max \ \ &\mathbf{z}(\mathbf{x}) = \overline{\mathbf{z}} + \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ &\overline{\mathbf{A}} \mathbf{x} + \overline{\mathbf{w}} = \overline{\mathbf{b}} \\
+& \mathbf{x}, \overline{\mathbf{w}} \ge \mathbf{0}
+\end{align*}
+$m \times (n+m)$  $\begin{bmatrix} \overline{\mathbf{A}} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \overline{\mathbf{w}} \end{bmatrix} = \overline{\mathbf{b}}$
+$\mathbf{x} \in \mathbb{R}^n$, $\mathbf{c} \in \mathbb{R}^n$, $\overline{\mathbf{w}} \in \mathbb{R}^m$
+$\overline{\mathbf{A}} \in \mathbb{R}^{m \times n}$, $\overline{\mathbf{b}} \in \mathbb{R}^m$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide further develops the matrix representation of a linear programming problem, specifically for the simplex method.  It shows two formulations. The top formulation presents the standard form of the problem, where the constraints are expressed as equalities using slack variables ($\mathbf{w}$).  The bottom formulation, marked for simplex iterations, introduces overlined variables ($\overline{\mathbf{z}}$, $\overline{\mathbf{w}}$, $\overline{\mathbf{b}}$), suggesting a transformation of the problem into a form suitable for the iterative steps of the simplex algorithm.  The matrix notation $\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$ and its counterpart for the second formulation highlight the augmented matrix representation of the constraints.  The dimensions of the vectors and matrices are explicitly stated, emphasizing the linear algebraic structure of the problem.  This slide is likely part of a lecture explaining the simplex method in matrix form, showing how the problem is set up for iterative calculations.
+
+
+Slide 4
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Basic and Non-Basic Variables}
+
+$\mathbf{x} = \begin{pmatrix}
+x_1 \\
+\vdots \\
+x_n \\
+w_1 \\
+\vdots \\
+w_m
+\end{pmatrix} = \begin{pmatrix}
+x_1 \\
+\vdots \\
+x_n \\
+x_{n+1} \\
+\vdots \\
+x_{n+m}
+\end{pmatrix} = \begin{pmatrix}
+\mathbf{x}_B \\
+\mathbf{x}_N
+\end{pmatrix}$
+
+$\mathbf{c}^T \mathbf{x} = \sum_{j=1}^n c_j x_j = \sum_{j \in B} c_j x_j + \sum_{j \in N} c_j x_j = \mathbf{c}_B^T \mathbf{x}_B + \mathbf{c}_N^T \mathbf{x}_N$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces the concept of basic and non-basic variables in the context of the simplex method.  It shows how the vector $\mathbf{x}$ can be partitioned into two sub-vectors: $\mathbf{x}_B$ (basic variables) and $\mathbf{x}_N$ (non-basic variables).  The notation suggests that the basic variables are a subset of the original variables, and the non-basic variables are the remaining ones.  The equation $\mathbf{c}^T \mathbf{x} = \sum_{j=1}^n c_j x_j = \sum_{j \in B} c_j x_j + \sum_{j \in N} c_j x_j = \mathbf{c}_B^T \mathbf{x}_B + \mathbf{c}_N^T \mathbf{x}_N$ demonstrates how the objective function can be expressed in terms of basic and non-basic variables.  This is a crucial step in the simplex algorithm, as it allows for efficient calculation of the objective function and identification of the next iteration.  The notation $j \in B$ and $j \in N$ indicates that the summation is over the indices of the basic and non-basic variables, respectively.  The slide is likely part of a lecture explaining the simplex method's underlying structure.
+
+
+Slide 5
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Basic and Non-Basic Variables}
+
+$\mathbf{x} = \begin{pmatrix}
+x_1 \\
+\vdots \\
+x_n \\
+w_1 \\
+\vdots \\
+w_m
+\end{pmatrix} = \begin{pmatrix}
+\mathbf{x}_B \\
+\mathbf{x}_N
+\end{pmatrix}$
+
+$ \mathbf{A} \mathbf{x} + \mathbf{w} = \mathbf{b} \iff \sum_{j=1}^n a_{ij} x_j + x_{n+i} = b_i$
+
+$\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$
+
+$\sum_{j \in B} a_{ij} x_j + \sum_{j \in N} a_{ij} x_j + x_{n+i} = b_i$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of basic and non-basic variables in the context of the simplex method.  It explicitly shows how the constraint equation $\mathbf{A} \mathbf{x} + \mathbf{w} = \mathbf{b}$ can be rewritten in terms of basic and non-basic variables.  The key is the partitioning of the vector $\mathbf{x}$ into $\mathbf{x}_B$ (basic variables) and $\mathbf{x}_N$ (non-basic variables).  The equation $\sum_{j=1}^n a_{ij} x_j + x_{n+i} = b_i$ demonstrates how each constraint equation can be expressed in terms of the basic and non-basic variables.  The matrix notation $\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$ highlights the augmented matrix representation of the constraints, which is crucial for the simplex method's iterative calculations.  The slide is likely part of a lecture explaining the simplex method's underlying structure and how the constraints are handled in the algorithm.
+
+
+
+
+Slide 6
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Basic and Non-Basic Variables}
+
+$\mathbf{x} = \begin{pmatrix}
+x_1 \\
+\vdots \\
+x_n \\
+w_1 \\
+\vdots \\
+w_m
+\end{pmatrix} = \begin{pmatrix}
+\mathbf{x}_B \\
+\mathbf{x}_N
+\end{pmatrix}$
+
+$\mathbf{A} \mathbf{x} + \mathbf{w} = \mathbf{b} \iff \sum_{j=1}^n a_{ij} x_j + x_{n+i} = b_i$
+
+$\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$
+
+$\sum_{j \in B} a_{ij} x_j + \sum_{j \in N} a_{ij} x_j + x_{n+i} = b_i$
+
+$\mathbf{x}_B + \mathbf{x}_N = \mathbf{b}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of basic and non-basic variables in the context of the simplex method.  It explicitly shows how the constraint equation $\mathbf{A} \mathbf{x} + \mathbf{w} = \mathbf{b}$ can be rewritten in terms of basic and non-basic variables.  The key is the partitioning of the vector $\mathbf{x}$ into $\mathbf{x}_B$ (basic variables) and $\mathbf{x}_N$ (non-basic variables).  The equation $\sum_{j=1}^n a_{ij} x_j + x_{n+i} = b_i$ demonstrates how each constraint equation can be expressed in terms of the basic and non-basic variables.  The matrix notation $\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$ highlights the augmented matrix representation of the constraints, which is crucial for the simplex method's iterative calculations.  The new equation $\mathbf{x}_B + \mathbf{x}_N = \mathbf{b}$ is introduced, showing the relationship between the basic and non-basic variables and the right-hand side vector $\mathbf{b}$.  The slide is likely part of a lecture explaining the simplex method's underlying structure and how the constraints are handled in the algorithm.
+
+
+
+
+Slide 7
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Basic and Non-Basic Variables}
+
+$\mathbf{x} = \begin{pmatrix}
+x_1 \\
+\vdots \\
+x_n \\
+w_1 \\
+\vdots \\
+w_m
+\end{pmatrix} = \begin{pmatrix}
+\mathbf{x}_B \\
+\mathbf{x}_N
+\end{pmatrix}$
+
+$\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{pmatrix} \mathbf{x}_B \\ \mathbf{x}_N \end{pmatrix} = \mathbf{b}$
+
+$\mathbf{A}_B \mathbf{x}_B + \mathbf{A}_N \mathbf{x}_N + \mathbf{w} = \mathbf{b}$
+
+$B = $ basic variables columns of $[\mathbf{A} \ \mathbf{I}]$
+
+$N = $ non-basic variables columns of $[\mathbf{A} \ \mathbf{I}]$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide further clarifies the concept of basic and non-basic variables in the context of the simplex method.  It explicitly shows how the augmented matrix representation of the constraints, $\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{pmatrix} \mathbf{x}_B \\ \mathbf{x}_N \end{pmatrix} = \mathbf{b}$, is partitioned into basic and non-basic variable columns.  The equation $\mathbf{A}_B \mathbf{x}_B + \mathbf{A}_N \mathbf{x}_N + \mathbf{w} = \mathbf{b}$ demonstrates how the constraints are expressed in terms of these partitions.  Crucially, the slide defines $B$ and $N$ as sets of indices corresponding to the basic and non-basic variable columns in the augmented matrix.  This is a critical step in the simplex algorithm, as it allows for efficient manipulation of the constraints during the iterative process.  The slide is likely part of a lecture explaining the simplex method's underlying structure and how the constraints are handled in the algorithm.
+
+
+Slide 8
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex Iterations in Matrix Form}
+
+\begin{enumerate}
+    \item $B \mathbf{x}_B + N \mathbf{x}_N = \mathbf{b} \implies \mathbf{x}_B = B^{-1} \mathbf{b} - B^{-1} N \mathbf{x}_N$
+    \item $\mathcal{Z} = \mathbf{c}_B^T \mathbf{x}_B + \mathbf{c}_N^T \mathbf{x}_N = \mathbf{c}_B^T (B^{-1} \mathbf{b} - B^{-1} N \mathbf{x}_N) + \mathbf{c}_N^T \mathbf{x}_N$
+    \item $= \mathbf{c}_B^T B^{-1} \mathbf{b} - \mathbf{c}_B^T B^{-1} N \mathbf{x}_N + \mathbf{c}_N^T \mathbf{x}_N$
+    \item $= \mathbf{c}_B^T B^{-1} \mathbf{b} + (\mathbf{c}_N^T - \mathbf{c}_B^T B^{-1} N) \mathbf{x}_N$
+    \item $= \overline{\mathcal{Z}} + \mathbf{c}_N^T \mathbf{x}_N$
+\end{enumerate}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the derivation of the objective function in matrix form during a simplex iteration.  It shows how the objective function ($\mathcal{Z}$) is expressed in terms of basic ($\mathbf{x}_B$) and non-basic ($\mathbf{x}_N$) variables, given the constraint equation $B \mathbf{x}_B + N \mathbf{x}_N = \mathbf{b}$.  The key steps are: (1) solving for $\mathbf{x}_B$ in terms of $\mathbf{x}_N$ and $\mathbf{b}$, (2) substituting this expression into the objective function, (3) rearranging the terms to isolate the constant term ($\overline{\mathcal{Z}}$) and the terms dependent on the non-basic variables ($\mathbf{x}_N$).  This derivation is crucial for the simplex method, as it allows for efficient calculation of the objective function value at each iteration and for determining the next variable to enter the basis.  The notation $B$, $N$, $\mathbf{c}_B$, $\mathbf{c}_N$, and $B^{-1}$ are all matrix representations used in the simplex algorithm.
+
+
+
+
+Slide 9
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex Iterations in Matrix Form}
+
+\begin{align*}
+\max \ \ &\mathcal{S}(\mathbf{x}) = \mathbf{c}^T \mathbf{x} \\
+\text{s.t.} \ \ &\mathbf{w} = \mathbf{b} - \mathbf{A} \mathbf{x} \\
+&\mathbf{x}, \mathbf{w} \ge \mathbf{0}
+\end{align*}
+
+\begin{align*}
+\max \ \ &\mathcal{S}(\mathbf{x}) = \mathbf{c}_B^T \mathbf{x}_B + \mathbf{c}_N^T \mathbf{x}_N \\
+\text{s.t.} \ \ &\mathbf{x}_B = B^{-1} \mathbf{b} - B^{-1} N \mathbf{x}_N \\
+&\mathbf{x}_B, \mathbf{x}_N \ge \mathbf{0}
+\end{align*}
+
+$\mathcal{S}(\mathbf{x}) = \mathbf{c}_B^T B^{-1} \mathbf{b} + (\mathbf{c}_N^T - \mathbf{c}_B^T B^{-1} N) \mathbf{x}_N = \overline{\mathcal{Z}} + \mathbf{c}_N^T \mathbf{x}_N$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the objective function in matrix form, specifically for a simplex iteration.  It shows how the objective function ($\mathcal{S}(\mathbf{x})$) is expressed in terms of basic ($\mathbf{x}_B$) and non-basic ($\mathbf{x}_N$) variables.  The key is the substitution of the expression for $\mathbf{x}_B$ from the constraint equation into the objective function.  The result, $\mathcal{S}(\mathbf{x}) = \overline{\mathcal{Z}} + \mathbf{c}_N^T \mathbf{x}_N$, isolates the constant term ($\overline{\mathcal{Z}}$) and the terms dependent on the non-basic variables ($\mathbf{x}_N$).  This form is crucial for the simplex method, as it allows for efficient calculation of the objective function value at each iteration and for determining the next variable to enter the basis.  The notation $B$, $N$, $\mathbf{c}_B$, $\mathbf{c}_N$, and $B^{-1}$ are all matrix representations used in the simplex algorithm.  The slide is likely part of a lecture explaining the simplex method's underlying structure and how the objective function is updated during iterations.
+
+
+Slide 10
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex Iterations in Matrix Form}
+
+\begin{tabular}{|c|c|}
+\hline
+$c_B^T B^{-1} b$ & $-(B^{-1} N)^T (c_B - c_N)$ \\ \hline
+$B^{-1} b$ & $-B^{-1} N$ \\ \hline
+\end{tabular}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents a tabular representation of the simplex method's matrix operations.  The table shows the components needed to update the objective function and the basic variables during a simplex iteration.  The top row represents the constant term ($\overline{\mathcal{Z}}$) and the coefficients of the non-basic variables in the objective function.  The bottom row represents the values of the basic variables ($\mathbf{x}_B$) and the coefficients of the non-basic variables in the constraint equations.  The table is organized to highlight the matrix operations involved in updating the simplex tableau.  The notation $B$, $N$, $c_B$, $c_N$, and $B^{-1}$ are all matrix representations used in the simplex algorithm.  This slide is likely part of a lecture explaining the simplex method's underlying structure and how the tableau is updated during iterations.
+
+
+
+
+Slide 11
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex Iterations in Matrix Form}
+
+\begin{tabular}{|c|c|}
+\hline
+$\mathcal{Z}_B^*$ & $-(B^{-1} N)^T (c_B - c_N)$ \\ \hline
+$x_B^*$ & $-B^{-1} N$ \\ \hline
+\end{tabular}
+
+\vspace{0.5cm}
+
+\begin{tabular}{|c|c|}
+\hline
+$-\mathcal{Z}_N^*$ & $-(B^{-1} N)^T (c_B - c_N)$ \\ \hline
+$-x_B^*$ & $-B^{-1} N$ \\ \hline
+\end{tabular}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents two tables, each representing a step in the simplex method's matrix operations.  The tables are organized to show the updated values for the objective function and the basic variables.  The top table likely corresponds to a particular iteration where the objective function value is $\mathcal{Z}_B^*$ and the basic variables are $x_B^*$.  The bottom table likely corresponds to the next iteration, where the objective function value is $-\mathcal{Z}_N^*$ and the basic variables are $-x_B^*$.  The notation $B$, $N$, $c_B$, $c_N$, and $B^{-1}$ are all matrix representations used in the simplex algorithm.  The negative signs and the use of the transpose operation ($^T$) indicate the transformations applied to the matrix during the simplex iteration.  This slide is likely part of a lecture explaining the simplex method's underlying structure and how the tableau is updated during iterations.  The notation suggests a specific step in the algorithm, likely involving the selection of a pivot element to update the basis.
+
+
+Slide 12
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex Iterations in Matrix Form}
+
+\begin{align*}
+\max \ \ &\mathcal{S}^*(\mathbf{x}) = \mathcal{S}^* + c_N^T x_N \\
+\text{s.t.} \ \ &x_B^* = B^{-1} b - (B^{-1} N) x_N \\
+&x_B^*, x_N \ge 0
+\end{align*}
+
+\begin{align*}
+\max \ \ &-\mathcal{Z}_N^* = - \mathcal{Z}_N^* + c_N^T x_N \\
+\text{s.t.} \ \ &Z_N^* = (B^{-1} N)^T c_B - c_N \\
+&Z_B^*, Z_N^* \ge 0
+\end{align*}
+
+$S^* = c_B^T B^{-1} b$, $Z_N^* = (B^{-1} N)^T c_B - c_N$, $x_B^* = B^{-1} b$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents two formulations of the objective function and constraints in matrix form, specifically for a simplex iteration.  The top formulation, labeled ($\mathcal{S}^*$), shows the objective function in terms of the basic variables ($x_B^*$) and non-basic variables ($x_N$).  The constraint equation is expressed as $x_B^* = B^{-1} b - (B^{-1} N) x_N$.  The bottom formulation, labeled ($-\mathcal{Z}_N^*$), shows the negative of the objective function in terms of the dual variables ($Z_N^*$) and non-basic variables ($x_N$).  The constraint equation is expressed as $Z_N^* = (B^{-1} N)^T c_B - c_N$.  The equations $S^* = c_B^T B^{-1} b$, $Z_N^* = (B^{-1} N)^T c_B - c_N$, and $x_B^* = B^{-1} b$ are explicitly stated, providing the necessary components for updating the simplex tableau during an iteration.  The notation $B$, $N$, $c_B$, $c_N$, and $B^{-1}$ are all matrix representations used in the simplex algorithm.  This slide is likely part of a lecture explaining the simplex method's underlying structure and how the tableau is updated during iterations.
+
+
+
+
+Slide 13
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex Iterations in Matrix Form}
+
+\begin{align*}
+\max \ \ &\mathcal{S}^*(\mathbf{x}) = S^* + c_N^T x_N \\
+\text{s.t.} \ \ &x_B^* = B^{-1} b - (B^{-1} N) x_N \\
+&x_B^*, x_N \ge 0
+\end{align*}
+
+\begin{align*}
+\max \ \ &-\mathcal{Z}_N^* = - Z_N^* + c_N^T x_N \\
+\text{s.t.} \ \ &Z_N^* = (B^{-1} N)^T c_B - c_N \\
+&Z_B^*, Z_N^* \ge 0
+\end{align*}
+
+$S^* = c_B^T B^{-1} b$, $Z_N^* = (B^{-1} N)^T c_B - c_N$, $x_B^* = B^{-1} b$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the objective function and constraints in matrix form, specifically for a simplex iteration.  The top formulation, labeled ($\mathcal{S}^*$), shows the objective function in terms of the basic variables ($x_B^*$) and non-basic variables ($x_N$).  The constraint equation is expressed as $x_B^* = B^{-1} b - (B^{-1} N) x_N$.  The bottom formulation, labeled ($-\mathcal{Z}_N^*$), shows the negative of the objective function in terms of the dual variables ($Z_N^*$) and non-basic variables ($x_N$).  The constraint equation is expressed as $Z_N^* = (B^{-1} N)^T c_B - c_N$.  The equations $S^* = c_B^T B^{-1} b$, $Z_N^* = (B^{-1} N)^T c_B - c_N$, and $x_B^* = B^{-1} b$ are explicitly stated, providing the necessary components for updating the simplex tableau during an iteration.  The notation $B$, $N$, $c_B$, $c_N$, and $B^{-1}$ are all matrix representations used in the simplex algorithm.  This slide is likely part of a lecture explaining the simplex method's underlying structure and how the tableau is updated during iterations.  The slide is likely part of a lecture explaining the simplex method's underlying structure and how the tableau is updated during iterations.  The notation suggests a specific step in the algorithm, likely involving the selection of a pivot element to update the basis.
+
+
+
+
+Slide 14
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Complementary Variables}
+
+\begin{enumerate}
+    \item $x_j \sim z_j$  ($x_j, z_j = 0$)
+    \item $x_j$ leaves/enters $\sim$ $z_j$ enters/leaves
+    \item $x_N \sim z_N$, $x_B \sim z_B$
+\end{enumerate}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces the concept of complementary variables in the context of the simplex method.  It shows the relationships between primal variables ($x_j$) and dual variables ($z_j$).  The notation $x_j \sim z_j$ indicates that the primal variable $x_j$ and the dual variable $z_j$ are related in a complementary fashion.  The second point, $x_j$ leaves/enters $\sim$ $z_j$ enters/leaves, highlights the complementary nature of the variables' entry and exit from the basis during a simplex iteration.  The third point, $x_N \sim z_N$, $x_B \sim z_B$, further emphasizes the complementary relationship between the non-basic primal variables ($x_N$) and non-basic dual variables ($z_N$), and the basic primal variables ($x_B$) and basic dual variables ($z_B$).  This slide is likely part of a lecture explaining the simplex method's underlying structure and how the primal and dual variables are related during iterations.  The notation suggests a specific step in the algorithm, likely involving the selection of a pivot element to update the basis.
+
+
+
+
+Slide 15
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Example}
+
+Maximize $4x_1 + 3x_2$ subject to:
+\begin{align*}
+x_1 - x_2 &\le 1 \\
+2x_1 - x_2 &\le 3 \\
+x_1, x_2 &\le 5 \\
+x_1, x_2 &\ge 0
+\end{align*}
+
+The matrix $A$ is given by:
+\[
+\begin{bmatrix}
+1 & -1 & 1 & 0 & 0 \\
+2 & -1 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 1
+\end{bmatrix}
+\]
+
+$B = \{3, 4, 5\}$, $N = \{1, 2\}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents a specific example of a linear programming problem.  The problem is to maximize the objective function $4x_1 + 3x_2$ subject to a set of constraints.  The constraints are presented as inequalities, and the variables $x_1$ and $x_2$ are non-negative.  The matrix $A$ represents the coefficients of the variables in the constraints.  Crucially, the sets $B = \{3, 4, 5\}$ and $N = \{1, 2\}$ are defined.  These sets indicate which variables are initially considered basic and non-basic, respectively, in the simplex method.  This example is likely used to illustrate the setup of a linear programming problem for solution using the simplex method in matrix form.  The slide is likely part of a lecture explaining how to apply the simplex method to a specific problem.  The matrix $A$ is an augmented matrix, with the identity matrix portion representing the slack variables.
+
+
+Slide 16
+
+The image shows a linear programming problem in a graphical format.  A graph is displayed with shaded regions representing feasible solutions to the constraints.  The axes are labeled $x_1$ and $x_2$, and lines are drawn to represent the constraints.  The shaded area indicates the region where all constraints are satisfied.  The objective function, which is to be maximized, is represented by a series of lines with increasing values.  The optimal solution is indicated by the intersection of the objective function line with the feasible region.  The optimal solution point is marked on the graph.  The slide likely accompanies a lecture on the graphical method for solving linear programming problems, demonstrating how the feasible region and the objective function are used to find the optimal solution.  The specific values of the optimal solution and the constraints are shown in the table.  The table is a simplex tableau, showing the current values of the variables and the objective function.  The slide is likely part of a lecture explaining how to use the graphical method to solve a linear programming problem.
+
+Slide 17
+
+The image shows a step in the simplex method, likely part of a linear programming problem.  It indicates that $x_1$ is entering the basis, and $x_3$ is leaving the basis.  The slide shows the objective function and constraints, with the current basic variables and their corresponding values.  The notation suggests that the simplex method is being applied to a specific problem, and the current step involves a pivot operation to improve the objective function value.  The slide is likely part of a lecture explaining the simplex method's iterative process.  The specific values of the variables and the coefficients in the constraints are shown in the table.  The table is a simplex tableau, showing the current values of the variables and the objective function.  The slide is likely part of a lecture explaining how to use the simplex method to solve a linear programming problem.
+
+
+
+Slide 18
+
+The image shows a step in the simplex method, likely part of a linear programming problem.  It indicates that $x_2$ is entering the basis, and $x_4$ is leaving the basis.  The slide shows the objective function and constraints, with the current basic variables and their corresponding values.  The notation suggests that the simplex method is being applied to a specific problem, and the current step involves a pivot operation to improve the objective function value.  The slide is likely part of a lecture explaining the simplex method's iterative process.  The specific values of the variables and the coefficients in the constraints are shown in the table.  The table is a simplex tableau, showing the current values of the variables and the objective function.  The slide is likely part of a lecture explaining how to use the simplex method to solve a linear programming problem.  The new sets of basic and non-basic indices are also shown.
+
+
+
+
+Slide 19
+
+The image shows a step in the simplex method, likely part of a linear programming problem.  It indicates that $x_3$ is entering the basis, and $x_5$ is leaving the basis.  The slide shows the objective function and constraints, with the current basic variables and their corresponding values.  The notation suggests that the simplex method is being applied to a specific problem, and the current step involves a pivot operation to improve the objective function value.  The slide is likely part of a lecture explaining the simplex method's iterative process.  The specific values of the variables and the coefficients in the constraints are shown in the table.  The table is a simplex tableau, showing the current values of the variables and the objective function.  The slide is likely part of a lecture explaining how to use the simplex method to solve a linear programming problem.  The new sets of basic and non-basic indices are also shown.  The new basic primal variables and non-basic dual variables are also displayed.
+
+
+
+
+Slide 20
+
+The image shows the final step in a simplex method iteration for a linear programming problem.  It indicates that the optimal solution has been reached, as all coefficients in the objective function row of the simplex tableau are non-negative.  The slide displays the final simplex tableau, which shows the optimal values for the decision variables ($x_1$, $x_2$, $x_3$) and the objective function value.  The sets of basic and non-basic variables ($B$ and $N$) are also shown, indicating which variables are in the basis and which are not.  The slide is likely part of a lecture explaining the simplex method's termination criteria and how to interpret the final tableau to obtain the optimal solution.  The specific values of the variables and the coefficients in the constraints are shown in the table.  The table is a simplex tableau, showing the current values of the variables and the objective function.  The slide is likely part of a lecture explaining how to use the simplex method to solve a linear programming problem.  The new sets of basic and non-basic indices are also shown.  The new basic primal variables and non-basic dual variables are also displayed.
+
+
+
+
+Slide 21
+
+The image shows the final solution to a linear programming problem, likely presented using the graphical method.  The graph displays the feasible region, defined by the constraints of the problem.  The objective function, which is to be maximized, is represented by a series of lines with increasing values.  The optimal solution is indicated by the intersection of the objective function line with the feasible region.  The optimal solution point is marked on the graph, and the corresponding values of the decision variables ($x_1 = 4$, $x_2 = 5$) are clearly shown.  The optimal value of the objective function ($z^* = 31$) is also displayed.  The slide likely concludes a lecture on linear programming, demonstrating how the graphical method is used to find the optimal solution to a problem.  The specific values of the optimal solution and the constraints are shown in the table.  The table is a simplex tableau, showing the current values of the variables and the objective function.  The slide is likely part of a lecture explaining how to use the graphical method to solve a linear programming problem.
+
+

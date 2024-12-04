@@ -1,0 +1,32 @@
+Slide 22
+
+\textbf{Summary of Duality}
+
+\begin{itemize}
+    \item \textbf{Primal Problem (P)}
+    \begin{align*}
+        \max \xi(x) &= c^T x \\
+        \text{s.t.} \quad Ax &\le b \\
+        x &\ge 0
+    \end{align*}
+    \item \textbf{Dual Problem (D)}
+    \begin{align*}
+        \min \xi(\lambda) &= \lambda^T b \\
+        \text{s.t.} \quad A^T \lambda &\ge c \\
+        \lambda &\ge 0
+    \end{align*}
+    \item \textbf{Strong Duality Theorem}
+    \begin{itemize}
+        \item If the primal problem (P) has a finite optimal solution, then the dual problem (D) also has a finite optimal solution, and the optimal values of the primal and dual problems are equal.
+    \end{itemize}
+    \item \textbf{Complementary Slackness}
+    \begin{itemize}
+        \item If $x^*$ is optimal for (P) and $\lambda^*$ is optimal for (D), then $x^*_i \lambda^*_i = 0$ for all $i$.
+    \end{itemize}
+\end{itemize}
+
+\textbf{Description:}
+
+This slide summarizes the key concepts of duality in linear programming, specifically for the "traditional" form of the primal and dual problems.  It restates the primal and dual problems in standard form.  The slide emphasizes the strong duality property, stating that if the primal problem has a finite optimal solution, then the dual problem also has a finite optimal solution, and the optimal values of the primal and dual problems are equal.  Crucially, it introduces the concept of complementary slackness, which states that if $x^*$ is optimal for the primal problem and $\lambda^*$ is optimal for the dual problem, then the product of the $i$-th primal variable and the $i$-th dual variable must be zero for all $i$.  This complementary slackness condition provides a powerful tool for finding optimal solutions to both the primal and dual problems.  The slide is likely part of a larger presentation on duality and optimization techniques in linear programming, summarizing the key conditions for strong duality and complementary slackness.
+
+

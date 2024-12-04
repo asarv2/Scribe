@@ -1,0 +1,23 @@
+Slide 3
+
+$IVJ$. $397$
+
+\begin{equation*}
+\text{maximize} \ 17x_1 + 12x_2
+\end{equation*}
+\begin{equation*}
+\text{subject to} \ 10x_1 + 7x_2 \le 40
+\end{equation*}
+\begin{equation*}
+x_1 + x_2 \le 5
+\end{equation*}
+\begin{equation*}
+x_1, x_2 \ge 0
+\end{equation*}
+\begin{equation*}
+x_1, x_2 \text{ integers.}
+\end{equation*}
+
+\textbf{Description:}
+
+This slide presents a specific example of an integer programming problem.  It shows a linear objective function ($17x_1 + 12x_2$) to be maximized, subject to a set of linear constraints ($10x_1 + 7x_2 \le 40$, $x_1 + x_2 \le 5$, $x_1, x_2 \ge 0$).  Importantly, the variables $x_1$ and $x_2$ are explicitly stated to be integers.  This is a concrete illustration of the problem type introduced in the previous slides. The notation and structure are typical of a linear programming problem, with the addition of the integer requirement. The label "$IVJ$. $397$" likely refers to a specific problem instance or example number within a larger set of examples.

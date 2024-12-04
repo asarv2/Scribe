@@ -1,0 +1,22 @@
+Slide 3
+
+\begin{align*}
+\vec{y}^T \vec{A} (\vec{x}^+ - \vec{x}^-) &\le \vec{y}^T \vec{b} + \vec{z}^T \vec{u} \\
+\vec{z}^T (\vec{x}^+ - \vec{x}^-) &\le \vec{z}^T \vec{u} \\
+(\vec{y}^T \vec{A} + \vec{z}^T) \vec{x}^+ + (-\vec{y}^T \vec{A} - \vec{z}^T) \vec{x}^- &\le \vec{y}^T \vec{b} + \vec{z}^T \vec{u} \\
+\implies \vec{c}^T &\le (\vec{y}^T \vec{A} + \vec{z}^T) \\
+\end{align*}
+
+\newline
+\textbf{(D)}
+\begin{align*}
+\min \ \vec{b}^T \vec{y} + \vec{u}^T \vec{z} \\
+\text{s.t.} \quad \vec{A}^T \vec{y} + \vec{z} &\ge \vec{c} \\
+\qquad \vec{y}, \vec{z} &\ge \vec{0}
+\end{align*}
+
+---
+
+\textbf{Description:}
+
+This slide continues the derivation of the dual problem from the primal problem (M1), which is a general linear programming problem that doesn't necessarily require non-negativity constraints on the variables.  It shows the intermediate steps in manipulating the inequalities to arrive at the final form of the dual problem (D).  The slide demonstrates how the introduction of slack variables ($\vec{z}$) allows for the formulation of the dual problem in a standard form.  The notation is consistent with the previous slides, using vectors and matrices.  The slide number is 3 of 7, indicating its place in a larger presentation.  The derivation shows how the dual problem is constructed from the primal problem's constraints and objective function.

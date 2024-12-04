@@ -1,0 +1,24 @@
+Slide 10
+
+\textbf{Neg. Transpose Property is Preserved in each Simplex Step}
+
+\textbf{at Optimal:}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$\zeta^*$ & $-b_1^*$ & $-b_2^*$ & $\dots$ & $-b_m^*$ \\ \hline
+$-c_1^*$ & $a_{11}^*$ & $a_{12}^*$ & $\dots$ & $a_{1m}^*$ \\ \hline
+$-c_2^*$ & $a_{21}^*$ & $a_{22}^*$ & $\dots$ & $a_{2m}^*$ \\ \hline
+$\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\ \hline
+$-c_n^*$ & $a_{n1}^*$ & $a_{n2}^*$ & $\dots$ & $a_{nm}^*$ \\ \hline
+\end{tabular}
+
+$c_j^* \ge 0$
+\newline
+$b_i^* \ge 0$
+
+\textbf{Strong Duality}
+
+\textbf{Description:}
+
+This slide summarizes the negative transpose property at the optimal solution of the simplex method for linear programming, specifically focusing on the dual problem.  It shows a tableau (which is meant to be a matrix) representing the dual problem (D) at optimality.  The notation indicates that all the coefficients in the objective row ($-b_i^*$) and the constraint rows ($-c_j^*$) are non-negative at the optimal solution.  This is a crucial property, as it signifies that the solution found using the simplex method is indeed optimal.  The slide also introduces the concept of "Strong Duality," which is likely the next topic in the lecture.  The notation $^*$ indicates values at the optimal solution.  The slide likely follows previous ones demonstrating simplex iterations, and now highlights the characteristics of the tableau at the optimal solution for the dual problem.

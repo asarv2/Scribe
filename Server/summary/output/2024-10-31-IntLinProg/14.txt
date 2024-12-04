@@ -1,0 +1,26 @@
+Slide 14
+
+\textbf{Branch-and-Bound}
+
+\textit{Discussion of Depth-First Search (cont.)}
+
+Therefore, we can use the following dictionary as a starting point for the solution
+of $P_2$:
+
+$\qquad \xi = \frac{205}{3} - \frac{5}{3} w_1 - \frac{1}{3} w_2 \quad \leftarrow \text{dual feasible}$
+
+$\qquad x_1 = \frac{5}{3} - \frac{1}{3} w_1 + \frac{7}{3} w_2$
+
+$\qquad x_2 = 10 + \frac{1}{3} w_1 - \frac{10}{3} w_2$
+
+$\qquad g_1 = -\frac{1}{3} + \frac{1}{3} w_1 + \frac{7}{3} w_2 \quad \leftarrow \text{new constraint}$
+
+This dictionary is dual feasible but primal infeasible. Therefore, the dual simplex
+method is likely to find a new optimal solution in very few iterations. According to
+
+
+\textbf{Description:}
+
+This slide continues the discussion of depth-first search in the Branch and Bound algorithm for integer programming.  It demonstrates how a new problem ($P_2$) derived from a previous problem ($P_0$) can be solved efficiently using the dual simplex method.  The slide presents the optimal dictionary for $P_0$ and then shows how the dictionary is modified to incorporate the new constraint ($x_1 \ge 2$).  The new dictionary is dual feasible but primal infeasible, suggesting that the dual simplex method is a suitable approach for finding the optimal solution for $P_2$.  The slide is likely part of a larger lecture series on integer programming and optimization techniques, providing a practical example of how the algorithm can be applied to solve subsequent problems.  The handwritten nature of the notes suggests this is a lecture or class notes, not a formal publication.
+
+

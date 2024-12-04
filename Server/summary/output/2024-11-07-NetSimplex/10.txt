@@ -1,0 +1,20 @@
+Slide 10
+
+\textbf{Primal Network Simplex}
+
+\textit{Proof of the fact that the cost is reduced}
+
+\textit{New Cost} = (6 - t) $C_{fa}$ + $C_{ac}$ + (6 + t) $C_{bc}$ + (3 - t) $C_{fb}$
+
+= 6 $C_{fa}$ + 6 $C_{bc}$ + 3 $C_{fb}$ + t ($C_{fa}$ + $C_{ac}$ - $C_{bc}$ - $C_{fb}$)
+
+= old cost + t ($y_a - y_c + C_{ac}$) - (y_b - y_f)
+
+= old cost + t $Z_{ac}$ < 0
+
+\textit{modified cost}
+
+
+\textbf{Description:}
+
+This slide continues the proof of cost reduction in the Network Simplex Method.  It shows a network with nodes a, b, and c, and edges with associated costs ($C_{fa}$, $C_{ac}$, $C_{bc}$, $C_{fb}$).  The equations demonstrate how the new cost is calculated after a flow adjustment (represented by the variable $t$).  The key equation highlights that the change in cost is directly related to the dual variable $Z_{ac}$ and the flow adjustment $t$.  The expression $y_a - y_c + C_{ac}$ is a crucial component of the dual variables, and the fact that $Z_{ac} < 0$ is the condition that guarantees a reduction in cost.  This slide likely completes the proof that the algorithm's selection rules ensure a decrease in the objective function value in each iteration.

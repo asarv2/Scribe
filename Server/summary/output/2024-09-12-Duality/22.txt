@@ -1,0 +1,15 @@
+Slide 22
+
+$\mathcal{P} \ \sum_{j} c_j x_j \le \sum_{i} (\sum_{j} a_{ij} y_i) x_j \le \sum_{i} b_i y_i$
+\newline
+$\mathcal{D} \ \sum_{i} b_i y_i \ge \sum_{j} (\sum_{i} a_{ij} x_j) y_i \ge \sum_{j} c_j x_j$
+\newline
+$\mathcal{P} \ \sum_{j} c_j x_j = \sum_{j} (\sum_{i} a_{ij} y_i) x_j$
+\newline
+$\mathcal{D} \ \sum_{i} b_i y_i = \sum_{j} (\sum_{i} a_{ij} x_j) y_i$
+
+\textbf{Description:}
+
+This slide presents the relationships between the primal and dual objective functions in linear programming.  It shows how the primal objective function ($\sum_{j} c_j x_j$) is less than or equal to the dual objective function ($\sum_{i} b_i y_i$).  The equations demonstrate the equality of the primal and dual objective functions at the optimal solution.  The slide likely follows a discussion of the Strong Duality Theorem and now illustrates the equality of the objective functions in a more detailed way.  The equations show how the constraints ($Ax \le b$ and $A^T y \ge c$) are incorporated into the objective function values.  The slide is a crucial step in understanding the relationship between the primal and dual problems in linear programming.
+
+

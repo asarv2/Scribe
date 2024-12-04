@@ -1,0 +1,49 @@
+Slide 4
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Simplex Method  \textit{LVJ p.71}}
+
+\textbf{Step 1}
+\begin{itemize}
+    \item (P) $\xi = -4 - 0.5 w_2 - 3 x_2$
+    \item $w_1 = 12 + w_2 + 5 x_2$
+    \item $x_1 = 4 + 0.5 w_2 + 2 x_2$
+    \item $w_3 = -3 + 0.5 w_2 - x_2$
+\end{itemize}
+\textbf{The dual of this problem is}
+\begin{itemize}
+    \item (D) $-\xi = 4 - 12 y_1 - 4 z_1 + 3 y_3$
+    \item $y_2 = 0.5 - y_1 - 0.5 z_1 - 0.5 y_3$
+    \item $x_2 = 3 - 5 y_1 - 2 z_1 + y_3$
+\end{itemize}
+
+\textbf{Step 2}
+\begin{itemize}
+    \item (P) $\xi = -7 - 1 w_3 - 4 x_2$
+    \item $w_1 = 18 + 2 w_3 + 7 x_2$
+    \item $x_1 = 7 + w_3 + 3 x_2$
+    \item $w_2 = 6 + 2 w_3 + 2 x_2$
+\end{itemize}
+\textbf{The dual of this problem is}
+\begin{itemize}
+    \item (D) $-\xi = 7 - 18 y_1 - 7 z_1 - 6 y_2$
+    \item $y_3 = 1 - 0 y_1 - z_1 - 2 y_2$
+    \item $z_2 = 4 - 0.7 y_1 - 3 z_1 - 2 y_2$
+\end{itemize}
+
+\textbf{Opt. for both}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the results of the first and second steps of the dual simplex method applied to the primal and dual linear programming problems.  The equations are displayed in a tabular format, showing the objective function ($\xi$) and constraints ($w_1$, $w_2$, $w_3$, $x_1$, $x_2$, $y_2$, $y_3$, $z_1$, $z_2$) after each step.  The notation (P) and (D) denote the primal and dual problems, respectively.  The slide is part of a larger presentation on the dual simplex method, demonstrating the iterative process of solving linear programming problems.  The arrows indicate the transformation between steps, and the objective is to find the optimal solution for both the primal and dual problems.  The "Opt. for both" at the bottom suggests that the goal is to find the optimal solution for both the primal and dual problems simultaneously.
+
+

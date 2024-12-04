@@ -1,0 +1,36 @@
+Slide 7
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Convex Analysis [V] Chapter 10}
+
+\subsection*{Theorem 10.2}
+$S \subseteq \mathbb{R}^m$, $\text{Conv}(S) = \{ \text{collection of all convex combinations of finitely many points from } S \}$
+
+\textbf{Proof:}
+Let $H = \{ \text{collection of all convex combinations of finitely many points from } S \}$.
+Need to show $\text{Conv}(S) \subseteq H$ and $H \subseteq \text{Conv}(S)$.
+
+(1) $\text{Conv}(S) \subseteq H$
+\textit{Proof:}
+Let $z \in \text{Conv}(S)$.  By definition of $\text{Conv}(S)$, there exists a convex set $C$ such that $S \subseteq C$ and $z \in C$.  Since $C$ is convex and $S \subseteq C$, any convex combination of points in $S$ must also be in $C$.  Thus, $z \in H$.
+
+(2) $H \subseteq \text{Conv}(S)$
+\textit{Proof:}
+Let $z \in H$.  Then $z$ is a convex combination of finitely many points from $S$.  By Theorem 10.1, any convex combination of points in $S$ is in $\text{Conv}(S)$.  Therefore, $z \in \text{Conv}(S)$.
+
+\end{document}
+```
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the proof of Theorem 10.2, which states that the convex hull of a set $S$ is the set of all convex combinations of finitely many points from $S$.  The proof is now presented in a more formal and structured way, with separate proofs for the two inclusions: (1) $\text{Conv}(S) \subseteq H$ and (2) $H \subseteq \text{Conv}(S)$.  Part (1) shows that any point in the convex hull of $S$ is also a convex combination of finitely many points from $S$.  Part (2) shows that any convex combination of finitely many points from $S$ is in the convex hull of $S$.  The proof uses the definition of the convex hull and Theorem 10.1, which states that a set is convex if it contains all convex combinations of its points.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of convex hulls and convex combinations.  The proof is likely to be continued on subsequent slides.
+
+

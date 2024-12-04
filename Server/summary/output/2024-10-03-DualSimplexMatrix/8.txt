@@ -1,0 +1,36 @@
+Slide 8
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+\begin{itemize}
+    \item $\max -\xi(\mathbf{y}) = -\mathbf{b}^T \mathbf{y}$
+    \item st.
+        \begin{itemize}
+            \item $A^T \mathbf{y} \ge \mathbf{c}$
+            \item $\mathbf{y} \ge \mathbf{0}$
+        \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+    \item $\max -\xi(\mathbf{z}) = -\mathbf{z}_N^T \mathbf{x}_N - (\mathbf{x}_B^*)^T \mathbf{z}_B$
+    \item st.
+        \begin{itemize}
+            \item $\mathbf{z}_N = \mathbf{z}_N^* + (\mathbf{B}^{-1} \mathbf{N})^T \mathbf{z}_B$
+        \end{itemize}
+\end{itemize}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the dual problem.  It presents the dual problem ($\max -\xi(\mathbf{y}) = -\mathbf{b}^T \mathbf{y}$ subject to $A^T \mathbf{y} \ge \mathbf{c}$ and $\mathbf{y} \ge \mathbf{0}$).  The slide then shows how the dual objective function can be expressed in terms of the primal variables ($\mathbf{x}_B$ and $\mathbf{x}_N$) and their corresponding reduced costs ($\mathbf{z}_B$ and $\mathbf{z}_N$).  The equation $\mathbf{z}_N = \mathbf{z}_N^* + (\mathbf{B}^{-1} \mathbf{N})^T \mathbf{z}_B$ shows the relationship between the reduced costs of the non-basic variables ($\mathbf{z}_N$) and the basic variables ($\mathbf{z}_B$).  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method and its dual, emphasizing the mathematical equivalence between the primal and dual problems.
+
+

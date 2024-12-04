@@ -1,0 +1,22 @@
+Slide 18
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Distance of a Point from a Hyperplane}
+
+\begin{equation*}
+d_i = \frac{|a_1 s_i + a_2 s_i^2 - b'|}{\sqrt{a_1^2 + a_2^2}}
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the formula for calculating the distance of a point from a hyperplane.  The equation shows the distance ($d_i$) of a point ($s_i$, $s_i^2$) from a hyperplane defined by the equation $a_1 x_1 + a_2 x_2 - b' = 0$.  The formula involves the coordinates of the point ($s_i$, $s_i^2$), the coefficients of the hyperplane ($a_1$, $a_2$, $b'$), and the Euclidean norm of the coefficients.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the geometric aspects of SVM optimization, specifically the calculation of distances from points to hyperplanes.  The slide number (18 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their geometric interpretation, and the concept of maximizing the margin.  The formula is crucial for determining the margin and support vectors in the SVM algorithm.
+
+

@@ -1,0 +1,33 @@
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{equation*}
+\begin{cases}
+\text{(Use complementary slackness)} \\
+x_1^* > 0 \implies \zeta_1^* = 0 \\
+x_2^* > 0 \implies \zeta_2^* = 0 \\
+\implies y_1 + 10y_2 = 40 \\
+\implies y_1 + 50y_2 = 70
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+\begin{cases}
+y_1 = 32.5 \\
+y_2 = 0.75
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+\zeta^* = 40(25) + 70(75) = 100(32.5) + 4000(0.75) = 6250
+\end{equation*}
+
+\end{document}
+
+\textbf{Description:}
+
+This is slide 3 of a 15-slide lecture on Linear Programming.  It continues the analysis of the primal and dual problems introduced in the previous slides. The slide demonstrates the use of complementary slackness to verify the optimal solution.  It shows how the non-zero primal variables imply zero values for the corresponding dual slack variables.  The equations $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$ are derived and solved for $y_1$ and $y_2$, confirming the optimal dual variables.  Finally, the slide recalculates the optimal objective function value ($\zeta^* = 6250$) using the optimal primal and dual variables, providing a check on the solution's validity.

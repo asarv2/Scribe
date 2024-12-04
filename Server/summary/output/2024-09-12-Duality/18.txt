@@ -1,0 +1,15 @@
+Slide 18
+
+Four and Only Four Possibilities
+\newline
+(1) (P) has an optimal solution $\implies$ (D) also has an optimal solution, $\mathcal{S}^* = \mathcal{S}^*$, duality gap = 0
+\newline
+(2) (P) is feasible but unbounded $\implies$ (D) must be infeasible, $\mathcal{S}(x) \le \mathcal{S}(y) \implies +\infty$ (min empty set = $+\infty$)
+\newline
+(3) (P) is infeasible $\implies$ (D) must be infeasible or unbounded
+\newline
+(4) (P) is unbounded $\implies$ (D) must be infeasible
+
+\textbf{Description:}
+
+This slide summarizes the possible outcomes when analyzing the primal and dual linear programming problems.  It presents four mutually exclusive and exhaustive cases that can occur when solving a linear programming problem and its dual.  The cases are: (1) both problems have optimal solutions and their optimal values are equal; (2) the primal problem is feasible but unbounded, implying the dual problem is infeasible; (3) the primal problem is infeasible, implying the dual problem is either infeasible or unbounded; and (4) the primal problem is unbounded, implying the dual problem is infeasible.  The slide likely follows a discussion of the Strong Duality Theorem and now presents a more practical application of the theorem's implications.  The slide is a useful summary for understanding the relationship between the primal and dual problems in linear programming.

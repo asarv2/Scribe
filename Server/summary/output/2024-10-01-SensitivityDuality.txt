@@ -1,0 +1,503 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{[C] p.67}
+
+\begin{equation*}
+\max. \ \zeta = 40x_1 + 70x_2
+\end{equation*}
+\begin{equation*}
+\text{(P)} \quad \text{s.t.} \begin{cases}
+x_1 + x_2 \le 100 \\
+x_1 + 30x_2 \le 4000 \\
+x_1, x_2 \ge 0
+\end{cases}
+\end{equation*}
+
+\textbf{Opt. Solution:} $x_1^* = 25$, $x_2^* = 75$, $\zeta^* = 40(25) + 70(75) = 6250$
+
+\textbf{Q.}
+\begin{enumerate}
+    \item Check optimality.
+    \item What if 4000 is changed to 4000+t? How would $x_1^*$, $x_2^*$, $\zeta^*$ be changed? How large can t be?
+\end{enumerate}
+
+\end{document}
+
+\textbf{Description:}
+
+This is the first slide of a 15-slide lecture on Linear Programming.  The slide presents a linear programming problem (P) with an objective function to maximize $\zeta = 40x_1 + 70x_2$ subject to constraints.  The constraints involve $x_1 + x_2 \le 100$, $x_1 + 30x_2 \le 4000$, and $x_1, x_2 \ge 0$.  The optimal solution ($x_1^* = 25$, $x_2^* = 75$) and the corresponding optimal objective function value ($\zeta^* = 6250$) are also shown.  The questions posed at the end of the slide indicate that the lecture will likely discuss sensitivity analysis, specifically how changes in the constraint values affect the optimal solution.
+
+
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+A (1) (find $y_1$, $y_2$ and check validity of Strong duality.)
+
+($y_1^* = 32.1$, $y_2^* = 0.75$ given in $\Sigma$)
+
+(D) $\min. \ 100y_1 + 4000y_2$
+
+s.t. $\begin{cases}
+y_1 + 10y_2 \ge 40 \\
+y_1 + 50y_2 \ge 70 \\
+y_1, y_2 \ge 0
+\end{cases}$
+
+\end{document}
+
+\textbf{Description:}
+
+This is slide 2 of a 15-slide lecture on Linear Programming.  It continues the discussion from slide 1, focusing on the dual problem (D) of the primal problem (P) presented in the previous slide.  The slide shows the dual problem's objective function to minimize $100y_1 + 4000y_2$ subject to constraints $y_1 + 10y_2 \ge 40$, $y_1 + 50y_2 \ge 70$, and $y_1, y_2 \ge 0$.  The notation $y_1^* = 32.1$, $y_2^* = 0.75$ suggests that these are the optimal values for the dual variables, and the phrase "given in $\Sigma$" implies that these values were obtained from a previous calculation or a solution method (likely the Simplex method).  The reference to "Strong duality" indicates that the lecture is covering the theory of duality in linear programming, where the optimal values of the primal and dual problems are equal.
+
+
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{equation*}
+\begin{cases}
+\text{(Use complementary slackness)} \\
+x_1^* > 0 \implies \zeta_1^* = 0 \\
+x_2^* > 0 \implies \zeta_2^* = 0 \\
+\implies y_1 + 10y_2 = 40 \\
+\implies y_1 + 50y_2 = 70
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+\begin{cases}
+y_1 = 32.5 \\
+y_2 = 0.75
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+\zeta^* = 40(25) + 70(75) = 100(32.5) + 4000(0.75) = 6250
+\end{equation*}
+
+\end{document}
+
+\textbf{Description:}
+
+This is slide 3 of a 15-slide lecture on Linear Programming.  It continues the analysis of the primal and dual problems introduced in the previous slides. The slide demonstrates the use of complementary slackness to verify the optimal solution.  It shows how the non-zero primal variables imply zero values for the corresponding dual slack variables.  The equations $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$ are derived and solved for $y_1$ and $y_2$, confirming the optimal dual variables.  Finally, the slide recalculates the optimal objective function value ($\zeta^* = 6250$) using the optimal primal and dual variables, providing a check on the solution's validity.
+
+
+Slide 4
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+A(2) Use B, N method
+
+$\zeta = \bar{C}_B \bar{B}^{-1} b - (\bar{B}^{-1} \bar{N}) \bar{C}_N) X_N$
+
+$X_B = \bar{B}^{-1} b - (\bar{B}^{-1} \bar{N}) X_N$
+
+$[A \quad I] = \begin{bmatrix}
+1 & 0 & 50 & 0 & 1 \\
+x_1 & x_2 & x_3 & x_4 \\
+(\omega_1) & (\omega_2)
+\end{bmatrix}$
+
+\end{document}
+
+\textbf{Description:}
+
+This is slide 4 of a 15-slide lecture on Linear Programming.  It introduces the use of the basis and non-basis method for solving linear programming problems. The slide shows the equations for calculating the objective function value ($\zeta$) and the basic variables ($X_B$) using the inverse of the basis matrix ($\bar{B}^{-1}$), the basis vector ($b$), and the non-basis vector ($X_N$).  The notation suggests that the lecture is covering the simplex method, a common algorithm for solving linear programming problems. The matrix $[A \quad I]$ represents the augmented matrix of the constraints, where the identity matrix $I$ is appended to the constraint matrix $A$.  The variables $x_1$, $x_2$, $x_3$, and $x_4$ represent the decision variables and slack variables, and $\omega_1$ and $\omega_2$ are likely indices or labels for the columns.
+
+
+Slide 5
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{tabular}{c|c|c|c|c}
+\multicolumn{2}{c}{Start} & \multicolumn{2}{c}{} & \\
+\cline{1-5}
+\textbf{P} & $x_1$ & $x_2$ & \textbf{D} & \\
+\cline{2-5}
+& 0 & 40 & 0 & $-100$ \\
+$x_3$ ($\omega_1$) & 100 & -1 & -1 & $z_1$ \\
+$x_4$ ($\omega_2$) & 4000 & -10 & -50 & $z_2$ \\
+\cline{2-5}
+\multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \\
+\end{tabular}
+
+\begin{tabular}{c|c|c|c|c}
+\multicolumn{2}{c}{End (Opt)} & \multicolumn{2}{c}{} & \\
+\cline{1-5}
+\textbf{P} & $x_1$ & $x_2$ & \textbf{D} & \\
+\cline{2-5}
+& 6250 & -32.5 & -0.75 & $-6250$ \\
+$x_1$ & 25 & - & - & $y_1$ \\
+$x_2$ & 70 & - & - & $y_2$ \\
+\cline{2-5}
+\multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \\
+\end{tabular}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 5 of a 15-slide lecture on Linear Programming.  It presents a tabular representation of the primal (P) and dual (D) problems, likely in the context of the simplex method. The table shows the initial and final states of the simplex tableau.  The top table shows the initial tableau, with the objective function coefficients and constraint coefficients. The bottom table shows the final tableau, with the optimal values for the primal variables ($x_1$, $x_2$) and the dual variables ($y_1$, $y_2$). The values in the table represent the coefficients of the variables in the objective function and constraints. The columns represent the variables, and the rows represent the constraints and the objective function. The numbers in the table are likely the results of iterations of the simplex method. The notation ($\omega_1$) and ($\omega_2$) likely represent indices or labels for the slack variables $x_3$ and $x_4$. The red lines likely separate the initial and final tableaus. The values in the final tableau indicate the optimal solution to the linear programming problem.
+
+Slide 6
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{equation*}
+\begin{aligned}
+\Theta &= \{1, 2, 3\} \\
+N &= \{3, 4\} \\
+B &= \begin{bmatrix}
+1 \\
+10 \\
+50
+\end{bmatrix}, \quad N = \begin{bmatrix}
+0 \\
+1 \\
+0
+\end{bmatrix} = I
+\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+\bar{B} = \begin{bmatrix}
+50 & -1 \\
+-10 & 1
+\end{bmatrix} = \begin{bmatrix}
+\frac{5}{4} & -\frac{1}{4} \\
+-\frac{1}{4} & \frac{1}{4}
+\end{bmatrix}
+\end{equation*}
+
+\begin{tabular}{c|c|c|c|c}
+\multicolumn{2}{c}{End (Opt)} & \multicolumn{2}{c}{} & \\
+\cline{1-5}
+\textbf{P} & $x_1$ & $x_2$ & \textbf{D} & \\
+\cline{2-5}
+& 6250 & $-32.5$ & $-0.75$ & $-6250$ \\
+$x_1$ & 25 & $\frac{5}{4}$ & $\frac{1}{4}40$ & $y_1$ \\
+$x_2$ & 70 & $-\frac{1}{4}$ & $\frac{1}{4}40$ & $y_2$ \\
+\cline{2-5}
+\multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \\
+\end{tabular}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 6 of a 15-slide lecture on Linear Programming.  It continues the analysis of the primal and dual problems, likely within the context of the simplex method. The slide shows the basis matrix ($B$) and non-basis matrix ($N$) and their inverses ($\bar{B}$ and $\bar{B}^{-1}$).  The notation suggests that the slide is focused on the calculations involved in the simplex method, specifically the matrix operations needed to determine the optimal solution. The table at the bottom is the final tableau, showing the optimal values for the primal variables ($x_1$, $x_2$) and the dual variables ($y_1$, $y_2$). The values in the table represent the coefficients of the variables in the objective function and constraints. The columns represent the variables, and the rows represent the constraints and the objective function. The numbers in the table are likely the results of iterations of the simplex method. The notation ($\omega_1$) and ($\omega_2$) likely represent indices or labels for the slack variables $x_3$ and $x_4$. The red lines likely separate the initial and final tableaus. The values in the final tableau indicate the optimal solution to the linear programming problem.  The equations and matrices are crucial for understanding the steps of the simplex method.
+
+
+
+
+Slide 7
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{equation*}
+\begin{aligned}
+\zeta &= C_B B^{-1} b - (B^{-1} N) C_N X_N \\
+X_B &= B^{-1} b - (B^{-1} N) X_N
+\end{aligned}
+\end{equation*}
+
+\textbf{Changed to} $B \begin{pmatrix}
+b + (0) \\
+(t)
+\end{pmatrix}$
+
+\begin{equation*}
+= \begin{pmatrix}
+\frac{5}{4} & -\frac{1}{4} \\
+-\frac{1}{4} & \frac{1}{4}
+\end{pmatrix} \begin{pmatrix}
+100 \\
+4000 + t
+\end{pmatrix} = \begin{pmatrix}
+25 - \frac{1}{4} t \\
+75 + \frac{1}{4} t
+\end{pmatrix}
+\end{equation*}
+
+$x_1^* \rightarrow 25 - \frac{1}{4} t$, $x_2^* \rightarrow 75 + \frac{1}{4} t$
+
+$-300 \le t \le 1000$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 7 of a 15-slide lecture on Linear Programming.  It continues the sensitivity analysis of the primal problem, specifically examining how a change in the right-hand side of a constraint affects the optimal solution. The slide shows the calculation of how the optimal solution ($x_1^*$, $x_2^*$) changes when the constraint $x_1 + 30x_2 \le 4000$ is modified to $x_1 + 30x_2 \le 4000 + t$.  The result is expressed as a function of the parameter $t$.  The calculation uses the inverse of the basis matrix ($B^{-1}$) to determine the new values of the basic variables ($x_1$, $x_2$).  The inequality $-300 \le t \le 1000$ indicates the range of permissible changes in the constraint's right-hand side that will maintain the current optimal basis.  This range is crucial for determining the sensitivity of the optimal solution to changes in the constraint.
+
+
+Slide 8
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{equation*}
+\begin{aligned}
+M_1: \quad \zeta^* &= 40 x_1^* + 70 x_2^* \\
+&= 40(25) + 70(75) = 6250
+\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+\begin{aligned}
+M_2: \quad \zeta^* &= C_B B^{-1} (b + t \bar{a}_4) \\
+&= (40 \quad 70) \begin{pmatrix}
+\frac{5}{4} & -\frac{1}{4} \\
+-\frac{1}{4} & \frac{1}{4}
+\end{pmatrix} \begin{pmatrix}
+100 \\
+4000 + t
+\end{pmatrix} \\
+&= (32.5 \quad 0.75) \begin{pmatrix}
+100 \\
+4000 + t
+\end{pmatrix} \\
+&= 6250 + 0.75 t
+\end{aligned}
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 8 of a 15-slide lecture on Linear Programming.  It continues the sensitivity analysis of the primal problem, specifically examining how a change in the right-hand side of a constraint affects the optimal solution. The slide shows two methods ($M_1$ and $M_2$) for calculating the new optimal objective function value ($\zeta^*$) when the constraint $x_1 + 30x_2 \le 4000$ is modified to $x_1 + 30x_2 \le 4000 + t$.  Method $M_1$ directly calculates the new objective function value using the original optimal solution values. Method $M_2$ uses the optimal dual variables ($y_1 = 32.5$, $y_2 = 0.75$) to calculate the new objective function value.  The result in both cases is expressed as a function of the parameter $t$, showing how the optimal objective function value changes linearly with $t$.  This demonstrates the sensitivity of the optimal solution to changes in the constraint.  The result is $\zeta^* = 6250 + 0.75t$.  The previous slide's result is used to calculate the new optimal objective function value.
+
+Slide 9
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+$M_3: \quad \zeta_{new} = 40 x_1^* + 70 x_2^* = 6250$
+
+\begin{equation*}
+\begin{aligned}
+\zeta_{new} &= y_1^* (x_1^* + x_2^*) + y_2^* (10 x_1^* + 50 x_2^*) \\
+&= y_1^* (100) + y_2^* (4000 + t) \\
+&= 100 y_1^* + 4000 y_2^* + y_2^* t \\
+&= 6250 + 0.75 t
+\end{aligned}
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 9 of a 15-slide lecture on Linear Programming.  It continues the sensitivity analysis of the primal problem, specifically examining how a change in the right-hand side of a constraint affects the optimal solution. The slide shows a third method ($M_3$) for calculating the new optimal objective function value ($\zeta_{new}$) when the constraint $x_1 + 30x_2 \le 4000$ is modified to $x_1 + 30x_2 \le 4000 + t$.  This method uses the optimal dual variables ($y_1^*$, $y_2^*$) to calculate the new objective function value.  The result is expressed as a function of the parameter $t$, showing how the optimal objective function value changes linearly with $t$.  The calculation explicitly shows the relationship between the optimal dual variables and the change in the constraint's right-hand side.  The result is $\zeta_{new} = 6250 + 0.75t$.  This method is a direct application of the dual problem to calculate the change in the objective function.
+
+
+Slide 10
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Note:} $\Delta \zeta = (\Delta b)^T y^*$
+
+\textbf{In fact:} $\zeta_{new} = \zeta_{old} + (\Delta b) y^*$
+
+(if non-degenerate, $|\Delta b| < 1$)
+
+$(\Delta b)^T y^* = (\Delta b_1) y_1^* + (\Delta b_2) y_2^* + \dots + (\Delta b_m) y_m^*$
+
+(shadow price)
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 10 of a 15-slide lecture on Linear Programming.  It continues the sensitivity analysis of the primal problem, specifically examining how a change in the right-hand side of a constraint affects the optimal solution. The slide introduces the concept of shadow price and how it relates to the change in the objective function.  The equation $\Delta \zeta = (\Delta b)^T y^*$ shows that the change in the optimal objective function value ($\Delta \zeta$) is equal to the dot product of the change in the right-hand side of the constraints ($\Delta b$) and the optimal dual variables ($y^*$).  The formula $\zeta_{new} = \zeta_{old} + (\Delta b) y^*$ explicitly shows how the new optimal objective function value ($\zeta_{new}$) is related to the old optimal objective function value ($\zeta_{old}$) and the change in the right-hand side of the constraints ($\Delta b$) and the optimal dual variables ($y^*$).  The condition "if non-degenerate, $|\Delta b| < 1$" specifies the conditions under which this formula holds.  The concept of shadow price is introduced as the dual variable value, which represents the rate of change in the optimal objective function value for a unit change in the right-hand side of a constraint.
+
+
+
+
+Slide 11
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{P} $\max \ \zeta = c^T x$
+
+s.t. $Ax \le b$
+
+$x \ge 0$
+
+\textbf{at Opt:} $\zeta = c_B^T B^{-1} b - z_N^T X_N$
+
+$X_B = B^{-1} b - (B^{-1} N) X_N$
+
+$z_N = (B^{-1} N)^T c_B - c_N \ge 0$
+
+$X_B = B^{-1} b \ge 0$
+
+$\zeta = c_B^T B^{-1} b = b^T B^{-T} c_B$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 11 of a 15-slide lecture on Linear Programming.  It presents the fundamental equations and conditions for the optimal solution of a linear programming problem (P). The slide summarizes the optimal objective function value ($\zeta$) and the optimal values of the basic variables ($X_B$) in terms of the basis matrix ($B$), the non-basis matrix ($N$), the objective function coefficients ($c_B$, $c_N$), and the right-hand side vector ($b$).  The equations highlight the relationships between the primal and dual variables, and the conditions for optimality, specifically the non-negativity of the reduced costs ($z_N$).  The equations are crucial for understanding the simplex method and the relationship between the primal and dual problems.  The notation suggests that the lecture is covering the simplex method, a common algorithm for solving linear programming problems.
+
+
+
+
+Slide 12
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+(D) $\min \ \xi = b^T y$
+
+s.t. $A^T y \ge c$
+
+$y \ge 0$
+
+\textbf{at Opt:} $-\xi = -\zeta^* = -c_B^T B^{-1} b + z_N^T X_N$
+
+$z_N = (B^{-1} N)^T c_B - c_N \ge 0$
+
+$X_B = B^{-1} b \ge 0$
+
+Compare: $\zeta = c^T x = b^T y$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 12 of a 15-slide lecture on Linear Programming.  It presents the dual problem (D) and its relationship to the primal problem (P). The slide shows the dual problem's objective function ($\min \ \xi = b^T y$) and constraints ($A^T y \ge c$, $y \ge 0$).  It also shows the relationship between the optimal objective function values of the primal and dual problems ($\zeta = c^T x = b^T y$).  The equations highlight the fundamental duality theorem in linear programming, which states that the optimal value of the primal problem is equal to the optimal value of the dual problem.  The notation suggests that the lecture is covering the simplex method and the duality theory in linear programming.  The equations are crucial for understanding the relationship between the primal and dual problems and the optimality conditions.
+
+
+
+
+Slide 13
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Guess/Prove} $y^* = B^{-1} c_B$
+
+(1) $b^T c_B$ does gives opt. objective value
+
+(2) Check for feasibility of $B^{-1} c_B$
+
+$A^T (B^{-1} c_B) \ge c$
+
+$B^{-1} c_B \ge 0$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 13 of a 15-slide lecture on Linear Programming.  It outlines a method for verifying the optimality of a solution to a linear programming problem. The slide describes a "Guess/Prove" approach.  The first step (1) involves checking if the calculated optimal dual variables ($y^* = B^{-1} c_B$) produce the optimal objective function value ($b^T c_B$).  The second step (2) verifies the feasibility of the dual solution by checking if the dual variables satisfy the dual constraints ($A^T (B^{-1} c_B) \ge c$ and $B^{-1} c_B \ge 0$).  The notation suggests that the lecture is covering the simplex method and the duality theory in linear programming.  The steps are crucial for confirming the correctness of the solution obtained using the simplex method.
+
+
+
+
+Slide 14
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+We need $A^T y \ge c \Leftrightarrow y^T A \ge c^T$
+
+$y^T \ge 0$
+
+$y^T [A \quad I] \ge [c^T \quad 0^T]$
+
+$y^T [B \quad N] \ge [c_B^T \quad c_N^T]$
+
+$y^T B \ge c_B^T$
+
+$y^T N \ge c_N^T$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 14 of a 15-slide lecture on Linear Programming.  It presents the conditions for feasibility of the dual solution. The slide shows the relationships between the primal and dual constraints.  The equations demonstrate how the dual variables ($y$) must satisfy the dual constraints ($A^T y \ge c$, $y \ge 0$) in relation to the primal problem's constraints ($Ax \le b$, $x \ge 0$).  The notation suggests that the lecture is covering the simplex method and the duality theory in linear programming.  The equations are crucial for understanding the relationship between the primal and dual problems and the optimality conditions.  The slide shows how the dual constraints are derived from the primal constraints and the relationship between the optimal dual variables and the primal constraints.
+
+
+
+
+Slide 15
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+$y = B^{-1} c_B$, $y^T B = c_B^T \implies B^{-1} B = I$
+
+$y^T N = (B^{-1} N)^T c_B \ge c_N^T$
+
+Optimality condition: $z_N = (B^{-1} N)^T c_B - c_N \ge 0$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 15 of a 15-slide lecture on Linear Programming.  It presents the optimality conditions for the dual problem (D) in terms of the primal problem (P). The slide shows the relationship between the optimal dual variables ($y$) and the inverse of the basis matrix ($B^{-1}$) and the objective function coefficients ($c_B$).  The equation $y^T N = (B^{-1} N)^T c_B \ge c_N^T$ shows how the dual variables must satisfy the dual constraints in relation to the primal problem's constraints.  The optimality condition $z_N = (B^{-1} N)^T c_B - c_N \ge 0$ is crucial for verifying the optimality of the solution.  The notation suggests that the lecture is covering the simplex method and the duality theory in linear programming.  The equations are crucial for understanding the relationship between the primal and dual problems and the optimality conditions.  The slide summarizes the key conditions for an optimal solution in the dual problem.
+
+

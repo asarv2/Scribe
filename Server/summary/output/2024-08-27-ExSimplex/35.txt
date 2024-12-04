@@ -1,0 +1,33 @@
+Slide 35
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It demonstrates the steps to find an initial feasible solution for the auxiliary problem.  The slide shows how to set $x_1 = 0$ and $x_2 = 0$ in the auxiliary problem's constraints and objective function.  This results in expressions for the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) in terms of the new variable $x_0$.  The slide then calculates a specific value for $x_0$ (2) that satisfies all the constraints, leading to a calculated objective function value ($\mathcal{Z} = -2$).  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (35) is also included.

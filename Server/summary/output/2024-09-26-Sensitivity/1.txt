@@ -1,0 +1,26 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Sensitivity and Parametric Analysis}
+
+\textbf{[V] p. 11}
+
+\begin{align*}
+\text{maximize} \quad & 5x_1 + 4x_2 + 3x_3 \\
+\text{subject to} \quad & 2x_1 + 3x_2 + x_3 \le 5 \\
+& 4x_1 + x_2 + 2x_3 \le 11 \\
+& 3x_1 + 4x_2 + 2x_3 \le 8 \\
+& x_1, x_2, x_3 \ge 0
+\end{align*}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This is the first slide of a presentation on Sensitivity and Parametric Analysis in Linear Programming.  The slide displays a linear programming problem.  The objective function is to maximize the expression $5x_1 + 4x_2 + 3x_3$.  The constraints are presented as inequalities, limiting the values of $x_1$, $x_2$, and $x_3$.  The slide number and the title suggest that this is the beginning of a larger discussion on how changes in the objective function coefficients or constraint values affect the optimal solution.  The variables $x_1$, $x_2$, and $x_3$ are non-negative, as indicated by the $x_i \ge 0$ constraints.  The notation and problem setup are standard for linear programming problems.

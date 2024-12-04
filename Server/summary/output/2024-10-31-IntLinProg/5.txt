@@ -1,0 +1,20 @@
+Slide 5
+
+\textbf{Branch-and-Bound}
+
+maximize $17x_1 + 12x_2$
+subject to $10x_1 + 7x_2 \le 40$
+$x_1 + x_2 \le 5$
+$x_1, x_2 \ge 0$
+$x_1, x_2$ integers.
+
+\textit{Graph of feasible region and optimal solution} (a plot is shown)
+
+$\vec{x}^* = (5/3, 10/3)$
+Optimal integer solution: $(4, 1)$
+
+$x_1 \le 1 \quad \text{or} \quad x_1 \ge 2$ $\implies$ 2 sub-problems, with new constraints
+
+\textbf{Description:}
+
+This slide introduces the Branch and Bound method for solving integer programming problems.  It builds on the previous slides by showing how the method works on the example problem from slide 3.  The graph shows the feasible region from the previous slide, but now with additional annotations.  The slide demonstrates the branching step of the Branch and Bound algorithm.  The optimal solution to the relaxed problem is marked, and the integer solution is also shown.  The branching step is illustrated by splitting the problem into two subproblems based on the integer constraint on $x_1$.  One subproblem considers $x_1 \le 1$, and the other considers $x_1 \ge 2$.  This splitting of the problem space is a key part of the Branch and Bound algorithm.  The arrows from the optimal relaxed solution to the new constraints visually represent the branching process.  The slide is likely part of a larger lecture series on integer programming and optimization techniques.

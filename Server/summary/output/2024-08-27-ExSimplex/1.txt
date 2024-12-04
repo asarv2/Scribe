@@ -1,0 +1,24 @@
+Slide 1
+
+\textbf{Simplex Method} [LV] p. 20
+
+\begin{align*}
+\max \mathcal{Z} &= 3x_1 + 2x_2 \\
+\text{Subject to} \quad &-x_1 + 3x_2 \le 12 \\
+&x_1 + x_2 \le 8 \\
+&2x_1 - x_2 \le 10 \\
+&x_1, x_2 \ge 0
+\end{align*}
+
+\textbf{Slack variable form:}
+
+\begin{align*}
+\omega_1 &= 12 + x_1 - 3x_2 \\
+\omega_2 &= 8 - x_1 - x_2 \\
+\omega_3 &= 10 - 2x_1 + x_2 \\
+x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 &\ge 0
+\end{align*}
+
+\textbf{Description:}
+
+This slide presents a linear programming problem.  It shows the original problem in standard form (maximization with less than or equal to constraints and non-negativity constraints).  The slide then transforms the problem into the "slack variable form".  This form introduces slack variables ($\omega_1$, $\omega_2$, $\omega_3$) to convert the inequality constraints into equality constraints.  The slack variables represent the unused capacity or "slack" in each constraint.  The slide number and page number are also included.  The context suggests this is the beginning of a lecture on the Simplex method for solving linear programming problems.

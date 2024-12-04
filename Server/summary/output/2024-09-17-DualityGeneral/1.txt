@@ -1,0 +1,47 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Duality (General Form)}
+
+\begin{itemize}
+    \item \textbf{Primal Problem:}
+    \begin{align*}
+        \text{maximize } \zeta &= f_0(x) \\
+        x \in \mathbb{R}^d \\
+        \text{subject to } f_i(x) &\le 0 \quad i=1,\dots,m \\
+        g_j(x) &= 0 \quad j=1,\dots,n
+    \end{align*}
+    \begin{itemize}
+        \item $\zeta$ is the objective function.
+        \item $f_0(x)$ is the objective function of the primal problem.
+        \item $f_i(x)$ are inequality constraints.
+        \item $g_j(x)$ are equality constraints.
+        \item $x \in \mathbb{R}^d$ indicates that the variables $x$ are real-valued.
+        \item $i=1,\dots,m$ and $j=1,\dots,n$ denote the number of inequality and equality constraints, respectively.
+    \end{itemize}
+    \item \textbf{Dual Problem:}
+    \begin{align*}
+        \text{maximize } \zeta &= f_0(x) \\
+        x \in \mathbb{R}^d \\
+        \text{subject to } g_j(x) &= 0 \quad j=1,\dots,n
+    \end{align*}
+    \begin{itemize}
+        \item $\zeta$ is the objective function.
+        \item $f_0(x)$ is the objective function of the dual problem.
+        \item $g_j(x)$ are equality constraints.
+        \item $x \in \mathbb{R}^d$ indicates that the variables $x$ are real-valued.
+        \item $j=1,\dots,n$ denotes the number of equality constraints.
+    \end{itemize}
+\end{itemize}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces the general form of the primal and dual linear programming problems.  It shows the objective function and constraints for both problems.  The notation uses $f_0(x)$ for the objective function of the primal problem and $g_j(x)$ for the equality constraints.  The slide also includes the notation $x \in \mathbb{R}^d$, indicating that the variables are real-valued.  The use of $i=1,\dots,m$ and $j=1,\dots,n$ indicates the number of inequality and equality constraints, respectively.  The red arrows and the handwritten 6 are likely to indicate the variables associated with the constraints.  This is the first slide of a 22-slide presentation on duality in linear programming.

@@ -1,0 +1,51 @@
+Slide 2
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16} \hspace{1cm} 2.3 Ice Cream All Year Round
+
+\newline
+The next application of linear programming again concerns food (which should not be surprising, given the importance of food in life and the difficulties in optimizing sleep or love). The ice cream manufacturer Icicle Works Ltd. needs to set up a production plan for the next year. Based on historical extensive surveys, and bird observations, the marketing department has come up with the following prediction of monthly sales of ice cream in the next year:
+
+\newline
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    ymin=0, ymax=750,
+    ylabel={sales [tons]},
+    xlabel={Months},
+    symbolic x coords={Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec},
+    xtick=data,
+    bar width=10pt,
+    enlarge x limits=0.15,
+    legend style={at={(0.5,-0.2)},
+    anchor=north,legend columns=-1},
+    ]
+\addplot coordinates {
+(Jan,350)
+(Feb,350)
+(Mar,450)
+(Apr,650)
+(May,600)
+(Jun,600)
+(Jul,500)
+(Aug,250)
+(Sep,450)
+(Oct,350)
+(Nov,650)
+(Dec,550)
+};
+\draw[red, thick] (axis cs:Jan,500) -- (axis cs:Dec,500);
+\node[red, below] at (axis cs:Jan,450) {average demand};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\newline
+Monthly Demands $d_i$, $i=1,\dots,12$
+
+
+\textbf{Description:}
+
+This slide continues the previous example of Icicle Works Ltd.  It presents the same bar graph of predicted monthly ice cream sales.  However, a new element is added: a horizontal red line has been drawn across the graph at approximately 500 tons.  This line represents the average demand for ice cream throughout the year.  The text "average demand" is written below the line, indicating that this is a key metric for the production planning.  The slide is likely part of a lecture or presentation explaining how to use linear programming to create a production plan based on predicted demand and average demand.

@@ -1,0 +1,22 @@
+Slide 8
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Linear Separability}
+
+\textit{Given labeled points} $(x_i, x_i')$
+
+\textit{Find} a hyperplane that separates the points.
+
+\textit{Linear Separable} if there exists a hyperplane that separates the points.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide discusses linear separability in the context of binary classification.  It states that a dataset is linearly separable if a hyperplane can be drawn to perfectly divide the data points into two categories (represented by the labels '+', and '-').  The notation $(x_i, x_i')$ indicates that each data point $x_i$ has an associated label $x_i'$.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to determine if a given dataset can be separated by a hyperplane.  The presence of a scatter plot of points labeled with '+' and '-' indicates the data points to be classified.  The slide number (8 of 22) suggests this is a later part of the lecture, building on the previous discussion of binary classification.  The concept of linear separability is crucial for determining the feasibility of using linear methods for classification.

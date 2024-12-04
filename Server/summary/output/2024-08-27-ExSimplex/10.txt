@@ -1,0 +1,17 @@
+Slide 10
+
+$\pi$ A ($x_1=3$, $w_3=0$)
+Interchange $x_1$ and $w_3$ with
+$w_3$ leaving basic and $x_1$ entering basic
+
+$\max \mathcal{Z} = 15 - \frac{3}{2}w_3 + \frac{7}{2}x_2$
+subject to
+$x_1 = 5 - \frac{1}{2}w_3 + \frac{1}{2}x_2$
+$w_1 = 17 - \frac{3}{2}w_3 - \frac{3}{2}x_2$
+$w_2 = 3 + \frac{1}{2}w_3 - \frac{3}{2}x_2$
+
+basic var.  non-basic var.
+
+\textbf{Description:}
+
+This slide continues the Simplex method's pivot operation, showing the result of the exchange of $x_1$ and $w_3$.  The equations are now rewritten in a form where the basic variables ($x_1$, $w_1$, $w_2$) are expressed in terms of the non-basic variables ($x_2$, $w_3$).  The objective function ($\mathcal{Z}$) is also updated to reflect this change.  The context suggests this is an intermediate step in the iterative process of the Simplex method, preparing for the next iteration.  The slide is focused on the algebraic manipulation of the equations to achieve the new form.

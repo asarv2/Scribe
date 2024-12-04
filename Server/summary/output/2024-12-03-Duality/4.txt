@@ -1,0 +1,27 @@
+Slide 4
+
+\textbf{THE GRAPHIC METHOD}
+
+The geometric interpretation of linear programming leads to a geometric procedure for solving
+LP problems with two variables. For illustration, let us consider the problem
+
+maximize $\quad x_1 + x_2$
+
+subject to $\quad 2x_1 + x_2 \le 14$
+$\quad -x_1 + 2x_2 \le 8$
+$\quad 2x_1 - x_2 \le 10$
+$\quad x_1, x_2 \ge 0$.
+
+Its region of feasibility is shown in Figure 17.8, together with the line representing all the points
+
+$x_1 + x_2 = 10$
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figure17_8.png} % Replace with actual image path
+\caption{Figure 17.8}
+\end{figure}
+
+\textbf{Description:}
+
+This slide continues the graphical method for solving linear programming problems, building on the previous slide.  It presents the same example problem, but now includes a graph (Figure 17.8) that visually depicts the feasible region and the objective function line $x_1 + x_2 = 10$. The shaded area in the graph represents the feasible region, which is a polygon. The lines represent the boundaries of the constraints. The line $x_1 + x_2 = 10$ is the objective function line, and the goal is to find the point within the feasible region that maximizes the objective function.  The graph shows the coordinates of the vertices of the feasible region, which are crucial for finding the optimal solution.  This slide is part of a linear programming lecture, demonstrating the graphical method for solving problems. The figure is a graphical representation of the feasible region for the given constraints, and the objective function line is superimposed on the graph to help determine the optimal solution.

@@ -1,0 +1,24 @@
+Slide 25
+
+\textbf{Cutting Stock Problem}
+
+\newline
+\textit{[EMG] p. 267}
+
+\newline
+A paper mill manufactures rolls of paper of a standard width 3 meters. But customers want to buy paper rolls of shorter width, and the mill has to cut such rolls from the 3 m rolls. One 3 m roll can be cut, for instance, into two rolls 93 cm wide, one roll of width 108 cm, and a rest of 6 cm (which goes to waste).
+
+\newline
+Let us consider an order of
+
+\begin{itemize}
+\item 97 rolls of width 135 cm,
+\item 610 rolls of width 108 cm,
+\item 395 rolls of width 93 cm, and
+\item 211 rolls of width 42 cm.
+\end{itemize}
+
+
+\textbf{Description:}
+
+This slide introduces a cutting stock problem.  A paper mill produces large rolls of paper (3 meters wide) but customers want smaller rolls.  The problem is to determine the best way to cut the large rolls into smaller rolls of various widths to minimize waste.  The slide lists the quantities of smaller rolls needed in the order.  The goal is to find a cutting pattern that satisfies the customer's order while minimizing the amount of paper wasted.  This is a classic optimization problem in operations research, often solved using integer programming techniques.

@@ -1,0 +1,18 @@
+Slide 11
+
+\textbf{Primal Network Simplex}
+
+\textit{Modify dual flow}
+
+\textit{Choose arc with $z_{ij} < 0$ as entering arc}
+
+\textit{Find cycle including entering arc and leaving arc}
+
+\textit{Update primal and dual flows}
+
+\textit{Two disconnected trees}
+
+
+\textbf{Description:}
+
+This slide continues the discussion of the Network Simplex Method, focusing on the modification of the dual flow.  It shows a graphical representation of a network, where the edges are labeled with costs or capacities.  The diagram illustrates a network with two disconnected trees, which is a result of the algorithm's iterative process.  The algorithm is selecting an entering arc (highlighted in purple) and a leaving arc to form a cycle.  The text likely explains how the dual flow is updated to reflect the changes in the primal flow and the spanning tree.  The presence of two disconnected trees suggests that the algorithm has reached a point where the current solution is not optimal, and further iterations are needed to connect the trees and improve the solution.

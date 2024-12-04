@@ -1,0 +1,34 @@
+Slide 4
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Theorem 10.1}
+$S$ is convex $\iff$
+it contains all conv. comb. of points in $S$
+
+\textbf{Proof} $\Rightarrow$
+Suppose $S$ is convex.
+$n=2$: $z_1, z_2 \in S \implies \lambda z_1 + (1-\lambda) z_2 \in S$, $\lambda_1 + \lambda_2 = 1$, $\lambda_1, \lambda_2 \ge 0$
+
+$n=3$: $z_1, z_2, z_3 \in S \implies \lambda_1 z_1 + \lambda_2 z_2 + \lambda_3 z_3 \in S$, $\lambda_1 + \lambda_2 + \lambda_3 = 1$, $\lambda_1, \lambda_2, \lambda_3 \ge 0$
+
+$n=4$: $z_1, z_2, z_3, z_4 \in S \implies \lambda_1 z_1 + \lambda_2 z_2 + \lambda_3 z_3 + \lambda_4 z_4 \in S$, $\lambda_1 + \lambda_2 + \lambda_3 + \lambda_4 = 1$, $\lambda_1, \lambda_2, \lambda_3, \lambda_4 \ge 0$
+
+$(\lambda_1 + \lambda_2)( \frac{\lambda_1 z_1 + \lambda_2 z_2}{\lambda_1 + \lambda_2}) + \lambda_3 z_3 + \lambda_4 z_4 \in S$
+$\lambda_1 + \lambda_2 \le 1$
+$\lambda_1, \lambda_2 \ge 0$
+$\lambda_3, \lambda_4 \ge 0$
+
+\end{document}
+```
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the proof of Theorem 10.1, focusing on the implication that if a set is convex, then it contains all convex combinations of its points.  It generalizes the argument from the previous slide ($n=2$ and $n=3$ points) to the case of $n=4$ points.  The slide shows the structure of the proof, demonstrating how the convex combination of points within a convex set remains within the set.  The notation is typical of a linear programming or optimization lecture, focusing on the mathematical details of the proof.  The handwritten style suggests a classroom setting.  The incomplete or unclear parts of the original handwritten notes are represented as best as possible in LaTeX.  The arrows and underlines in the original are not included in the LaTeX output, as they are not part of the mathematical content.  The slide likely builds on the previous slides' definitions of convex sets and convex combinations.

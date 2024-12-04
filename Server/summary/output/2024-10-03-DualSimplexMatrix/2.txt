@@ -1,0 +1,39 @@
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Simplex Method  \textit{LVJ p.71}}
+
+We begin with an example:
+
+\textbf{Step 0}
+\begin{itemize}
+    \item maximize $-x_1 - x_2$
+    \item subject to
+        \begin{itemize}
+            \item $-2x_1 + x_2 \le 4$
+            \item $-2x_1 + 4x_2 \le -8$
+            \item $-x_1 + 3x_2 \le -7$
+            \item $x_1, x_2 \ge 0$
+        \end{itemize}
+\end{itemize}
+\textbf{The dual of this problem is}
+\begin{itemize}
+    \item minimize $4y_1 - 8y_2 - 7y_3$
+    \item subject to
+        \begin{itemize}
+            \item $-2y_1 - 2y_2 - y_3 \ge -1$
+            \item $-y_1 + 4y_2 + 3y_3 \ge -1$
+            \item $y_1, y_2, y_3 \ge 0$
+        \end{itemize}
+\end{itemize}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide presents a linear programming problem (the primal problem) and its corresponding dual problem.  The primal problem is to maximize $-x_1 - x_2$ subject to constraints involving $x_1$ and $x_2$. The dual problem is to minimize $4y_1 - 8y_2 - 7y_3$ subject to constraints involving $y_1$, $y_2$, and $y_3$.  The slide is likely part of a lecture on the dual simplex method, a specific algorithm for solving linear programming problems. The notation "LVJ p.71" suggests this is from a textbook or reference material. The slide is introducing the primal and dual problems, likely as a starting point for applying the dual simplex method.  The red arrows and annotations highlight the key elements of the problem setup.

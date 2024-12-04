@@ -1,0 +1,18 @@
+Slide 7
+
+\textbf{Primal Network Simplex}
+
+\textit{Modify primal flow and spanning tree}
+
+\textit{Choose arc with $z_{ij} < 0$ as entering arc}
+
+\textit{Find cycle including entering arc and leaving arc}
+
+\textit{Update primal and dual flows}
+
+\textit{FIGURE 14.7. The cycle produced by including the entering arc with the spanning tree. As the flow $t$ on the entering arc (f,b) becomes zero (when $t = 3$). Hence, arc (f,b) is the leaving arc.}
+
+
+\textbf{Description:}
+
+This slide continues the explanation of the Network Simplex Method.  It shows a graphical representation of a network flow problem, illustrating the process of updating the spanning tree and primal flow.  The diagram shows a cycle formed by including an entering arc (highlighted in purple) into the existing spanning tree (red edges).  The algorithm identifies a leaving arc (f,b) within this cycle, which is adjusted to maintain the spanning tree's properties.  The text explains that the flow on the entering arc increases, and the flow on the leaving arc decreases, until the leaving arc's flow reaches zero.  This process is crucial for iteratively improving the solution towards optimality.  The reference "FIGURE 14.7" indicates that this is a figure from a textbook or other resource, illustrating the concept of finding a cycle and updating the flow.

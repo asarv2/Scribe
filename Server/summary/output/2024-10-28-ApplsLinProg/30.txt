@@ -1,0 +1,23 @@
+Slide 30
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+
+\textbf{Description:}
+
+This slide introduces a problem in linear algebra, specifically finding a sparse solution to an underdetermined system of linear equations.  The problem is to find a solution vector $x$ to the equation $Ax = b$, where $A$ is an $m \times n$ matrix with $m < n$ (fewer equations than unknowns), $b$ is a given vector, and the solution $x$ must be sparse, meaning that it has at most $r$ non-zero elements.  This problem is relevant to linear programming because it often arises in various optimization contexts where finding a solution with a limited number of non-zero components is desirable.  The notation $|supp(x)|$ represents the number of non-zero elements in the vector $x$.

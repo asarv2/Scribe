@@ -1,0 +1,27 @@
+Slide 2
+
+\textbf{General LP}
+
+\newline
+\textbf{(M1)}
+\begin{align*}
+\max \ \vec{c}^T \vec{x} \\
+\text{s.t.} \quad \vec{A} \vec{x} &\le \vec{b} \\
+\qquad \vec{x} &\le \vec{u}
+\end{align*}
+\newline
+\textit{(not necessarily $\vec{x} \ge \vec{0}$)}
+
+\newline
+\begin{align*}
+\max \ \vec{c}^T (\vec{x}^+ - \vec{x}^-) \\
+\text{s.t.} \quad \vec{A} (\vec{x}^+ - \vec{x}^-) &\le \vec{b} \\
+\qquad \vec{x}^+, \vec{x}^- &\ge \vec{0} \\
+\qquad \vec{x} = \vec{x}^+ - \vec{x}^-
+\end{align*}
+
+---
+
+\textbf{Description:}
+
+This slide continues the discussion of linear programming duality, specifically focusing on the case where the primal problem's constraints do not necessarily require non-negativity of the variables ($\vec{x} \ge \vec{0}$).  It introduces a reformulation of the primal problem (M1) by splitting the variables into positive and negative components ($\vec{x}^+$ and $\vec{x}^-$).  The slide shows how the original constraints are maintained, and the new variables are constrained to be non-negative.  The notation is consistent with the previous slide, using vectors and matrices.  The arrow indicates a transformation or reformulation of the primal problem.  The slide number is 2 of 7, indicating its place in a larger presentation.

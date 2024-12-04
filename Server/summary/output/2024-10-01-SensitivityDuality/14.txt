@@ -1,0 +1,28 @@
+Slide 14
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+We need $A^T y \ge c \Leftrightarrow y^T A \ge c^T$
+
+$y^T \ge 0$
+
+$y^T [A \quad I] \ge [c^T \quad 0^T]$
+
+$y^T [B \quad N] \ge [c_B^T \quad c_N^T]$
+
+$y^T B \ge c_B^T$
+
+$y^T N \ge c_N^T$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 14 of a 15-slide lecture on Linear Programming.  It presents the conditions for feasibility of the dual solution. The slide shows the relationships between the primal and dual constraints.  The equations demonstrate how the dual variables ($y$) must satisfy the dual constraints ($A^T y \ge c$, $y \ge 0$) in relation to the primal problem's constraints ($Ax \le b$, $x \ge 0$).  The notation suggests that the lecture is covering the simplex method and the duality theory in linear programming.  The equations are crucial for understanding the relationship between the primal and dual problems and the optimality conditions.  The slide shows how the dual constraints are derived from the primal constraints and the relationship between the optimal dual variables and the primal constraints.
+
+

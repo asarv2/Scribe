@@ -1,0 +1,36 @@
+Slide 1
+
+\textbf{Network Flow (LV) Chapter 14)}
+
+$N = \text{set of nodes } \{i, j\}$
+
+$\mathcal{A} = \text{set of (directed) arcs}$
+
+$\subseteq \{c_{ij} : i, j \in N\}$
+
+\begin{tikzpicture}[scale=0.5]
+\filldraw (0,0) circle (2pt) node[below] {};
+\filldraw (2,2) circle (2pt) node[below] {$i$};
+\filldraw (4,0) circle (2pt) node[below] {};
+\filldraw (6,2) circle (2pt) node[below] {$j$};
+\filldraw (8,0) circle (2pt) node[below] {};
+
+\draw[->] (2,2) -- (4,0);
+\draw[->] (2,2) -- (6,2);
+\draw[->] (6,2) -- (8,0);
+\draw[->] (4,0) -- (6,2);
+\end{tikzpicture}
+
+Network = (N, $\mathcal{A}$)
+Graph (or digraph)
+
+
+\textbf{Description:}
+
+This slide introduces the concept of Network Flow, specifically in the context of Linear Programming.  It defines the key components of a network:
+
+* **N:** The set of nodes (represented by dots in the diagram).  The handwritten notes use $i$ and $j$ as examples of nodes.
+* **$\mathcal{A}$:** The set of directed arcs (represented by arrows in the diagram).  The notation $c_{ij}$ suggests that each arc has a capacity or cost associated with it.
+* **Network:** The combination of nodes and arcs, forming a graph (or digraph, implying directionality).
+
+The diagram shows a simple network with nodes and directed edges.  The slide number and chapter indicate this is likely part of a larger lecture series on Linear Programming.  The notation suggests that the lecture will cover how to model and solve network flow problems using linear programming techniques.

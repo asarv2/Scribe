@@ -1,0 +1,28 @@
+Slide 20
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{SVM Optimization as a QP Problem}
+
+\textit{Maximize} $d$
+
+s.t.
+\begin{equation*}
+d \le \frac{|a_1 s_i + a_2 s_i^2 - b'|}{\sqrt{a_1^2 + a_2^2}}, \quad \forall i
+\end{equation*}
+\begin{equation*}
+a_1 s_i + a_2 s_i^2 - b' \le 0, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the optimization problem for an SVM, framed as a quadratic programming (QP) problem.  It shows the objective function as maximizing the margin ($d$), subject to constraints ensuring that all data points are correctly classified with a margin at least $d$.  The constraints are expressed in terms of the data points' ($s_i$, $s_i^2$) coordinates, the hyperplane parameters ($a_1$, $a_2$, $b'$), and the margin ($d$).  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the optimization problem underlying the SVM algorithm.  The slide number (20 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their geometric interpretation, and Lagrangian formulation.  The constraints ensure that the data points are correctly classified and that the margin is maximized.  The notation $s_i$ and $s_i^2$ likely represent the coordinates of the support vectors.  The constraints are now more explicitly related to the distance calculation.
+
+

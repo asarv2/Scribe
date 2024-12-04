@@ -1,0 +1,26 @@
+Slide 10
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Note:} $\Delta \zeta = (\Delta b)^T y^*$
+
+\textbf{In fact:} $\zeta_{new} = \zeta_{old} + (\Delta b) y^*$
+
+(if non-degenerate, $|\Delta b| < 1$)
+
+$(\Delta b)^T y^* = (\Delta b_1) y_1^* + (\Delta b_2) y_2^* + \dots + (\Delta b_m) y_m^*$
+
+(shadow price)
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 10 of a 15-slide lecture on Linear Programming.  It continues the sensitivity analysis of the primal problem, specifically examining how a change in the right-hand side of a constraint affects the optimal solution. The slide introduces the concept of shadow price and how it relates to the change in the objective function.  The equation $\Delta \zeta = (\Delta b)^T y^*$ shows that the change in the optimal objective function value ($\Delta \zeta$) is equal to the dot product of the change in the right-hand side of the constraints ($\Delta b$) and the optimal dual variables ($y^*$).  The formula $\zeta_{new} = \zeta_{old} + (\Delta b) y^*$ explicitly shows how the new optimal objective function value ($\zeta_{new}$) is related to the old optimal objective function value ($\zeta_{old}$) and the change in the right-hand side of the constraints ($\Delta b$) and the optimal dual variables ($y^*$).  The condition "if non-degenerate, $|\Delta b| < 1$" specifies the conditions under which this formula holds.  The concept of shadow price is introduced as the dual variable value, which represents the rate of change in the optimal objective function value for a unit change in the right-hand side of a constraint.
+
+

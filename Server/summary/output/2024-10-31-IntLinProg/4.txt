@@ -1,0 +1,28 @@
+Slide 4
+
+$IVJ$. $397$
+
+\begin{equation*}
+\text{maximize} \ 17x_1 + 12x_2
+\end{equation*}
+\begin{equation*}
+\text{subject to} \ 10x_1 + 7x_2 \le 40
+\end{equation*}
+\begin{equation*}
+x_1 + x_2 \le 5
+\end{equation*}
+\begin{equation*}
+x_1, x_2 \ge 0
+\end{equation*}
+\begin{equation*}
+x_1, x_2 \text{ integers.}
+\end{equation*}
+
+\textit{Graph of feasible region and optimal solution} (a plot is shown)
+
+$\vec{x}^* = (5/3, 10/3)$
+Optimal integer solution: $(4, 1)$
+
+\textbf{Description:}
+
+This slide continues the example from slide 3, now including a graphical representation of the feasible region for the linear programming problem.  The graph shows the feasible region (the shaded area) defined by the constraints $10x_1 + 7x_2 \le 40$, $x_1 + x_2 \le 5$, and $x_1, x_2 \ge 0$.  The optimal solution to the *relaxed* linear program (where $x_1$ and $x_2$ are not restricted to integers) is marked on the graph, and it is a non-integer solution.  The optimal integer solution is also shown, which is different from the relaxed solution.  The slide demonstrates how the optimal integer solution can differ significantly from the optimal solution to the relaxed problem.  The graph is a visual aid to understand the impact of the integer constraints on the solution space.  The notation $\vec{x}^*$ likely represents the optimal solution to the relaxed problem.  The red and blue annotations likely highlight key points or calculations.

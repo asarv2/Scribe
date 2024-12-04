@@ -1,0 +1,20 @@
+Slide 20
+
+\textbf{Primal Network Simplex}
+
+\textit{Updating dual variables}
+
+\textit{Crossing} $\mathcal{I}$ and $\mathcal{II}$: if $i \in \mathcal{I}, j \in \mathcal{II}$:
+
+$(i,j) \in \mathcal{II}$: $\tilde{y}_i - \tilde{y}_j + \tilde{z}_{ij} = C_{ij}$
+
+$(\tilde{y}_j - (\tilde{y}_i + z_{ab})) + \tilde{z}_{ij} = C_{ij}$
+
+$\tilde{z}_{ij} = C_{ij} - (\tilde{y}_j - \tilde{y}_i) = z_{ij} + z_{ab}$
+
+
+\textbf{Description:}
+
+This slide describes the update rule for dual variables when crossing between two trees ($\mathcal{I}$ and $\mathcal{II}$) in the Network Simplex Method.  The notation $\tilde{y}_i$, $\tilde{y}_j$, and $\tilde{z}_{ij}$ represent the updated values of the dual variables after a primal pivot step.  The equation $\tilde{y}_i - \tilde{y}_j + \tilde{z}_{ij} = C_{ij}$ shows the relationship between the dual variables and the cost $C_{ij}$ associated with the edge connecting nodes i and j.  The slide specifically addresses the case where node i is in tree $\mathcal{I}$ and node j is in tree $\mathcal{II}$.  The update rule for $\tilde{z}_{ij}$ is also given, showing how the dual variable is adjusted based on the crossing of the trees and the change in the dual variable $z_{ab}$.  This is a crucial step in the algorithm, ensuring that the dual solution remains consistent with the updated primal solution as the spanning tree is modified.  The notation with the tilde (~) above the variables likely indicates that these are updated values after the pivot step.  The equation now shows an addition of $z_{ab}$ to the updated dual variable $\tilde{z}_{ij}$.
+
+

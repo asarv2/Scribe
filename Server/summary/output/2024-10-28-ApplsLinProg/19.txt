@@ -1,0 +1,39 @@
+Slide 19
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 31} \hspace{1cm} Maximum Weight Matching
+
+\newline
+(A graph with weights on the edges. Find a matching of maximum weight.)
+
+\newline
+\begin{itemize}
+\item quality manager
+\item representative appearance
+\item secretary
+\item trend analyst
+\item undersecretary
+\item vacation specialist
+\item webmaster
+\end{itemize}
+
+\newline
+\begin{itemize}
+\item Amos
+\item Boris
+\item Colette
+\item Devdat
+\item Eleanor
+\item Fortunato
+\item Gudrun
+\end{itemize}
+
+\newline
+(A graph with weights on the edges. Find a matching of maximum weight.)
+
+
+\textbf{Description:}
+
+This slide presents a maximum weight matching problem, a type of integer programming problem.  The problem involves finding the best possible matching between two sets of people (in this case, job titles and names).  Each connection between a job title and a person has a weight, representing a value or score associated with that pairing.  The goal is to find a matching that maximizes the total weight of the connections.  The slide lists the job titles and names, implying that there are connections (edges) between them, each with a numerical weight.  This is a classic combinatorial optimization problem that can be solved using integer programming techniques.

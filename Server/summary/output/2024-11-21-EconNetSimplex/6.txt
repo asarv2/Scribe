@@ -1,0 +1,13 @@
+Slide 6
+
+\textbf{Three Steps of Simplex}
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item In the third step of each iteration, we imagine that the first company has found out about its competitor's plan and hastens to use the information to its own advantage. It will now ship $t$ units through the entering arc and keep ignoring other out-of-tree arcs; the shipments along the arcs of $T$ will have to be adjusted so as to maintain feasibility of the resulting schedule. The adjustments, easy to work out, are shown in
+    $$\sum_{ij} \tilde{z}_{ij} = 0, \quad i.e. \quad \tilde{y}_j - \tilde{y}_i = c_{ij}$$
+\end{enumerate}
+
+\textbf{Description:}
+
+This slide concludes the description of the three-step simplex algorithm for a network flow problem.  It details the third step, where the first company, having learned about the competitor's strategy, adjusts its own shipments to maintain feasibility.  The company now considers the entering arc and adjusts the shipments along the arcs of the spanning tree ($T$) to maintain the overall feasibility of the solution.  The adjustments are straightforward and involve maintaining the balance of flow through the network. The notation $\tilde{z}_{ij}$ likely represents the adjusted flow along arc $ij$, and $\tilde{y}_i$ represents the adjusted price at node $i$. The overall goal is to iteratively improve the solution until an optimal solution is found.

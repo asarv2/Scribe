@@ -1,0 +1,1477 @@
+Slide 1
+
+\textbf{Simplex Method} [LV] p. 20
+
+\begin{align*}
+\max \mathcal{Z} &= 3x_1 + 2x_2 \\
+\text{Subject to} \quad &-x_1 + 3x_2 \le 12 \\
+&x_1 + x_2 \le 8 \\
+&2x_1 - x_2 \le 10 \\
+&x_1, x_2 \ge 0
+\end{align*}
+
+\textbf{Slack variable form:}
+
+\begin{align*}
+\omega_1 &= 12 + x_1 - 3x_2 \\
+\omega_2 &= 8 - x_1 - x_2 \\
+\omega_3 &= 10 - 2x_1 + x_2 \\
+x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 &\ge 0
+\end{align*}
+
+\textbf{Description:}
+
+This slide presents a linear programming problem.  It shows the original problem in standard form (maximization with less than or equal to constraints and non-negativity constraints).  The slide then transforms the problem into the "slack variable form".  This form introduces slack variables ($\omega_1$, $\omega_2$, $\omega_3$) to convert the inequality constraints into equality constraints.  The slack variables represent the unused capacity or "slack" in each constraint.  The slide number and page number are also included.  The context suggests this is the beginning of a lecture on the Simplex method for solving linear programming problems.
+
+
+Slide 2
+
+\begin{tikzpicture}
+\draw[->] (-1,0) -- (4,0) node[right] {$x_1$};
+\draw[->] (0,-1) -- (0,4) node[above] {$x_2$};
+\draw[blue] (-1,2) -- (4,-2);
+\draw[red,->] (0.5,2.5) -- (2,1.5) node[above,right] {$ax+by < 0$};
+\draw[red,->] (2,1.5) -- (3,0.5) node[below,right] {$ax+by = 0$};
+\draw[red,->] (3,0.5) -- (3.5,-1) node[below,right] {$ax+by > 0$};
+\draw[blue] (0,0) -- (0,4);
+\draw[blue] (0,0) -- (4,0);
+\draw[blue] (-1,0) -- (0,0);
+\draw[blue] (0,-1) -- (0,0);
+\node[red] at (-0.5,3) {$x_1 \ge 0$};
+\node[red] at (3,-0.5) {$x_2 \ge 0$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide shows a graphical representation of a linear inequality constraint in a two-dimensional space.  The blue line represents the equation $ax + by = 0$.  The red arrows indicate the regions where $ax + by < 0$, $ax + by = 0$, and $ax + by > 0$.  The axes are labeled $x_1$ and $x_2$, and the non-negativity constraints $x_1 \ge 0$ and $x_2 \ge 0$ are also shown.  The context suggests this is part of a lecture on linear programming, specifically on how to graphically represent and solve linear inequalities.  The slide is likely illustrating how to determine the feasible region for a linear programming problem.
+
+
+Slide 3
+
+\begin{tikzpicture}
+\draw[->] (-1,0) -- (4,0) node[right] {$x_1$};
+\draw[->] (0,-1) -- (0,4) node[above] {$x_2$};
+\draw[blue] (-1,2) -- (4,-2);
+\draw[red,->] (0.5,2.5) -- (2,1.5) node[above,right] {$ax+by = w$, $w \le 0$};
+\draw[red,->] (2,1.5) -- (3,0.5) node[below,right] {$ax+by = w$, $w = 0$};
+\draw[red,->] (3,0.5) -- (3.5,-1) node[below,right] {$ax+by = w$, $w > 0$};
+\draw[blue] (0,0) -- (0,4);
+\draw[blue] (0,0) -- (4,0);
+\draw[blue] (-1,0) -- (0,0);
+\draw[blue] (0,-1) -- (0,0);
+\node[red] at (-0.5,3) {$x_1 \ge 0$};
+\node[red] at (3,-0.5) {$x_2 \ge 0$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide builds upon the previous one, continuing the graphical representation of linear inequalities in a two-dimensional space.  The blue line represents the equation $ax + by = w$.  The red arrows now indicate the regions where $w < 0$, $w = 0$, and $w > 0$.  The axes are labeled $x_1$ and $x_2$, and the non-negativity constraints $x_1 \ge 0$ and $x_2 \ge 0$ are still shown.  Crucially, the slide now explicitly connects the variable $w$ to the linear equation, indicating that $w$ is a function of $x$ and $y$.  The context suggests this is part of a lecture on linear programming, focusing on how to graphically represent and solve linear inequalities with a variable representing a constraint value.  The slide is likely illustrating how to determine the feasible region for a linear programming problem, now considering the value of $w$ as a constraint.
+
+
+Slide 4
+
+\begin{tikzpicture}
+\draw[->] (-1,0) -- (6,0) node[right] {$x_1$};
+\draw[->] (0,-1) -- (0,4) node[above] {$x_2$};
+\draw[blue] (-1,2) -- (6,-2);
+\draw[blue] (0,0) -- (6,0);
+\draw[blue] (0,0) -- (0,4);
+\draw[blue] (-1,0) -- (0,0);
+\draw[blue] (0,-1) -- (0,0);
+\draw[fill=orange!30] (0,0) -- (3,0) -- (3,2) -- (1,3) -- (0,3) -- cycle;
+\draw[blue] (0,3) -- (6,0);
+\draw[blue] (0,0) -- (3,2);
+\node[red] at (-0.5,3) {$x_1 \ge 0$};
+\node[red] at (5,-0.5) {$x_2 \ge 0$};
+\node[red] at (1,3.5) {$-x_1 + 3x_2 = 12$};
+\node[red] at (3,2.5) {$w_1 = 0$};
+\node[red] at (4,1) {$2x_1 - x_2 = 10$};
+\node[red] at (4,0.5) {$w_3 = 0$};
+\node[red] at (5,2) {$x_1 + x_2 = 8$};
+\node[red] at (5,1.5) {$w_2 = 0$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide presents a graphical solution to a system of linear inequalities, likely part of a linear programming problem.  The shaded area represents the feasible region, the set of points that satisfy all the constraints.  The lines represent the equations derived from the constraints of the linear programming problem.  The axes are labeled $x_1$ and $x_2$, and the non-negativity constraints $x_1 \ge 0$ and $x_2 \ge 0$ are shown.  The equations of the lines are labeled with the corresponding slack variables ($w_1$, $w_2$, $w_3$) set to zero.  The context suggests this is a step in graphically determining the optimal solution to a linear programming problem.  The intersection points of the lines define the vertices of the feasible region.
+
+
+Slide 5
+
+\begin{tikzpicture}
+\draw[->] (-1,0) -- (6,0) node[right] {$x_1$};
+\draw[->] (0,-1) -- (0,4) node[above] {$x_2$};
+\draw[blue] (-1,2) -- (6,-2);
+\draw[blue] (0,0) -- (6,0);
+\draw[blue] (0,0) -- (0,4);
+\draw[blue] (-1,0) -- (0,0);
+\draw[blue] (0,-1) -- (0,0);
+\draw[fill=orange!30] (0,0) -- (3,0) -- (3,2) -- (1,3) -- (0,3) -- cycle;
+\draw[blue] (0,3) -- (6,0);
+\draw[blue] (0,0) -- (3,2);
+\draw[fill=purple] (0,0) circle (2pt) node[below left] {$O$};
+\draw[fill=purple] (3,2) circle (2pt) node[below right] {$B$};
+\draw[fill=purple] (1,3) circle (2pt) node[above left] {$C$};
+\draw[fill=purple] (3,0) circle (2pt) node[below right] {$A$};
+\draw[fill=purple] (0,3) circle (2pt) node[above left] {$D$};
+\node[red] at (-0.5,3) {$x_1 \ge 0$};
+\node[red] at (5,-0.5) {$x_2 \ge 0$};
+\node[red] at (1,3.5) {$-x_1 + 3x_2 = 12$};
+\node[red] at (3,2.5) {$w_1 = 0$};
+\node[red] at (4,1) {$2x_1 - x_2 = 10$};
+\node[red] at (4,0.5) {$w_3 = 0$};
+\node[red] at (5,2) {$x_1 + x_2 = 8$};
+\node[red] at (5,1.5) {$w_2 = 0$};
+\node[violet] at (4,3.5) {$E$};
+\node[violet] at (4.5,3.2) {(not feasible)};
+\node[violet] at (3.5,2.2) {$B(w_2=0, w_3=0)$};
+\node[violet] at (2.5,3.2) {$C(w_1=0, w_2=0)$};
+\node[violet] at (2.5,0.2) {$A(x_2=0, w_3=0)$};
+\node[violet] at (0.5,3.2) {$D(x_1=0, w_1=0)$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide extends the graphical analysis of the linear programming problem from the previous slide.  It now labels the vertices of the feasible region (the area satisfying all constraints) with their coordinates, explicitly showing the values of the slack variables ($w_1$, $w_2$, $w_3$) at each vertex.  The point E is labeled as "not feasible" because it lies outside the feasible region.  The vertices are labeled with their corresponding coordinates in terms of the original variables ($x_1$, $x_2$) and the slack variables ($w_1$, $w_2$, $w_3$).  The context suggests this is a crucial step in the graphical method for solving linear programming problems, identifying the possible optimal solutions within the feasible region.
+
+
+Slide 6
+
+\begin{align*}
+(0) \quad \max \mathcal{Z} &= 3x_1 + 2x_2 \\
+\text{subject to} \quad &\omega_1 = 12 + x_1 - 3x_2 \\
+&\omega_2 = 8 - x_1 - x_2 \\
+&\omega_3 = 10 - 2x_1 + x_2 \\
+&x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0
+\end{align*}
+
+Idea of Simplex Method:
+
+(1) set all non-basic variables to zero - correspond to a vertex
+(2) choose a new set of (non) basic vars, to improve.
+((1) + (2)) is the same as moving from vertex to vertex.
+
+
+\textbf{Description:}
+
+This slide describes the Simplex method for solving linear programming problems.  It explains the core idea of the method, which is iteratively moving from one vertex of the feasible region to another, in order to find the optimal solution.  The method involves setting non-basic variables to zero, which corresponds to a vertex of the feasible region, and then choosing a new set of non-basic variables to potentially improve the objective function value.  The slide explicitly connects the Simplex method to the graphical approach by highlighting the movement between vertices.  The context suggests this is a continuation of the lecture on linear programming, explaining the algorithm behind the Simplex method.
+
+
+Slide 7
+
+(I) Initial Step/Guess
+
+$\max \mathcal{Z} = 3x_1 + 2x_2$
+subject to
+$\omega_1 = 12 + x_1 - 3x_2$
+$\omega_2 = 8 - x_1 - x_2$
+$\omega_3 = 10 - 2x_1 + x_2$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1, x_2 = 0$ (0) $\implies \mathcal{Z} = 0$
+
+\textbf{Description:}
+
+This slide outlines the initial step of the Simplex method for linear programming.  It restates the objective function and constraints from the previous slides.  The crucial instruction is to set $x_1$ and $x_2$ to zero.  This corresponds to the origin (0,0) in the graphical representation of the feasible region.  The result of this initial step is that the objective function $\mathcal{Z}$ is also zero.  The context suggests this is the beginning of the iterative process of the Simplex method, where the algorithm starts at a specific vertex (the origin in this case) and then proceeds to find a better solution by moving to another vertex.
+
+
+Slide 8
+
+(I) Improve (0) ($x_1=0$, $x_2=0$)
+
+$\max \mathcal{Z} = 3x_1 + 2x_2$
+subject to
+$\omega_1 = 12 + x_1 - 3x_2$
+$\omega_2 = 8 - x_1 - x_2$
+$\omega_3 = 10 - 2x_1 + x_2$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 3$, $\implies$
+$\omega_1: \quad 12 + x_1 - 3x_2 = 12 + 3 - 3(0) = 15$
+$\omega_2: \quad 8 - x_1 - x_2 = 8 - 3 - 0 = 5$
+$\omega_3: \quad 10 - 2x_1 + x_2 = 10 - 2(3) + 0 = 4$
+$\implies \mathcal{Z} = 3(3) + 2(0) = 9$
+
+$A = (x_1=3, x_2=0, w_3=0)$
+
+\textbf{Description:}
+
+This slide demonstrates the first iteration of the Simplex method, moving from the initial vertex (0,0) to a new vertex.  It shows how to increase $x_1$ while keeping $x_2$ at zero, based on the "max. coeff. rule".  The calculation shows the impact of this change on the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) and the objective function ($\mathcal{Z}$).  The result is a new vertex A with coordinates ($x_1=3$, $x_2=0$) and a corresponding objective function value of 9.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process.
+
+
+Slide 9
+
+$\pi$ A ($x_1=3$, $w_3=0$)
+Interchange $x_1$ and $w_3$ with
+$w_3$ leaving basic and $x_1$ entering basic
+
+$\mathcal{Z} = 3x_1 + 2x_2$
+$\omega_1 = 12 + x_1 - 3x_2$
+$\omega_2 = 8 - x_1 - x_2$
+$\omega_3 = 10 - 2x_1 + x_2$
+$x_1 = 5 - \frac{1}{2}w_3 + \frac{1}{2}x_2$
+$w_2 = 8 - 5 - \frac{1}{2}w_3 - \frac{1}{2}x_2 = 3 - \frac{1}{2}w_3 - \frac{1}{2}x_2$
+$\mathcal{Z} = 15 - 3w_3 + \frac{1}{2}x_2$
+$w_2 = 3 - \frac{1}{2}w_3 - \frac{1}{2}x_2$
+$\mathcal{Z} = 15 - 3w_3 + \frac{1}{2}x_2$
+$w_1 = 15 - w_3 - 3x_2$
+$\mathcal{Z} = 17 - \frac{5}{2}x_2 - \frac{3}{2}w_3$
+$w_1 = 15 - w_3 - 3x_2$
+$w_2 = 3 - \frac{1}{2}w_3 - \frac{1}{2}x_2$
+$\mathcal{Z} = 9 + \frac{1}{2}x_2 - 3w_3$
+
+\textbf{Description:}
+
+This slide shows the next step in the Simplex method, specifically the pivot operation.  It's transitioning from the initial basic solution (where $x_1 = x_2 = 0$) to a new basic solution.  The pivot operation involves exchanging $x_1$ and $w_3$ in the basic variables.  The equations are rewritten to express the basic variables ($x_1$, $w_1$, $w_2$) in terms of the non-basic variables ($x_2$, $w_3$).  The objective function ($\mathcal{Z}$) is also rewritten in terms of the new variables.  The context suggests this is a crucial step in the Simplex method, where the algorithm is systematically moving from one vertex of the feasible region to another to find the optimal solution.  The calculations show the intermediate steps of this pivot operation.
+
+
+Slide 10
+
+$\pi$ A ($x_1=3$, $w_3=0$)
+Interchange $x_1$ and $w_3$ with
+$w_3$ leaving basic and $x_1$ entering basic
+
+$\max \mathcal{Z} = 15 - \frac{3}{2}w_3 + \frac{7}{2}x_2$
+subject to
+$x_1 = 5 - \frac{1}{2}w_3 + \frac{1}{2}x_2$
+$w_1 = 17 - \frac{3}{2}w_3 - \frac{3}{2}x_2$
+$w_2 = 3 + \frac{1}{2}w_3 - \frac{3}{2}x_2$
+
+basic var.  non-basic var.
+
+\textbf{Description:}
+
+This slide continues the Simplex method's pivot operation, showing the result of the exchange of $x_1$ and $w_3$.  The equations are now rewritten in a form where the basic variables ($x_1$, $w_1$, $w_2$) are expressed in terms of the non-basic variables ($x_2$, $w_3$).  The objective function ($\mathcal{Z}$) is also updated to reflect this change.  The context suggests this is an intermediate step in the iterative process of the Simplex method, preparing for the next iteration.  The slide is focused on the algebraic manipulation of the equations to achieve the new form.
+
+
+Slide 11
+
+(III) Improve: A ($x_1=3$, $w_3=0$)
+increase $x_2$, keeping $w_3=0$
+
+$\max \mathcal{Z} = 15 - \frac{3}{2}w_3 + \frac{7}{2}x_2$
+subject to
+$x_1 = 5 - \frac{1}{2}w_3 + \frac{1}{2}x_2$
+$w_1 = 17 - \frac{3}{2}w_3 - \frac{3}{2}x_2$
+$w_2 = 3 + \frac{1}{2}w_3 - \frac{3}{2}x_2$
+
+$x_1$: $x_2$ can be as large as possible
+$w_1$: $17 - \frac{5}{2}x_2 \ge 0 \implies x_2 \le \frac{34}{5} = 6.8$
+$w_2$: $3 - \frac{3}{2}x_2 \ge 0 \implies x_2 \le 2$
+
+Set $x_2 = 2 \implies w_3 = 0$ and $w_2 = 0 \implies B$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's iteration, focusing on improving the solution from vertex A.  It explores increasing $x_2$ while keeping $w_3$ at zero.  The calculations determine the upper bounds on $x_2$ based on the constraints ($w_1 \ge 0$, $w_2 \ge 0$).  The result is that the maximum possible value for $x_2$ is 2, leading to a new vertex B.  The context suggests this is a step-by-step optimization process, where the algorithm is systematically finding the next vertex in the feasible region that potentially yields a better objective function value.
+
+
+
+
+Slide 12
+
+$\pi$ B ($w_2=0$, $w_3=0$)
+Interchange $x_2$ and $w_2$ with
+$w_2$ leaving basic and $x_2$ entering basic.
+
+$\max \mathcal{Z} = 17 - \frac{3}{2}w_3 - \frac{5}{2}x_2$
+subject to
+$x_1 = 5 - \frac{1}{2}w_3 + \frac{1}{2}x_2$
+$w_1 = 17 - \frac{3}{2}w_3 - \frac{3}{2}x_2$
+$w_2 = 3 + \frac{1}{2}w_3 - \frac{3}{2}x_2$
+$x_2 = 2 + \frac{1}{3}w_3 - \frac{2}{3}w_2$
+$w_1 = 7 - \frac{1}{2}w_3 - \frac{2}{3}w_2$
+$x_1 = 5 - \frac{1}{2}w_3 + \frac{1}{2}(2 + \frac{1}{3}w_3 - \frac{2}{3}w_2) = 5 - \frac{1}{2}w_3 + 1 + \frac{1}{6}w_3 - \frac{1}{3}w_2 = 6 - \frac{1}{3}w_3 - \frac{1}{3}w_2$
+$w_1 = 7 - \frac{1}{2}w_3 - \frac{2}{3}w_2$
+$w_2 = 3 + \frac{1}{2}w_3 - \frac{3}{2}x_2$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's pivot operation, showing the result of the exchange of $x_2$ and $w_2$ in the basic variables.  The equations are rewritten to express the basic variables ($x_1$, $w_1$, $x_2$) in terms of the non-basic variables ($w_2$, $w_3$).  The objective function ($\mathcal{Z}$) is also updated to reflect this change.  The context suggests this is an intermediate step in the iterative process of the Simplex method, preparing for the next iteration.  The slide is focused on the algebraic manipulation of the equations to achieve the new form.  The calculations show the intermediate steps of this pivot operation.
+
+
+
+
+Slide 13
+
+$\pi$ B ($w_2=0$, $w_3=0$)
+Interchange $x_2$ and $w_2$ with
+$w_2$ leaving basic and $x_2$ entering basic.
+
+$\max \mathcal{Z} = 17 - \frac{3}{2}w_3 - \frac{5}{2}x_2$
+subject to
+$x_1 = 6 - \frac{1}{3}w_3 - \frac{1}{3}w_2$
+$w_1 = 7 - \frac{1}{2}w_3 - \frac{2}{3}w_2$
+$x_2 = 2 + \frac{1}{3}w_3 - \frac{2}{3}w_2$
+$\mathcal{Z} = 22 - \frac{7}{3}w_3 - \frac{1}{3}w_2$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's pivot operation, showing the result of the exchange of $x_2$ and $w_2$ in the basic variables.  The equations are rewritten to express the basic variables ($x_1$, $w_1$, $x_2$) in terms of the non-basic variables ($w_2$, $w_3$).  The objective function ($\mathcal{Z}$) is also updated to reflect this change.  The context suggests this is an intermediate step in the iterative process of the Simplex method, preparing for the next iteration.  The slide is focused on the algebraic manipulation of the equations to achieve the new form.  The calculations show the intermediate steps of this pivot operation.  Notice the objective function is now expressed in terms of $w_2$ and $w_3$.
+
+
+Slide 14
+
+$\pi$ B ($w_2=0$, $w_3=0$)
+Interchange $x_2$ and $w_2$ with
+$w_2$ leaving basic and $x_2$ entering basic.
+
+$\max \mathcal{Z} = 22 - \frac{7}{3}w_3 - \frac{1}{3}w_2$
+subject to
+$x_1 = 6 - \frac{1}{3}w_3 - \frac{1}{3}w_2$
+$w_1 = 12 - \frac{4}{3}w_3 + \frac{2}{3}w_2$
+$x_2 = 2 + \frac{1}{3}w_3 - \frac{2}{3}w_2$
+$x_1, x_2, w_1, w_2, w_3 \ge 0$
+
+B is optimal!! $\max \mathcal{Z} = 22$
+
+\textbf{Description:}
+
+This slide presents the final iteration of the Simplex method, indicating that the optimal solution has been reached.  The equations are in a form where the basic variables ($x_1$, $w_1$, $x_2$) are expressed in terms of the non-basic variables ($w_2$, $w_3$).  The objective function ($\mathcal{Z}$) is also expressed in terms of the non-basic variables, and the maximum value of $\mathcal{Z}$ is explicitly stated as 22.  The context suggests this is the conclusion of the Simplex method's iterative process, with the optimal solution for the linear programming problem identified.
+
+
+
+
+Slide 15
+
+$\pi$ B ($w_2=0$, $w_3=0$)
+Interchange $x_2$ and $w_2$ with
+$w_2$ leaving basic and $x_2$ entering basic.
+
+$\max \mathcal{Z} = 22 - \frac{7}{3}w_3 - \frac{1}{3}w_2$
+subject to
+$x_1 = 6 - \frac{1}{3}w_3 - \frac{1}{3}w_2$
+$w_1 = 12 - \frac{4}{3}w_3 + \frac{2}{3}w_2$
+$x_2 = 2 + \frac{1}{3}w_3 - \frac{2}{3}w_2$
+$x_1, x_2, w_1, w_2, w_3 \ge 0$
+
+B is optimal!! $\max \mathcal{Z} = 22$
+$\mathcal{Z} = 22 - \frac{7}{3}w_3 - \frac{1}{3}w_2$, $w_2 \ge 0$, $w_3 \ge 0$
+
+\textbf{Description:}
+
+This slide confirms the optimal solution for the linear programming problem.  It restates the objective function ($\mathcal{Z}$) and constraints in their final form, where all variables are expressed in terms of non-basic variables ($w_2$, $w_3$).  The maximum value of the objective function ($\mathcal{Z}$) is explicitly stated as 22, confirming that vertex B is the optimal solution.  The slide concludes the Simplex method's iterations, signifying the end of the optimization process.
+
+
+
+
+Slide 16
+
+\begin{tikzpicture}
+\draw[->] (-1,0) -- (6,0) node[right] {$x_1$};
+\draw[->] (0,-1) -- (0,4) node[above] {$x_2$};
+\draw[blue] (-1,2) -- (6,-2);
+\draw[blue] (0,0) -- (6,0);
+\draw[blue] (0,0) -- (0,4);
+\draw[blue] (-1,0) -- (0,0);
+\draw[blue] (0,-1) -- (0,0);
+\draw[fill=orange!30] (0,0) -- (3,0) -- (3,2) -- (1,3) -- (0,3) -- cycle;
+\draw[blue] (0,3) -- (6,0);
+\draw[blue] (0,0) -- (3,2);
+\draw[fill=purple] (0,0) circle (2pt) node[below left] {$O$};
+\draw[fill=purple] (3,2) circle (2pt) node[below right] {$B$};
+\draw[fill=purple] (1,3) circle (2pt) node[above left] {$C$};
+\draw[fill=purple] (3,0) circle (2pt) node[below right] {$A$};
+\draw[fill=purple] (0,3) circle (2pt) node[above left] {$D$};
+\node[red] at (-0.5,3) {$x_1 \ge 0$};
+\node[red] at (5,-0.5) {$x_2 \ge 0$};
+\node[red] at (1,3.5) {$-x_1 + 3x_2 = 12$};
+\node[red] at (3,2.5) {$w_1 = 0$};
+\node[red] at (4,1) {$2x_1 - x_2 = 10$};
+\node[red] at (4,0.5) {$w_3 = 0$};
+\node[red] at (5,2) {$x_1 + x_2 = 8$};
+\node[red] at (5,1.5) {$w_2 = 0$};
+\node[violet] at (4,3.5) {$E$};
+\node[violet] at (4.5,3.2) {(not feasible)};
+\node[violet] at (3.5,2.2) {$B(x_1=3, x_2=5, \mathcal{Z}=22)$};
+\node[violet] at (2.5,3.2) {$C(x_1=1, x_2=7, \mathcal{Z}=21)$};
+\node[violet] at (2.5,0.2) {$A(x_1=6, x_2=2, \mathcal{Z}=22)$};
+\node[violet] at (0.5,3.2) {$D(x_1=0, x_2=8, \mathcal{Z}=16)$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide presents a graphical representation of the feasible region and optimal solution for the linear programming problem.  It shows the feasible region (the shaded area) and the vertices (labeled A, B, C, D) with their corresponding objective function values ($\mathcal{Z}$).  The optimal solution, vertex B, is explicitly identified with its coordinates ($x_1=3$, $x_2=5$) and the maximum objective function value of 22.  The slide visually confirms the graphical method's result, showing the optimal solution within the feasible region.
+
+
+
+
+Slide 17
+
+$\max \mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+subject to
+$2x_1 + 3x_2 + x_3 \le 5$
+$4x_1 + x_2 + 2x_3 \le 11$
+$3x_1 + 4x_2 + 2x_3 \le 8$
+$x_1, x_2, x_3 \ge 0$
+
+$\omega_1 = 5 - 2x_1 - 3x_2 - x_3$
+$\omega_2 = 11 - 4x_1 - x_2 - 2x_3$
+$\omega_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+\textbf{Description:}
+
+This slide presents a linear programming problem in three variables ($x_1$, $x_2$, $x_3$).  It shows the objective function and constraints, along with the equivalent slack variable form.  The problem is to maximize the objective function subject to a set of linear inequalities.  The slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are introduced to convert the inequalities into equalities.  The slide is likely part of a lecture introducing the Simplex method, where the problem is set up for potential solution using the method.  The context suggests this is a step in preparing the problem for the Simplex method's iterative process.
+
+
+Slide 18
+
+$\text{LV} \text{ p. } 11$
+Set $x_1 = x_2 = x_3 = 0$
+$\max \mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+subject to
+$2x_1 + 3x_2 + x_3 \le 5$
+$4x_1 + x_2 + 2x_3 \le 11$
+$3x_1 + 4x_2 + 2x_3 \le 8$
+$x_1, x_2, x_3 \ge 0$
+
+$\omega_1 = 5 - 2x_1 - 3x_2 - x_3$
+$\omega_2 = 11 - 4x_1 - x_2 - 2x_3$
+$\omega_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+\textbf{Description:}
+
+This slide sets up a linear programming problem for solution using the Simplex method.  It restates the objective function and constraints, and then shows the equivalent problem in slack variable form.  The key instruction is to set all the original variables ($x_1$, $x_2$, $x_3$) to zero.  This corresponds to the origin (0, 0, 0) in the three-dimensional space.  The context suggests this is a preliminary step in the Simplex method, where the algorithm begins at a specific vertex (the origin) and then proceeds to find a better solution by moving to another vertex.
+
+
+
+
+Slide 19
+
+$\text{LV} \text{ p. } 11$
+Set $x_1 = x_2 = x_3 = 0$
+$\max \mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+subject to
+$2x_1 + 3x_2 + x_3 \le 5$
+$4x_1 + x_2 + 2x_3 \le 11$
+$3x_1 + 4x_2 + 2x_3 \le 8$
+$x_1, x_2, x_3 \ge 0$
+
+$\omega_1 = 5 - 2x_1 - 3x_2 - x_3$
+$\omega_2 = 11 - 4x_1 - x_2 - 2x_3$
+$\omega_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Increase $x_1$, keeping $x_2 = x_3 = 0$
+$\omega_1 \ge 0 \implies 5 - 2x_1 \ge 0 \implies x_1 \le \frac{5}{2} = 2.5$
+$\omega_2 \ge 0 \implies 11 - 4x_1 \ge 0 \implies x_1 \le \frac{11}{4} = 2.75$
+$\omega_3 \ge 0 \implies 8 - 3x_1 \ge 0 \implies x_1 \le \frac{8}{3} = 2.67$
+
+$x_1 \le 2.5$ is the most strict
+
+\textbf{Description:}
+
+This slide continues the setup of a linear programming problem for solution using the Simplex method.  It now focuses on determining the maximum possible value for $x_1$ while holding $x_2$ and $x_3$ at zero.  The calculations show how the constraints ($\omega_1 \ge 0$, $\omega_2 \ge 0$, $\omega_3 \ge 0$) limit the possible values of $x_1$.  The most restrictive constraint is identified as $x_1 \le 2.5$, meaning $x_1$ can be increased up to 2.5 while maintaining feasibility.  The context suggests this is a step in the Simplex method's iterative process, where the algorithm determines which variable to increase next to improve the objective function value.
+
+
+
+
+Slide 20
+
+$\text{LV} \text{ p. } 11$
+Set $x_1 = x_2 = x_3 = 0$
+$\max \mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+subject to
+$2x_1 + 3x_2 + x_3 \le 5$
+$4x_1 + x_2 + 2x_3 \le 11$
+$3x_1 + 4x_2 + 2x_3 \le 8$
+$x_1, x_2, x_3 \ge 0$
+
+$\omega_1 = 5 - 2x_1 - 3x_2 - x_3$
+$\omega_2 = 11 - 4x_1 - x_2 - 2x_3$
+$\omega_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Increase $x_1$, keeping $x_2 = x_3 = 0$
+$\omega_1 \ge 0 \implies 5 - 2x_1 \ge 0 \implies x_1 \le \frac{5}{2} = 2.5$
+$\omega_2 \ge 0 \implies 11 - 4x_1 \ge 0 \implies x_1 \le \frac{11}{4} = 2.75$
+$\omega_3 \ge 0 \implies 8 - 3x_1 \ge 0 \implies x_1 \le \frac{8}{3} = 2.67$
+
+$x_1 \le 2.5$ is the most strict
+Set $x_1 = 2.5$, $x_2 = x_3 = 0$
+$\mathcal{Z} = 5(2.5) + 4(0) + 3(0) = 12.5$
+$x_1 = 2.5$, $w_1 = 0$, $w_2 = 11 - 4(2.5) = 11 - 10 = 1$, $w_3 = 8 - 3(2.5) = 8 - 7.5 = 0.5$
+
+\textbf{Description:}
+
+This slide continues the process of finding the initial solution for a three-variable linear programming problem using the Simplex method.  It determines the maximum possible value for $x_1$ while holding $x_2$ and $x_3$ at zero, based on the constraints.  The calculations show how the constraints limit the possible values of $x_1$.  The most restrictive constraint is identified, and a new solution point is calculated with $x_1 = 2.5$, $x_2 = 0$, $x_3 = 0$.  The corresponding objective function value ($\mathcal{Z}$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.
+
+
+
+
+Slide 21
+
+$\text{LV} \text{ p. } 11$
+Set $x_1 = x_2 = x_3 = 0$
+$\max \mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+subject to
+$2x_1 + 3x_2 + x_3 \le 5$
+$4x_1 + x_2 + 2x_3 \le 11$
+$3x_1 + 4x_2 + 2x_3 \le 8$
+$x_1, x_2, x_3 \ge 0$
+
+$\omega_1 = 5 - 2x_1 - 3x_2 - x_3$
+$\omega_2 = 11 - 4x_1 - x_2 - 2x_3$
+$\omega_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Increase $x_1$, keeping $x_2 = x_3 = 0$
+$\omega_1 \ge 0 \implies 5 - 2x_1 \ge 0 \implies x_1 \le \frac{5}{2} = 2.5$
+$\omega_2 \ge 0 \implies 11 - 4x_1 \ge 0 \implies x_1 \le \frac{11}{4} = 2.75$
+$\omega_3 \ge 0 \implies 8 - 3x_1 \ge 0 \implies x_1 \le \frac{8}{3} = 2.67$
+
+$x_1 \le 2.5$ is the most strict
+Set $x_1 = 2.5$, $x_2 = x_3 = 0$
+$\mathcal{Z} = 5(2.5) + 4(0) + 3(0) = 12.5$
+$x_1 = 2.5$, $w_1 = 0$, $w_2 = 11 - 4(2.5) = 1$, $w_3 = 8 - 3(2.5) = 0.5$
+
+Set $x_1 = 2.5$, $x_2 = 0$, $x_3 = 0$
+$\mathcal{Z} = 12.5$
+$\omega_1 = 0$, $\omega_2 = 1$, $\omega_3 = 0.5$
+
+$\mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+$x_1 = 2.5$, $x_2 = 0$, $x_3 = 0$
+$\mathcal{Z} = 12.5$
+$\omega_1 = 0$, $\omega_2 = 1$, $\omega_3 = 0.5$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's initial iteration for a three-variable linear programming problem.  It calculates the objective function value ($\mathcal{Z}$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) when $x_1 = 2.5$, $x_2 = 0$, and $x_3 = 0$.  The result is $\mathcal{Z} = 12.5$, $\omega_1 = 0$, $\omega_2 = 1$, $\omega_3 = 0.5$.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.  The slide is focused on calculating the values of the variables at a specific vertex of the feasible region.
+
+
+
+
+Slide 22
+
+$\text{LV} \text{ p. } 11$
+Set $w_1 = 0$, $x_2 = 0$, $x_3 = 0$
+$\max \mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+subject to
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$
+$x_3 = 0$
+$w_1 = 5 - 2x_1 - 3x_2 - x_3$
+$w_2 = 11 - 4x_1 - x_2 - 2x_3$
+$w_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, w_1, w_2, w_3 \ge 0$
+
+Increase $x_1$, keeping $x_2 = x_3 = 0$
+$\omega_1 \ge 0 \implies 5 - 2x_1 \ge 0 \implies x_1 \le \frac{5}{2} = 2.5$
+$\omega_2 \ge 0 \implies 11 - 4x_1 \ge 0 \implies x_1 \le \frac{11}{4} = 2.75$
+$\omega_3 \ge 0 \implies 8 - 3x_1 \ge 0 \implies x_1 \le \frac{8}{3} = 2.67$
+
+$x_1 \le 2.5$ is the most strict
+Set $x_1 = 2.5$, $x_2 = x_3 = 0$
+$\mathcal{Z} = 5(2.5) + 4(0) + 3(0) = 12.5$
+$x_1 = 2.5$, $w_1 = 0$, $w_2 = 11 - 4(2.5) = 1$, $w_3 = 8 - 3(2.5) = 0.5$
+
+Set $x_1 = 2.5$, $x_2 = 0$, $x_3 = 0$
+$\mathcal{Z} = 12.5$
+$\omega_1 = 0$, $\omega_2 = 1$, $\omega_3 = 0.5$
+
+$\mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$, $x_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's initial iteration for a three-variable linear programming problem.  It rewrites the objective function ($\mathcal{Z}$) and constraints in a form where $x_1$ is expressed in terms of the slack variables ($w_1$, $w_2$, $w_3$).  The calculations show the impact of setting $x_1 = 2.5$, $x_2 = 0$, and $x_3 = 0$ on the objective function and slack variables.  The result is $\mathcal{Z} = 12.5$, $\omega_1 = 0$, $\omega_2 = 1$, $\omega_3 = 0.5$.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.  The slide is focused on calculating the values of the variables at a specific vertex of the feasible region.
+
+
+
+
+
+
+Slide 22
+
+$\text{LV} \text{ p. } 11$
+Set $w_1 = 0$, $x_2 = 0$, $x_3 = 0$
+$\max \mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+subject to
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$
+$x_3 = 0$
+$w_1 = 5 - 2x_1 - 3x_2 - x_3$
+$w_2 = 11 - 4x_1 - x_2 - 2x_3$
+$w_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, w_1, w_2, w_3 \ge 0$
+
+Increase $x_1$, keeping $x_2 = x_3 = 0$
+$\omega_1 \ge 0 \implies 5 - 2x_1 \ge 0 \implies x_1 \le \frac{5}{2} = 2.5$
+$\omega_2 \ge 0 \implies 11 - 4x_1 \ge 0 \implies x_1 \le \frac{11}{4} = 2.75$
+$\omega_3 \ge 0 \implies 8 - 3x_1 \ge 0 \implies x_1 \le \frac{8}{3} = 2.67$
+
+$x_1 \le 2.5$ is the most strict
+Set $x_1 = 2.5$, $x_2 = x_3 = 0$
+$\mathcal{Z} = 5(2.5) + 4(0) + 3(0) = 12.5$
+$x_1 = 2.5$, $w_1 = 0$, $w_2 = 11 - 4(2.5) = 1$, $w_3 = 8 - 3(2.5) = 0.5$
+
+Set $x_1 = 2.5$, $x_2 = 0$, $x_3 = 0$
+$\mathcal{Z} = 12.5$
+$\omega_1 = 0$, $\omega_2 = 1$, $\omega_3 = 0.5$
+
+$\mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$, $x_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's initial iteration for a three-variable linear programming problem.  It rewrites the objective function ($\mathcal{Z}$) and constraints in a form where $x_1$ is expressed in terms of the slack variables ($w_1$, $w_2$, $w_3$).  The calculations show the impact of setting $x_1 = 2.5$, $x_2 = 0$, and $x_3 = 0$ on the objective function and slack variables.  The result is $\mathcal{Z} = 12.5$, $\omega_1 = 0$, $\omega_2 = 1$, $\omega_3 = 0.5$.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.  The slide is focused on calculating the values of the variables at a specific vertex of the feasible region.  The expressions are now in a form suitable for the next iteration of the Simplex method.
+
+
+
+
+Slide 23
+
+$\text{LV} \text{ p. } 11$
+Set $w_1 = 0$, $x_2 = 0$, $x_3 = 0$
+$\max \mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+subject to
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$
+$x_3 = 0$
+$w_1 = 5 - 2x_1 - 3x_2 - x_3$
+$w_2 = 11 - 4x_1 - x_2 - 2x_3$
+$w_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, w_1, w_2, w_3 \ge 0$
+
+Increase $x_3$, keeping $x_1 = x_2 = 0$
+$\omega_1 \ge 0 \implies 5 - x_3 \ge 0 \implies x_3 \le 5$
+$\omega_2 \ge 0 \implies 11 - 2x_3 \ge 0 \implies x_3 \le \frac{11}{2} = 5.5$
+$\omega_3 \ge 0 \implies 8 - 2x_3 \ge 0 \implies x_3 \le 4$
+
+$x_3 \le 4$ is the most strict
+Set $x_3 = 4$, $x_1 = x_2 = 0$
+$\mathcal{Z} = 5(0) + 4(0) + 3(4) = 12$
+$x_3 = 4$, $w_1 = 5 - 4 = 1$, $w_2 = 11 - 8 = 3$, $w_3 = 0$
+
+Set $x_3 = 4$, $x_1 = 0$, $x_2 = 0$
+$\mathcal{Z} = 12$
+$\omega_1 = 1$, $\omega_2 = 3$, $\omega_3 = 0$
+
+$\mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$, $x_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's initial iteration for a three-variable linear programming problem.  It now determines the maximum possible value for $x_3$ while holding $x_1$ and $x_2$ at zero, based on the constraints.  The calculations show how the constraints limit the possible values of $x_3$.  The most restrictive constraint is identified, and a new solution point is calculated with $x_3 = 4$, $x_1 = 0$, $x_2 = 0$.  The corresponding objective function value ($\mathcal{Z}$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.  The slide is focused on calculating the values of the variables at a specific vertex of the feasible region.  The expressions are now in a form suitable for the next iteration of the Simplex method.
+
+
+
+
+
+
+Slide 24
+
+$\text{LV} \text{ p. } 11$
+Set $w_1 = 0$, $x_2 = 0$, $x_3 = 0$
+$\max \mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+subject to
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$
+$x_3 = 0$
+$w_1 = 5 - 2x_1 - 3x_2 - x_3$
+$w_2 = 11 - 4x_1 - x_2 - 2x_3$
+$w_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, w_1, w_2, w_3 \ge 0$
+
+Increase $x_3$, keeping $x_1 = x_2 = 0$
+$\omega_1 \ge 0 \implies 5 - x_3 \ge 0 \implies x_3 \le 5$
+$\omega_2 \ge 0 \implies 11 - 2x_3 \ge 0 \implies x_3 \le \frac{11}{2} = 5.5$
+$\omega_3 \ge 0 \implies 8 - 2x_3 \ge 0 \implies x_3 \le 4$
+
+$x_3 \le 4$ is the most strict
+Set $x_3 = 4$, $x_1 = x_2 = 0$
+$\mathcal{Z} = 5(0) + 4(0) + 3(4) = 12$
+$x_3 = 4$, $w_1 = 5 - 4 = 1$, $w_2 = 11 - 8 = 3$, $w_3 = 0$
+
+Set $x_3 = 4$, $x_1 = 0$, $x_2 = 0$
+$\mathcal{Z} = 12$
+$\omega_1 = 1$, $\omega_2 = 3$, $\omega_3 = 0$
+
+$\mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$, $x_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's initial iteration for a three-variable linear programming problem.  It now determines the maximum possible value for $x_3$ while holding $x_1$ and $x_2$ at zero, based on the constraints.  The calculations show how the constraints limit the possible values of $x_3$.  The most restrictive constraint is identified, and a new solution point is calculated with $x_3 = 4$, $x_1 = 0$, $x_2 = 0$.  The corresponding objective function value ($\mathcal{Z}$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.  The slide is focused on calculating the values of the variables at a specific vertex of the feasible region.  The expressions are now in a form suitable for the next iteration of the Simplex method.
+
+
+
+
+
+
+Slide 25
+
+$\text{LV} \text{ p. } 11$
+Set $w_1 = 0$, $x_2 = 0$, $x_3 = 0$
+$\max \mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+subject to
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$
+$x_3 = 0$
+$w_1 = 5 - 2x_1 - 3x_2 - x_3$
+$w_2 = 11 - 4x_1 - x_2 - 2x_3$
+$w_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, w_1, w_2, w_3 \ge 0$
+
+Increase $x_3$, keeping $x_1 = x_2 = 0$
+$\omega_1 \ge 0 \implies 5 - x_3 \ge 0 \implies x_3 \le 5$
+$\omega_2 \ge 0 \implies 11 - 2x_3 \ge 0 \implies x_3 \le \frac{11}{2} = 5.5$
+$\omega_3 \ge 0 \implies 8 - 2x_3 \ge 0 \implies x_3 \le 4$
+
+$x_3 \le 4$ is the most strict
+Set $x_3 = 4$, $x_1 = x_2 = 0$
+$\mathcal{Z} = 5(0) + 4(0) + 3(4) = 12$
+$x_3 = 4$, $w_1 = 5 - 4 = 1$, $w_2 = 11 - 8 = 3$, $w_3 = 0$
+
+Set $x_3 = 4$, $x_1 = 0$, $x_2 = 0$
+$\mathcal{Z} = 12$
+$\omega_1 = 1$, $\omega_2 = 3$, $\omega_3 = 0$
+
+$\mathcal{Z} = \frac{25}{2} - \frac{5}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_1 = \frac{5}{2} - \frac{1}{2}w_1 - \frac{3}{2}w_2 - \frac{1}{2}w_3$
+$x_2 = 0$, $x_3 = 0$
+
+Set $x_3 = 1 \implies w_3 = 0$
+$\mathcal{Z} = 13$, achieved at $w_1 = 4$, $x_2 = x_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the Simplex method's initial iteration for a three-variable linear programming problem.  It now determines the maximum possible value for $x_3$ while holding $x_1$ and $x_2$ at zero, based on the constraints.  The calculations show how the constraints limit the possible values of $x_3$.  The most restrictive constraint is identified, and a new solution point is calculated with $x_3 = 1$, $x_1 = 0$, $x_2 = 0$.  The corresponding objective function value ($\mathcal{Z}$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.  The slide is focused on calculating the values of the variables at a specific vertex of the feasible region.  The expressions are now in a form suitable for the next iteration of the Simplex method.  The slide also shows the calculation of the objective function value at this new vertex.
+
+
+
+
+Slide 26
+
+Concept of a Dictionary of Variables
+
+Initially: ($x_1, x_2, ..., x_n$, $w_1, w_2, ..., w_m$)
+$n$ non-basic vars, $m$ basic variables
+
+($x_1, x_2, ..., x_n$, $x_{n+1}, x_{n+2}, ..., x_{n+m}$)
+
+$\begin{pmatrix}
+x_{n+1} \\
+x_{n+2} \\
+... \\
+x_{n+m}
+\end{pmatrix} = \begin{pmatrix}
+b_1 \\
+b_2 \\
+... \\
+b_m
+\end{pmatrix} - \begin{pmatrix}
+a_{11} & a_{12} & ... & a_{1n} \\
+a_{21} & a_{22} & ... & a_{2n} \\
+... & ... & ... & ... \\
+a_{m1} & a_{m2} & ... & a_{mn}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+... \\
+x_n
+\end{pmatrix}$
+
+$\mathcal{Z} = c_0 + c_1x_1 + c_2x_2 + ... + c_nx_n$
+
+\textbf{Description:}
+
+This slide introduces the concept of a dictionary in linear programming, specifically within the context of the Simplex method.  It shows how variables are organized into basic and non-basic sets.  The notation suggests a general linear programming problem with $n$ original variables ($x_1, ..., x_n$) and $m$ constraints.  The dictionary structure is presented as a system of equations, where basic variables are expressed in terms of non-basic variables.  The coefficients ($a_{ij}$) represent the relationships between the variables in the constraints.  The $c_i$ values are coefficients of the objective function.  The context suggests this is a foundational concept for understanding the Simplex method's iterative process, where the dictionary is updated in each iteration to move towards the optimal solution.
+
+
+
+
+Slide 27
+
+Concept of a Dictionary of Variables
+
+Initially: ($x_1, x_2, ..., x_n$, $w_1, w_2, ..., w_m$)
+$n$ non-basic vars, $m$ basic variables
+
+($x_1, x_2, ..., x_n$, $x_{n+1}, x_{n+2}, ..., x_{n+m}$)
+
+$\begin{pmatrix}
+x_{n+1} \\
+x_{n+2} \\
+... \\
+x_{n+m}
+\end{pmatrix} = \begin{pmatrix}
+b_1 \\
+b_2 \\
+... \\
+b_m
+\end{pmatrix} - \begin{pmatrix}
+a_{11} & a_{12} & ... & a_{1n} \\
+a_{21} & a_{22} & ... & a_{2n} \\
+... & ... & ... & ... \\
+a_{m1} & a_{m2} & ... & a_{mn}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+... \\
+x_n
+\end{pmatrix}$
+
+$\mathcal{Z} = c_0 + c_1x_1 + c_2x_2 + ... + c_nx_n$
+
+Interchange one basic and one non-basic variable.
+
+\textbf{Description:}
+
+This slide introduces the concept of a dictionary in linear programming, specifically within the context of the Simplex method.  It shows how variables are organized into basic and non-basic sets.  The notation suggests a general linear programming problem with $n$ original variables ($x_1, ..., x_n$) and $m$ constraints.  The dictionary structure is presented as a system of equations, where basic variables are expressed in terms of non-basic variables.  The coefficients ($a_{ij}$) represent the relationships between the variables in the constraints.  The $c_i$ values are coefficients of the objective function.  The context suggests this is a foundational concept for understanding the Simplex method's iterative process, where the dictionary is updated in each iteration to move towards the optimal solution.  The addition of "Interchange one basic and one non-basic variable" highlights the pivot operation that is central to the Simplex method.
+
+
+Slide 28
+
+Concept of a Dictionary of Variables
+
+Initially: ($x_1, x_2, ..., x_n$, $w_1, w_2, ..., w_m$)
+$n$ non-basic vars, $m$ basic variables
+
+($x_1, x_2, ..., x_n$, $x_{n+1}, x_{n+2}, ..., x_{n+m}$)
+
+$\begin{pmatrix}
+x_{n+1} \\
+x_{n+2} \\
+... \\
+x_{n+m}
+\end{pmatrix} = \begin{pmatrix}
+b_1 \\
+b_2 \\
+... \\
+b_m
+\end{pmatrix} - \begin{pmatrix}
+a_{11} & a_{12} & ... & a_{1n} \\
+a_{21} & a_{22} & ... & a_{2n} \\
+... & ... & ... & ... \\
+a_{m1} & a_{m2} & ... & a_{mn}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+... \\
+x_n
+\end{pmatrix}$
+
+$\mathcal{Z} = c_0 + c_1x_1 + c_2x_2 + ... + c_nx_n$
+
+Interchange one basic and one non-basic variable.
+
+\textbf{Description:}
+
+This slide reiterates the concept of a dictionary in linear programming, specifically within the context of the Simplex method.  It emphasizes the structure of the dictionary as a system of equations, where basic variables are expressed in terms of non-basic variables.  The notation is more general than previous slides, representing a problem with $n$ original variables ($x_1, ..., x_n$) and $m$ constraints.  The coefficients ($a_{ij}$) represent the relationships between the variables in the constraints, and the $c_i$ values are coefficients of the objective function.  The key takeaway is the concept of an interchange between basic and non-basic variables, which is the pivot operation in the Simplex method.  The slide is focused on the structure and organization of the variables within the dictionary, preparing for the iterative process of the Simplex method.
+
+
+
+
+Slide 29
+
+Concept of a Dictionary of Variables
+
+(1) In each dictionary, setting $n$ non-basic variables to zero corresponds to a vertex in a polyhedron.
+(2) Total number of dictionaries = $\frac{(n+m)!}{n!m!} = (n+m)!$
+
+(Note: not all vertices are feasible)
+
+\textbf{Description:}
+
+This slide discusses the relationship between dictionaries and vertices in a polyhedron, a key concept in the Simplex method for linear programming.  It states that each dictionary corresponds to a vertex in the feasible region defined by the constraints.  The formula $\frac{(n+m)!}{n!m!}$ represents the total number of possible dictionaries, which is a combinatorial calculation.  The important note is that not all vertices in the polyhedron are necessarily feasible solutions to the linear programming problem.  The context suggests this is a theoretical underpinning for the Simplex method, explaining the relationship between the algebraic representation (the dictionary) and the geometric representation (the vertices of the feasible region) of the problem.
+
+
+Slide 30
+
+What if the origin is not feasible?
+
+$\text{LV} \text{ p. } 18$
+$\max \mathcal{Z} = -2x_1 - x_2$
+subject to
+$-x_1 + x_2 \le -1$
+$-x_1 - 2x_2 \le -2$
+$x_2 \le 1$
+$x_1, x_2 \ge 0$
+$x_2 = 1 \implies -x_1 - 2(1) \le -2 \implies -x_1 \le 0 \implies x_1 \ge 0$
+$-x_1 + x_2 = -1 \implies -x_1 + 1 = -1 \implies -x_1 = -2 \implies x_1 = 2$
+
+\begin{tikzpicture}
+\draw[->] (-1,0) -- (5,0) node[right] {$x_1$};
+\draw[->] (0,-1) -- (0,3) node[above] {$x_2$};
+\draw[blue] (0,0) -- (0,1);
+\draw[blue] (0,0) -- (1,0);
+\draw[blue] (0,1) -- (4,0);
+\draw[blue] (0,0) -- (2,-1);
+\draw[fill=orange!30] (2,-1) -- (4,0) -- (4,1) -- (2,1) -- cycle;
+\draw[fill=red] (0,0) circle (2pt) node[below left] {(0,0)};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide explores a linear programming problem where the origin (0,0) is not a feasible solution.  The problem is to maximize $\mathcal{Z} = -2x_1 - x_2$ subject to several constraints.  The graph visually demonstrates that the origin (0,0) lies outside the feasible region, which is the shaded area.  The constraints are shown as lines on the graph, and the feasible region is the area enclosed by these lines and the non-negativity constraints ($x_1 \ge 0$, $x_2 \ge 0$).  The context suggests this is a demonstration of how to identify and work with a linear programming problem where the initial guess (origin) is not a feasible solution, which is a common scenario in the Simplex method.
+
+
+
+
+Slide 32
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+\textbf{Description:}
+
+This slide introduces an auxiliary problem to address a linear programming problem where the origin is not feasible.  The auxiliary problem maximizes a new variable, $-x_0$, subject to modified constraints that ensure the origin is now within the feasible region.  The key idea is to introduce an additional variable $x_0$ to shift the feasible region so that the origin becomes a feasible solution.  The context suggests this is a technique used in the Simplex method to handle cases where the initial solution is not feasible.  The auxiliary problem is designed to find a feasible solution to the original problem, and the solution to the auxiliary problem will then be used to find a feasible solution to the original problem.  The final statement, "Original problem is feasible," indicates the purpose of this auxiliary problem.
+
+
+
+
+Slide 33
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+\textbf{Description:}
+
+This slide continues the discussion of an auxiliary problem in linear programming, specifically within the context of the Simplex method.  It presents the auxiliary problem's objective function and constraints, which are designed to ensure the origin (0, 0, 0) is now within the feasible region.  The auxiliary problem maximizes a new variable, $-x_0$, subject to modified constraints.  The key point is that the auxiliary problem is constructed to find a feasible solution to the original problem.  The slide also includes the statement that the original problem is feasible, indicating the purpose of the auxiliary problem.  The context suggests this is a technique used in the Simplex method to handle cases where the initial solution is not feasible.  The auxiliary problem is designed to find a feasible solution to the original problem, and the solution to the auxiliary problem will then be used to find a feasible solution to the original problem.  The handwritten notes on the slide indicate the steps to be taken to find a feasible solution to the original problem.  The slide number (33) and page number (18) are also included. 
+
+Slide 34
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+\textbf{Description:}
+
+This slide continues the discussion of the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It presents the auxiliary problem's objective function and constraints, which are designed to ensure the origin (0, 0, 0) is now within the feasible region.  The auxiliary problem maximizes a new variable, $-x_0$, subject to modified constraints.  The key point is that the auxiliary problem is constructed to find a feasible solution to the original problem.  The slide now explicitly adds slack variables ($\omega_1$, $\omega_2$, $\omega_3$) to the auxiliary problem's constraints, converting them into equalities.  This step is crucial for applying the Simplex method to the auxiliary problem.  The context suggests this is a technique used in the Simplex method to handle cases where the initial solution is not feasible.  The auxiliary problem is designed to find a feasible solution to the original problem, and the solution to the auxiliary problem will then be used to find a feasible solution to the original problem.  The handwritten notes on the slide indicate the steps to be taken to find a feasible solution to the original problem.  The slide number (34) is also included.
+
+
+
+
+Slide 35
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It demonstrates the steps to find an initial feasible solution for the auxiliary problem.  The slide shows how to set $x_1 = 0$ and $x_2 = 0$ in the auxiliary problem's constraints and objective function.  This results in expressions for the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) in terms of the new variable $x_0$.  The slide then calculates a specific value for $x_0$ (2) that satisfies all the constraints, leading to a calculated objective function value ($\mathcal{Z} = -2$).  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (35) is also included.
+
+
+Slide 36
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+Increase $x_2$, keeping $x_1 = x_0 = 0$
+$\omega_1 \ge 0 \implies -1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_2 \ge 0 \implies -2 + 2x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_3 \ge 0 \implies 1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+
+Set $x_2 = 1$, $x_1 = x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -1 + 0 - 1 + 0 = -2$
+$\omega_2 = -2 + 0 + 2(1) + 0 = 0$
+$\omega_3 = 1 - 1 + 0 = 0$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It now explores increasing $x_2$ while holding $x_1$ and $x_0$ at zero.  The calculations determine the maximum possible value for $x_2$ based on the constraints, which is 1.  A new solution point is calculated with $x_2 = 1$, $x_1 = 0$, $x_0 = 0$.  The corresponding objective function value ($\mathcal{Z} = -1$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (36) is also included.  The calculations show the impact of increasing $x_2$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.
+
+
+
+
+Slide 37
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+Increase $x_2$, keeping $x_1 = x_0 = 0$
+$\omega_1 \ge 0 \implies -1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_2 \ge 0 \implies -2 + 2x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_3 \ge 0 \implies 1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+
+Set $x_2 = 1$, $x_1 = x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -1 + 0 - 1 + 0 = -2$
+$\omega_2 = -2 + 0 + 2(1) + 0 = 0$
+$\omega_3 = 1 - 1 + 0 = 0$
+
+Set $x_2 = 1$, $x_1 = 0$, $x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -2$, $\omega_2 = 0$, $\omega_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It now explores increasing $x_2$ while holding $x_1$ and $x_0$ at zero.  The calculations determine the maximum possible value for $x_2$ based on the constraints, which is 1.  A new solution point is calculated with $x_2 = 1$, $x_1 = 0$, $x_0 = 0$.  The corresponding objective function value ($\mathcal{Z} = -1$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (37) is also included.  The calculations show the impact of increasing $x_2$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The calculations show the impact of increasing $x_2$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.
+
+
+
+
+Slide 38
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+Increase $x_2$, keeping $x_1 = x_0 = 0$
+$\omega_1 \ge 0 \implies -1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_2 \ge 0 \implies -2 + 2x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_3 \ge 0 \implies 1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+
+Set $x_2 = 1$, $x_1 = x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -1 + 0 - 1 + 0 = -2$
+$\omega_2 = -2 + 0 + 2(1) + 0 = 0$
+$\omega_3 = 1 - 1 + 0 = 0$
+
+Set $x_2 = 1$, $x_1 = 0$, $x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -2$, $\omega_2 = 0$, $\omega_3 = 0$
+
+Increase $x_1$, keeping $x_2 = 1$, $x_0 = 0$
+$\omega_1 \ge 0 \implies -1 + x_1 - 1 + 0 \ge 0 \implies x_1 \ge 2$
+$\omega_2 \ge 0 \implies -2 + x_1 + 2(1) + 0 \ge 0 \implies x_1 \ge 0$
+$\omega_3 \ge 0 \implies 1 - 1 + 0 \ge 0 \implies 0 \ge 0$
+
+Set $x_1 = 2$, $x_2 = 1$, $x_0 = 0$
+$\mathcal{Z} = -5$
+$\omega_1 = 0$, $\omega_2 = 0$, $\omega_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It now explores increasing $x_1$ while holding $x_2 = 1$ and $x_0 = 0$.  The calculations determine the minimum possible value for $x_1$ based on the constraints, which is 2.  A new solution point is calculated with $x_1 = 2$, $x_2 = 1$, $x_0 = 0$.  The corresponding objective function value ($\mathcal{Z} = -5$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (38) is also included.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.
+
+
+
+
+Slide 39
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+Increase $x_2$, keeping $x_1 = x_0 = 0$
+$\omega_1 \ge 0 \implies -1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_2 \ge 0 \implies -2 + 2x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_3 \ge 0 \implies 1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+
+Set $x_2 = 1$, $x_1 = x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -1 + 0 - 1 + 0 = -2$
+$\omega_2 = -2 + 0 + 2(1) + 0 = 0$
+$\omega_3 = 1 - 1 + 0 = 0$
+
+Set $x_2 = 1$, $x_1 = 0$, $x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -2$, $\omega_2 = 0$, $\omega_3 = 0$
+
+Increase $x_1$, keeping $x_2 = 1$, $x_0 = 0$
+$\omega_1 \ge 0 \implies -1 + x_1 - 1 + 0 \ge 0 \implies x_1 \ge 2$
+$\omega_2 \ge 0 \implies -2 + x_1 + 2(1) + 0 \ge 0 \implies x_1 \ge 0$
+$\omega_3 \ge 0 \implies 1 - 1 + 0 \ge 0 \implies 0 \ge 0$
+
+Set $x_1 = 2$, $x_2 = 1$, $x_0 = 0$
+$\mathcal{Z} = -5$
+$\omega_1 = 0$, $\omega_2 = 0$, $\omega_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It now explores increasing $x_1$ while holding $x_2 = 1$ and $x_0 = 0$.  The calculations determine the minimum possible value for $x_1$ based on the constraints, which is 2.  A new solution point is calculated with $x_1 = 2$, $x_2 = 1$, $x_0 = 0$.  The corresponding objective function value ($\mathcal{Z} = -5$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (39) is also included.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.
+
+
+
+
+Slide 39
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+Increase $x_2$, keeping $x_1 = x_0 = 0$
+$\omega_1 \ge 0 \implies -1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_2 \ge 0 \implies -2 + 2x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_3 \ge 0 \implies 1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+
+Set $x_2 = 1$, $x_1 = x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -1 + 0 - 1 + 0 = -2$
+$\omega_2 = -2 + 0 + 2(1) + 0 = 0$
+$\omega_3 = 1 - 1 + 0 = 0$
+
+Set $x_2 = 1$, $x_1 = 0$, $x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -2$, $\omega_2 = 0$, $\omega_3 = 0$
+
+Increase $x_1$, keeping $x_2 = 1$, $x_0 = 0$
+$\omega_1 \ge 0 \implies -1 + x_1 - 1 + 0 \ge 0 \implies x_1 \ge 2$
+$\omega_2 \ge 0 \implies -2 + x_1 + 2(1) + 0 \ge 0 \implies x_1 \ge 0$
+$\omega_3 \ge 0 \implies 1 - 1 + 0 \ge 0 \implies 0 \ge 0$
+
+Set $x_1 = 2$, $x_2 = 1$, $x_0 = 0$
+$\mathcal{Z} = -5$
+$\omega_1 = 0$, $\omega_2 = 0$, $\omega_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It now explores increasing $x_1$ while holding $x_2 = 1$ and $x_0 = 0$.  The calculations determine the minimum possible value for $x_1$ based on the constraints, which is 2.  A new solution point is calculated with $x_1 = 2$, $x_2 = 1$, $x_0 = 0$.  The corresponding objective function value ($\mathcal{Z} = -5$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (39) is also included.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.
+
+
+
+
+Slide 40
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+Increase $x_2$, keeping $x_1 = x_0 = 0$
+$\omega_1 \ge 0 \implies -1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_2 \ge 0 \implies -2 + 2x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_3 \ge 0 \implies 1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+
+Set $x_2 = 1$, $x_1 = x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -1 + 0 - 1 + 0 = -2$
+$\omega_2 = -2 + 0 + 2(1) + 0 = 0$
+$\omega_3 = 1 - 1 + 0 = 0$
+
+Set $x_2 = 1$, $x_1 = 0$, $x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -2$, $\omega_2 = 0$, $\omega_3 = 0$
+
+Increase $x_1$, keeping $x_2 = 1$, $x_0 = 0$
+$\omega_1 \ge 0 \implies -1 + x_1 - 1 + 0 \ge 0 \implies x_1 \ge 2$
+$\omega_2 \ge 0 \implies -2 + x_1 + 2(1) + 0 \ge 0 \implies x_1 \ge 0$
+$\omega_3 \ge 0 \implies 1 - 1 + 0 \ge 0 \implies 0 \ge 0$
+
+Set $x_1 = 2$, $x_2 = 1$, $x_0 = 0$
+$\mathcal{Z} = -5$
+$\omega_1 = 0$, $\omega_2 = 0$, $\omega_3 = 0$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It now explores increasing $x_1$ while holding $x_2 = 1$ and $x_0 = 0$.  The calculations determine the minimum possible value for $x_1$ based on the constraints, which is 2.  A new solution point is calculated with $x_1 = 2$, $x_2 = 1$, $x_0 = 0$.  The corresponding objective function value ($\mathcal{Z} = -5$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (38) is also included.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.
+
+
+
+
+Slide 41
+
+Auxiliary Problem
+
+$\max \overline{\mathcal{Z}} = -x_0$
+subject to
+$-x_1 + x_2 - x_0 \le -1$
+$-x_1 - 2x_2 - x_0 \le -2$
+$x_2 - x_0 \le 1$
+$x_1, x_2, x_0 \ge 0$
+
+(1) Must be feasible: choose $x_0$ large enough
+(2) Original problem is feasible
+
+$\max \mathcal{Z} = 0$
+
+Add slack variables:
+$\omega_1 = -1 + x_1 - x_2 + x_0$
+$\omega_2 = -2 + x_1 + 2x_2 + x_0$
+$\omega_3 = 1 - x_2 + x_0$
+$x_1, x_2, x_0, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1 = 0$, $x_2 = 0$
+$\omega_1 = -1 + x_0$
+$\omega_2 = -2 + x_0$
+$\omega_3 = 1 + x_0$
+$x_0 = 2 \implies \mathcal{Z} = -2$
+$x_1 = 0$, $x_2 = 0$, $x_0 = 2$
+$\omega_1 = 1$, $\omega_2 = 0$, $\omega_3 = 3$
+
+Increase $x_2$, keeping $x_1 = x_0 = 0$
+$\omega_1 \ge 0 \implies -1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_2 \ge 0 \implies -2 + 2x_2 + x_0 \ge 0 \implies x_2 \le 1$
+$\omega_3 \ge 0 \implies 1 - x_2 + x_0 \ge 0 \implies x_2 \le 1$
+
+Set $x_2 = 1$, $x_1 = x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -1 + 0 - 1 + 0 = -2$
+$\omega_2 = -2 + 0 + 2(1) + 0 = 0$
+$\omega_3 = 1 - 1 + 0 = 0$
+
+Set $x_2 = 1$, $x_1 = 0$, $x_0 = 0$
+$\mathcal{Z} = -1$
+$\omega_1 = -2$, $\omega_2 = 0$, $\omega_3 = 0$
+
+Increase $x_1$, keeping $x_2 = 1$, $x_0 = 0$
+$\omega_1 \ge 0 \implies -1 + x_1 - 1 + 0 \ge 0 \implies x_1 \ge 2$
+$\omega_2 \ge 0 \implies -2 + x_1 + 2(1) + 0 \ge 0 \implies x_1 \ge 0$
+$\omega_3 \ge 0 \implies 1 - 1 + 0 \ge 0 \implies 0 \ge 0$
+
+Set $x_1 = 2$, $x_2 = 1$, $x_0 = 0$
+$\mathcal{Z} = -5$
+$\omega_1 = 0$, $\omega_2 = 0$, $\omega_3 = 0$
+
+Optimal solution: $x_1 = 2$, $x_2 = 1$, $x_0 = 0$, $\mathcal{Z} = -5$
+
+\textbf{Description:}
+
+This slide continues the process of solving the auxiliary problem in linear programming, specifically within the context of the Simplex method.  It now explores increasing $x_1$ while holding $x_2 = 1$ and $x_0 = 0$.  The calculations determine the minimum possible value for $x_1$ based on the constraints, which is 2.  A new solution point is calculated with $x_1 = 2$, $x_2 = 1$, $x_0 = 0$.  The corresponding objective function value ($\mathcal{Z} = -5$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of how to find a feasible solution to the auxiliary problem, which is a necessary step in the Simplex method when the initial solution is not feasible.  The slide number (41) is also included.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.  The calculations show the impact of increasing $x_1$ on the objective function and slack variables.  The slide is focused on finding a feasible solution to the auxiliary problem.  The slide also shows the calculation of the objective function value at this new vertex.  The slide concludes by stating the optimal solution to the auxiliary problem.
+
+
+
+
+Slide 42
+
+Optimal solution to the auxiliary problem: $x_1 = 2$, $x_2 = 1$, $x_0 = 0$, $\overline{\mathcal{Z}} = -5$
+
+Since $x_0 = 0$, this is a feasible solution to the original problem.
+
+Substituting $x_0 = 0$ into the equations for $x_1$ and $x_2$ from the auxiliary problem dictionary, we get:
+
+$x_1 = 2$
+$x_2 = 1$
+
+$\max \mathcal{Z} = -2x_1 - x_2 = -2(2) - 1 = -5$
+
+\textbf{Description:}
+
+This slide presents the conclusion of the auxiliary problem's solution within the context of the Simplex method.  It states the optimal solution to the auxiliary problem, which is $x_1 = 2$, $x_2 = 1$, $x_0 = 0$, and $\overline{\mathcal{Z}} = -5$.  Crucially, since $x_0 = 0$, this solution is now a feasible solution to the original problem.  The slide then substitutes these values into the original objective function, $\mathcal{Z} = -2x_1 - x_2$, to calculate the corresponding objective function value for the original problem, which is -5.  The context suggests this is a crucial step in the Simplex method, where the solution to the auxiliary problem is used to find a feasible solution to the original problem.  The slide number (42) is also included.
+
+
+
+
+Slide 43
+
+Back to Original Problem
+
+$\max \mathcal{Z} = -2x_1 - x_2$
+subject to
+$-x_1 + x_2 \le -1$
+$-x_1 - 2x_2 \le -2$
+$x_2 \le 1$
+$x_1, x_2 \ge 0$
+
+We already have
+$x_1 = 2$
+$x_2 = 1$
+$\mathcal{Z} = -2(2) - 1 = -5$
+
+\textbf{Description:}
+
+This slide returns to the original linear programming problem after solving the auxiliary problem.  It restates the original objective function and constraints.  The optimal solution to the auxiliary problem, $x_1 = 2$, $x_2 = 1$, $x_0 = 0$, is now a feasible solution to the original problem.  The slide then substitutes these values into the original objective function, $\mathcal{Z} = -2x_1 - x_2$, to calculate the corresponding objective function value for the original problem, which is -5.  The context suggests this is the final step in the process, where the optimal solution to the original problem is determined.  The slide number (43) is also included.
+
+
+
+

@@ -1,0 +1,25 @@
+Slide 23
+
+\textbf{Primal Network Simplex}
+
+\textit{Updating dual variables}
+
+\textit{Dual variables update:}
+
+\begin{itemize}
+    \item If the entering arc crosses from the root-containing tree to the non-root-containing tree, then increase all dual variables on the non-root-containing tree by the dual slack of the entering arc.
+    \item Otherwise, decrease these dual variables by this amount.
+\end{itemize}
+
+\textit{Dual slacks update:}
+
+\begin{itemize}
+    \item The dual slacks corresponding to those arcs that bridge in the same direction as the entering arc get decremented by the old dual slack on the entering arc, whereas those that correspond to arcs bridging in the opposite direction get incremented by this amount.
+\end{itemize}
+
+
+\textbf{Description:}
+
+This slide describes how dual variables and dual slacks are updated in the Network Simplex Method after a primal pivot step.  The first bullet point details how to update the dual variables themselves.  If the entering arc connects a tree containing the root node to a tree that does not contain the root node, then all dual variables in the non-root-containing tree are increased by the dual slack of the entering arc.  Otherwise, the dual variables in the non-root-containing tree are decreased by the dual slack of the entering arc.  The second bullet point describes how the dual slacks are updated.  Dual slacks corresponding to arcs that bridge in the same direction as the entering arc are decremented by the entering arc's dual slack, while those in the opposite direction are incremented by the same amount.  This ensures that the dual solution remains consistent with the updated primal solution as the spanning tree is modified.
+
+

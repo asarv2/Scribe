@@ -1,0 +1,5 @@
+Slide 19
+
+The image shows a step in the simplex method, likely part of a linear programming problem.  It indicates that $x_3$ is entering the basis, and $x_5$ is leaving the basis.  The slide shows the objective function and constraints, with the current basic variables and their corresponding values.  The notation suggests that the simplex method is being applied to a specific problem, and the current step involves a pivot operation to improve the objective function value.  The slide is likely part of a lecture explaining the simplex method's iterative process.  The specific values of the variables and the coefficients in the constraints are shown in the table.  The table is a simplex tableau, showing the current values of the variables and the objective function.  The slide is likely part of a lecture explaining how to use the simplex method to solve a linear programming problem.  The new sets of basic and non-basic indices are also shown.  The new basic primal variables and non-basic dual variables are also displayed.
+
+

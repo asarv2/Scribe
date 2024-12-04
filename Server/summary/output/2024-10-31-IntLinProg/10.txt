@@ -1,0 +1,62 @@
+Slide 10
+
+\textbf{Branch-and-Bound}
+
+maximize $17x_1 + 12x_2$
+subject to $10x_1 + 7x_2 \le 40$
+$x_1 + x_2 \le 5$
+$x_1, x_2 \ge 0$
+$x_1, x_2$ integers.
+
+\textit{Graph of feasible region and optimal solution} (a plot is shown)
+
+$\vec{x}^* = (5/3, 10/3)$
+Optimal integer solution: $(4, 1)$
+
+$x_1 \le 1 \quad \text{or} \quad x_1 \ge 2$ $\implies$ 2 sub-problems, with new constraints
+
+\textit{Enumeration tree} (a tree diagram is shown)
+
+$P_0$: $x_1 = 1.67, x_2 = 3.33$
+$\implies \zeta = 68.33$
+
+$P_1$: $x_1 \le 1, x_2 \ge 4$
+$\implies \zeta = 65$
+
+$P_2$: $x_1 \ge 2, x_2 \ge 2.86$
+$\implies \zeta = 68.29$
+
+\textit{Figure 23.6} (caption)
+The feasible subregions formed by the first branch.
+
+\textit{Figure 23.7} (caption)
+The beginnings of the enumeration tree.
+
+\textit{Figure 23.8} (caption)
+The refinement of $P_2$ to $P_3$.
+
+\textit{Figure 23.9} (caption)
+The enumeration tree after solving $P_3$.
+
+\textit{Figure 23.10} (caption)
+The refinement of $P_3$ to $P_4$ and $P_5$. Note that $P_4$ is just a short vertical line segment.
+
+\textit{Figure 23.11} (caption)
+The enumeration tree after solving $P_5$. The double box around $P_4$ indicates that it is a leaf in the tree.
+
+\textit{Figure 23.12} (caption)
+The refinement of $P_5$ to $P_6$.
+
+\textit{Figure 23.13} (caption)
+The enumeration tree after solving $P_6$, $P_7$, and $P_8$.
+
+\textit{Figure 23.14} (caption)
+The enumeration tree after solving $P_6$, $P_7$, and $P_8$.
+
+\textit{Figure 23.15} (caption)
+The complete enumeration tree.
+
+
+\textbf{Description:}
+
+This slide presents the complete enumeration tree for the Branch and Bound method applied to the integer programming problem.  The figures (23.12, 23.13, and 23.14) are plots of the feasible regions for the subproblems $P_6$, $P_7$, and $P_8$, respectively.  The enumeration tree is fully developed, showing all branching decisions based on the integer constraints on $x_1$ and $x_2$.  The values of $x_1$ and $x_2$ are shown for each subproblem, along with the corresponding objective function value ($\zeta$).  The slide illustrates the complete exploration of the solution space by the Branch and Bound algorithm.  The figures (23.6 through 23.15) are likely part of a larger set of figures in a textbook or lecture notes, providing a visual representation of the algorithm's process.  The red and blue annotations likely highlight key points or calculations.  The slide shows the complete enumeration tree, with all leaf nodes identified, and the optimal solution is highlighted.

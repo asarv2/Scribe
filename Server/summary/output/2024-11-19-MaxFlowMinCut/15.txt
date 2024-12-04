@@ -1,0 +1,16 @@
+Slide 15
+
+\textbf{Max Flow Min Cut (LP Formulation)}
+
+\begin{align*}
+\min -x_{ts} \\
+\text{s.t.} \quad x_{ts} &= \sum_{j} x_{sj} \\
+\sum_{i} x_{it} &= x_{ts} \\
+\sum_{j} x_{kj} &= \sum_{i} x_{ik} \quad k \neq s, t \\
+0 \le x_{ij} &\le u_{ij} \\
+(u_{ts} &= +\infty)
+\end{align*}
+
+\textbf{Description:}
+
+This slide presents the linear programming (LP) formulation of the maximum flow problem.  The objective function is to minimize $-x_{ts}$, which is equivalent to maximizing $x_{ts}$.  The constraints ensure flow conservation at each node and limit the flow on each edge to its capacity.  The constraint $x_{ts} = \sum_{j} x_{sj}$ represents the flow into the sink node $t$ from the source node $s$.  The constraint $\sum_{i} x_{it} = x_{ts}$ represents the flow out of the sink node $t$.  The constraint $\sum_{j} x_{kj} = \sum_{i} x_{ik}$ represents flow conservation at all intermediate nodes $k$.  The constraint $0 \le x_{ij} \le u_{ij}$ limits the flow on each edge $ij$ to its capacity $u_{ij}$.  The constraint $u_{ts} = +\infty$ indicates that the flow along the fictitious arc from the source to the sink has no capacity limit.  This LP formulation is used to solve the maximum flow problem.

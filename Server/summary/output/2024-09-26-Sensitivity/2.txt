@@ -1,0 +1,26 @@
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Sensitivity and Parametric Analysis}
+
+\textbf{opt. \newline
+Dict.}
+
+\begin{align*}
+\xi &= 13 - 3x_2 - 1x_4 - 1x_6 \\
+x_3 &= 1 + x_2 + 3x_4 - 2x_6 \\
+x_1 &= 2 - 2x_2 - 2x_4 + x_6 \\
+x_5 &= 1 + 5x_2 + 2x_4
+\end{align*}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the optimal solution (or a portion of it) to the linear programming problem from the previous slide.  The equations show the relationships between the original variables ($x_1$, $x_2$, $x_3$, $x_5$) and the slack variables ($x_4$, $x_6$).  The variable $\xi$ likely represents the objective function value at the optimal solution.  The expressions for $x_1$, $x_3$, $x_5$ are in terms of the other variables, indicating the basic variables and their relationships to the non-basic variables.  This is a common form of expressing the solution in linear programming, often used in sensitivity analysis to understand how changes in the problem parameters affect the optimal solution.

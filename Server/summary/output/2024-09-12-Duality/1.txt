@@ -1,0 +1,30 @@
+Slide 1
+
+\textbf{Primal and Dual Problems}
+
+\begin{itemize}
+    \item[(P)]
+    \begin{align*}
+        \max \ \sum(x) &= c^T x \\
+        \text{subject to} \quad Ax &\le b \\
+        x &\ge 0
+    \end{align*}
+    \item[(D)]
+    \begin{align*}
+        \min \ \sum(y) &= b^T y \\
+        \text{subject to} \quad A^T y &\ge c \\
+        y &\ge 0
+    \end{align*}
+    \begin{center}
+        $\iff$
+    \end{center}
+    \begin{align*}
+        \max \ -\sum(y) &= -b^T y \\
+        \text{subject to} \quad (A^T)y &\le c \\
+        y &\ge 0
+    \end{align*}
+\end{itemize}
+
+\textbf{Description:}
+
+This slide introduces the primal and dual problems in linear programming.  It shows the standard forms of both problems.  The primal problem (P) seeks to maximize a linear function ($c^T x$) subject to linear inequality constraints ($Ax \le b$) and non-negativity constraints ($x \ge 0$). The dual problem (D) seeks to minimize a different linear function ($b^T y$) subject to different linear inequality constraints ($A^T y \ge c$) and non-negativity constraints ($y \ge 0$).  Importantly, the slide highlights the equivalence between the dual problem and a maximization problem with the opposite objective function and reversed inequality constraints.  The arrow between the two dual problem formulations indicates the transformation. This is a fundamental concept in linear programming, as solving one problem can often provide information about the solution to the other.  The slide is likely the first step in a lecture series on duality in linear programming.

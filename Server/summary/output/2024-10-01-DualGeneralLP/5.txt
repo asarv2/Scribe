@@ -1,0 +1,27 @@
+Slide 5
+
+Let $\vec{x}$ is (P) - feasible.
+\newline
+$\mathcal{S}(\vec{x}) = \vec{c}^T \vec{x}$
+\newline
+$\le \vec{c}^T \vec{x} - \vec{y}^T (\vec{A} \vec{x} - \vec{b}) - \vec{z}^T (\vec{x} - \vec{u})$
+\newline
+$\vec{y} \ge \vec{0}, \vec{z} \ge \vec{0}$
+\newline
+$\le \max_{\vec{x}} (\vec{c}^T \vec{x} - \vec{y}^T (\vec{A} \vec{x} - \vec{b}) - \vec{z}^T (\vec{x} - \vec{u}))$
+\newline
+$= \mathcal{S}(\vec{y}, \vec{z})$
+\newline
+Weak Duality
+\newline
+$\vec{x}$: P - feasible $\implies \mathcal{S}(\vec{x}) \le \mathcal{S}(\vec{y}, \vec{z})$
+\newline
+$\max \mathcal{S}(\vec{x}) \le \min \mathcal{S}(\vec{y}, \vec{z})$
+\newline
+$\vec{y}, \vec{z} \ge \vec{0}$
+
+---
+
+\textbf{Description:}
+
+This slide presents the proof of weak duality in linear programming.  It starts by assuming a feasible solution $\vec{x}$ for the primal problem (P).  The slide then shows how the objective function value for the primal problem ($\mathcal{S}(\vec{x})$) is less than or equal to the objective function value for the dual problem ($\mathcal{S}(\vec{y}, \vec{z})$).  This inequality is the statement of weak duality.  The slide number is 5 of 7, indicating its place in a larger presentation.  The notation is consistent with the previous slides, using vectors and matrices.  The proof demonstrates the fundamental relationship between the optimal values of the primal and dual problems.

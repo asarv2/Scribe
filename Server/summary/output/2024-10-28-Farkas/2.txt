@@ -1,0 +1,23 @@
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Farkas Lemma (Other Versions)}
+
+6.4.1 Proposition (Farkas lemma). Let $A$ be a real matrix with $m$ rows
+and $n$ columns, and let $b \in \mathbb{R}^m$ be a vector. Then exactly one of the following
+two possibilities occurs:
+
+\begin{enumerate}
+    \item[(F1)] There exists a vector $x \in \mathbb{R}^n$ satisfying $Ax = b$ and $x \ge 0$.
+    \item[(F2)] There exists a vector $y \in \mathbb{R}^m$ such that $y^T A \ge 0^T$ and $y^T b < 0$.
+\end{enumerate}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide presents an alternative formulation of Farkas' Lemma (Proposition 6.4.1).  It's a different, but equivalent, way to express the condition for the system $Ax = b$ to have a non-negative solution ($x \ge 0$).  Instead of the previous formulation involving $Ax \le b$, this version focuses on the case where $Ax = b$.  Crucially, it introduces two mutually exclusive possibilities (F1 and F2).  (F1) states that if a solution $x$ exists satisfying $Ax = b$ and $x \ge 0$, then (F2) cannot hold. Conversely, if (F1) does not hold, then (F2) must hold.  This is a key result in linear programming, often used to determine the feasibility of certain systems of equations. The notation $y^T A$ and $y^T b$ represents the transpose of $y$ multiplied by $A$ and $b$ respectively.  The slide number (2 of 11) indicates this is part of a larger discussion on Farkas' Lemma.

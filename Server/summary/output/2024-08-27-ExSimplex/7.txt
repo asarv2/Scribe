@@ -1,0 +1,16 @@
+Slide 7
+
+(I) Initial Step/Guess
+
+$\max \mathcal{Z} = 3x_1 + 2x_2$
+subject to
+$\omega_1 = 12 + x_1 - 3x_2$
+$\omega_2 = 8 - x_1 - x_2$
+$\omega_3 = 10 - 2x_1 + x_2$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Set $x_1, x_2 = 0$ (0) $\implies \mathcal{Z} = 0$
+
+\textbf{Description:}
+
+This slide outlines the initial step of the Simplex method for linear programming.  It restates the objective function and constraints from the previous slides.  The crucial instruction is to set $x_1$ and $x_2$ to zero.  This corresponds to the origin (0,0) in the graphical representation of the feasible region.  The result of this initial step is that the objective function $\mathcal{Z}$ is also zero.  The context suggests this is the beginning of the iterative process of the Simplex method, where the algorithm starts at a specific vertex (the origin in this case) and then proceeds to find a better solution by moving to another vertex.

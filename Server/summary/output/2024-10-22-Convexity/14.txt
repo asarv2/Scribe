@@ -1,0 +1,45 @@
+Slide 14
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Convex Analysis [V] Chapter 10}
+
+\subsection*{Separation Theorem}
+THEOREM 10.4. Let $P$ and $\bar{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then there exist disjoint half-spaces $H$ and $\bar{H}$ such that $P \subset H$ and $\bar{P} \subset \bar{H}$.
+
+\textbf{Proof:}
+Let $P = \{x: Ax \le b\}$ and $\bar{P} = \{x: A \bar{x} \le \bar{b}\}$.
+If $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that $v^Tx \le c$ for all $x \in P$ and $v^T \bar{x} \ge c$ for all $\bar{x} \in \bar{P}$.
+$P \cap \bar{P} = \emptyset \iff \exists y, \ \bar{y} \ s.t.$
+\begin{align*}
+y^T A + \bar{y}^T A &= 0 \\
+y^T b + \bar{y}^T \bar{b} &< 0 \\
+y, \bar{y} &\ge 0
+\end{align*}
+(Farkas' Lemma)
+
+\textbf{Farkas' Lemma}
+The system $Ax \le b$ has no solution if and only if there exists a vector $y \ge 0$ such that $y^T A = 0$ and $y^T b < 0$.
+
+\textbf{Proof of Separation Theorem (cont.):}
+Define $H = \{x: y^T x \le y^T b\}$ and $\bar{H} = \{x: y^T x \ge y^T \bar{b}\}$.
+$P \subset H$ and $\bar{P} \subset \bar{H}$.
+$H \cap \bar{H} = \emptyset$.
+
+\end{document}
+```
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the proof of the Separation Theorem (Theorem 10.4).  It defines the half-spaces $H$ and $\bar{H}$ in terms of the vector $y$ found from Farkas' Lemma.  The key step is showing that these half-spaces contain the respective polyhedra $P$ and $\bar{P}$ and are disjoint.  The proof likely involves demonstrating that any point in $P$ satisfies the inequality $y^Tx \le y^Tb$, and any point in $\bar{P}$ satisfies the inequality $y^Tx \ge y^T\bar{b}$.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of Farkas' Lemma and sets the stage for the conclusion of the proof of the separation theorem.
+
+
+
+

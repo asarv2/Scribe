@@ -1,0 +1,24 @@
+Slide 12
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Geometric Interpretation of SVM}
+
+\textit{Distance of} $\{(x_i, x_i')\}$ \textit{from} $a_1 x_1 + a_2 x_2 - b = 0$
+
+\begin{equation*}
+= \min_i |a_1 x_i^1 + a_2 x_i^2 - b|
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide provides a geometric interpretation of the Support Vector Machine (SVM) problem.  It shows the distance of data points $(x_i, x_i')$ from the separating hyperplane $a_1 x_1 + a_2 x_2 - b = 0$.  The equation shows the minimum distance calculation for each data point.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the geometric aspects of SVM optimization.  The slide number (12 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their Lagrangian formulation, and the concept of maximizing the margin.  The focus on the distance calculation is crucial for understanding how the SVM algorithm finds the optimal hyperplane.
+
+

@@ -1,0 +1,33 @@
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Equality Constraints}
+
+\begin{itemize}
+    \item \textbf{Problem:}
+    \begin{align*}
+        \text{maximize } \zeta &= f_0(x) \\
+        x \in \mathbb{R}^d \\
+        \text{subject to } g_j(x) &= 0 \quad j=1,\dots,n
+    \end{align*}
+    \item \textbf{Lagrange Multiplier( $\mu$ ) \& Lagrangian (L)}
+    \begin{align*}
+        L(x,\mu) &= f_0(x) - \sum_{j=1}^n \mu_j g_j(x)
+    \end{align*}
+    \begin{itemize}
+        \item $x_i, \mu_1, \dots, \mu_m$ are variables.
+        \item $j=1,\dots,n$ denotes the number of equality constraints.
+    \end{itemize}
+\end{itemize}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide builds upon the previous slide by focusing specifically on equality constraints in a linear programming problem.  It introduces the concept of Lagrange multipliers ($\mu$) and the Lagrangian function (L). The Lagrangian function is a way to incorporate equality constraints into the optimization problem.  The equation $L(x,\mu) = f_0(x) - \sum_{j=1}^n \mu_j g_j(x)$ defines the Lagrangian, where $f_0(x)$ is the objective function, $\mu_j$ are the Lagrange multipliers, and $g_j(x)$ are the equality constraints.  The variables $x_i, \mu_1, \dots, \mu_m$ are explicitly mentioned, highlighting the variables involved in the Lagrangian formulation.  The notation $j=1,\dots,n$ again indicates the number of equality constraints.  The slide is likely part of a larger presentation on duality and optimization techniques in linear programming.

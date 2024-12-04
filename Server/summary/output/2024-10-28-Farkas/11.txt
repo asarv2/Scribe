@@ -1,0 +1,44 @@
+Slide 11
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{[mg] Farkas Lemma (Other Versions)}
+
+6.4.3 Proposition (Farkas lemma in three variants). Let $A$ be a real
+matrix with $m$ rows and $n$ columns, and let $b \in \mathbb{R}^m$ be a vector.
+
+(i) The system $Ax = b$ has a nonnegative solution $x \in \mathbb{R}^n$
+with $x \ge 0$ if and only if every $y \in \mathbb{R}^m$ with $y^T A \ge 0^T$ also satisfies $y^T b \ge 0$.
+
+(ii) The system $Ax \le b$ has a nonnegative solution $x \in \mathbb{R}^n$
+with $x \ge 0$ if and only if every $y \in \mathbb{R}^m$ with $y^T A \ge 0^T$ also satisfies $y^T b \ge 0$.
+
+(iii) The system $Ax \le b$ has a solution $x \in \mathbb{R}^n$ if and only if every $y \in \mathbb{R}^m$ with $y^T A = 0^T$ also satisfies $y^T b \ge 0$.
+
+\begin{itemize}
+    \item $Ax \le b$ has no solution iff there is $y \ge 0$ s.t. $y^T A \ge 0^T$ and $y^T b < 0$.
+\end{itemize}
+
+\textbf{Proof of (iii)}
+
+\begin{enumerate}
+    \item Assume $Ax \le b$ has no solution.
+    \item Then there exists $y \ge 0$ such that $y^T A \ge 0^T$ and $y^T b < 0$.
+\end{enumerate}
+
+\textbf{Geometric Interpretation}
+
+The plan of the proof is straightforward: We let $z$ be the point of $C$ nearest to $b$ (in the Euclidean distance), and we check that the vector $y = z - b$ is as required; see the following illustration.
+
+\textbf{Conclusion}
+
+Thus, $Ax \le b$ has no solution iff there is $y \ge 0$ s.t. $y^T A \ge 0^T$ and $y^T b < 0$.
+
+\end{document}
+
+\textbf{Description:}
+
+This slide concludes the proof of part (iii) of Farkas' Lemma.  It restates the three variants of the proposition, emphasizing the conditions for the *absence* of solutions to the system $Ax \le b$.  The slide reiterates the key condition for the absence of a solution to $Ax \le b$ in terms of the existence of a vector $y$ satisfying specific conditions.  The slide number (11 of 11) indicates this is the final slide in a larger discussion on Farkas' Lemma, likely building upon the previous slides.  The slide reiterates the key condition for the absence of a solution to $Ax \le b$ in terms of the existence of a vector $y$ satisfying specific conditions.  The slide likely concludes the presentation of Farkas' Lemma.

@@ -1,0 +1,13 @@
+Slide 9
+
+Let $x \in \mathcal{G}$, i.e., constraints are satisfied.
+$\implies f_0(x) \le f_0(\tilde{x}) - \sum_{i=1}^m \lambda_i f_i(\tilde{x}) - \sum_{j=1}^n \mu_j g_j(\tilde{x}) = L(x,\lambda,\mu)$
+$\le \max_x L(x,\lambda,\mu) = \xi(\lambda,\mu)$
+$f_0(x) \le \xi(\lambda,\mu)$
+$\lambda_i \ge 0$
+$\max_{x \in \mathcal{G}} f_0(x) \le \min_{\lambda \ge 0, \mu} \xi(\lambda,\mu) = \xi^*$
+(Weak Duality)
+
+\textbf{Description:}
+
+This slide continues the development of the Lagrangian function for a linear programming problem with both inequality and equality constraints.  It shows how the objective function value $f_0(x)$ for a point $x$ satisfying the constraints is related to the maximum value of the Lagrangian function $\xi(\lambda,\mu)$ without constraints, but with the added condition that $\lambda_i \ge 0$.  The key idea is that if $x$ satisfies the constraints, then the objective function value at $x$ is less than or equal to the maximum value of the Lagrangian function, which is a function of the Lagrange multipliers $\lambda$ and $\mu$, and the additional constraint that $\lambda_i \ge 0$ for all $i$.  This is a crucial step in establishing the duality relationship between the primal and dual problems, and the statement "Weak Duality" is explicitly included.  The notation $\xi^*$ represents the minimum value of $\xi(\lambda,\mu)$ subject to the non-negativity constraint on $\lambda$.  The slide is part of a larger presentation on duality and optimization techniques in linear programming.

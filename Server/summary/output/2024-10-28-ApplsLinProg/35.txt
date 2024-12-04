@@ -1,0 +1,41 @@
+Slide 35
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+$\min \|x\|_1$
+
+\newline
+s.t.
+\newline
+$Ax = b$
+
+\newline
+$\min \sum_{i=1}^n |x_i|$
+
+\newline
+s.t.
+\newline
+$Ax = b$
+
+
+\textbf{Description:}
+
+This slide presents an alternative formulation of the sparse solution problem.  The objective function is now $\min \|x\|_1$, which is the $l_1$ norm of the vector $x$.  This is equivalent to minimizing the sum of the absolute values of the components of $x$.  The constraint remains $Ax = b$, ensuring that the solution satisfies the given linear equation.  This formulation is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation, now explicitly using the $l_1$ norm as the objective function.
+
+

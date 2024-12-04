@@ -1,0 +1,16 @@
+Slide 6
+
+Rank(A) = m - 1
+* Sum of all rows = 0 (Rank(A) ≤ m-1)
+* Can delete one row (Root node)
+
+
+\textbf{Description:}
+
+This slide continues the Network Flow discussion, likely from the previous slides. It discusses the rank of the incidence matrix ($A$) in the context of network flow problems.
+
+* **Rank(A):** The rank of the incidence matrix $A$ is crucial for determining the solvability of the network flow problem.  The statement Rank(A) = m - 1 indicates that the rank of the matrix is one less than the number of arcs (m).  This is a key property of the incidence matrix in a connected network.
+* **Sum of all rows = 0:** This constraint is a direct consequence of the balanced flow equations at each node.  The sum of all rows in the incidence matrix must be zero, reflecting the conservation of flow.
+* **Can delete one row (Root node):** This statement likely refers to the fact that one row in the incidence matrix can be removed without changing the rank of the matrix.  This is often related to the choice of a "root node" in the network, which simplifies the representation of the flow equations.
+
+The slide likely connects the rank of the incidence matrix to the fundamental properties of network flow problems and their linear programming formulations.  The notation suggests that the lecture is covering how to formulate and solve network flow problems as linear programming problems.  The context implies that the rank of the matrix is related to the number of independent equations in the system.

@@ -1,0 +1,57 @@
+Slide 14
+
+\textbf{Max Flow Min Cut (LP Formulation)}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, inner sep=1pt, minimum size=5pt]
+
+\node (s) at (0, 2) [label=left:$S$] {$0$};
+\node (t) at (8, 2) [label=right:$t$] {$0$};
+\node (a) at (2, 1) {$0$};
+\node (b) at (4, 1) {$0$};
+\node (c) at (6, 1) {$0$};
+\node (d) at (3, 0) {$0$};
+\node (e) at (5, 0) {$0$};
+
+\node (s_label) at (-0.5, 2.5) [label=left: (Source)] {};
+\node (t_label) at (8.5, 2.5) [label=right: (sink)] {};
+
+\draw[->, thick] (s) -- (a) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (a);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (b);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (c);
+\draw[->, thick] (a) -- (4, -1) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (6, -1) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (8, -1) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, very thick, purple] (s) to[out=135, in=45] (t) node[midway, above, sloped] {};
+\node[draw, red, rounded corners, minimum width=2cm, minimum height=0.5cm] at (4, -2.5) {$0 \le x_{ij} \le u_{ij}$};
+\node[below of=a, xshift=-2cm] {$x_{ts}, c_{ts} = 1, u_{ts} = +\infty$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide presents a linear programming formulation for the maximum flow problem.  It shows a network flow diagram with a source node ($S$) and a sink node ($t$).  The edges represent possible flow paths, and the capacities of these paths are represented by $u_{ij}$.  The addition of a fictitious arc from the source to the sink ($x_{ts}$) with infinite capacity ($u_{ts} = +\infty$) is shown.  The constraints $x_{ts}, c_{ts} = 1$ are also included, indicating that the flow along this fictitious arc is constrained to be 1.  This formulation is crucial for converting the maximum flow problem into a linear programming problem.
+
+

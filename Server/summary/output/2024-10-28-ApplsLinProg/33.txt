@@ -1,0 +1,40 @@
+Slide 33
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+Data Compression:
+
+\newline
+$AX = b$
+
+\newline
+$x_1 U_1 + x_2 U_2 + \dots + x_n U_n = b$
+
+\newline
+$\underline{x} = \underline{x} - x$
+
+\newline
+$\underline{x}$ = coordinates of $b$ w.r.t. cols of $A$
+
+
+\textbf{Description:}
+
+This slide continues the discussion of sparse solutions to underdetermined linear systems, now focusing on data compression.  The problem is to find a sparse solution $x$ to the equation $Ax = b$, where $A$ is an $m \times n$ matrix with $m < n$, $b$ is a given vector, and the solution $x$ must be sparse, meaning that it has at most $r$ non-zero elements.  The slide introduces the concept of data compression, where the vector $b$ is represented by a linear combination of the columns of the matrix $A$.  The vector $\underline{x}$ represents the coordinates of $b$ with respect to the columns of $A$.  The slide is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation, now in the context of data compression.
+
+

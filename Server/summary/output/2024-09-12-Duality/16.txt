@@ -1,0 +1,21 @@
+Slide 16
+
+\textbf{Strong Duality Theorem}
+
+$\mathcal{P} \neq$ Compare 1 and 2
+\newline
+Const term: $0 = \mathcal{S}^* + \sum_{i} d_i^* b_i$
+\newline
+$x_j :$ $c_j = c_j^* - \sum_{i} a_{ij} d_i^*$
+\newline
+$c_j = c_j^* + \sum_{i} a_{ij} y_i^* \le \sum_{i} a_{ij} y_i^*$
+\newline
+Let $y_i^* = d_i^* (d_i \ge 0)$. Then
+\newline
+$\mathcal{S}^* = \sum_{i} b_i y_i^*$
+
+\textbf{Description:}
+
+This slide continues the proof of the Strong Duality Theorem for linear programming.  It focuses on comparing the constant terms and coefficients of the primal and dual objective functions at the optimal solution.  The notation $c_j^*$, $x_j^*$, $b_i^*$, and $d_i^*$ represent the optimal values of the primal variables, slack variables, and dual variables, respectively.  The equations show the relationships between the constant terms and coefficients of the primal and dual objective functions at optimality.  The slide likely follows previous ones demonstrating simplex iterations and now highlights the specific relationships between the optimal primal and dual objective function values.  The introduction of $y_i^*$ suggests that the proof is now deriving a formula for the optimal dual variables.  The slide also shows the relationship between the coefficients of the primal and dual variables, which is crucial for the proof.
+
+

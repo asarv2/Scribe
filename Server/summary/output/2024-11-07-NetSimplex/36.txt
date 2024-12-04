@@ -1,0 +1,21 @@
+Slide 36
+
+\textbf{Dual Network Simplex}
+
+To this end, let us consider the general situation. As mentioned above, the spanning tree with the leaving arc removed consists of two disjoint trees. The entering arc must reconnect these two trees.
+
+First, consider a reconnecting arc that connects in the same direction as the leaving arc. If chosen as the entering arc, this arc's slack will drop from a positive value to zero. The dual slack for all other nontree arcs pointing in the same direction will drop by the same amount. The leaving arc will become a nontree arc and therefore its dual slack will also drop by this amount. But, it started out at zero. After the pivot, it will be negative. In other words, dual feasibility will be lost. For this reason, we restrict our attention to reconnecting arcs that point in the opposite direction.
+
+\textit{Entering arc selection rule:}
+
+\begin{itemize}
+    \item the entering arc must bridge the two subtrees in the opposite direction from the leaving arc, and
+    \item among all such arcs, it must have the smallest dual slack.
+\end{itemize}
+
+
+\textbf{Description:}
+
+This slide describes the rule for selecting the entering arc in the dual network simplex method when the spanning tree has been disconnected by the removal of a leaving arc.  The key idea is that if a reconnecting arc is chosen that points in the same direction as the leaving arc, the dual feasibility of the solution will be lost.  Therefore, the algorithm focuses on reconnecting arcs that point in the opposite direction.  The selection rule for the entering arc is based on finding the arc that bridges the two subtrees in the opposite direction from the leaving arc and has the smallest dual slack among all such arcs.  This ensures that the dual feasibility is maintained during the pivot step.  The slide also shows a graphical representation of the network, illustrating the two subtrees and the entering arc.
+
+

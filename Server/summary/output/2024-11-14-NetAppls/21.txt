@@ -1,0 +1,42 @@
+Slide 21
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem (Dijkstra Alg.)}
+
+Initialize:
+\begin{itemize}
+    \item $F = \emptyset$
+    \item $v_j = \begin{cases}
+        0, & j = r, \\
+        \infty, & j \neq r.
+    \end{cases}$
+\end{itemize}
+
+while ($|F| > 0$) \{
+\begin{itemize}
+    \item $j = \operatorname{argmin}_{v_k : k \notin F} \{v_k\}$
+    \item $F \leftarrow F \cup \{j\}$
+    \item for each $i$ for which $(i, j) \in A$ and $i \notin F$ \{
+        \item if ($c_{ij} + v_j < v_i$) \{
+            \item $v_i = c_{ij} + v_j$
+            \item $h_i = j$
+        \}
+    \}
+\end{itemize}
+\}
+
+\end{document}
+
+**Description:**
+
+This slide presents the pseudocode for Dijkstra's algorithm to find the shortest path in a graph.  The algorithm iteratively finds the shortest distances from a starting node to all other nodes in the graph.  The variables and their meanings are as follows:
+
+*   $F$: A set of nodes that have already been processed.  Initially empty.
+*   $v_j$: The shortest distance from node $j$ to the destination node $r$.  Initialized to infinity for all nodes except the destination node $r$, which is initialized to 0.
+*   $h_j$: The node to visit next in the shortest path from the source to node $j$.
+
+The `while` loop continues as long as there are unprocessed nodes ($|F| > 0$).  In each iteration, the algorithm selects the node $j$ with the smallest current shortest distance estimate ($v_k$) among the unprocessed nodes ($k \notin F$).  Then, it adds this node $j$ to the set of finished nodes ($F$).  Next, it considers all unprocessed neighbors ($i$) of node $j$ and updates the shortest distance estimate ($v_i$) if a shorter path is found through node $j$.  The algorithm terminates when all nodes have been processed.  This pseudocode is a clear and concise description of Dijkstra's algorithm, a fundamental graph algorithm for finding shortest paths in a weighted graph.

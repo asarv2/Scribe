@@ -1,0 +1,27 @@
+Slide 17
+
+\textbf{[EMG] p. 184}
+
+\newline
+8.7 Smallest Balls and Convex Programming
+
+\newline
+The smallest ball problem. We are given points $p_1, \dots, p_n \in \mathbb{R}^d$, and we want to find a ball of the smallest radius that contains all the points.
+
+\newline
+\begin{center}
+\begin{tikzpicture}
+\draw (0,0) circle (2cm);
+\filldraw (0,2) circle (2pt);
+\filldraw (0,-2) circle (2pt);
+\filldraw (2,0) circle (2pt);
+\filldraw (-2,0) circle (2pt);
+\filldraw (1,1) circle (2pt);
+\filldraw (-1,-1) circle (2pt);
+\end{tikzpicture}
+\end{center}
+
+
+\textbf{Description:}
+
+This slide introduces a geometric optimization problem, the smallest enclosing ball problem.  The problem is to find the smallest circle (or, more generally, the smallest hypersphere in higher dimensions) that encloses a set of given points in a $d$-dimensional space.  The diagram shows a circle enclosing several points in a 2-dimensional space.  The goal is to find the smallest possible radius for this enclosing circle.  This problem is often solved using convex programming techniques, which are relevant to linear programming.

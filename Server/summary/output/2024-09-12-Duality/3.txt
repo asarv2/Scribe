@@ -1,0 +1,40 @@
+Slide 3
+
+\textbf{Matrix Representations}
+
+\begin{itemize}
+    \item[(P)]
+    \begin{align*}
+        \max \ \mathcal{S}(x) &= s_0 + c^T x \\
+        \text{subject to} \quad Ax &\ge 0 \\
+        x &\ge 0
+    \end{align*}
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    $s_0$ & $c_1$ & $c_2$ & $\dots$ & $c_n$ \\ \hline
+    $b_1$ & $-a_{11}$ & $-a_{12}$ & $\dots$ & $-a_{1n}$ \\ \hline
+    $b_2$ & $-a_{21}$ & $-a_{22}$ & $\dots$ & $-a_{2n}$ \\ \hline
+    $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\ \hline
+    $b_m$ & $-a_{m1}$ & $-a_{m2}$ & $\dots$ & $-a_{mn}$ \\ \hline
+    \end{tabular}
+    \item[(D)]
+    \begin{align*}
+        \max \ -\mathcal{S}(y) &= -s_0 - b^T y \\
+        \text{subject to} \quad A^T y &\le -c \\
+        y &\ge 0
+    \end{align*}
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    $-s_0$ & $-b_1$ & $-b_2$ & $\dots$ & $-b_m$ \\ \hline
+    $-c_1$ & $a_{11}$ & $a_{12}$ & $\dots$ & $a_{1m}$ \\ \hline
+    $-c_2$ & $a_{21}$ & $a_{22}$ & $\dots$ & $a_{2m}$ \\ \hline
+    $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\ \hline
+    $-c_n$ & $a_{n1}$ & $a_{n2}$ & $\dots$ & $a_{nm}$ \\ \hline
+    \end{tabular}
+\end{itemize}
+
+\textbf{Description:}
+
+This slide presents the primal and dual linear programming problems in matrix form.  It shows how the constraints and objective functions can be represented using matrices and vectors.  The tables (which are meant to be matrices) illustrate the coefficients of the variables in the constraints.  The primal problem (P) is to maximize a linear function ($s_0 + c^T x$) subject to linear inequality constraints ($Ax \ge 0$) and non-negativity constraints ($x \ge 0$). The dual problem (D) is to maximize a different linear function ($-s_0 - b^T y$) subject to different linear inequality constraints ($A^T y \le -c$) and non-negativity constraints ($y \ge 0$).  The slide is likely part of a lecture explaining how to represent linear programming problems in a matrix format, which is crucial for computational methods.  The use of $s_0$ suggests that the problems are in a specific standard form, possibly for a simplex method implementation.
+
+

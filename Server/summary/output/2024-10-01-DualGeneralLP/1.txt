@@ -1,0 +1,41 @@
+Slide 1
+
+\textbf{Dual of General LP Problem}
+
+\newline
+\textit{(EVJ p.107 / #66, Chapter 9, p 152)}
+
+\newline
+\textbf{Recall (P)}
+\begin{align*}
+\max \ \vec{s} &= \vec{c} \vec{x} \\
+\text{s.t.} \quad \vec{A} \vec{x} &\le \vec{b} \\
+\qquad \vec{x} &\ge \vec{0}
+\end{align*}
+
+\newline
+\textbf{(D)}
+\begin{align*}
+\min \ \vec{s} &= \vec{b} \vec{y} \\
+\text{s.t.} \quad \vec{A}^T \vec{y} &\ge \vec{c} \\
+\qquad \vec{y} &\ge \vec{0}
+\end{align*}
+
+\newline
+\textbf{Derivation:}
+Take linear combination of the constraints.
+\newline
+$y$ - Lagrange Multiplier
+
+\newline
+$(\vec{y}^T \vec{A}) \vec{x} \le \vec{y}^T \vec{b} \implies (\vec{y}^T \vec{A}) \vec{x} \le \vec{y}^T \vec{b}$
+
+\newline
+$\vec{c}^T \vec{x} \le (\vec{y}^T \vec{A}) \vec{x} \le \vec{y}^T \vec{b}$
+
+
+---
+
+\textbf{Description:}
+
+This slide introduces the dual of a general linear programming (LP) problem.  It shows the primal problem (P) and its corresponding dual problem (D).  The slide highlights the relationship between the two problems, noting that the dual problem is derived by taking a linear combination of the constraints of the primal problem.  The notation uses vectors and matrices, typical of linear programming formulations.  The slide also includes a reference to a textbook and page numbers, indicating the source of the material.  The red arrows and text "Derivation:" and "Take linear combination of the constraints" indicate the derivation process.  The notation $y$ - Lagrange Multiplier is a key concept in the derivation.  The slide number is 1 of 7, suggesting this is the first of a series of slides on linear programming duality.

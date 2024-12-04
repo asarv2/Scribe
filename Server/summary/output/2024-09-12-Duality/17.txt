@@ -1,0 +1,19 @@
+Slide 17
+
+\textbf{Strong Duality Theorem}
+
+$\mathcal{P} \neq$
+\newline
+Hence there exists an $y^*$ s.t.
+\newline
+$\mathcal{S}^* = \mathcal{S}(X^*) = \mathcal{S}(y^*)$
+\newline
+This must be opt. for (D)
+\newline
+(By Weak Duality, $\mathcal{S}(X^*) \le \mathcal{S}(y^*)$)
+
+\textbf{Description:}
+
+This slide continues the proof of the Strong Duality Theorem for linear programming.  It states that if the primal problem (P) has an optimal solution, then there exists a corresponding optimal solution for the dual problem (D) such that the optimal values of the objective functions for both problems are equal.  The notation $\mathcal{S}^*$ represents the optimal value of the objective function for the primal problem.  The notation $X^*$ represents the optimal solution for the primal problem, and $y^*$ represents the optimal solution for the dual problem.  The slide likely follows previous ones demonstrating simplex iterations and now highlights the equality of the optimal values of the primal and dual objective functions.  The statement "By Weak Duality, $\mathcal{S}(X^*) \le \mathcal{S}(y^*)$" indicates that the proof is using the Weak Duality Theorem as a stepping stone to prove the equality of the optimal values.
+
+

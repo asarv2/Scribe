@@ -1,0 +1,35 @@
+Slide 12
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Convex Analysis [V] Chapter 10}
+
+\subsection*{Separation Theorem}
+THEOREM 10.4. Let $P$ and $\bar{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then there exist disjoint half-spaces $H$ and $\bar{H}$ such that $P \subset H$ and $\bar{P} \subset \bar{H}$.
+
+\textbf{Proof:}
+Let $P = \{x: Ax \le b\}$ and $\bar{P} = \{x: A \bar{x} \le \bar{b}\}$.
+If $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that $v^Tx \le c$ for all $x \in P$ and $v^T \bar{x} \ge c$ for all $\bar{x} \in \bar{P}$.
+$P \cap \bar{P} = \emptyset \iff \exists y, \ \bar{y} \ s.t.$
+\begin{align*}
+y^T A + \bar{y}^T A &= 0 \\
+y^T b + \bar{y}^T \bar{b} &< 0 \\
+y, \bar{y} &\ge 0
+\end{align*}
+(Farkas' Lemma)
+
+\end{document}
+```
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the proof of the Separation Theorem (Theorem 10.4).  It introduces a crucial condition for the existence of a separating hyperplane.  The slide states that if two disjoint polyhedra $P$ and $\bar{P}$ exist, then there must exist a vector $y$ and $\bar{y}$ that satisfy a system of linear equations and inequalities.  These conditions are equivalent to the statement that $P \cap \bar{P} = \emptyset$.  The conditions are presented as a system of linear equations and inequalities involving the vectors $y$, $\bar{y}$, the matrix $A$, and the vectors $b$ and $\bar{b}$.  This system is often referred to as Farkas' Lemma, a fundamental result in linear programming.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of the separation theorem and sets the stage for the continuation of the proof, which would likely involve showing how to find such a vector $y$ and $\bar{y}$.
+
+

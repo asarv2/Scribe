@@ -1,0 +1,33 @@
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Theorem 10.1}
+$S$ is convex $\iff$
+it contains all conv. comb. of points in $S$
+
+\textbf{Proof} $\Rightarrow$
+Suppose $S$ is convex.
+$n=2$: $z_1, z_2 \in S \implies \lambda z_1 + (1-\lambda) z_2 \in S$
+$0 \le \lambda \le 1$
+
+$n=3$: $z_1, z_2, z_3 \in S \implies \lambda_1 z_1 + \lambda_2 z_2 + \lambda_3 z_3 \in S$
+$\lambda_1 + \lambda_2 + \lambda_3 = 1$
+$\lambda_1, \lambda_2, \lambda_3 \ge 0$
+
+$z_3 \in S \implies \lambda_1 z_1 + \lambda_2 z_2 + \lambda_3 z_3 = (\lambda_1 + \lambda_2) \left(\frac{\lambda_1 z_1 + \lambda_2 z_2}{\lambda_1 + \lambda_2}\right) + \lambda_3 z_3 \in S$
+$\lambda_1 + \lambda_2 \le 1$
+$\lambda_1, \lambda_2 \ge 0$
+$\lambda_3 \ge 0$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the proof of Theorem 10.1, demonstrating the implication that if a set is convex, then it contains all convex combinations of its points.  It explicitly shows the case for $n=2$ and $n=3$ points, illustrating how the convex combination of points within a convex set remains within the set.  The notation is typical of a linear programming or optimization lecture, focusing on the mathematical details of the proof.  The handwritten style suggests a classroom setting.

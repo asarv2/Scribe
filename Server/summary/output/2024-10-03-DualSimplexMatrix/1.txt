@@ -1,0 +1,42 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Solution of Primal vs Dual Problems}
+
+\begin{center}
+\begin{tikzpicture}
+\draw[->,>=latex,blue] (-4,0) -- (4,0);
+\draw[blue] (-4,0) -- (4,0);
+\draw[red,->,>=latex] (-2,0.2) -- (-1,0.2);
+\draw[red,->,>=latex] (-1,0.2) -- (0,0.2);
+\draw[red,->,>=latex] (0,0.2) -- (1,0.2);
+\draw[red,->,>=latex] (1,0.2) -- (2,0.2);
+\draw[red,->,>=latex] (2,0.2) -- (3,0.2);
+\draw[red,->,>=latex] (3,0.2) -- (4,0.2);
+\draw[red,->,>=latex] (-2,-0.2) -- (-1,-0.2);
+\draw[red,->,>=latex] (-1,-0.2) -- (0,-0.2);
+\draw[red,->,>=latex] (0,-0.2) -- (1,-0.2);
+\draw[red,->,>=latex] (1,-0.2) -- (2,-0.2);
+\draw[red,->,>=latex] (2,-0.2) -- (3,-0.2);
+\draw[red,->,>=latex] (3,-0.2) -- (4,-0.2);
+\draw[fill] (0,0) circle [radius=0.05];
+\node at (-2.5,0.5) {$\xi(x)$};
+\node at (2.5,0.5) {$\xi(y)$};
+\node at (0,-1.5) {$\xi(x) \rightarrow \xi^* = \xi^* \leftarrow \xi(y)$};
+\node at (-1.5,-0.8) {$\xi^*$};
+\node at (1.5,-0.8) {$\xi^*$};
+\node at (0,-2.5) {$\xi^*$};
+\node at (0,-2.2) {$=$};
+\end{tikzpicture}
+\end{center}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide, titled "Solution of Primal vs Dual Problems," visually depicts the relationship between the primal and dual solutions in linear programming.  A horizontal line represents a constraint boundary.  $\xi(x)$ and $\xi(y)$ are likely representing the primal and dual objective function values, respectively.  The arrows emanating from the point (0,0) on the constraint boundary indicate the relationship between the primal and dual solutions.  The notation $\xi^* = \xi^*$ suggests that the optimal values of the primal and dual problems are equal.  The red arrows indicate the direction of the relationship between the primal and dual solutions.  The slide is likely part of a larger presentation on duality theory in linear programming.

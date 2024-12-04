@@ -1,0 +1,49 @@
+Slide 32
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+Recovery of Signals with noise:
+
+\newline
+$w \in \mathbb{R}^k \implies$ encode $\implies z = Q w$
+
+\newline
+$z \implies$ transmit $\implies z_2 = z + x$ (noise: only a few zeros)
+
+\newline
+Given $z_2$, how to recover $z$?
+
+\newline
+$Az = Q w + x$
+
+\newline
+$A \tilde{z} = A Q w + A x = b$ given
+
+\newline
+$\tilde{z} = z + x \implies z = \tilde{z} - x$
+
+\newline
+Find $x$ with as few non-zeros as possible
+
+
+\textbf{Description:}
+
+This slide continues the discussion of sparse solutions to underdetermined linear systems, focusing on signal recovery with noise.  It shows the relationship between the original signal ($z$), the encoding matrix ($Q$), the noise ($x$), and the observed signal ($\tilde{z}$).  The equation $A \tilde{z} = b$ is given, and the goal is to find the sparse solution $x$ that minimizes the number of non-zero elements while satisfying the equation.  The slide is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation.
+
+

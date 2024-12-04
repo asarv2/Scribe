@@ -1,0 +1,16 @@
+Slide 45
+
+\textbf{5. Putting It All Together}
+
+As we saw in Chapter 5, for linear programming the primal and the dual simplex methods form the foundation on which one can build a few different variants of the simplex method. The same is true here in the context of network flows.
+
+For example, one can build a two-phased network simplex method (with costs artificially and temporarily altered to ensure dual feasibility of an initial tree solution) to find a primal feasible solution and then uses the primal network simplex method to move from the feasible solution to an optimal one.
+
+Alternatively, one can use the primal network simplex method (with supplies temporarily altered to ensure primal feasibility of an initial tree solution) to find a dual feasible solution and then use the dual network simplex method (with the original supplies) to move from the dual feasible solution to an optimal one.
+
+Finally, as described for linear programming in Chapter 7, one can define a parametric self-dual method in which primal pivots and dual pivots are intertwined as needed so as to reduce a perturbation parameter $\mu$ from $\infty$ to zero.
+
+
+\textbf{Description:}
+
+This slide summarizes the different approaches to solving linear programming problems using network simplex methods, drawing connections to the general simplex method.  It highlights the flexibility of network simplex methods, allowing for two-phased approaches where an initial feasible solution is found using artificial costs, and then the standard network simplex method is used to optimize.  It also mentions a parametric self-dual method, which intermingles primal and dual pivots to handle perturbations in the problem parameters.  The slide emphasizes the connection between network simplex methods and the general simplex method, showcasing the versatility of these techniques for solving linear programming problems in network flow contexts.

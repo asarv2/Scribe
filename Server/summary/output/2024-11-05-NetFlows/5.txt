@@ -1,0 +1,12 @@
+Slide 5
+
+$A_{ij} (k,l) = \begin{cases} -1 & i=k \\ 1 & i=l \\ 0 & i \neq k, l \end{cases}$
+
+
+\textbf{Description:}
+
+This slide continues the Network Flow discussion, likely from the previous slides. It defines a specific element of the incidence matrix ($A_{ij}$) in terms of the nodes ($k$ and $l$).
+
+* **Element Definition:** The equation $A_{ij} (k,l) = \begin{cases} -1 & i=k \\ 1 & i=l \\ 0 & i \neq k, l \end{cases}$ defines the value of an element in the incidence matrix $A_{ij}$ based on the relationship between the row index ($i$), and the column indices ($k$ and $l$).  This is a concise way to specify the entries of the matrix.  The values -1, 1, and 0 correspond to the flow direction and connection between nodes.
+
+The slide likely provides a more detailed explanation of how the incidence matrix is constructed, potentially in relation to the network diagram (Figure 14.1 and 14.2) from previous slides.  The notation suggests that the lecture is covering how to formulate and solve network flow problems as linear programming problems.

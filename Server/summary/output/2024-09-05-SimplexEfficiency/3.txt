@@ -1,0 +1,35 @@
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Worst Case Example: Klee-Minty (1970)}
+
+\subsection*{[Iv]}
+
+\begin{equation*}
+\label{eq:1}
+maximize \sum_{j=1}^{n} 2^{n-j} x_j
+\end{equation*}
+\begin{equation*}
+\label{eq:2}
+subject \ to \ 2 \sum_{j=1}^{i-1} 2^{i-j} x_j + x_i \le \sum_{j=1}^{i-1} 2^{i-j} \beta_j + \beta_i \quad i = 1, 2, \dots, n
+\end{equation*}
+\begin{equation*}
+\label{eq:3}
+x_j \ge 0 \quad j = 1, 2, \dots, n.
+\end{equation*}
+
+$1 < \beta_1 < \beta_2 < \dots < \beta_n$
+
+\textbf{Largest Coefficient Rule}: require $2^{n-1}$ steps.
+
+\textbf{Smallest Coefficient Rule}: just 1 step.
+
+\end{document}
+
+\textbf{Description:}
+
+This slide continues the discussion of the Klee-Minty example, a worst-case scenario for the Simplex method in linear programming.  It presents the formal mathematical formulation of the problem, including the objective function and constraints.  Crucially, the constraints are now expressed in a more general form, using summation notation and the $\beta_i$ variables.  The slide also highlights the difference in performance between two different Simplex rules: the Largest Coefficient Rule and the Smallest Coefficient Rule.  The Largest Coefficient Rule is shown to require a significantly higher number of steps ($2^{n-1}$) to solve the problem, while the Smallest Coefficient Rule is much more efficient, requiring only one step.  This illustrates the sensitivity of the Simplex method to the specific choice of pivot rule.

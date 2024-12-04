@@ -1,0 +1,39 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Farkas Lemma}
+
+\textit{LEMMA 10.5.} The system $Ax \le b$ has no solutions if and only if there is a $y$ such that
+
+\begin{align*}
+A^T y &= 0 \\
+y &\ge 0 \\
+b^T y &< 0.
+\end{align*}
+
+(10.8)
+
+\textbf{PROOF.} Consider the linear program
+
+\begin{align*}
+\label{eq:1}
+(P) \quad \text{maximize} \quad 0 \\
+\text{subject to} \quad Ax \le b
+\end{align*}
+and its dual
+
+\begin{align*}
+(D) \quad \text{minimize} \quad b^T y \\
+\text{subject to} \quad A^T y = 0 \\
+y \ge 0.
+\end{align*}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide introduces Farkas Lemma (Lemma 10.5), a fundamental result in linear programming.  It states a condition for the system $Ax \le b$ to have no solutions.  The condition involves the existence of a vector $y$ satisfying certain constraints.  The slide then outlines a proof by considering the primal linear program (P) and its dual (D).  The primal (P) is to maximize 0 subject to $Ax \le b$, and the dual (D) is to minimize $b^T y$ subject to $A^T y = 0$ and $y \ge 0$.  The slide number (1 of 11) indicates this is the first of a series of slides likely detailing the proof of the lemma.

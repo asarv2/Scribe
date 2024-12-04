@@ -1,0 +1,18 @@
+Slide 42
+
+Optimal solution to the auxiliary problem: $x_1 = 2$, $x_2 = 1$, $x_0 = 0$, $\overline{\mathcal{Z}} = -5$
+
+Since $x_0 = 0$, this is a feasible solution to the original problem.
+
+Substituting $x_0 = 0$ into the equations for $x_1$ and $x_2$ from the auxiliary problem dictionary, we get:
+
+$x_1 = 2$
+$x_2 = 1$
+
+$\max \mathcal{Z} = -2x_1 - x_2 = -2(2) - 1 = -5$
+
+\textbf{Description:}
+
+This slide presents the conclusion of the auxiliary problem's solution within the context of the Simplex method.  It states the optimal solution to the auxiliary problem, which is $x_1 = 2$, $x_2 = 1$, $x_0 = 0$, and $\overline{\mathcal{Z}} = -5$.  Crucially, since $x_0 = 0$, this solution is now a feasible solution to the original problem.  The slide then substitutes these values into the original objective function, $\mathcal{Z} = -2x_1 - x_2$, to calculate the corresponding objective function value for the original problem, which is -5.  The context suggests this is a crucial step in the Simplex method, where the solution to the auxiliary problem is used to find a feasible solution to the original problem.  The slide number (42) is also included.
+
+

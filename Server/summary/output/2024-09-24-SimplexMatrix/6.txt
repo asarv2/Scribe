@@ -1,0 +1,38 @@
+Slide 6
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Basic and Non-Basic Variables}
+
+$\mathbf{x} = \begin{pmatrix}
+x_1 \\
+\vdots \\
+x_n \\
+w_1 \\
+\vdots \\
+w_m
+\end{pmatrix} = \begin{pmatrix}
+\mathbf{x}_B \\
+\mathbf{x}_N
+\end{pmatrix}$
+
+$\mathbf{A} \mathbf{x} + \mathbf{w} = \mathbf{b} \iff \sum_{j=1}^n a_{ij} x_j + x_{n+i} = b_i$
+
+$\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$
+
+$\sum_{j \in B} a_{ij} x_j + \sum_{j \in N} a_{ij} x_j + x_{n+i} = b_i$
+
+$\mathbf{x}_B + \mathbf{x}_N = \mathbf{b}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of basic and non-basic variables in the context of the simplex method.  It explicitly shows how the constraint equation $\mathbf{A} \mathbf{x} + \mathbf{w} = \mathbf{b}$ can be rewritten in terms of basic and non-basic variables.  The key is the partitioning of the vector $\mathbf{x}$ into $\mathbf{x}_B$ (basic variables) and $\mathbf{x}_N$ (non-basic variables).  The equation $\sum_{j=1}^n a_{ij} x_j + x_{n+i} = b_i$ demonstrates how each constraint equation can be expressed in terms of the basic and non-basic variables.  The matrix notation $\begin{bmatrix} \mathbf{A} & \mathbf{I} \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ \mathbf{w} \end{bmatrix} = \mathbf{b}$ highlights the augmented matrix representation of the constraints, which is crucial for the simplex method's iterative calculations.  The new equation $\mathbf{x}_B + \mathbf{x}_N = \mathbf{b}$ is introduced, showing the relationship between the basic and non-basic variables and the right-hand side vector $\mathbf{b}$.  The slide is likely part of a lecture explaining the simplex method's underlying structure and how the constraints are handled in the algorithm.
+
+

@@ -1,0 +1,17 @@
+Slide 33
+
+max $\quad (u_3 - u_4) + 2(u_5 - u_6) + p(u_7 - u_8)$
+
+s.t. $\quad u_1 + u_2 = 1$
+$\quad u_3 + u_4 = 1$
+$\quad u_5 + u_6 = 1$
+$\quad u_7 + u_8 = 1$
+$2(u_3 - u_6) + q(u_5 - u_6) + (u_7 - u_8) = 0$
+$v_1(u_1 - u_2) + v_2(u_3 - u_6) + v_3(u_5 - u_6) + v_4(u_7 - u_8) = 0$
+$u_i \ge 0$
+
+\textbf{Description:}
+
+This slide presents a linear programming problem, likely for a midterm exam.  The problem is to maximize a linear function of variables $u_3, u_4, u_5, u_6, u_7, u_8$ subject to constraints.  The variables $u_1, u_2, u_3, u_4, u_5, u_6, u_7, u_8$ are likely slack variables or surplus variables in the dual problem.  The terms within the parentheses likely represent the constraints of the dual problem, where $x_1$ and $x_2$ are primal variables, and $5, 8, 3, 4$ are the right-hand side constants of the primal constraints.  The inequalities are related to the complementary slackness conditions, which are crucial for determining the optimal solution to both the primal and dual problems.  The slide is likely part of a linear programming lecture or exam, where the presenter or student is analyzing the conditions for optimality.  The presence of $v_1, v_2, v_3, v_4$ suggests a further step in the solution process, possibly involving a specific solution method.
+
+

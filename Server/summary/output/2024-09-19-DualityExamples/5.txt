@@ -1,0 +1,12 @@
+Slide 5
+
+\textbf{Diet Problem}
+
+Minimize cost: $Z(x) = \sum_{j} c_j x_j$
+
+s.t. $\sum_{j} a_{ij} x_j \ge b_i$
+$x_j \ge 0$
+
+\textbf{Description:}
+
+This slide presents the mathematical formulation of the diet problem as a linear programming problem.  It shows the objective function, which is to minimize the total cost of the food consumed, represented by $Z(x) = \sum_{j} c_j x_j$.  The constraints are shown as $\sum_{j} a_{ij} x_j \ge b_i$, ensuring that the minimum intake of each nutrient ($b_i$) is met.  The non-negativity constraint $x_j \ge 0$ ensures that the amount of each food consumed is non-negative.  This is a standard linear programming problem format, where the objective is to minimize a linear function subject to linear constraints.  The variables $x_j$ represent the amount of food $j$ to consume, $c_j$ represents the cost of food $j$, $a_{ij}$ represents the amount of nutrient $i$ in food $j$, and $b_i$ represents the minimum intake of nutrient $i$.  The notation $\sum_{j}$ indicates summation over all foods.  The slide is likely part of a larger lecture on linear programming and its applications, specifically focusing on the diet problem.

@@ -1,0 +1,30 @@
+Slide 4
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{L\textsuperscript{2} Regression (Least Square)}
+
+\begin{equation*}
+\min_{(x_1, \dots, x_n)} \sum_{i=1}^m \left| (b_i - \sum_{j=1}^n a_{ij} x_j) \right|^2
+\end{equation*}
+
+\begin{equation*}
+\min \left\| b - AX \right\|_2^2
+\end{equation*}
+
+$AX = b$ (might not be solvable)
+
+$A^T A \hat{X} = A^T b$ (normal equation, always solvable)
+
+$\hat{X} = (A^T A)^{-1} A^T b$ (if $(A^T A)^{-1}$ exists)
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of linear regression, specifically focusing on the least squares method.  It shows the objective function for minimizing the sum of squared errors between the observed values ($b_i$) and the predicted values ($\sum_{j=1}^n a_{ij} x_j$).  The notation introduces the matrix representation of the problem, where $b$ is a vector of observed values, $A$ is a matrix of coefficients, $X$ is a vector of parameters to be determined, and the error is represented by the difference between $b$ and $AX$.  The slide highlights the normal equation ($A^T A \hat{X} = A^T b$) as a way to solve for the optimal parameters ($\hat{X}$), which is always solvable.  The final equation shows the solution for $\hat{X}$ in terms of matrix operations, requiring the inverse of $(A^T A)$.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the best-fit line (or hyperplane) to a set of data points, considering the error term.  The slide number (4 of 22) suggests this is a later part of the lecture, building on the concepts introduced in previous slides.

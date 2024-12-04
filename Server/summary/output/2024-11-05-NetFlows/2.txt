@@ -1,0 +1,23 @@
+Slide 2
+
+\textbf{Network Flow (LV) Chapter 14)}
+
+(1) $b_i > 0$ (Supply)  $b_i < 0$ (Demand)  $\sum_{i \in N} b_i = 0$
+
+(2) $X_{ij}$ = amount transported from $i$ to $j$
+
+(3) $C_{ij}$ = cost of transportation from $i$ to $j$
+
+(4) $\text{min} \sum_{(i,j) \in \mathcal{A}} C_{ij} X_{ij}$
+
+
+\textbf{Description:}
+
+This slide continues the Network Flow discussion, likely from the previous slide.  It defines key variables and constraints for a network flow problem, likely a transportation problem.
+
+* **(1) $b_i$**: This represents the net flow at each node.  Positive values indicate supply, negative values indicate demand.  The equation $\sum_{i \in N} b_i = 0$ is a crucial constraint, ensuring that the total supply equals the total demand in the network.
+* **(2) $X_{ij}$**: This variable represents the amount of flow along the arc from node $i$ to node $j$.
+* **(3) $C_{ij}$**: This variable represents the cost of transporting one unit of flow along the arc from node $i$ to node $j$.
+* **(4) $\text{min} \sum_{(i,j) \in \mathcal{A}} C_{ij} X_{ij}$**: This is the objective function, aiming to minimize the total cost of transporting all the flow in the network.
+
+The slide also includes diagrams (Figure 14.1 and 14.2) which likely illustrate the network structure and the costs associated with the arcs.  The context suggests that the lecture is covering how to formulate and solve network flow problems as linear programming problems.

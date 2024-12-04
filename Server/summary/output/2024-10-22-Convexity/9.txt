@@ -1,0 +1,35 @@
+Slide 9
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Convex Analysis [V] Chapter 10}
+
+\subsection*{Caratheodory Theorem}
+If $z \in \text{Conv}(S)$, then $z$ can be written as a convex combination of at most $m+1$ points from $S$.
+
+\textbf{Proof:}
+Consider the LP:
+\begin{align*}
+\max \ c^T x \\
+\text{s.t.} \ Ax = z \\
+x_i \ge 0, \ \sum_{j=1}^n x_j = 1 \\
+\end{align*}
+where $x = [x_1, x_2, \dots, x_n]^T$, $A = [z_1, z_2, \dots, z_n]$, and $z_j \in S$.
+
+This is feasible, and hence has a basic opt. soln with $m+1$ basic variables.
+
+\end{document}
+```
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the Caratheodory Theorem and its application to a linear program (LP).  The theorem states that any point within the convex hull of a set in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from the original set.  The slide demonstrates this by considering a linear program where the objective is to maximize a linear function subject to constraints.  The constraints are formulated in terms of a matrix $A$ and a vector $z$, where the columns of $A$ represent points from the set $S$.  The constraints also include non-negativity and a sum-to-one constraint.  The key takeaway is that the LP has a basic optimal solution with at most $m+1$ basic variables, which directly relates to the Caratheodory Theorem's limitation on the number of points needed for the convex combination.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of convex hulls and convex combinations.
+
+

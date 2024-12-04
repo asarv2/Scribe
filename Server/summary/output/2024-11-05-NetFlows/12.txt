@@ -1,0 +1,19 @@
+Slide 12
+
+Spanning Trees and Bases
+* Balanced Flow: $AX = -b$
+* Feasible Flow: $X \ge 0$
+* Tree Solution: $X(i,j) = 0$ if $(i,j) \in \mathcal{T}$
+* Tree Solution might not be feasible
+
+
+\textbf{Description:}
+
+This slide continues the Network Flow discussion, likely from the previous slides. It expands on the conditions for a "tree solution" in the context of a network flow problem, adding a crucial caveat.
+
+* **Balanced Flow, Feasible Flow, and Tree Solution:** The conditions for balanced flow ($AX = -b$) and feasible flow ($X \ge 0$) are restated.  The condition $X(i,j) = 0$ if $(i,j) \in \mathcal{T}$ defines a tree solution, meaning that flow is zero along arcs in the spanning tree $\mathcal{T}$.
+* **Tree Solution might not be feasible:** This is the key addition.  A tree solution, while satisfying the flow conservation constraints, might not satisfy all the other constraints of the problem, and therefore might not be a feasible solution overall.  This highlights that a tree solution is a *subset* of the possible feasible solutions, not necessarily the complete set.
+
+The slide likely connects these conditions to the linear programming formulation of network flow problems, potentially providing a method for finding or verifying a specific type of solution.  The notation suggests that the lecture is covering how to formulate and solve network flow problems as linear programming problems.  The context implies that the tree solution is a special case of a feasible solution, but not all tree solutions are feasible. The diagram in the slide likely illustrates a network with a spanning tree, highlighting the arcs that have zero flow in the tree solution.
+
+

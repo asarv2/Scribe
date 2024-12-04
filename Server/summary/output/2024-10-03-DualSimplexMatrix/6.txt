@@ -1,0 +1,40 @@
+Slide 6
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Based Phase I Algorithm \textit{LVJ p.73}}
+
+maximize $-x_1 + 4x_2$
+subject to
+\begin{itemize}
+    \item $-2x_1 - x_2 \le 4$
+    \item $-2x_1 + 4x_2 \le -8$
+    \item $-x_1 + 3x_2 \le -7$
+    \item $x_1, x_2 \ge 0$
+\end{itemize}
+
+\begin{itemize}
+    \item (P) $\xi = -1 x_1 + 4 x_2$
+    \item $w_1 = 4 + 2 x_1 + x_2$
+    \item $w_2 = -8 + 2 x_1 - 4 x_2$
+    \item $w_3 = -7 + x_1 - 3 x_2$
+\end{itemize}
+\begin{itemize}
+    \item (D) $-\xi = -4 y_1 + 8 y_2 + 7 y_3$
+    \item $z_1 = 1 - 2 y_1 - 2 y_2 - y_3$
+    \item $z_2 = -4 - y_1 + 4 y_2 + 3 y_3$
+\end{itemize}
+
+\textbf{New origin is D-feasible}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the "Dual Based Phase I Algorithm" example from the previous slide.  It shows the primal and dual problems, but now with a crucial change.  The slide indicates that the "New origin is D-feasible." This means that by introducing an artificial variable and modifying the constraints, the origin (where all variables are zero) now satisfies the constraints of the dual problem (D).  This is a significant step in the algorithm, as it provides a feasible starting point for the simplex method to find the optimal solution.  The reference "LVJ p.73" indicates the source of the problem.  The slide is likely part of a larger presentation on the dual simplex method, demonstrating the iterative process of solving linear programming problems. The arrows and highlighting on the previous slide's table are now absent, suggesting the table has been updated.

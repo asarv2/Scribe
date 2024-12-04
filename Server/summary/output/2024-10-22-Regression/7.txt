@@ -1,0 +1,20 @@
+Slide 7
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Binary Classification}
+
+\textit{Given labeled points} $(x_i, x_i')$
+
+\textit{Find} a hyperplane that separates the points.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide introduces a binary classification problem.  It states that the goal is to find a hyperplane that separates a set of data points into two categories (represented by the labels '+', and '-').  The notation $(x_i, x_i')$ indicates that each data point $x_i$ has an associated label $x_i'$.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find a decision boundary that optimally classifies data points into two categories.  The inclusion of the labeled points suggests that this is a supervised learning problem, where the labels are known for each data point.  The presence of a scatter plot of points labeled with '+' and '-' indicates the data points to be classified.  The slide number (7 of 22) suggests this is a later part of the lecture, introducing a new topic related to linear programming.

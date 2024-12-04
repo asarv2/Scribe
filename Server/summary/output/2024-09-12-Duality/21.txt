@@ -1,0 +1,25 @@
+Slide 21
+
+\textbf{Complementary Slackness}
+
+\textbf{THEOREM 5.3.} Suppose that $x = (x_1, x_2, \dots, x_n)$ is primal feasible and that $y = (y_1, y_2, \dots, y_m)$ is dual feasible. Let $(w_1, w_2, \dots, w_m)$ denote the corresponding primal slack variables, and let $(z_1, z_2, \dots, z_n)$ denote the corresponding dual slack variables. Then $x$ and $y$ are optimal for their respective problems if and only if
+\newline
+$x_j z_j = 0$, for $j = 1, 2, \dots, n$
+\newline
+$w_i y_i = 0$, for $i = 1, 2, \dots, m$
+\newline
+(pairing of variables)
+\newline
+i.e. either $x_j$ or $z_j = 0$
+\newline
+and either $y_i$ or $w_i = 0$
+\newline
+$j \in \{1, \dots, n\}$
+\newline
+$i \in \{1, \dots, m\}$
+
+\textbf{Description:}
+
+This slide presents the Complementary Slackness Theorem for linear programming.  It states a crucial condition for optimality in both the primal and dual problems.  The theorem states that if both the primal and dual problems have feasible solutions, then those solutions are optimal if and only if the product of each primal variable and its corresponding dual slack variable is zero, and the product of each dual variable and its corresponding primal slack variable is zero.  This condition is often used in conjunction with the simplex method to determine if a solution is optimal.  The slide likely follows a discussion of the Strong Duality Theorem and now introduces a practical condition for verifying optimality.  The notation $x_j$, $y_i$, $w_i$, and $z_j$ represent the primal and dual variables and their corresponding slack variables.
+
+

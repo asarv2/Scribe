@@ -1,0 +1,11 @@
+Slide 8
+
+Let $x \in \mathcal{G}$, i.e., constraints are satisfied.
+$\overline{f_0(x)} \le f_0(\tilde{x}) - \sum_{i=1}^m \lambda_i f_i(\tilde{x}) - \sum_{j=1}^n \mu_j g_j(\tilde{x}) = L(x,\lambda,\mu)$
+$\le \max_x L(x,\lambda,\mu) = \xi(\lambda,\mu)$
+$\overline{f_0(x)} \le \xi(\lambda,\mu)$
+(no constraint)
+
+\textbf{Description:}
+
+This slide continues the development of the Lagrangian function for a linear programming problem with both inequality and equality constraints.  It shows how the objective function value $\overline{f_0(x)}$ for a point $x$ satisfying the constraints is related to the maximum value of the Lagrangian function $\xi(\lambda,\mu)$ without constraints.  The key idea is that if $x$ satisfies the constraints, then the objective function value at $x$ is less than or equal to the maximum value of the Lagrangian function, which is a function of the Lagrange multipliers $\lambda$ and $\mu$.  This is a crucial step in establishing the duality relationship between the primal and dual problems.  The notation $\overline{f_0(x)}$ likely represents the optimal value of the objective function subject to the constraints.  The slide is part of a larger presentation on duality and optimization techniques in linear programming.

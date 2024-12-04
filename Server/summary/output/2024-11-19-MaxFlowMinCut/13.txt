@@ -1,0 +1,5 @@
+Slide 13
+
+The slide continues the discussion of the Ford-Fulkerson algorithm for finding the maximum flow in a network.  It presents a visual representation of the algorithm's logic, focusing on the concept of augmenting paths.  The diagram shows a network with nodes and edges, and a purple circle encompassing a subset of nodes.  The notation $x_{ij} < u_{ij}$ indicates that the flow along edge $ij$ is less than its capacity.  The notation $x_{ij} > 0$ indicates that there is flow along edge $ij$.  The slide likely follows a series of slides that have introduced the concepts of maximum flow, minimum cut, and the relationship between them.  The overall goal is to illustrate the algorithm's steps in finding augmenting paths.
+
+

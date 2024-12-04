@@ -1,0 +1,30 @@
+Slide 30
+
+What if the origin is not feasible?
+
+$\text{LV} \text{ p. } 18$
+$\max \mathcal{Z} = -2x_1 - x_2$
+subject to
+$-x_1 + x_2 \le -1$
+$-x_1 - 2x_2 \le -2$
+$x_2 \le 1$
+$x_1, x_2 \ge 0$
+$x_2 = 1 \implies -x_1 - 2(1) \le -2 \implies -x_1 \le 0 \implies x_1 \ge 0$
+$-x_1 + x_2 = -1 \implies -x_1 + 1 = -1 \implies -x_1 = -2 \implies x_1 = 2$
+
+\begin{tikzpicture}
+\draw[->] (-1,0) -- (5,0) node[right] {$x_1$};
+\draw[->] (0,-1) -- (0,3) node[above] {$x_2$};
+\draw[blue] (0,0) -- (0,1);
+\draw[blue] (0,0) -- (1,0);
+\draw[blue] (0,1) -- (4,0);
+\draw[blue] (0,0) -- (2,-1);
+\draw[fill=orange!30] (2,-1) -- (4,0) -- (4,1) -- (2,1) -- cycle;
+\draw[fill=red] (0,0) circle (2pt) node[below left] {(0,0)};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide explores a linear programming problem where the origin (0,0) is not a feasible solution.  The problem is to maximize $\mathcal{Z} = -2x_1 - x_2$ subject to several constraints.  The graph visually demonstrates that the origin (0,0) lies outside the feasible region, which is the shaded area.  The constraints are shown as lines on the graph, and the feasible region is the area enclosed by these lines and the non-negativity constraints ($x_1 \ge 0$, $x_2 \ge 0$).  The context suggests this is a demonstration of how to identify and work with a linear programming problem where the initial guess (origin) is not a feasible solution, which is a common scenario in the Simplex method.
+
+

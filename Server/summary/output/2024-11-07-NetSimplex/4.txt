@@ -1,0 +1,22 @@
+Slide 4
+
+\textbf{Network Simplex Method (Primal and Dual)}
+
+\textit{Network} (N, A)
+
+\textit{Spanning Tree} $T = (N, \tilde{A})$, connected, acyclic
+
+(Very easy to find a spanning tree: [V] p. 253 Ex 14.4F)
+
+(3) $T + one \ arc \implies$ there is a cycle
+
+$T - one \ arc \implies$ tree becomes disconnected
+
+(Bertsmas-Tsitsikis : Intro. Lin. Opt. p. 279)
+
+\textit{The network simplex algorithm is widely used in practice, and is included in many commercial optimization codes, due to its simplicity and efficiency. In particular, it tends to run an order of magnitude faster than a general purpose simplex code applied to a network flow problem.}
+
+
+\textbf{Description:}
+
+This slide continues the discussion of the Network Simplex Method, focusing on the properties of spanning trees.  It describes how adding or removing an edge from the spanning tree affects the tree's structure.  Adding an edge creates a cycle, while removing an edge disconnects the tree.  This is a key concept in the algorithm, as it describes how the algorithm modifies the spanning tree to find the optimal solution.  The reference "(Bertsmas-Tsitsikis : Intro. Lin. Opt. p. 279)" indicates that further details and examples are available in a textbook or other resource.  The final paragraph provides a practical justification for the use of the network simplex method, highlighting its efficiency compared to general-purpose simplex methods when applied to network flow problems.

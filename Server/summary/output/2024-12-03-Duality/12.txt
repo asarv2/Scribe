@@ -1,0 +1,37 @@
+Slide 12
+
+\textbf{Sensitivity Analysis (what if $c$, $b$ change)}
+
+\vspace{0.5cm}
+
+$(P) \quad \text{max} \quad \mathcal{S} = c^T x$
+\vspace{0.5cm}
+s.t. $\quad Ax \le b$
+\vspace{0.5cm}
+$\quad x \ge 0$
+
+\vspace{0.5cm}
+
+$(D) \quad \text{min} \quad \mathcal{S} = b^T y$
+\vspace{0.5cm}
+s.t. $\quad A^T y \ge c$
+\vspace{0.5cm}
+$\quad y \ge 0$
+
+\vspace{0.5cm}
+
+$\mathcal{S}(x_B, x_N) = c_B^T \bar{x}_B - (c_N^T - (\bar{B}^T \bar{N})^T c_B) x_N$
+
+$\bar{x}_B = \bar{B}^{-1} b - (\bar{B}^{-1} \bar{N}) x_N$
+
+$\bar{x}_B = \bar{B}^{-1} b$
+
+$(\bar{B}^T \bar{N})^T c_N - c_N \ge 0$
+
+$\mathcal{S} = c^T x^*$
+
+at opt.
+
+\textbf{Description:}
+
+This slide continues the discussion of sensitivity analysis in linear programming.  It presents formulas for calculating changes in the optimal solution value ($\mathcal{S}$) of the primal problem (P) when the objective function coefficients ($c$) or the constraint values ($b$) change.  The formulas involve the basis matrix ($\bar{B}$), non-basic variables ($x_N$), and optimal solution values ($x^*$).  The notation indicates that these calculations are performed at the optimal solution.  The slide is likely part of a linear programming lecture, where the presenter is explaining how to perform sensitivity analysis to determine the impact of parameter changes on the optimal solution.  The formulas are crucial for determining the range of parameter changes that will not affect the optimality of the solution.

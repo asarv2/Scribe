@@ -1,0 +1,644 @@
+Slide 1
+
+\textbf{Economic Interpretation of Network Simplex}
+\newline
+\textit{[C] p. 297.}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, fill=white, inner sep=1pt]
+\node (n1) at (0,0) {};
+\node (n2) at (2,2) {};
+\node (n3) at (4,0) {};
+\node (n4) at (6,2) {};
+\node (n5) at (4,-2) {};
+\node (n6) at (8,0) {};
+
+\draw (n1) -- (n2) node[midway, below] {$b_i$};
+\draw (n1) -- (n5) ;
+\draw (n2) -- (n5) node[midway, left] {$c_{ij}$};
+\draw (n2) -- (n4) ;
+\draw (n3) -- (n5) node[midway, right] {$j b_j$};
+\draw (n3) -- (n4) ;
+\draw (n4) -- (n6) ;
+\draw (n5) -- (n3) ;
+\draw (n5) -- (n1) ;
+\draw (n5) -- (n2) ;
+\draw (n5) -- (n3) ;
+\draw (n5) -- (n4) ;
+\draw (n5) -- (n6) ;
+\draw (n1) -- (n3) ;
+\draw (n2) -- (n3) ;
+\draw (n2) -- (n6) ;
+\draw (n3) -- (n6) ;
+\draw (n4) -- (n5) ;
+\draw (n6) -- (n4) ;
+\draw (n6) -- (n5) ;
+\draw (n1) -- (n5) ;
+\draw (n2) -- (n5) ;
+\draw (n3) -- (n5) ;
+\draw (n4) -- (n5) ;
+\draw (n6) -- (n5) ;
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This is a slide from a Linear Programming lecture, specifically focusing on the "Economic Interpretation of Network Simplex." The slide displays a network diagram, likely representing a transportation or flow problem.  Nodes (circles) represent points in the network, and lines (edges) represent connections between them.  The labels $b_i$, $c_{ij}$, and $j b_j$ are associated with the edges, indicating costs or capacities.  The $b_i$ values are likely supply or demand at each node, while $c_{ij}$ represents the cost of moving a unit of flow along the edge connecting node $i$ and $j$. The $j b_j$ values are likely associated with the flow constraints. The diagram is a visual representation of the problem's constraints and costs, which are crucial for solving the linear programming problem using the network simplex method. The title and the notation ([C] p. 297) suggest this is a reference to a specific textbook or lecture notes.
+
+
+Slide 2
+
+\textbf{Economic Interpretation of Network Simplex}
+\newline
+\textit{(?) }
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, fill=white, inner sep=1pt]
+\node (n1) at (0,0) {};
+\node (n2) at (2,2) {};
+\node (n3) at (4,0) {};
+\node (n4) at (6,2) {};
+\node (n5) at (4,-2) {};
+
+\draw[red!50!white, thick] (n1) -- (n2) node[midway, below] {$b_i$};
+\draw[red!50!white, thick] (n1) -- (n5) ;
+\draw[thick] (n2) -- (n5) node[midway, left] {$c_{ij}$};
+\draw[thick] (n2) -- (n4) ;
+\draw[thick] (n3) -- (n5) node[midway, right] {$j b_j$};
+\draw[thick] (n3) -- (n4) ;
+\draw[thick] (n4) -- (n5) ;
+\draw[thick] (n1) -- (n3) ;
+\draw[thick] (n2) -- (n3) ;
+\draw[thick] (n2) -- (n5) ;
+\draw[thick] (n3) -- (n5) ;
+\draw[thick] (n4) -- (n5) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n2) ;
+
+Slide 3
+
+\textbf{Economic Interpretation of Network Simplex}
+\newline
+\textit{(?) }
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, fill=white, inner sep=1pt]
+\node (n1) at (0,0) {};
+\node (n2) at (2,2) {};
+\node (n3) at (4,0) {};
+\node (n4) at (6,2) {};
+\node (n5) at (4,-2) {};
+
+\draw[red!50!white, thick] (n1) -- (n2) node[midway, below] {$b_i$};
+\draw[red!50!white, thick] (n1) -- (n5) ;
+\draw[thick] (n2) -- (n5) node[midway, left] {$c_{ij}$};
+\draw[thick] (n2) -- (n4) ;
+\draw[thick] (n3) -- (n5) node[midway, right] {$j b_j$};
+\draw[thick] (n3) -- (n4) ;
+\draw[thick] (n4) -- (n5) ;
+\draw[thick] (n1) -- (n3) ;
+\draw[thick] (n2) -- (n3) ;
+\draw[thick] (n2) -- (n5) ;
+\draw[thick] (n3) -- (n5) ;
+\draw[thick] (n4) -- (n5) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\end{tikzpicture}
+\newline
+Start a feasible Solution on a Spanning tree
+
+\textbf{Description:}
+
+This slide continues the discussion on the "Economic Interpretation of Network Simplex" from previous slides.  It shows a network diagram, similar to Slide 1 and 2, but with a slightly different configuration of nodes and edges.  The labels $b_i$, $c_{ij}$, and $j b_j$ are still present, indicating costs or capacities associated with the edges.  The key addition is the text "Start a feasible Solution on a Spanning tree". This suggests that the method for solving the network flow problem will begin by finding a feasible solution (a solution that satisfies all constraints) on a spanning tree of the network.  A spanning tree is a subset of the edges that connects all nodes in the network without forming any cycles.  This is a crucial step in the network simplex algorithm, as it provides a starting point for the iterative improvement process. The question mark in the title suggests that this is a step in a larger algorithm or a specific problem instance.
+
+
+Slide 4
+
+\textbf{Three Steps of Simplex}
+
+\begin{enumerate}
+    \item In the first part of the iteration, we imagine that the current feasible tree solution has been adopted by a transportation company. Because of the shipping costs, the market price of the commodity will vary with location: for example, oranges cost more in Alaska than they do in Florida. If the unit price is $y_i$ at a node $i$ and if the company ships the commodity along an arc $ij$, then it is fair to expect a unit price of $y_i + c_{ij}$ at the node $j$: a lower price would make shipping along the arc $ij$ wasteful, whereas a higher price would allow competitors to undersell the company at $j$ and still make a profit for themselves. Our first task is to determine a set of "fair prices" $y_1, y_2, \dots, y_n$ such that
+    $$y_i + c_{ij} = y_j$$
+    for each $ij \in T$.
+\end{enumerate}
+
+\textbf{Description:}
+
+This slide details the first step of a three-step simplex algorithm, likely for a network flow problem.  It explains the economic rationale behind the algorithm.  The algorithm assumes a transportation company has a current feasible solution (a spanning tree).  The prices $y_i$ represent the "fair" market prices at each node $i$ in the network.  The key idea is that if the company ships a commodity along an arc $ij$, the price at node $j$ should be the price at node $i$ plus the cost of shipping along that arc ($c_{ij}$).  This step is crucial for determining the next iteration of the algorithm, as it helps identify potential improvements in the solution. The notation $T$ likely refers to the set of arcs in the spanning tree. The example of oranges in Alaska and Florida illustrates the concept of varying market prices based on location.  The overall goal is to find a set of prices that are consistent with the shipping costs and allow the company to maintain profitability.
+
+
+Slide 5
+
+\textbf{Three Steps of Simplex}
+
+\begin{enumerate}
+    \setcounter{enumi}{1}
+    \item In the second step of each iteration, we put ourselves in the role of a competitor: would it pay to buy the commodity at some node $i$, ship it along an arc $ij$ and sell at the node $j$? In our example, the answer is affirmative for several different arcs $ij$. For instance, we could buy at the node 2 for $y_2 = 23$ and ship along the arc 25 for $c_{25} = 37$: the total expense of $y_2 + c_{25} = 60$ compares favorably with the selling price of $y_5 = 62$. In general, this second step consists of choosing an arc $ij$ such that
+    $$y_i + c_{ij} < y_j$$
+\end{enumerate}
+
+\textbf{Description:}
+
+This slide continues the description of the three-step simplex algorithm for a network flow problem.  It details the second step, focusing on the economic decision of whether a competitor would find it profitable to buy at one node, ship along an arc, and sell at another node.  The key idea is to find an arc $ij$ where the cost of buying and shipping ($y_i + c_{ij}$) is less than the selling price at the destination node ($y_j$).  This step identifies potential improvements in the solution by finding arcs where a competitor could undercut the transportation company's current prices.  The example given (buying at node 2, shipping along arc 25, and selling at node 5) illustrates this concept.  The goal is to find such an arc to potentially improve the solution in the next iteration.
+
+
+Slide 6
+
+\textbf{Three Steps of Simplex}
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item In the third step of each iteration, we imagine that the first company has found out about its competitor's plan and hastens to use the information to its own advantage. It will now ship $t$ units through the entering arc and keep ignoring other out-of-tree arcs; the shipments along the arcs of $T$ will have to be adjusted so as to maintain feasibility of the resulting schedule. The adjustments, easy to work out, are shown in
+    $$\sum_{ij} \tilde{z}_{ij} = 0, \quad i.e. \quad \tilde{y}_j - \tilde{y}_i = c_{ij}$$
+\end{enumerate}
+
+\textbf{Description:}
+
+This slide concludes the description of the three-step simplex algorithm for a network flow problem.  It details the third step, where the first company, having learned about the competitor's strategy, adjusts its own shipments to maintain feasibility.  The company now considers the entering arc and adjusts the shipments along the arcs of the spanning tree ($T$) to maintain the overall feasibility of the solution.  The adjustments are straightforward and involve maintaining the balance of flow through the network. The notation $\tilde{z}_{ij}$ likely represents the adjusted flow along arc $ij$, and $\tilde{y}_i$ represents the adjusted price at node $i$. The overall goal is to iteratively improve the solution until an optimal solution is found.

@@ -1,0 +1,31 @@
+Slide 20
+
+$\text{LV} \text{ p. } 11$
+Set $x_1 = x_2 = x_3 = 0$
+$\max \mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+subject to
+$2x_1 + 3x_2 + x_3 \le 5$
+$4x_1 + x_2 + 2x_3 \le 11$
+$3x_1 + 4x_2 + 2x_3 \le 8$
+$x_1, x_2, x_3 \ge 0$
+
+$\omega_1 = 5 - 2x_1 - 3x_2 - x_3$
+$\omega_2 = 11 - 4x_1 - x_2 - 2x_3$
+$\omega_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+Increase $x_1$, keeping $x_2 = x_3 = 0$
+$\omega_1 \ge 0 \implies 5 - 2x_1 \ge 0 \implies x_1 \le \frac{5}{2} = 2.5$
+$\omega_2 \ge 0 \implies 11 - 4x_1 \ge 0 \implies x_1 \le \frac{11}{4} = 2.75$
+$\omega_3 \ge 0 \implies 8 - 3x_1 \ge 0 \implies x_1 \le \frac{8}{3} = 2.67$
+
+$x_1 \le 2.5$ is the most strict
+Set $x_1 = 2.5$, $x_2 = x_3 = 0$
+$\mathcal{Z} = 5(2.5) + 4(0) + 3(0) = 12.5$
+$x_1 = 2.5$, $w_1 = 0$, $w_2 = 11 - 4(2.5) = 11 - 10 = 1$, $w_3 = 8 - 3(2.5) = 8 - 7.5 = 0.5$
+
+\textbf{Description:}
+
+This slide continues the process of finding the initial solution for a three-variable linear programming problem using the Simplex method.  It determines the maximum possible value for $x_1$ while holding $x_2$ and $x_3$ at zero, based on the constraints.  The calculations show how the constraints limit the possible values of $x_1$.  The most restrictive constraint is identified, and a new solution point is calculated with $x_1 = 2.5$, $x_2 = 0$, $x_3 = 0$.  The corresponding objective function value ($\mathcal{Z}$) and the values of the slack variables ($\omega_1$, $\omega_2$, $\omega_3$) are also calculated.  The context suggests this is a step-by-step demonstration of the Simplex method's iterative process, preparing for the next pivot operation.
+
+

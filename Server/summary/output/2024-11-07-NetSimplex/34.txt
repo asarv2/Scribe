@@ -1,0 +1,14 @@
+Slide 34
+
+\textbf{Dual Network Simplex}
+
+\textit{FIGURE 14.14. The two subtrees for the first pivot of the dual simplex method.}
+
+
+\textbf{Description:}
+
+This slide presents a graphical representation of a network flow problem, illustrating two subtrees ($\mathcal{I}$ and $\mathcal{II}$) resulting from a dual pivot step in the Dual Network Simplex Method.  The diagram shows a network with nodes and edges, where the edges are labeled with costs or capacities.  The edges are colored differently to distinguish the two subtrees.  This slide likely serves as a visual aid to illustrate the state of the network after a dual pivot step, highlighting the separation of the network into two distinct subtrees.  The algorithm would use these subtrees to update the dual variables and primal flows.
+
+
+
+

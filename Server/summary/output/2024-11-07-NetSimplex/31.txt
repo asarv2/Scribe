@@ -1,0 +1,78 @@
+Slide 30
+
+\textbf{Primal Network Simplex}
+
+\textit{2nd Step}
+
+\begin{tikzpicture}[scale=0.7]
+% Nodes
+\node[circle, draw, fill=white] (a) at (2, 6) {a};
+\node[circle, draw, fill=white] (b) at (6, 4) {b};
+\node[circle, draw, fill=white] (c) at (3, 3) {c};
+\node[circle, draw, fill=white] (d) at (5, 5) {d};
+\node[circle, draw, fill=white] (e) at (8, 6) {e};
+\node[circle, draw, fill=white] (f) at (2, 2) {f};
+\node[circle, draw, fill=white] (g) at (7, 2) {g};
+
+% Edges with labels
+\draw[->, red] (a) to node[above, sloped, pos=0.5] {40} (d);
+\draw[->, red] (a) to node[above, sloped, pos=0.5] {6} (d);
+\draw[->, red] (a) to node[above, sloped, pos=0.5] {6} (c);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {3} (c);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {3} (g);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {88} (f);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {3} (d);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {73} (b);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {21} (b);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {69} (c);
+\draw[->, red] (e) to node[above, sloped, pos=0.5] {19} (g);
+\draw[->, red] (e) to node[above, sloped, pos=0.5] {21} (d);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {-6} (g);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {-5} (c);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {9} (g);
+\draw[->, red] (g) to node[above, sloped, pos=0.5] {0} (b);
+\draw[->, red] (g) to node[above, sloped, pos=0.5] {2} (e);
+\draw[->, yellow!60!black] (a) to node[above, sloped, pos=0.5] {-9} (c);
+\draw[->, yellow!60!black] (a) to node[above, sloped, pos=0.5] {-1} (d);
+\draw[->, yellow!60!black] (c) to node[above, sloped, pos=0.5] {-5} (f);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {33} (d);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {10} (b);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {3} (b);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {8} (c);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {18} (g);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {3} (d);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {35} (d);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {3} (g);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {10} (b);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {3} (d);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {35} (d);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {3} (g);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {98} (f);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {3} (d);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {74} (b);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {21} (b);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {83} (b);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {69} (c);
+\draw[->, red] (e) to node[above, sloped, pos=0.5] {19} (g);
+\draw[->, red] (e) to node[above, sloped, pos=0.5] {21} (d);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {-6} (g);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {-5} (c);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {9} (g);
+\draw[->, red] (g) to node[above, sloped, pos=0.5] {0} (b);
+\draw[->, red] (g) to node[above, sloped, pos=0.5] {2} (e);
+\draw[->, yellow!60!black] (a) to node[above, sloped, pos=0.5] {-9} (c);
+\draw[->, yellow!60!black] (a) to node[above, sloped, pos=0.5] {-1} (d);
+\draw[->, yellow!60!black] (c) to node[above, sloped, pos=0.5] {-5} (f);
+
+\end{tikzpicture}
+
+
+\textbf{Description:}
+
+This slide presents a graphical representation of a network flow problem, illustrating the state of the network after the second step of the Network Simplex Method.  The diagram shows the updated primal flow values on the edges of the network.  The red edges represent the spanning tree, and the yellow edges represent edges not in the spanning tree.  The numbers on the edges now reflect the updated primal flow values.  This slide likely serves as a visual representation of the network after the second iteration of the algorithm, showing the changes in the primal flow values.  The algorithm has performed a pivot step, and the values are updated accordingly.  The numbers on the edges are now different from the previous slide, reflecting the changes in the flow values.  The diagram also shows the entering and leaving arcs for the second step.
+
+
+
+
+
+

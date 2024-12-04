@@ -1,0 +1,16 @@
+Slide 13
+
+\textbf{Primal Network Simplex}
+
+\textit{After}
+
+$\tilde{x}_{ab} \ge 0$, $\tilde{z}_{ab} = 0$
+
+$\tilde{x}_{cd} = 0$, $\tilde{z}_{cd} < 0$
+
+$\tilde{y}_r > 0$
+
+
+\textbf{Description:}
+
+This slide shows a graphical representation of a network flow problem, illustrating the state of the network "after" a primal pivot step in the Network Simplex Method.  The diagram shows two interconnected cycles, representing two disconnected trees.  The labels $\tilde{x}_{ab}$, $\tilde{z}_{ab}$, $\tilde{x}_{cd}$, and $\tilde{z}_{cd}$ represent primal and dual variables associated with the edges connecting nodes a and b, and c and d, respectively.  The variable $\tilde{y}_r$ likely represents a dual variable associated with a root node.  The "After" state shows that the flow on edge ab is now positive, and the dual variable $z_{ab}$ is zero.  The flow on edge cd is zero, and the dual variable $z_{cd}$ is negative.  The change in $\tilde{y}_r$ indicates a change in the dual variables, reflecting the adjustment in the primal flow.  This slide likely illustrates the transition from one suboptimal solution to another during the iterative optimization process.  The notation with the tilde (~) above the variables likely indicates that these are updated values after the pivot step.

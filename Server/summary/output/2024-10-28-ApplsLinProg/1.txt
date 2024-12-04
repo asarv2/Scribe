@@ -1,0 +1,49 @@
+Slide 1
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16} \hspace{1cm} 2.3 Ice Cream All Year Round
+
+\newline
+The next application of linear programming again concerns food (which should not be surprising, given the importance of food in life and the difficulties in optimizing sleep or love). The ice cream manufacturer Icicle Works Ltd. needs to set up a production plan for the next year. Based on historical extensive surveys, and bird observations, the marketing department has come up with the following prediction of monthly sales of ice cream in the next year:
+
+\newline
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    ymin=0, ymax=750,
+    ylabel={sales [tons]},
+    xlabel={Months},
+    symbolic x coords={Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec},
+    xtick=data,
+    bar width=10pt,
+    enlarge x limits=0.15,
+    legend style={at={(0.5,-0.2)},
+    anchor=north,legend columns=-1},
+    ]
+\addplot coordinates {
+(Jan,350)
+(Feb,350)
+(Mar,450)
+(Apr,650)
+(May,600)
+(Jun,600)
+(Jul,500)
+(Aug,250)
+(Sep,450)
+(Oct,350)
+(Nov,650)
+(Dec,550)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\newline
+Monthly Demands $d_i$, $i=1,\dots,12$
+
+
+\textbf{Description:}
+
+This is the first slide of a 37-slide presentation on Linear Programming.  It introduces a case study involving Icicle Works Ltd., an ice cream manufacturer, needing to create a production plan for the upcoming year.  The slide presents a bar graph illustrating the predicted monthly sales (in tons) of ice cream for the year, from January to December.  The $d_i$ notation indicates the monthly demands.  The handwritten notes clearly outline the problem context and the data used for the production planning.  The slide number and page number are also included.

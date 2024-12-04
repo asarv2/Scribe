@@ -1,0 +1,23 @@
+Slide 12
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Upper Bounded Transshipment Problem [IV]}
+\textbf{[C] p. 263}
+
+$AX = b$, $0 \le X \le U$
+
+\begin{itemize}
+    \item at $i$: $\cdots - x_{ij} \cdots = -b_i$
+    \item at $j$: $\cdots + x_{ij} \cdots = -b_j - u_{ij}$
+    \item $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$)
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide continues the discussion of the "Upper Bounded Transshipment Problem [IV]".  It's a variation of a network flow problem, likely a linear programming problem.  The equation $AX = b$ represents the flow constraints in the network.  The inequality $0 \le X \le U$ introduces upper bounds on the flow variables ($\bar{x}_{ij}$).  The slide now explicitly shows the constraints at each node ($i$ and $j$).  The constraints at node $i$ are represented as $\cdots - x_{ij} \cdots = -b_i$, and at node $j$ as $\cdots + x_{ij} \cdots = -b_j - u_{ij}$.  These equations likely represent the conservation of flow at each node, ensuring that the total flow into and out of a node is balanced.  The new constraint $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$) introduces a slack variable $h_{ij}$ to account for the upper bound.  This is a crucial constraint in the problem, limiting the maximum amount of flow that can pass through a particular edge or arc in the network.  The context suggests that the lecture is discussing variations of network flow problems, where the flow values are not only constrained by supply and demand but also by upper bounds.  The notation suggests a more abstract and mathematical treatment of the problem, potentially for use in algorithms or more complex network models.  The arrows and notation indicate the direction of flow and the constraints on the flow variables.  The addition of the term $-u_{ij}$ in the constraint at node $j$ is a key difference from the previous slide, reflecting the upper bound on the flow.

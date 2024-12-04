@@ -1,0 +1,21 @@
+Slide 16
+
+4. Consider the following linear programming problem:
+
+maximize $\quad x_1 + 2x_2$
+
+subject to $\quad x_1 + x_2 \le 5$
+$\quad x_1 \le 4$
+$\quad x_2 \le 3$
+$\quad x_1, x_2 \ge 0$
+
+(a) Solve the above problem and give also the dictionary at the optimal point.
+
+(b) Suppose the constraint $x_1 + x_2 \le 5$ is changed to $x_1 + x_2 \le p$. Find the range of $p$ such that the dictionary you have found in (a) remains optimal.
+
+(c) Suppose the objective function $x_1 + 2x_2$ is changed to $x_1 + qx_2$. Find the range of $q$ such that the dictionary you have found in (a) remains optimal.
+
+
+\textbf{Description:}
+
+This slide presents a linear programming problem and asks for the range of parameter changes that will keep the optimal solution the same.  Part (a) asks for the solution to the original problem, which is a standard linear programming problem.  Part (b) asks for the range of values for $p$ in the constraint $x_1 + x_2 \le p$ such that the optimal solution found in part (a) remains optimal.  Part (c) asks for the range of values for $q$ in the objective function $x_1 + qx_2$ such that the optimal solution found in part (a) remains optimal.  This slide is part of a linear programming lecture, demonstrating how to perform sensitivity analysis to determine the range of parameter changes that do not affect the optimal solution.  The problem is designed to illustrate the concepts of sensitivity analysis in linear programming.

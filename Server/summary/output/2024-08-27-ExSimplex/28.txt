@@ -1,0 +1,39 @@
+Slide 27
+
+Concept of a Dictionary of Variables
+
+Initially: ($x_1, x_2, ..., x_n$, $w_1, w_2, ..., w_m$)
+$n$ non-basic vars, $m$ basic variables
+
+($x_1, x_2, ..., x_n$, $x_{n+1}, x_{n+2}, ..., x_{n+m}$)
+
+$\begin{pmatrix}
+x_{n+1} \\
+x_{n+2} \\
+... \\
+x_{n+m}
+\end{pmatrix} = \begin{pmatrix}
+b_1 \\
+b_2 \\
+... \\
+b_m
+\end{pmatrix} - \begin{pmatrix}
+a_{11} & a_{12} & ... & a_{1n} \\
+a_{21} & a_{22} & ... & a_{2n} \\
+... & ... & ... & ... \\
+a_{m1} & a_{m2} & ... & a_{mn}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+... \\
+x_n
+\end{pmatrix}$
+
+$\mathcal{Z} = c_0 + c_1x_1 + c_2x_2 + ... + c_nx_n$
+
+Interchange one basic and one non-basic variable.
+
+\textbf{Description:}
+
+This slide introduces the concept of a dictionary in linear programming, specifically within the context of the Simplex method.  It shows how variables are organized into basic and non-basic sets.  The notation suggests a general linear programming problem with $n$ original variables ($x_1, ..., x_n$) and $m$ constraints.  The dictionary structure is presented as a system of equations, where basic variables are expressed in terms of non-basic variables.  The coefficients ($a_{ij}$) represent the relationships between the variables in the constraints.  The $c_i$ values are coefficients of the objective function.  The context suggests this is a foundational concept for understanding the Simplex method's iterative process, where the dictionary is updated in each iteration to move towards the optimal solution.  The addition of "Interchange one basic and one non-basic variable" highlights the pivot operation that is central to the Simplex method.

@@ -1,0 +1,47 @@
+Slide 5
+
+\begin{center}
+\textbf{Primal Network Simplex}
+\end{center}
+
+\begin{tikzpicture}[scale=0.7]
+% Nodes
+\node[circle, draw, fill=white] (a) at (2, 6) {a};
+\node[circle, draw, fill=white] (b) at (6, 4) {b};
+\node[circle, draw, fill=white] (c) at (3, 3) {c};
+\node[circle, draw, fill=white] (d) at (5, 5) {d};
+\node[circle, draw, fill=white] (e) at (8, 6) {e};
+\node[circle, draw, fill=white] (f) at (2, 2) {f};
+\node[circle, draw, fill=white] (g) at (7, 2) {g};
+
+% Edges with labels
+\draw[->, red] (a) to node[above, sloped, pos=0.5] {6} (d);
+\draw[->, red] (a) to node[above, sloped, pos=0.5] {32} (d);
+\draw[->, red] (a) to node[above, sloped, pos=0.5] {41} (b);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {33} (d);
+\draw[->, red] (b) to node[above, sloped, pos=0.5] {3} (g);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {6} (b);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {98} (f);
+\draw[->, red] (c) to node[above, sloped, pos=0.5] {3} (d);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {65} (e);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {69} (c);
+\draw[->, red] (d) to node[above, sloped, pos=0.5] {74} (b);
+\draw[->, red] (e) to node[above, sloped, pos=0.5] {19} (g);
+\draw[->, red] (e) to node[above, sloped, pos=0.5] {21} (d);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {-5} (c);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {-15} (c);
+\draw[->, red] (f) to node[above, sloped, pos=0.5] {9} (g);
+\draw[->, red] (g) to node[above, sloped, pos=0.5] {0} (b);
+\draw[->, red] (g) to node[above, sloped, pos=0.5] {2} (e);
+\draw[->, yellow!60!black] (a) to node[above, sloped, pos=0.5] {-9} (c);
+\draw[->, yellow!60!black] (a) to node[above, sloped, pos=0.5] {-1} (d);
+\draw[->, yellow!60!black] (c) to node[above, sloped, pos=0.5] {-5} (f);
+
+\end{tikzpicture}
+
+\textit{Not Optimal as some $z_{ij} < 0$}
+
+
+\textbf{Description:}
+
+This slide presents a graphical representation of a network flow problem, likely part of a linear programming example.  The nodes (circles) represent points in the network, and the directed edges (lines with arrows) represent possible flows between nodes.  The numbers on the edges represent the costs or capacities associated with those flows.  The diagram shows a network with nodes labeled a, b, c, d, e, f, and g.  The red lines represent a spanning tree, and the yellow lines represent edges not in the spanning tree.  The labels on the edges indicate the cost of the flow along that edge.  The text "Not Optimal as some $z_{ij} < 0$" indicates that the current solution is not optimal because some of the dual variables $z_{ij}$ are negative. This suggests that the algorithm is in a process of finding an optimal solution by iteratively adjusting the flow along the edges.

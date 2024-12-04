@@ -1,0 +1,28 @@
+Slide 11
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Lagrangian Formulation of SVM}
+
+\begin{equation*}
+\min_{\alpha} \frac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j x_i^T x_j - \sum_{i=1}^N \alpha_i
+\end{equation*}
+
+s.t.
+\begin{equation*}
+\sum_{i=1}^N \alpha_i y_i = 0
+\end{equation*}
+\begin{equation*}
+0 \le \alpha_i \le C, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the Lagrangian formulation of the Support Vector Machine (SVM) problem.  It shows the objective function for minimizing a quadratic form involving the Lagrange multipliers ($\alpha_i$) and the data points ($x_i$).  The constraints ensure that the sum of the Lagrange multipliers weighted by the target values ($y_i$) is zero, and that the Lagrange multipliers are bounded between 0 and C.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to derive the dual form of the SVM optimization problem.  The slide number (11 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs and their geometric interpretation.  The Lagrangian formulation is a crucial step in solving the SVM problem using quadratic programming techniques.  The parameter C is a regularization parameter that controls the trade-off between maximizing the margin and minimizing the classification error.

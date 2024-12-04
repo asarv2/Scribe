@@ -1,0 +1,30 @@
+Slide 17
+
+\textbf{Spanning Trees and Bases}
+
+$\tilde{A} = [B \quad N]$, $X = \begin{bmatrix} X_B \\ X_N \end{bmatrix}$, $\tilde{A} X = - \tilde{b}$
+
+$[B \quad N] \begin{bmatrix} X_B \\ X_N \end{bmatrix} = - \tilde{b}$
+
+$B X_B + N X_N = - \tilde{b}$
+
+$X_B = -B^{-1} N X_N - B^{-1} \tilde{b}$
+
+$X_B = 0$ if $(i,j) \in T$
+
+$X_{ij} \neq 0$ if $(i,j) \notin T$
+
+
+\textbf{Description:}
+
+This slide continues the discussion on network flow problems within the context of linear programming. It presents a more detailed algebraic representation of the relationship between the spanning tree and the flow variables.
+
+* **Matrix Representation:** The slide introduces the notation $\tilde{A} = [B \quad N]$, where $B$ represents the basis matrix and $N$ represents the non-basic matrix.  The vector $X$ is partitioned into $X_B$ (basic variables) and $X_N$ (non-basic variables).  The equation $\tilde{A} X = - \tilde{b}$ represents the flow balance constraints after removing the root node.
+* **Flow Balance Equation:** The equation $B X_B + N X_N = - \tilde{b}$ explicitly shows the relationship between the basic variables ($X_B$) and the non-basic variables ($X_N$).
+* **Solution for Basic Variables:** The equation $X_B = -B^{-1} N X_N - B^{-1} \tilde{b}$ provides a way to express the basic variables in terms of the non-basic variables and the supply/demand vector.
+* **Flow on Arcs in Spanning Tree:** The condition $X_B = 0$ if $(i,j) \in T$ states that the flow along arcs in the spanning tree ($T$) is zero.  This is a crucial property of the tree solution.
+* **Flow on Arcs Outside Spanning Tree:** The condition $X_{ij} \neq 0$ if $(i,j) \notin T$ states that the flow along arcs not in the spanning tree is non-zero.
+
+The slide likely connects these algebraic expressions to the graphical representation of the network and the spanning tree, providing a more rigorous mathematical framework for understanding the structure of feasible solutions in network flow problems.
+
+

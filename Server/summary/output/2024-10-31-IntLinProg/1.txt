@@ -1,0 +1,17 @@
+Slide 1
+
+\textbf{Integer Programming}
+
+\begin{equation*}
+\max \ \vec{c}^T \vec{x}
+\end{equation*}
+\begin{equation*}
+\text{s.t.} \quad A\vec{x} \le \vec{b}
+\end{equation*}
+\begin{equation*}
+\vec{x} \ge \vec{0}, \quad x_j \in \mathbb{Z}
+\end{equation*}
+
+\textbf{Description:}
+
+This slide introduces the formulation of an Integer Programming problem.  It shows the objective function to be maximized ($\max \ \vec{c}^T \vec{x}$) and the constraints ($A\vec{x} \le \vec{b}$, $\vec{x} \ge \vec{0}$). Crucially, it specifies that the variables $x_j$ must be integers ($\in \mathbb{Z}$). This is the key difference between a standard linear program and an integer program.  The slide is likely the first in a series of slides explaining integer programming, as it only presents the basic formulation.  The notation used is standard linear programming notation, with $\vec{x}$ representing a vector of variables, $\vec{c}$ representing a vector of coefficients for the objective function, $A$ representing a matrix of coefficients for the constraints, and $\vec{b}$ representing a vector of constraint values.  The red underlines likely indicate emphasis or a separation of different parts of the problem.

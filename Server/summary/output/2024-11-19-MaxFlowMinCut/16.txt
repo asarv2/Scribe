@@ -1,0 +1,16 @@
+Slide 16
+
+\textbf{Proof of Max Flow = Min Cut (LP)}
+
+\textbf{FIGURE 15.4.} Adding a new node, $k$, to accommodate an arc $(i, j)$ having an upper bound $u_{ij}$ on its flow capacity.
+
+\begin{itemize}
+    \item $0 \le x_{ij} \le u_{ij}$
+    \item $x_{ij} = 0 \implies y_i + c_{ij} \ge y_j$
+    \item $x_{ij} = u_{ij} \implies y_i + c_{ij} \le y_j$
+    \item $0 < x_{ij} < u_{ij} \implies y_i + c_{ij} = y_j$
+\end{itemize}
+
+\textbf{Description:}
+
+This slide presents a step in the proof of the max-flow min-cut theorem, focusing on the linear programming formulation.  It shows a network diagram with a new node $k$ added to accommodate an arc $(i, j)$.  The key idea is to illustrate how the constraints of the LP formulation (related to flow conservation and capacity) are modified when an intermediate node is added.  The equations shown relate the flow ($x_{ij}$) along an edge to the variables ($y_i$, $y_j$, $c_{ij}$) in the LP formulation.  The constraints ensure that the flow on each edge is within its capacity limits.  The slide is part of a larger presentation on linear programming and network flow problems.  The overall goal is to demonstrate how the LP formulation can be used to prove the max-flow min-cut theorem.

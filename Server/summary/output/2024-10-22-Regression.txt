@@ -1,0 +1,571 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Regression}
+
+\textbf{Given} $x_1, x_2, ..., x_m$  $\{$ $x_i \in \mathbb{R}$\}
+
+\begin{enumerate}
+    \item
+    \begin{equation*}
+    \min_x \frac{1}{m} \sum_{i=1}^m (x-x_i)^2 \implies x = \frac{x_1 + ... + x_m}{m}
+    \end{equation*}
+    \textit{(mean)}
+    \item
+    \begin{equation*}
+    \min_x \frac{1}{m} \sum_{i=1}^m |x-x_i| \implies x = \text{median}
+    \end{equation*}
+    \item
+    \begin{equation*}
+    \min_x \left( \max_{i} |x-x_i| \right) \implies x = \frac{\min x_i + \max x_i}{2}
+    \end{equation*}
+    \textit{"mid-range"}
+\end{enumerate}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide presents different methods for regression, focusing on the minimization of different error functions.  It shows how to calculate the mean, median, and mid-range values as estimators for a central tendency.  The notation indicates that $x_1, x_2, ..., x_m$ are data points, and $x$ is the value being estimated.  The slide uses $L^2$-error, $L^1$-error, and $L^\infty$-error as the error functions.  The slide number and the use of (1), (2), and (3) suggest this is part of a larger lecture series on regression or linear programming.  The handwritten style and the use of mathematical notation indicate a lecture setting.
+
+
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Given} a  tributes $ \{a_1, a_2, ..., a_n\}, b$
+\textbf{Find} parameters $x_1, x_2, ..., x_n$ s.t.
+\begin{equation*}
+b = a_1 x_1 + a_2 x_2 + ... + a_n x_n + \varepsilon
+\end{equation*}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide introduces a linear regression problem.  It states that given a set of coefficients $\{a_1, a_2, ..., a_n\}$ and a target value $b$, the goal is to find values for $x_1, x_2, ..., x_n$ that minimize the error $\varepsilon$ in the equation $b = a_1 x_1 + a_2 x_2 + ... + a_n x_n + \varepsilon$.  The notation suggests a linear relationship between the variables.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is a linear programming problem, where the goal is to find the best-fit line (or hyperplane in higher dimensions) to a set of data points. The arrow pointing to "error" highlights the residual term, which is the difference between the observed value and the predicted value.
+
+
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Given} data points (individuals) $b_i$, $i=1,...,m$  $\{$ $a_{ij} \}$ $j=1,...,n$, $i=1,...,m$
+
+\textbf{Find} $x_1, x_2, ..., x_n$ s.t.
+\begin{equation*}
+b_i = \sum_{j=1}^n a_{ij} x_j, \quad i=1,...,m
+\end{equation*}
+\begin{equation*}
+b_i = \sum_{j=1}^n a_{ij} x_j + \varepsilon_i, \quad i=1,...,m
+\end{equation*}
+$b = AX + \varepsilon$
+
+\end{document}
+
+\textbf{Description:}
+
+This slide builds upon the previous one, refining the linear regression problem.  It introduces data points $b_i$ and coefficients $a_{ij}$, where $i$ indexes the data points and $j$ indexes the parameters.  The equation $b_i = \sum_{j=1}^n a_{ij} x_j$ represents a linear combination of the parameters $x_j$ to predict the data point $b_i$.  The addition of the error term $\varepsilon_i$ acknowledges that the prediction might not perfectly match the data.  The final equation $b = AX + \varepsilon$ summarizes the entire system of equations, where $b$ is a vector of data points, $A$ is a matrix of coefficients, $X$ is a vector of parameters, and $\varepsilon$ is a vector of errors.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is a linear programming problem, where the goal is to find the best-fit line (or hyperplane in higher dimensions) to a set of data points, considering the error term.
+
+
+Slide 4
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{L\textsuperscript{2} Regression (Least Square)}
+
+\begin{equation*}
+\min_{(x_1, \dots, x_n)} \sum_{i=1}^m \left| (b_i - \sum_{j=1}^n a_{ij} x_j) \right|^2
+\end{equation*}
+
+\begin{equation*}
+\min \left\| b - AX \right\|_2^2
+\end{equation*}
+
+$AX = b$ (might not be solvable)
+
+$A^T A \hat{X} = A^T b$ (normal equation, always solvable)
+
+$\hat{X} = (A^T A)^{-1} A^T b$ (if $(A^T A)^{-1}$ exists)
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of linear regression, specifically focusing on the least squares method.  It shows the objective function for minimizing the sum of squared errors between the observed values ($b_i$) and the predicted values ($\sum_{j=1}^n a_{ij} x_j$).  The notation introduces the matrix representation of the problem, where $b$ is a vector of observed values, $A$ is a matrix of coefficients, $X$ is a vector of parameters to be determined, and the error is represented by the difference between $b$ and $AX$.  The slide highlights the normal equation ($A^T A \hat{X} = A^T b$) as a way to solve for the optimal parameters ($\hat{X}$), which is always solvable.  The final equation shows the solution for $\hat{X}$ in terms of matrix operations, requiring the inverse of $(A^T A)$.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the best-fit line (or hyperplane) to a set of data points, considering the error term.  The slide number (4 of 22) suggests this is a later part of the lecture, building on the concepts introduced in previous slides.
+
+
+Slide 5
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{L\textsuperscript{1} Regression}
+
+\begin{equation*}
+\min_{x_1, \dots, x_n} \sum_{i=1}^m |b_i - \sum_{j=1}^n a_{ij} x_j|
+\end{equation*}
+
+\begin{equation*}
+\min_X \|b - AX\|_1
+\end{equation*}
+
+\begin{equation*}
+\min \sum_{i=1}^m \hat{\varepsilon}_i
+\end{equation*}
+
+s.t.
+\begin{equation*}
+-\hat{\varepsilon}_i \le b_i - \sum_{j=1}^n a_{ij} x_j \le \hat{\varepsilon}_i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the L\textsuperscript{1} regression problem.  It shows the objective function for minimizing the sum of absolute errors between the observed values ($b_i$) and the predicted values ($\sum_{j=1}^n a_{ij} x_j$).  The notation introduces the matrix representation of the problem, similar to the previous slide.  The slide emphasizes the use of absolute values in the error calculation, which is a key difference from the least squares method (L\textsuperscript{2}).  The constraints are introduced, showing how the absolute errors ($\hat{\varepsilon}_i$) are bounded by the difference between the observed and predicted values.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the best-fit line (or hyperplane) to a set of data points, considering the absolute error term.  The slide number (5 of 22) suggests this is a continuation of the discussion on different regression methods.  The use of $\hat{\varepsilon}_i$ suggests that these are estimated errors.
+
+
+Slide 6
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{L\textsuperscript{∞} Regression}
+
+\begin{equation*}
+\min_{x_1, \dots, x_n} \max_{i} |b_i - \sum_{j=1}^n a_{ij} x_j|
+\end{equation*}
+
+\begin{equation*}
+\min_X \|b - AX\|_\infty
+\end{equation*}
+
+\begin{equation*}
+\min \delta
+\end{equation*}
+
+s.t.
+\begin{equation*}
+-\delta \le b_i - \sum_{j=1}^n a_{ij} x_j \le \delta, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the L\textsuperscript{∞} regression problem.  It shows the objective function for minimizing the maximum absolute error between the observed values ($b_i$) and the predicted values ($\sum_{j=1}^n a_{ij} x_j$).  The notation introduces the matrix representation of the problem, similar to the previous slides.  The slide emphasizes the use of the maximum absolute error, which is a key difference from the least squares (L\textsuperscript{2}) and least absolute deviations (L\textsuperscript{1}) methods.  The constraints are introduced, showing how the maximum error ($\delta$) is bounded by the difference between the observed and predicted values for all data points.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the best-fit line (or hyperplane) to a set of data points, considering the maximum absolute error.  The slide number (6 of 22) suggests this is a continuation of the discussion on different regression methods.  The use of $\delta$ represents the maximum error allowed.
+
+
+Slide 7
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Binary Classification}
+
+\textit{Given labeled points} $(x_i, x_i')$
+
+\textit{Find} a hyperplane that separates the points.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide introduces a binary classification problem.  It states that the goal is to find a hyperplane that separates a set of data points into two categories (represented by the labels '+', and '-').  The notation $(x_i, x_i')$ indicates that each data point $x_i$ has an associated label $x_i'$.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find a decision boundary that optimally classifies data points into two categories.  The inclusion of the labeled points suggests that this is a supervised learning problem, where the labels are known for each data point.  The presence of a scatter plot of points labeled with '+' and '-' indicates the data points to be classified.  The slide number (7 of 22) suggests this is a later part of the lecture, introducing a new topic related to linear programming.
+
+
+Slide 8
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Linear Separability}
+
+\textit{Given labeled points} $(x_i, x_i')$
+
+\textit{Find} a hyperplane that separates the points.
+
+\textit{Linear Separable} if there exists a hyperplane that separates the points.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide discusses linear separability in the context of binary classification.  It states that a dataset is linearly separable if a hyperplane can be drawn to perfectly divide the data points into two categories (represented by the labels '+', and '-').  The notation $(x_i, x_i')$ indicates that each data point $x_i$ has an associated label $x_i'$.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to determine if a given dataset can be separated by a hyperplane.  The presence of a scatter plot of points labeled with '+' and '-' indicates the data points to be classified.  The slide number (8 of 22) suggests this is a later part of the lecture, building on the previous discussion of binary classification.  The concept of linear separability is crucial for determining the feasibility of using linear methods for classification.
+
+
+Slide 9
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Maximum Margin Classifier}
+
+\textit{Maximize} the minimum distance from the hyperplane to the closest data points.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide describes the maximum margin classifier.  It states that the goal is to maximize the minimum distance from the separating hyperplane to the closest data points of either class.  The diagram shows two groups of data points, one in light blue and the other in light red, separated by a black line representing the hyperplane.  The arrows indicate the distances being maximized.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the optimal hyperplane that maximizes the margin between the two classes.  The slide number (9 of 22) suggests this is a later part of the lecture, building on the previous discussion of binary classification and linear separability.  The concept of maximizing the margin is crucial for robust classification, as it increases the tolerance to noise and misclassifications.
+
+
+Slide 10
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Support Vector Machine (SVM)}
+
+\textit{Find} a hyperplane that maximizes the margin.
+
+\textit{Support Vectors} are the data points closest to the hyperplane.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide introduces the Support Vector Machine (SVM) concept.  It states that the goal is to find a hyperplane that maximizes the margin between the two classes of data points.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the optimal hyperplane that maximizes the margin between the two classes.  The slide number (10 of 22) suggests this is a later part of the lecture, building on the previous discussion of binary classification, linear separability, and the maximum margin classifier.  The concept of support vectors is crucial for understanding the SVM algorithm, as these points are the most influential in determining the hyperplane.  The diagram shows two groups of data points, one in light blue and the other in light red, separated by a black line representing the hyperplane.  The points closest to the hyperplane are highlighted as support vectors.
+
+
+Slide 11
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Lagrangian Formulation of SVM}
+
+\begin{equation*}
+\min_{\alpha} \frac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j x_i^T x_j - \sum_{i=1}^N \alpha_i
+\end{equation*}
+
+s.t.
+\begin{equation*}
+\sum_{i=1}^N \alpha_i y_i = 0
+\end{equation*}
+\begin{equation*}
+0 \le \alpha_i \le C, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the Lagrangian formulation of the Support Vector Machine (SVM) problem.  It shows the objective function for minimizing a quadratic form involving the Lagrange multipliers ($\alpha_i$) and the data points ($x_i$).  The constraints ensure that the sum of the Lagrange multipliers weighted by the target values ($y_i$) is zero, and that the Lagrange multipliers are bounded between 0 and C.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to derive the dual form of the SVM optimization problem.  The slide number (11 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs and their geometric interpretation.  The Lagrangian formulation is a crucial step in solving the SVM problem using quadratic programming techniques.  The parameter C is a regularization parameter that controls the trade-off between maximizing the margin and minimizing the classification error.
+
+
+Slide 12
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Geometric Interpretation of SVM}
+
+\textit{Distance of} $\{(x_i, x_i')\}$ \textit{from} $a_1 x_1 + a_2 x_2 - b = 0$
+
+\begin{equation*}
+= \min_i |a_1 x_i^1 + a_2 x_i^2 - b|
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide provides a geometric interpretation of the Support Vector Machine (SVM) problem.  It shows the distance of data points $(x_i, x_i')$ from the separating hyperplane $a_1 x_1 + a_2 x_2 - b = 0$.  The equation shows the minimum distance calculation for each data point.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the geometric aspects of SVM optimization.  The slide number (12 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their Lagrangian formulation, and the concept of maximizing the margin.  The focus on the distance calculation is crucial for understanding how the SVM algorithm finds the optimal hyperplane.
+
+
+
+
+Slide 13
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{SVM Optimization as a QP Problem}
+
+\textit{Maximize} $\delta$
+
+s.t.
+\begin{equation*}
+y_i (a_1 x_i^1 + a_2 x_i^2 - b) \ge \delta, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the optimization problem for an SVM, framed as a quadratic programming (QP) problem.  It shows the objective function as maximizing the margin ($\delta$), subject to constraints ensuring that all data points are correctly classified with a margin at least $\delta$.  The constraints are expressed in terms of the data points' ($x_i$) coordinates and their associated labels ($y_i$).  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the optimization problem underlying the SVM algorithm.  The slide number (13 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their geometric interpretation, and Lagrangian formulation.  The constraints ensure that the data points are correctly classified and that the margin is maximized.
+
+
+
+
+Slide 14
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{SVM Optimization as a QP Problem}
+
+\textit{Maximize} $\delta$
+
+s.t.
+\begin{equation*}
+y_i (a_1 x_i^1 + a_2 x_i^2 - b) \ge \delta, \quad \forall i
+\end{equation*}
+\begin{equation*}
+-1 \le a_1, a_2 \le 1
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the optimization problem for an SVM, framed as a quadratic programming (QP) problem.  It shows the objective function as maximizing the margin ($\delta$), subject to constraints ensuring that all data points are correctly classified with a margin at least $\delta$.  The constraints are expressed in terms of the data points' ($x_i$) coordinates and their associated labels ($y_i$).  The additional constraint $-1 \le a_1, a_2 \le 1$ is added, likely for normalization or to ensure the hyperplane parameters are within a specific range.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the optimization problem underlying the SVM algorithm.  The slide number (14 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their geometric interpretation, and Lagrangian formulation.  The constraints ensure that the data points are correctly classified and that the margin is maximized, while also normalizing the parameters.
+
+
+
+
+Slide 15
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Maximum Inscribed Circle in a Convex Polyhedron}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide states the problem of finding the maximum inscribed circle within a convex polyhedron.  A rough sketch of a convex polygon (likely a hexagon) is present, suggesting the geometric nature of the problem.  The handwritten style indicates a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the largest possible circle that can fit entirely inside a given convex polygon.  The problem is likely to involve finding the optimal center and radius of the inscribed circle.  The reference to "EMG" and "See 2.6" suggests that this problem is related to a specific section or example in a textbook or lecture notes.
+
+
+Slide 16
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Maximum Inscribed Circle in a Convex Polyhedron}
+
+\textit{Find} the largest circle that can be inscribed in a convex polyhedron.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide restates the problem of finding the maximum inscribed circle within a convex polyhedron.  It's a concise restatement of the problem introduced in the previous slide.  The handwritten style indicates a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the largest possible circle that can fit entirely inside a given convex polygon.  The problem is likely to involve finding the optimal center and radius of the inscribed circle.  The reference to "EMG" and "See 2.6" suggests that this problem is related to a specific section or example in a textbook or lecture notes.  The slide is likely a summary or a transition to the next topic.
+
+
+Slide 17
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Geometric Interpretation of SVM}
+
+\textit{Find} a hyperplane that maximizes the margin.
+
+\textit{Support Vectors} are the data points closest to the hyperplane.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide restates the Support Vector Machine (SVM) problem in geometric terms.  It emphasizes the goal of finding a hyperplane that maximizes the margin between the two classes of data points.  The handwritten style and the use of mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the optimal hyperplane that maximizes the margin between the two classes.  The slide number (17 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their Lagrangian formulation, and the concept of maximizing the margin.  The slide is likely a summary or a transition to the next topic.  The lack of specific equations or constraints suggests that this slide is a conceptual review rather than a detailed mathematical derivation.
+
+
+
+
+Slide 18
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Distance of a Point from a Hyperplane}
+
+\begin{equation*}
+d_i = \frac{|a_1 s_i + a_2 s_i^2 - b'|}{\sqrt{a_1^2 + a_2^2}}
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the formula for calculating the distance of a point from a hyperplane.  The equation shows the distance ($d_i$) of a point ($s_i$, $s_i^2$) from a hyperplane defined by the equation $a_1 x_1 + a_2 x_2 - b' = 0$.  The formula involves the coordinates of the point ($s_i$, $s_i^2$), the coefficients of the hyperplane ($a_1$, $a_2$, $b'$), and the Euclidean norm of the coefficients.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the geometric aspects of SVM optimization, specifically the calculation of distances from points to hyperplanes.  The slide number (18 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their geometric interpretation, and the concept of maximizing the margin.  The formula is crucial for determining the margin and support vectors in the SVM algorithm.
+
+
+
+
+Slide 19
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{SVM Optimization as a QP Problem}
+
+\textit{Maximize} $d$
+
+s.t.
+\begin{equation*}
+|a_1 s_i + a_2 s_i^2 - b'| \le d \sqrt{a_1^2 + a_2^2}, \quad \forall i
+\end{equation*}
+\begin{equation*}
+a_1 s_i + a_2 s_i^2 - b' \le 0, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the optimization problem for an SVM, framed as a quadratic programming (QP) problem.  It shows the objective function as maximizing the margin ($d$), subject to constraints ensuring that all data points are correctly classified with a margin at least $d$.  The constraints are expressed in terms of the data points' ($s_i$, $s_i^2$) coordinates, the hyperplane parameters ($a_1$, $a_2$, $b'$), and the margin ($d$).  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the optimization problem underlying the SVM algorithm.  The slide number (19 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their geometric interpretation, and Lagrangian formulation.  The constraints ensure that the data points are correctly classified and that the margin is maximized.  The notation $s_i$ and $s_i^2$ likely represent the coordinates of the support vectors.
+
+
+
+
+Slide 20
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{SVM Optimization as a QP Problem}
+
+\textit{Maximize} $d$
+
+s.t.
+\begin{equation*}
+d \le \frac{|a_1 s_i + a_2 s_i^2 - b'|}{\sqrt{a_1^2 + a_2^2}}, \quad \forall i
+\end{equation*}
+\begin{equation*}
+a_1 s_i + a_2 s_i^2 - b' \le 0, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the optimization problem for an SVM, framed as a quadratic programming (QP) problem.  It shows the objective function as maximizing the margin ($d$), subject to constraints ensuring that all data points are correctly classified with a margin at least $d$.  The constraints are expressed in terms of the data points' ($s_i$, $s_i^2$) coordinates, the hyperplane parameters ($a_1$, $a_2$, $b'$), and the margin ($d$).  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to understand the optimization problem underlying the SVM algorithm.  The slide number (20 of 22) suggests this is a later part of the lecture, building on the previous discussion of SVMs, their geometric interpretation, and Lagrangian formulation.  The constraints ensure that the data points are correctly classified and that the margin is maximized.  The notation $s_i$ and $s_i^2$ likely represent the coordinates of the support vectors.  The constraints are now more explicitly related to the distance calculation.
+
+
+
+
+Slide 21
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Maximum Inscribed Circle in a Convex Polyhedron}
+
+\textit{Find} the largest circle that can be inscribed in a convex polyhedron.
+
+\textit{The problem is equivalent to finding the largest circle that can be inscribed in a convex polygon.}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide restates the problem of finding the maximum inscribed circle within a convex polyhedron.  It's a concise restatement of the problem introduced in the previous slides.  The handwritten style indicates a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the largest possible circle that can fit entirely inside a given convex polygon.  The problem is likely to involve finding the optimal center and radius of the inscribed circle.  The statement that the problem is equivalent to finding the largest circle inscribed in a convex polygon suggests a simplification of the original problem.  The slide is likely a summary or a transition to the next topic.
+
+
+
+
+Slide 22
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Smallest Ball and Convex Programming}
+
+The smallest ball problem. We are given points $p_1, \dots, p_n \in \mathbb{R}^d$, and we want to find a ball of the smallest radius that contains all the points.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide states the "smallest ball problem" in the context of linear programming.  It describes the problem as finding the smallest radius ball (sphere in higher dimensions) that encloses a set of given points in a d-dimensional space.  The handwritten style indicates a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the optimal bounding sphere for a given set of data points.  The problem is likely to involve finding the optimal center and radius of the smallest enclosing ball.  The presence of a diagram showing a circle enclosing several points in a 2D space visually represents the problem.  This is the final slide, likely summarizing the lecture's discussion of linear programming and its applications in machine learning.

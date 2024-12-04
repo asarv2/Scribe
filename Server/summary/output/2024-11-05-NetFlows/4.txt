@@ -1,0 +1,31 @@
+Slide 4
+
+\textbf{Network Flow (LV) Chapter 14)}
+
+$x^T = \begin{bmatrix} x_{ac} & x_{ad} & x_{ae} & x_{ba} & x_{bc} & x_{be} & x_{db} & x_{de} & x_{fa} & x_{fb} & x_{fc} & x_{fg} & x_{gb} & x_{ge} \end{bmatrix}$
+
+$A = \begin{bmatrix}
+-1 & -1 & -1 & 1 & 1 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 0 & -1 & -1 & -1 & 0 & 0 & 0 & 1 & 1 & 1 & -1 & -1 \\
+0 & 1 & 0 & 0 & 0 & 0 & -1 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & -1 & -1 & -1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+\end{bmatrix}$
+
+$c^T = \begin{bmatrix} 48 & 28 & 110 & 7 & 65 & 7 & 38 & 15 & 56 & 48 & 108 & 24 & 33 & 19 \end{bmatrix}$
+
+$b = \begin{bmatrix} 0 \\ -6 \\ -6 \\ -2 \\ 9 \\ 5 \end{bmatrix}$
+
+
+\textbf{Description:}
+
+This slide continues the Network Flow discussion, likely from the previous slides. It presents the incidence matrix ($A$) and cost vector ($c$) for a specific network flow problem.
+
+* **Incidence Matrix (A):** The matrix $A$ defines the flow relationships between nodes and arcs in the network.  Each row corresponds to a node, and each column corresponds to an arc.  The entries in the matrix indicate how the flow on each arc affects the balance at each node.  A value of 1 indicates flow *out* of the node, -1 indicates flow *into* the node, and 0 indicates no direct connection.
+* **Cost Vector (c):** The vector $c$ contains the cost of transporting one unit of flow along each arc.
+* **Supply/Demand Vector (b):** The vector $b$ represents the net flow at each node.  Positive values indicate supply, negative values indicate demand.
+
+The slide likely demonstrates how to represent a network flow problem in a matrix form suitable for linear programming solution.  The values in the vectors and matrix are likely derived from the network diagram (Figure 14.1 and 14.2) shown in the previous slides.
+
+

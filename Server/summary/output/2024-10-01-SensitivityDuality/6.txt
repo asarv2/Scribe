@@ -1,0 +1,54 @@
+Slide 6
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{equation*}
+\begin{aligned}
+\Theta &= \{1, 2, 3\} \\
+N &= \{3, 4\} \\
+B &= \begin{bmatrix}
+1 \\
+10 \\
+50
+\end{bmatrix}, \quad N = \begin{bmatrix}
+0 \\
+1 \\
+0
+\end{bmatrix} = I
+\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+\bar{B} = \begin{bmatrix}
+50 & -1 \\
+-10 & 1
+\end{bmatrix} = \begin{bmatrix}
+\frac{5}{4} & -\frac{1}{4} \\
+-\frac{1}{4} & \frac{1}{4}
+\end{bmatrix}
+\end{equation*}
+
+\begin{tabular}{c|c|c|c|c}
+\multicolumn{2}{c}{End (Opt)} & \multicolumn{2}{c}{} & \\
+\cline{1-5}
+\textbf{P} & $x_1$ & $x_2$ & \textbf{D} & \\
+\cline{2-5}
+& 6250 & $-32.5$ & $-0.75$ & $-6250$ \\
+$x_1$ & 25 & $\frac{5}{4}$ & $\frac{1}{4}40$ & $y_1$ \\
+$x_2$ & 70 & $-\frac{1}{4}$ & $\frac{1}{4}40$ & $y_2$ \\
+\cline{2-5}
+\multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \\
+\end{tabular}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 6 of a 15-slide lecture on Linear Programming.  It continues the analysis of the primal and dual problems, likely within the context of the simplex method. The slide shows the basis matrix ($B$) and non-basis matrix ($N$) and their inverses ($\bar{B}$ and $\bar{B}^{-1}$).  The notation suggests that the slide is focused on the calculations involved in the simplex method, specifically the matrix operations needed to determine the optimal solution. The table at the bottom is the final tableau, showing the optimal values for the primal variables ($x_1$, $x_2$) and the dual variables ($y_1$, $y_2$). The values in the table represent the coefficients of the variables in the objective function and constraints. The columns represent the variables, and the rows represent the constraints and the objective function. The numbers in the table are likely the results of iterations of the simplex method. The notation ($\omega_1$) and ($\omega_2$) likely represent indices or labels for the slack variables $x_3$ and $x_4$. The red lines likely separate the initial and final tableaus. The values in the final tableau indicate the optimal solution to the linear programming problem.  The equations and matrices are crucial for understanding the steps of the simplex method.
+
+

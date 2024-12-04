@@ -1,0 +1,23 @@
+Slide 17
+
+\textbf{Gomory Cuts}
+
+From the optimal dictionary for the relaxed problem, we can derive a Gomory cut.
+Consider the equation for $x_1$:
+
+$x_1 = \frac{11}{3} - \frac{5}{54} w_1 - \frac{1}{54} w_2$
+
+Since $x_1$ must be an integer, the fractional part of $\frac{11}{3}$ is $\frac{2}{3}$.
+The fractional part of $\frac{5}{54}$ is $\frac{5}{54}$.
+The fractional part of $\frac{1}{54}$ is $\frac{1}{54}$.
+
+Therefore, the Gomory cut is:
+
+$\frac{5}{54} w_1 + \frac{1}{54} w_2 \le \frac{2}{3}$
+
+
+\textbf{Description:}
+
+This slide demonstrates the derivation of a Gomory cut from the optimal dictionary of a relaxed linear program.  The slide shows how to identify the fractional part of the coefficients in the equation for $x_1$ from the previous slide's optimal dictionary.  The fractional parts are used to construct a new constraint (the Gomory cut) that ensures integer solutions.  The slide is likely part of a larger lecture series on integer programming and optimization techniques, illustrating the process of deriving Gomory cuts from a given dictionary.  The handwritten nature of the notes suggests this is a lecture or class notes, not a formal publication.  The slide is likely to be followed by an explanation of how to incorporate this Gomory cut into the original problem to find an integer solution.
+
+

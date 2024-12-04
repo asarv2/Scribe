@@ -1,0 +1,17 @@
+Slide 22
+
+\textbf{Spanning Trees and Bases}
+
+We can now apply the primal simplex method to the problem.  The steps are as follows:
+
+\begin{enumerate}
+    \item Identify the entering variable.  This is the variable corresponding to the arc with the most negative reduced cost.
+    \item Identify the leaving variable.  This is the variable corresponding to the arc that is part of the cycle formed by the entering variable and the spanning tree.
+    \item Update the spanning tree by replacing the leaving variable with the entering variable.
+    \item Update the primal and dual variables.
+    \item Repeat steps 1-4 until all dual slacks are nonnegative.
+\end{enumerate}
+
+\textbf{Description:}
+
+This slide outlines the steps for applying the primal simplex method to a network flow problem, specifically to find an optimal solution from a given spanning tree.  The steps are presented in a numbered list, providing a clear procedure for updating the spanning tree, primal flows, and dual variables until an optimal solution is reached.  The slide likely builds upon the previous discussion of spanning trees, primal and dual variables, and complementary slackness.  The slide is crucial for understanding the practical application of the theory to solve network flow problems using linear programming techniques.  The context implies that the algorithm will iteratively improve the solution until all dual slacks are non-negative, indicating an optimal solution.

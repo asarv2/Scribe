@@ -1,0 +1,21 @@
+Slide 18
+
+$\text{LV} \text{ p. } 11$
+Set $x_1 = x_2 = x_3 = 0$
+$\max \mathcal{Z} = 5x_1 + 4x_2 + 3x_3$
+subject to
+$2x_1 + 3x_2 + x_3 \le 5$
+$4x_1 + x_2 + 2x_3 \le 11$
+$3x_1 + 4x_2 + 2x_3 \le 8$
+$x_1, x_2, x_3 \ge 0$
+
+$\omega_1 = 5 - 2x_1 - 3x_2 - x_3$
+$\omega_2 = 11 - 4x_1 - x_2 - 2x_3$
+$\omega_3 = 8 - 3x_1 - 4x_2 - 2x_3$
+$x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0$
+
+\textbf{Description:}
+
+This slide sets up a linear programming problem for solution using the Simplex method.  It restates the objective function and constraints, and then shows the equivalent problem in slack variable form.  The key instruction is to set all the original variables ($x_1$, $x_2$, $x_3$) to zero.  This corresponds to the origin (0, 0, 0) in the three-dimensional space.  The context suggests this is a preliminary step in the Simplex method, where the algorithm begins at a specific vertex (the origin) and then proceeds to find a better solution by moving to another vertex.
+
+

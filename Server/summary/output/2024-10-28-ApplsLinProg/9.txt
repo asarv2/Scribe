@@ -1,0 +1,23 @@
+Slide 9
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 13}
+
+\newline
+(1) $R_i$ - (annual) return of $i^{th}$ investment (a random Variable)
+
+\newline
+(2) $X_i$ - proportion of investment in $i$ ($X_i \ge 0$, $\sum_{j} X_j = 1$)
+
+\newline
+$\max \sum_{j} X_j R_j$  \hspace{0.5cm} (random)
+
+\newline
+$\max \sum_{j} X_j \overline{R_j}$ \hspace{0.5cm} (average return)
+
+
+\textbf{Description:}
+
+This slide introduces the Markowitz portfolio selection model, a classic problem in finance and a relevant application of linear programming.  The variables $R_i$ represent the annual return of each investment, and $X_i$ represents the proportion of the portfolio invested in that particular investment.  The objective is to maximize the expected return of the portfolio, which is represented by $\sum_{j} X_j R_j$.  The constraint $\sum_{j} X_j = 1$ ensures that the total investment is 100%.  The slide is likely part of a lecture or presentation explaining how to use linear programming to optimize investment portfolios.

@@ -1,0 +1,18 @@
+Slide 22
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Smallest Ball and Convex Programming}
+
+The smallest ball problem. We are given points $p_1, \dots, p_n \in \mathbb{R}^d$, and we want to find a ball of the smallest radius that contains all the points.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide states the "smallest ball problem" in the context of linear programming.  It describes the problem as finding the smallest radius ball (sphere in higher dimensions) that encloses a set of given points in a d-dimensional space.  The handwritten style indicates a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the optimal bounding sphere for a given set of data points.  The problem is likely to involve finding the optimal center and radius of the smallest enclosing ball.  The presence of a diagram showing a circle enclosing several points in a 2D space visually represents the problem.  This is the final slide, likely summarizing the lecture's discussion of linear programming and its applications in machine learning.

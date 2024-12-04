@@ -1,0 +1,24 @@
+Slide 7
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Sensitivity and Parametric Analysis}
+
+$X_B^* = B^{-1} b \ge 0$ \textit{not changed}
+
+$\tilde{Z}_N^* = (B^{-1} N)^T C_B - C_N$
+
+$\Delta \tilde{Z}_N = (B^{-1} N)^T \Delta C_B - \Delta C_N$
+
+We need $\tilde{Z}_N^* + \Delta \tilde{Z}_N \ge 0$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the conditions for the optimal solution to remain optimal when the objective function coefficients are changed.  The equations show the relationships between the basic variables ($X_B$), non-basic variables ($X_N$), and the change in the objective function coefficients ($\Delta C_B$, $\Delta C_N$).  The condition $\tilde{Z}_N^* + \Delta \tilde{Z}_N \ge 0$ is crucial; it ensures that the reduced costs of the non-basic variables remain non-negative, which is a necessary condition for the current optimal solution to remain optimal.  The notation uses matrix operations, specifically the inverse of the basis matrix ($B^{-1}$) and the transpose ($^T$).  This slide is a continuation of the sensitivity analysis, focusing on the conditions for the optimality of the solution to remain valid under changes in the objective function.

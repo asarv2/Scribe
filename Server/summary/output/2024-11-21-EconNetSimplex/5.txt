@@ -1,0 +1,13 @@
+Slide 5
+
+\textbf{Three Steps of Simplex}
+
+\begin{enumerate}
+    \setcounter{enumi}{1}
+    \item In the second step of each iteration, we put ourselves in the role of a competitor: would it pay to buy the commodity at some node $i$, ship it along an arc $ij$ and sell at the node $j$? In our example, the answer is affirmative for several different arcs $ij$. For instance, we could buy at the node 2 for $y_2 = 23$ and ship along the arc 25 for $c_{25} = 37$: the total expense of $y_2 + c_{25} = 60$ compares favorably with the selling price of $y_5 = 62$. In general, this second step consists of choosing an arc $ij$ such that
+    $$y_i + c_{ij} < y_j$$
+\end{enumerate}
+
+\textbf{Description:}
+
+This slide continues the description of the three-step simplex algorithm for a network flow problem.  It details the second step, focusing on the economic decision of whether a competitor would find it profitable to buy at one node, ship along an arc, and sell at another node.  The key idea is to find an arc $ij$ where the cost of buying and shipping ($y_i + c_{ij}$) is less than the selling price at the destination node ($y_j$).  This step identifies potential improvements in the solution by finding arcs where a competitor could undercut the transportation company's current prices.  The example given (buying at node 2, shipping along arc 25, and selling at node 5) illustrates this concept.  The goal is to find such an arc to potentially improve the solution in the next iteration.

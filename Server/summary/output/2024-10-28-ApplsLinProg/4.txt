@@ -1,0 +1,30 @@
+Slide 4
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16}
+
+\newline
+(1) $X_i$ - production at month $i$
+
+\newline
+(2) $S_i$ - Surplus at end of Month $i$
+
+\newline
+(3) $X_i + S_{i-1} = d_i + S_i$
+
+\newline
+$\min \sum_{i=1}^{12} 50|X_i - X_{i-1}| + \sum_{i=1}^{12} 20 S_i$
+
+\newline
+$X_i - X_{i-1} = Y_i - Z_i$
+$ |X_i - X_{i-1}| = Y_i + Z_i$
+$Y_i, Z_i \ge 0$
+
+\textit{Cost of Changing Production} \hspace{2cm} \textit{Cost of Storage}
+
+
+\textbf{Description:}
+
+This slide continues the ice cream production planning problem, refining the mathematical formulation.  It introduces new variables $Y_i$ and $Z_i$ to represent the positive and negative differences in production levels between consecutive months.  The equation $X_i - X_{i-1} = Y_i - Z_i$ and $|X_i - X_{i-1}| = Y_i + Z_i$  express the absolute value term in the objective function in terms of these new variables.  The constraints $Y_i, Z_i \ge 0$ ensure that these variables are non-negative.  This transformation allows for a more standard linear programming formulation, which is likely a key step in solving the problem.  The slide is likely part of a lecture or presentation explaining how to use linear programming to create a production plan based on predicted demand, average demand, and the cost of changing production levels.

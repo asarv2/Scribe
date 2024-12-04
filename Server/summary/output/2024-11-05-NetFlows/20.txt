@@ -1,0 +1,14 @@
+Slide 20
+
+\textbf{Spanning Trees and Bases}
+
+\textbf{Example 14.1 (continued)}
+
+Figure 14.6 shows the network. The fat arcs show a spanning tree $T$. The numbers shown on the arcs of the spanning tree are the primal flows, the numbers shown next to the nodes are the dual variables, and the numbers shown on the arcs not belonging to the spanning tree are the dual slacks.
+
+
+\textbf{Description:}
+
+This slide continues the example (Example 14.1) from previous slides, providing a visual representation of the network flow problem.  It refers to Figure 14.6, which is not included here, but would show a network diagram with a highlighted spanning tree.  The slide visually displays the primal flows along the arcs of the spanning tree, the dual variables associated with each node, and the dual slacks along the arcs not part of the spanning tree.  This visual representation helps to illustrate the relationships between the primal and dual variables and their connection to the spanning tree structure.  The slide likely prepares the reader for the next step in the solution process, which would involve using the complementary slackness condition to determine optimality.
+
+

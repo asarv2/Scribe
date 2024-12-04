@@ -1,0 +1,26 @@
+Slide 13
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Guess/Prove} $y^* = B^{-1} c_B$
+
+(1) $b^T c_B$ does gives opt. objective value
+
+(2) Check for feasibility of $B^{-1} c_B$
+
+$A^T (B^{-1} c_B) \ge c$
+
+$B^{-1} c_B \ge 0$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 13 of a 15-slide lecture on Linear Programming.  It outlines a method for verifying the optimality of a solution to a linear programming problem. The slide describes a "Guess/Prove" approach.  The first step (1) involves checking if the calculated optimal dual variables ($y^* = B^{-1} c_B$) produce the optimal objective function value ($b^T c_B$).  The second step (2) verifies the feasibility of the dual solution by checking if the dual variables satisfy the dual constraints ($A^T (B^{-1} c_B) \ge c$ and $B^{-1} c_B \ge 0$).  The notation suggests that the lecture is covering the simplex method and the duality theory in linear programming.  The steps are crucial for confirming the correctness of the solution obtained using the simplex method.
+
+

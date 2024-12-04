@@ -1,0 +1,36 @@
+Slide 3
+
+\textbf{Economic Interpretation of Network Simplex}
+\newline
+\textit{(?) }
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, fill=white, inner sep=1pt]
+\node (n1) at (0,0) {};
+\node (n2) at (2,2) {};
+\node (n3) at (4,0) {};
+\node (n4) at (6,2) {};
+\node (n5) at (4,-2) {};
+
+\draw[red!50!white, thick] (n1) -- (n2) node[midway, below] {$b_i$};
+\draw[red!50!white, thick] (n1) -- (n5) ;
+\draw[thick] (n2) -- (n5) node[midway, left] {$c_{ij}$};
+\draw[thick] (n2) -- (n4) ;
+\draw[thick] (n3) -- (n5) node[midway, right] {$j b_j$};
+\draw[thick] (n3) -- (n4) ;
+\draw[thick] (n4) -- (n5) ;
+\draw[thick] (n1) -- (n3) ;
+\draw[thick] (n2) -- (n3) ;
+\draw[thick] (n2) -- (n5) ;
+\draw[thick] (n3) -- (n5) ;
+\draw[thick] (n4) -- (n5) ;
+\draw[thick] (n5) -- (n1) ;
+\draw[thick] (n5) -- (n3) ;
+\draw[thick] (n5) -- (n4) ;
+\end{tikzpicture}
+\newline
+Start a feasible Solution on a Spanning tree
+
+\textbf{Description:}
+
+This slide continues the discussion on the "Economic Interpretation of Network Simplex" from previous slides.  It shows a network diagram, similar to Slide 1 and 2, but with a slightly different configuration of nodes and edges.  The labels $b_i$, $c_{ij}$, and $j b_j$ are still present, indicating costs or capacities associated with the edges.  The key addition is the text "Start a feasible Solution on a Spanning tree". This suggests that the method for solving the network flow problem will begin by finding a feasible solution (a solution that satisfies all constraints) on a spanning tree of the network.  A spanning tree is a subset of the edges that connects all nodes in the network without forming any cycles.  This is a crucial step in the network simplex algorithm, as it provides a starting point for the iterative improvement process. The question mark in the title suggests that this is a step in a larger algorithm or a specific problem instance.

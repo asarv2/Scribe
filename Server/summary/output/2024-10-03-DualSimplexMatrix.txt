@@ -1,0 +1,823 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Solution of Primal vs Dual Problems}
+
+\begin{center}
+\begin{tikzpicture}
+\draw[->,>=latex,blue] (-4,0) -- (4,0);
+\draw[blue] (-4,0) -- (4,0);
+\draw[red,->,>=latex] (-2,0.2) -- (-1,0.2);
+\draw[red,->,>=latex] (-1,0.2) -- (0,0.2);
+\draw[red,->,>=latex] (0,0.2) -- (1,0.2);
+\draw[red,->,>=latex] (1,0.2) -- (2,0.2);
+\draw[red,->,>=latex] (2,0.2) -- (3,0.2);
+\draw[red,->,>=latex] (3,0.2) -- (4,0.2);
+\draw[red,->,>=latex] (-2,-0.2) -- (-1,-0.2);
+\draw[red,->,>=latex] (-1,-0.2) -- (0,-0.2);
+\draw[red,->,>=latex] (0,-0.2) -- (1,-0.2);
+\draw[red,->,>=latex] (1,-0.2) -- (2,-0.2);
+\draw[red,->,>=latex] (2,-0.2) -- (3,-0.2);
+\draw[red,->,>=latex] (3,-0.2) -- (4,-0.2);
+\draw[fill] (0,0) circle [radius=0.05];
+\node at (-2.5,0.5) {$\xi(x)$};
+\node at (2.5,0.5) {$\xi(y)$};
+\node at (0,-1.5) {$\xi(x) \rightarrow \xi^* = \xi^* \leftarrow \xi(y)$};
+\node at (-1.5,-0.8) {$\xi^*$};
+\node at (1.5,-0.8) {$\xi^*$};
+\node at (0,-2.5) {$\xi^*$};
+\node at (0,-2.2) {$=$};
+\end{tikzpicture}
+\end{center}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide, titled "Solution of Primal vs Dual Problems," visually depicts the relationship between the primal and dual solutions in linear programming.  A horizontal line represents a constraint boundary.  $\xi(x)$ and $\xi(y)$ are likely representing the primal and dual objective function values, respectively.  The arrows emanating from the point (0,0) on the constraint boundary indicate the relationship between the primal and dual solutions.  The notation $\xi^* = \xi^*$ suggests that the optimal values of the primal and dual problems are equal.  The red arrows indicate the direction of the relationship between the primal and dual solutions.  The slide is likely part of a larger presentation on duality theory in linear programming.
+
+
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Simplex Method  \textit{LVJ p.71}}
+
+We begin with an example:
+
+\textbf{Step 0}
+\begin{itemize}
+    \item maximize $-x_1 - x_2$
+    \item subject to
+        \begin{itemize}
+            \item $-2x_1 + x_2 \le 4$
+            \item $-2x_1 + 4x_2 \le -8$
+            \item $-x_1 + 3x_2 \le -7$
+            \item $x_1, x_2 \ge 0$
+        \end{itemize}
+\end{itemize}
+\textbf{The dual of this problem is}
+\begin{itemize}
+    \item minimize $4y_1 - 8y_2 - 7y_3$
+    \item subject to
+        \begin{itemize}
+            \item $-2y_1 - 2y_2 - y_3 \ge -1$
+            \item $-y_1 + 4y_2 + 3y_3 \ge -1$
+            \item $y_1, y_2, y_3 \ge 0$
+        \end{itemize}
+\end{itemize}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide presents a linear programming problem (the primal problem) and its corresponding dual problem.  The primal problem is to maximize $-x_1 - x_2$ subject to constraints involving $x_1$ and $x_2$. The dual problem is to minimize $4y_1 - 8y_2 - 7y_3$ subject to constraints involving $y_1$, $y_2$, and $y_3$.  The slide is likely part of a lecture on the dual simplex method, a specific algorithm for solving linear programming problems. The notation "LVJ p.71" suggests this is from a textbook or reference material. The slide is introducing the primal and dual problems, likely as a starting point for applying the dual simplex method.  The red arrows and annotations highlight the key elements of the problem setup.
+
+
+Slide 3
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Simplex Method  \textit{LVJ p.71}}
+
+\textbf{Step 0}
+\begin{itemize}
+    \item (P) $\xi = -x_1 - x_2$
+    \item subject to
+        \begin{itemize}
+            \item $w_1 = 4 + 2x_1 + x_2$
+            \item $w_2 = -8 + 2x_1 - 4x_2$
+            \item $w_3 = -7 + x_1 - 3x_2$
+        \end{itemize}
+\end{itemize}
+\textbf{The dual of this problem is}
+\begin{itemize}
+    \item (D) $-\xi = -4y_1 + 8y_2 + 7y_3$
+    \item subject to
+        \begin{itemize}
+            \item $z_1 = 1 - 2y_1 - 2y_2 - y_3$
+            \item $z_2 = 1 - y_1 + 4y_2 + 3y_3$
+        \end{itemize}
+\end{itemize}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the example from the previous slide, focusing on the primal and dual problems in a tabular format.  The primal problem (P) is represented by the equations $w_1$, $w_2$, and $w_3$, which are constraints expressed in terms of variables $x_1$ and $x_2$. The dual problem (D) is represented by the equations $z_1$ and $z_2$, which are constraints expressed in terms of variables $y_1$, $y_2$, and $y_3$.  The slide is likely part of a lecture on the dual simplex method, showing the initial tableau setup for both the primal and dual problems. The notation "LVJ p.71" indicates the source of the example. The slide is crucial for understanding the transformation between the primal and dual problems, which is a key concept in linear programming duality. The equations are presented in a tabular format, which is typical for linear programming problems. The notation $-\xi$ in the dual problem indicates that the objective function is being minimized. The slide also notes that the origin is D-infeasible.
+
+
+Slide 4
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Simplex Method  \textit{LVJ p.71}}
+
+\textbf{Step 1}
+\begin{itemize}
+    \item (P) $\xi = -4 - 0.5 w_2 - 3 x_2$
+    \item $w_1 = 12 + w_2 + 5 x_2$
+    \item $x_1 = 4 + 0.5 w_2 + 2 x_2$
+    \item $w_3 = -3 + 0.5 w_2 - x_2$
+\end{itemize}
+\textbf{The dual of this problem is}
+\begin{itemize}
+    \item (D) $-\xi = 4 - 12 y_1 - 4 z_1 + 3 y_3$
+    \item $y_2 = 0.5 - y_1 - 0.5 z_1 - 0.5 y_3$
+    \item $x_2 = 3 - 5 y_1 - 2 z_1 + y_3$
+\end{itemize}
+
+\textbf{Step 2}
+\begin{itemize}
+    \item (P) $\xi = -7 - 1 w_3 - 4 x_2$
+    \item $w_1 = 18 + 2 w_3 + 7 x_2$
+    \item $x_1 = 7 + w_3 + 3 x_2$
+    \item $w_2 = 6 + 2 w_3 + 2 x_2$
+\end{itemize}
+\textbf{The dual of this problem is}
+\begin{itemize}
+    \item (D) $-\xi = 7 - 18 y_1 - 7 z_1 - 6 y_2$
+    \item $y_3 = 1 - 0 y_1 - z_1 - 2 y_2$
+    \item $z_2 = 4 - 0.7 y_1 - 3 z_1 - 2 y_2$
+\end{itemize}
+
+\textbf{Opt. for both}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the results of the first and second steps of the dual simplex method applied to the primal and dual linear programming problems.  The equations are displayed in a tabular format, showing the objective function ($\xi$) and constraints ($w_1$, $w_2$, $w_3$, $x_1$, $x_2$, $y_2$, $y_3$, $z_1$, $z_2$) after each step.  The notation (P) and (D) denote the primal and dual problems, respectively.  The slide is part of a larger presentation on the dual simplex method, demonstrating the iterative process of solving linear programming problems.  The arrows indicate the transformation between steps, and the objective is to find the optimal solution for both the primal and dual problems.  The "Opt. for both" at the bottom suggests that the goal is to find the optimal solution for both the primal and dual problems simultaneously.
+
+
+
+
+Slide 5
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Based Phase I Algorithm \textit{LVJ p.73}}
+
+maximize $-x_1 + 4x_2$
+subject to
+\begin{itemize}
+    \item $-2x_1 - x_2 \le 4$
+    \item $-2x_1 + 4x_2 \le -8$
+    \item $-x_1 + 3x_2 \le -7$
+    \item $x_1, x_2 \ge 0$
+\end{itemize}
+
+\begin{itemize}
+    \item (P) $\xi = -1 x_1 + 4 x_2$
+    \item $w_1 = 4 + 2 x_1 + x_2$
+    \item $w_2 = -8 + 2 x_1 - 4 x_2$
+    \item $w_3 = -7 + x_1 - 3 x_2$
+\end{itemize}
+\begin{itemize}
+    \item (D) $-\xi = -4 y_1 + 8 y_2 + 7 y_3$
+    \item $z_1 = 1 - 2 y_1 - 2 y_2 - y_3$
+    \item $z_2 = -4 - y_1 + 4 y_2 + 3 y_3$
+\end{itemize}
+
+\textbf{origin not feasible for both}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide introduces a "Dual Based Phase I Algorithm" for solving a linear programming problem.  It presents the primal problem (maximize $-x_1 + 4x_2$ subject to constraints) and its corresponding dual problem (minimize $-4y_1 + 8y_2 + 7y_3$ subject to constraints).  The slide shows the initial tableau setup for both problems, with the objective function and constraints explicitly written out.  The notation (P) and (D) clearly identify the primal and dual problems.  The final line, "origin not feasible for both," indicates that the origin (where all variables are zero) does not satisfy the constraints of either the primal or dual problem.  This suggests that a Phase I procedure might be necessary to find a feasible starting point for the simplex method. The reference "LVJ p.73" indicates the source of the problem.
+
+
+Slide 6
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Dual Based Phase I Algorithm \textit{LVJ p.73}}
+
+maximize $-x_1 + 4x_2$
+subject to
+\begin{itemize}
+    \item $-2x_1 - x_2 \le 4$
+    \item $-2x_1 + 4x_2 \le -8$
+    \item $-x_1 + 3x_2 \le -7$
+    \item $x_1, x_2 \ge 0$
+\end{itemize}
+
+\begin{itemize}
+    \item (P) $\xi = -1 x_1 + 4 x_2$
+    \item $w_1 = 4 + 2 x_1 + x_2$
+    \item $w_2 = -8 + 2 x_1 - 4 x_2$
+    \item $w_3 = -7 + x_1 - 3 x_2$
+\end{itemize}
+\begin{itemize}
+    \item (D) $-\xi = -4 y_1 + 8 y_2 + 7 y_3$
+    \item $z_1 = 1 - 2 y_1 - 2 y_2 - y_3$
+    \item $z_2 = -4 - y_1 + 4 y_2 + 3 y_3$
+\end{itemize}
+
+\textbf{New origin is D-feasible}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the "Dual Based Phase I Algorithm" example from the previous slide.  It shows the primal and dual problems, but now with a crucial change.  The slide indicates that the "New origin is D-feasible." This means that by introducing an artificial variable and modifying the constraints, the origin (where all variables are zero) now satisfies the constraints of the dual problem (D).  This is a significant step in the algorithm, as it provides a feasible starting point for the simplex method to find the optimal solution.  The reference "LVJ p.73" indicates the source of the problem.  The slide is likely part of a larger presentation on the dual simplex method, demonstrating the iterative process of solving linear programming problems. The arrows and highlighting on the previous slide's table are now absent, suggesting the table has been updated.
+
+
+Slide 7
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+\begin{itemize}
+    \item $\max \xi(\mathbf{x}) = \mathbf{c}^T \mathbf{x}$
+    \item st.
+        \begin{itemize}
+            \item $A \mathbf{x} \le \mathbf{b}$
+            \item $\mathbf{x} \ge \mathbf{0}$
+        \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+    \item $\max \xi(\mathbf{x}) = \mathbf{c}^T \mathbf{x} = \mathbf{c}_B^T \mathbf{x}_B + \mathbf{c}_N^T \mathbf{x}_N$
+    \item $\mathbf{x}_B = \mathbf{x}_B - (\mathbf{B}^{-1} \mathbf{N}) \mathbf{x}_N$
+\end{itemize}
+
+\begin{itemize}
+    \item $\xi^* = \mathbf{c}_B^T \mathbf{B}^{-1} \mathbf{b}$, $\mathbf{z}_N = (\mathbf{B}^{-1} \mathbf{N})^T \mathbf{c}_B - \mathbf{c}_N$, $\mathbf{x}_B = \mathbf{B}^{-1} \mathbf{b}$
+\end{itemize}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the simplex method in a matrix form, focusing on the mathematical representation of the problem.  It shows the objective function ($\xi(\mathbf{x}) = \mathbf{c}^T \mathbf{x}$) and the constraints ($A \mathbf{x} \le \mathbf{b}$, $\mathbf{x} \ge \mathbf{0}$) in a matrix format.  The slide then introduces the partitioning of variables into basic variables ($\mathbf{x}_B$) and non-basic variables ($\mathbf{x}_N$), and the corresponding coefficients in the objective function ($\mathbf{c}_B$ and $\mathbf{c}_N$).  The equations show how the basic variables ($\mathbf{x}_B$) are expressed in terms of the non-basic variables ($\mathbf{x}_N$) and the right-hand side vector ($\mathbf{b}$).  The slide also provides the optimal solution for the objective function ($\xi^*$) and the reduced costs ($\mathbf{z}_N$) in terms of the matrix operations.  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.
+
+
+Slide 8
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+\begin{itemize}
+    \item $\max -\xi(\mathbf{y}) = -\mathbf{b}^T \mathbf{y}$
+    \item st.
+        \begin{itemize}
+            \item $A^T \mathbf{y} \ge \mathbf{c}$
+            \item $\mathbf{y} \ge \mathbf{0}$
+        \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+    \item $\max -\xi(\mathbf{z}) = -\mathbf{z}_N^T \mathbf{x}_N - (\mathbf{x}_B^*)^T \mathbf{z}_B$
+    \item st.
+        \begin{itemize}
+            \item $\mathbf{z}_N = \mathbf{z}_N^* + (\mathbf{B}^{-1} \mathbf{N})^T \mathbf{z}_B$
+        \end{itemize}
+\end{itemize}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the dual problem.  It presents the dual problem ($\max -\xi(\mathbf{y}) = -\mathbf{b}^T \mathbf{y}$ subject to $A^T \mathbf{y} \ge \mathbf{c}$ and $\mathbf{y} \ge \mathbf{0}$).  The slide then shows how the dual objective function can be expressed in terms of the primal variables ($\mathbf{x}_B$ and $\mathbf{x}_N$) and their corresponding reduced costs ($\mathbf{z}_B$ and $\mathbf{z}_N$).  The equation $\mathbf{z}_N = \mathbf{z}_N^* + (\mathbf{B}^{-1} \mathbf{N})^T \mathbf{z}_B$ shows the relationship between the reduced costs of the non-basic variables ($\mathbf{z}_N$) and the basic variables ($\mathbf{z}_B$).  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method and its dual, emphasizing the mathematical equivalence between the primal and dual problems.
+
+
+
+
+Slide 9
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+(i) From $\mathbf{z}_N^* \implies$ entering variable $x_j$
+
+$\begin{array}{c|c}
+\mathbf{z}_B^* & -(\mathbf{B}^{-1} \mathbf{N}) \\
+\hline
+\mathbf{x}_B^* &
+\end{array}$
+
+$\implies (\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j = \Delta \mathbf{x}_B$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the calculation of the entering variable.  It shows how to determine the entering variable ($x_j$) from the reduced costs ($\mathbf{z}_N^*$).  The equation $(\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j = \Delta \mathbf{x}_B$ is crucial.  It shows how the change in the basic variables ($\Delta \mathbf{x}_B$) is calculated when a non-basic variable ($x_j$) enters the basis.  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method, emphasizing the matrix operations involved in the selection of the entering variable.  The vertical line and the notation $\mathbf{z}_B^*$ and $\mathbf{x}_B^*$ suggest a table or matrix structure.  The equation $(\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j$ highlights the matrix operations involved in determining the change in the basic variables.
+
+
+
+
+Slide 10
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+(2) Find $\max \pi$ s.t.
+$\mathbf{x}_B^* - \Delta \mathbf{x}_B \ge 0$
+
+$\begin{array}{c|c}
+\mathbf{z}_B^* & -(\mathbf{B}^{-1} \mathbf{N}) \\
+\hline
+\mathbf{x}_B^* &
+\end{array}$
+
+$\implies (\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j = \Delta \mathbf{x}_B$
+
+$\implies \Delta \mathbf{x}_B = \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+
+$\implies$ determine leaving variable, $x_i^*$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the determination of the leaving variable.  It shows how to find the leaving variable ($x_i^*$) from the change in basic variables ($\Delta \mathbf{x}_B$).  The equation $\Delta \mathbf{x}_B = \frac{-\mathbf{x}_B^*}{\pi} \ge 0$ is crucial.  It shows how the change in the basic variables ($\Delta \mathbf{x}_B$) is calculated when a non-basic variable ($x_j$) enters the basis.  The slide also emphasizes that the leaving variable must satisfy the condition $\Delta \mathbf{x}_B \ge 0$.  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method, emphasizing the matrix operations involved in the selection of the leaving variable.  The vertical line and the notation $\mathbf{z}_B^*$ and $\mathbf{x}_B^*$ suggest a table or matrix structure.  The equation $\Delta \mathbf{x}_B = \frac{-\mathbf{x}_B^*}{\pi} \ge 0$ highlights the condition for selecting the leaving variable. The slide is focused on the second step of the simplex method, which is to determine the leaving variable.
+
+
+
+
+Slide 11
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+(3) Update $\mathbf{B}$, $\mathbf{N} \implies (\mathbf{B}_{00} \mid \mathbf{x}_j) \mathbf{u}_{ij}$
+$(\mathbf{N}_{00} \mid \mathbf{y}_i) \mathbf{u}_{ij}$
+
+$\begin{array}{c|c}
+\mathbf{z}_B^* & -(\mathbf{B}^{-1} \mathbf{N}) \\
+\hline
+\mathbf{x}_B^* &
+\end{array}$
+
+$\implies (\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j = \Delta \mathbf{x}_B$
+
+$\implies \Delta \mathbf{x}_B = \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+
+$\implies$ determine leaving variable, $x_i^*$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the update of the basis matrices $\mathbf{B}$ and $\mathbf{N}$.  It shows how the basis matrices are updated after the entering and leaving variables have been determined.  The notation $(\mathbf{B}_{00} \mid \mathbf{x}_j) \mathbf{u}_{ij}$ and $(\mathbf{N}_{00} \mid \mathbf{y}_i) \mathbf{u}_{ij}$ suggests a specific update procedure, likely involving matrix operations to maintain the correct form of the tableau.  The slide also reiterates the calculation of the change in basic variables ($\Delta \mathbf{x}_B$) and the determination of the leaving variable ($x_i^*$).  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method, emphasizing the matrix operations involved in the update of the basis matrices.  The vertical line and the notation $\mathbf{z}_B^*$ and $\mathbf{x}_B^*$ suggest a table or matrix structure.  The equation $(\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j = \Delta \mathbf{x}_B$ highlights the matrix operations involved in determining the change in the basic variables. The slide is focused on the third step of the simplex method, which is to update the basis matrices.
+
+
+
+
+Slide 12
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+(2) Find $\max \pi$ s.t.
+$\mathbf{x}_B^* - \Delta \mathbf{x}_B \ge 0$
+$\Delta \mathbf{x}_B = \mathbf{B}^{-1} \mathbf{N} \mathbf{e}_j$
+$\pi \mathbf{x}_B^* - \pi \Delta \mathbf{x}_B \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+$\pi \mathbf{x}_B^* - \frac{-\
+
+Slide 13
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+What is actually done or needed?
+
+Find $\max \pi$ s.t. $\mathbf{x}_B^* - \Delta \mathbf{x}_B \ge 0$
+
+$\tilde{\mathbf{B}} = \mathbf{B} + (\frac{\mathbf{a}_j - \mathbf{a}_i}{\mathbf{a}_i^T \mathbf{e}_i}) \mathbf{e}_i^T$
+
+$= \mathbf{B} (\mathbf{I} + \mathbf{B}^{-1} (\Delta \mathbf{x}_B - \mathbf{e}_i) \mathbf{e}_i^T)$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the update of the basis matrix $\mathbf{B}$.  It shows the formula for updating the basis matrix $\mathbf{B}$ after the entering and leaving variables have been determined.  The equation $\tilde{\mathbf{B}} = \mathbf{B} + (\frac{\mathbf{a}_j - \mathbf{a}_i}{\mathbf{a}_i^T \mathbf{e}_i}) \mathbf{e}_i^T$ is crucial.  It shows how the new basis matrix ($\tilde{\mathbf{B}}$) is calculated from the old basis matrix ($\mathbf{B}$) by adding a scaled vector to it.  The scaling factor is determined by the difference between the entering column ($\mathbf{a}_j$) and the leaving column ($\mathbf{a}_i$) divided by the dot product of the leaving column and a unit vector.  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method, emphasizing the matrix operations involved in the update of the basis matrix.  The vertical line and the notation $\mathbf{z}_B^*$ and $\mathbf{x}_B^*$ suggest a table or matrix structure.  The equation highlights the matrix operations involved in updating the basis matrix. The slide is focused on the third step of the simplex method, which is to update the basis matrices.
+
+
+
+
+Slide 14
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+$\tilde{\mathbf{B}} = \mathbf{B} (\mathbf{I} + (\Delta \mathbf{x}_B - \mathbf{e}_i) \mathbf{e}_i^T)$
+
+$\mathbf{B}^{-1} = (\mathbf{I} + (\Delta \mathbf{x}_B - \mathbf{e}_i) \mathbf{e}_i^T)^{-1}$
+
+$\tilde{\mathbf{B}}^{-1} = \mathbf{B}^{-1} (\mathbf{I} - (\Delta \mathbf{x}_B - \mathbf{e}_i) \mathbf{e}_i^T)$
+
+PROPOSITION 8.1. Given two column vectors $\mathbf{u}$ and $\mathbf{v}$ for which $1 + \mathbf{v}^T \mathbf{u} \ne 0$,
+$(\mathbf{I} + \mathbf{u} \mathbf{v}^T)^{-1} = \mathbf{I} - \frac{\mathbf{u} \mathbf{v}^T}{1 + \mathbf{v}^T \mathbf{u}}$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the update of the basis matrix $\mathbf{B}$.  It presents the formula for updating the inverse of the basis matrix $\mathbf{B}^{-1}$ after the entering and leaving variables have been determined.  The equation $\tilde{\mathbf{B}} = \mathbf{B} (\mathbf{I} + (\Delta \mathbf{x}_B - \mathbf{e}_i) \mathbf{e}_i^T)$ is crucial.  It shows how the new basis matrix ($\tilde{\mathbf{B}}$) is calculated from the old basis matrix ($\mathbf{B}$) by adding a scaled vector to it.  The scaling factor is determined by the difference between the entering column ($\mathbf{a}_j$) and the leaving column ($\mathbf{a}_i$) divided by the dot product of the leaving column and a unit vector.  The slide also provides a proposition for calculating the inverse of a matrix that has been updated by adding a scaled vector.  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method, emphasizing the matrix operations involved in the update of the basis matrix.  The vertical line and the notation $\mathbf{z}_B^*$ and $\mathbf{x}_B^*$ suggest a table or matrix structure.  The equation highlights the matrix operations involved in updating the basis matrix. The slide is focused on the third step of the simplex method, which is to update the basis matrices.  The proposition provides a formula for calculating the inverse of a matrix that has been updated by adding a scaled vector, which is a useful tool for updating the inverse of the basis matrix in the simplex method.
+
+
+
+
+Slide 15
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+$\mathbf{B}_k = \mathbf{B}_0 \mathbf{E}_1 \mathbf{E}_2 \dots \mathbf{E}_k$
+
+$\mathbf{B}_k^{-1} = \mathbf{E}_k^{-1} \mathbf{E}_{k-1}^{-1} \dots \mathbf{E}_1^{-1} \mathbf{B}_0^{-1}$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the update of the basis matrix $\mathbf{B}$ in the simplex method, expressed in terms of elementary matrices.  It shows how the basis matrix $\mathbf{B}_k$ at iteration $k$ is constructed from the initial basis matrix $\mathbf{B}_0$ by multiplying by a sequence of elementary matrices ($\mathbf{E}_1, \mathbf{E}_2, \dots, \mathbf{E}_k$).  The formula $\mathbf{B}_k^{-1} = \mathbf{E}_k^{-1} \mathbf{E}_{k-1}^{-1} \dots \mathbf{E}_1^{-1} \mathbf{B}_0^{-1}$ shows how the inverse of the updated basis matrix is calculated.  This is a crucial step in the simplex method, as it allows for efficient calculation of the inverse of the basis matrix without having to recompute it from scratch at each iteration. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method, emphasizing the matrix operations involved in the update of the basis matrix.  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm.  The slide is focused on the efficient calculation of the inverse of the basis matrix in the simplex method.
+
+

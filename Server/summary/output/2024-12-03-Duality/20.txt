@@ -1,0 +1,47 @@
+Slide 20
+
+\textbf{Sensitivity Analysis (what if $c$, $b$ change)}
+
+\vspace{0.5cm}
+
+$(P) \quad \text{max} \quad \mathcal{S} = c^T x$
+\vspace{0.5cm}
+s.t. $\quad Ax \le b$
+\vspace{0.5cm}
+$\quad x \ge 0$
+
+\vspace{0.5cm}
+
+$(D) \quad \text{min} \quad \mathcal{S} = b^T y$
+\vspace{0.5cm}
+s.t. $\quad A^T y \ge c$
+\vspace{0.5cm}
+$\quad y \ge 0$
+
+\vspace{0.5cm}
+
+at opt. $\mathcal{S} = c^T x^* = b^T y^*$
+
+\vspace{0.5cm}
+
+If only $c$ changes:
+
+$\Delta \mathcal{S} = (\Delta c)^T x^*$
+
+\vspace{0.5cm}
+
+If only $b$ changes:
+
+$\Delta \mathcal{S} = (\Delta b)^T y^*$
+
+$y^*$: Shadow prices
+
+\vspace{0.5cm}
+
+$\mathcal{S}^* = c_B^T B^{-1} b$
+
+$\Delta \mathcal{S}^* = c_B^T (\Delta B^{-1}) b + c_B^T B^{-1} (\Delta b)$
+
+\textbf{Description:}
+
+This slide continues the discussion of sensitivity analysis in linear programming.  It presents formulas for calculating changes in the optimal solution value ($\Delta \mathcal{S}$) of the primal problem (P) when either the objective function coefficients ($c$) or the constraint values ($b$) change.  The formulas are more complex than those on the previous slide, involving the basis matrix ($B$), its inverse ($\bar{B}^{-1}$), and changes in the constraint values ($\Delta b$).  The notation indicates that these calculations are performed at the optimal solution.  The slide is likely part of a linear programming lecture, where the presenter is explaining how to perform sensitivity analysis to determine the impact of parameter changes on the optimal solution.  The formulas are crucial for determining the range of parameter changes that will not affect the optimality of the solution.  The formulas are more complex than those on the previous slide, involving the inverse of the basis matrix and other matrix operations.  The slide is likely to show how to apply these formulas to a specific example problem.

@@ -1,0 +1,21 @@
+Slide 11
+
+```latex
+\documentclass{article}
+
+\begin{document}
+
+\section*{Some Theoretical Results}
+
+\subsection*{[MG]}
+
+In spite of the Klee-Minty cube and similar artificial examples, the simplex method is being used successfully. Remarkable theoretical results indicate that these willful examples are rare indeed. For instance, it is known that if a linear program in equational form is generated in a suitable (precisely defined) way at random, then the number of pivot steps is of order at most $m^2$ with high probability. More recent results, in the general framework of the so-called smoothed complexity, claim that if we take an arbitrary linear program and then we change its coefficients by small random amounts, then the simplex method with a certain pivot rule reaches the optimum of the resulting linear program by polynomially many steps with high probability (a concrete bound on the polynomial depends on a precise specification of the "small random amounts" of change). The first theorem of this kind is due to Spielman and Teng, and for recent progress see
+
+R. Vershynin: Beyond Hirsch conjecture: Walks on random polytopes and the smoothed complexity of the simplex method, preprint, 2006.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of theoretical results regarding the performance of the Simplex method in linear programming.  It acknowledges that, despite worst-case examples, the Simplex method performs well in practice.  The slide introduces the concept of *smoothed complexity*, arguing that if the input linear program is perturbed by small random changes to its coefficients, then the Simplex method, with a suitable pivot rule, is likely to find the optimal solution in a polynomial number of steps.  The slide highlights that the number of steps is likely to be of order $m^2$, where $m$ is the number of constraints.  The slide also credits Spielman and Teng for a key theorem in this area and references further work by Vershynin.

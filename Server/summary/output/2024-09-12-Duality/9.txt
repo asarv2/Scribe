@@ -1,0 +1,24 @@
+Slide 9
+
+\textbf{Neg. Transpose Property is Preserved in each Simplex Step}
+
+[V.J] p.64
+
+\textbf{at Optimal:}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$\zeta^*$ & $c_1^*$ & $c_2^*$ & $\dots$ & $c_n^*$ \\ \hline
+$b_1^*$ & $-a_{11}^*$ & $-a_{12}^*$ & $\dots$ & $-a_{1n}^*$ \\ \hline
+$b_2^*$ & $-a_{21}^*$ & $-a_{22}^*$ & $\dots$ & $-a_{2n}^*$ \\ \hline
+$\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ \\ \hline
+$b_m^*$ & $-a_{m1}^*$ & $-a_{m2}^*$ & $\dots$ & $-a_{mn}^*$ \\ \hline
+\end{tabular}
+
+$c_j^* \ge 0$
+\newline
+$b_i^* \ge 0$
+
+\textbf{Description:}
+
+This slide summarizes the negative transpose property at the optimal solution of the simplex method for linear programming.  It shows a tableau (which is meant to be a matrix) representing the primal problem (P) at optimality.  The notation indicates that all the coefficients in the objective row ($c_j^*$) and the constraint rows ($b_i^*$) are non-negative at the optimal solution.  This is a crucial property, as it signifies that the solution found using the simplex method is indeed optimal.  The slide likely follows previous ones demonstrating simplex iterations, and now highlights the characteristics of the tableau at the optimal solution.  The notation $^*$ indicates values at the optimal solution.

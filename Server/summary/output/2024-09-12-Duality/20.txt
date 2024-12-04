@@ -1,0 +1,39 @@
+Slide 20
+
+[V.J] p.69
+\newline
+Four and Only Four Possibilities
+\newline
+(1) (P) has an optimal solution $\implies$ (D) also has an optimal solution, $\mathcal{S}^* = \mathcal{S}^*$, duality gap = 0
+\newline
+(2) (P) is feasible but unbounded $\implies$ (D) must be infeasible, $\mathcal{S}(x) \le \mathcal{S}(y) \implies +\infty$ (min empty set = $+\infty$)
+\newline
+(3) (D) is feasible but unbounded $\implies$ (P) must be infeasible, $\mathcal{S}(x) \le \mathcal{S}(y) \implies -\infty$ (max empty set = $-\infty$)
+\newline
+(4) Both (P) and (D) are infeasible
+\newline
+Example:
+\newline
+(P) maximize $2x_1 - x_2$
+\newline
+subject to $x_1 - x_2 \le 1$
+\newline
+$-x_1 + x_2 \le -2$
+\newline
+$x_1, x_2 \ge 0$
+\newline
+(D) minimize $y_1 - 2y_2$
+\newline
+subject to $y_1 - y_2 \ge 2$
+\newline
+$-y_1 + y_2 \ge -1$
+\newline
+$y_1, y_2 \ge 0$
+\newline
+(P) and (D) are inconsistent
+
+\textbf{Description:}
+
+This slide provides an example of how to apply the four possible outcomes of the primal and dual linear programming problems.  It shows a specific primal problem (P) and its corresponding dual problem (D).  The example demonstrates that the primal and dual problems can be inconsistent, meaning that there are no feasible solutions that satisfy all the constraints.  The slide likely follows a discussion of the Strong Duality Theorem and the four possible outcomes, and now illustrates a practical example of how to identify inconsistent problems.  The example shows that the constraints of the primal problem are inconsistent, which, according to the Strong Duality Theorem, implies that the dual problem is also infeasible.  The slide is a practical application of the theoretical concepts presented in previous slides.
+
+

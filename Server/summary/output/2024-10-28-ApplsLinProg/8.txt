@@ -1,0 +1,20 @@
+Slide 8
+
+\textbf{Reformulated Problem}
+
+\newline
+$\min 25 \sum_{i=1}^{12} Y_i + (17.5 \times 12) X$
+
+\newline
+s.t.
+\newline
+$a_i - X \le Y_i$
+\newline
+$0 \le Y_i$
+\newline
+$X \ge 0$
+
+
+\textbf{Description:}
+
+This slide presents a reformulation of the workforce planning problem from the previous slide.  The objective function now explicitly minimizes the total cost, which is the sum of the cost of temporary employees ($25 \sum_{i=1}^{12} Y_i$) and the cost of regular employees ($17.5 \times 12 \times X$).  The constraints are also presented, ensuring that the number of hours of temporary employees ($Y_i$) is greater than or equal to the difference between the required labor hours ($a_i$) and the number of regular employees ($X$).  The non-negativity constraints for $Y_i$ and $X$ are also included.  This reformulation is likely a crucial step in solving the problem using standard linear programming techniques.

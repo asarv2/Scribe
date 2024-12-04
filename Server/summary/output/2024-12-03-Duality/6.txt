@@ -1,0 +1,24 @@
+Slide 6
+
+\begin{align*}
+\label{eq:1}
+(P) \quad &\text{max} \quad x_1 + x_2 \\
+&\text{s.t.} \quad 2x_1 + x_2 \le 14 \\
+& \quad \quad -x_1 + 2x_2 \le 8 \\
+& \quad \quad 2x_1 - x_2 \le 10 \\
+& \quad \quad x_1, x_2 \ge 0
+\end{align*}
+
+\vspace{0.5cm}
+
+\begin{align*}
+(D) \quad &\text{min} \quad 14y_1 + 8y_2 + 10y_3 \\
+&\text{s.t.} \quad 2y_1 - y_2 + 2y_3 \ge 1 \\
+& \quad \quad y_1 + 2y_2 - y_3 \ge 1 \\
+& \quad \quad y_1 - 2y_2 + 2y_3 \ge 0 \\
+& \quad \quad y_1, y_2, y_3 \ge 0
+\end{align*}
+
+\textbf{Description:}
+
+This slide restates the primal and dual linear programming problems from the previous slide.  It clearly displays the primal problem (P) and its corresponding dual problem (D).  The primal problem (P) is to maximize $x_1 + x_2$ subject to the constraints $2x_1 + x_2 \le 14$, $-x_1 + 2x_2 \le 8$, $2x_1 - x_2 \le 10$, and $x_1, x_2 \ge 0$. The dual problem (D) is to minimize $14y_1 + 8y_2 + 10y_3$ subject to the constraints $2y_1 - y_2 + 2y_3 \ge 1$, $y_1 + 2y_2 - y_3 \ge 1$, $y_1 - 2y_2 + 2y_3 \ge 0$, and $y_1, y_2, y_3 \ge 0$.  The slide is likely part of a linear programming lecture, where the presenter is reviewing the primal and dual problems for the example problem.  The presentation of the problems in this format emphasizes the correspondence between the coefficients of the primal and dual problems.

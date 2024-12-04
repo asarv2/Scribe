@@ -1,0 +1,20 @@
+Slide 4
+
+\textbf{Diet Problem}
+
+\begin{tabular}{c|cccccc|c}
+ & $F_1$ & $C_1$ & $C_2$ & $C_3$ & $\dots$ & $C_n$ & \\
+\hline
+$N_1$ & $a_{11}$ & $a_{12}$ & $a_{13}$ & $a_{1j}$ & $\dots$ & $a_{1n}$ & $b_1$ \\
+$N_2$ & $a_{21}$ & $a_{22}$ & $a_{23}$ & $a_{2j}$ & $\dots$ & $a_{2n}$ & $b_2$ \\
+$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+$N_i$ & $a_{i1}$ & $a_{i2}$ & $a_{i3}$ & $a_{ij}$ & $\dots$ & $a_{in}$ & $b_i$ \\
+$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+$N_m$ & $a_{m1}$ & $a_{m2}$ & $a_{m3}$ & $a_{mj}$ & $\dots$ & $a_{mn}$ & $b_m$ \\
+\hline
+ & $c_1$ & $c_2$ & $c_3$ & $c_j$ & $\dots$ & $c_n$ &  
+\end{tabular}
+
+\textbf{Description:}
+
+This slide builds upon the previous slide's table representation of the diet problem.  It now includes a new row at the bottom of the table, labeled with the costs ($c_j$) of each food ($F_j$).  This bottom row is crucial for the objective function in the linear programming formulation of the diet problem.  The table now explicitly shows the coefficients for the objective function, which is to minimize the total cost of the food consumed.  The values in the table ($a_{ij}$) represent the amount of nutrient $i$ in one unit of food $j$.  The values in the bottom row ($c_j$) represent the cost of each food.  The values in the rightmost column ($b_i$) represent the minimum required intake of each nutrient.  This complete table is now ready to be used to formulate the linear programming problem.

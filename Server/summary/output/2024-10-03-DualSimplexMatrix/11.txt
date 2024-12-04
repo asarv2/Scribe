@@ -1,0 +1,34 @@
+Slide 11
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Simplex Method in Matrix Form \textit{[LVJ Ch.6]}}
+
+(3) Update $\mathbf{B}$, $\mathbf{N} \implies (\mathbf{B}_{00} \mid \mathbf{x}_j) \mathbf{u}_{ij}$
+$(\mathbf{N}_{00} \mid \mathbf{y}_i) \mathbf{u}_{ij}$
+
+$\begin{array}{c|c}
+\mathbf{z}_B^* & -(\mathbf{B}^{-1} \mathbf{N}) \\
+\hline
+\mathbf{x}_B^* &
+\end{array}$
+
+$\implies (\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j = \Delta \mathbf{x}_B$
+
+$\implies \Delta \mathbf{x}_B = \frac{-\mathbf{x}_B^*}{\pi} \ge 0$
+
+$\implies$ determine leaving variable, $x_i^*$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of the simplex method in matrix form, focusing on the update of the basis matrices $\mathbf{B}$ and $\mathbf{N}$.  It shows how the basis matrices are updated after the entering and leaving variables have been determined.  The notation $(\mathbf{B}_{00} \mid \mathbf{x}_j) \mathbf{u}_{ij}$ and $(\mathbf{N}_{00} \mid \mathbf{y}_i) \mathbf{u}_{ij}$ suggests a specific update procedure, likely involving matrix operations to maintain the correct form of the tableau.  The slide also reiterates the calculation of the change in basic variables ($\Delta \mathbf{x}_B$) and the determination of the leaving variable ($x_i^*$).  The notation suggests a linear programming problem in a standard form, ready for application of the simplex algorithm. The reference "[LVJ Ch.6]" indicates the source of the material.  The slide is likely part of a larger presentation on the simplex method, emphasizing the matrix operations involved in the update of the basis matrices.  The vertical line and the notation $\mathbf{z}_B^*$ and $\mathbf{x}_B^*$ suggest a table or matrix structure.  The equation $(\mathbf{B}^{-1} \mathbf{N}) \mathbf{e}_j = \Delta \mathbf{x}_B$ highlights the matrix operations involved in determining the change in the basic variables. The slide is focused on the third step of the simplex method, which is to update the basis matrices.
+
+

@@ -1,0 +1,36 @@
+Slide 29
+
+$y = \begin{bmatrix}
+y_1 \\
+y_2 \\
+y_3
+\end{bmatrix} = \begin{bmatrix}
+1 \\
+2 \\
+0
+\end{bmatrix}$
+
+\vspace{0.5cm}
+
+(P) $\quad \text{min} \quad x_1 + 2x_2$
+
+s.t. $\quad x_1 + x_2 \le 5$
+$\quad x_1 \le 4$
+$\quad x_2 \le 3$
+$\quad x_1, x_2 \ge 0$
+
+\vspace{0.5cm}
+
+(D) $\quad \text{max} \quad 5y_1 + 4y_2 + 3y_3$
+
+s.t. $\quad y_1 + y_2 \le 1$
+$\quad y_1 \le 1$
+$\quad y_2 \le 2$
+$\quad y_3 \le 0$
+$\quad y_1, y_2, y_3 \ge 0$
+
+\textbf{Description:}
+
+This slide presents the primal and dual linear programming problems, likely for a midterm exam.  The primal problem (P) is to maximize $x_1 + 2x_2$ subject to constraints $x_1 + x_2 \le 5$, $x_1 \le 4$, $x_2 \le 3$, and $x_1, x_2 \ge 0$. The dual problem (D) is to maximize $5y_1 + 4y_2 + 3y_3$ subject to constraints $y_1 + y_2 \le 1$, $y_1 \le 1$, $y_2 \le 2$, $y_3 \le 0$, and $y_1, y_2, y_3 \ge 0$.  The slide is likely part of a linear programming lecture or exam, where the presenter or student is formulating the dual problem from the primal problem.  The dual problem is derived from the primal problem by transposing the constraint matrix and swapping the objective function coefficients with the right-hand side constants of the primal constraints.  The slide is likely a step in the process of solving the problems using the simplex method or a similar algorithm.
+
+

@@ -1,0 +1,32 @@
+Slide 13
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Simplex Iterations in Matrix Form}
+
+\begin{align*}
+\max \ \ &\mathcal{S}^*(\mathbf{x}) = S^* + c_N^T x_N \\
+\text{s.t.} \ \ &x_B^* = B^{-1} b - (B^{-1} N) x_N \\
+&x_B^*, x_N \ge 0
+\end{align*}
+
+\begin{align*}
+\max \ \ &-\mathcal{Z}_N^* = - Z_N^* + c_N^T x_N \\
+\text{s.t.} \ \ &Z_N^* = (B^{-1} N)^T c_B - c_N \\
+&Z_B^*, Z_N^* \ge 0
+\end{align*}
+
+$S^* = c_B^T B^{-1} b$, $Z_N^* = (B^{-1} N)^T c_B - c_N$, $x_B^* = B^{-1} b$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the objective function and constraints in matrix form, specifically for a simplex iteration.  The top formulation, labeled ($\mathcal{S}^*$), shows the objective function in terms of the basic variables ($x_B^*$) and non-basic variables ($x_N$).  The constraint equation is expressed as $x_B^* = B^{-1} b - (B^{-1} N) x_N$.  The bottom formulation, labeled ($-\mathcal{Z}_N^*$), shows the negative of the objective function in terms of the dual variables ($Z_N^*$) and non-basic variables ($x_N$).  The constraint equation is expressed as $Z_N^* = (B^{-1} N)^T c_B - c_N$.  The equations $S^* = c_B^T B^{-1} b$, $Z_N^* = (B^{-1} N)^T c_B - c_N$, and $x_B^* = B^{-1} b$ are explicitly stated, providing the necessary components for updating the simplex tableau during an iteration.  The notation $B$, $N$, $c_B$, $c_N$, and $B^{-1}$ are all matrix representations used in the simplex algorithm.  This slide is likely part of a lecture explaining the simplex method's underlying structure and how the tableau is updated during iterations.  The slide is likely part of a lecture explaining the simplex method's underlying structure and how the tableau is updated during iterations.  The notation suggests a specific step in the algorithm, likely involving the selection of a pivot element to update the basis.
+
+

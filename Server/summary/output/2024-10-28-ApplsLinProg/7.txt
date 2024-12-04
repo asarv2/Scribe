@@ -1,0 +1,8 @@
+Slide 7
+
+The slide presents a problem statement and a possible solution for a linear programming problem related to workforce planning.  It describes a distributor of office equipment that needs to plan its workforce for the year, considering seasonal peaks and valleys in demand.  The problem involves two types of employees: regular employees and temporary employees.  The cost of regular employees is $17.50/hour, and the cost of temporary employees is $25/hour.  The predicted labor hours needed for each month are given in a table.  The problem is to minimize the total labor costs.  The objective function is to minimize $\sum_{i=1}^{12} (25 \max(a_i - x, 0) + 17.50 x)$.  The problem statement also includes instructions to reformulate the problem as a linear programming problem and to solve it using calculus to find the optimal value for $x$.
+
+
+\textbf{Description:}
+
+This slide introduces a new linear programming problem, focusing on workforce optimization.  The problem involves a company needing to determine the optimal number of employees (regular and temporary) to meet fluctuating monthly labor demands.  The objective is to minimize the total labor costs while ensuring sufficient labor hours are available each month.  The slide sets the stage for the mathematical formulation and solution of this workforce planning problem.

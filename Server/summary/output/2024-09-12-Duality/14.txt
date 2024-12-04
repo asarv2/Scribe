@@ -1,0 +1,21 @@
+Slide 14
+
+\textbf{Strong Duality Theorem}
+
+$\mathcal{P} \neq$
+\newline
+at (P)'s optimal:
+\newline
+$\mathcal{S} = \mathcal{S}^* + \sum_{j} c_j^* x_j^* + \sum_{i} 0 w_i^*$
+\newline
+$(x_1^*, x_2^*, \dots, x_n^*, w_1^*, \dots, w_m^*)$
+\newline
+$= \mathcal{S}^* + \sum_{j} c_j^* x_j^* + \sum_{i} d_i^* w_i^*$
+\newline
+$= (\mathcal{S}^* + \sum_{i} d_i^* b_i) + \sum_{j} (c_j^* - \sum_{i} a_{ij} d_i^*) x_j^*$
+
+\textbf{Description:}
+
+This slide continues the proof of the Strong Duality Theorem for linear programming.  It shows the primal objective function ($\mathcal{S}$) rewritten at the optimal solution of the primal problem (P) in terms of non-basic variables ($x_j^*$) and basic variables ($w_i^*$).  The notation $c_j^*$, $x_j^*$, $w_i^*$, and $d_i^*$ represent the optimal values of the primal variables, slack variables, and dual variables, respectively.  The equation shows that the optimal value of the primal objective function ($\mathcal{S}^*$) is equal to the sum of the optimal values of the non-basic variables and a term involving the slack variables.  The final equation shows the relationship between the optimal primal objective function value and the optimal dual objective function value.  This is a crucial step in the proof, as it demonstrates the equality of the optimal values of the primal and dual objective functions.  The slide likely follows previous ones demonstrating simplex iterations, and now highlights the characteristics of the tableau at the optimal solution for the dual problem.
+
+

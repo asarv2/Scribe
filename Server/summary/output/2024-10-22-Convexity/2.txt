@@ -1,0 +1,26 @@
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Theorem 10.1}
+$S$ is convex $\iff$
+it contains all conv. comb. of points in $S$
+
+\textbf{Proof} $\Leftarrow$
+Suppose $S$ contain all conv. comb. of pts in $S$
+Then clearly, for any $z_1, z_2 \in S$
+$\lambda z_1 + (1-\lambda) z_2 \in S$
+$0 \le \lambda \le 1$
+$\implies S$ is convex
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents a theorem (Theorem 10.1) about convex sets.  It states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof ($\Leftarrow$) demonstrates this by showing that if a set contains all convex combinations of its points, then it must be convex.  The notation and content are typical of a linear programming or optimization lecture, focusing on the theoretical properties of convex sets.  The handwritten style suggests a classroom setting.

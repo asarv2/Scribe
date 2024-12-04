@@ -1,0 +1,12 @@
+Slide 7
+
+Replacement of food by pills for each $N_i$'s
+$N_i$ = pills  $i=1,2,\dots,m$
+$y_i$ = unit price of pill for $N_i$
+1 unit of $F_j$ contains $a_{ij}$ unit of $N_i$
+Price/Value of (1 unit) $F_j = \sum_{i} y_i a_{ij}$
+Maximize profit by selling pills
+
+\textbf{Description:}
+
+This slide describes a variation of the diet problem, where instead of minimizing the cost of food, the objective is to maximize the profit from selling pills that contain nutrients.  The $N_i$ represent nutrients, and $F_j$ represent foods.  The $a_{ij}$ values are the same as in the previous diet problem slides, representing the amount of nutrient $i$ in food $j$.  The $y_i$ values represent the unit price of a pill containing nutrient $i$.  The key change is that the value of each food item ($F_j$) is now calculated as the sum of the values of the nutrients it contains, weighted by the unit price of each nutrient pill ($y_i$).  This formulation allows for a different optimization problem, where the goal is to maximize the profit from selling nutrient pills derived from the foods.  This is a transformation of the original diet problem to a profit maximization problem.

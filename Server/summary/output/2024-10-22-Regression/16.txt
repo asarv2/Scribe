@@ -1,0 +1,18 @@
+Slide 16
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Maximum Inscribed Circle in a Convex Polyhedron}
+
+\textit{Find} the largest circle that can be inscribed in a convex polyhedron.
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide restates the problem of finding the maximum inscribed circle within a convex polyhedron.  It's a concise restatement of the problem introduced in the previous slide.  The handwritten style indicates a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the largest possible circle that can fit entirely inside a given convex polygon.  The problem is likely to involve finding the optimal center and radius of the inscribed circle.  The reference to "EMG" and "See 2.6" suggests that this problem is related to a specific section or example in a textbook or lecture notes.  The slide is likely a summary or a transition to the next topic.

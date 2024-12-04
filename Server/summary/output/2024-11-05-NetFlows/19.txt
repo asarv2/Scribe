@@ -1,0 +1,21 @@
+Slide 19
+
+\textbf{Spanning Trees and Bases}
+
+For example, let node "g" be the root node in the spanning tree in Figure 14.6. Starting with it, we compute the dual variables as follows:
+
+\begin{itemize}
+    \item across arc (g,e): $y_e - y_g = 19 \implies y_e = 19$
+    \item across arc (g,b): $y_b - y_g = 33 \implies y_b = 33$
+    \item across arc (b,c): $y_c - y_b = 65 \implies y_c = 98$
+    \item across arc (f,b): $y_b - y_f = 48 \implies y_f = -15$
+    \item across arc (f,a): $y_a - y_f = 56 \implies y_a = 41$
+    \item across arc (a,d): $y_d - y_a = 28 \implies y_d = 69$
+\end{itemize}
+
+Now that we know the dual variables, the dual slacks for the arcs not in the spanning tree $T$ can be computed using $z_{ij} = y_j - y_i + c_{ij}$  $(i,j) \notin T$ (which is just the dual feasibility condition solved for $z_{ij}$). These values are shown on ...
+
+
+\textbf{Description:}
+
+This slide provides an example of how to compute dual variables ($y_i$) for a given spanning tree ($T$) in a network flow problem.  It demonstrates the step-by-step calculation of dual variables starting from a chosen root node ("g").  The slide likely refers to Figure 14.6, which is not included here, but would show the network structure.  The example shows how to use the dual flow equation ($y_j - y_i + z_{ij} = c_{ij}$) to determine the dual variables for each node in the network, given the spanning tree.  The slide is crucial for understanding how to apply the theory to specific network flow problems.  The values calculated for the dual variables ($y_i$) are used to compute the dual slacks ($z_{ij}$) for arcs not in the spanning tree.  The slide likely prepares the reader for the next step in the solution process, which would involve using the complementary slackness condition to determine optimality.

@@ -1,0 +1,36 @@
+Slide 17
+
+\textbf{Duality for General LP}
+
+\begin{itemize}
+    \item \textbf{Primal Problem (P)}
+    \begin{align*}
+        \max \xi(x) &= c^T x \\
+        \text{s.t.} \quad Ax &\le b \\
+        x &\ge 0
+    \end{align*}
+    \item \textbf{Dual Problem (D)}
+    \begin{align*}
+        \min \xi(\lambda) &= \lambda^T b \\
+        \text{s.t.} \quad A^T \lambda &\ge c \\
+        \lambda &\ge 0
+    \end{align*}
+    \item \textbf{Lagrangian Function}
+    \begin{align*}
+        L(x,\lambda) &= c^T x - \lambda^T (Ax - b) = c^T x - \lambda^T Ax + \lambda^T b
+    \end{align*}
+    \item $\xi(\lambda,\mu) = \begin{cases}
+        \lambda^T b & \text{if } A^T \lambda = c \\
+        \infty & \text{otherwise}
+    \end{cases}$
+    \item \textbf{Strong Duality}
+    \begin{itemize}
+        \item If $x^*$ is optimal for (P) and $\lambda^*$ is optimal for (D), then $\xi(x^*) = \xi(\lambda^*)$.
+    \end{itemize}
+\end{itemize}
+
+\textbf{Description:}
+
+This slide continues the discussion of duality in linear programming, focusing on the conditions for strong duality.  It restates the primal and dual problems in standard form.  The Lagrangian function $L(x,\lambda)$ is shown, and the slide then analyzes the maximum value of the Lagrangian function with respect to $x$.  The key point is that the maximum value of $L(x,\lambda)$ is either unbounded or equal to $\lambda^T b$ if $A^T \lambda = c$.  The slide introduces the concept of strong duality, stating that if an optimal solution $x^*$ exists for the primal problem (P) and an optimal solution $\lambda^*$ exists for the dual problem (D), then the optimal values of the primal and dual problems are equal ($\xi(x^*) = \xi(\lambda^*)$).  This is a crucial result in linear programming duality, as it provides a way to find the optimal solution to one problem by solving the other.  The slide is likely part of a larger presentation on duality and optimization techniques in linear programming, preparing the audience for the next steps in the derivation of the strong duality theorem.
+
+

@@ -1,0 +1,32 @@
+Slide 11
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{P} $\max \ \zeta = c^T x$
+
+s.t. $Ax \le b$
+
+$x \ge 0$
+
+\textbf{at Opt:} $\zeta = c_B^T B^{-1} b - z_N^T X_N$
+
+$X_B = B^{-1} b - (B^{-1} N) X_N$
+
+$z_N = (B^{-1} N)^T c_B - c_N \ge 0$
+
+$X_B = B^{-1} b \ge 0$
+
+$\zeta = c_B^T B^{-1} b = b^T B^{-T} c_B$
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This is slide 11 of a 15-slide lecture on Linear Programming.  It presents the fundamental equations and conditions for the optimal solution of a linear programming problem (P). The slide summarizes the optimal objective function value ($\zeta$) and the optimal values of the basic variables ($X_B$) in terms of the basis matrix ($B$), the non-basis matrix ($N$), the objective function coefficients ($c_B$, $c_N$), and the right-hand side vector ($b$).  The equations highlight the relationships between the primal and dual variables, and the conditions for optimality, specifically the non-negativity of the reduced costs ($z_N$).  The equations are crucial for understanding the simplex method and the relationship between the primal and dual problems.  The notation suggests that the lecture is covering the simplex method, a common algorithm for solving linear programming problems.
+
+

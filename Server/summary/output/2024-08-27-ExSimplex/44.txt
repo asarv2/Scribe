@@ -1,0 +1,23 @@
+Slide 43
+
+Back to Original Problem
+
+$\max \mathcal{Z} = -2x_1 - x_2$
+subject to
+$-x_1 + x_2 \le -1$
+$-x_1 - 2x_2 \le -2$
+$x_2 \le 1$
+$x_1, x_2 \ge 0$
+
+We already have
+$x_1 = 2$
+$x_2 = 1$
+$\mathcal{Z} = -2(2) - 1 = -5$
+
+\textbf{Description:}
+
+This slide returns to the original linear programming problem after solving the auxiliary problem.  It restates the original objective function and constraints.  The optimal solution to the auxiliary problem, $x_1 = 2$, $x_2 = 1$, $x_0 = 0$, is now a feasible solution to the original problem.  The slide then substitutes these values into the original objective function, $\mathcal{Z} = -2x_1 - x_2$, to calculate the corresponding objective function value for the original problem, which is -5.  The context suggests this is the final step in the process, where the optimal solution to the original problem is determined.  The slide number (43) is also included.
+
+
+
+

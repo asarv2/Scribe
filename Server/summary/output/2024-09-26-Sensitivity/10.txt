@@ -1,0 +1,25 @@
+Slide 10
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Sensitivity and Parametric Analysis}
+
+\textbf{Still optimal?}
+
+\begin{align*}
+\xi &= 13 - 3x_2 - 1x_4 - 1x_6 \\
+x_3 &= 1 + x_2 + 3x_4 - 2x_6 \\
+x_1 &= 2 - 2x_2 - 2x_4 + x_6 \\
+x_5 &= 1 + 5x_2 + 2x_4
+\end{align*}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the sensitivity analysis of the linear programming problem.  The question "Still optimal?" indicates that the analysis is focused on determining if the current optimal solution remains optimal when the constraint values are changed.  The equations displayed are the same as in Slide 2 and 3, showing the relationships between the original variables ($x_1$, $x_2$, $x_3$, $x_5$) and the slack variables ($x_4$, $x_6$).  The variable $\xi$ represents the objective function value at the optimal solution.  The expressions for $x_1$, $x_3$, and $x_5$ are in terms of the other variables, indicating the basic variables and their relationships to the non-basic variables.  This slide is likely a step in the process of determining the range of values for $\Delta b_i$ (from Slide 8) for which the current optimal solution remains valid.  The equations are presented in a table-like format, making it easier to see the relationships between the variables.  The slide is likely a continuation of the previous slide's analysis, focusing on the conditions for the optimality of the solution to remain valid under changes in the constraint values.  The repetition of this slide from the previous one suggests that the analysis is not yet complete.

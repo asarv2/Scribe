@@ -1,0 +1,53 @@
+Slide 1
+
+\textbf{Max Flow Min Cut}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, inner sep=1pt, minimum size=5pt]
+
+\node (s) at (0, 2) [label=left:$S$] {$0$};
+\node (t) at (8, 2) [label=right:$t$] {$0$};
+\node (a) at (2, 0) {$0$};
+\node (b) at (4, 0) {$0$};
+\node (c) at (6, 0) {$0$};
+
+\node (s_label) at (0, 2.5) [label=left: (Source)] {};
+\node (t_label) at (8, 2.5) [label=right: (sink)] {};
+
+\draw[->, thick] (s) -- (a) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (a);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (b);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (c);
+\draw[->, thick] (a) -- (4, -1) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (6, -1) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (8, -1) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\node[draw, red, rounded corners, minimum width=2cm, minimum height=0.5cm] at (4, -2.5) {$0 \le x_{ij} \le u_{ij}$};
+\end{tikzpicture}
+
+\textbf{What is the max. flow from $S$ to $t$ subject to $0 \le x_{ij} \le u_{ij}$?}
+
+\textbf{Description:}
+
+This slide presents a network flow problem, specifically a maximum flow problem.  The diagram shows a directed graph with nodes (circles) representing points in the network and edges (lines with arrows) representing possible flow paths.  The node labeled 'S' is the source, and the node labeled 't' is the sink.  The numbers 0 are placed at each node, and the edges have no explicit capacity values.  The red dashed lines highlight some of the possible flow paths.  The text below the diagram asks for the maximum flow from the source to the sink, subject to the constraint that the flow on each edge ($x_{ij}$) must be between 0 and the capacity of that edge ($u_{ij}$). This is a standard linear programming problem formulation for maximum flow.  This is the first slide of a 17-slide presentation on the topic.

@@ -1,0 +1,33 @@
+Slide 6
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{L\textsuperscript{∞} Regression}
+
+\begin{equation*}
+\min_{x_1, \dots, x_n} \max_{i} |b_i - \sum_{j=1}^n a_{ij} x_j|
+\end{equation*}
+
+\begin{equation*}
+\min_X \|b - AX\|_\infty
+\end{equation*}
+
+\begin{equation*}
+\min \delta
+\end{equation*}
+
+s.t.
+\begin{equation*}
+-\delta \le b_i - \sum_{j=1}^n a_{ij} x_j \le \delta, \quad \forall i
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide presents the L\textsuperscript{∞} regression problem.  It shows the objective function for minimizing the maximum absolute error between the observed values ($b_i$) and the predicted values ($\sum_{j=1}^n a_{ij} x_j$).  The notation introduces the matrix representation of the problem, similar to the previous slides.  The slide emphasizes the use of the maximum absolute error, which is a key difference from the least squares (L\textsuperscript{2}) and least absolute deviations (L\textsuperscript{1}) methods.  The constraints are introduced, showing how the maximum error ($\delta$) is bounded by the difference between the observed and predicted values for all data points.  The handwritten style and mathematical notation indicate a lecture setting.  The context implies that this is part of a linear programming lecture, where the goal is to find the best-fit line (or hyperplane) to a set of data points, considering the maximum absolute error.  The slide number (6 of 22) suggests this is a continuation of the discussion on different regression methods.  The use of $\delta$ represents the maximum error allowed.

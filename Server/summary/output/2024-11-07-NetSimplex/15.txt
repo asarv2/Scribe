@@ -1,0 +1,18 @@
+Slide 15
+
+\textbf{Primal Network Simplex}
+
+\textit{Updating dual variables}
+
+\textit{Crossing} $\mathcal{I}$ and $\mathcal{II}$: if $a \in \mathcal{II} \implies b \in \mathcal{I}$
+
+$\tilde{y}_b - \tilde{y}_a = C_{ab} \implies \tilde{y}_a = \tilde{y}_b - C_{ab}$
+
+$(\tilde{y}_b - \tilde{y}_a + \tilde{z}_{ab} = C_{ab}) \implies \tilde{y}_a = \tilde{y}_b - z_{ab}$
+
+$\tilde{y}_p = \tilde{y}_p - z_{ab}, \ p \in \mathcal{II}$
+
+
+\textbf{Description:}
+
+This slide describes the update rule for dual variables when crossing between two trees ($\mathcal{I}$ and $\mathcal{II}$) in the Network Simplex Method.  The notation $\tilde{y}_b$, $\tilde{y}_a$, and $\tilde{z}_{ab}$ represent the updated values of the dual variables after a primal pivot step.  The equation $\tilde{y}_b - \tilde{y}_a = C_{ab}$ shows the relationship between the dual variables and the cost $C_{ab}$ associated with the edge connecting nodes a and b.  The slide specifically addresses the case where node a is in tree $\mathcal{II}$ and node b is in tree $\mathcal{I}$.  The update rule for $\tilde{y}_p$ for nodes in tree $\mathcal{II}$ is also given.  This is a crucial step in the algorithm, ensuring that the dual solution remains consistent with the updated primal solution as the spanning tree is modified.

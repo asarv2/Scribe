@@ -1,0 +1,20 @@
+Slide 6
+
+\begin{align*}
+(0) \quad \max \mathcal{Z} &= 3x_1 + 2x_2 \\
+\text{subject to} \quad &\omega_1 = 12 + x_1 - 3x_2 \\
+&\omega_2 = 8 - x_1 - x_2 \\
+&\omega_3 = 10 - 2x_1 + x_2 \\
+&x_1, x_2, x_3, \omega_1, \omega_2, \omega_3 \ge 0
+\end{align*}
+
+Idea of Simplex Method:
+
+(1) set all non-basic variables to zero - correspond to a vertex
+(2) choose a new set of (non) basic vars, to improve.
+((1) + (2)) is the same as moving from vertex to vertex.
+
+
+\textbf{Description:}
+
+This slide describes the Simplex method for solving linear programming problems.  It explains the core idea of the method, which is iteratively moving from one vertex of the feasible region to another, in order to find the optimal solution.  The method involves setting non-basic variables to zero, which corresponds to a vertex of the feasible region, and then choosing a new set of non-basic variables to potentially improve the objective function value.  The slide explicitly connects the Simplex method to the graphical approach by highlighting the movement between vertices.  The context suggests this is a continuation of the lecture on linear programming, explaining the algorithm behind the Simplex method.

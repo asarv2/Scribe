@@ -1,0 +1,30 @@
+Slide 7
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Inequality Constraints}
+
+\begin{itemize}
+    \item \textbf{Primal Problem}
+    \begin{align*}
+        \text{maximize } \xi &= f_0(x) \\
+        x \in \mathbb{R}^d \\
+        \text{subject to } f_i(x) &\le 0 \quad i=1,\dots,m \\
+        g_j(x) &= 0 \quad j=1,\dots,n
+    \end{align*}
+    \item \textbf{Lagrangian Function}
+    \begin{align*}
+        L(x,\lambda,\mu) &= f_0(x) - \sum_{i=1}^m \lambda_i f_i(x) - \sum_{j=1}^n \mu_j g_j(x)
+    \end{align*}
+\end{itemize}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces the Lagrangian function for a linear programming problem with both inequality and equality constraints.  The primal problem (shown in the first bullet point) is to maximize the objective function $f_0(x)$ subject to inequality constraints $f_i(x) \le 0$ for $i = 1, \dots, m$ and equality constraints $g_j(x) = 0$ for $j = 1, \dots, n$.  The second bullet point introduces the Lagrangian function $L(x,\lambda,\mu)$, which incorporates both types of constraints.  The Lagrangian function is defined as $L(x,\lambda,\mu) = f_0(x) - \sum_{i=1}^m \lambda_i f_i(x) - \sum_{j=1}^n \mu_j g_j(x)$, where $\lambda_i$ are the Lagrange multipliers associated with the inequality constraints and $\mu_j$ are the Lagrange multipliers associated with the equality constraints.  This slide is a crucial step in the development of the dual problem, which will be used to solve the optimization problem more efficiently.

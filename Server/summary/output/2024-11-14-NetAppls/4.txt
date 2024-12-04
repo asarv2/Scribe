@@ -1,0 +1,25 @@
+Slide 4
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Variants of Network Flows}
+\subsection*{Inequality constraints (Transportation Problem)}
+\textbf{[C] p. 320}
+
+$\sum_{j} x_{ij} + x_{id} = \sum_{i} s_i$, $\sum_{i} x_{ij} = d_j + x_{d_j}$
+
+$\sum_{i} s_i - \sum_{i} x_{id} = \sum_{j} d_j + \sum_{j} x_{d_j}$
+
+Hence, the new additional constraint:
+
+$\sum_{i} s_i - \sum_{i} x_{id} = \sum_{j} d_j + \sum_{j} x_{d_j}$
+
+
+\end{document}
+
+**Description:**
+
+This slide continues the discussion of the transportation problem, focusing on the algebraic representation of the constraints.  It presents the equations derived from the network diagram in the previous slide.  The equations $\sum_{j} x_{ij} + x_{id} = \sum_{i} s_i$ and $\sum_{i} x_{ij} = d_j + x_{d_j}$ are explicitly stated, showing the relationship between the flows to and from the dummy node and the total supply and demand.  The final equation, $\sum_{i} s_i - \sum_{i} x_{id} = \sum_{j} d_j + \sum_{j} x_{d_j}$, is a restatement of the balance condition, highlighting that the total supply must equal the total demand plus any unmet demand (represented by the flow to the dummy node).  This slide is a crucial step in formulating the transportation problem as a linear program, showing the algebraic equivalence of the network diagram's constraints.

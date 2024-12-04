@@ -1,0 +1,23 @@
+Slide 21
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 31} \hspace{1cm} Maximum Weight Matching
+
+\newline
+$\max \sum_{e \in E} w_e x_e$
+
+\newline
+s.t.
+\newline
+$\sum_{e \in \delta(v)} x_e = 1$ for all vertices $v$
+\newline
+$x_e \in \{0, 1\}$ for all edges $e$
+
+
+\textbf{Description:}
+
+This slide presents the linear programming formulation for the maximum weight matching problem.  The objective function $\max \sum_{e \in E} w_e x_e$ aims to maximize the total weight of the edges included in the matching.  The constraints ensure that each vertex ($v$) is incident to exactly one edge in the matching ($\sum_{e \in \delta(v)} x_e = 1$).  The variables $x_e$ are binary, indicating whether an edge $e$ is included in the matching ($x_e \in \{0, 1\}$).  This formulation is a crucial step in solving the maximum weight matching problem using linear programming techniques.  The slide is likely part of a lecture or presentation explaining how to use integer programming to solve combinatorial optimization problems.
+
+

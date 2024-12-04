@@ -1,0 +1,23 @@
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Equality Constraints}
+
+\begin{itemize}
+    \item Compare $\max f_0$ with constraints $\leftrightarrow$ $\max L$ with no constraints
+    \item Let $x \in \mathcal{G}$, i.e. $g_j(x) \ge 0$
+    \item $f_0(x) = f_0(\tilde{x}) - \sum_j \mu_j g_j(\tilde{x}) = 0$
+    \item $\implies \max_x [f_0(x) - \sum_j \mu_j g_j(x)] = \max_x L(x,\mu) = \xi(\mu)$
+\end{itemize}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of equality constraints in linear programming, building on the previous slide's introduction of the Lagrangian.  It explicitly shows how to compare the maximization of the objective function ($f_0$) with constraints to the maximization of the Lagrangian function ($L$) without constraints.  The key idea is that if a point $\tilde{x}$ satisfies the equality constraints ($g_j(\tilde{x}) = 0$), then the objective function value at $\tilde{x}$ is equal to the Lagrangian value at $\tilde{x}$ and $\mu$.  The slide uses the notation $\xi(\mu)$ to represent the maximum value of the Lagrangian function with respect to $x$.  This is likely part of a larger presentation on duality and optimization techniques in linear programming, demonstrating how to formulate and solve optimization problems with equality constraints using Lagrange multipliers.

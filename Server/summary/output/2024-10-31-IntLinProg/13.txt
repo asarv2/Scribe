@@ -1,0 +1,31 @@
+Slide 13
+
+\textbf{Branch-and-Bound}
+
+\textit{Discussion of Depth-First Search (cont.)}
+
+The third reason to favor depth-first search is perhaps the most important. It is based
+on the observation that as one moves deeper in the enumeration tree, each subsequent
+linear programming problem is obtained from the preceding one by simply adding (or
+refining) an upper/lower bound on one specific variable. To see why this is an advan-
+tage, consider, for example, problem $P_2$, which is a refinement of $P_0$. The optimal
+dictionary for problem $P_0$ is recorded as
+
+$\qquad \xi = 205 \frac{5}{3} - \frac{5}{3} w_1 - \frac{1}{3} w_2$
+
+$\qquad x_1 = \frac{5}{3} - \frac{1}{3} w_1 + \frac{7}{3} w_2$
+
+$\qquad x_2 = 10 + \frac{1}{3} w_1 - 10 w_2$
+
+Problem $P_2$ is obtained from $P_0$ by adding the constraint that $x_1 \ge 2$. Introducing a
+variable, $g_1$, to stand for the difference between $x_1$ and this lower bound and using the
+dictionary above to write $x_1$ in terms of the nonbasic variables, we get
+
+$\qquad g_1 = x_1 - 2 = \frac{1}{3} - \frac{1}{3} w_1 + \frac{7}{3} w_2$.
+
+
+\textbf{Description:}
+
+This slide continues the discussion of depth-first search in the Branch and Bound algorithm for integer programming.  It presents a third reason for preferring depth-first search, focusing on how subsequent problems in the enumeration tree are refinements of previous ones.  The slide illustrates this by showing how problem $P_2$ is derived from problem $P_0$ by adding a constraint ($x_1 \ge 2$).  The optimal dictionary for $P_0$ is presented, and the slide then shows how to express $x_1$ in terms of the nonbasic variables ($w_1$ and $w_2$) to incorporate the new constraint.  This demonstrates how each subsequent problem builds upon the previous one, potentially leading to efficiency gains.  The slide is likely part of a larger lecture series on integer programming and optimization techniques, providing a theoretical justification for the chosen search strategy.  The handwritten nature of the notes suggests this is a lecture or class notes, not a formal publication.
+
+

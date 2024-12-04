@@ -1,0 +1,28 @@
+Slide 19
+
+\textbf{Duality for "Traditional" LP}
+
+\begin{itemize}
+    \item \textbf{Primal Problem (P)}
+    \begin{align*}
+        \max \xi(x) &= c^T x \\
+        \text{s.t.} \quad Ax &\le b \\
+        x &\ge 0
+    \end{align*}
+    \item \textbf{Dual Problem (D)}
+    \begin{align*}
+        \min \xi(\lambda) &= \lambda^T b \\
+        \text{s.t.} \quad A^T \lambda &\ge c \\
+        \lambda &\ge 0
+    \end{align*}
+    \item \textbf{Lagrangian Function}
+    \begin{align*}
+        L(x,\lambda) &= c^T x - \lambda^T (Ax - b) = c^T x - \lambda^T Ax + \lambda^T b
+    \end{align*}
+\end{itemize}
+
+\textbf{Description:}
+
+This slide presents the primal and dual problems for a "traditional" linear program (LP), focusing on the specific form often encountered in applications.  The primal problem (P) is to maximize the objective function $c^T x$ subject to the constraints $Ax \le b$ and $x \ge 0$.  The dual problem (D) is to minimize the function $\lambda^T b$ subject to the constraints $A^T \lambda \ge c$ and $\lambda \ge 0$.  The Lagrangian function $L(x,\lambda)$ is also shown, which is a key component in the duality relationship.  The slide is likely part of a larger presentation on duality and optimization techniques in linear programming, specifically focusing on the standard form of the primal and dual problems for a traditional LP.  The notation $c^T x$ represents the dot product of the vectors $c$ and $x$.  The notation $A^T$ represents the transpose of the matrix $A$.  The slide is likely to be followed by a discussion of the relationship between the primal and dual problems, and how the Lagrangian function is used to establish the duality relationship.
+
+

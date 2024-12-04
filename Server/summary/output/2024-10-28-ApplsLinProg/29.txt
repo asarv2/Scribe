@@ -1,0 +1,73 @@
+Slide 29
+
+\textbf{Cutting Stock Problem}
+
+\newline
+\textit{[EMG] p. 267}
+
+\newline
+In order to engage linear programming one has to be generous in introducing variables. We write down all of the requested widths: 135 cm, 108 cm, 93 cm, and 42 cm. We then list all possibilities of cutting a 3 m paper roll, in rolls of some of these widths (we need to consider only possibilities for which the wasted piece is shorter than 42 cm):
+
+\newline
+$P_1$: $2 \times 135$
+
+\newline
+$P_2$: $135 + 108 + 42$
+
+\newline
+$P_3$: $135 + 93 + 42$
+
+\newline
+$P_4$: $135 + 3 \times 93 + 42$
+
+\newline
+$P_5$: $2 \times 108 + 2 \times 42$
+
+\newline
+$P_6$: $108 + 2 \times 93$
+
+\newline
+$P_7$: $108 + 93 + 2 \times 42$
+
+\newline
+$P_8$: $108 + 93 + 4 \times 42$
+
+\newline
+$P_9$: $3 \times 93$
+
+\newline
+$P_{10}$: $2 \times 93 + 2 \times 42$
+
+\newline
+$P_{11}$: $93 + 4 \times 42$
+
+\newline
+$P_{12}$: $7 \times 42$
+
+\newline
+$x_1, x_2, \dots, x_{12} = \# \text{ of } P_i$, $i = 1, \dots, 12$
+
+\newline
+$x_i \ge 0$, integers
+
+\newline
+$\min x_1 + x_2 + \dots + x_{12}$
+
+\newline
+subject to $2 x_1 + x_2 + x_3 + x_4 + 2 x_5 + x_6 + x_7 + x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 97$
+
+\newline
+$x_2 + x_3 + x_4 + 2 x_5 + 2 x_6 + x_7 + x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 610$
+
+\newline
+$x_3 + 2 x_5 + 2 x_6 + x_7 + 2 x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 395$
+
+\newline
+$2 x_5 + 2 x_6 + x_7 + 2 x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 211$
+
+
+\textbf{Description:}
+
+This slide continues the cutting stock problem, defining the objective function and constraints for a linear programming formulation.  The variables $x_i$ represent the number of times a particular cutting pattern ($P_i$) is used.  The objective function $\min \sum_{i=1}^{12} x_i$ aims to minimize the total number of 3-meter rolls needed to satisfy the order.  The constraints are now presented, ensuring that the total number of rolls of each width is at least the required amount.  The slide is likely part of a lecture or presentation explaining how to use integer programming to solve cutting stock problems, showing the complete formulation of the problem in terms of variables and constraints.
+
+

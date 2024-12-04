@@ -1,0 +1,18 @@
+Slide 31
+
+\textbf{Proposed Solution}
+
+$\alpha = \frac{1}{2}$, $b = 0$
+
+$\implies -z_1 \le 0 \implies z_1 = 0$
+$\implies -z_2 \le 0 \implies z_2 = 0$
+$\implies -z_3 \le 0 \implies z_3 = 0$
+$\implies p - 2 \le z_4 \implies z_4 = p - 2$
+
+$\mathcal{S}^* = p - 2$
+
+\textbf{Description:}
+
+This slide presents a proposed solution to a linear programming problem, likely part of a sensitivity analysis.  The solution involves determining the optimal value of the objective function ($\mathcal{S}^*$) when a parameter ($p$) in a constraint changes.  The equations show the conditions for the slack variables ($z_1$, $z_2$, $z_3$, $z_4$) to be zero or positive, which are crucial for determining the optimal solution.  The final equation, $\mathcal{S}^* = p - 2$, indicates the optimal solution value in terms of the parameter $p$.  The slide is likely part of a linear programming lecture or exam, where the presenter or student is analyzing how changes in a constraint affect the optimal solution.
+
+

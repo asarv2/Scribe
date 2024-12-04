@@ -1,0 +1,21 @@
+Slide 16
+
+\textbf{Spanning Trees and Bases}
+
+\textbf{Example 14.1}
+
+Consider the network in Figure 14.12.  We want to find a spanning tree.
+
+\begin{enumerate}
+    \item Select a root node.  Let's choose node $f$.
+    \item Remove the row corresponding to the root node from the incidence matrix $A$.  This gives us $\tilde{A}$.
+    \item Remove the entry corresponding to the root node from the supply/demand vector $b$.  This gives us $\tilde{b}$.
+\end{enumerate}
+
+\textbf{Finding a Basis}
+
+A square submatrix of $\tilde{A}$ is a basis if and only if the arcs to which its columns correspond form a spanning tree.
+
+\textbf{Description:}
+
+This slide provides an example (Example 14.1) of how to find a spanning tree in a network flow problem.  It demonstrates the steps involved in selecting a root node, modifying the incidence matrix ($\tilde{A}$) and supply/demand vector ($\tilde{b}$), and then using Theorem 14.1 to identify a basis that corresponds to a spanning tree.  The slide likely refers to Figure 14.12, which is not included here, but would show the network structure.  The example demonstrates a practical application of the theoretical concepts presented in previous slides.  The slide is crucial for understanding how to apply the theory to specific network flow problems.

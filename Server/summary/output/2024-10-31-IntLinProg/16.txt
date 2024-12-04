@@ -1,0 +1,28 @@
+Slide 16
+
+\textbf{Gomory Cuts}
+
+maximize $8x_1 + 13x_2$
+subject to $10x_1 - 2x_2 \le 32$
+$4x_1 + 10x_2 \le 38$
+$-2x_1 + 10x_2 \le 29$
+$x_1, x_2 \ge 0$
+$x_1, x_2$ integers.
+
+Note: $A, b, X$ are integers
+and so are slacks.
+
+Optimal dictionary for the relaxed problem:
+
+$\qquad \xi = \frac{179}{3} - \frac{7}{3} w_1 - \frac{73}{54} w_2$
+
+$\qquad x_1 = \frac{11}{3} - \frac{5}{54} w_1 - \frac{1}{54} w_2$
+
+$\qquad x_2 = \frac{7}{3} + \frac{1}{27} w_1 - \frac{5}{54} w_2$
+
+$\qquad w_3 = 13 - \frac{5}{9} w_1 + \frac{8}{9} w_2$
+
+
+\textbf{Description:}
+
+This slide presents the optimal dictionary for the relaxed linear programming problem associated with the integer programming problem from slide 15.  The dictionary shows the objective function ($\xi$) and the expressions for the variables ($x_1$, $x_2$, and $w_3$) in terms of the non-basic variables ($w_1$ and $w_2$).  The slide is likely part of a larger lecture series on integer programming and optimization techniques, demonstrating the process of obtaining the optimal dictionary for the relaxed problem.  The handwritten nature of the notes suggests this is a lecture or class notes, not a formal publication.  The slide is likely to be followed by an explanation of how Gomory cuts are derived from this dictionary.  The presence of the fractional coefficients in the dictionary indicates that the optimal solution to the relaxed problem is not integer, which is why Gomory cuts are needed.

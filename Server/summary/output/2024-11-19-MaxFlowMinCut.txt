@@ -1,0 +1,432 @@
+Slide 1
+
+\textbf{Max Flow Min Cut}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, inner sep=1pt, minimum size=5pt]
+
+\node (s) at (0, 2) [label=left:$S$] {$0$};
+\node (t) at (8, 2) [label=right:$t$] {$0$};
+\node (a) at (2, 0) {$0$};
+\node (b) at (4, 0) {$0$};
+\node (c) at (6, 0) {$0$};
+
+\node (s_label) at (0, 2.5) [label=left: (Source)] {};
+\node (t_label) at (8, 2.5) [label=right: (sink)] {};
+
+\draw[->, thick] (s) -- (a) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (a);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (b);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (c);
+\draw[->, thick] (a) -- (4, -1) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (6, -1) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (8, -1) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\node[draw, red, rounded corners, minimum width=2cm, minimum height=0.5cm] at (4, -2.5) {$0 \le x_{ij} \le u_{ij}$};
+\end{tikzpicture}
+
+\textbf{What is the max. flow from $S$ to $t$ subject to $0 \le x_{ij} \le u_{ij}$?}
+
+\textbf{Description:}
+
+This slide presents a network flow problem, specifically a maximum flow problem.  The diagram shows a directed graph with nodes (circles) representing points in the network and edges (lines with arrows) representing possible flow paths.  The node labeled 'S' is the source, and the node labeled 't' is the sink.  The numbers 0 are placed at each node, and the edges have no explicit capacity values.  The red dashed lines highlight some of the possible flow paths.  The text below the diagram asks for the maximum flow from the source to the sink, subject to the constraint that the flow on each edge ($x_{ij}$) must be between 0 and the capacity of that edge ($u_{ij}$). This is a standard linear programming problem formulation for maximum flow.  This is the first slide of a 17-slide presentation on the topic.
+
+
+Slide 2
+
+\textbf{Max Flow Min Cut}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, inner sep=1pt, minimum size=5pt]
+
+\node (s) at (0, 2) [label=left:$S$] {$0$};
+\node (t) at (8, 2) [label=right:$t$] {$0$};
+\node (a) at (2, 0) {$0$};
+\node (b) at (4, 0) {$0$};
+\node (c) at (6, 0) {$0$};
+\node (d) at (3, 1) {$0$};
+\node (e) at (5, 1) {$0$};
+
+\node (s_label) at (-0.5, 2.5) [label=left: (Source)] {};
+\node (t_label) at (8.5, 2.5) [label=right: (sink)] {};
+
+\draw[->, thick] (s) -- (a) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (d) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (d) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (d) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (e) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (a);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (b);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (d);
+\draw[->, thick] (a) -- (4, -1) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (6, -1) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (8, -1) node[midway, above, sloped] {};
+\draw[->, thick] (d) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (e) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (d);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (e);
+\draw[->, thick, red!50!black] (b) to[out=135, in=45] (e);
+\draw[->, thick, red!50!black] (a) to[out=135, in=45] (c);
+\draw[->, thick, red!50!black] (d) to[out=135, in=45] (c);
+\draw[->, thick, purple] (a) to[out=135, in=45] (c);
+\draw[->, thick, purple] (b) to[out=135, in=45] (c);
+\draw[->, thick, purple] (d) to[out=135, in=45] (c);
+\draw[->, thick, purple] (e) to[out=135, in=45] (c);
+\draw[->, thick, purple] (s) to[out=135, in=45] (c);
+\draw[->, thick, purple] (s) to[out=135, in=45] (e);
+\draw[->, thick, purple] (s) to[out=135, in=45] (t);
+\draw[->, thick, purple] (a) to[out=135, in=45] (t);
+\draw[->, thick, purple] (b) to[out=135, in=45] (t);
+\draw[->, thick, purple] (c) to[out=135, in=45] (t);
+\draw[->, thick, purple] (d) to[out=135, in=45] (t);
+\draw[->, thick, purple] (e) to[out=135, in=45] (t);
+\node[draw, red, rounded corners, minimum width=4cm, minimum height=0.5cm] at (4, -2.5) {$N = C \cup C^c$, $s \in C$ ($t \in C^c$)};
+\node[draw, red, rounded corners, minimum width=4cm, minimum height=0.5cm] at (4, -3.5) {$K(C) = \sum_{i \in C, j \notin C} u_{ij}$ capacity of the cut $C$.};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide continues the discussion of the maximum flow problem. It introduces the concept of a cut (denoted by $C$) in the network.  The diagram now shows a more complex network with multiple nodes and edges.  The purple lines highlight a specific cut in the network.  The formula $N = C \cup C^c$, $s \in C$ ($t \in C^c$) defines the set $N$ as the union of the cut set $C$ and its complement $C^c$, with the source $s$ in $C$ and the sink $t$ in $C^c$.  The formula $K(C) = \sum_{i \in C, j \notin C} u_{ij}$ calculates the capacity of the cut $C$ by summing the capacities of all edges that cross the cut from nodes in $C$ to nodes outside of $C$. This is a crucial concept in the max-flow min-cut theorem.
+
+
+Slide 3
+
+\textbf{Max Flow Min Cut}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, inner sep=1pt, minimum size=5pt]
+
+\node (s) at (0, 2) [label=left:$S$] {$0$};
+\node (t) at (8, 2) [label=right:$t$] {$0$};
+\node (a) at (2, 0) {$0$};
+\node (b) at (4, 0) {$0$};
+\node (c) at (6, 0) {$0$};
+\node (d) at (3, 1) {$0$};
+\node (e) at (5, 1) {$0$};
+
+\node (s_label) at (-0.5, 2.5) [label=left: (Source)] {};
+\node (t_label) at (8.5, 2.5) [label=right: (sink)] {};
+
+\draw[->, thick] (s) -- (a) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (d) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (d) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (d) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (e) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (a);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (b);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (d);
+\draw[->, thick] (a) -- (4, -1) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (6, -1) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (8, -1) node[midway, above, sloped] {};
+\draw[->, thick] (d) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (e) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (d);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (e);
+\draw[->, thick, red!50!black] (b) to[out=135, in=45] (e);
+\draw[->, thick, red!50!black] (a) to[out=135, in=45] (c);
+\draw[->, thick, red!50!black] (d) to[out=135, in=45] (c);
+\draw[->, thick, purple] (a) to[out=135, in=45] (c);
+\draw[->, thick, purple] (b) to[out=135, in=45] (c);
+\draw[->, thick, purple] (d) to[out=135, in=45] (c);
+\draw[->, thick, purple] (e) to[out=135, in=45] (c);
+\draw[->, thick, purple] (s) to[out=135, in=45] (c);
+\draw[->, thick, purple] (s) to[out=135, in=45] (e);
+\draw[->, thick, purple] (s) to[out=135, in=45] (t);
+\draw[->, thick, purple] (a) to[out=135, in=45] (t);
+\draw[->, thick, purple] (b) to[out=135, in=45] (t);
+\draw[->, thick, purple] (c) to[out=135, in=45] (t);
+\draw[->, thick, purple] (d) to[out=135, in=45] (t);
+\draw[->, thick, purple] (e) to[out=135, in=45] (t);
+\node[draw, red, rounded corners, minimum width=4cm, minimum height=0.5cm] at (4, -2.5) {$N = C \cup C^c$, $s \in C$ ($t \in C^c$)};
+\node[draw, red, rounded corners, minimum width=4cm, minimum height=0.5cm] at (4, -3.5) {$K(C) = \sum_{i \in C, j \notin C} u_{ij}$ capacity of the cut $C$.};
+\node[below of=c, xshift=-2cm] {(any) Flow ($s \to t$) $\le$ (any) $K(C)$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide continues the discussion of the maximum flow problem. It introduces the concept of a cut (denoted by $C$) in the network. The diagram shows a more complex network with multiple nodes and edges. The purple lines highlight a specific cut in the network. The formula $N = C \cup C^c$, $s \in C$ ($t \in C^c$) defines the set $N$ as the union of the cut set $C$ and its complement $C^c$, with the source $s$ in $C$ and the sink $t$ in $C^c$. The formula $K(C) = \sum_{i \in C, j \notin C} u_{ij}$ calculates the capacity of the cut $C$ by summing the capacities of all edges that cross the cut from nodes in $C$ to nodes outside of $C$. The new addition is the statement "(any) Flow ($s \to t$) $\le$ (any) $K(C)$", which is a key part of the max-flow min-cut theorem.
+
+
+Slide 4
+
+\textbf{Max Flow Min Cut}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, inner sep=1pt, minimum size=5pt]
+
+\node (s) at (0, 3) [label=left:$S$] {$0$};
+\node (t) at (8, 3) [label=right:$t$] {$0$};
+\node (a) at (2, 1) {$0$};
+\node (b) at (4, 1) {$0$};
+\node (c) at (6, 1) {$0$};
+\node (d) at (3, 2) {$0$};
+\node (e) at (5, 2) {$0$};
+
+\node (s_label) at (-0.5, 3.5) [label=left: (Source)] {};
+\node (t_label) at (8.5, 3.5) [label=right: (sink)] {};
+
+\draw[->, thick] (s) -- (d) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (a) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (d) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (e) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (a);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (b);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (d);
+\draw[->, thick] (a) -- (2, 0) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (4, 0) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (6, 0) node[midway, above, sloped] {};
+\draw[->, thick] (d) -- (e) node[midway, above, sloped] {};
+\draw[->, thick] (e) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (d);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (e);
+\draw[->, thick, red!50!black] (b) to[out=135, in=45] (e);
+\draw[->, thick, red!50!black] (a) to[out=135, in=45] (c);
+\draw[->, thick, red!50!black] (d) to[out=135, in=45] (c);
+\draw[->, thick, purple] (a) to[out=135, in=45] (c);
+\draw[->, thick, purple] (b) to[out=135, in=45] (c);
+\draw[->, thick, purple] (d) to[out=135, in=45] (c);
+\draw[->, thick, purple] (e) to[out=135, in=45] (c);
+\draw[->, thick, purple] (s) to[out=135, in=45] (c);
+\draw[->, thick, purple] (s) to[out=135, in=45] (e);
+\draw[->, thick, purple] (s) to[out=135, in=45] (t);
+\draw[->, thick, purple] (a) to[out=135, in=45] (t);
+\draw[->, thick, purple] (b) to[out=135, in=45] (t);
+\draw[->, thick, purple] (c) to[out=135, in=45] (t);
+\draw[->, thick, purple] (d) to[out=135, in=45] (t);
+\draw[->, thick, purple] (e) to[out=135, in=45] (t);
+\node[below of=c, xshift=-2cm] {(max) Flow ($s \to t$) = (min) $K(C)$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide continues the discussion of the maximum flow problem. It now states the max-flow min-cut theorem. The diagram shows a network with multiple nodes and edges. The purple lines highlight a specific cut in the network. The theorem states that the maximum possible flow from the source ($s$) to the sink ($t$) in a network is equal to the minimum capacity of any cut ($C$) in the network.  The equation (max) Flow ($s \to t$) = (min) $K(C)$ is written below the diagram, summarizing the theorem.
+
+
+Slide 5
+
+This slide presents an example of a network flow problem, likely from a linear programming context.  It shows a directed graph representing a transportation network, with nodes representing cities (San Francisco (SF), Denver (D), Houston (H), Atlanta (A), and New York City (NYC)) and edges representing possible routes between them.  The numbers on the edges represent the capacity (or maximum number of seats available) for each route.  The diagram is accompanied by a table (Table 22.1) that shows the seat availability between pairs of cities.  The table provides the capacity values for the edges in the graph.  The goal of the problem is likely to find the maximum flow (number of passengers) that can be transported from San Francisco to New York City, subject to the capacity constraints of the various routes.  This is a practical application of the max-flow min-cut theorem discussed in previous slides.
+
+Slide 6
+
+The slide shows a network flow problem, likely from a linear programming context.  It presents a directed graph with nodes representing cities (SF, D, H, A, NYC) and edges representing possible routes between them.  The numbers on the edges represent the capacity (or maximum flow) along each route.  The graph is labeled "Figure 22.2".  The text "Flow = 8" is written below the graph, indicating the maximum flow found for this particular network.  This slide likely follows a previous slide that introduced the concept of maximum flow and minimum cut, and this slide demonstrates a specific example of calculating the maximum flow.  The context suggests that the problem is about finding the maximum number of passengers that can be transported between cities, subject to the capacity constraints of the routes.
+
+
+Slide 7
+
+The slide presents a network flow problem, likely from a linear programming context.  It shows a directed graph with nodes representing cities (SF, D, H, A, NYC) and edges representing possible routes between them.  The numbers on the edges represent the capacity (or maximum flow) along each route.  The graph is labeled "Figure 22.1".  The text "Flow = 9" is written below the graph, indicating the maximum flow found for this particular network.  This slide likely follows a previous slide that introduced the concept of maximum flow and minimum cut, and this slide demonstrates a specific example of calculating the maximum flow.  The context suggests that the problem is about finding the maximum number of passengers that can be transported between cities, subject to the capacity constraints of the routes.  The top graph is a different example than the one in slide 6.
+
+Slide 8
+
+\textbf{Proof of Max Flow = Min Cut}
+
+\begin{itemize}
+    \item Let $x_{ij}^*$ be a (optimal) max flow
+    \item Let $C^*$ be those nodes that some more flow can be pushed from $s$.
+    \item $t \notin C^*$ (By default, $s \in C^*$)
+\end{itemize}
+
+\textbf{Claim}
+Flow ($C^*$ to $C^{*c}$) = $K(C^*)$
+$\sum_{i \in C^*, j \notin C^*} x_{ij}^* = \sum_{i \in C^*, j \notin C^*} u_{ij}$
+
+\textbf{Description:}
+
+This slide presents the proof of the max-flow min-cut theorem.  It outlines the steps in the proof.  The first bullet points define the optimal maximum flow ($x_{ij}^*$) and the set of nodes ($C^*$) that can receive additional flow from the source ($s$).  The second bullet point states that the sink ($t$) is not in the set $C^*$.  The claim states that the flow from the set $C^*$ to its complement ($C^{*c}$) is equal to the capacity of the cut $C^*$, which is expressed as a summation of the capacities of the edges crossing the cut.  This is a crucial step in the formal proof of the theorem.  The notation $x_{ij}^*$ represents the optimal flow values, and $u_{ij}$ represents the capacities of the edges.  The sets $C^*$ and $C^{*c}$ are subsets of the nodes in the network.
+
+
+Slide 9
+
+The slide presents a proof of the max-flow min-cut theorem.  It's a continuation of the previous slide's discussion of network flow problems.  The text outlines the proof's logic.  It states that if $x_{ij}^*$ represents an optimal maximum flow, and $C^*$ is the set of nodes reachable from the source $s$ with some additional flow capacity, then the maximum flow from $C^*$ to $C^{*c}$ (the complement of $C^*$) is equal to the capacity of the cut $C^*$.  This is expressed mathematically as $\sum_{i \in C^*, j \notin C^*} x_{ij}^* = \sum_{i \in C^*, j \notin C^*} u_{ij}$.  The slide likely follows a series of slides that have introduced the concepts of maximum flow, minimum cut, and the relationship between them.  The notation $x_{ij}^*$ represents the optimal flow values, and $u_{ij}$ represents the capacities of the edges.  The sets $C^*$ and $C^{*c}$ are subsets of the nodes in the network.  The overall goal is to formally prove the max-flow min-cut theorem.
+
+
+Slide 10
+
+The slide introduces the Ford-Fulkerson algorithm for finding the maximum flow in a network.  It shows two network diagrams, likely representing different stages of the algorithm.  The top diagram, labeled "Figure 22.1", depicts the original network with capacities on the edges.  The bottom diagram, labeled "Figure 22.2", shows a modified network with an augmented path highlighted in a lighter color (likely orange or tan).  The augmented path represents a flow improvement step in the Ford-Fulkerson algorithm.  The algorithm iteratively finds augmenting paths and updates the flow along these paths to increase the total flow from the source to the sink.  The numbers on the edges represent the capacities or flows along the edges.  This slide is part of a larger presentation on linear programming and network flow problems.
+
+
+
+
+Slide 11
+
+The slide continues the discussion of the Ford-Fulkerson algorithm for finding the maximum flow in a network.  It shows two network diagrams, likely representing different stages of the algorithm.  The top diagram, labeled "Figure 22.1", depicts the original network with capacities on the edges.  The bottom diagram, labeled "Figure 22.2", shows a modified network with an augmented path highlighted in a lighter color (likely orange or tan).  The augmented path represents a flow improvement step in the Ford-Fulkerson algorithm.  The algorithm iteratively finds augmenting paths and updates the flow along these paths to increase the total flow from the source to the sink.  The numbers on the edges represent the capacities or flows along the edges.  The slide is likely part of a larger presentation on linear programming and network flow problems.  The numbers next to the edges in the bottom graph indicate the change in flow along that edge.  This is a crucial step in the algorithm.
+
+
+
+
+Slide 12
+
+\textbf{Ford - Fulkerson Algorithm (Augmented Path)}
+
+\textbf{Implementations}
+
+Our description of the augmenting path method does not specify a way of searching
+for the arcs $ij$ such that $i \in C, j \notin C, x_{ij} < u_{ij}$, and the arcs $ji$ such that $j \in C, i \in C$.
+For Ford and Fulkerson did specify a way of doing that. In their terminology,
+nodes in $C$ are called labeled and nodes outside $C$ are called unlabeled; the source is labeled
+but unscanned and all the remaining nodes are unlabeled. Scanning a labeled node
+$i$ means examining all the arcs $ij$ and, whenever such an arc satisfies $x_{ij} < u_{ij}, j \notin C$, setting $j \in C, p(j) = i$. The search may be described as in Box 22.1.
+
+\textbf{BOX 22.1} Search for an Augmenting Path
+
+Step 0. Mark $s$ as labeled, unscanned; mark the remaining nodes as
+unlabeled.
+
+Step 1. If all the labeled nodes are scanned then stop [the set $C$ of labeled
+nodes satisfies (22.7) and (22.8)]; otherwise, choose a labeled unscanned
+node $i$.
+
+Step 2. Scan $i$. If $i$ has become labeled then stop (an $x$-augmenting path
+has been found); otherwise return to step 1.
+
+
+\textbf{Description:}
+
+This slide describes the implementation details of the Ford-Fulkerson algorithm for finding the maximum flow in a network.  It explains how to search for augmenting paths.  The algorithm labels nodes in the network and scans arcs to find paths where flow can be increased.  The algorithm's steps are outlined in Box 22.1.  The algorithm's logic is crucial for finding the maximum flow in a network.  The notation $x_{ij}$ represents the flow along edge $ij$, and $u_{ij}$ represents the capacity of edge $ij$.  The set $C$ contains labeled nodes, and $C^c$ is the complement of $C$.  The algorithm is part of a larger presentation on linear programming and network flow problems.
+
+
+Slide 13
+
+The slide continues the discussion of the Ford-Fulkerson algorithm for finding the maximum flow in a network.  It presents a visual representation of the algorithm's logic, focusing on the concept of augmenting paths.  The diagram shows a network with nodes and edges, and a purple circle encompassing a subset of nodes.  The notation $x_{ij} < u_{ij}$ indicates that the flow along edge $ij$ is less than its capacity.  The notation $x_{ij} > 0$ indicates that there is flow along edge $ij$.  The slide likely follows a series of slides that have introduced the concepts of maximum flow, minimum cut, and the relationship between them.  The overall goal is to illustrate the algorithm's steps in finding augmenting paths.
+
+
+
+
+Slide 14
+
+\textbf{Max Flow Min Cut (LP Formulation)}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, inner sep=1pt, minimum size=5pt]
+
+\node (s) at (0, 2) [label=left:$S$] {$0$};
+\node (t) at (8, 2) [label=right:$t$] {$0$};
+\node (a) at (2, 1) {$0$};
+\node (b) at (4, 1) {$0$};
+\node (c) at (6, 1) {$0$};
+\node (d) at (3, 0) {$0$};
+\node (e) at (5, 0) {$0$};
+
+\node (s_label) at (-0.5, 2.5) [label=left: (Source)] {};
+\node (t_label) at (8.5, 2.5) [label=right: (sink)] {};
+
+\draw[->, thick] (s) -- (a) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (s) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (a);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (b);
+\draw[->, thick, red!50!black] (s) to[out=135, in=45] (c);
+\draw[->, thick] (a) -- (4, -1) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (6, -1) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (8, -1) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (b) node[midway, above, sloped] {};
+\draw[->, thick] (a) -- (c) node[midway, above, sloped] {};
+\draw[->, thick] (b) -- (t) node[midway, above, sloped] {};
+\draw[->, thick] (c) -- (t) node[midway, above, sloped] {};
+\draw[->, thick, very thick, purple] (s) to[out=135, in=45] (t) node[midway, above, sloped] {};
+\node[draw, red, rounded corners, minimum width=2cm, minimum height=0.5cm] at (4, -2.5) {$0 \le x_{ij} \le u_{ij}$};
+\node[below of=a, xshift=-2cm] {$x_{ts}, c_{ts} = 1, u_{ts} = +\infty$};
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This slide presents a linear programming formulation for the maximum flow problem.  It shows a network flow diagram with a source node ($S$) and a sink node ($t$).  The edges represent possible flow paths, and the capacities of these paths are represented by $u_{ij}$.  The addition of a fictitious arc from the source to the sink ($x_{ts}$) with infinite capacity ($u_{ts} = +\infty$) is shown.  The constraints $x_{ts}, c_{ts} = 1$ are also included, indicating that the flow along this fictitious arc is constrained to be 1.  This formulation is crucial for converting the maximum flow problem into a linear programming problem.
+
+
+
+
+Slide 15
+
+\textbf{Max Flow Min Cut (LP Formulation)}
+
+\begin{align*}
+\min -x_{ts} \\
+\text{s.t.} \quad x_{ts} &= \sum_{j} x_{sj} \\
+\sum_{i} x_{it} &= x_{ts} \\
+\sum_{j} x_{kj} &= \sum_{i} x_{ik} \quad k \neq s, t \\
+0 \le x_{ij} &\le u_{ij} \\
+(u_{ts} &= +\infty)
+\end{align*}
+
+\textbf{Description:}
+
+This slide presents the linear programming (LP) formulation of the maximum flow problem.  The objective function is to minimize $-x_{ts}$, which is equivalent to maximizing $x_{ts}$.  The constraints ensure flow conservation at each node and limit the flow on each edge to its capacity.  The constraint $x_{ts} = \sum_{j} x_{sj}$ represents the flow into the sink node $t$ from the source node $s$.  The constraint $\sum_{i} x_{it} = x_{ts}$ represents the flow out of the sink node $t$.  The constraint $\sum_{j} x_{kj} = \sum_{i} x_{ik}$ represents flow conservation at all intermediate nodes $k$.  The constraint $0 \le x_{ij} \le u_{ij}$ limits the flow on each edge $ij$ to its capacity $u_{ij}$.  The constraint $u_{ts} = +\infty$ indicates that the flow along the fictitious arc from the source to the sink has no capacity limit.  This LP formulation is used to solve the maximum flow problem.
+
+
+Slide 16
+
+\textbf{Proof of Max Flow = Min Cut (LP)}
+
+\textbf{FIGURE 15.4.} Adding a new node, $k$, to accommodate an arc $(i, j)$ having an upper bound $u_{ij}$ on its flow capacity.
+
+\begin{itemize}
+    \item $0 \le x_{ij} \le u_{ij}$
+    \item $x_{ij} = 0 \implies y_i + c_{ij} \ge y_j$
+    \item $x_{ij} = u_{ij} \implies y_i + c_{ij} \le y_j$
+    \item $0 < x_{ij} < u_{ij} \implies y_i + c_{ij} = y_j$
+\end{itemize}
+
+\textbf{Description:}
+
+This slide presents a step in the proof of the max-flow min-cut theorem, focusing on the linear programming formulation.  It shows a network diagram with a new node $k$ added to accommodate an arc $(i, j)$.  The key idea is to illustrate how the constraints of the LP formulation (related to flow conservation and capacity) are modified when an intermediate node is added.  The equations shown relate the flow ($x_{ij}$) along an edge to the variables ($y_i$, $y_j$, $c_{ij}$) in the LP formulation.  The constraints ensure that the flow on each edge is within its capacity limits.  The slide is part of a larger presentation on linear programming and network flow problems.  The overall goal is to demonstrate how the LP formulation can be used to prove the max-flow min-cut theorem.
+
+

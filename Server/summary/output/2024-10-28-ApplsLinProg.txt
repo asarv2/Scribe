@@ -1,0 +1,1390 @@
+Slide 1
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16} \hspace{1cm} 2.3 Ice Cream All Year Round
+
+\newline
+The next application of linear programming again concerns food (which should not be surprising, given the importance of food in life and the difficulties in optimizing sleep or love). The ice cream manufacturer Icicle Works Ltd. needs to set up a production plan for the next year. Based on historical extensive surveys, and bird observations, the marketing department has come up with the following prediction of monthly sales of ice cream in the next year:
+
+\newline
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    ymin=0, ymax=750,
+    ylabel={sales [tons]},
+    xlabel={Months},
+    symbolic x coords={Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec},
+    xtick=data,
+    bar width=10pt,
+    enlarge x limits=0.15,
+    legend style={at={(0.5,-0.2)},
+    anchor=north,legend columns=-1},
+    ]
+\addplot coordinates {
+(Jan,350)
+(Feb,350)
+(Mar,450)
+(Apr,650)
+(May,600)
+(Jun,600)
+(Jul,500)
+(Aug,250)
+(Sep,450)
+(Oct,350)
+(Nov,650)
+(Dec,550)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\newline
+Monthly Demands $d_i$, $i=1,\dots,12$
+
+
+\textbf{Description:}
+
+This is the first slide of a 37-slide presentation on Linear Programming.  It introduces a case study involving Icicle Works Ltd., an ice cream manufacturer, needing to create a production plan for the upcoming year.  The slide presents a bar graph illustrating the predicted monthly sales (in tons) of ice cream for the year, from January to December.  The $d_i$ notation indicates the monthly demands.  The handwritten notes clearly outline the problem context and the data used for the production planning.  The slide number and page number are also included.
+
+
+Slide 2
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16} \hspace{1cm} 2.3 Ice Cream All Year Round
+
+\newline
+The next application of linear programming again concerns food (which should not be surprising, given the importance of food in life and the difficulties in optimizing sleep or love). The ice cream manufacturer Icicle Works Ltd. needs to set up a production plan for the next year. Based on historical extensive surveys, and bird observations, the marketing department has come up with the following prediction of monthly sales of ice cream in the next year:
+
+\newline
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    ymin=0, ymax=750,
+    ylabel={sales [tons]},
+    xlabel={Months},
+    symbolic x coords={Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec},
+    xtick=data,
+    bar width=10pt,
+    enlarge x limits=0.15,
+    legend style={at={(0.5,-0.2)},
+    anchor=north,legend columns=-1},
+    ]
+\addplot coordinates {
+(Jan,350)
+(Feb,350)
+(Mar,450)
+(Apr,650)
+(May,600)
+(Jun,600)
+(Jul,500)
+(Aug,250)
+(Sep,450)
+(Oct,350)
+(Nov,650)
+(Dec,550)
+};
+\draw[red, thick] (axis cs:Jan,500) -- (axis cs:Dec,500);
+\node[red, below] at (axis cs:Jan,450) {average demand};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\newline
+Monthly Demands $d_i$, $i=1,\dots,12$
+
+
+\textbf{Description:}
+
+This slide continues the previous example of Icicle Works Ltd.  It presents the same bar graph of predicted monthly ice cream sales.  However, a new element is added: a horizontal red line has been drawn across the graph at approximately 500 tons.  This line represents the average demand for ice cream throughout the year.  The text "average demand" is written below the line, indicating that this is a key metric for the production planning.  The slide is likely part of a lecture or presentation explaining how to use linear programming to create a production plan based on predicted demand and average demand.
+
+
+Slide 3
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16}
+
+\newline
+(1) $X_i$ - production at month $i$
+
+\newline
+(2) $S_i$ - Surplus at end of Month $i$
+
+\newline
+(3) $X_i + S_{i-1} = d_i + S_i$
+
+\newline
+$\min \sum_{i=1}^{12} 50|X_i - X_{i-1}| + \sum_{i=1}^{12} 20 S_i$
+
+\newline
+\textit{Cost of Changing Production} \hspace{2cm} \textit{Cost of Storage}
+
+
+\textbf{Description:}
+
+This slide continues the ice cream production planning problem. It defines variables and a cost function for the linear programming model.  $X_i$ represents the production level in month $i$, and $S_i$ represents the surplus (or shortage) of ice cream at the end of month $i$.  The equation $X_i + S_{i-1} = d_i + S_i$ is a constraint, linking production, surplus, and demand.  The objective function $\min \sum_{i=1}^{12} 50|X_i - X_{i-1}| + \sum_{i=1}^{12} 20 S_i$ minimizes the total cost, which is the sum of the cost of changing production levels from month to month (represented by the absolute value term) and the cost of storing surplus ice cream (represented by the $S_i$ term).  The costs of changing production and storage are explicitly labeled.  This slide is likely presenting the mathematical formulation of the linear programming problem for the ice cream production planning.
+
+
+Slide 4
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16}
+
+\newline
+(1) $X_i$ - production at month $i$
+
+\newline
+(2) $S_i$ - Surplus at end of Month $i$
+
+\newline
+(3) $X_i + S_{i-1} = d_i + S_i$
+
+\newline
+$\min \sum_{i=1}^{12} 50|X_i - X_{i-1}| + \sum_{i=1}^{12} 20 S_i$
+
+\newline
+$X_i - X_{i-1} = Y_i - Z_i$
+$ |X_i - X_{i-1}| = Y_i + Z_i$
+$Y_i, Z_i \ge 0$
+
+\textit{Cost of Changing Production} \hspace{2cm} \textit{Cost of Storage}
+
+
+\textbf{Description:}
+
+This slide continues the ice cream production planning problem, refining the mathematical formulation.  It introduces new variables $Y_i$ and $Z_i$ to represent the positive and negative differences in production levels between consecutive months.  The equation $X_i - X_{i-1} = Y_i - Z_i$ and $|X_i - X_{i-1}| = Y_i + Z_i$  express the absolute value term in the objective function in terms of these new variables.  The constraints $Y_i, Z_i \ge 0$ ensure that these variables are non-negative.  This transformation allows for a more standard linear programming formulation, which is likely a key step in solving the problem.  The slide is likely part of a lecture or presentation explaining how to use linear programming to create a production plan based on predicted demand, average demand, and the cost of changing production levels.
+
+
+Slide 5
+
+\textbf{Production Planning}
+
+\newline
+\textit{[m\&p] p.16}
+
+\newline
+$\min 50 \sum_{i=1}^{12} (Y_i + Z_i) + 20 \sum_{i=1}^{12} S_i$
+
+\newline
+s.t.
+\newline
+$X_i + S_{i-1} - S_i = d_i$  \hspace{0.5cm} $i=1,2,\dots,12$
+\newline
+$X_i - X_{i-1} = Y_i - Z_i$ \hspace{0.5cm} $i=1,2,\dots,12$
+\newline
+$X_0 = 0$
+\newline
+$S_0 = 0$
+\newline
+$S_{12} = 0$
+\newline
+$X_i, Y_i, Z_i, S_i \ge 0$ \hspace{0.5cm} $i=1,2,\dots,12$
+
+
+\textbf{Description:}
+
+This slide presents the complete linear programming formulation for the ice cream production planning problem.  The objective function, $\min 50 \sum_{i=1}^{12} (Y_i + Z_i) + 20 \sum_{i=1}^{12} S_i$, now explicitly includes the costs of changing production levels ($Y_i$ and $Z_i$) and storage ($S_i$).  The constraints are clearly defined, including the initial conditions ($X_0 = 0$, $S_0 = 0$, $S_{12} = 0$) and the non-negativity constraints for all variables.  The constraints ensure that production levels and storage levels are consistent with the predicted demand for each month.  This complete formulation is ready for solution using linear programming techniques.
+
+
+Slide 6
+
+The slide shows two bar graphs.  The top graph displays predicted monthly ice cream production (in tons) for the year.  The bars are light gray.  The bottom graph shows a possible production plan, with the bars representing the production levels for each month.  Darker bars are used to highlight the production plan.  A red arrow points from the bottom graph to the word "production" in the top graph, indicating a comparison between the predicted production and a possible production plan.  The word "no storage cost" is also written in red, suggesting that the bottom graph is a possible production plan that does not account for storage costs.
+
+\textbf{Description:}
+
+This slide likely accompanies a lecture or presentation on linear programming, specifically focusing on the ice cream production planning problem.  The graphs visually represent the predicted monthly demand and a possible production schedule.  The top graph shows the predicted demand, while the bottom graph illustrates a potential production plan that might be optimized to minimize costs, but without considering storage costs.  The visual comparison between the two graphs is crucial for understanding the problem's constraints and potential solutions.
+
+
+Slide 7
+
+The slide presents a problem statement and a possible solution for a linear programming problem related to workforce planning.  It describes a distributor of office equipment that needs to plan its workforce for the year, considering seasonal peaks and valleys in demand.  The problem involves two types of employees: regular employees and temporary employees.  The cost of regular employees is $17.50/hour, and the cost of temporary employees is $25/hour.  The predicted labor hours needed for each month are given in a table.  The problem is to minimize the total labor costs.  The objective function is to minimize $\sum_{i=1}^{12} (25 \max(a_i - x, 0) + 17.50 x)$.  The problem statement also includes instructions to reformulate the problem as a linear programming problem and to solve it using calculus to find the optimal value for $x$.
+
+
+\textbf{Description:}
+
+This slide introduces a new linear programming problem, focusing on workforce optimization.  The problem involves a company needing to determine the optimal number of employees (regular and temporary) to meet fluctuating monthly labor demands.  The objective is to minimize the total labor costs while ensuring sufficient labor hours are available each month.  The slide sets the stage for the mathematical formulation and solution of this workforce planning problem.
+
+
+Slide 8
+
+\textbf{Reformulated Problem}
+
+\newline
+$\min 25 \sum_{i=1}^{12} Y_i + (17.5 \times 12) X$
+
+\newline
+s.t.
+\newline
+$a_i - X \le Y_i$
+\newline
+$0 \le Y_i$
+\newline
+$X \ge 0$
+
+
+\textbf{Description:}
+
+This slide presents a reformulation of the workforce planning problem from the previous slide.  The objective function now explicitly minimizes the total cost, which is the sum of the cost of temporary employees ($25 \sum_{i=1}^{12} Y_i$) and the cost of regular employees ($17.5 \times 12 \times X$).  The constraints are also presented, ensuring that the number of hours of temporary employees ($Y_i$) is greater than or equal to the difference between the required labor hours ($a_i$) and the number of regular employees ($X$).  The non-negativity constraints for $Y_i$ and $X$ are also included.  This reformulation is likely a crucial step in solving the problem using standard linear programming techniques.
+
+
+Slide 9
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 13}
+
+\newline
+(1) $R_i$ - (annual) return of $i^{th}$ investment (a random Variable)
+
+\newline
+(2) $X_i$ - proportion of investment in $i$ ($X_i \ge 0$, $\sum_{j} X_j = 1$)
+
+\newline
+$\max \sum_{j} X_j R_j$  \hspace{0.5cm} (random)
+
+\newline
+$\max \sum_{j} X_j \overline{R_j}$ \hspace{0.5cm} (average return)
+
+
+\textbf{Description:}
+
+This slide introduces the Markowitz portfolio selection model, a classic problem in finance and a relevant application of linear programming.  The variables $R_i$ represent the annual return of each investment, and $X_i$ represents the proportion of the portfolio invested in that particular investment.  The objective is to maximize the expected return of the portfolio, which is represented by $\sum_{j} X_j R_j$.  The constraint $\sum_{j} X_j = 1$ ensures that the total investment is 100%.  The slide is likely part of a lecture or presentation explaining how to use linear programming to optimize investment portfolios.
+
+
+Slide 10
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 13}
+
+\newline
+(1) $R_i$ - (annual) return of $i^{th}$ investment (a random Variable)
+
+\newline
+(2) $X_i$ - proportion of investment in $i$ ($X_i \ge 0$, $\sum_{j} X_j = 1$)
+
+\newline
+$\max \sum_{j} X_j R_j$  \hspace{0.5cm} (random)
+
+\newline
+$\max \sum_{j} X_j \overline{R_j} - \epsilon \sum_{j} X_j \tilde{R_j}$ \hspace{0.5cm} (average return - risk)
+
+\newline
+$\tilde{R_j} = R_j - \overline{ER_j}$ \hspace{0.5cm} (fluctuation)
+
+
+\textbf{Description:}
+
+This slide extends the portfolio selection model from the previous slide.  It introduces a new objective function that now includes a risk term.  The objective is to maximize the expected return of the portfolio ($\sum_{j} X_j \overline{R_j}$) while minimizing the portfolio's risk ($\sum_{j} X_j \tilde{R_j}$).  The new term $\tilde{R_j}$ represents the fluctuation of the return of investment $j$ around its expected return $\overline{ER_j}$.  This modification to the objective function allows for the optimization of portfolios that balance expected return with risk.  The slide is likely part of a lecture or presentation explaining how to use linear programming to optimize investment portfolios, considering both return and risk.
+
+
+Slide 11
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 13}
+
+\newline
+\textbf{Estimation of $ER_j$ and $E[\sum_{j} X_j R_j]$}
+
+\newline
+Given historical data, $R_j(t)$, $t=1,\dots,T$
+
+\newline
+(1) $ER_j = \frac{1}{T} \sum_{t=1}^T R_j(t)$  \hspace{0.5cm} ($= \overline{r_j}$)
+
+\newline
+(2) $E[\sum_{j} X_j R_j] = \frac{1}{T} \sum_{t=1}^T \left| \sum_{j} X_j (R_j(t) - \overline{r_j}) \right|$
+
+
+\textbf{Description:}
+
+This slide details how to estimate the expected return of an investment ($ER_j$) and the expected return of a portfolio ($\sum_{j} X_j R_j$) given historical data.  The expected return of an individual investment $ER_j$ is calculated as the average of its historical returns.  The expected return of a portfolio is calculated as the average of the absolute value of the difference between the historical returns and the average return for each investment, weighted by the proportion of the portfolio invested in that investment.  This slide is a crucial step in the Markowitz portfolio selection model, providing the necessary calculations to quantify expected return and risk based on historical data.
+
+
+Slide 12
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 13}
+
+\newline
+$\max \mu \sum_{j} X_j R_j - \frac{1}{T} \sum_{t=1}^T \left| \sum_{j} X_j (R_j(t) - \overline{r_j}) \right|$
+
+\newline
+s.t.
+\newline
+$\sum_{j} X_j = 1$, $X_j \ge 0$
+\newline
+($\overline{r_j} = \frac{1}{T} \sum_{t=1}^T R_j(t)$)
+
+\newline
+$\max \mu \sum_{j} X_j R_j - \frac{1}{T} \sum_{t=1}^T Y_t$
+
+\newline
+s.t.
+\newline
+$-\gamma(t) \le \sum_{j} X_j (R_j(t) - \overline{r_j}) \le \gamma(t)$
+\newline
+$\sum_{j} X_j = 1$, $X_j \ge 0$
+
+
+\textbf{Description:}
+
+This slide presents a linear programming (LP) formulation of the Markowitz portfolio selection model.  The objective function now explicitly includes a risk term, aiming to maximize the expected return ($\mu \sum_{j} X_j R_j$) while limiting the risk (represented by the sum of $Y_t$ terms).  The constraints ensure that the total investment is 100% ($\sum_{j} X_j = 1$) and that the proportions of investment in each asset are non-negative ($X_j \ge 0$).  The new constraints, $-\gamma(t) \le \sum_{j} X_j (R_j(t) - \overline{r_j}) \le \gamma(t)$,  control the risk by limiting the deviation of the portfolio return from its expected value in each historical period $t$.  This formulation is a key step in solving the portfolio selection problem using linear programming techniques.
+
+
+
+
+Slide 13
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 14}
+
+\newline
+$\max \mu \sum_{j} X_j ER_j - \epsilon E \left( \sum_{j} X_j \tilde{R_j} \right)^2$
+
+\newline
+s.t.
+\newline
+$\sum_{j} X_j = 1$, $X_j \ge 0$
+
+\newline
+$E \left( \sum_{j} X_j \tilde{R_j} \right)^2 = \sum_{i} \sum_{j} X_i X_j E( \tilde{R_i} \tilde{R_j}) = \sum_{i} \sum_{j} X_i X_j \sigma_{ij}$
+
+\newline
+(variance)
+
+
+\textbf{Description:}
+
+This slide further refines the Markowitz portfolio selection model, focusing on the calculation of portfolio variance.  The objective function now explicitly includes the variance of the portfolio return, aiming to maximize the expected return ($\mu \sum_{j} X_j ER_j$) while minimizing the portfolio's variance ($E \left( \sum_{j} X_j \tilde{R_j} \right)^2$).  The variance is calculated as the sum of the covariances between each pair of assets, weighted by the proportion of the portfolio invested in each asset.  This slide is a crucial step in the Markowitz portfolio selection model, providing the necessary calculations to quantify expected return and risk based on historical data and covariances.  The notation $\sigma_{ij}$ likely represents the covariance between the returns of assets $i$ and $j$.
+
+
+Slide 14
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 14}
+
+\newline
+$\max \mu \sum_{j} x_j ER_j - \epsilon E \left( \sum_{j} x_j \tilde{R_j} \right)^2$
+
+\newline
+s.t.
+\newline
+$\sum_{j} x_j = 1$, $x_j \ge 0$
+
+\newline
+$E \left( \sum_{j} x_j \tilde{R_j} \right)^2 = \sum_{i} \sum_{j} x_i x_j \sigma_{ij}$
+
+\newline
+(variance)
+
+\newline
+$\sigma_{ij} = E(\tilde{R_i} \tilde{R_j})$
+
+
+\textbf{Description:}
+
+This slide further clarifies the calculation of portfolio variance in the Markowitz portfolio selection model.  It explicitly defines the covariance ($\sigma_{ij}$) between the returns of assets $i$ and $j$ as the expected value of the product of the fluctuations ($\tilde{R_i}$ and $\tilde{R_j}$) of the returns.  This is a crucial step in the model, as the variance of a portfolio is calculated as a weighted sum of the covariances between all pairs of assets in the portfolio.  The slide is likely part of a lecture or presentation explaining how to use linear programming to optimize investment portfolios, considering both return and risk, and how to calculate the variance of a portfolio from historical data.
+
+
+Slide 14
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 14}
+
+\newline
+$\max \mu \sum_{j} x_j \overline{r_j} - \frac{\epsilon}{2} \sum_{i} \sum_{j} x_i x_j \sigma_{ij}$
+
+\newline
+s.t.
+\newline
+$\sum_{j} x_j = 1$, $x_j \ge 0$
+
+\newline
+(Quadratic function)
+
+
+\textbf{Description:}
+
+This slide presents the final, simplified linear programming formulation of the Markowitz portfolio selection model.  The objective function now explicitly maximizes the expected return ($\mu \sum_{j} x_j \overline{r_j}$) minus a portion of the portfolio variance ($\frac{\epsilon}{2} \sum_{i} \sum_{j} x_i x_j \sigma_{ij}$).  The constraints ensure that the total investment is 100% ($\sum_{j} x_j = 1$) and that the proportions of investment in each asset are non-negative ($x_j \ge 0$).  The objective function is now a quadratic function, which is a key characteristic of this particular formulation.  The slide is likely part of a lecture or presentation explaining how to use linear programming to optimize investment portfolios, considering both return and risk, and how to calculate the variance of a portfolio from historical data.
+
+
+
+
+Slide 16
+
+\textbf{Portfolio Selection (Markowitz Model)}
+
+\newline
+\textit{[LV] ch. 14}
+
+\newline
+$\max \mu \sum_{j} x_j \overline{r_j} - \frac{\epsilon}{2} \sum_{i} \sum_{j} x_i x_j \sigma_{ij}$
+
+\newline
+s.t.
+\newline
+$\sum_{j} x_j = 1$, $x_j \ge 0$
+
+\newline
+\textbf{Quadratic Programming}
+
+\newline
+$\min c^T x + \frac{1}{2} x^T Q x$
+
+\newline
+s.t.
+\newline
+$Ax \le b$
+\newline
+$x \ge 0$
+
+
+\textbf{Description:}
+
+This slide presents the standard form of a quadratic programming problem, which is the type of problem that arises when solving the Markowitz portfolio selection model.  The objective function is to minimize a quadratic function of the form $c^T x + \frac{1}{2} x^T Q x$, where $c$ is a vector of constants, $x$ is a vector of variables, and $Q$ is a symmetric matrix.  The constraints are linear inequalities ($Ax \le b$) and non-negativity constraints ($x \ge 0$).  This slide is likely part of a lecture or presentation explaining how to use quadratic programming to solve the Markowitz portfolio selection model, which is a crucial step in optimizing investment portfolios.
+
+
+
+
+Slide 17
+
+\textbf{[EMG] p. 184}
+
+\newline
+8.7 Smallest Balls and Convex Programming
+
+\newline
+The smallest ball problem. We are given points $p_1, \dots, p_n \in \mathbb{R}^d$, and we want to find a ball of the smallest radius that contains all the points.
+
+\newline
+\begin{center}
+\begin{tikzpicture}
+\draw (0,0) circle (2cm);
+\filldraw (0,2) circle (2pt);
+\filldraw (0,-2) circle (2pt);
+\filldraw (2,0) circle (2pt);
+\filldraw (-2,0) circle (2pt);
+\filldraw (1,1) circle (2pt);
+\filldraw (-1,-1) circle (2pt);
+\end{tikzpicture}
+\end{center}
+
+
+\textbf{Description:}
+
+This slide introduces a geometric optimization problem, the smallest enclosing ball problem.  The problem is to find the smallest circle (or, more generally, the smallest hypersphere in higher dimensions) that encloses a set of given points in a $d$-dimensional space.  The diagram shows a circle enclosing several points in a 2-dimensional space.  The goal is to find the smallest possible radius for this enclosing circle.  This problem is often solved using convex programming techniques, which are relevant to linear programming.
+
+
+Slide 18
+
+\textbf{[EMG] p. 184}
+
+\newline
+8.7.4 Theorem. Let $p_1, \dots, p_n$ be points in $\mathbb{R}^d$, and let $Q$ be the $d \times n$ matrix whose $j^{th}$ column is formed by the $d$ coordinates of the point $p_j$. Let us consider the optimization problem
+
+\newline
+minimize $x^T Q^T Q x - \sum_{j=1}^n x_j p_j^T p_j$
+
+\newline
+subject to $\sum_{j=1}^n x_j = 1$, $x_j \ge 0$
+
+\newline
+in the variables $x_1, \dots, x_n$. Then the convex, and the following statements hold.
+
+\newline
+(i) Problem (8.15) has an optimal solution $x^*$.
+
+\newline
+(ii) There exists a point $p^*$ such that $p^* = Q x^*$ holds for every optimal solution $x^*$. Moreover, the ball with center $p^*$ and squared radius $-f(x^*)$ is the unique ball of smallest radius containing $P$.
+
+
+\textbf{Description:}
+
+This slide presents a theorem related to the smallest enclosing ball problem.  It states that the optimization problem (8.15) for finding the smallest ball containing a set of points $p_1, \dots, p_n$ in $\mathbb{R}^d$ has an optimal solution $x^*$.  Crucially, it shows that the center of the smallest enclosing ball is given by $p^* = Q x^*$, where $Q$ is a matrix formed from the coordinates of the points, and $x^*$ is an optimal solution to the optimization problem.  This theorem provides a way to find the center of the smallest enclosing ball and its radius.  The slide is likely part of a lecture or presentation explaining how to use convex programming techniques to solve geometric optimization problems.
+
+
+Slide 19
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 31} \hspace{1cm} Maximum Weight Matching
+
+\newline
+(A graph with weights on the edges. Find a matching of maximum weight.)
+
+\newline
+\begin{itemize}
+\item quality manager
+\item representative appearance
+\item secretary
+\item trend analyst
+\item undersecretary
+\item vacation specialist
+\item webmaster
+\end{itemize}
+
+\newline
+\begin{itemize}
+\item Amos
+\item Boris
+\item Colette
+\item Devdat
+\item Eleanor
+\item Fortunato
+\item Gudrun
+\end{itemize}
+
+\newline
+(A graph with weights on the edges. Find a matching of maximum weight.)
+
+
+\textbf{Description:}
+
+This slide presents a maximum weight matching problem, a type of integer programming problem.  The problem involves finding the best possible matching between two sets of people (in this case, job titles and names).  Each connection between a job title and a person has a weight, representing a value or score associated with that pairing.  The goal is to find a matching that maximizes the total weight of the connections.  The slide lists the job titles and names, implying that there are connections (edges) between them, each with a numerical weight.  This is a classic combinatorial optimization problem that can be solved using integer programming techniques.
+
+
+Slide 20
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 31} \hspace{1cm} Maximum Weight Matching
+
+\newline
+(A graph with weights on the edges. Find a matching of maximum weight.)
+
+\newline
+\begin{itemize}
+\item quality manager
+\item representative appearance
+\item secretary
+\item trend analyst
+\item undersecretary
+\item vacation specialist
+\item webmaster
+\end{itemize}
+
+\newline
+\begin{itemize}
+\item Amos
+\item Boris
+\item Colette
+\item Devdat
+\item Eleanor
+\item Fortunato
+\item Gudrun
+\end{itemize}
+
+\newline
+(A graph with weights on the edges. Find a matching of maximum weight.)
+
+\newline
+(Example of a matching with weights.)
+
+
+\textbf{Description:}
+
+This slide continues the maximum weight matching problem, likely from the previous slide.  It displays a graph representing the possible pairings between job titles and people, with numerical weights on the edges connecting them.  The weights represent the value or score associated with each pairing.  The goal is to find a matching that maximizes the total weight of the connections.  The slide lists the job titles and names, and the graph visually represents the possible pairings and their associated weights.  This is a classic combinatorial optimization problem that can be solved using integer programming techniques.  The example of a matching with weights is likely a visual aid to illustrate the problem's structure.
+
+
+Slide 21
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 31} \hspace{1cm} Maximum Weight Matching
+
+\newline
+$\max \sum_{e \in E} w_e x_e$
+
+\newline
+s.t.
+\newline
+$\sum_{e \in \delta(v)} x_e = 1$ for all vertices $v$
+\newline
+$x_e \in \{0, 1\}$ for all edges $e$
+
+
+\textbf{Description:}
+
+This slide presents the linear programming formulation for the maximum weight matching problem.  The objective function $\max \sum_{e \in E} w_e x_e$ aims to maximize the total weight of the edges included in the matching.  The constraints ensure that each vertex ($v$) is incident to exactly one edge in the matching ($\sum_{e \in \delta(v)} x_e = 1$).  The variables $x_e$ are binary, indicating whether an edge $e$ is included in the matching ($x_e \in \{0, 1\}$).  This formulation is a crucial step in solving the maximum weight matching problem using linear programming techniques.  The slide is likely part of a lecture or presentation explaining how to use integer programming to solve combinatorial optimization problems.
+
+
+
+
+Slide 22
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 148} \hspace{1cm} Machine Scheduling
+
+\begin{tabular}{|l|c|c|c|}
+\hline
+ & Single & Duplex & Duplex \\
+ & B\&W & B\&W & Color \\
+\hline
+Master's thesis, 90 pages & -- & 45 min & 60 min \\
+two-sided, 10 B\&W copies & & & \\
+\hline
+All the Best Deals flyer, 1 page & 2h 45 min & 4h 10 min & 5h 30 min \\
+one-sided, 10,000 B\&W copies & & & \\
+\hline
+Buyer's Paradise flyer, 1 page & 2h 45 min & 4h 10 min & 5h 30 min \\
+one-sided, 10,000 B\&W copies & & & \\
+\hline
+Obituary, 2 pages & -- & 2 min & 3 min \\
+two-sided, 100 B\&W copies & & & \\
+\hline
+Party platform, 10 pages & -- & -- & 3h 30 min \\
+two-sided, 5,000 color copies & & & \\
+\hline
+\end{tabular}
+
+
+\textbf{Description:}
+
+This slide presents a table outlining the time required to complete various printing jobs on different types of copiers.  The table lists different documents (Master's thesis, flyer, etc.) with their page counts, sidedness, and the number of black and white (B\&W) or color copies needed.  The table then shows the time (in hours and minutes) required to complete each job on a single-sided B\&W copier, a duplex B\&W copier, and a duplex color copier.  This table is likely part of a machine scheduling problem, where the goal is to determine the optimal order in which to process these jobs to minimize the total time required to complete all jobs.
+
+
+Slide 23
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 148} \hspace{1cm} Machine Scheduling
+
+\newline
+$M = \{1, 2, \dots, m\}$ \hspace{1cm} $m$ - Machines
+
+\newline
+$J = \{1, 2, \dots, n\}$ \hspace{1cm} $n$ - Jobs
+
+\newline
+$d_{ij}$ = running time of job $j$ in Machine $i$
+
+\newline
+$\min \pi$ (total run time)
+
+\newline
+s.t.
+\newline
+$\sum_{i \in M} x_{ij} = 1$ for $j \in J$
+\newline
+$\sum_{j \in J} d_{ij} x_{ij} \le \pi$ for $i \in M$
+\newline
+$x_{ij} \in \{0, 1\}$ for all $i, j$
+
+
+\textbf{Description:}
+
+This slide presents the linear programming formulation for a machine scheduling problem.  The problem involves scheduling $n$ jobs on $m$ machines.  The variable $d_{ij}$ represents the time required to complete job $j$ on machine $i$.  The objective is to minimize the total run time ($\pi$).  The constraints ensure that each job is assigned to exactly one machine ($\sum_{i \in M} x_{ij} = 1$ for $j \in J$) and that the total time spent on each machine does not exceed the total run time ($\sum_{j \in J} d_{ij} x_{ij} \le \pi$ for $i \in M$).  The variables $x_{ij}$ are binary, indicating whether job $j$ is assigned to machine $i$ ($x_{ij} \in \{0, 1\}$).  This formulation is a crucial step in solving the machine scheduling problem using integer programming techniques.
+
+
+
+
+Slide 24
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 201} \hspace{1cm} Knapsack Problem
+
+\newline
+23.1 Knapsack Problem. Consider a picnicker who will be carrying a knapsack that holds a maximum amount $b$ of "stuff". Suppose that our picnicker must decide what to take and what to leave behind. The $j^{th}$ thing that might be taken occupies $a_j$ units of space in the knapsack and will bring that amount of "enjoyment". The knapsack problem then is to maximize enjoyment subject to the constraint that the stuff brought must fit into the knapsack:
+
+\newline
+maximize $\sum_{j=1}^n c_j x_j$
+
+\newline
+subject to $\sum_{j=1}^n a_j x_j \le b$
+
+\newline
+$x_j \in \{0, 1\}$, $j = 1, 2, \dots, n$
+
+\newline
+In the usual notation, the knapsack problem is recorded as:
+
+\newline
+maximize $\sum_{j=1}^n c_j x_j$
+
+\newline
+subject to $\sum_{j=1}^n a_j x_j \le b$
+
+\newline
+$x_j \in \{0, 1\}$, $j = 1, 2, \dots, n$
+
+\newline
+$x_j$ = nonnegative integer ($i = 1, 2, \dots, m$)
+
+
+\textbf{Description:}
+
+This slide presents the classic 0-1 knapsack problem, a fundamental problem in integer programming.  The problem describes a scenario where a person has a knapsack with a limited capacity ($b$) and a set of items ($j = 1, 2, \dots, n$) each with a weight ($a_j$) and a value ($c_j$).  The goal is to select a subset of items to maximize the total value ($c_j x_j$) while ensuring that the total weight of the selected items does not exceed the knapsack's capacity ($\sum_{j=1}^n a_j x_j \le b$).  The variables $x_j$ are binary, indicating whether item $j$ is included in the knapsack (1) or not (0).  This problem is a classic example of a combinatorial optimization problem that can be solved using integer programming techniques.
+
+
+
+
+Slide 25
+
+\textbf{Cutting Stock Problem}
+
+\newline
+\textit{[EMG] p. 267}
+
+\newline
+A paper mill manufactures rolls of paper of a standard width 3 meters. But customers want to buy paper rolls of shorter width, and the mill has to cut such rolls from the 3 m rolls. One 3 m roll can be cut, for instance, into two rolls 93 cm wide, one roll of width 108 cm, and a rest of 6 cm (which goes to waste).
+
+\newline
+Let us consider an order of
+
+\begin{itemize}
+\item 97 rolls of width 135 cm,
+\item 610 rolls of width 108 cm,
+\item 395 rolls of width 93 cm, and
+\item 211 rolls of width 42 cm.
+\end{itemize}
+
+
+\textbf{Description:}
+
+This slide introduces a cutting stock problem.  A paper mill produces large rolls of paper (3 meters wide) but customers want smaller rolls.  The problem is to determine the best way to cut the large rolls into smaller rolls of various widths to minimize waste.  The slide lists the quantities of smaller rolls needed in the order.  The goal is to find a cutting pattern that satisfies the customer's order while minimizing the amount of paper wasted.  This is a classic optimization problem in operations research, often solved using integer programming techniques.
+
+
+Slide 26
+
+\textbf{Cutting Stock Problem}
+
+\newline
+\textit{[EMG] p. 267}
+
+\newline
+A paper mill manufactures rolls of paper of a standard width 3 meters. But customers want to buy paper rolls of shorter width, and the mill has to cut such rolls from the 3 m rolls. One 3 m roll can be cut, for instance, into two rolls 93 cm wide, one roll of width 108 cm, and a rest of 6 cm (which goes to waste).
+
+\newline
+Let us consider an order of
+
+\begin{itemize}
+\item 97 rolls of width 135 cm,
+\item 610 rolls of width 108 cm,
+\item 395 rolls of width 93 cm, and
+\item 211 rolls of width 42 cm.
+\end{itemize}
+
+\newline
+e.g.
+
+\newline
+\begin{tikzpicture}
+\draw[thick, blue] (0,0) -- (10,0) -- (10,1) -- (0,1) -- cycle;
+\draw[thick, red] (0,0) -- (3,0);
+\draw[thick, red] (3,0) -- (3,1);
+\draw[thick, red] (3,1) -- (0,1);
+\draw[thick, red] (0,0) -- (10,0);
+\draw[thick, red] (0,0) -- (0,1);
+\node[below] at (1.5, -0.2) {135 cm};
+\node[below] at (5.5, -0.2) {108 cm};
+\node[below] at (8.5, -0.2) {42 cm};
+\node[below] at (10.5, -0.2) {150 cm wasted};
+\node[above] at (5, 0.5) {3 m};
+\end{tikzpicture}
+
+
+\textbf{Description:}
+
+This slide continues the cutting stock problem from the previous slide.  It provides a visual example of how a 3-meter roll of paper might be cut to satisfy an order for smaller rolls of different widths.  The diagram shows a 3-meter roll (represented by a rectangle) being cut into smaller pieces of 135 cm, 108 cm, and 42 cm.  The remaining 150 cm is marked as wasted.  This example illustrates the problem of finding the optimal cutting pattern to minimize the total waste while satisfying the customer's order.  The slide is likely part of a lecture or presentation explaining how to use integer programming to solve cutting stock problems.
+
+
+
+
+Slide 27
+
+\textbf{Cutting Stock Problem}
+
+\newline
+\textit{[EMG] p. 267}
+
+\newline
+In order to engage linear programming one has to be generous in introducing variables. We write down all of the requested widths: 135 cm, 108 cm, 93 cm, and 42 cm. We then list all possibilities of cutting a 3 m paper roll, in rolls of some of these widths (we need to consider only possibilities for which the wasted piece is shorter than 42 cm):
+
+\newline
+$P_1$: $2 \times 135$
+
+\newline
+$P_2$: $135 + 108 + 42$
+
+\newline
+$P_3$: $135 + 93 + 42$
+
+\newline
+$P_4$: $135 + 3 \times 93 + 42$
+
+\newline
+$P_5$: $2 \times 108 + 2 \times 42$
+
+\newline
+$P_6$: $108 + 2 \times 93$
+
+\newline
+$P_7$: $108 + 93 + 2 \times 42$
+
+\newline
+$P_8$: $108 + 93 + 4 \times 42$
+
+\newline
+$P_9$: $3 \times 93$
+
+\newline
+$P_{10}$: $2 \times 93 + 2 \times 42$
+
+\newline
+$P_{11}$: $93 + 4 \times 42$
+
+\newline
+$P_{12}$: $7 \times 42$
+
+\newline
+$258 \le 135 n_1 + 108 n_2 + 93 n_3 + 42 n_4 \le 300$
+
+\newline
+$0 \le n_i$, integers
+
+
+\textbf{Description:}
+
+This slide continues the cutting stock problem, listing possible cutting patterns for a 3-meter roll of paper to satisfy an order for smaller rolls of various widths.  The slide lists various possible combinations of cuts (denoted $P_1$ through $P_{12}$) that can be made from a 3-meter roll to yield the requested widths (135 cm, 108 cm, 93 cm, and 42 cm).  The goal is to find a combination of these cutting patterns that satisfies the customer's order while minimizing the total waste.  The inequality $258 \le 135 n_1 + 108 n_2 + 93 n_3 + 42 n_4 \le 300$ represents a constraint on the number of rolls of each width that can be produced.  The slide is likely part of a lecture or presentation explaining how to use integer programming to solve cutting stock problems.
+
+
+
+
+Slide 28
+
+\textbf{Cutting Stock Problem}
+
+\newline
+\textit{[EMG] p. 267}
+
+\newline
+In order to engage linear programming one has to be generous in introducing variables. We write down all of the requested widths: 135 cm, 108 cm, 93 cm, and 42 cm. We then list all possibilities of cutting a 3 m paper roll, in rolls of some of these widths (we need to consider only possibilities for which the wasted piece is shorter than 42 cm):
+
+\newline
+$P_1$: $2 \times 135$
+
+\newline
+$P_2$: $135 + 108 + 42$
+
+\newline
+$P_3$: $135 + 93 + 42$
+
+\newline
+$P_4$: $135 + 3 \times 93 + 42$
+
+\newline
+$P_5$: $2 \times 108 + 2 \times 42$
+
+\newline
+$P_6$: $108 + 2 \times 93$
+
+\newline
+$P_7$: $108 + 93 + 2 \times 42$
+
+\newline
+$P_8$: $108 + 93 + 4 \times 42$
+
+\newline
+$P_9$: $3 \times 93$
+
+\newline
+$P_{10}$: $2 \times 93 + 2 \times 42$
+
+\newline
+$P_{11}$: $93 + 4 \times 42$
+
+\newline
+$P_{12}$: $7 \times 42$
+
+\newline
+$x_i = \# \text{ of } P_i$, $i = 1, \dots, 12$
+
+\newline
+$x_i \ge 0$, integers
+
+\newline
+$\min \sum_{i=1}^{12} x_i$
+
+\newline
+subject to $135 n_1 + 108 n_2 + 93 n_3 + 42 n_4 \ge 97$, $108 n_2 + 93 n_3 + 42 n_4 \ge 610$, $93 n_3 + 42 n_4 \ge 395$, $42 n_4 \ge 211$
+
+
+\textbf{Description:}
+
+This slide continues the cutting stock problem, defining variables and constraints for a linear programming formulation.  The variables $x_i$ represent the number of times a particular cutting pattern ($P_i$) is used.  The constraints ensure that the total number of rolls of each width is at least the required amount.  The objective function $\min \sum_{i=1}^{12} x_i$ aims to minimize the total number of 3-meter rolls needed to satisfy the order.  The slide is likely part of a lecture or presentation explaining how to use integer programming to solve cutting stock problems, showing the formulation of the problem in terms of variables and constraints.
+
+
+
+
+Slide 29
+
+\textbf{Cutting Stock Problem}
+
+\newline
+\textit{[EMG] p. 267}
+
+\newline
+In order to engage linear programming one has to be generous in introducing variables. We write down all of the requested widths: 135 cm, 108 cm, 93 cm, and 42 cm. We then list all possibilities of cutting a 3 m paper roll, in rolls of some of these widths (we need to consider only possibilities for which the wasted piece is shorter than 42 cm):
+
+\newline
+$P_1$: $2 \times 135$
+
+\newline
+$P_2$: $135 + 108 + 42$
+
+\newline
+$P_3$: $135 + 93 + 42$
+
+\newline
+$P_4$: $135 + 3 \times 93 + 42$
+
+\newline
+$P_5$: $2 \times 108 + 2 \times 42$
+
+\newline
+$P_6$: $108 + 2 \times 93$
+
+\newline
+$P_7$: $108 + 93 + 2 \times 42$
+
+\newline
+$P_8$: $108 + 93 + 4 \times 42$
+
+\newline
+$P_9$: $3 \times 93$
+
+\newline
+$P_{10}$: $2 \times 93 + 2 \times 42$
+
+\newline
+$P_{11}$: $93 + 4 \times 42$
+
+\newline
+$P_{12}$: $7 \times 42$
+
+\newline
+$x_1, x_2, \dots, x_{12} = \# \text{ of } P_i$, $i = 1, \dots, 12$
+
+\newline
+$x_i \ge 0$, integers
+
+\newline
+$\min x_1 + x_2 + \dots + x_{12}$
+
+\newline
+subject to $2 x_1 + x_2 + x_3 + x_4 + 2 x_5 + x_6 + x_7 + x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 97$
+
+\newline
+$x_2 + x_3 + x_4 + 2 x_5 + 2 x_6 + x_7 + x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 610$
+
+\newline
+$x_3 + 2 x_5 + 2 x_6 + x_7 + 2 x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 395$
+
+\newline
+$2 x_5 + 2 x_6 + x_7 + 2 x_8 + 3 x_9 + 2 x_{10} + x_{11} + 7 x_{12} \ge 211$
+
+
+\textbf{Description:}
+
+This slide continues the cutting stock problem, defining the objective function and constraints for a linear programming formulation.  The variables $x_i$ represent the number of times a particular cutting pattern ($P_i$) is used.  The objective function $\min \sum_{i=1}^{12} x_i$ aims to minimize the total number of 3-meter rolls needed to satisfy the order.  The constraints are now presented, ensuring that the total number of rolls of each width is at least the required amount.  The slide is likely part of a lecture or presentation explaining how to use integer programming to solve cutting stock problems, showing the complete formulation of the problem in terms of variables and constraints.
+
+
+
+
+Slide 30
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+
+\textbf{Description:}
+
+This slide introduces a problem in linear algebra, specifically finding a sparse solution to an underdetermined system of linear equations.  The problem is to find a solution vector $x$ to the equation $Ax = b$, where $A$ is an $m \times n$ matrix with $m < n$ (fewer equations than unknowns), $b$ is a given vector, and the solution $x$ must be sparse, meaning that it has at most $r$ non-zero elements.  This problem is relevant to linear programming because it often arises in various optimization contexts where finding a solution with a limited number of non-zero components is desirable.  The notation $|supp(x)|$ represents the number of non-zero elements in the vector $x$.
+
+
+Slide 31
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+Recovery of Signals with noise:
+
+\newline
+$w \in \mathbb{R}^k \implies$ encode $\implies z = Q w$
+
+\newline
+$z \implies$ transmit $\implies z_2 = z + x$ (noise: only a few zeros)
+
+\newline
+Given $z_2$, how to recover $z$?
+
+\newline
+$z_2 = Q w + x$
+
+\newline
+$A z_2 = A Q w + A x$
+
+
+\textbf{Description:}
+
+This slide continues the discussion of sparse solutions to underdetermined linear systems, but now introduces the concept of signal recovery with noise.  The problem is to recover a sparse signal $w$ from a noisy observation $z_2$.  The signal $w$ is encoded into a vector $z$ using a matrix $Q$.  The transmission of $z$ introduces noise, represented by the vector $x$, which is also sparse.  The goal is to recover the original signal $z$ from the noisy observation $z_2$.  The slide shows the relationship between the original signal, the encoding matrix, the noise, and the observed signal.  This is a common problem in signal processing and data recovery, where a sparse signal is corrupted by noise, and the goal is to recover the original signal from the noisy observation.
+
+
+Slide 32
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+Recovery of Signals with noise:
+
+\newline
+$w \in \mathbb{R}^k \implies$ encode $\implies z = Q w$
+
+\newline
+$z \implies$ transmit $\implies z_2 = z + x$ (noise: only a few zeros)
+
+\newline
+Given $z_2$, how to recover $z$?
+
+\newline
+$Az = Q w + x$
+
+\newline
+$A \tilde{z} = A Q w + A x = b$ given
+
+\newline
+$\tilde{z} = z + x \implies z = \tilde{z} - x$
+
+\newline
+Find $x$ with as few non-zeros as possible
+
+
+\textbf{Description:}
+
+This slide continues the discussion of sparse solutions to underdetermined linear systems, focusing on signal recovery with noise.  It shows the relationship between the original signal ($z$), the encoding matrix ($Q$), the noise ($x$), and the observed signal ($\tilde{z}$).  The equation $A \tilde{z} = b$ is given, and the goal is to find the sparse solution $x$ that minimizes the number of non-zero elements while satisfying the equation.  The slide is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation.
+
+
+
+
+Slide 33
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+Data Compression:
+
+\newline
+$AX = b$
+
+\newline
+$x_1 U_1 + x_2 U_2 + \dots + x_n U_n = b$
+
+\newline
+$\underline{x} = \underline{x} - x$
+
+\newline
+$\underline{x}$ = coordinates of $b$ w.r.t. cols of $A$
+
+
+\textbf{Description:}
+
+This slide continues the discussion of sparse solutions to underdetermined linear systems, now focusing on data compression.  The problem is to find a sparse solution $x$ to the equation $Ax = b$, where $A$ is an $m \times n$ matrix with $m < n$, $b$ is a given vector, and the solution $x$ must be sparse, meaning that it has at most $r$ non-zero elements.  The slide introduces the concept of data compression, where the vector $b$ is represented by a linear combination of the columns of the matrix $A$.  The vector $\underline{x}$ represents the coordinates of $b$ with respect to the columns of $A$.  The slide is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation, now in the context of data compression.
+
+
+
+
+Slide 34
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+$\min \|x\|_1$
+
+\newline
+s.t.
+\newline
+$Ax = b$
+
+
+\textbf{Description:}
+
+This slide presents a linear programming formulation for finding a sparse solution to an underdetermined linear system.  The problem is to find a solution vector $x$ to the equation $Ax = b$, where $A$ is an $m \times n$ matrix with $m < n$, $b$ is a given vector, and the solution $x$ must be sparse, meaning that it has at most $r$ non-zero elements.  The objective function $\min \|x\|_1$ aims to minimize the $l_1$ norm of the solution vector $x$, which is the sum of the absolute values of its components.  This formulation is a crucial step in solving the sparse solution problem using linear programming techniques.  The slide is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation, now in the context of minimizing the $l_1$ norm of the solution.
+
+
+
+
+Slide 35
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+$\min \|x\|_1$
+
+\newline
+s.t.
+\newline
+$Ax = b$
+
+\newline
+$\min \sum_{i=1}^n |x_i|$
+
+\newline
+s.t.
+\newline
+$Ax = b$
+
+
+\textbf{Description:}
+
+This slide presents an alternative formulation of the sparse solution problem.  The objective function is now $\min \|x\|_1$, which is the $l_1$ norm of the vector $x$.  This is equivalent to minimizing the sum of the absolute values of the components of $x$.  The constraint remains $Ax = b$, ensuring that the solution satisfies the given linear equation.  This formulation is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation, now explicitly using the $l_1$ norm as the objective function.
+
+
+
+
+Slide 36
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+$\min \|x\|_1$
+
+\newline
+s.t.
+\newline
+$Ax = b$
+
+\newline
+\begin{tikzpicture}
+\draw[->] (-2,0) -- (2,0) node[right] {$x_1$};
+\draw[->] (0,-2) -- (0,2) node[above] {$x_2$};
+\draw[red, thick] (-1,1) -- (1,-1);
+\draw[red, thick] (-1,-1) -- (1,1);
+\draw[blue] (-1,0) -- (1,0);
+\draw[blue] (0,-1) -- (0,1);
+\filldraw (0,0) circle (2pt);
+\filldraw (1,0) circle (2pt);
+\filldraw (-1,0) circle (2pt);
+\filldraw (0,1) circle (2pt);
+\filldraw (0,-1) circle (2pt);
+\node[below] at (-1, -0.2) {$-1$};
+\node[below] at (1, -0.2) {$1$};
+\node[left] at (-0.2, 1) {$1$};
+\node[left] at (-0.2, -1) {$-1$};
+\end{tikzpicture}
+
+\newline
+$n=2$
+\newline
+$\|x\|_1 = |x_1| + |x_2| = 1$
+
+
+\textbf{Description:}
+
+This slide illustrates the $l_1$ norm minimization problem in a 2-dimensional space.  The graph shows a diamond shape, which represents the set of all vectors $x = (x_1, x_2)$ that satisfy the constraint $\|x\|_1 = |x_1| + |x_2| = 1$.  The vertices of the diamond are at (1,0), (-1,0), (0,1), and (0,-1).  The problem is to find the vector $x$ within this diamond that minimizes the $l_1$ norm while satisfying the constraint $Ax = b$.  This visual representation helps to understand the geometry of the problem and how the $l_1$ norm minimization leads to a sparse solution.
+
+
+
+
+Slide 37
+
+\textbf{Sparse Solutions of Linear System}
+
+\newline
+\textit{[EMG] p. 167}
+
+\newline
+Sparse solution of underdetermined system of linear equations
+
+\newline
+Given an $m \times n$ matrix $A$ with $m < n$, a vector $b \in \mathbb{R}^m$, and an integer $r$, find an $x \in \mathbb{R}^n$ such that $Ax = b$ and $|supp(x)| \le r$
+
+\newline
+if one exists.
+
+\newline
+($|supp(x)| = \# \{i: x_i \ne 0\}$)
+
+\newline
+$\min \|x\|_1$
+
+\newline
+s.t.
+\newline
+$Ax = b$
+
+\newline
+Geometric Interpretation:
+
+\newline
+\begin{itemize}
+\item The set of solutions to $Ax = b$ is an affine subspace.
+\item The $l_1$ norm minimization problem finds the solution in the affine subspace that is closest to the origin in the $l_1$ norm.
+\end{itemize}
+
+\newline
+\begin{tikzpicture}
+\draw[->] (-2,0) -- (2,0) node[right] {$x_1$};
+\draw[->] (0,-2) -- (0,2) node[above] {$x_2$};
+\draw[red, thick] (-1,1) -- (1,-1);
+\draw[red, thick] (-1,-1) -- (1,1);
+\draw[blue] (-1,0) -- (1,0);
+\draw[blue] (0,-1) -- (0,1);
+\filldraw (0,0) circle (2pt);
+\filldraw (1,0) circle (2pt);
+\filldraw (-1,0) circle (2pt);
+\filldraw (0,1) circle (2pt);
+\filldraw (0,-1) circle (2pt);
+\node[below] at (-1, -0.2) {$-1$};
+\node[below] at (1, -0.2) {$1$};
+\node[left] at (-0.2, 1) {$1$};
+\node[left] at (-0.2, -1) {$-1$};
+\draw[red, thick] (-1,0) -- (1,0);
+\draw[red, thick] (0,1) -- (0,-1);
+\end{tikzpicture}
+
+\newline
+$n=2$
+\newline
+$\|x\|_1 = |x_1| + |x_2| = 1$
+
+\newline
+The solution is at the intersection of the line $Ax = b$ and the diamond $\|x\|_1 = 1$.
+
+
+\textbf{Description:}
+
+This slide summarizes the sparse solution problem and its geometric interpretation.  The slide reiterates the problem of finding a sparse solution $x$ to $Ax = b$ by minimizing the $l_1$ norm of $x$.  The graph visually represents the $l_1$ norm constraint in a 2-dimensional space, showing the diamond shape defined by $|x_1| + |x_2| = 1$.  The red line represents the constraint $Ax = b$.  The solution is the point where the red line intersects the diamond, which is the closest point to the origin in the $l_1$ norm.  The slide is likely part of a lecture or presentation explaining how to use linear programming to recover a sparse signal from a noisy observation, emphasizing the geometric interpretation of the problem.
+
+

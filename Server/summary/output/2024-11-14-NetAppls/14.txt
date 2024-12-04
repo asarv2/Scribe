@@ -1,0 +1,25 @@
+Slide 14
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem}
+
+minimize $\sum_{i,j} c_{ij} x_{ij}$
+s.t.
+\begin{itemize}
+    \item $\sum_{i} x_{si} = 1$
+    \item $\sum_{i} x_{ir} = 1$
+    \item $x_{ik} - \sum_{j} x_{kj} = 0$, $k \neq s, r$
+    \item $x_{ij} \ge 0$
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide presents the linear programming formulation for the shortest path problem.  The objective function is to minimize the total cost, represented by $\sum_{i,j} c_{ij} x_{ij}$, where $c_{ij}$ are the costs associated with the edges in the network.  The constraints ensure that the flow is properly defined.  The constraint $\sum_{i} x_{si} = 1$ specifies that there is exactly one unit of flow leaving the source node ($s$).  Similarly, $\sum_{i} x_{ir} = 1$ ensures that there is exactly one unit of flow entering the destination node ($r$).  The constraint $x_{ik} - \sum_{j} x_{kj} = 0$, $k \neq s, r$ represents the flow conservation at each intermediate node ($k$).  This means that the total flow into a node must equal the total flow out of that node.  The non-negativity constraint $x_{ij} \ge 0$ ensures that the flow values are non-negative.  This formulation is a network flow approach to finding the shortest path in a weighted graph.
+
+

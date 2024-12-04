@@ -1,0 +1,24 @@
+Slide 18
+
+\textbf{Spanning Trees and Bases}
+
+Dual Flow: $y_j - y_i + z_{ij} = c_{ij}$  $(z_{ij} \ge 0)$
+
+Dual Flow for Spanning Tree ($T$):
+\begin{itemize}
+    \item $x_{ij} \neq 0 \implies z_{ij} = 0$  $(i,j) \in T$
+    \item $x_{ij} = 0 \implies y_j - y_i = c_{ij}$  $(i,j) \notin T$
+\end{itemize}
+
+Complementary Slackness: $x_{ij} z_{ij} = 0$
+
+
+\textbf{Description:}
+
+This slide continues the discussion on network flow problems within the context of linear programming. It focuses on the dual flow and complementary slackness conditions for a spanning tree ($T$).
+
+* **Dual Flow Equation:** The equation $y_j - y_i + z_{ij} = c_{ij}$  is restated, emphasizing the relationship between node potentials ($y_i$), arc costs ($c_{ij}$), and slack variables ($z_{ij}$).
+* **Dual Flow for Spanning Tree:** The conditions $x_{ij} \neq 0 \implies z_{ij} = 0$ and $x_{ij} = 0 \implies y_j - y_i = c_{ij}$  specify the relationship between primal flow ($x_{ij}$) and dual slack variables ($z_{ij}$) for arcs in and out of the spanning tree.
+* **Complementary Slackness:** The condition $x_{ij} z_{ij} = 0$ highlights the complementary relationship between primal and dual variables.  This condition is crucial for understanding the optimality conditions in the context of network flow problems.
+
+The slide likely connects these conditions to the optimality criteria for network flow problems, providing a more refined understanding of the relationship between primal and dual solutions.  The notation suggests that the lecture is covering how to formulate and solve network flow problems as linear programming problems.  The context implies that the conditions presented are essential for determining optimal solutions.

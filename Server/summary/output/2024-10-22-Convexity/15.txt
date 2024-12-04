@@ -1,0 +1,57 @@
+Slide 15
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Convex Analysis [V] Chapter 10}
+
+\subsection*{Separation Theorem}
+THEOREM 10.4. Let $P$ and $\bar{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then there exist disjoint half-spaces $H$ and $\bar{H}$ such that $P \subset H$ and $\bar{P} \subset \bar{H}$.
+
+\textbf{Proof:}
+Let $P = \{x: Ax \le b\}$ and $\bar{P} = \{x: A \bar{x} \le \bar{b}\}$.
+If $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that $v^Tx \le c$ for all $x \in P$ and $v^T \bar{x} \ge c$ for all $\bar{x} \in \bar{P}$.
+$P \cap \bar{P} = \emptyset \iff \exists y, \ \bar{y} \ s.t.$
+\begin{align*}
+y^T A + \bar{y}^T A &= 0 \\
+y^T b + \bar{y}^T \bar{b} &< 0 \\
+y, \bar{y} &\ge 0
+\end{align*}
+(Farkas' Lemma)
+
+\textbf{Farkas' Lemma}
+The system $Ax \le b$ has no solution if and only if there exists a vector $y \ge 0$ such that $y^T A = 0$ and $y^T b < 0$.
+
+\textbf{Proof of Separation Theorem (cont.):}
+Define $H = \{x: y^T x \le y^T b\}$ and $\bar{H} = \{x: y^T x \ge y^T \bar{b}\}$.
+$P \subset H$ and $\bar{P} \subset \bar{H}$.
+$H \cap \bar{H} = \emptyset$.
+
+\textbf{Proof of Farkas' Lemma (sketch): }
+Consider the linear program:
+\begin{align*}
+\max \ 0 \\
+\text{s.t.} \ Ax \le b \\
+x \ge 0
+\end{align*}
+and its dual:
+\begin{align*}
+\min \ y^T b \\
+\text{s.t.} \ y^T A = 0 \\
+y \ge 0
+\end{align*}
+
+\end{document}
+```
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide concludes the proof of the Separation Theorem (Theorem 10.4).  It provides a sketch of the proof of Farkas' Lemma, which was used in the proof of the separation theorem.  The proof of Farkas' Lemma is presented by considering the primal and dual linear programs.  The primal problem is to maximize 0 subject to $Ax \le b$ and $x \ge 0$.  The dual problem is to minimize $y^T b$ subject to $y^T A = 0$ and $y \ge 0$.  The equivalence between the infeasibility of the primal problem and the existence of a feasible solution to the dual problem is the core of Farkas' Lemma.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of the separation theorem and concludes the presentation.
+
+

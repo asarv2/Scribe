@@ -1,0 +1,27 @@
+Slide 5
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Convex Analysis [V] Chapter 10}
+
+\subsection*{Def 3}
+$S \subseteq \mathbb{R}^m$
+$\text{Conv}(S) = \bigcap \{C \text{ convex } | S \subseteq C \}$
+(= Smallest convex set containing $S$)
+
+\subsection*{Theorem 10.2}
+$S \subseteq \mathbb{R}^m$, $\text{Conv}(S) = \{ \text{collection of all convex combinations of finitely many points from } S \}$
+
+\end{document}
+```
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces two important concepts related to convex sets.  Definition 3 defines the convex hull of a set $S$, denoted as $\text{Conv}(S)$.  It's the intersection of all convex sets that contain $S$.  This is crucial in linear programming, as it represents the smallest convex set that encloses the given set.  Theorem 10.2 states that the convex hull of a set $S$ is also the set of all convex combinations of finitely many points from $S$.  This is a fundamental result in convex analysis, providing an alternative characterization of the convex hull.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.

@@ -1,0 +1,27 @@
+Slide 4
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{Worst Case Example: Klee-Minty (1970)}
+
+\subsection*{[LcJ]}
+
+Using the largest-coefficient rule, we construct the following sequence of dictionaries.
+The initial dictionary:
+
+\begin{align*}
+x_4 &= 1 - x_1 \\
+x_5 &= 100 - 20x_1 - x_2 \\
+x_6 &= 10,000 - 200x_1 - 10x_2 - x_3
+\end{align*}
+$2^3 - 1$ steps
+
+In the first iteration, we were led to an unfortunate choice of the entering variable; had we made $x_3$ rather than $x_1$ enter the basis, we would have pivoted directly to the final dictionary. In view of this blunder, it is natural to question the expediency of the largest-coefficient rule; perhaps the simplex method would always go through only a small number of iterations if it were directed by some other rule. In fact, the largest-coefficient rule is not quite natural. More specifically, it ranks the potential candidates for entering the basis according to their coefficients in the last row of the dictionary; variables with larger coefficients appear to be more promising. But appearances are misleading and the ranking order is easily upset by changes in the scale on which each candidate is measured. For instance, the substitution
+
+\end{document}
+
+\textbf{Description:}
+
+This slide continues the Klee-Minty example, illustrating the Simplex method's behavior with the largest-coefficient rule.  It shows the initial dictionary and the sequence of steps taken.  The example highlights a potential pitfall of the largest-coefficient rule: the choice of entering variable can be sensitive to the scaling of the coefficients.  The slide argues that the rule might not be the most efficient choice, and other rules might perform better in certain cases.  The example demonstrates that the Simplex method's performance can be highly dependent on the specific problem structure and the chosen pivot rule.

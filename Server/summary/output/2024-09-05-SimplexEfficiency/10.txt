@@ -1,0 +1,23 @@
+Slide 10
+
+```latex
+\documentclass{article}
+
+\begin{document}
+
+\section*{Some Theoretical Results}
+
+\subsection*{[MG]}
+
+Later on, very slow examples of a similar type were discovered for many other pivot rules, among them all the rules mentioned above. Many people have tried to design a pivot rule and prove that the number of pivot steps is always bounded by some polynomial function of $m$ and $n$, but nobody has succeeded so far. The best known bound has been proved for the following simple randomized pivot rule: Choose a random ordering of the variables at the beginning of the computation (in other words, randomly permute the indices of the variables in the input linear program); then use Bland's rule for choosing the entering variable, and the lexicographic method for choosing the leaving variable. For every linear program with at most $n$ variables and at most $n$ constraints, the expected number of pivot steps is bounded by $e C \sqrt{n} \ln n$, where $C$ is a (not too large) constant. (Here the expectation means the arithmetic average over all possible orderings of the variables.) This bound is considerably better than $2^n$, say, but much worse than a polynomial bound.
+
+This algorithm was found independently and almost at the same time by Kalai and by Matoušek, Sharir, and Welzl. For a recent treatment in a somewhat broader context see
+
+B. Gärtner and E. Welzl: Explicit and implicit enforcing-randomized optimization, in Lectures of the Graduate Program
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide discusses theoretical results regarding the performance of the Simplex method in linear programming.  It notes that, despite numerous attempts, no pivot rule has been proven to have a polynomial bound on the number of iterations required to solve linear programs.  The slide introduces a *randomized* pivot rule, where the order of variables is randomly permuted at the start of the computation.  Using this rule, along with Bland's rule for entering variables and a lexicographic method for leaving variables, the expected number of pivot steps is bounded by a function of the form $e C \sqrt{n} \ln n$, where $n$ is the minimum of the number of variables and constraints, and $C$ is a constant.  This bound is better than exponential ($2^n$), but still not polynomial.  The slide also credits Kalai and Matoušek, Sharir, and Welzl for independently discovering this algorithm.  Finally, it mentions a related work by Gärtner and Welzl for a broader context.

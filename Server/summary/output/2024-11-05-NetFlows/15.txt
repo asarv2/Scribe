@@ -1,0 +1,14 @@
+Slide 15
+
+\textbf{Spanning Trees and Bases}
+
+The above computation suggests that spanning trees are related to bases in the simplex method.  Let us pursue this idea. Normally, a basis is an invertible square submatrix of the constraint matrix. But for incidence matrices, no such submatrix exists. To see why, note that if we sum together all the rows of $A$, we get a row vector of all zeros (since each column of $A$ has exactly one $+1$ and one $-1$). Of course, every square submatrix of $A$ has this same property and so is singular. In fact, we shall show in a moment that for a connected network, there is exactly one redundant equation (i.e., the rank of $A$ is exactly $m-1$).
+
+Let us select some node, say, the last one, and delete the flow balance constraint associated with this node from the constraints defining the problem (since it is redundant anyway). Let us call this node the root node. Let $A$ denote the incidence matrix $A$ without the row corresponding to the root node (i.e., the last row), and let $\tilde{b}$ denote the supply/demand vector with the last entry deleted. The most important property of network flow problems is summarized in the following theorem:
+
+\textbf{THEOREM 14.1} A square submatrix of $\tilde{A}$ is a basis if and only if the arcs to which its columns correspond form a spanning tree.
+
+
+\textbf{Description:}
+
+This slide continues the discussion on network flow problems within the context of linear programming. It explains the relationship between spanning trees and bases in the context of incidence matrices.  The slide introduces Theorem 14.1, which establishes a crucial connection between square submatrices of the modified incidence matrix ($\tilde{A}$) and spanning trees in the network.  The slide builds upon previous discussions about the incidence matrix ($A$), flow balance equations, and the concept of a spanning tree.  The slide likely sets the stage for further analysis and proofs related to the use of spanning trees in solving network flow problems using linear programming techniques.  The discussion suggests that the incidence matrix's structure is fundamentally linked to the spanning tree structure of the network.

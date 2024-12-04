@@ -1,0 +1,12 @@
+Slide 8
+
+\textbf{Diet Problem - Dual Formulation}
+
+Maximize (profit) $Z(y) = \sum_{i} b_i y_i$
+
+s.t. $\sum_{i} y_i a_{ij} \le c_j$
+$y_i \ge 0$
+
+\textbf{Description:}
+
+This slide presents the dual formulation of the diet problem, derived from the previous slide's discussion of replacing food with nutrient pills.  The objective function is to maximize the profit ($Z(y)$) by selling nutrient pills, where the profit is the sum of the minimum intake of each nutrient ($b_i$) multiplied by the unit price of each nutrient pill ($y_i$).  The constraints ensure that the price/value of each food item ($F_j$) is not greater than the cost of the food item ($c_j$).  The non-negativity constraint $y_i \ge 0$ ensures that the unit price of each nutrient pill is non-negative.  This dual formulation is a crucial step in understanding the duality theorem in linear programming, showing the relationship between the primal (minimizing cost) and dual (maximizing profit) problems.  The $a_{ij}$ values represent the amount of nutrient $i$ in food $j$, $b_i$ represents the minimum intake of nutrient $i$, and $c_j$ represents the cost of food $j$.  The slide is likely part of a larger lecture on linear programming and its applications, specifically focusing on the diet problem and duality.

@@ -1,0 +1,33 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Regression}
+
+\textbf{Given} $x_1, x_2, ..., x_m$  $\{$ $x_i \in \mathbb{R}$\}
+
+\begin{enumerate}
+    \item
+    \begin{equation*}
+    \min_x \frac{1}{m} \sum_{i=1}^m (x-x_i)^2 \implies x = \frac{x_1 + ... + x_m}{m}
+    \end{equation*}
+    \textit{(mean)}
+    \item
+    \begin{equation*}
+    \min_x \frac{1}{m} \sum_{i=1}^m |x-x_i| \implies x = \text{median}
+    \end{equation*}
+    \item
+    \begin{equation*}
+    \min_x \left( \max_{i} |x-x_i| \right) \implies x = \frac{\min x_i + \max x_i}{2}
+    \end{equation*}
+    \textit{"mid-range"}
+\end{enumerate}
+
+\end{document}
+
+\textbf{Description:}
+
+This slide presents different methods for regression, focusing on the minimization of different error functions.  It shows how to calculate the mean, median, and mid-range values as estimators for a central tendency.  The notation indicates that $x_1, x_2, ..., x_m$ are data points, and $x$ is the value being estimated.  The slide uses $L^2$-error, $L^1$-error, and $L^\infty$-error as the error functions.  The slide number and the use of (1), (2), and (3) suggest this is part of a larger lecture series on regression or linear programming.  The handwritten style and the use of mathematical notation indicate a lecture setting.

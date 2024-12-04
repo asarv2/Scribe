@@ -1,0 +1,25 @@
+Slide 4
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Sensitivity and Parametric Analysis}
+
+what if
+\begin{align*}
+\text{maximize} \quad & (5+\lambda)x_1 + 4x_2 + 3x_3 \\
+\text{subject to} \quad & 2x_1 + 3x_2 + x_3 \le 5 \\
+& 4x_1 + x_2 + 2x_3 \le 11 \\
+& 3x_1 + 4x_2 + 2x_3 \le 8 \\
+& x_1, x_2, x_3 \ge 0
+\end{align*}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents a modified linear programming problem, focusing on the sensitivity of the objective function coefficient.  The original objective function, $5x_1 + 4x_2 + 3x_3$, has been altered to $(5+\lambda)x_1 + 4x_2 + 3x_3$. The parameter $\lambda$ is introduced, indicating a possible change in the coefficient of $x_1$.  The constraints remain the same as in the previous slides.  This formulation is typical of a parametric analysis in linear programming, where the objective function coefficient is allowed to vary, and the impact on the optimal solution is investigated.  The question "what if" suggests an exploration of how different values of $\lambda$ affect the optimal solution.

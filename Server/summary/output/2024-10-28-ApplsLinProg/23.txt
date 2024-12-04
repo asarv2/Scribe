@@ -1,0 +1,34 @@
+Slide 23
+
+\textbf{Integer Programming}
+
+\newline
+\textit{[EMG] p. 148} \hspace{1cm} Machine Scheduling
+
+\newline
+$M = \{1, 2, \dots, m\}$ \hspace{1cm} $m$ - Machines
+
+\newline
+$J = \{1, 2, \dots, n\}$ \hspace{1cm} $n$ - Jobs
+
+\newline
+$d_{ij}$ = running time of job $j$ in Machine $i$
+
+\newline
+$\min \pi$ (total run time)
+
+\newline
+s.t.
+\newline
+$\sum_{i \in M} x_{ij} = 1$ for $j \in J$
+\newline
+$\sum_{j \in J} d_{ij} x_{ij} \le \pi$ for $i \in M$
+\newline
+$x_{ij} \in \{0, 1\}$ for all $i, j$
+
+
+\textbf{Description:}
+
+This slide presents the linear programming formulation for a machine scheduling problem.  The problem involves scheduling $n$ jobs on $m$ machines.  The variable $d_{ij}$ represents the time required to complete job $j$ on machine $i$.  The objective is to minimize the total run time ($\pi$).  The constraints ensure that each job is assigned to exactly one machine ($\sum_{i \in M} x_{ij} = 1$ for $j \in J$) and that the total time spent on each machine does not exceed the total run time ($\sum_{j \in J} d_{ij} x_{ij} \le \pi$ for $i \in M$).  The variables $x_{ij}$ are binary, indicating whether job $j$ is assigned to machine $i$ ($x_{ij} \in \{0, 1\}$).  This formulation is a crucial step in solving the machine scheduling problem using integer programming techniques.
+
+

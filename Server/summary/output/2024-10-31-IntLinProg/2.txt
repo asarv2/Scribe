@@ -1,0 +1,31 @@
+Slide 2
+
+\textbf{Integer Programming}
+
+\begin{equation*}
+\max \ \vec{c}^T \vec{x}
+\end{equation*}
+\begin{equation*}
+\text{s.t.} \quad A\vec{x} \le \vec{b}
+\end{equation*}
+\begin{equation*}
+\vec{x} \ge \vec{0}, \quad x_j \in \mathbb{Z}
+\end{equation*}
+
+\textit{relaxed problem} $\implies$ $\max \ \vec{c}^T \vec{x}$
+\begin{equation*}
+\text{s.t.} \quad A\vec{x} \le \vec{b}
+\end{equation*}
+\begin{equation*}
+\vec{x} \ge \vec{0}
+\end{equation*}
+
+$Rk$: Solving the problem without the int. constraints and then round up/down the solution does not work because
+\begin{enumerate}
+    \item rounded Solution might not be feasible
+    \item true opt. int. solution might be far from the rounded Solution.
+\end{enumerate}
+
+\textbf{Description:}
+
+This slide continues the discussion of Integer Programming, building on the previous slide's introduction. It introduces the concept of a "relaxed problem," which is the same as the original integer programming problem, but without the integer constraint ($x_j \in \mathbb{Z}$).  The slide explains why simply solving the relaxed problem and then rounding the solution is not a reliable approach for finding the optimal integer solution.  The points (1) and (2) highlight the potential issues: the rounded solution might not satisfy the constraints of the original problem, and the optimal integer solution might be significantly different from the rounded solution of the relaxed problem.  The handwritten nature of the notes suggests this is a lecture or class notes, not a formal publication.  The red underlines likely indicate emphasis or a separation of different parts of the explanation.

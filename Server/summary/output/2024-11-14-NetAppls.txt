@@ -1,0 +1,1105 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+
+\section*{Variants of Network Flows}
+\subsection*{Inequality constraints (Transportation Problem)}
+\textbf{[C] p. 320}
+
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (s1) at (1, 4) {$s_i$};
+\node (s2) at (1, 3) {};
+\node (s3) at (1, 2) {};
+\node (s4) at (1, 1) {};
+\node (s5) at (1, 0) {};
+\node (i) at (3, 2.5) {$i$};
+\node (d1) at (5, 4) {};
+\node (d2) at (5, 3) {};
+\node (d3) at (5, 2) {};
+\node (d4) at (5, 1) {};
+\node (d5) at (5, 0) {$d_j$};
+\node (d6) at (5, 5) {};
+\node (d7) at (5, 6) {};
+\node (d8) at (5, 7) {};
+\node (d9) at (5, 8) {};
+\node (d10) at (5, 9) {};
+\node (d11) at (5, 10) {};
+\node (d12) at (5, 11) {};
+\node (d13) at (5, 12) {};
+\node (d14) at (5, 13) {};
+\node (d15) at (5, 14) {};
+\node (d16) at (5, 15) {};
+\node (d17) at (5, 16) {};
+\node (d18) at (5, 17) {};
+\node (d19) at (5, 18) {};
+\node (d20) at (5, 19) {};
+\node (d21) at (5, 20) {};
+\node (d22) at (5, 21) {};
+\node (d23) at (5, 22) {};
+\node (d24) at (5, 23) {};
+\node (d25) at (5, 24) {};
+\node (d26) at (5, 25) {};
+\node (d27) at (5, 26) {};
+\node (d28) at (5, 27) {};
+\node (d29) at (5, 28) {};
+\node (d30) at (5, 29) {};
+\node (d31) at (5, 30) {};
+\node (d32) at (5, 31) {};
+\node (d33) at (5, 32) {};
+\node (d34) at (5, 33) {};
+\node (d35) at (5, 34) {};
+\node (d36) at (5, 35) {};
+\node (d37) at (5, 36) {};
+\node (d38) at (5, 37) {};
+\node (d39) at (5, 38) {};
+\node (d40) at (5, 39) {};
+\node (d41) at (5, 40) {};
+\node (d42) at (5, 41) {};
+\node (d43) at (5, 42) {};
+\node (d44) at (5, 43) {};
+\node (d45) at (5, 44) {};
+\node (d46) at (5, 45) {};
+\node (d47) at (5, 46) {};
+\node (d48) at (5, 47) {};
+\node (d49) at (5, 48) {};
+\node (d50) at (5, 49) {};
+\node (d51) at (5, 50) {};
+\node (d52) at (5, 51) {};
+\node (d53) at (5, 52) {};
+\node (d54) at (5, 53) {};
+\node (d55) at (5, 54) {};
+\node (d56) at (5, 55) {};
+\node (d57) at (5, 56) {};
+\node (d58) at (5, 57) {};
+\node (d59) at (5, 58) {};
+\node (d60) at (5, 59) {};
+\node (d61) at (5, 60) {};
+\node (d62) at (5, 61) {};
+\node (d63) at (5, 62) {};
+\node (d64) at (5, 63) {};
+\node (d65) at (5, 64) {};
+\node (d66) at (5, 65) {};
+\node (d67) at (5, 66) {};
+\node (d68) at (5, 67) {};
+\node (d69) at (5, 68) {};
+\node (d70) at (5, 69) {};
+\node (d71) at (5, 70) {};
+\node (d72) at (5, 71) {};
+\node (d73) at (5, 72) {};
+\node (d74) at (5, 73) {};
+\node (d75) at (5, 74) {};
+\node (d76) at (5, 75) {};
+\node (d77) at (5, 76) {};
+\node (d78) at (5, 77) {};
+\node (d79) at (5, 78) {};
+\node (d80) at (5, 79) {};
+\node (d81) at (5, 80) {};
+\node (d82) at (5, 81) {};
+\node (d83) at (5, 82) {};
+\node (d84) at (5, 83) {};
+\node (d85) at (5, 84) {};
+\node (d86) at (5, 85) {};
+\node (d87) at (5, 86) {};
+\node (d88) at (5, 87) {};
+\node (d89) at (5, 88) {};
+\node (d90) at (5, 89) {};
+\node (d91) at (5, 90) {};
+\node (d92) at (5, 91) {};
+\node (d93) at (5, 92) {};
+\node (d94) at (5, 93) {};
+\node (d95) at (5, 94) {};
+\node (d96) at (5, 95) {};
+\node (d97) at (5, 96) {};
+\node (d98) at (5, 97) {};
+\node (d99) at (5, 98) {};
+\node (d100) at (5, 99) {};
+\node (d101) at (5, 100) {};
+\node (d102) at (5, 101) {};
+\node (d103) at (5, 102) {};
+\node (d104) at (5, 103) {};
+\node (d105) at (5, 104) {};
+\node (d106) at (5, 105) {};
+\node (d107) at (5, 106) {};
+\node (d108) at (5, 107) {};
+\node (d109) at (5, 108) {};
+\node (d110) at (5, 109) {};
+\node (d111) at (5, 110) {};
+\node (d112) at (5, 111) {};
+\node (d113) at (5, 112) {};
+\node (d114) at (5, 113) {};
+\node (d115) at (5, 114) {};
+\node (d116) at (5, 115) {};
+\node (d117) at (5, 116) {};
+\node (d118) at (5, 117) {};
+\node (d119) at (5, 118) {};
+\node (d120) at (5, 119) {};
+\node (d121) at (5, 120) {};
+\node (d122) at (5, 121) {};
+\node (d123) at (5, 122) {};
+\node (d124) at (5, 123) {};
+\node (d125) at (5, 124) {};
+\node (d126) at (5, 125) {};
+\node (d127) at (5, 126) {};
+\node (d128) at (5, 127) {};
+\node (d129) at (5, 128) {};
+\node (d130) at (5, 129) {};
+\node (d131) at (5, 130) {};
+\node (d132) at (5, 131) {};
+\node (d133) at (5, 132) {};
+\node (d134) at (5, 133) {};
+\node (d135) at (5, 134) {};
+\node (d136) at (5, 135) {};
+\node (d137) at (5, 136) {};
+\node (d138) at (5, 137) {};
+\node (d139) at (5, 138) {};
+\node (d140) at (5, 139) {};
+\node (d141) at (5, 140) {};
+\node (d142) at (5, 141) {};
+\node (d143) at (5, 142) {};
+\node (d144) at (5, 143) {};
+\node (d145) at (5, 144) {};
+\node (d146) at (5, 145) {};
+\node (d147) at (5, 146) {};
+\node (d148) at (5, 147) {};
+\node (d149) at (5, 148) {};
+\node (d150) at (5, 149) {};
+\node (d151) at (5, 150) {};
+\node (d152) at (5, 151) {};
+\node (d153) at (5, 152) {};
+\node (d154) at (5, 153) {};
+\node (d155) at (5, 154) {};
+\node (d156) at (5, 155) {};
+\node (d157) at (5, 156) {};
+\node (d158) at (5, 157) {};
+\node (d159) at (5, 158) {};
+\node (d160) at (5, 159) {};
+\node (d161) at (5, 160) {};
+\node (d162) at (5, 161) {};
+\node (d163) at (5, 162) {};
+\node (d164) at (5, 163) {};
+\node (d165) at (5, 164) {};
+\node (d166) at (5, 165) {};
+\node (d167) at (5, 166) {};
+\node (d168) at (5, 167) {};
+\node (d169) at (5, 168) {};
+\node (d170) at (5, 169) {};
+\node (d171) at (5, 170) {};
+\node (d172) at (5, 171) {};
+\node (d173) at (5, 172) {};
+\node (d174) at (5, 173) {};
+\node (d175) at (5, 174) {};
+\node (d176) at (5, 175) {};
+\node (d177) at (5, 176) {};
+\node (d178) at (5, 177) {};
+\node (d179) at (5, 178) {};
+\node (d180) at (5, 179) {};
+\node (d181) at (5, 180) {};
+\node (d182) at (5, 181) {};
+\node (d183) at (5, 182) {};
+\node (d184) at (5, 183) {};
+\node (d185) at (5, 184) {};
+\node (d186) at (5, 185) {};
+\node (d187) at (5, 186) {};
+\node (d188) at (5, 187) {};
+\node (d189) at (5, 188) {};
+\node (d190) at (5, 189) {};
+\node (d191) at (5, 190) {};
+\node (d192) at (5, 191) {};
+\node (d193) at (5, 192) {};
+\node (d194) at (5, 193) {};
+\node (d195) at (5, 194) {};
+\node (d196) at (5, 195) {};
+\node (d197) at (5, 196) {};
+\node (d198) at (5, 197) {};
+\node (d199) at (5, 198) {};
+\node (d200) at (5, 199) {};
+\node (d201) at (5, 200) {};
+\node (d202) at (5, 201) {};
+\node (d203) at (5, 202) {};
+\node (d204) at (5, 203) {};
+\node (d205) at (5, 204) {};
+\node (d206) at (5, 205) {};
+\node (d207) at (5, 206) {};
+\node (d208) at (5, 207) {};
+\node (d209) at (5, 208) {};
+\node (d210) at (5, 209) {};
+\node (d211) at (5, 210) {};
+\node (d212) at (5, 211) {};
+\node (d213) at (5, 212) {};
+\node (d214) at (5, 213) {};
+\node (d215) at (5, 214) {};
+\node (d216) at (5, 215) {};
+\node (d217) at (5, 216) {};
+\node (d218) at (5, 217) {};
+\node (d219) at (5, 218) {};
+\node (d220) at (5, 219) {};
+\node (d221) at (5, 220) {};
+\node (d222) at (5, 221) {};
+\node (d223) at (5, 222) {};
+\node (d224) at (5, 223) {};
+\node (d225) at (5, 224) {};
+\node (d226) at (5, 225) {};
+\node (d227) at (5, 226) {};
+\node (d228) at (5, 227) {};
+\node (d229) at (5, 228) {};
+\node (d230) at (5, 229) {};
+\node (d231) at (5, 230) {};
+\node (d232) at (5, 231) {};
+\node (d233) at (5, 232) {};
+\node (d234) at (5, 233) {};
+\node (d235) at (5, 234) {};
+\node (d236) at (5, 235) {};
+\node (d237) at (5, 236) {};
+\node (d238) at (5, 237) {};
+\node (d239) at (5, 238) {};
+\node (d240) at (5, 239) {};
+\node (d241) at (5, 240) {};
+\node (d242) at (5, 241) {};
+\node (d243) at (5, 242) {};
+\node (d244) at (5, 243) {};
+\node (d245) at (5, 244) {};
+\node (d246) at (5, 245) {};
+\node (d247) at (5, 246) {};
+\node (d248) at (5, 247) {};
+\node (d249) at (5, 248) {};
+\node (d250) at (5, 249) {};
+\node (d251) at (5, 250) {};
+\node (d252) at (5, 251) {};
+\node (d253) at (5, 252) {};
+\node (d254) at (5, 253) {};
+\node (d255) at (5, 254) {};
+\node (d256) at (5, 255) {};
+\node (d257) at (5, 256) {};
+\node (d258) at (5, 257) {};
+\node (d259) at (5, 258) {};
+\node (d260) at (5, 259) {};
+\node (d261) at (5, 260) {};
+\node (d262) at (5, 261) {};
+\node (d263) at (5, 262) {};
+\node (d264) at (5, 263) {};
+\node (d265) at (5, 264) {};
+\node (d266) at (5, 265) {};
+\node (d267) at (5, 266) {};
+\node (d268) at (5, 267) {};
+\node (d269) at (5, 268) {};
+\node (d270) at (5, 269) {};
+\node (d271) at (5, 270) {};
+\node (d272) at (5, 271) {};
+\node (d273) at (5, 272) {};
+\node (d274) at (5, 273) {};
+\node (d275) at (5, 274) {};
+\node (d276) at (5, 275) {};
+\node (d277) at (5, 276) {};
+\node (d278) at (5, 277) {};
+\node (d279) at (5, 278) {};
+\node (d280) at (5, 279) {};
+\node (d281) at (5, 280) {};
+\node (d282) at (5, 281) {};
+\node (d283) at (5, 282) {};
+\node (d284) at (5, 283) {};
+\node (d285) at (5, 284) {};
+\node (d286) at (5, 285) {};
+\node (d287) at (5, 286) {};
+\node (d288) at (5, 287) {};
+\node (d289) at (5, 288) {};
+\node (d290) at (5, 289) {};
+\node (d291) at (5, 290) {};
+\node (d292) at (5, 291) {};
+\node (d293) at (5, 292) {};
+\node (d294) at (5, 293) {};
+\node (d295) at (5, 294) {};
+\node (d296) at (5, 295) {};
+\node (d297) at (5, 296) {};
+\node (d298) at (5, 297) {};
+\node (d299) at (5, 298) {};
+\node (d300) at (5, 299) {};
+\node (d301) at (5, 300) {};
+\node (d302) at (5, 301) {};
+\node (d303) at (5, 302) {};
+\node (d304) at (5, 303) {};
+\node (d305) at (5, 304) {};
+\node (d306) at (5, 305) {};
+\node (d307) at (5, 306) {};
+\node (d308) at (5, 307) {};
+\node (d309) at (5, 308) {};
+\node (d310) at (5, 309) {};
+\node (d311) at (5, 310) {};
+\node (d312) at (5, 311) {};
+\node (d313) at (5, 312) {};
+\node (d314) at (5, 313) {};
+\node (d315) at (5, 314) {};
+\node (d316) at (5, 315) {};
+\node (d317) at (5, 316) {};
+\node (d318) at (5, 317) {};
+\node (d319) at (5, 318) {};
+\node (d320) at (5, 319) {};
+\node (d321) at (5, 320) {};
+\node (d322) at (5, 321) {};
+\node (d323) at (5, 322) {};
+\node (d324) at (5, 323) {};
+\node (d325) at (5, 324) {};
+\node (d326) at (5, 325) {};
+\node (d327) at (5, 326) {};
+\node (d328) at (5, 327) {};
+\node (d329) at (5, 328) {};
+\node (d330) at (5, 329) {};
+\node (d331) at (5, 330) {};
+\node (d332) at (5, 331) {};
+\node (d333) at (5, 332) {};
+\node (d334) at (5, 333) {};
+\node (d335) at (5, 334) {};
+\node (d336) at (5, 335) {};
+\node (d337) at (5, 336) {};
+\node (d338) at (5, 337) {};
+\node (d339) at (5, 338) {};
+\node (d340) at (5, 339) {};
+\node (d341) at (5, 340) {};
+\node (d342) at (5, 341) {};
+\node (d343) at (5, 342) {};
+\node (d344) at (5, 343) {};
+\node (d345) at (5, 344) {};
+\node (d346) at (5, 345) {};
+\node (d347) at (5, 346) {};
+\node (d348) at (5, 347) {};
+\node (d349) at (5, 348) {};
+\node (d350) at (5, 349) {};
+\node (d351) at (5, 350) {};
+\node (d352) at (5, 351) {};
+\node (d353) at (5, 352) {};
+\node (d354) at (5, 353) {};
+\node (d355) at (5, 354) {};
+\node (d356) at (5, 355) {};
+\node (d357) at (5, 356) {};
+\node (d358) at (5, 357) {};
+\node (d359) at (5, 358) {};
+\node (d360) at (5, 359) {};
+\node (d361) at (5, 360) {};
+\node (d362) at (5, 361) {};
+\node (d363) at (5, 362) {};
+\node (d364) at (5, 363) {};
+\node (d365) at (5, 364) {};
+\node (d366) at (5, 365) {};
+\node (d367) at (5, 366) {};
+\node (d368) at (5, 367) {};
+\node (d369) at (5, 368) {};
+\node (d370) at (5, 369) {};
+\node (d371) at (5, 370) {};
+\node (d372) at (5, 371) {};
+\node (d373) at (5, 372) {};
+\node (d374) at (5, 373) {};
+\node (d375) at (5, 374) {};
+\node (d376) at (5, 375) {};
+\node (d377) at (5, 376) {};
+\node (d378) at (5, 377) {};
+\node (d379) at (5, 378) {};
+\node (d380) at (5, 379) {};
+\node (d381) at (5, 380) {};
+\node (d382) at (5, 381) {};
+\node (d383) at (5, 382) {};
+\node (d384) at (5, 383) {};
+\node (d385) at (5, 384) {};
+\node (d386) at (5, 385) {};
+\node (d387) at (5, 386) {};
+\node (d388) at (5, 387) {};
+\node (d389) at (5, 388) {};
+\node (d390) at (5, 389) {};
+\node (d391) at (5, 390) {};
+\node (d392) at (5, 391) {};
+\node (d393) at (5, 392) {};
+\node (d394) at (5, 393) {};
+\node (d395) at (5, 394) {};
+\node (d396) at (5, 395) {};
+\node (d397) at (5, 396) {};
+\node (d398) at (5, 397) {};
+\node (d399) at (5, 398) {};
+\node (d400) at (5, 399) {};
+\node (d401) at (5, 400) {};
+\node (d402) at (5, 401) {};
+\node (d403) at (5, 402) {};
+\node (d404) at (5, 403) {};
+\node (d405) at (5, 404) {};
+\node (d406) at (5, 405) {};
+\node (d407) at (5, 406) {};
+\node (d408) at (5, 407) {};
+\node (d409) at (5, 408) {};
+\node (d410) at (5, 409) {};
+\node (d411) at (5, 410) {};
+\node (d412) at (5, 411) {};
+\node (d413) at (5, 412) {};
+\node (d414) at (5, 413) {};
+\node (d415) at (5, 414) {};
+\node (d416) at (5, 415) {};
+\node (d417) at (5, 416) {};
+\node (d418) at (5, 417) {};
+\node (d419) at (5, 418) {};
+\node (d420) at (5, 419) {};
+\node (d421) at (5, 420) {};
+\node (d422) at (5, 421) {};
+\node (d423) at (5, 422) {};
+\node (d424) at (5, 423) {};
+\node (d425) at (5, 424) {};
+\node (d426) at (5, 425) {};
+\node (d427) at (5, 426) {};
+\node (d428) at (5, 427) {};
+\node (d429) at (5, 428) {};
+\node (d430) at (5, 429) {};
+\node (d431) at (5, 430) {};
+\node (d432) at (5, 431) {};
+\node (d433) at (5, 432
+
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+
+\section*{Variants of Network Flows}
+\subsection*{Inequality constraints (Transportation Problem)}
+\textbf{[C] p. 320}
+
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (s1) at (1, 4) {$s_i$};
+\node (s2) at (1, 3) {};
+\node (s3) at (1, 2) {};
+\node (s4) at (1, 1) {};
+\node (s5) at (1, 0) {};
+\node (i) at (3, 2.5) {$i$};
+\node (d1) at (5, 4) {};
+\node (d2) at (5, 3) {};
+\node (d3) at (5, 2) {};
+\node (d4) at (5, 1) {};
+\node (d5) at (5, 0) {$d_j$};
+\draw[->] (i) to node[above] {$x_{ij}$} (d1);
+\draw[->] (i) to node[below] {$x_{ij}$} (d2);
+\draw[->] (i) to node[below] {$x_{ij}$} (d3);
+\draw[->] (i) to node[below] {$x_{ij}$} (d4);
+\draw[->] (i) to node[below] {$x_{ij}$} (d5);
+\draw[->] (s1) to (i);
+\draw[->] (s2) to (i);
+\draw[->] (s3) to (i);
+\draw[->] (s4) to (i);
+\draw[->] (s5) to (i);
+\draw[->] (i) to (d1);
+\draw[->] (i) to (d2);
+\draw[->] (i) to (d3);
+\draw[->] (i) to (d4);
+\draw[->] (i) to (d5);
+\node at (2.5, 1.5) {$ \sum_{j} x_{ij} \le s_i $};
+\node at (4.5, 1.5) {$ \sum_{i} x_{ij} \ge d_j $};
+\end{tikzpicture}
+
+\end{document}
+
+\end{document}
+
+**Description:**
+
+This slide presents a network flow diagram, specifically a transportation problem.  It shows nodes representing sources ($s_i$) and destinations ($d_j$), with a connecting node ($i$) in the middle.  The variables $x_{ij}$ represent the flow from source $i$ to destination $j$.  The diagram visually depicts the flow of goods or resources between the supply points and demand points.  Crucially, the slide introduces inequality constraints.  The equations below the diagram, $\sum_{j} x_{ij} \le s_i$ and $\sum_{i} x_{ij} \ge d_j$,  indicate that the total flow out of each supply node cannot exceed the supply ($s_i$) and the total flow into each demand node must be at least the demand ($d_j$).  This is a key difference from a standard network flow problem where the total flow in equals the total flow out.  This slide is likely part of a lecture series on linear programming, specifically focusing on variants of network flow problems.
+
+
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+
+\section*{Variants of Network Flows}
+\subsection*{Inequality constraints (Transportation Problem)}
+\textbf{[C] p. 320}
+
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (s1) at (1, 4) {$s_i$};
+\node (s2) at (1, 3) {};
+\node (s3) at (1, 2) {};
+\node (s4) at (1, 1) {};
+\node (s5) at (1, 0) {};
+\node (i) at (3, 2.5) {$i$};
+\node (d1) at (5, 4) {};
+\node (d2) at (5, 3) {};
+\node (d3) at (5, 2) {};
+\node (d4) at (5, 1) {};
+\node (d5) at (5, 0) {$d_j$};
+\draw[->] (i) to node[above] {$x_{ij}$} (d1);
+\draw[->] (i) to node[below] {$x_{ij}$} (d2);
+\draw[->] (i) to node[below] {$x_{ij}$} (d3);
+\draw[->] (i) to node[below] {$x_{ij}$} (d4);
+\draw[->] (i) to node[below] {$x_{ij}$} (d5);
+\draw[->] (s1) to (i);
+\draw[->] (s2) to (i);
+\draw[->] (s3) to (i);
+\draw[->] (s4) to (i);
+\draw[->] (s5) to (i);
+\draw[->] (i) to (d1);
+\draw[->] (i) to (d2);
+\draw[->] (i) to (d3);
+\draw[->] (i) to (d4);
+\draw[->] (i) to (d5);
+\draw[red,->] (i) to[out=270,in=180] node[below] {$x_{id}$} (d);
+\draw[red,->] (d4) to[out=270,in=180] node[below] {$x_{d_j}$} (d);
+\node[draw, circle, red, minimum size=10pt] (d) at (4, 0) {$d$};
+\node[red] at (4.5, -0.5) {dummy node};
+\node at (2.5, 1.5) {$ \sum_{j} x_{ij} + x_{id} = s_i $};
+\node at (4.5, 1.5) {$ \sum_{i} x_{ij} - d_j + x_{d_j} = d_j $};
+\node[red] at (6.5, -1) {$x_{id}, x_{d_j} \ge 0$};
+\end{tikzpicture}
+
+\end{document}
+
+\end{document}
+
+**Description:**
+
+This slide builds upon the previous one, further elaborating on the transportation problem's constraints.  The key addition is the introduction of a "dummy node" ($d$).  A red arrow now connects the original node $i$ to the dummy node $d$, labeled $x_{id}$.  Similarly, a red arrow connects each demand node $d_j$ to the dummy node $d$, labeled $x_{d_j}$.  These new variables represent the excess supply or unmet demand.  The equations below the diagram now incorporate these dummy variables.  The equation $\sum_{j} x_{ij} + x_{id} = s_i$  indicates that the total flow out of each supply node, plus the flow to the dummy node, must equal the supply.  The equation $\sum_{i} x_{ij} - d_j + x_{d_j} = d_j$  indicates that the total flow into each demand node, minus the demand, plus the flow from the dummy node, must equal the demand.  The addition of the dummy node and these equations ensure that all supply is accounted for and all demand is met, even if there's excess supply or unmet demand.  The constraint $x_{id}, x_{d_j} \ge 0$ ensures that these flows are non-negative.  This is a crucial step in formulating the transportation problem as a linear program.
+
+
+Slide 4
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Variants of Network Flows}
+\subsection*{Inequality constraints (Transportation Problem)}
+\textbf{[C] p. 320}
+
+$\sum_{j} x_{ij} + x_{id} = \sum_{i} s_i$, $\sum_{i} x_{ij} = d_j + x_{d_j}$
+
+$\sum_{i} s_i - \sum_{i} x_{id} = \sum_{j} d_j + \sum_{j} x_{d_j}$
+
+Hence, the new additional constraint:
+
+$\sum_{i} s_i - \sum_{i} x_{id} = \sum_{j} d_j + \sum_{j} x_{d_j}$
+
+
+\end{document}
+
+**Description:**
+
+This slide continues the discussion of the transportation problem, focusing on the algebraic representation of the constraints.  It presents the equations derived from the network diagram in the previous slide.  The equations $\sum_{j} x_{ij} + x_{id} = \sum_{i} s_i$ and $\sum_{i} x_{ij} = d_j + x_{d_j}$ are explicitly stated, showing the relationship between the flows to and from the dummy node and the total supply and demand.  The final equation, $\sum_{i} s_i - \sum_{i} x_{id} = \sum_{j} d_j + \sum_{j} x_{d_j}$, is a restatement of the balance condition, highlighting that the total supply must equal the total demand plus any unmet demand (represented by the flow to the dummy node).  This slide is a crucial step in formulating the transportation problem as a linear program, showing the algebraic equivalence of the network diagram's constraints.
+
+
+Slide 5
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+
+\section*{Inequality constraints (Transportation Problem)}
+\textbf{[C] p. 321}
+
+\textbf{Figure 20.1}
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (n1) at (1, 4) {1};
+\node (n2) at (5, 4) {3};
+\node (n3) at (1, 1) {2};
+\node (n4) at (5, 1) {4};
+\draw[->] (n1) to node[above] {+4} (n2);
+\draw[->] (n1) to node[left] {+9} (n3);
+\draw[->] (n3) to node[below] {+9} (n4);
+\draw[->] (n2) to node[right] {-7} (n4);
+\draw[->] (n2) to node[right] {-3} (n3);
+\draw[->] (n4) to node[left] {-2} (n3);
+\node at (3, 2.5) {N1};
+\node at (3, 0.5) {Figure 20.1};
+\end{tikzpicture}
+
+\textbf{Figure 20.2}
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (n1) at (1, 4) {1};
+\node (n2) at (5, 4) {3};
+\node (n3) at (1, 1) {2};
+\node (n4) at (5, 1) {4};
+\node (n5) at (3, 0) {5};
+\node (n6) at (3, 2.5) {N2};
+\draw[->] (n1) to node[above] {+4} (n2);
+\draw[->] (n1) to node[left] {+9} (n3);
+\draw[->] (n3) to node[below] {+9} (n4);
+\draw[->] (n2) to node[right] {-7} (n4);
+\draw[->] (n2) to node[right] {-3} (n3);
+\draw[->] (n4) to node[left] {-2} (n3);
+\draw[->] (n5) to node[left] {-4} (n1);
+\draw[->] (n5) to node[right] {+9} (n2);
+\draw[->] (n5) to node[right] {-2} (n4);
+\node at (3, -1.5) {Figure 20.2};
+\end{tikzpicture}
+
+4 units at the source 1
+9 units at the source 2
+and demands of
+7 units at the sink 3
+2 units at the sink 4.
+
+\end{document}
+
+**Description:**
+
+This slide presents two network flow diagrams (Figures 20.1 and 20.2) illustrating a transportation problem.  Figure 20.1 depicts a basic network with sources and sinks, and the associated flows.  Figure 20.2 shows a modified network, likely incorporating a dummy node to account for excess supply or unmet demand, as discussed in previous slides.  The numbers (+4, +9, -7, -2) on the edges represent the flow values.  The text below the diagrams specifies the supply and demand values for the problem.  This slide is part of a linear programming lecture, focusing on the graphical representation of transportation problems.  The context suggests that the lecture is explaining how to model and solve transportation problems using network flow techniques.
+
+
+Slide 6
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Inequality constraints (Transportation Problem)}
+\textbf{[C] p. 321}
+
+\textbf{Case N1}
+minimize $\sum_{i=1}^{2} \sum_{j=3}^{4} c_{ij} x_{ij}$
+subject to
+\begin{itemize}
+    \item $x_{13} + x_{14} \ge -4$
+    \item $x_{23} + x_{24} \ge -9$
+    \item $x_{13} + x_{23} = 7$
+    \item $x_{14} + x_{24} = 2$
+    \item $x_{13}, x_{14}, x_{23}, x_{24} \ge 0$
+\end{itemize}
+
+\textbf{Case N2}
+minimize $\sum_{i=1}^{2} \sum_{j=3}^{4} c_{ij} x_{ij}$
+subject to
+\begin{itemize}
+    \item $x_{13} + x_{21} \ge -4$
+    \item $x_{15} + x_{25} \ge -9$
+    \item $x_{13} + x_{23} = 7$
+    \item $x_{24} + x_{34} = 2$
+    \item $x_{15} + x_{25} = 4$
+    \item $x_{13}, x_{21}, x_{23}, x_{24}, x_{34}, x_{15}, x_{25} \ge 0$
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide presents two different formulations (N1 and N2) of a linear programming problem, likely related to a transportation problem.  Each formulation represents a different way of expressing the constraints of the problem.  The objective function in both cases is to minimize the total cost, represented by $\sum_{i=1}^{2} \sum_{j=3}^{4} c_{ij} x_{ij}$.  The constraints are expressed as inequalities and equalities, involving variables like $x_{13}$, $x_{14}$, etc.  These variables likely represent the flow of goods or resources between different locations (sources and sinks).  The constraints ensure that the total flow into and out of each location satisfies the given supply and demand values.  The non-negativity constraints ($x_{ij} \ge 0$) are also included.  The presence of "N1" and "N2" suggests that these are different possible ways to model the same underlying problem, potentially with different interpretations or simplifications.  This slide is part of a linear programming lecture, focusing on the formulation of transportation problems as linear programs.
+
+
+Slide 7
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{Inequality constraints (More generally)}
+\textbf{[C] p. 322}
+
+$[A_1]$ - incident matrix
+$[A_2]$
+\begin{itemize}
+    \item $A_1 \bar{x} \ge -\bar{b}_1$
+    \item $A_2 \bar{x} \le -\bar{b}_2$
+    \item $A_1 \bar{x} = -\bar{b}_1 + \bar{w}_1$, $\bar{w}_1 \ge 0$
+    \item $A_2 \bar{x} = -\bar{b}_2 - \bar{w}_2$, $\bar{w}_2 \ge 0$
+\end{itemize}
+
+new constraint:
+$\sum_{p} w_{1p} - \sum_{s} w_{s2} = \sum_{p} b_{1p} + \sum_{s} b_{s2}$
+
+\end{document}
+
+**Description:**
+
+This slide generalizes the inequality constraints in a transportation problem, moving beyond the specific case of sources and sinks.  It introduces matrices $A_1$ and $A_2$, likely representing the incidence matrices for the network.  The equations $A_1 \bar{x} \ge -\bar{b}_1$ and $A_2 \bar{x} \le -\bar{b}_2$ represent the inequality constraints.  The introduction of vectors $\bar{w}_1$ and $\bar{w}_2$, with the constraint $\bar{w}_1 \ge 0$ and $\bar{w}_2 \ge 0$, suggests the addition of slack variables to convert the inequalities to equalities.  The final equation, $\sum_{p} w_{1p} - \sum_{s} w_{s2} = \sum_{p} b_{1p} + \sum_{s} b_{s2}$, is a new constraint derived from the previous ones, likely representing a balance condition in the network.  This slide is part of a linear programming lecture, focusing on the general formulation of network flow problems.  The notation suggests a more abstract and mathematical treatment of the problem, potentially for use in algorithms or more complex network models.
+
+
+Slide 8
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+
+\section*{Inequality constraints (More generally)}
+\textbf{[C] p. 322}
+
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (s1) at (1, 4) {$b_{1p}$};
+\node (s2) at (5, 4) {$b_{2q}$};
+\node (s3) at (1, 1) {$w_{sp}$};
+\node (s4) at (5, 1) {$w_{qd}$};
+\node[draw, circle, fill=orange!20, minimum size=15pt] (d) at (3, 2.5) {$D$};
+\node[red] at (3, 2) {Zero costs};
+\draw[->] (s1) to (d);
+\draw[->] (s2) to (d);
+\draw[->] (s3) to (d);
+\draw[->] (s4) to (d);
+\node[red] at (4, 0.5) {$w_{qd} \ge 0$};
+\node[red] at (1, 0.5) {$w_{sp} \ge 0$};
+\node at (3.5, 0.5) {$D$};
+\node at (3.5, -0.5) {dummy node};
+\end{tikzpicture}
+
+\end{document}
+
+**Description:**
+
+This slide presents a network diagram, likely part of a linear programming lecture on transportation problems.  The diagram shows nodes representing supply ($b_{1p}$) and demand ($b_{2q}$) points, connected to a central "dummy node" ($D$).  The variables $w_{sp}$ and $w_{qd}$ represent flows from supply points to the dummy node and from the dummy node to demand points, respectively.  The text "Zero costs" indicates that the flow through the dummy node has zero cost.  The constraints $w_{sp} \ge 0$ and $w_{qd} \ge 0$ ensure that these flows are non-negative.  This diagram likely illustrates a generalized transportation problem where the dummy node accounts for any imbalance between supply and demand.  The context suggests that the lecture is explaining how to model and solve transportation problems using network flow techniques.
+
+
+Slide 9
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+
+\section*{Upper Bounded Transshipment Problem [IV]}
+\textbf{[C] p. 263}
+
+$AX = b$, $0 \le X \le U$
+
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (i) at (1, 2) {$i$};
+\node (j) at (4, 2) {$j$};
+\draw[->] (i) to node[above] {$\bar{x}_{ij}$} (j);
+\node at (2.5, 1) {$0 \le \bar{x}_{ij} \le \bar{u}_{ij}$};
+\end{tikzpicture}
+
+\end{document}
+
+**Description:**
+
+This slide introduces the "Upper Bounded Transshipment Problem [IV]".  It's a variation of a network flow problem, likely a linear programming problem.  The equation $AX = b$ represents the flow constraints in the network.  The inequality $0 \le X \le U$ introduces upper bounds on the flow variables ($\bar{x}_{ij}$).  The diagram shows a simple connection between nodes $i$ and $j$, with the flow variable $\bar{x}_{ij}$ indicated.  The constraint $0 \le \bar{x}_{ij} \le \bar{u}_{ij}$ specifies that the flow between nodes $i$ and $j$ is bounded above by $\bar{u}_{ij}$.  This is a crucial constraint in the problem, limiting the maximum amount of flow that can pass through a particular edge or arc in the network.  The context suggests that the lecture is discussing variations of network flow problems, where the flow values are not only constrained by supply and demand but also by upper bounds.
+
+
+Slide 10
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Upper Bounded Transshipment Problem [IV]}
+\textbf{[C] p. 263}
+
+$AX = b$, $0 \le X \le U$
+
+\begin{itemize}
+    \item $b_i \rightarrow i$
+    \item $b_j \rightarrow j$
+    \item $0 \le \bar{x}_{ij} \le \bar{u}_{ij}$
+    \item $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$)
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide continues the discussion of the "Upper Bounded Transshipment Problem [IV]".  It's a variation of a network flow problem, likely a linear programming problem.  The equation $AX = b$ represents the flow constraints in the network.  The inequality $0 \le X \le U$ introduces upper bounds on the flow variables ($\bar{x}_{ij}$).  The slide explicitly shows the flow from node $i$ to node $j$ as $\bar{x}_{ij}$.  The constraint $0 \le \bar{x}_{ij} \le \bar{u}_{ij}$ specifies that the flow between nodes $i$ and $j$ is bounded above by $\bar{u}_{ij}$.  The new constraint $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$) introduces a slack variable $h_{ij}$ to account for the upper bound.  This is a crucial constraint in the problem, limiting the maximum amount of flow that can pass through a particular edge or arc in the network.  The context suggests that the lecture is discussing variations of network flow problems, where the flow values are not only constrained by supply and demand but also by upper bounds.  The notation suggests a more abstract and mathematical treatment of the problem, potentially for use in algorithms or more complex network models.  The arrows and notation indicate the direction of flow and the constraints on the flow variables.
+
+
+Slide 11
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Upper Bounded Transshipment Problem [IV]}
+\textbf{[C] p. 263}
+
+$AX = b$, $0 \le X \le U$
+
+\begin{itemize}
+    \item at $i$: $\cdots - x_{ij} \cdots = -b_i$
+    \item at $j$: $\cdots + x_{ij} \cdots = -b_j$
+    \item $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$)
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide continues the discussion of the "Upper Bounded Transshipment Problem [IV]".  It's a variation of a network flow problem, likely a linear programming problem.  The equation $AX = b$ represents the flow constraints in the network.  The inequality $0 \le X \le U$ introduces upper bounds on the flow variables ($\bar{x}_{ij}$).  The slide now explicitly shows the constraints at each node ($i$ and $j$).  The constraints at node $i$ are represented as $\cdots - x_{ij} \cdots = -b_i$, and at node $j$ as $\cdots + x_{ij} \cdots = -b_j$.  These equations likely represent the conservation of flow at each node, ensuring that the total flow into and out of a node is balanced.  The new constraint $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$) introduces a slack variable $h_{ij}$ to account for the upper bound.  This is a crucial constraint in the problem, limiting the maximum amount of flow that can pass through a particular edge or arc in the network.  The context suggests that the lecture is discussing variations of network flow problems, where the flow values are not only constrained by supply and demand but also by upper bounds.  The notation suggests a more abstract and mathematical treatment of the problem, potentially for use in algorithms or more complex network models.  The arrows and notation indicate the direction of flow and the constraints on the flow variables.
+
+
+
+
+Slide 12
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Upper Bounded Transshipment Problem [IV]}
+\textbf{[C] p. 263}
+
+$AX = b$, $0 \le X \le U$
+
+\begin{itemize}
+    \item at $i$: $\cdots - x_{ij} \cdots = -b_i$
+    \item at $j$: $\cdots + x_{ij} \cdots = -b_j - u_{ij}$
+    \item $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$)
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide continues the discussion of the "Upper Bounded Transshipment Problem [IV]".  It's a variation of a network flow problem, likely a linear programming problem.  The equation $AX = b$ represents the flow constraints in the network.  The inequality $0 \le X \le U$ introduces upper bounds on the flow variables ($\bar{x}_{ij}$).  The slide now explicitly shows the constraints at each node ($i$ and $j$).  The constraints at node $i$ are represented as $\cdots - x_{ij} \cdots = -b_i$, and at node $j$ as $\cdots + x_{ij} \cdots = -b_j - u_{ij}$.  These equations likely represent the conservation of flow at each node, ensuring that the total flow into and out of a node is balanced.  The new constraint $x_{ij} + h_{ij} = u_{ij}$ ($h_{ij} \ge 0$) introduces a slack variable $h_{ij}$ to account for the upper bound.  This is a crucial constraint in the problem, limiting the maximum amount of flow that can pass through a particular edge or arc in the network.  The context suggests that the lecture is discussing variations of network flow problems, where the flow values are not only constrained by supply and demand but also by upper bounds.  The notation suggests a more abstract and mathematical treatment of the problem, potentially for use in algorithms or more complex network models.  The arrows and notation indicate the direction of flow and the constraints on the flow variables.  The addition of the term $-u_{ij}$ in the constraint at node $j$ is a key difference from the previous slide, reflecting the upper bound on the flow.
+
+
+Slide 13
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+
+\section*{Shortest Path Problem}
+
+\begin{tikzpicture}
+\tikzstyle{every node}=[circle, draw, inner sep=1pt]
+\node (s) at (1, 4) {$S$};
+\node (i) at (3, 4) {};
+\node (j) at (5, 3) {$j$};
+\node (k) at (7, 3) {};
+\node (r) at (9, 4) {$R$};
+\node (c) at (4, 2) {};
+\node (a) at (2, 3) {};
+\draw[->,red!50!white] (s) to (i);
+\draw[->,red!50!white] (i) to (a);
+\draw[->,red!50!white] (a) to (j);
+\draw[->,red!50!white] (j) to (k);
+\draw[->,red!50!white] (k) to (r);
+\draw[->] (a) to (c);
+\draw[->] (c) to (j);
+\draw[->] (c) to (k);
+\end{tikzpicture}
+
+\end{document}
+
+**Description:**
+
+This slide presents a graphical representation of a shortest path problem.  The diagram shows a network with nodes labeled $S$, $i$, $j$, $k$, and $R$.  The edges connecting these nodes are highlighted in a pinkish-red color, suggesting that these edges have associated weights or costs.  The nodes likely represent locations or points in a network, and the edges represent paths between these locations.  The goal of the shortest path problem is to find the path with the lowest cumulative cost or distance from the starting node ($S$) to the destination node ($R$).  The problem is likely part of a linear programming or graph theory lecture, focusing on algorithms for finding the shortest path in a weighted graph.  The diagram is a visual representation of the network structure and the paths to be considered.
+
+
+Slide 14
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem}
+
+minimize $\sum_{i,j} c_{ij} x_{ij}$
+s.t.
+\begin{itemize}
+    \item $\sum_{i} x_{si} = 1$
+    \item $\sum_{i} x_{ir} = 1$
+    \item $x_{ik} - \sum_{j} x_{kj} = 0$, $k \neq s, r$
+    \item $x_{ij} \ge 0$
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide presents the linear programming formulation for the shortest path problem.  The objective function is to minimize the total cost, represented by $\sum_{i,j} c_{ij} x_{ij}$, where $c_{ij}$ are the costs associated with the edges in the network.  The constraints ensure that the flow is properly defined.  The constraint $\sum_{i} x_{si} = 1$ specifies that there is exactly one unit of flow leaving the source node ($s$).  Similarly, $\sum_{i} x_{ir} = 1$ ensures that there is exactly one unit of flow entering the destination node ($r$).  The constraint $x_{ik} - \sum_{j} x_{kj} = 0$, $k \neq s, r$ represents the flow conservation at each intermediate node ($k$).  This means that the total flow into a node must equal the total flow out of that node.  The non-negativity constraint $x_{ij} \ge 0$ ensures that the flow values are non-negative.  This formulation is a network flow approach to finding the shortest path in a weighted graph.
+
+
+
+
+Slide 15
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem}
+
+Network flow formulation:
+\begin{itemize}
+    \item minimize $\sum_{i,j} c_{ij} x_{ij}$
+    \item s.t.
+        \begin{itemize}
+            \item $\sum_{i} x_{si} = 1$
+            \item $\sum_{i} x_{ir} = 1$
+            \item $x_{ik} - \sum_{j} x_{kj} = 0$, $k \neq s, r$
+            \item $x_{ij} \ge 0$
+        \end{itemize}
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide presents the network flow formulation for the shortest path problem, continuing from the previous slide's graphical representation.  The objective function is to minimize the total cost, represented by $\sum_{i,j} c_{ij} x_{ij}$, where $c_{ij}$ are the costs associated with the edges in the network.  The constraints ensure that the flow is properly defined.  The constraint $\sum_{i} x_{si} = 1$ specifies that there is exactly one unit of flow leaving the source node ($s$).  Similarly, $\sum_{i} x_{ir} = 1$ ensures that there is exactly one unit of flow entering the destination node ($r$).  The constraint $x_{ik} - \sum_{j} x_{kj} = 0$, $k \neq s, r$ represents the flow conservation at each intermediate node ($k$).  This means that the total flow into a node must equal the total flow out of that node.  The non-negativity constraint $x_{ij} \ge 0$ ensures that the flow values are non-negative.  This formulation is a network flow approach to finding the shortest path in a weighted graph.  The slide likely follows a lecture on linear programming and graph theory, showing how to model a shortest path problem as a network flow problem.
+
+
+Slide 16
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem (Bellman's Eqn)}
+
+$v_i$ = shortest distance from $i$ to $r$
+
+\end{document}
+
+**Description:**
+
+This slide defines a variable $v_i$ in the context of the shortest path problem.  $v_i$ represents the shortest distance from node $i$ to the destination node $r$.  This is likely part of a lecture on algorithms for finding the shortest path in a weighted graph, specifically using Bellman's equation.  The variable $v_i$ is a crucial component in the algorithm, as it stores the accumulated cost or distance from the starting node to each intermediate node.  The notation is consistent with the previous slides, which have shown a graph structure for the shortest path problem.
+
+
+Slide 17
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem (Bellman's Eqn)}
+
+$v_i$ = shortest distance from $i$ to $r$
+
+$v_i = \min_{j} \{c_{ij} + v_j\}$
+$v_r = 0$
+
+\end{document}
+
+**Description:**
+
+This slide presents Bellman's equation for the shortest path problem.  $v_i$ represents the shortest distance from node $i$ to the destination node $r$.  The equation $v_i = \min_{j} \{c_{ij} + v_j\}$ defines how to calculate the shortest distance to a node $i$ by considering all possible paths that end at node $i$.  The cost of the edge from node $i$ to node $j$ is $c_{ij}$, and $v_j$ is the shortest distance from node $j$ to the destination node $r$.  The equation $v_r = 0$ sets the shortest distance from the destination node $r$ to itself to zero.  This is a recursive definition, crucial for dynamic programming algorithms that solve the shortest path problem.  The notation is consistent with the previous slides, which have shown a graph structure for the shortest path problem.
+
+
+Slide 18
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem (Bellman's Eqn)}
+
+Approximation/Iteration:
+\begin{itemize}
+    \item $k = 0$, $v_r^{(0)} = 0$, $v_i^{(0)} = +\infty$, $i \neq r$
+    \item $k \ge 0$, $v_r^{(k)} = 0$, $v_i^{(k+1)} = \min_j \{c_{ij} + v_j^{(k)}\}$, $i \neq r$
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide details the iterative approximation method for finding the shortest path using Bellman's equation.  The notation $v_i^{(k)}$ represents an approximation of the shortest distance from node $i$ to the destination node $r$ at iteration $k$.  The initial step ($k = 0$) sets the distance to the destination node $r$ to zero ($v_r^{(0)} = 0$) and the distances to all other nodes to infinity ($v_i^{(0)} = +\infty$, $i \neq r$).  Subsequent iterations ($k \ge 0$) update the distance estimates for each node ($v_i^{(k+1)}$) by considering the shortest path from the source to node $i$ that passes through an adjacent node $j$.  The cost of the edge from $i$ to $j$ is $c_{ij}$, and $v_j^{(k)}$ is the shortest distance from node $j$ to the destination node $r$ at iteration $k$.  This iterative process continues until the shortest distances converge.  This is a dynamic programming approach to solving the shortest path problem.
+
+
+
+
+Slide 19
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem (Bellman's Eqn)}
+
+Approximation/Iteration:
+\begin{itemize}
+    \item $k = 0$, $v_r^{(0)} = 0$, $v_i^{(0)} = +\infty$, $i \neq r$
+    \item $k \ge 0$, $v_r^{(k)} = 0$, $v_i^{(k+1)} = \min_j \{c_{ij} + v_j^{(k)}\}$, $i \neq r$
+    \item $v_i^{(k)}$ = shortest path from $i$ to $r$, with $\le k$ arcs.
+    \item Needs at most $m$ iterations, $m = \#$ of nodes
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide continues the iterative approximation method for finding the shortest path using Bellman's equation.  The notation $v_i^{(k)}$ represents an approximation of the shortest distance from node $i$ to the destination node $r$ at iteration $k$.  The initial step ($k = 0$) sets the distance to the destination node $r$ to zero ($v_r^{(0)} = 0$) and the distances to all other nodes to infinity ($v_i^{(0)} = +\infty$, $i \neq r$).  Subsequent iterations ($k \ge 0$) update the distance estimates for each node ($v_i^{(k+1)}$) by considering the shortest path from the source to node $i$ that passes through an adjacent node $j$.  The cost of the edge from $i$ to $j$ is $c_{ij}$, and $v_j^{(k)}$ is the shortest distance from node $j$ to the destination node $r$ at iteration $k$.  This iterative process continues until the shortest distances converge.  The slide also states that the algorithm needs at most $m$ iterations, where $m$ is the number of nodes in the graph.  This is a dynamic programming approach to solving the shortest path problem.  The notation is consistent with the previous slides, which have shown a graph structure for the shortest path problem.  The addition of the statement about the maximum number of iterations is important for understanding the algorithm's termination condition.
+
+
+Slide 20
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{Shortest Path Problem (Dijkstra Alg.)}
+
+\begin{itemize}
+    \item $J$ - set of finished node
+    \item $v_j$ - label of $j$ (shortest distance $j$ to $r$)
+    \item $h_j$ - node to visit next in shortest path
+\end{itemize}
+
+\end{document}
+
+**Description:**
+
+This slide defines variables used in Dijkstra's algorithm for the shortest path problem.  $J$ is a set of nodes that have already been processed and their shortest distances to the destination node $r$ have been determined.  $v_j$ represents the shortest distance from node $j$ to the destination node $r$.  $h_j$ indicates the next node to visit in the shortest path from the source to node $j$.  These variables are crucial for the algorithm's iterative process of finding the shortest path in a graph.  The context suggests that the lecture is discussing graph algorithms and how to efficiently find the shortest path between nodes in a network.
+
+
+Slide 21
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Shortest Path Problem (Dijkstra Alg.)}
+
+Initialize:
+\begin{itemize}
+    \item $F = \emptyset$
+    \item $v_j = \begin{cases}
+        0, & j = r, \\
+        \infty, & j \neq r.
+    \end{cases}$
+\end{itemize}
+
+while ($|F| > 0$) \{
+\begin{itemize}
+    \item $j = \operatorname{argmin}_{v_k : k \notin F} \{v_k\}$
+    \item $F \leftarrow F \cup \{j\}$
+    \item for each $i$ for which $(i, j) \in A$ and $i \notin F$ \{
+        \item if ($c_{ij} + v_j < v_i$) \{
+            \item $v_i = c_{ij} + v_j$
+            \item $h_i = j$
+        \}
+    \}
+\end{itemize}
+\}
+
+\end{document}
+
+**Description:**
+
+This slide presents the pseudocode for Dijkstra's algorithm to find the shortest path in a graph.  The algorithm iteratively finds the shortest distances from a starting node to all other nodes in the graph.  The variables and their meanings are as follows:
+
+*   $F$: A set of nodes that have already been processed.  Initially empty.
+*   $v_j$: The shortest distance from node $j$ to the destination node $r$.  Initialized to infinity for all nodes except the destination node $r$, which is initialized to 0.
+*   $h_j$: The node to visit next in the shortest path from the source to node $j$.
+
+The `while` loop continues as long as there are unprocessed nodes ($|F| > 0$).  In each iteration, the algorithm selects the node $j$ with the smallest current shortest distance estimate ($v_k$) among the unprocessed nodes ($k \notin F$).  Then, it adds this node $j$ to the set of finished nodes ($F$).  Next, it considers all unprocessed neighbors ($i$) of node $j$ and updates the shortest distance estimate ($v_i$) if a shorter path is found through node $j$.  The algorithm terminates when all nodes have been processed.  This pseudocode is a clear and concise description of Dijkstra's algorithm, a fundamental graph algorithm for finding shortest paths in a weighted graph.

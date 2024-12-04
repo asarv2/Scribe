@@ -1,0 +1,18 @@
+Slide 5
+
+\textbf{Complementary Variables}
+
+$(x_1, x_2, \dots, x_n), w_1, w_2, \dots, w_m$
+\newline
+$y_1 \sim w_1$  $\iff$ $x_j \sim z_j$
+\newline
+$(y_1, y_2, \dots, y_m), z_1, z_2, \dots, z_n$
+\newline
+\begin{itemize}
+    \item[(P)] $x_j$ enter (leaves), $w_i$ enter (leaves)
+    \item[(D)] $z_j$ leave (enters), $y_i$ leave (enters)
+\end{itemize}
+
+\textbf{Description:}
+
+This slide introduces the concept of complementary variables in the context of linear programming duality.  It visually represents the relationship between primal variables ($x_j$) and dual variables ($y_i$) and their corresponding slack variables ($w_i$ and $z_j$).  The notation $x_j \sim z_j$ and $y_i \sim w_i$ indicates a complementary relationship.  The arrows visually represent the entry and exit of variables in the primal and dual problems.  The slide likely explains how complementary slackness conditions can be used to determine the optimal solutions for both the primal and dual problems.  The notation suggests that this is a step in a lecture on the simplex method or a similar algorithm for solving linear programming problems.

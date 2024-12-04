@@ -1,0 +1,24 @@
+Slide 11
+
+\textbf{Branch-and-Bound}
+
+\textit{Discussion of Depth-First Search}
+
+It is better going deep - depth search
+before going wide - breadth search
+
+There are three reasons why depth-first search is generally the preferred order in
+which to fathom the enumeration tree. The first is based on the observation that most
+integer solutions lie deep in the tree. There are two advantages to finding integer feasi-
+ble solutions early. The first is simply the fact that it is better to have a feasible solution
+than nothing in case one wishes to abort the solution process early. But more impor-
+tantly, identifying a feasible integer solution can result in subsequent nodes of the
+enumeration tree being made into leaves simply because the optimal objective func-
+tion associated with that node is lower than the best-so-far integer solution. Making
+such nodes into leaves is called pruning the tree and can account for tremendous gains
+in efficiency.
+
+
+\textbf{Description:}
+
+This slide discusses the rationale behind using depth-first search in the Branch and Bound algorithm for integer programming.  It argues that most integer solutions are found deeper in the enumeration tree, making a depth-first approach more efficient.  The slide emphasizes two key advantages of finding feasible integer solutions early:  1) the ability to terminate the search early if a satisfactory solution is found, and 2) the potential for "pruning" the search tree by eliminating branches that cannot lead to a better solution than one already found.  The text highlights the concept of pruning as a significant efficiency gain in the algorithm.  The slide is likely part of a larger lecture series on integer programming and optimization techniques, providing a theoretical justification for the chosen search strategy.  The handwritten nature of the notes suggests this is a lecture or class notes, not a formal publication.

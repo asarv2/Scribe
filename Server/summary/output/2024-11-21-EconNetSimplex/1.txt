@@ -1,0 +1,45 @@
+Slide 1
+
+\textbf{Economic Interpretation of Network Simplex}
+\newline
+\textit{[C] p. 297.}
+
+\begin{tikzpicture}[scale=0.7]
+\tikzstyle{every node}=[circle, draw, fill=white, inner sep=1pt]
+\node (n1) at (0,0) {};
+\node (n2) at (2,2) {};
+\node (n3) at (4,0) {};
+\node (n4) at (6,2) {};
+\node (n5) at (4,-2) {};
+\node (n6) at (8,0) {};
+
+\draw (n1) -- (n2) node[midway, below] {$b_i$};
+\draw (n1) -- (n5) ;
+\draw (n2) -- (n5) node[midway, left] {$c_{ij}$};
+\draw (n2) -- (n4) ;
+\draw (n3) -- (n5) node[midway, right] {$j b_j$};
+\draw (n3) -- (n4) ;
+\draw (n4) -- (n6) ;
+\draw (n5) -- (n3) ;
+\draw (n5) -- (n1) ;
+\draw (n5) -- (n2) ;
+\draw (n5) -- (n3) ;
+\draw (n5) -- (n4) ;
+\draw (n5) -- (n6) ;
+\draw (n1) -- (n3) ;
+\draw (n2) -- (n3) ;
+\draw (n2) -- (n6) ;
+\draw (n3) -- (n6) ;
+\draw (n4) -- (n5) ;
+\draw (n6) -- (n4) ;
+\draw (n6) -- (n5) ;
+\draw (n1) -- (n5) ;
+\draw (n2) -- (n5) ;
+\draw (n3) -- (n5) ;
+\draw (n4) -- (n5) ;
+\draw (n6) -- (n5) ;
+\end{tikzpicture}
+
+\textbf{Description:}
+
+This is a slide from a Linear Programming lecture, specifically focusing on the "Economic Interpretation of Network Simplex." The slide displays a network diagram, likely representing a transportation or flow problem.  Nodes (circles) represent points in the network, and lines (edges) represent connections between them.  The labels $b_i$, $c_{ij}$, and $j b_j$ are associated with the edges, indicating costs or capacities.  The $b_i$ values are likely supply or demand at each node, while $c_{ij}$ represents the cost of moving a unit of flow along the edge connecting node $i$ and $j$. The $j b_j$ values are likely associated with the flow constraints. The diagram is a visual representation of the problem's constraints and costs, which are crucial for solving the linear programming problem using the network simplex method. The title and the notation ([C] p. 297) suggest this is a reference to a specific textbook or lecture notes.
