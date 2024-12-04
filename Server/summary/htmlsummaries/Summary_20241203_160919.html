@@ -1,0 +1,65 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Summary</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        margin: 20px;
+                        background-color: #f9f9f9;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        background: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #444;
+                    }
+                    h2 {
+                        border-bottom: 2px solid #ddd;
+                        padding-bottom: 5px;
+                        color: #555;
+                        page-break-before: always;
+                    }
+                    ul {
+                        padding-left: 20px;
+                    }
+                    li {
+                        margin: 5px 0;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 20px;
+                        font-size: 0.9em;
+                        color: #777;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Summary</h1>
+            <h2>Key Terms</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=1'>Slack Variable</a>: A variable added to a less-than-or-equal-to inequality constraint to transform it into an equality constraint. The slack variable represents the difference between the left and right sides of the inequality.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=4'>Feasible Region</a>: The set of all points that satisfy all the constraints of a linear programming problem.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=5'>Vertex</a>: A point where two or more constraint boundaries intersect in the feasible region of a linear programming problem. In the Simplex method, optimal solutions are found at vertices.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Basic Variable</a>: In the Simplex method, a variable that is expressed in terms of non-basic variables in a dictionary. Basic variables are set to values that satisfy the constraints.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Non-basic Variable</a>: In the Simplex method, a variable that is set to zero in a given iteration of the algorithm. The values of the basic variables are determined by the values of the non-basic variables.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=9'>Pivot Operation</a>: The process of exchanging a basic and a non-basic variable in the Simplex method. This operation moves from one vertex of the feasible region to another.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=26'>Dictionary</a>: A representation of a linear programming problem where the basic variables are expressed as functions of the non-basic variables. It is used in the Simplex method to systematically move towards the optimal solution.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=32'>Auxiliary Problem</a>: A modified linear programming problem used to find an initial feasible solution when the origin is not feasible in the original problem. It introduces a new variable to guarantee feasibility.</li>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=4'>Largest-Coefficient Rule</a>: A pivot rule in the simplex method that selects the entering variable with the largest coefficient in the objective function row of the dictionary.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=6'>Largest-Increase Rule</a>: A pivot rule in the simplex method that selects the entering variable that produces the largest increase in the objective function value.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=2'>Klee-Minty Example</a>: A worst-case example for the simplex method, demonstrating exponential time complexity for certain pivot rules.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=10'>Bland's Rule</a>: A pivot rule in the simplex method designed to avoid cycling, but not necessarily to improve efficiency.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=10'>Lexicographic Method</a>: A method for choosing the leaving variable in the simplex method to prevent cycling.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=11'>Smoothed Complexity</a>: A measure of the complexity of an algorithm that considers the average-case performance after small random perturbations to the input.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=12'>Interior Method</a>: A class of algorithms for linear programming that traverse the interior of the feasible region, in contrast to the simplex method which follows the boundary.</li>
+</ul>
+<h2>Problem Types</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=32'>Finding an Initial Feasible Solution</a>: The Simplex method requires an initial feasible solution. If the origin is not feasible, an auxiliary problem is introduced to find a feasible solution. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=30'>Handling Infeasible Origins</a>: The origin (0,0) might not satisfy all constraints, requiring an alternative starting point. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=17'>Optimizing in Higher Dimensions</a>: The Simplex method is extended to problems with more than two variables, requiring iterative pivoting and dictionary updates. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=26'>Using Dictionaries to Represent Solutions</a>: The Simplex method uses dictionaries to represent the current solution and guide the iterative process. Each dictionary corresponds to a vertex of the feasible region. </li>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=1'>Analyzing the Efficiency of the Simplex Method</a>: This problem involves analyzing the number of iterations required by the Simplex method to solve linear programming problems, considering both average-case and worst-case scenarios. The analysis includes comparing different pivot rules (largest-coefficient, largest-increase) and their impact on the number of iterations. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=2'>Understanding Worst-Case Behavior of the Simplex Method</a>: This problem focuses on understanding why the Simplex method can exhibit exponential time complexity in the worst case. The Klee-Minty example is used to illustrate how specific problem structures can lead to a large number of iterations. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=6'>Evaluating the Impact of Pivot Rules on Simplex Method Efficiency</a>: This problem investigates the effect of different pivot rules (largest-coefficient, largest-increase, Bland's rule) on the efficiency of the Simplex method. The analysis considers both the number of iterations and the total computation time. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=9'>Analyzing Empirical Performance of the Simplex Method</a>: This problem involves analyzing empirical data from various experiments to understand the typical performance of the Simplex method in practice. The analysis includes examining the relationship between problem size and the number of iterations required. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=10'>Investigating Theoretical Bounds on Simplex Method Performance</a>: This problem explores theoretical results regarding the number of iterations required by the Simplex method, including the existence of polynomial-time algorithms and the concept of smoothed complexity. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=12'>Comparing Simplex Method with Polynomial-Time Algorithms</a>: This problem involves comparing the Simplex method with other polynomial-time algorithms for linear programming, highlighting their differences in approach and theoretical performance guarantees. </li>
+</ul>
+<h2>Algorithm Solutions</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Simplex Method</a>: Iteratively move from one vertex of the feasible region to another by setting non-basic variables to zero and choosing a new set of (non)basic variables to improve the objective function. This is equivalent to moving from vertex to vertex in the feasible region. </li>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-09-05-SimplexEfficiency.pdf#page=10'>Randomized Pivot Rule</a>: Randomly permute the indices of the variables; then use Bland's rule for entering variables and the lexicographic method for leaving variables.</li>
+</ul>
