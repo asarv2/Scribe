@@ -1,0 +1,24 @@
+Slide 7
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Pivot Selection Rules in the Simplex Method}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item \textbf{Entering Variable:} Choose the variable with the most negative coefficient in the objective row.  This corresponds to the variable that will increase the objective function the most.
+    \item \textbf{Leaving Variable:} Calculate the ratios of the RHS values to the corresponding coefficients of the entering variable in each constraint row.  Choose the row with the smallest non-negative ratio.  This corresponds to the variable that will become zero first as the entering variable increases.
+    \item \textbf{Pivot Element:} The element in the intersection of the chosen leaving row and entering column is the pivot element.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide outlines the pivot selection rules used in the simplex method for solving linear programming problems.  It details how to choose the entering and leaving variables, which are crucial for the iterative process of the simplex method.  The entering variable is the one with the most negative coefficient in the objective function row, as this will increase the objective function value the most.  The leaving variable is determined by calculating the ratios of the right-hand side (RHS) values to the corresponding coefficients of the entering variable in each constraint row.  The row with the smallest non-negative ratio is chosen, as this indicates the variable that will become zero first as the entering variable increases.  The pivot element is the element at the intersection of the chosen leaving row and entering column.  These rules are fundamental to the simplex method's iterative approach to finding the optimal solution.

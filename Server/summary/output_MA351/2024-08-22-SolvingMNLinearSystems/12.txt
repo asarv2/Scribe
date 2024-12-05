@@ -1,0 +1,47 @@
+Slide 12
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+$E_{x10}$
+\begin{equation*}
+\begin{cases}
+x + y - z = 2 \\
+2x - y + 3z = 1 \\
+x - 2y + 4z = 0
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+\begin{pmatrix}
+1 & 1 & -1 \\
+2 & -1 & 3 \\
+1 & -2 & 4
+\end{pmatrix}
+\rightarrow
+\begin{pmatrix}
+1 & 1 & -1 \\
+0 & -3 & 5 \\
+0 & -3 & 5
+\end{pmatrix}
+\rightarrow
+\begin{pmatrix}
+1 & 1 & -1 \\
+0 & -3 & 5 \\
+0 & 0 & 0
+\end{pmatrix}
+\end{equation*}
+
+no solutions
+
+3 planes forming 3 parallel lines with no common intersection.
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents a system of three linear equations in three variables ($x$, $y$, and $z$) with no solution. The equations are $x + y - z = 2$, $2x - y + 3z = 1$, and $x - 2y + 4z = 0$.  The slide shows the row reduction process, which leads to a result indicating that the system has no solution.  The accompanying 3D sketch illustrates three parallel planes in space, which have no common intersection point.  The handwritten style and the 3D sketch are characteristic of lecture notes.

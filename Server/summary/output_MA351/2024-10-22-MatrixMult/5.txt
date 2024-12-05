@@ -1,0 +1,21 @@
+Slide 5
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Matrix Multiplication}
+
+$A_{nxm} = (a_{ij})$, $B_{mxl} = (b_{ij})$
+$A_{nxm} B_{mxl} = C_{nxl}$
+
+$c_{ij} = (AB)_{ij} = \begin{pmatrix} a_{i1} & a_{i2} & \cdots & a_{im} \end{pmatrix} \begin{pmatrix} b_{1j} \\ b_{2j} \\ \vdots \\ b_{mj} \end{pmatrix} = \sum_{k=1}^m a_{ik} b_{kj}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of matrix multiplication, focusing on the calculation of elements in the resulting matrix $C = AB$.  It explicitly shows how the element $c_{ij}$ (the element in the $i$-th row and $j$-th column of the resulting matrix $C$) is computed as a dot product of the $i$-th row of matrix $A$ and the $j$-th column of matrix $B$.  The formula $\sum_{k=1}^m a_{ik} b_{kj}$ is presented, highlighting the summation over the common index $k$.  The context strongly suggests this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are fundamental for defining and solving problems.  The slide emphasizes the step-by-step calculation of matrix elements.

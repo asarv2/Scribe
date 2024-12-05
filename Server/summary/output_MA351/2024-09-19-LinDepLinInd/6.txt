@@ -1,0 +1,20 @@
+Slide 6
+
+\textbf{Consequences (Properties) of Linear Dependence}
+
+(III) If $\ell = \{u_1, u_2, \dots, u_k\}$ is lin. dep.,
+then any vector $\vec{v} \in Span(\ell)$ can be
+represented in an infinitely many ways
+as lin. comb. of the $u_i$'s.
+i.e. the representation is not unique.
+
+For example, $\vec{v} = 2u_1 - u_2 + 2u_3$
+$= 3u_1 - 3u_2 + 3u_3$
+$= -u_1 + 3u_2 + u_3$
+( $3u_1 - 4u_2 + u_3 = 0$)
+( $2(3u_1 - 4u_2 + u_3) = 0$)
+
+
+\textbf{Description:}
+
+This slide continues the discussion of linear dependence, focusing on the non-uniqueness of vector representations.  It states that if a set of vectors ($\ell$) is linearly dependent, then any vector within the span of those vectors can be expressed as a linear combination of the original vectors in infinitely many ways.  This means there isn't a single, unique way to represent a vector as a linear combination of the dependent vectors.  The example demonstrates this by showing how the same vector $\vec{v}$ can be expressed as different linear combinations of the vectors $u_1$, $u_2$, and $u_3$, which are linearly dependent.  This non-uniqueness is important in linear programming because it highlights the potential for redundancy and alternative representations within the problem's solution space.

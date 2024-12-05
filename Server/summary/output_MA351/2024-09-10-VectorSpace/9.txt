@@ -1,0 +1,22 @@
+Slide 9
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+$V$ is called a vector space as long as you can define vector addition and scalar mult.
+such that properties 1 - 8 hold.
+
+\textbf{Important points not to be missed}
+\newline
+You need to make sure that
+\newline
+$\vec{u} + \vec{v} \in V$ and $\alpha \vec{u} \in V$
+
+\end{document}
+
+--- Description ---
+
+This slide emphasizes crucial aspects of vector spaces.  It highlights the requirement that the sum of two vectors ($\vec{u} + \vec{v}$) and the result of multiplying a vector by a scalar ($\alpha \vec{u}$) must also be elements of the vector space $V$.  This is a fundamental condition for a set of vectors to form a vector space.  The slide number is 9 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a reminder of the necessary conditions for the vector operations to be well-defined within the context of a linear programming problem.

@@ -1,0 +1,62 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Column Space (Col(A)) \& Null Space (Null(A))}
+
+\vspace{0.5cm}
+
+$m \times n$ Linear System
+
+\vspace{0.5cm}
+
+\begin{align*}
+a_{11}x_1 + a_{12}x_2 + \dots + a_{1n}x_n &= b_1 \\
+a_{21}x_1 + a_{22}x_2 + \dots + a_{2n}x_n &= b_2 \\
+\vdots & \\
+a_{m1}x_1 + a_{m2}x_2 + \dots + a_{mn}x_n &= b_m
+\end{align*}
+
+\vspace{0.5cm}
+
+\begin{tikzpicture}[scale=0.8]
+\draw[->,red] (2,7) -- (2,0);
+\draw[->,red] (2,7) -- (10,7);
+\draw[red] (2,7) -- (2,6.5);
+\draw[red] (2,6.5) node[left] {Column Space (Col(A))};
+\draw[red] (2,0) -- (2,-0.5);
+\draw[red] (2,-0.5) node[left] {$m \times n$ Linear System};
+\draw[red] (10,7) -- (10,6.5);
+\draw[red] (10,6.5) node[right] {Null Space (Null(A))};
+\draw (2,7) node[circle,fill=red,inner sep=1pt] {};
+\draw (2,6) node[below] {$a_{11}x_1$};
+\draw (2,5) node[below] {$a_{21}x_1$};
+\draw (2,4) node[below] {$\vdots$};
+\draw (2,3) node[below] {$a_{m1}x_1$};
+\draw (10,7) node[circle,fill=red,inner sep=1pt] {};
+\draw (10,6) node[below] {$x_1$};
+\draw (10,5) node[below] {$x_2$};
+\draw (10,4) node[below] {$\vdots$};
+\draw (10,3) node[below] {$x_n$};
+\draw (10,0) node[below] {unknowns: $x_1, x_2, \dots, x_n$};
+\draw (4,7) node[above] {$b_1$};
+\draw (6,7) node[above] {$b_2$};
+\draw (8,7) node[above] {$b_m$};
+\draw[->,red] (8,7) -- (10,5);
+\draw[dashed] (2,7) -- (10,7);
+\draw[dashed] (2,6) -- (10,6);
+\draw[dashed] (2,5) -- (10,5);
+\draw[dashed] (2,4) -- (10,4);
+\draw[dashed] (2,3) -- (10,3);
+\end{tikzpicture}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide introduces the concept of column space and null space in the context of a linear system.  It shows a $m \times n$ linear system, represented by a matrix equation $Ax = b$, where $A$ is the coefficient matrix, $x$ is the vector of unknowns, and $b$ is the vector of constants. The slide visually depicts the column space (Col(A)) as the span of the columns of the matrix $A$, and the null space (Null(A)) as the set of all vectors $x$ that satisfy $Ax = 0$.  The slide also shows the relationship between the unknowns ($x_1, x_2, \dots, x_n$) and the constants ($b_1, b_2, \dots, b_m$).  The arrows visually represent the relationships between the variables and the constants.  This is the first slide of a 25-slide presentation on linear programming, likely introducing the fundamental concepts of linear systems.

@@ -1,0 +1,24 @@
+Slide 22
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Finding a Particular Solution:  Methods}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item \textbf{Gaussian Elimination:}  A systematic method for solving linear systems.  It's often used to find a particular solution to $Ax = b$.
+    \item \textbf{Matrix Inversion:} If $A$ is invertible, $x_p = A^{-1}b$ is a particular solution.
+    \item \textbf{Other Methods:}  Specific algorithms or techniques might be used depending on the structure of the matrix $A$.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide discusses the methods for finding a particular solution ($x_p$) to the linear system $Ax = b$.  It lists Gaussian elimination and matrix inversion as two common approaches.  Gaussian elimination is a general method for solving linear systems, while matrix inversion is applicable when the matrix $A$ is invertible.  The slide also notes that other specialized methods might be used depending on the specific structure of the matrix $A$.  This slide likely follows the previous ones, which introduced the concept of finding a particular solution and the relationship between $b$ and the column space of $A$.  It provides practical strategies for obtaining a particular solution in a linear system.

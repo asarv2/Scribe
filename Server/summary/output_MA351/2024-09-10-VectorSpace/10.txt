@@ -1,0 +1,27 @@
+Slide 10
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \item $P_n = \{polynomials \ of \ degree \ at \ most \ n\}$
+    \newline
+    = $\{p(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n\}$
+    \newline
+    $p_1(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n$
+    \newline
+    $p_2(x) = b_0 + b_1 x + b_2 x^2 + ... + b_n x^n$
+    \newline
+    $(p_1 + p_2)(x) = (a_0 + b_0) + (a_1 + b_1) x + ... + (a_n + b_n) x^n$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide provides examples of vector spaces.  It specifically shows $P_n$, the set of polynomials of degree at most $n$.  The example demonstrates how vector addition works in this context.  The sum of two polynomials $p_1(x)$ and $p_2(x)$ results in a new polynomial $(p_1 + p_2)(x)$ where the coefficients of corresponding powers of $x$ are added.  The slide number is 10 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this example is illustrating how polynomial functions can be treated as vectors, with addition and scalar multiplication defined in a way that satisfies the properties of a vector space.  This is likely a prelude to applying these concepts to linear programming problems involving polynomial functions.

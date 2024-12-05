@@ -1,0 +1,21 @@
+Slide 13
+
+\textbf{(III)} Linear Transformation
+
+\begin{align*}
+\begin{pmatrix}
+x \\
+y \\
+z
+\end{pmatrix} \xrightarrow{T} \begin{pmatrix}
+x + 2y + z \\
+3x + y + 4z \\
+2x + 2y + 3z
+\end{pmatrix}
+\end{align*}
+Find $(x, y, z)$ such that $T(x, y, z) = (0, 0, 2)$.
+
+
+\textbf{Description:}
+
+This slide continues the discussion of linear transformations in three dimensions ($\mathbb{R}^3$).  It introduces a linear transformation $T$ that maps a vector $\begin{pmatrix} x \\ y \\ z \end{pmatrix}$ to a new vector $\begin{pmatrix} x + 2y + z \\ 3x + y + 4z \\ 2x + 2y + 3z \end{pmatrix}$.  The slide is asking for the input vector $(x, y, z)$ that, when transformed by $T$, results in the output vector $(0, 0, 2)$.  A 3D coordinate system is shown, with the x, y, and z axes labeled.  The slide is likely part of a lecture on linear transformations and their applications in linear programming, where these transformations are used to analyze the relationships between variables and constraints.  The slide is asking for the pre-image of the vector (0, 0, 2) under the transformation $T$.

@@ -1,0 +1,27 @@
+Slide 15
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Geometric Interpretation of $Ax = b$ (cont.)}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item The solution to $Ax = b$ is a vector $x$ that, when multiplied by the matrix $A$, results in the vector $b$.
+    \item Geometrically, $b$ is a linear combination of the columns of $A$.
+    \item The solution $x$ is a combination of the columns of $A$ that produces $b$.
+    \item If $b$ is not in the column space of $A$, there is no solution to $Ax = b$.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide continues the geometric interpretation of the linear system $Ax = b$, building on the previous slide.  It emphasizes that if the vector $b$ is not within the column space of the matrix $A$, then there is no solution to the equation $Ax = b$.  This is a crucial concept in linear algebra and linear programming.  The slide likely follows the previous ones, which introduced the simplex method, pivot operations, and the concept of the column space.  The addition of the condition that $b$ must be in the column space of $A$ for a solution to exist is a key takeaway for understanding the limitations of the system.
+
+

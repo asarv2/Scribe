@@ -1,0 +1,56 @@
+Slide 5
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\begin{center}
+\textbf{Slide 5}
+\end{center}
+
+\begin{equation*}
+\text{0} \quad \text{Anatomy of 2 Dimensions (or REF of A)}
+\end{equation*}
+\begin{equation*}
+\text{dim(Col(A))} = \text{Rank(A)} = \text{\# of pivot variables} = \text{Span}\text{'}\text{ of columns} = \text{Column Space of A}
+\end{equation*}
+\begin{equation*}
+\text{dim(Null(A))} = \text{Nullity(A)} = \text{\# of free variables}
+\end{equation*}
+\begin{equation*}
+\text{Rank(A)} + \text{Nullity(A)} = n
+\end{equation*}
+\begin{equation*}
+\text{Nullity(A)} = n - \text{Rank(A)}
+\end{equation*}
+\begin{equation*}
+\text{Rank(A)} = m \quad \text{if} \quad m \le n
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Nullity(A)} = \text{Number of columns} - \text{Rank(A)}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} = \text{Number of pivot variables}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Nullity(A)} = \text{Number of free variables}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} + \text{Nullity(A)} = \text{Number of columns}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} + \text{Nullity(A)} = n
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} = m \quad \text{if} \quad m \le n
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of matrix rank and nullity, expanding on the previous slide's concepts.  It explicitly defines the dimension of the column space (Col(A)) as equal to the rank of the matrix, which is also the number of pivot variables.  It also defines the dimension of the null space (Null(A)) as equal to the nullity of the matrix, which is the number of free variables.  The equations reiterate the relationships between these dimensions and the total number of columns (n).  The handwritten style and numbered equations suggest a lecture setting.  The slide likely builds upon the previous discussion of row echelon form (REF) and the anatomy of a matrix.

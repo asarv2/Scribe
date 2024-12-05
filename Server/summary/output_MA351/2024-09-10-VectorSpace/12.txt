@@ -1,0 +1,24 @@
+Slide 12
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \setcounter{enumi}{1}
+    \item $F = \{functions \ f: R \rightarrow R\}$
+    \newline
+    $(f+g)(x) = f(x) + g(x)$
+    \newline
+    $(\alpha f)(x) = \alpha f(x)$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide provides another example of a vector space, $F$.  It defines a vector space consisting of all functions $f$ that map real numbers to real numbers.  The slide defines vector addition and scalar multiplication for these functions.  The sum of two functions, $f(x)$ and $g(x)$, is a new function $(f+g)(x)$ where the output at each input $x$ is the sum of the outputs of $f(x)$ and $g(x)$.  Similarly, scalar multiplication of a function $f(x)$ by a scalar $\alpha$ results in a new function $(\alpha f)(x)$ where the output at each input $x$ is the product of the scalar $\alpha$ and the output of $f(x)$.  The slide number is 12 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this example is illustrating how functions can be treated as vectors, with addition and scalar multiplication defined in a way that satisfies the properties of a vector space.  This is likely a prelude to applying these concepts to linear programming problems involving functions.

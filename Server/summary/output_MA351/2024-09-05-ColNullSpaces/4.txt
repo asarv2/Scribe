@@ -1,0 +1,42 @@
+Slide 4
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Example: Converting to Standard Form}
+
+\vspace{0.5cm}
+
+\textbf{Problem:}
+
+Maximize $z = 2x_1 + 3x_2$
+
+subject to
+
+$x_1 + 2x_2 \le 10$
+
+$3x_1 + x_2 \le 15$
+
+$x_1, x_2 \ge 0$
+
+\vspace{0.5cm}
+
+\textbf{Solution:}
+
+Introduce slack variables $s_1$ and $s_2$:
+
+$x_1 + 2x_2 + s_1 = 10$
+
+$3x_1 + x_2 + s_2 = 15$
+
+$x_1, x_2, s_1, s_2 \ge 0$
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide provides an example of converting a linear programming problem into standard form.  The original problem is a maximization problem with two variables ($x_1$ and $x_2$) and two constraints.  The slide demonstrates the process of introducing slack variables ($s_1$ and $s_2$) to convert the "less than or equal to" inequalities into equalities.  The resulting equations now include the slack variables, and all variables (including the slack variables) are constrained to be non-negative.  This transformation is a crucial step in preparing the problem for solution using standard linear programming algorithms.  The example is straightforward, but it illustrates the general method for converting any linear programming problem into standard form.

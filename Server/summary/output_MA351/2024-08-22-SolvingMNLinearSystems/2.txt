@@ -1,0 +1,53 @@
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+For linear system, one and only one
+of the following cases can occur:
+
+(1) there is a unique (i.e. only one)
+solution
+
+(2) there are infinitely many solutions
+
+(3) there is no solution.
+
+In the case of $2 \times 2$ linear system,
+the above 3 cases correspond to:
+
+(1) \begin{tikzpicture}[scale=0.5]
+\draw[->] (-5,0) -- (5,0) node[right] {$x$};
+\draw[->] (0,-5) -- (0,5) node[above] {$y$};
+\draw[domain=-4:4,smooth,variable=\x] plot ({\x}, {1*\x+1});
+\draw[domain=-4:4,smooth,variable=\x] plot ({\x}, {-1*\x+3});
+\draw (2,3) node[circle,fill,inner sep=1pt]{};
+\end{tikzpicture}
+\textit{only one intersection}
+
+(2) \begin{tikzpicture}[scale=0.5]
+\draw[->] (-5,0) -- (5,0) node[right] {$x$};
+\draw[->] (0,-5) -- (0,5) node[above] {$y$};
+\draw[domain=-4:4,smooth,variable=\x] plot ({\x}, {1*\x+1});
+\draw[domain=-4:4,smooth,variable=\x] plot ({\x}, {1*\x+3});
+\node[right] at (4,4) {2 lines coincide};
+\end{tikzpicture}
+
+(3) \begin{tikzpicture}[scale=0.5]
+\draw[->] (-5,0) -- (5,0) node[right] {$x$};
+\draw[->] (0,-5) -- (0,5) node[above] {$y$};
+\draw[domain=-4:4,smooth,variable=\x] plot ({\x}, {1*\x+1});
+\draw[domain=-4:4,smooth,variable=\x] plot ({\x}, {1*\x+3});
+\node[right] at (4,4) {2 unequal parallel lines};
+\node[right] at (4,-4) {no intersection};
+\end{tikzpicture}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of linear systems, specifically focusing on the possible outcomes when solving a system of two linear equations in two variables (a $2 \times 2$ system).  It illustrates these outcomes graphically.  Each graph depicts a pair of lines.  Case (1) shows two lines intersecting at a single point, representing a unique solution. Case (2) shows two coincident lines, indicating infinitely many solutions. Case (3) shows two parallel lines, signifying no solution.  The handwritten style and the visual representations of the solutions are characteristic of lecture notes.

@@ -1,0 +1,25 @@
+Slide 13
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Column Space and the Solution of $Ax = b$}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item The column space of a matrix $A$ is the set of all possible linear combinations of the columns of $A$.
+    \item The solution to $Ax = b$ is in the column space of $A$ if and only if $b$ is a linear combination of the columns of $A$.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide explains the relationship between the column space of a matrix $A$ and the solutions to the linear system $Ax = b$.  It states that the column space of $A$ is the set of all possible linear combinations of the columns of $A$.  Crucially, it highlights the condition that the solution to $Ax = b$ is within the column space of $A$ if and only if the vector $b$ can be expressed as a linear combination of the columns of $A$.  This is a fundamental concept in linear algebra and is directly relevant to understanding the feasible region in linear programming problems.  The slide likely follows the previous ones, which introduced the simplex method and its geometric interpretation.
+
+

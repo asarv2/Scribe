@@ -1,0 +1,23 @@
+Slide 6
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Properties of Matrix Multiplication}
+
+\begin{enumerate}
+    \item $A(\alpha B + \beta C) = \alpha AB + \beta AC$
+    \item $(\alpha A + \beta B) C = \alpha AC + \beta BC$
+    \item $(AB)^T = B^T A^T$
+    \item In general, $AB \neq BA$
+\end{enumerate}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the properties of matrix multiplication.  It lists four key properties:  distributivity over scalar multiplication (properties 1 and 2), the transpose property (property 3), and the non-commutativity property (property 4).  These properties are crucial for understanding how matrix operations behave and are essential for manipulating and solving linear systems, which are common in linear programming.  The context strongly suggests this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are fundamental for defining and solving problems.  The slide highlights the differences in the order of multiplication for matrices, which is a key distinction from scalar multiplication.

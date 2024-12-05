@@ -1,0 +1,23 @@
+Slide 3
+
+\textbf{Ex 5}
+$A = \begin{bmatrix} 3 & 1 & 0 \\ 0 & 1 & 0 \\ 4 & 2 & 1 \end{bmatrix}$
+
+$\begin{bmatrix} 3 & 1 & 0 \\ 0 & 1 & 0 \\ 4 & 2 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} = 3 \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}$
+
+$\begin{bmatrix} 3 & 1 & 0 \\ 0 & 1 & 0 \\ 4 & 2 & 1 \end{bmatrix} \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix} = 1 \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}$
+
+$\begin{bmatrix} 3 & 1 & 0 \\ 0 & 1 & 0 \\ 4 & 2 & 1 \end{bmatrix} \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} = 1 \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$
+
+$\begin{bmatrix} 3 & 1 & 0 \\ 0 & 1 & 0 \\ 4 & 2 & 1 \end{bmatrix} = \begin{bmatrix} 1 & -1 & 0 \\ 0 & 1 & 0 \\ 2 & 0 & 1 \end{bmatrix} \begin{bmatrix} 3 & 1 & 0 \\ 0 & 1 & 0 \\ 4 & 2 & 1 \end{bmatrix} = \begin{bmatrix} 3 & 0 & 0 \\ 0 & 1 & 0 \\ 4 & 0 & 1 \end{bmatrix}$
+
+$[\begin{bmatrix} 3 \\ 0 \\ 4 \end{bmatrix} \quad \begin{bmatrix} 1 \\ 1 \\ 2 \end{bmatrix} \quad \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}] = \begin{bmatrix} 1 & -1 & 0 \\ 0 & 1 & 0 \\ 2 & 0 & 1 \end{bmatrix} \begin{bmatrix} 3 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \\ 5 \end{bmatrix}$
+
+$\begin{bmatrix} 1 & -1 & 0 \\ 0 & 1 & 0 \\ 2 & 0 & 1 \end{bmatrix} \begin{bmatrix} 3 \\ 0 \\ 4 \end{bmatrix} = \begin{bmatrix} 3 \\ 0 \\ 11 \end{bmatrix}$
+
+$\begin{bmatrix} 3 & 1 & 0 \\ 0 & 1 & 0 \\ 4 & 2 & 1 \end{bmatrix} = \begin{bmatrix} 3 & 0 & 0 \\ 0 & 1 & 0 \\ 4 & 0 & 1 \end{bmatrix}$
+
+
+\textbf{Description:}
+
+This slide continues the examples of diagonalizing matrices.  It presents a 3x3 matrix (Ex 5) and demonstrates the process of finding its eigenvalues and eigenvectors.  The slide shows the matrix multiplications involved in verifying the diagonalization.  The notation is consistent with linear algebra, using matrices and vectors.  The example shows the process of finding the eigenvalues and eigenvectors for a 3x3 matrix.  The slide likely follows a lecture on linear algebra, where diagonalization is a key concept.  The calculations are shown in detail, including the intermediate steps.

@@ -1,0 +1,17 @@
+Slide 4
+
+\textbf{Consequences (Properties) of Lin Dep.}
+
+(I) If $\ell = \{u_1, u_2, \dots, u_k\}$ is lin. dep.,
+then $\ell$ can be reduced to $\ell' \subseteq \ell$
+such that $Span(\ell) = Span(\ell')$.
+
+For example: $u_1 = (0, 2)$, $u_2 = (0, 1)$, $u_3 = (2, 3, 4)$.
+$3u_1 + (-4)u_2 + u_3 = \vec{0}$
+
+Let $\vec{v} = 3u_1 + 2u_2 + 3u_3$
+
+
+\textbf{Description:}
+
+This slide explores the consequences of linear dependence for a set of vectors.  It states that if a set of vectors ($\ell$) is linearly dependent, then the set can be reduced to a smaller subset ($\ell'$) that still spans the same vector space.  This means that the original set contains redundant vectors that can be removed without changing the space spanned by the vectors.  The example demonstrates this by showing how a set of three vectors can be reduced to a set of two vectors that still span the same space.  The equation $3u_1 + (-4)u_2 + u_3 = \vec{0}$ shows a linear dependence relationship among the vectors.  The final line introduces a new vector $\vec{v}$ as a linear combination of the original vectors, highlighting how linear combinations can be used to generate new vectors within the spanned space.  This is a key concept in linear programming, as it allows for simplification of the problem by removing redundant constraints or variables.

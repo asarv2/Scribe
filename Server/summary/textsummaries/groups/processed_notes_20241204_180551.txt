@@ -1,0 +1,19 @@
+
+--- Key Terms ---
+linear programming
+linear systems of equations
+vector spaces and linear transformations
+matrix algebra
+markov chains
+--- Problem Types ---
+linear programming
+systems of linear equations
+vector spaces and linear combinations
+matrix operations and transformations
+linear transformations and their geometry
+--- Algorithm Solutions ---
+linear programming
+linear systems of equations
+vector spaces and linear transformations
+matrix algebra
+applications of linear algebra

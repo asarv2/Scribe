@@ -1,0 +1,33 @@
+Slide 15
+
+Examples: Express pivot var. in terms of free var.
+
+(c)
+\begin{align*}
+x - y + z = 5
+\end{align*}
+
+$\begin{bmatrix}
+1 & -1 & 1 & | & 5
+\end{bmatrix}$
+
+$z = t$ (free)
+$y = s$ (free)
+$x = y + z + 5 = s + t + 5$
+
+Solution:
+$\begin{bmatrix}
+x \\
+y \\
+z
+\end{bmatrix} = \begin{bmatrix}
+s + t + 5 \\
+s \\
+t
+\end{bmatrix}$
+
+\textit{Description:}
+
+This slide provides an example of expressing a pivot variable (x) in terms of free variables (y, z).  It starts with a single equation in three variables (x, y, z).  The slide shows the augmented matrix representation of the equation, followed by the expression of the pivot variable (x) in terms of the free variables (y, z).  The free variables (y, z) are represented by parameters s and t, respectively.  The resulting solution is presented as a vector, where s and t represent the free variables.  The slide is part of a larger presentation likely covering Gaussian elimination and its application to linear programming problems.  The example illustrates how to express the pivot variable in terms of the free variables, which is a key concept for understanding the solution space of a system of linear equations.  The red arrows and circled numbers highlight the relationships between the equations and the variables.
+
+

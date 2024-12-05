@@ -1,0 +1,28 @@
+Slide 18
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Finding a Particular Solution}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item To find a particular solution to $Ax = b$, we need to find a vector $x_p$ such that $Ax_p = b$.
+    \item If $b$ is in the column space of $A$, a particular solution exists.
+    \item If $b$ is not in the column space of $A$, there is no solution to $Ax = b$.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide focuses on finding a particular solution to the linear system $Ax = b$.  It states that a particular solution, $x_p$, is a vector that satisfies the equation $Ax_p = b$.  The key point is that a particular solution exists only if the vector $b$ is within the column space of the matrix $A$.  If $b$ is not in the column space of $A$, there is no solution to $Ax = b$.  This is a crucial concept in linear algebra and linear programming, as it directly relates to the existence of a feasible solution in a linear programming problem.  The slide likely follows the previous ones, which introduced the simplex method, pivot operations, and the geometric interpretation of linear systems.
+
+
+
+

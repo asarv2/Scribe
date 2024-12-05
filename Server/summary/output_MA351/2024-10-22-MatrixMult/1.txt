@@ -1,0 +1,40 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Matrix Multiplication}
+
+$A_{mxn} \cdot X \in R^n \rightarrow AX \in R^m$
+
+\begin{equation*}
+\begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{pmatrix}
+=
+\begin{pmatrix}
+a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n \\
+a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n \\
+\vdots \\
+a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n
+\end{pmatrix}
+\end{equation*}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces matrix multiplication in the context of Linear Programming.  It shows the multiplication of a matrix $A$ (with dimensions $m \times n$) by a vector $X$ (with dimensions $n \times 1$). The result is a vector $AX$ with dimensions $m \times 1$.  The slide explicitly demonstrates how the elements of the resulting vector are calculated, showing the dot product of each row of $A$ with the vector $X$.  This is a fundamental concept in linear algebra that is crucial for understanding many linear programming algorithms.  The slide number and the fact that it's the first of eight slides suggests this is part of a larger lecture series on linear programming.

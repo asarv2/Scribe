@@ -1,0 +1,44 @@
+Slide 13
+
+Examples: Express pivot var. in terms of free var.
+
+(a)
+\begin{align*}
+\begin{cases}
+x + y + z + w = 5 \\
+x + y - z + w = 7 \\
+x + y + 2z - w = 0
+\end{cases}
+\end{align*}
+
+$\begin{bmatrix}
+1 & 1 & 1 & 1 & | & 5 \\
+1 & 1 & -1 & 1 & | & 7 \\
+1 & 1 & 2 & -1 & | & 0
+\end{bmatrix} \rightarrow \begin{bmatrix}
+1 & 1 & 1 & 1 & | & 5 \\
+0 & 0 & -2 & 0 & | & 2 \\
+0 & 0 & 1 & -2 & | & -5
+\end{bmatrix}$
+
+$w = 2$
+$z - 2w = -5 \implies z = 1$
+$y = t$ (free)
+$x = -y - z - w + 5 = -t - 1 - 2 + 5 = 2 - t$
+
+Solution:
+$\begin{bmatrix}
+x \\
+y \\
+z \\
+w
+\end{bmatrix} = \begin{bmatrix}
+2-t \\
+t \\
+1 \\
+2
+\end{bmatrix}$
+
+\textit{Description:}
+
+This slide continues the example from the previous slide, demonstrating how to express the pivot variables (x, z, w) in terms of the free variable (y).  The slide shows the step-by-step derivation of the expressions for x, z, and w in terms of the free variable t.  The resulting solution is presented as a vector, where t represents the free variable.  The slide is part of a larger presentation likely covering Gaussian elimination and its application to linear programming problems.  The example illustrates how to express the pivot variables in terms of the free variable, which is a key concept for understanding the solution space of a system of linear equations.  The red arrows and circled numbers highlight the relationships between the equations and the variables.

@@ -1,0 +1,26 @@
+Slide 11
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{The Simplex Algorithm: Summary}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item Start with a standard form linear programming problem.
+    \item Construct the initial simplex tableau.
+    \item Apply the pivot selection rules (entering and leaving variables).
+    \item Perform the pivot operation to update the tableau.
+    \item Repeat steps 3 and 4 until an optimal solution is found or it's determined that no optimal solution exists.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide summarizes the steps involved in the simplex algorithm for solving linear programming problems.  It outlines the process from the initial setup to the iterative application of pivot operations.  The slide emphasizes the crucial steps of starting with a standard form problem, constructing the initial tableau, applying pivot selection rules, performing pivot operations, and repeating until an optimal solution is found or unboundedness is detected.  This slide likely follows the previous ones, which introduced the simplex method, pivot operations, and tableau representation.  It provides a concise overview of the algorithm's overall procedure.

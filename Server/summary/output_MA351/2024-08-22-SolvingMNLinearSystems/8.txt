@@ -1,0 +1,182 @@
+Slide 8
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+$E_{x7}$
+\begin{equation*}
+\begin{cases}
+x - y + z = 7 \\
+2x - 2y + 4z = 14
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+\begin{cases}
+(1 & |-1| & |1| \\
+2 & |-2| & |4|
+\end{cases}
+\rightarrow
+\begin{cases}
+(1 & |-1| & |1| \\
+0 & |0| & |2|
+\end{cases}
+\end{equation*}
+
+$z = \alpha$ (free)
+
+$y = \beta$ (free)
+
+$x = 7 + \beta - 2\alpha$
+
+$(x) = (7 + \beta - 2\alpha)$
+$(y) = (\beta)$
+$(z) = (\alpha)$
+
+\begin{tikzpicture}[scale=0.8]
+\draw[->] (-2,0,0) -- (4,0,0) node[right] {$x$};
+\draw[->] (0,-2,0) -- (0,4,0) node[above] {$y$};
+\draw[->] (0,0,-2) -- (0,0,4) node[above] {$z$};
+\draw[blue,fill=blue,opacity=0.2] (0,0,0) -- (0,0,2) -- (0,1,2) -- (0,1,0) -- cycle;
+\draw[blue,fill=blue,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[blue,fill=blue,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,2) -- (-1.6,0.2,0) -- cycle;
+\draw[fill=black,opacity=0.2] (0,0,0) -- (0,0,2) -- (-1.6,0.2,

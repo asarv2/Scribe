@@ -1,0 +1,17 @@
+
+--- Key Terms ---
+linear programming
+linear programming fundamentals
+advanced linear programming techniques
+duality theory
+auxiliary problems and techniques
+--- Problem Types ---
+linear programming
+simplex method analysis
+simplex method mechanics
+linear programming theory
+--- Algorithm Solutions ---
+linear programming
+linear programming fundamentals
+simplex method algorithms
+handling infeasibility

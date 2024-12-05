@@ -1,0 +1,18 @@
+Slide 7
+
+\textbf{(III)} Linear Transformation of Vectors
+
+Solving
+\begin{align*}
+\begin{cases}
+2x - y = 4 \\
+x + 3y = 9
+\end{cases}
+\end{align*}
+is equivalent to finding $(x, y)$ such that $T(x, y) = (4, 9)$.
+(i.e. $(x, y)$ is the pre-image of $(4, 9)$ under $T$).
+
+
+\textbf{Description:}
+
+This slide reiterates the connection between solving a system of linear equations and finding the pre-image of a vector under a linear transformation.  It restates that solving the system $2x - y = 4$ and $x + 3y = 9$ is equivalent to finding the input vector $(x, y)$ that, when transformed by $T$, results in the output vector $(4, 9)$.  The phrase "pre-image" is introduced, emphasizing the inverse relationship between the input and output vectors under the transformation $T$.  The slide is likely part of a larger lecture on linear transformations and their applications in linear programming, where these concepts are used to analyze the relationships between variables and constraints.

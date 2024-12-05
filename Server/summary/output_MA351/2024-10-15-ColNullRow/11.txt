@@ -1,0 +1,44 @@
+Slide 11
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\begin{center}
+\textbf{Slide 11}
+\end{center}
+
+\begin{equation*}
+\text{Non-Singular Matrix } A_{mxn} \text{ is called a square matrix if } m = n
+\end{equation*}
+\begin{equation*}
+\text{Given } A_{mxn} \text{ and } B_{m \times 1}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has a unique solution, then } A \text{ is non-singular}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has no solution, then } A \text{ is singular}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has infinitely many solutions, then } A \text{ is singular}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has a unique solution, then } A \text{ is non-singular}
+\end{equation*}
+\begin{equation*}
+\text{If } A \text{ is non-singular, then } AX = B \text{ has a unique solution for any } B
+\end{equation*}
+\begin{equation*}
+\text{If } A \text{ is a square matrix, then } A \text{ is non-singular} \iff \text{Rank(A)} = n
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of singular and non-singular matrices, focusing on the relationship between matrix properties and the existence of unique solutions to linear systems.  It restates the definition of a square matrix (m = n).  The slide then connects the concept of a non-singular matrix to the condition that the rank of the matrix must equal the number of columns (n) when the matrix is square.  This is a crucial link between the abstract concept of non-singularity and the practical aspect of finding unique solutions.  The handwritten style suggests a lecture setting.  The slide likely builds upon the previous discussion of matrix rank and the conditions for solving linear systems.

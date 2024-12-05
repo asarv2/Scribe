@@ -1,0 +1,14 @@
+Slide 16
+
+"Standard Basis" of $P_n$
+
+$P_n = Span\{1, x, x^2, ..., x^n\}$
+$p_n(x) = a_0 + a_1x + a_2x^2 + ... + a_nx^n$
+$p_n(x) = a_0e_0 + a_1e_1 + a_2e_2 + ... + a_ne_n$
+$e_0 = 1, e_1 = x, e_2 = x^2, ..., e_n = x^n$
+
+\textbf{Description:}
+
+This slide defines the standard basis for the vector space of polynomials $P_n$.  It shows the standard basis vectors for $P_n$ and illustrates how these vectors span the entire space $P_n$.  The slide number is 16 of 17, indicating this is the sixteenth of a series of slides on linear programming.  The handwritten style suggests this is a lecture or class note.  The slide likely builds upon the previous slides' discussion of bases and dimensions in vector spaces, providing a specific example of a basis for $P_n$ known as the standard basis.  The standard basis vectors are the monomials $1, x, x^2, \dots, x^n$.  The slide illustrates how these vectors span the entire space $P_n$ and how to express a polynomial in $P_n$ as a linear combination of the basis vectors.
+
+

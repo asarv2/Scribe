@@ -1,0 +1,30 @@
+
+--- Key Terms ---
+linear programming
+linear programming fundamentals
+duality theory
+advanced linear programming techniques
+linear programming applications
+convex optimization
+network optimization
+integer programming
+support vector machines 
+--- Problem Types ---
+linear programming
+linear programming fundamentals
+simplex method
+duality theory
+advanced linear programming topics
+network flow problems
+integer programming
+applications of linear programming
+geometric and algorithmic aspects
+machine learning connections
+--- Algorithm Solutions ---
+linear programming
+linear programming fundamentals
+simplex method and variants
+regression and optimization
+integer and combinatorial optimization
+network flows
+applications of linear programming

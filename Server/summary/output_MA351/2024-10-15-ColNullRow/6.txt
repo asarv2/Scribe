@@ -1,0 +1,67 @@
+Slide 6
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\begin{center}
+\textbf{Slide 6}
+\end{center}
+
+\begin{equation*}
+\text{0} \quad \text{Anatomy of 2 Dimensions (or REF of A)}
+\end{equation*}
+\begin{equation*}
+\text{dim(Col(A))} = \text{Rank(A)} = \text{\# of pivot variables} = \text{Span}\text{'}\text{ of columns} = \text{Column Space of A}
+\end{equation*}
+\begin{equation*}
+\text{dim(Null(A))} = \text{Nullity(A)} = \text{\# of free variables}
+\end{equation*}
+\begin{equation*}
+\text{Rank(A)} + \text{Nullity(A)} = n
+\end{equation*}
+\begin{equation*}
+\text{Nullity(A)} = n - \text{Rank(A)}
+\end{equation*}
+\begin{equation*}
+\text{Rank(A)} = m \quad \text{if} \quad m \le n
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Nullity(A)} = \text{Number of columns} - \text{Rank(A)}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} = \text{Number of pivot variables}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Nullity(A)} = \text{Number of free variables}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} + \text{Nullity(A)} = \text{Number of columns}
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} + \text{Nullity(A)} = n
+\end{equation*}
+\begin{equation*}
+\text{0} \quad \text{Rank(A)} = m \quad \text{if} \quad m \le n
+\end{equation*}
+\begin{equation*}
+\text{Row(A)} = \text{Span}\text{'}\text{ of rows of A}
+\end{equation*}
+\begin{equation*}
+\text{If} \quad \text{Row(A)} = \text{Row(B)} \quad \text{then} \quad A \sim B
+\end{equation*}
+\begin{equation*}
+\text{A} \sim \text{B} \quad \text{if} \quad \text{A} \text{ can be obtained from B by elementary row operations}
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide continues the discussion of matrix properties, focusing on the relationship between row spaces and elementary row operations.  It introduces the concept of row equivalence ($\sim$).  The slide states that if the row space of matrix A is equal to the row space of matrix B, then A is row equivalent to B.  This implies that one matrix can be transformed into another using elementary row operations.  The handwritten style suggests a lecture setting.  The slide likely builds upon the previous discussion of row echelon form (REF) and the anatomy of a matrix.
+
+

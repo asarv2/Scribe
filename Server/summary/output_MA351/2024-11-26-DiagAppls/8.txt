@@ -1,0 +1,26 @@
+Slide 8
+
+Let $P_0 = \begin{bmatrix} a_0 \\ b_0 \end{bmatrix}$, $P_1 = \begin{bmatrix} a_1 \\ b_1 \end{bmatrix}, \dots, P_n = \begin{bmatrix} a_n \\ b_n \end{bmatrix}$
+
+Then $P_1 = A P_0$, $P_2 = A P_1 = A^2 P_0$, $P_3 = A P_2 = A^3 P_0$, $\dots$
+
+$P_n = A^n P_0$
+
+$Q: \lim_{n \to \infty} P_n = \lim_{n \to \infty} A^n P_0 = ?$
+
+Ans: Find $\lambda, X$ for $A = \begin{bmatrix} 0.9 & 0.07 \\ 0.1 & 0.93 \end{bmatrix}$
+
+$\det(A - \lambda I) = \det \begin{bmatrix} 0.9 - \lambda & 0.07 \\ 0.1 & 0.93 - \lambda \end{bmatrix}$
+
+$= (0.9 - \lambda)(0.93 - \lambda) - 0.007$
+
+$= \lambda^2 - 1.83 \lambda + 0.83$
+
+$= (\lambda - 1)(\lambda - 0.83)$
+
+$\lambda_1 = 0.83$
+
+
+\textbf{Description:}
+
+This slide continues the Markov chain analysis from the previous slide.  It shows the recursive relationship between the population vectors $P_n$ and the transition matrix $A$.  The key concept is finding the limiting population distribution as $n$ approaches infinity.  The slide shows the calculation of the eigenvalues of the transition matrix $A$ to determine the long-term behavior of the Markov chain.  The calculation of the determinant of $(A - \lambda I)$ is shown to find the eigenvalues $\lambda$.  The result, $\lambda_1 = 0.83$, is a crucial step in determining the long-term population distribution.  The notation is consistent with linear algebra, using matrices and vectors.  The slide likely follows a lecture on Markov chains and linear algebra, where diagonalization is a key concept.

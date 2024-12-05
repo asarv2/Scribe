@@ -1,0 +1,79 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Solving $m \times n$ Linear System}
+
+$m \times n$ linear System : ($m$ equations in $n$ unknowns)
+
+\begin{equation*}
+\begin{cases}
+a_{11} x_1 + a_{12} x_2 + \dots + a_{1n} x_n = b_1 \\
+a_{21} x_1 + a_{22} x_2 + \dots + a_{2n} x_n = b_2 \\
+\vdots \\
+a_{m1} x_1 + a_{m2} x_2 + \dots + a_{mn} x_n = b_m
+\end{cases}
+\end{equation*}
+
+In matrix notation: $AX = B$
+
+\begin{equation*}
+\begin{bmatrix}
+a_{11} & a_{12} & \dots & a_{1n} \\
+a_{21} & a_{22} & \dots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \dots & a_{mn}
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{bmatrix}
+=
+\begin{bmatrix}
+b_1 \\
+b_2 \\
+\vdots \\
+b_m
+\end{bmatrix}
+\end{equation*}
+
+In terms of linear combination:
+
+\begin{equation*}
+x_1 \begin{bmatrix}
+a_{11} \\
+a_{21} \\
+\vdots \\
+a_{m1}
+\end{bmatrix} + x_2 \begin{bmatrix}
+a_{12} \\
+a_{22} \\
+\vdots \\
+a_{m2}
+\end{bmatrix} + \dots + x_n \begin{bmatrix}
+a_{1n} \\
+a_{2n} \\
+\vdots \\
+a_{mn}
+\end{bmatrix} = \begin{bmatrix}
+b_1 \\
+b_2 \\
+\vdots \\
+b_m
+\end{bmatrix}
+\end{equation*}
+
+\textbf{Columns of A}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This is the first slide of a lecture on Linear Programming. It introduces the concept of solving a system of $m$ linear equations in $n$ unknowns. The slide shows the general form of the system, both in its expanded form and in matrix notation ($AX = B$).  It also demonstrates how the system can be interpreted as a linear combination of the columns of the coefficient matrix $A$.  The slide number (1 of 12) and date (2/3/2016) are also present.  The handwritten style and use of arrows to indicate matrix multiplication and vector components suggest this is a handwritten set of lecture notes.

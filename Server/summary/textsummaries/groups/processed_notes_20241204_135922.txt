@@ -1,0 +1,10 @@
+
+--- Key Terms ---
+linear programming fundamentals
+solution space analysis
+solution algorithm
+--- Problem Types ---
+linear programming fundamentals
+solution representation and optimization
+--- Algorithm Solutions ---
+linear optimization techniques

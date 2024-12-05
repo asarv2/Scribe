@@ -1,0 +1,27 @@
+Slide 5
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{The Simplex Tableau}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item A tabular representation of the linear programming problem in standard form.
+    \item Used to solve linear programming problems using the simplex method.
+    \item Includes the objective function and constraints.
+    \item Variables are organized in columns.
+    \item Coefficients of variables are in the body of the tableau.
+    \item Right-hand side (RHS) values are in the last column.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide introduces the Simplex Tableau, a crucial tool in the simplex method for solving linear programming problems.  It describes the tableau as a tabular representation of the linear programming problem in standard form.  The slide highlights the tableau's key components: the objective function, constraints, variables organized in columns, coefficients of variables within the tableau, and the right-hand side (RHS) values in the last column.  This slide likely follows the previous ones, which introduced linear programming, standard form, and the conversion process.  The tableau is a structured way to represent the problem, making it easier to apply the simplex method's iterative steps.

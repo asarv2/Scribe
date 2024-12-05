@@ -1,0 +1,117 @@
+
+--- Key Terms ---
+linear programming
+\textbf{system of linear equations}
+\textbf{elimination and substitution method}
+\textbf{intersection of lines/planes}
+\textbf{linear combination of vectors}
+\textbf{linear transformation}
+\textbf{pre-image}
+\textbf{image}
+coefficient matrix
+augmented matrix
+elementary row operations
+row echelon form 
+backward substitution
+pivot variables
+free variables
+reduced row echelon form 
+inconsistent system
+$m \times n$ linear system
+column space )
+null space )
+slack variables
+simplex method
+entering variable
+leaving variable
+pivot element
+pivot operation
+feasible region
+homogeneous system
+inhomogeneous system
+particular solution
+$r^n$
+vector addition
+scalar multiplication
+zero vector 
+negative of a vector 
+linear combination
+span
+vector space
+$p_n$
+$f$
+$m_{m \times n}$
+matrix multiplication
+linearity properties of matrix multiplication
+composition of linear transformations
+properties of matrix multiplication
+identity matrix
+diagonal matrix
+eigenvalues
+eigenvectors
+diagonalizable matrix
+change of basis
+markov chain
+transition matrix
+steady-state distribution
+--- Problem Types ---
+linear programming
+solving systems of linear equations
+expressing a vector as a linear combination of other vectors
+understanding linear transformations
+determining the solution type of a system of linear equations
+expressing pivot variables in terms of free variables
+transforming a matrix into row echelon form 
+transforming a matrix into reduced row echelon form 
+determining the number of free variables in a system of linear equations
+geometric interpretation of solutions to systems of linear equations
+converting to standard form
+pivot selection rules
+performing the pivot operation
+geometric interpretation of the simplex method
+column space and the solution of $ax = b$
+geometric interpretation of $ax = b$
+feasible region and linear combinations
+homogeneous vs. inhomogeneous systems
+finding a particular solution
+geometric interpretation of the solution to $ax = b$
+general solution to $ax = b$
+uniqueness and existence of solutions
+summary
+determining if a vector is a linear combination of other vectors
+determining if a vector is in the span of a set of vectors
+verifying the properties of a vector space
+determining linear dependence/independence
+finding redundant vectors and reducing a set
+consequences of linear dependence on vector representation
+determining the dimension of a vector space
+determining linear dependence/independence of vectors
+finding a basis for a vector space
+determining the minimum number of vectors to span a vector space
+determining the maximum number of linearly independent vectors in a vector space
+understanding matrix multiplication
+understanding linear transformations and their composition
+utilizing properties of matrix multiplication
+diagonalizing a matrix
+computing matrix powers using diagonalization
+analyzing markov chains using diagonalization
+--- Algorithm Solutions ---
+linear programming
+gaussian elimination
+substitution method
+linear combination of vectors
+linear transformation
+backward substitution
+simplex method
+pivot operation
+pivot selection rules
+vector addition
+scalar multiplication
+determining if $\vec{v}$ is in the span of $\{\vec{u}_1, \dots, \vec{u}_k\}$
+eliminating redundant vectors
+matrix multiplication
+composition of linear transformations
+multiplication of diagonal matrices
+diagonalization of a matrix
+computation of $a^k$
+markov chain steady-state analysis

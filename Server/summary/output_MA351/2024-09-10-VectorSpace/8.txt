@@ -1,0 +1,27 @@
+Slide 8
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+$V$ is called a vector space as long as you can define vector addition and scalar mult.
+such that properties 1 - 8 hold.
+
+\begin{enumerate}
+    \item $\vec{u} + \vec{v} = \vec{v} + \vec{u}$
+    \item $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$
+    \item $\alpha (\beta \vec{u}) = (\alpha \beta) \vec{u}$
+    \item $\alpha (\vec{u} + \vec{v}) = \alpha \vec{u} + \alpha \vec{v}$
+    \item $(\alpha + \beta) \vec{u} = \alpha \vec{u} + \beta \vec{u}$
+    \item There is $\vec{0}$ such that $\vec{0} + \vec{u} = \vec{u}$
+    \item For each $\vec{u}$, there is $-\vec{u}$ such that $\vec{u} + (-\vec{u}) = \vec{0}$
+    \item $1\vec{u} = \vec{u}$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide defines a vector space, $V$.  It lists the eight defining properties that must hold for a set of vectors to be considered a vector space.  These properties are fundamental to linear algebra and are likely to be used in subsequent linear programming discussions.  The slide number is 8 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a review or a formalization of the concepts introduced in previous slides, providing a more general framework for the vector operations and properties that will be used in linear programming problems.

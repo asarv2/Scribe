@@ -1,0 +1,31 @@
+Slide 4
+
+\textbf{(II)} Writing vector as linear combination
+(look at "columns")
+
+\begin{tikzpicture}[scale=0.7]
+\draw[->] (-2,0) -- (6,0) node[right] {$x$-axis};
+\draw[->] (0,-2) -- (0,6) node[above] {$y$-axis};
+\draw[dashed,red] (0,0) -- (4,6);
+\draw[red,->] (0,0) -- (2,3) node[right] {$(2)$};
+\draw[red,->] (0,0) -- (-1,3) node[left] {$(-1)$};
+\draw[red,->] (0,0) -- (0,3) node[above] {$(3)$};
+\draw[red,->] (0,0) -- (-1,-1) node[below left] {$(-1)$};
+\draw[black] (0,0) -- (4,2);
+\draw[dashed,red] (0,0) -- (4,6);
+\draw[dashed,red] (0,0) -- (-1,3);
+\draw[dashed,red] (0,0) -- (0,3);
+\draw[dashed,red] (0,0) -- (-1,-1);
+\node[above] at (4,6) {$(4)$};
+\node[above] at (4,2) {$(9)$};
+\node[left] at (-1,3) {$(y/3)$};
+\node[below] at (2,3) {$(x/2)$};
+\node[below] at (4,2) {$x(2)+y(-1)=4$};
+\node[below] at (4,0) {$x(1)+y(3)=9$};
+\node[below] at (2,0) {These $x$'s are not the same};
+\end{tikzpicture}
+
+
+\textbf{Description:}
+
+This slide continues the discussion of solving systems of linear equations, likely in the context of linear programming.  It visually represents the solution to the system of equations $2x - y = 4$ and $x + 3y = 9$ using a graphical vector approach.  A coordinate plane is shown with vectors representing the coefficients of x and y.  The vectors are drawn from the origin to points on the coordinate plane, and the resulting vectors are shown as the sum of the two vectors.  The slide is demonstrating how to find the solution graphically by representing the equations as vectors and finding the linear combination that results in the solution vector (4, 9).  The dashed lines represent the individual vectors, and the solid line represents the sum of the vectors.  The slide is likely part of a larger lecture on linear programming, as it demonstrates a geometric interpretation of the system of equations.  The notation (x/2) and (y/3) likely represent the components of the solution vectors.

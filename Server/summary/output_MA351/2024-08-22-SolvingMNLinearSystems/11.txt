@@ -1,0 +1,16 @@
+Slide 11
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+3 planes intersect at a line.
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents a graphical representation of three planes intersecting at a line in 3D space.  The sketch shows the general configuration of the planes, indicating that the system of equations has infinitely many solutions, which form a line.  The handwritten style and the 3D sketch are characteristic of lecture notes.

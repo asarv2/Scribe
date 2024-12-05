@@ -1,0 +1,39 @@
+{
+    "Key Terms": [{
+        "linear programming fundamentals": [
+            "linear programming",
+            "slack variable"
+        ],
+        "solution space analysis": [
+            "feasible region",
+            "vertex"
+        ],
+        "simplex method algorithms": [
+            "basic variable",
+            "non-basic variable",
+            "pivot operation",
+            "dictionary",
+            "auxiliary problem"
+        ]
+    }],
+    "Problem Types": [{
+        "linear programming fundamentals": [
+            "linear programming",
+            "finding an initial feasible solution",
+            "using dictionaries to represent solutions"
+        ],
+        "advanced linear programming": [
+            "finding an initial feasible solution",
+            "handling infeasible origins",
+            "optimizing in higher dimensions",
+            "using dictionaries to represent solutions"
+        ]
+    }],
+    "Algorithm Solutions": [{
+        "linear optimization techniques": [
+            "linear programming",
+            "simplex method",
+            "auxiliary problem"
+        ]
+    }]
+}

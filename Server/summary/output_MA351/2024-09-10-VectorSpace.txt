@@ -1,0 +1,400 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\begin{document}
+
+\section*{Vectors in $R^n$}
+
+$\vec{u} = \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix}, \quad \vec{v} = \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix} \in R^n$
+
+\section*{Vector Addition}
+
+$\vec{u} + \vec{v} = \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix} + \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix} = \begin{pmatrix} x_1 + y_1 \\ x_2 + y_2 \\ \vdots \\ x_n + y_n \end{pmatrix}$
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\draw[->, thick, blue] (0,0) -- (2,1.5) node[right] {$\vec{v}$};
+\draw[->, thick, red] (0,0) -- (1.5,0.5) node[right] {$\vec{u}$};
+\draw[->, thick, red, dashed] (2,1.5) -- (3.5,2) node[right] {$\vec{u} + \vec{v}$};
+\draw[thick, dashed, red] (1.5,0.5) -- (3.5,2);
+\draw[->] (0,0) -- (0,0);
+\draw[->] (0,0) -- (4,0);
+\draw[->] (0,0) -- (0,2);
+\end{tikzpicture}
+\end{center}
+
+(parallelogram, or "triangle" law)
+
+
+\end{document}
+
+--- Description ---
+
+This slide introduces vector addition in $R^n$.  It defines vectors $\vec{u}$ and $\vec{v}$ as $n$-tuples of real numbers.  The key concept is that the sum of two vectors is obtained by adding their corresponding components.  The slide also includes a graphical representation of vector addition using a parallelogram law.  The figure shows two vectors $\vec{u}$ and $\vec{v}$ in a 2-dimensional space, originating from the origin.  The sum $\vec{u} + \vec{v}$ is represented by the diagonal of the parallelogram formed by $\vec{u}$ and $\vec{v}$.  The red dashed line represents the vector sum.  The blue and red arrows represent the vectors $\vec{v}$ and $\vec{u}$ respectively.  The slide number is 1 of 14, indicating it's the first in a sequence of linear programming lectures.
+
+
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\begin{document}
+
+\section*{Vectors in $R^n$}
+
+$\vec{u} = \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix}, \quad \vec{v} = \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix} \in R^n$
+
+\section*{Scalar Multiplication}
+
+$\alpha \in R$,
+
+$\alpha \vec{u} = \alpha \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix} = \begin{pmatrix} \alpha x_1 \\ \alpha x_2 \\ \vdots \\ \alpha x_n \end{pmatrix}$
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\draw[->] (-2,0) -- (2,0) node[right] {$x$};
+\draw[->] (0,-2) -- (0,2) node[above] {$y$};
+\draw[->, thick, black] (0,0) -- (1,1) node[right] {$\vec{u}$};
+\draw[->, thick, red] (0,0) -- (2,2) node[right] {$\alpha \vec{u}$};
+\draw[->, thick, red] (0,0) -- (-1,-1) node[below left] {$\alpha \vec{u}$};
+\node[below left] at (0,0) {$(0,0)$};
+\end{tikzpicture}
+\end{center}
+
+
+\end{document}
+
+--- Description ---
+
+This slide continues the discussion of vectors, focusing on scalar multiplication.  It defines scalar multiplication as multiplying each component of a vector by a scalar value ($\alpha$).  The example shows a vector $\vec{u}$ in a 2-dimensional space.  The red arrow represents the result of multiplying $\vec{u}$ by a scalar $\alpha$.  The figure illustrates that scalar multiplication scales the vector $\vec{u}$ by a factor of $\alpha$.  If $\alpha > 1$, the vector is stretched; if $0 < \alpha < 1$, the vector is shrunk; and if $\alpha < 0$, the vector is flipped and stretched/shrunk.  The slide number is 2 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a foundational concept for later discussions in linear programming.
+
+
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Properties of Vector Add. \& Scalar Mult.}
+
+$(\vec{u} + \vec{v} \in R^n, \quad \alpha \vec{u} \in R^n)$
+
+\begin{enumerate}
+    \item $\vec{u} + \vec{v} = \vec{v} + \vec{u}$
+    \item $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$
+    \item $\alpha (\beta \vec{u}) = (\alpha \beta) \vec{u}$
+    \item $\alpha (\vec{u} + \vec{v}) = \alpha \vec{u} + \alpha \vec{v}$
+    \item $(\alpha + \beta) \vec{u} = \alpha \vec{u} + \beta \vec{u}$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide lists the properties of vector addition and scalar multiplication in $R^n$.  It presents five key properties as numbered statements.  These properties are fundamental to understanding vector spaces and are likely to be used in subsequent linear programming discussions.  The slide number is 3 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that these properties are being introduced as a prerequisite for more advanced topics in linear programming.
+
+
+Slide 4
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{Properties of Vector Add. \& Scalar Mult.}
+
+$(\vec{u} + \vec{v} \in R^n, \quad \alpha \vec{u} \in R^n)$
+
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item Let $\vec{0} = \begin{pmatrix} 0 \\ 0 \\ \vdots \\ 0 \end{pmatrix}$. Then $\vec{0} + \vec{u} = \vec{u}$
+    \item Let $-\vec{u} = \begin{pmatrix} -x_1 \\ -x_2 \\ \vdots \\ -x_n \end{pmatrix}$. Then $(-\vec{u}) + \vec{u} = \vec{0}$
+    \item $1\vec{u} = \vec{u}$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide continues the discussion of vector properties, adding three more.  It defines the zero vector ($\vec{0}$) as a vector with all components equal to zero.  It also defines the negative of a vector ($-\vec{u}$) as the vector with each component negated.  Finally, it states that multiplying a vector by 1 results in the original vector.  These definitions and properties are crucial for understanding vector spaces and are likely to be used in subsequent linear programming discussions.  The slide number is 4 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that these properties are being introduced as a prerequisite for more advanced topics in linear programming.
+
+
+Slide 5
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\begin{document}
+
+\section*{Linear Combination and Span}
+
+\noindent
+\textbf{7.} Given $\mathcal{L} = \{\vec{u}_1, \vec{u}_2, ..., \vec{u}_k\} \subseteq R^n$.
+\newline
+\noindent
+A vector $\vec{v} \in R^n$ is said to be a linear combination of $\mathcal{L}$ if there are scalars $c_1, c_2, ..., c_k$ such that
+\newline
+\noindent
+$\vec{v} = c_1 \vec{u}_1 + c_2 \vec{u}_2 + ... + c_k \vec{u}_k$
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[->] (-2,0) -- (4,0) node[right] {$x$};
+\draw[->] (0,-2) -- (0,4) node[above] {$y$};
+\draw[->, thick, red] (0,0) -- (2,2) node[right] {$\vec{v}$};
+\draw[->, thick, black] (0,0) -- (1,0) node[below] {$\vec{u}_1$};
+\draw[->, thick, black] (0,0) -- (0,1) node[left] {$\vec{u}_2$};
+\draw[->, thick, black] (0,0) -- (1,1) node[right] {$\vec{u}_1 + \vec{u}_2$};
+\draw[->, thick, black] (1,0) -- (2,1) node[right] {$c_1 \vec{u}_1$};
+\draw[->, thick, black] (0,1) -- (2,1) node[right] {$c_2 \vec{u}_2$};
+\node[below left] at (0,0) {$(0,0)$};
+\end{tikzpicture}
+\end{center}
+
+\end{document}
+
+--- Description ---
+
+This slide introduces the concepts of linear combinations and spans of vectors.  It defines a linear combination of vectors from a set $\mathcal{L}$ as a vector $\vec{v}$ that can be expressed as a sum of scalar multiples of the vectors in $\mathcal{L}$.  The example shows a 2-dimensional case where $\vec{v}$ is a linear combination of $\vec{u}_1$ and $\vec{u}_2$.  The figure visually represents this combination.  The red arrow represents $\vec{v}$, and the black arrows represent $\vec{u}_1$ and $\vec{u}_2$.  The slide number is 5 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that these concepts are being introduced as a prerequisite for more advanced topics in linear programming, potentially related to the representation and manipulation of constraints.
+
+
+Slide 6
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{Linear Combination and Span}
+
+\noindent
+\textbf{8.} Given $\mathcal{L} = \{\vec{u}_1, \vec{u}_2, ..., \vec{u}_k\} \subseteq R^n$.
+\newline
+\noindent
+Span$\{\vec{u}_1, \vec{u}_2, ..., \vec{u}_k\}$ (or Simply Span($\mathcal{L}$))
+\newline
+\noindent
+= \{the collection of all the possible lin. comb. of the $\vec{u}_1, \vec{u}_2, ..., \vec{u}_k\}$
+\newline
+\noindent
+= $\{\vec{v} : \vec{v} = c_1 \vec{u}_1 + c_2 \vec{u}_2 + ... + c_k \vec{u}_k\}$
+
+\end{document}
+
+--- Description ---
+
+This slide defines the span of a set of vectors.  It states that the span of a set $\mathcal{L}$ of vectors is the set of all possible linear combinations of those vectors.  This is a crucial concept in linear algebra and is likely to be used in subsequent linear programming discussions.  The slide number is 6 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that the span is being introduced as a way to describe the set of all vectors that can be reached by linear combinations of a given set of vectors, which is relevant to the concept of feasible regions in linear programming.
+
+
+Slide 7
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{Linear Combination and Span}
+
+Given $\mathcal{L} = \{\vec{u}_1, \vec{u}_2, ..., \vec{u}_k\} \subseteq R^n$.
+
+\textbf{Main Question:}
+\newline
+Given a vector $\vec{v} \in R^n$, determine if $\vec{v} \in Span\{\vec{u}_1, ..., \vec{u}_k\}$.
+\newline
+Find $c_1, c_2, ..., c_k$ such that
+\newline
+$\vec{v} = c_1 \vec{u}_1 + c_2 \vec{u}_2 + ... + c_k \vec{u}_k$
+
+\end{document}
+
+--- Description ---
+
+This slide poses a key question in linear algebra and likely linear programming.  It asks how to determine if a given vector $\vec{v}$ is within the span of a set of vectors $\mathcal{L}$.  The question is framed as finding the coefficients ($c_1, c_2, ..., c_k$) that, when multiplied by the vectors in $\mathcal{L}$, sum to the given vector $\vec{v}$.  The slide number is 7 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a crucial step in determining if a vector satisfies certain constraints or belongs to a feasible region in a linear programming problem.
+
+
+Slide 8
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+$V$ is called a vector space as long as you can define vector addition and scalar mult.
+such that properties 1 - 8 hold.
+
+\begin{enumerate}
+    \item $\vec{u} + \vec{v} = \vec{v} + \vec{u}$
+    \item $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$
+    \item $\alpha (\beta \vec{u}) = (\alpha \beta) \vec{u}$
+    \item $\alpha (\vec{u} + \vec{v}) = \alpha \vec{u} + \alpha \vec{v}$
+    \item $(\alpha + \beta) \vec{u} = \alpha \vec{u} + \beta \vec{u}$
+    \item There is $\vec{0}$ such that $\vec{0} + \vec{u} = \vec{u}$
+    \item For each $\vec{u}$, there is $-\vec{u}$ such that $\vec{u} + (-\vec{u}) = \vec{0}$
+    \item $1\vec{u} = \vec{u}$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide defines a vector space, $V$.  It lists the eight defining properties that must hold for a set of vectors to be considered a vector space.  These properties are fundamental to linear algebra and are likely to be used in subsequent linear programming discussions.  The slide number is 8 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a review or a formalization of the concepts introduced in previous slides, providing a more general framework for the vector operations and properties that will be used in linear programming problems.
+
+
+Slide 9
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+$V$ is called a vector space as long as you can define vector addition and scalar mult.
+such that properties 1 - 8 hold.
+
+\textbf{Important points not to be missed}
+\newline
+You need to make sure that
+\newline
+$\vec{u} + \vec{v} \in V$ and $\alpha \vec{u} \in V$
+
+\end{document}
+
+--- Description ---
+
+This slide emphasizes crucial aspects of vector spaces.  It highlights the requirement that the sum of two vectors ($\vec{u} + \vec{v}$) and the result of multiplying a vector by a scalar ($\alpha \vec{u}$) must also be elements of the vector space $V$.  This is a fundamental condition for a set of vectors to form a vector space.  The slide number is 9 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a reminder of the necessary conditions for the vector operations to be well-defined within the context of a linear programming problem.
+
+
+Slide 10
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \item $P_n = \{polynomials \ of \ degree \ at \ most \ n\}$
+    \newline
+    = $\{p(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n\}$
+    \newline
+    $p_1(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n$
+    \newline
+    $p_2(x) = b_0 + b_1 x + b_2 x^2 + ... + b_n x^n$
+    \newline
+    $(p_1 + p_2)(x) = (a_0 + b_0) + (a_1 + b_1) x + ... + (a_n + b_n) x^n$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide provides examples of vector spaces.  It specifically shows $P_n$, the set of polynomials of degree at most $n$.  The example demonstrates how vector addition works in this context.  The sum of two polynomials $p_1(x)$ and $p_2(x)$ results in a new polynomial $(p_1 + p_2)(x)$ where the coefficients of corresponding powers of $x$ are added.  The slide number is 10 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this example is illustrating how polynomial functions can be treated as vectors, with addition and scalar multiplication defined in a way that satisfies the properties of a vector space.  This is likely a prelude to applying these concepts to linear programming problems involving polynomial functions.
+
+
+Slide 11
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \item $P_n = \{polynomials \ of \ degree \ at \ most \ n\}$
+    \newline
+    = $\{p(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n\}$
+    \newline
+    Scalar multiplication: $\alpha p(x) = \alpha a_0 + \alpha a_1 x + \alpha a_2 x^2 + ... + \alpha a_n x^n$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide continues the examples of vector spaces, focusing on the set of polynomials $P_n$.  It explicitly defines scalar multiplication for polynomials in $P_n$.  The scalar $\alpha$ multiplies each coefficient of the polynomial $p(x)$.  The slide number is 11 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a continuation of the discussion of vector spaces and their properties, likely to be used in subsequent linear programming problems involving polynomials.  The emphasis on scalar multiplication is crucial for understanding how to manipulate and combine polynomial functions within the context of linear programming.
+
+
+Slide 12
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \setcounter{enumi}{1}
+    \item $F = \{functions \ f: R \rightarrow R\}$
+    \newline
+    $(f+g)(x) = f(x) + g(x)$
+    \newline
+    $(\alpha f)(x) = \alpha f(x)$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide provides another example of a vector space, $F$.  It defines a vector space consisting of all functions $f$ that map real numbers to real numbers.  The slide defines vector addition and scalar multiplication for these functions.  The sum of two functions, $f(x)$ and $g(x)$, is a new function $(f+g)(x)$ where the output at each input $x$ is the sum of the outputs of $f(x)$ and $g(x)$.  Similarly, scalar multiplication of a function $f(x)$ by a scalar $\alpha$ results in a new function $(\alpha f)(x)$ where the output at each input $x$ is the product of the scalar $\alpha$ and the output of $f(x)$.  The slide number is 12 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this example is illustrating how functions can be treated as vectors, with addition and scalar multiplication defined in a way that satisfies the properties of a vector space.  This is likely a prelude to applying these concepts to linear programming problems involving functions.
+
+
+Slide 13
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item $M_{m \times n} = \{m \times n \ matrices \ \{(a_{ij})\}$
+    \newline
+    = $\left\{ A = \begin{pmatrix} a_{11} & a_{12} & ... & a_{1n} \\ a_{21} & a_{22} & ... & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & ... & a_{mn} \end{pmatrix} \right\}$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide provides an example of a vector space, $M_{m \times n}$, which represents the set of all $m \times n$ matrices.  The notation $\{(a_{ij})\}$ indicates that the elements of the matrix are indexed by row and column, $a_{ij}$ representing the element in the $i$-th row and $j$-th column.  The slide number is 13 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this example is illustrating how matrices can be treated as vectors, with addition and scalar multiplication defined in a way that satisfies the properties of a vector space.  This is likely a prelude to applying these concepts to linear programming problems involving matrices, potentially related to systems of linear equations or constraints.
+
+
+Slide 14
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item $M_{m \times n} = \{m \times n \ matrices \ \{(a_{ij})\}$
+    \newline
+    = $\left\{ A = \begin{pmatrix} a_{11} & a_{12} & ... & a_{1n} \\ a_{21} & a_{22} & ... & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & ... & a_{mn} \end{pmatrix} \right\}$
+    \newline
+    Vector addition: $(A+B) = (a_{ij}) + (b_{ij}) = (a_{ij} + b_{ij})$
+    \newline
+    Scalar multiplication: $\alpha A = \alpha (a_{ij}) = (\alpha a_{ij})$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide continues the examples of vector spaces, focusing on the set of $m \times n$ matrices, $M_{m \times n}$.  It defines vector addition and scalar multiplication for matrices.  The sum of two matrices $A$ and $B$ is a new matrix where each element is the sum of the corresponding elements in $A$ and $B$.  Similarly, scalar multiplication of a matrix $A$ by a scalar $\alpha$ results in a new matrix where each element is the product of the scalar $\alpha$ and the corresponding element in $A$.  The slide number is 14 of 14, indicating the end of the presentation.  The context suggests that this example is illustrating how matrices can be treated as vectors, with addition and scalar multiplication defined in a way that satisfies the properties of a vector space.  This is likely the final example in a series of examples of vector spaces, potentially to reinforce the concept of vector spaces and their properties.

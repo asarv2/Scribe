@@ -1,0 +1,59 @@
+{
+    "Key Terms": {
+        "linear programming": [
+            1
+        ],
+        "slack variable": [
+            1
+        ],
+        "feasible region": [
+            2
+        ],
+        "vertex": [
+            2
+        ],
+        "basic variable": [
+            3
+        ],
+        "non-basic variable": [
+            3
+        ],
+        "pivot operation": [
+            3
+        ],
+        "dictionary": [
+            3
+        ],
+        "auxiliary problem": [
+            3
+        ]
+    },
+    "Problem Types": {
+        "linear programming": [
+            1
+        ],
+        "finding an initial feasible solution": [
+            2
+        ],
+        "handling infeasible origins": [
+            2
+        ],
+        "optimizing in higher dimensions": [
+            2
+        ],
+        "using dictionaries to represent solutions": [
+            2
+        ]
+    },
+    "Algorithm Solutions": {
+        "linear programming": [
+            1
+        ],
+        "simplex method": [
+            1
+        ],
+        "auxiliary problem": [
+            1
+        ]
+    }
+}

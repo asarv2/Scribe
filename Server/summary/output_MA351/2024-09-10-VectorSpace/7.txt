@@ -1,0 +1,23 @@
+Slide 7
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{Linear Combination and Span}
+
+Given $\mathcal{L} = \{\vec{u}_1, \vec{u}_2, ..., \vec{u}_k\} \subseteq R^n$.
+
+\textbf{Main Question:}
+\newline
+Given a vector $\vec{v} \in R^n$, determine if $\vec{v} \in Span\{\vec{u}_1, ..., \vec{u}_k\}$.
+\newline
+Find $c_1, c_2, ..., c_k$ such that
+\newline
+$\vec{v} = c_1 \vec{u}_1 + c_2 \vec{u}_2 + ... + c_k \vec{u}_k$
+
+\end{document}
+
+--- Description ---
+
+This slide poses a key question in linear algebra and likely linear programming.  It asks how to determine if a given vector $\vec{v}$ is within the span of a set of vectors $\mathcal{L}$.  The question is framed as finding the coefficients ($c_1, c_2, ..., c_k$) that, when multiplied by the vectors in $\mathcal{L}$, sum to the given vector $\vec{v}$.  The slide number is 7 of 14, indicating its place in a sequence of linear programming lectures.  The context suggests that this is a crucial step in determining if a vector satisfies certain constraints or belongs to a feasible region in a linear programming problem.

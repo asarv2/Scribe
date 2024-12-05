@@ -1,0 +1,216 @@
+
+--- Key Terms ---
+linear programming
+slack variable
+feasible region
+vertex
+basic variable
+non-basic variable
+pivot operation
+dictionary
+auxiliary problem
+largest-coefficient rule
+largest-increase rule
+klee-minty example
+bland's rule
+lexicographic method
+smoothed complexity
+interior-point method
+primal problem
+dual problem
+weak duality
+strong duality
+complementary slackness
+negative transpose property
+lagrange multiplier
+lagrangian function
+weak duality theorem
+strong duality theorem
+diet problem
+\textbf{standard form }
+\textbf{augmented matrix }
+\textbf{basic variables }
+\textbf{non-basic variables }
+\textbf{simplex tableau}
+\textbf{pivot operation }
+\textbf{complementary variables }
+\textbf{optimal solution }
+\textbf{feasible region }
+sensitivity analysis
+parametric analysis
+reduced costs
+range of optimality
+range of feasibility
+shadow price
+dual simplex method
+dual based phase i algorithm
+$\xi$
+entering variable
+leaving variable
+elementary matrix
+farkas lemma
+fredholm alternatives
+integer programming
+relaxed problem
+branch-and-bound
+enumeration tree
+pruning
+gomory cuts
+network flow
+nodes
+arcs
+$b_i$
+$x_{ij}$
+$c_{ij}$
+balanced equation
+incidence matrix
+root node
+tree solution
+spanning tree
+reduced cost
+network simplex method 
+primal flow
+dual flow
+entering arc
+leaving arc
+dual slack
+cycle
+two disconnected trees
+subtrees $\mathcal{i}$ and $\mathcal{ii}$
+$y_i$
+$z_{ij}$
+$\tilde{b}$, $\tilde{x}$, $\tilde{b}$
+$\tilde{y}_i$
+$\tilde{z}_{ij}$
+$\mu$
+leaf node
+transportation problem
+dummy node
+upper bounded transshipment problem
+shortest path problem
+bellman's equation
+dijkstra's algorithm
+max flow
+min cut
+max-flow min-cut theorem
+augmenting path
+ford-fulkerson algorithm
+cut set $c$
+capacity of a cut $k$
+$y_i + c_{ij} = y_j$
+graphical method
+--- Problem Types ---
+linear programming
+finding an initial feasible solution
+handling infeasible origins
+optimizing in higher dimensions
+using dictionaries to represent solutions
+worst-case analysis of the simplex method
+impact of pivot rules on simplex method efficiency
+empirical analysis of simplex method performance
+theoretical bounds on simplex method iterations
+smoothed complexity of the simplex method
+existence of polynomial-time algorithms for linear programming
+verifying optimality using complementary slackness
+demonstrating the negative transpose property in simplex iterations
+proving the strong duality theorem
+analyzing the four possible outcomes of primal and dual problems
+relating primal and dual objective functions
+formulating the lagrangian for equality constraints
+formulating the lagrangian for inequality and equality constraints
+establishing weak duality
+establishing strong duality
+deriving the dual problem from the lagrangian
+applying complementary slackness
+formulating the diet problem as a linear program
+formulating the dual of the diet problem
+representing the diet problem using tables
+transforming the diet problem into a pill-selling problem
+representing linear programs in matrix notation
+partitioning variables into basic and non-basic sets
+expressing the objective function and constraints using basic and non-basic variables
+updating the simplex tableau using matrix operations
+illustrating complementary slackness through variable relationships
+solving a linear program using the simplex method
+solving a linear program graphically
+determining the range of objective function coefficient changes that maintain optimality
+determining the range of constraint value changes that maintain optimality
+deriving the dual problem from the primal problem
+handling unrestricted variables in linear programming
+proving weak duality
+sensitivity analysis
+solving linear programs using the simplex method and matrix operations
+deriving and utilizing the dual problem
+determining the existence of a non-negative solution to $ax = b$
+determining the existence of a solution to $ax \le b$
+establishing conditions for the non-existence of a solution to $ax \le b$
+integer programming
+solving integer programs using branch and bound
+applying gomory cuts
+formulating network flow problems as linear programs
+analyzing the incidence matrix of a network
+deriving and utilizing the dual problem for network flows
+finding tree solutions and verifying optimality
+applying the primal simplex method to network flows
+finding a spanning tree in a network
+finding a primal feasible flow
+finding a dual feasible solution
+selecting entering and leaving arcs in the primal network simplex method
+selecting the entering arc in the dual network simplex method
+updating primal and dual flows
+handling infeasible primal or dual solutions
+finding an optimal solution using primal and dual network simplex methods
+developing a two-phased network simplex method
+developing a parametric self-dual network simplex method
+formulating transportation problems with inequality constraints
+formulating general network flow problems with inequality constraints
+solving the upper bounded transshipment problem
+solving the shortest path problem using linear programming
+solving the shortest path problem using bellman's equation
+solving the shortest path problem using dijkstra's algorithm
+\textbf{finding the maximum flow in a network}
+\textbf{formulating the maximum flow problem as a linear program}
+\textbf{proving the max-flow min-cut theorem using linear programming}
+finding fair prices in network simplex
+identifying profitable shipping opportunities for competitors
+adjusting shipments to maintain feasibility
+\textbf{formulating the dual problem}
+\textbf{applying complementary slackness}
+\textbf{solving linear programs graphically}
+\textbf{performing sensitivity analysis on objective function coefficients}
+\textbf{performing sensitivity analysis on constraint values}
+\textbf{representing linear programs in matrix notation}
+--- Algorithm Solutions ---
+linear programming
+simplex method
+auxiliary problem
+largest-coefficient rule
+largest-increase rule
+bland's rule
+randomized pivot rule
+weak duality
+strong duality
+complementary slackness
+lagrangian function
+primal problem 
+dual problem 
+simplex method in matrix form
+sensitivity analysis of objective function coefficients
+sensitivity analysis of constraint values
+derivation of the dual problem
+reformulation of primal problem with unrestricted variables
+sensitivity analysis
+dual simplex method
+dual based phase i algorithm
+farkas lemma
+branch and bound
+gomory cuts
+network flow problem formulation
+primal simplex method for network flows
+finding a spanning tree basis
+dual variable calculation from spanning tree
+primal network simplex
+dual network simplex
+bellman's equation
+dijkstra's algorithm
+graphical method

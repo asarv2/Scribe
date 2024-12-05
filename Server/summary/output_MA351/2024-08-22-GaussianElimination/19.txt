@@ -1,0 +1,33 @@
+Slide 19
+
+Three Scenarios of Solving Linear Systems
+
+(1) Unique Solution (only pivot variables, i.e. no free variables, and in RREF, no. of non-zero rows in the coefficient matrix is the same as the no of non-zero rows in the augmented matrix.)
+
+$\begin{bmatrix}
+1 & * & * & | & * \\
+0 & 1 & * & | & * \\
+0 & 0 & 1 & | & *
+\end{bmatrix}$
+
+(2) Infinitely many solutions (some free variables, and in RREF, no. of non-zero rows in the coefficient matrix is less than the no of non-zero rows in the augmented matrix.)
+
+$\begin{bmatrix}
+1 & * & * & | & * \\
+0 & 1 & * & | & * \\
+0 & 0 & 0 & | & *
+\end{bmatrix}$
+
+(3) No solution (inconsistent system, and in RREF, no. of non-zero rows in the coefficient matrix is less than the no of non-zero rows in the augmented matrix.)
+
+$\begin{bmatrix}
+1 & * & * & | & * \\
+0 & 1 & * & | & * \\
+0 & 0 & 0 & | & *
+\end{bmatrix}$
+
+\textit{Description:}
+
+This slide summarizes the three possible outcomes when solving a system of linear equations using Gaussian elimination, specifically highlighting the Reduced Row Echelon Form (RREF).  The slide categorizes the outcomes based on the presence or absence of free variables and the relationship between the number of non-zero rows in the coefficient matrix and the augmented matrix.  A unique solution occurs when there are no free variables, and the number of non-zero rows in the coefficient matrix matches the number of non-zero rows in the augmented matrix.  Infinitely many solutions arise when there are free variables, and the number of non-zero rows in the coefficient matrix is less than the number of non-zero rows in the augmented matrix.  An inconsistent system, with no solution, is indicated by a situation where there are more non-zero rows in the augmented matrix than in the coefficient matrix.  The asterisks (*) represent arbitrary numbers.  This slide is part of a larger presentation likely covering Gaussian elimination and its application to linear programming problems.  The different scenarios are crucial for understanding the possible outcomes when solving systems of linear equations.
+
+

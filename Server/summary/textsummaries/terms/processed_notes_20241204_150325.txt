@@ -1,0 +1,53 @@
+
+--- Key Terms ---
+linear programming
+slack variable
+feasible region
+vertex
+basic variable
+non-basic variable
+pivot operation
+dictionary
+auxiliary problem
+largest-coefficient rule
+largest-increase rule
+klee-minty example
+bland's rule
+lexicographic method
+randomized pivot rule
+smoothed complexity
+interior method
+primal problem
+dual problem
+weak duality
+negative transpose property
+strong duality theorem
+complementary slackness
+--- Problem Types ---
+linear programming
+finding an initial feasible solution
+handling infeasible origins
+optimizing in higher dimensions
+using dictionaries to represent solutions
+worst-case analysis of the simplex method
+impact of pivot rules on simplex method efficiency
+empirical analysis of simplex method performance
+theoretical bounds on simplex method iterations
+smoothed complexity of the simplex method
+existence of polynomial-time algorithms for linear programming
+verifying optimality using complementary slackness
+demonstrating the negative transpose property in simplex iterations
+proving the strong duality theorem
+analyzing the four possible outcomes of primal and dual problems
+relating primal and dual objective functions
+--- Algorithm Solutions ---
+linear programming
+simplex method
+auxiliary problem
+largest-coefficient rule
+largest-increase rule
+bland's rule
+randomized pivot rule
+weak duality
+strong duality
+complementary slackness

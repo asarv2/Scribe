@@ -1,0 +1,11 @@
+Slide 10
+
+$P_n = A^n P_0 = \begin{bmatrix} 0.7 & -1 \\ 1 & 0 \end{bmatrix}^n \begin{bmatrix} 38 \\ 62 \end{bmatrix}$
+
+$= \frac{1}{1.7} \begin{bmatrix} 70 - 5.4(0.83)^n \\ 100 + 5.4(0.83)^n \end{bmatrix} = \frac{1}{1.7} \begin{bmatrix} 70 \\ 100 \end{bmatrix}$
+
+$\lim_{n \to \infty} P_n = \lim_{n \to \infty} A^n P_0 = \frac{1}{1.7} \begin{bmatrix} 70 \\ 100 \end{bmatrix} = \begin{bmatrix} 41.18 \\ 58.82 \end{bmatrix}$
+
+\textbf{Description:}
+
+This slide concludes the Markov chain analysis by calculating the limiting population distribution.  It substitutes the previously calculated eigenvector and eigenvalue into the formula for $P_n$ to find the long-term population distribution.  The result, $\begin{bmatrix} 41.18 \\ 58.82 \end{bmatrix}$, represents the steady-state distribution of the population across the two states (A and B).  The slide shows the final calculation and the resulting steady-state probabilities.  The notation is consistent with linear algebra, using matrices and vectors.  The slide likely follows a lecture on Markov chains and linear algebra, where diagonalization is a key concept.

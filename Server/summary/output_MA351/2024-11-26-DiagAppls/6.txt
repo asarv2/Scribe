@@ -1,0 +1,21 @@
+Slide 6
+
+Application of Diagonalization
+
+Computation of $A^k$
+
+$A = QD Q^{-1}$
+
+$A^2 = QD^2 Q^{-1}$
+
+$A^3 = QD^3 Q^{-1}$
+
+$A^k = QD^k Q^{-1}$
+
+$D^k = \begin{bmatrix} \lambda_1^k & 0 & \dots & 0 \\ 0 & \lambda_2^k & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & \lambda_n^k \end{bmatrix}$
+
+$A^k b = Q D^k Q^{-1} b = Q \begin{bmatrix} \lambda_1^k & 0 & \dots & 0 \\ 0 & \lambda_2^k & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & \lambda_n^k \end{bmatrix} Q^{-1} b = \begin{bmatrix} x_1 & x_2 & \dots & x_n \end{bmatrix} \begin{bmatrix} \lambda_1^k \\ \lambda_2^k \\ \vdots \\ \lambda_n^k \end{bmatrix}$
+
+\textbf{Description:}
+
+This slide demonstrates how diagonalization can be used to efficiently compute powers of a matrix $A$, denoted as $A^k$.  It shows that if a matrix $A$ can be diagonalized as $A = QD Q^{-1}$, then the $k$th power of $A$ is given by $A^k = QD^k Q^{-1}$, where $D$ is the diagonal matrix of eigenvalues of $A$.  The slide also shows how to compute $D^k$, which is simply raising each diagonal element of $D$ to the power of $k$.  This method is significantly more efficient than repeatedly multiplying the matrix by itself.  The notation is consistent with linear algebra, using matrices and vectors.  The slide likely follows a lecture on linear algebra, where diagonalization is a key concept.

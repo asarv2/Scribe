@@ -1,0 +1,21 @@
+
+--- Key Terms ---
+linear programming
+slack variable
+feasible region
+vertex
+basic variable
+non-basic variable
+pivot operation
+dictionary
+auxiliary problem
+--- Problem Types ---
+linear programming
+finding an initial feasible solution
+handling infeasible origins
+optimizing in higher dimensions
+using dictionaries to represent solutions
+--- Algorithm Solutions ---
+linear programming
+simplex method
+auxiliary problem

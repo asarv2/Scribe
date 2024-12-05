@@ -1,0 +1,18 @@
+
+--- Key Terms ---
+linear programming
+linear programming fundamentals
+simplex method algorithms
+advanced linear programming techniques
+duality theory
+negative transpose property
+--- Problem Types ---
+linear programming
+simplex method analysis
+simplex method mechanics
+linear programming theory
+--- Algorithm Solutions ---
+linear programming
+linear programming fundamentals
+simplex method variants
+duality theory

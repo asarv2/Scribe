@@ -1,0 +1,26 @@
+Slide 14
+
+\documentclass{article}
+
+\begin{document}
+
+\section*{(General) Vector Space $V$}
+
+\textbf{Examples of (General) Vector Space}
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item $M_{m \times n} = \{m \times n \ matrices \ \{(a_{ij})\}$
+    \newline
+    = $\left\{ A = \begin{pmatrix} a_{11} & a_{12} & ... & a_{1n} \\ a_{21} & a_{22} & ... & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & ... & a_{mn} \end{pmatrix} \right\}$
+    \newline
+    Vector addition: $(A+B) = (a_{ij}) + (b_{ij}) = (a_{ij} + b_{ij})$
+    \newline
+    Scalar multiplication: $\alpha A = \alpha (a_{ij}) = (\alpha a_{ij})$
+\end{enumerate}
+
+\end{document}
+
+--- Description ---
+
+This slide continues the examples of vector spaces, focusing on the set of $m \times n$ matrices, $M_{m \times n}$.  It defines vector addition and scalar multiplication for matrices.  The sum of two matrices $A$ and $B$ is a new matrix where each element is the sum of the corresponding elements in $A$ and $B$.  Similarly, scalar multiplication of a matrix $A$ by a scalar $\alpha$ results in a new matrix where each element is the product of the scalar $\alpha$ and the corresponding element in $A$.  The slide number is 14 of 14, indicating the end of the presentation.  The context suggests that this example is illustrating how matrices can be treated as vectors, with addition and scalar multiplication defined in a way that satisfies the properties of a vector space.  This is likely the final example in a series of examples of vector spaces, potentially to reinforce the concept of vector spaces and their properties.

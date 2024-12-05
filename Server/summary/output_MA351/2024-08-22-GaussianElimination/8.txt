@@ -1,0 +1,18 @@
+Slide 8
+
+Row Echelon Form (REF) (to facilitate backward substitution)
+
+$X_1$ is eliminated
+
+$\begin{bmatrix}
+1 & * & \dots & * & | & * \\
+0 & 1 & \dots & * & | & * \\
+\vdots & \vdots & \ddots & \vdots & | & \vdots \\
+0 & 0 & \dots & 1 & | & *
+\end{bmatrix}$
+
+\textit{Upper triangular matrix}
+
+\textit{Description:}
+
+This slide continues the process of transforming a matrix into Row Echelon Form (REF).  It shows a matrix in a form where the leading entry in each row is 1, and all elements below the leading entry in each column are 0.  The slide explicitly shows the elimination of $X_1$ and $X_2$.  The asterisk (*) represents arbitrary numbers.  The resulting matrix is an upper triangular matrix, which is a crucial step in Gaussian elimination.  This form is essential for backward substitution, a method used to solve systems of linear equations.  The slide is part of a larger presentation likely covering Gaussian elimination and its application to linear programming problems.  The visual representation of the matrix in REF is a key concept for understanding the algorithm.  The red arrows and circled 1s highlight the elements being focused on in the transformation.

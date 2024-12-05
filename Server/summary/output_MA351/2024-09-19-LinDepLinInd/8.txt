@@ -1,0 +1,25 @@
+Slide 8
+
+How to Eliminate (All the) Redundant Vectors
+
+Given a list $\ell = \{u_1, u_2, \dots, u_k\}$
+
+$\text{1) Consider solving for } c_1, c_2, \dots, c_k$
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+$\text{2) Throw away those vectors with the free}$
+$\text{variables } c_i$'s.
+
+$\text{3) The remaining vectors with the pivot}$
+$\text{variables } c_i$'s are linearly independent.
+
+
+\textbf{Description:}
+
+This slide provides a procedure for eliminating redundant vectors from a set.  It outlines a three-step process:
+
+1. **Solve for coefficients:**  First, solve the equation $c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$ for the coefficients $c_1, c_2, \dots, c_k$.
+
+2. **Discard vectors with free variables:**  Identify the vectors associated with the free variables ($c_i$'s) in the solution and discard them.  These vectors are redundant because they can be expressed as linear combinations of the remaining vectors.
+
+3. **Remaining vectors are linearly independent:** The remaining vectors, corresponding to the pivot variables, are linearly independent.  This reduced set of vectors spans the same vector space as the original set, but without the redundancy.  This process is crucial in linear programming for simplifying the problem by removing redundant constraints or variables.

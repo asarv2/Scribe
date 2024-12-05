@@ -1,0 +1,269 @@
+
+--- Key Terms ---
+linear programming
+slack variable
+feasible region
+vertex
+basic variable
+non-basic variable
+pivot operation
+dictionary
+auxiliary problem
+largest-coefficient rule
+largest-increase rule
+klee-minty example
+bland's rule
+lexicographic method
+smoothed complexity
+interior-point method
+primal problem
+dual problem
+weak duality
+strong duality
+negative transpose property
+complementary slackness
+lagrange multiplier
+lagrangian function
+weak duality theorem
+strong duality theorem
+diet problem
+\textbf{standard form }
+\textbf{simplex iterates}
+\textbf{augmented matrix}
+\textbf{basic variables}
+\textbf{non-basic variables}
+\textbf{simplex tableau}
+\textbf{complementary slackness}
+\textbf{optimal solution}
+shadow price
+reduced costs
+complementary slackness conditions
+sensitivity analysis
+basis matrix 
+non-basis matrix 
+simplex tableau
+dual simplex method
+dual based phase i algorithm
+entering variable
+leaving variable
+elementary matrix
+convex set
+convex combination
+convex hull
+caratheodory theorem
+separation theorem
+farkas' lemma
+$l^2$ regression 
+$l^1$ regression
+$l^\infty$ regression
+linear separability
+maximum margin classifier
+support vector machine 
+support vectors
+lagrangian formulation of svm
+geometric interpretation of svm
+svm optimization as a qp problem
+maximum inscribed circle in a convex polyhedron
+distance of a point from a hyperplane
+smallest ball problem
+monthly demands
+average demand
+production level
+surplus
+cost of changing production
+cost of storage
+required labor hours
+regular employees
+temporary employees
+portfolio selection
+annual return
+proportion of investment
+average return
+risk
+fluctuation
+variance
+covariance
+smallest enclosing ball problem
+maximum weight matching
+machine scheduling
+knapsack problem
+cutting stock problem
+sparse solutions of linear system
+$l_1$ norm
+support
+integer programming
+relaxed problem
+branch-and-bound
+enumeration tree
+pruning
+gomory cuts
+network flow
+incidence matrix
+balanced equation
+root node
+tree solution
+spanning tree
+reduced cost
+network
+primal flow
+dual flow
+entering arc
+leaving arc
+dual slack
+two disconnected trees
+reconnecting arc
+transportation problem
+dummy node
+upper bounded transshipment problem
+shortest path problem
+bellman's equation
+dijkstra's algorithm
+max flow
+min cut
+max-flow min-cut theorem
+cut
+cut capacity
+augmenting path
+ford-fulkerson algorithm
+fair prices
+--- Problem Types ---
+linear programming
+finding an initial feasible solution
+handling infeasible origins
+optimizing in higher dimensions
+using dictionaries to represent solutions
+worst-case analysis of the simplex method
+impact of pivot rules on simplex method efficiency
+empirical analysis of simplex method performance
+theoretical bounds on simplex method iterations
+smoothed complexity of the simplex method
+existence of polynomial-time algorithms for linear programming
+verifying optimality using complementary slackness
+demonstrating the negative transpose property in simplex iterations
+proving strong duality
+analyzing the four possible outcomes of primal and dual problems
+relating primal and dual objective functions
+formulating the lagrangian for equality constraints
+formulating the lagrangian for inequality and equality constraints
+establishing weak duality
+establishing strong duality
+deriving the dual problem from the lagrangian
+applying complementary slackness
+formulating the diet problem as a linear program
+formulating the dual of the diet problem
+representing the diet problem using tables
+representing linear programs in matrix notation
+partitioning variables into basic and non-basic sets
+expressing the objective function in terms of basic and non-basic variables
+updating the simplex tableau using matrix operations
+understanding complementary slackness in the simplex method
+solving a linear program graphically
+illustrating simplex iterations with a numerical example
+deriving the dual problem from the primal problem
+handling unrestricted variables in linear programming
+proving weak duality
+sensitivity analysis
+applying the basis and non-basis method
+deriving and utilizing the dual problem
+\textbf{solving primal and dual problems simultaneously}
+\textbf{applying the dual simplex method}
+\textbf{implementing a dual based phase i algorithm}
+\textbf{representing the simplex method in matrix form}
+proving the equivalence of a convex set and its convex combinations
+defining and proving properties of the convex hull
+proving the caratheodory theorem
+proving the separation theorem
+proving farkas' lemma
+regression
+binary classification
+maximum margin classifier
+support vector machine 
+maximum inscribed circle in a convex polyhedron
+smallest ball problem
+production planning
+workforce planning
+portfolio selection 
+maximum weight matching
+machine scheduling
+knapsack problem
+cutting stock problem
+sparse solutions of linear systems
+determining the existence of a non-negative solution to $ax = b$
+determining the existence of a solution to $ax \le b$
+integer programming
+solving integer programs using branch and bound
+solving integer programs using gomory cuts
+formulating network flow problems as linear programs
+analyzing the incidence matrix of a network
+relating spanning trees to bases in network flow problems
+applying the primal simplex method to network flow problems
+finding a primal feasible spanning tree flow
+finding a dual feasible spanning tree flow
+selecting entering and leaving arcs in the primal network simplex method
+updating primal and dual flows in the primal network simplex method
+selecting the entering arc in the dual network simplex method
+updating dual variables in the dual network simplex method
+developing two-phased network simplex methods
+developing a parametric self-dual network simplex method
+network flow problems with inequality constraints
+upper bounded transshipment problem
+shortest path problem
+\textbf{finding the maximum flow in a network}
+\textbf{formulating the maximum flow problem as a linear program}
+\textbf{proving the max-flow min-cut theorem using linear programming}
+\textbf{implementing the ford-fulkerson algorithm}
+finding fair prices in network simplex
+identifying profitable shipping opportunities for competitors
+adjusting shipments to maintain feasibility
+--- Algorithm Solutions ---
+linear programming
+simplex method
+auxiliary problem
+largest-coefficient rule
+largest-increase rule
+bland's rule
+randomized pivot rule
+weak duality
+strong duality
+complementary slackness
+lagrangian function
+primal problem 
+dual problem 
+simplex method in matrix form
+dual problem derivation using lagrangian multipliers
+weak duality theorem
+sensitivity analysis
+shadow price
+dual simplex method
+dual based phase i algorithm
+caratheodory's theorem
+farkas' lemma
+separation theorem
+$l^2$ regression 
+$l^1$ regression
+$l^\infty$ regression
+lagrangian formulation of svm
+svm optimization as a qp problem 
+smallest ball problem
+ice cream production planning
+workforce planning
+portfolio selection 
+maximum weight matching
+machine scheduling
+knapsack problem
+cutting stock problem
+sparse solutions of linear system
+branch and bound
+gomory cuts
+network flow problem formulation
+primal simplex method for network flows
+finding a spanning tree basis
+dual variable calculation from spanning tree
+network simplex method 
+two-phased network simplex method
+parametric self-dual network simplex method
+bellman's equation
+dijkstra's algorithm
+ford-fulkerson algorithm
+max-flow min-cut theorem
+linear programming formulation of max flow

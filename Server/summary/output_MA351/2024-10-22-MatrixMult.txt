@@ -1,0 +1,213 @@
+Slide 1
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Matrix Multiplication}
+
+$A_{mxn} \cdot X \in R^n \rightarrow AX \in R^m$
+
+\begin{equation*}
+\begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{pmatrix}
+=
+\begin{pmatrix}
+a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n \\
+a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n \\
+\vdots \\
+a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n
+\end{pmatrix}
+\end{equation*}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces matrix multiplication in the context of Linear Programming.  It shows the multiplication of a matrix $A$ (with dimensions $m \times n$) by a vector $X$ (with dimensions $n \times 1$). The result is a vector $AX$ with dimensions $m \times 1$.  The slide explicitly demonstrates how the elements of the resulting vector are calculated, showing the dot product of each row of $A$ with the vector $X$.  This is a fundamental concept in linear algebra that is crucial for understanding many linear programming algorithms.  The slide number and the fact that it's the first of eight slides suggests this is part of a larger lecture series on linear programming.
+
+
+Slide 2
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Matrix Multiplication}
+
+\textit{"Formula"}
+\begin{equation*}
+(AX)_i = \sum_{k=1}^n a_{ik} x_k
+\end{equation*}
+
+\textit{Linearity Properties}
+\begin{enumerate}
+    \item $A(\alpha X + \beta Y) = \alpha AX + \beta AY$
+    \item $(\alpha A + \beta B) X = \alpha AX + \beta BX$
+\end{enumerate}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of matrix multiplication, focusing on the linearity properties.  It defines how the $i$-th element of the resulting vector $AX$ is calculated using a summation.  The slide then presents two key linearity properties of matrix multiplication:  distributivity over vector addition (property 1) and distributivity over scalar multiplication (property 2).  These properties are fundamental to understanding how linear transformations behave under combinations of vectors and scalars.  The context suggests this is part of a larger lecture on linear programming, where matrix operations are crucial for defining and solving problems.
+
+
+Slide 3
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Composition of Linear Transformations}
+
+$R^l \xrightarrow{B_{mxl}} R^m \xrightarrow{A_{nxm}} R^n$
+$X \xrightarrow{} Y=BX \xrightarrow{} Z=AY = A(BX) = (AB)X$
+
+$Z = AY = A( \chi_1 B_1 + \chi_2 B_2 + \cdots + \chi_l B_l) = \chi_1 A B_1 + \chi_2 A B_2 + \cdots + \chi_l A B_l = \begin{bmatrix} A B_1 & A B_2 & \cdots & A B_l \end{bmatrix} \begin{bmatrix} \chi_1 \\ \chi_2 \\ \vdots \\ \chi_l \end{bmatrix}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide builds upon the previous slides by illustrating the composition of linear transformations using matrices.  It shows how applying a transformation $B$ followed by a transformation $A$ is equivalent to a single transformation $AB$.  The slide visually represents this composition with arrows indicating the flow of vectors through the transformations.  The key takeaway is that the composition of linear transformations represented by matrices $A$ and $B$ results in a new linear transformation represented by the matrix product $AB$.  The notation and the context of the slide strongly suggest this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are crucial for defining and solving problems.  The slide explicitly shows how the resulting transformation $Z$ is a linear combination of the transformed basis vectors.
+
+
+Slide 4
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Composition of Linear Transformations}
+
+$R^l \xrightarrow{B_{mxl}} R^m \xrightarrow{A_{nxm}} R^n$
+$X \xrightarrow{} Y=BX \xrightarrow{} Z=AY = A(BX) = (AB)X$
+
+$AB := [AB_1, AB_2, \dots, AB_l]$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of matrix composition.  It defines the matrix $AB$ as a collection of vectors, each being the result of multiplying matrix $A$ by the corresponding column vector $B_i$ of matrix $B$.  This is a crucial step in understanding how matrix multiplication represents the composition of linear transformations.  The notation and context strongly suggest this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are fundamental for defining and solving problems.  The slide emphasizes the relationship between the columns of the product matrix $AB$ and the columns of matrix $B$.
+
+
+Slide 5
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Matrix Multiplication}
+
+$A_{nxm} = (a_{ij})$, $B_{mxl} = (b_{ij})$
+$A_{nxm} B_{mxl} = C_{nxl}$
+
+$c_{ij} = (AB)_{ij} = \begin{pmatrix} a_{i1} & a_{i2} & \cdots & a_{im} \end{pmatrix} \begin{pmatrix} b_{1j} \\ b_{2j} \\ \vdots \\ b_{mj} \end{pmatrix} = \sum_{k=1}^m a_{ik} b_{kj}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the discussion of matrix multiplication, focusing on the calculation of elements in the resulting matrix $C = AB$.  It explicitly shows how the element $c_{ij}$ (the element in the $i$-th row and $j$-th column of the resulting matrix $C$) is computed as a dot product of the $i$-th row of matrix $A$ and the $j$-th column of matrix $B$.  The formula $\sum_{k=1}^m a_{ik} b_{kj}$ is presented, highlighting the summation over the common index $k$.  The context strongly suggests this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are fundamental for defining and solving problems.  The slide emphasizes the step-by-step calculation of matrix elements.
+
+
+Slide 6
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Properties of Matrix Multiplication}
+
+\begin{enumerate}
+    \item $A(\alpha B + \beta C) = \alpha AB + \beta AC$
+    \item $(\alpha A + \beta B) C = \alpha AC + \beta BC$
+    \item $(AB)^T = B^T A^T$
+    \item In general, $AB \neq BA$
+\end{enumerate}
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide presents the properties of matrix multiplication.  It lists four key properties:  distributivity over scalar multiplication (properties 1 and 2), the transpose property (property 3), and the non-commutativity property (property 4).  These properties are crucial for understanding how matrix operations behave and are essential for manipulating and solving linear systems, which are common in linear programming.  The context strongly suggests this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are fundamental for defining and solving problems.  The slide highlights the differences in the order of multiplication for matrices, which is a key distinction from scalar multiplication.
+
+
+Slide 7
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Properties of Matrix Multiplication}
+
+\textit{(5) Identity Matrix (Square)}
+\begin{equation*}
+I_n = \begin{pmatrix} 1 & 0 & \cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & 1 \end{pmatrix}_{nxn}
+\end{equation*}
+$I_1 = (1)$, $I_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$, $I_3 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}$
+
+$I_n A_{nxm} = A_{nxm}$, $I_m A_{nxm} = A_{nxm}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide introduces the identity matrix, a crucial concept in linear algebra.  It defines the identity matrix $I_n$ as a square matrix with 1s on the main diagonal and 0s elsewhere.  The slide shows examples of $I_1$, $I_2$, and $I_3$ to illustrate the concept.  Crucially, the slide demonstrates that multiplying a matrix $A$ by the identity matrix $I_n$ (or $I_m$) results in the original matrix $A$.  This property is fundamental to linear algebra and is often used in linear programming to simplify calculations or to represent the identity transformation. The context suggests this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are fundamental for defining and solving problems.
+
+
+Slide 8
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section*{Properties of Matrix Multiplication}
+
+\textit{(6) Diagonal Matrix (Square)}
+\begin{equation*}
+A_{nxn} = \begin{pmatrix} a_1 & 0 & \cdots & 0 \\ 0 & a_2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & a_n \end{pmatrix}, \quad B_{nxn} = \begin{pmatrix} b_1 & 0 & \cdots & 0 \\ 0 & b_2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & b_n \end{pmatrix}
+\end{equation*}
+$AB = \begin{pmatrix} a_1 b_1 & 0 & \cdots & 0 \\ 0 & a_2 b_2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & a_n b_n \end{pmatrix}$
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide demonstrates the multiplication of diagonal matrices.  It defines two square diagonal matrices, $A$ and $B$, each with elements only on the main diagonal.  The slide then shows the result of multiplying these two matrices, $AB$, which is also a diagonal matrix.  The elements of the resulting diagonal matrix are the products of the corresponding elements on the diagonals of the original matrices.  This property is useful in simplifying matrix calculations, particularly in linear algebra contexts like linear programming, where diagonal matrices often represent scaling or other simple transformations. The context suggests this is part of a linear algebra lecture, likely leading into a discussion of linear programming, where matrix operations are fundamental for defining and solving problems.

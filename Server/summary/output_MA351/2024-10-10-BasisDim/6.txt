@@ -1,0 +1,16 @@
+Slide 6
+
+Basis is and dimension of $V$: The number of vectors in a (any) defined basis.
+
+The dimension of $V$ is the number of vectors in a basis (any basis).
+e.g. $R^2$: $Span\{(1,0), (0,1)\} = R^2$
+Hence $dim(R^2) = 2$
+Note: There can be many different basis but the dimension is always the same.
+
+$dim(R^3) = 3$
+$Span\{(1,0,0), (0,1,0), (0,0,1)\} = R^3$
+$dim(R^n) = n$
+
+\textbf{Description:}
+
+This slide continues the discussion of vector space dimension, extending the example to $R^3$ and $R^n$.  It explicitly states that the dimension of $R^n$ is $n$.  The slide number is 6 of 17, indicating this is the sixth of a series of slides on linear programming.  The handwritten style and red lines suggest this is a lecture or class note.  The slide likely builds upon the previous slides' discussion of bases and dimensions in vector spaces, reinforcing the idea that the dimension of a vector space is an invariant property, independent of the specific basis chosen, and generalizing the concept to higher-dimensional spaces.  The examples of $R^2$ and $R^3$ are used to illustrate this point.

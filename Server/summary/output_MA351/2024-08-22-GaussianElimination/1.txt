@@ -1,0 +1,21 @@
+Slide 1
+
+\textbf{Gaussian Elimination - Solving Linear Systems}
+
+$m$ equations in $n$ unknowns ($m \times n$)
+
+\begin{align*}
+\begin{cases}
+a_{11} X_1 + a_{12} X_2 + \dots + a_{1n} X_n = b_1 & \text{- (1)} \\
+a_{21} X_1 + a_{22} X_2 + \dots + a_{2n} X_n = b_2 & \text{- (2)} \\
+a_{31} X_1 + a_{32} X_2 + \dots + a_{3n} X_n = b_3 & \text{- (3)} \\
+\vdots & \\
+a_{i1} X_1 + \dots + a_{ij} X_j + \dots + a_{in} X_n = b_i & \text{- (i)} \\
+\vdots & \\
+a_{m1} X_1 + a_{m2} X_2 + \dots + a_{mn} X_n = b_m & \text{- (m)}
+\end{cases}
+\end{align*}
+
+\textit{Description:}
+
+This slide introduces the concept of solving a system of linear equations using Gaussian elimination.  It shows a general form of $m$ equations with $n$ unknowns.  Each equation is a linear combination of the unknowns, where $a_{ij}$ are the coefficients and $b_i$ are the constants.  The notation $(m \times n)$ indicates the dimensions of the system of equations.  The numbers (1), (2), (3), ..., (i), ..., (m) are used to label each equation.  This is a standard format for representing a system of linear equations, which is a fundamental concept in linear algebra and often used in various applications, including linear programming.  The slide is the first of a series of 20 slides, likely detailing the Gaussian elimination method for solving such systems.

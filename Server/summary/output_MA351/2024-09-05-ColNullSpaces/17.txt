@@ -1,0 +1,25 @@
+Slide 17
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Homogeneous vs. Inhomogeneous Systems}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item \textbf{Homogeneous System ($Ax = 0$): } The solution space is the null space of $A$.  It contains the zero vector and all vectors orthogonal to the row space of $A$.
+    \item \textbf{Inhomogeneous System ($Ax = b$): } The solution space is the column space of $A$ shifted by a particular solution.  If $b$ is not in the column space of $A$, there is no solution.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide contrasts homogeneous and inhomogeneous linear systems, specifically in the context of linear programming.  It explains that the solution space of a homogeneous system ($Ax = 0$) is the null space of $A$.  This null space contains the zero vector and all vectors orthogonal to the row space of $A$.  In contrast, the solution space of an inhomogeneous system ($Ax = b$) is the column space of $A$ shifted by a particular solution.  The slide highlights the crucial point that if the vector $b$ is not in the column space of $A$, then there is no solution to the inhomogeneous system.  This distinction is important for understanding the feasible region and the existence of solutions in linear programming problems.  The slide likely follows the previous ones, which introduced the simplex method, pivot operations, and the geometric interpretation of linear systems.
+
+

@@ -1,0 +1,21 @@
+Slide 2
+
+\textbf{Linear Dependence and Independence}
+
+Given a list of vectors, $\ell = \{u_1, u_2, \dots, u_k\}$
+
+\textbf{Def 2:} ($\leftrightarrow$ Def 1.)
+
+$\ell$ is called linearly dependent if
+there are constants (scalars) $c_1, c_2, \dots, c_k$
+\textit{not all zero} (i.e. some non-zero) such that
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+$\ell$ is called linearly independent if
+$c_1 = c_2 = \dots = c_k = 0$ is the only solution of
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+
+\textbf{Description:}
+
+This slide continues the discussion of linear dependence and independence, providing a second, equivalent definition.  It states that a set of vectors is linearly dependent if there exist non-zero constants ($c_1, c_2, \dots, c_k$) that satisfy the equation $c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$.  Conversely, a set of vectors is linearly independent if the only solution to this equation is the trivial solution where all the constants are zero.  This definition is equivalent to the previous one, but phrased in terms of the existence of a non-trivial solution to the vector equation.  This is a crucial concept in linear algebra, particularly in linear programming, as it helps determine the dimensionality of the problem and the potential for redundancy in the set of vectors.

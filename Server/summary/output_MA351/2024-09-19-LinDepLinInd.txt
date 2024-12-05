@@ -1,0 +1,180 @@
+Slide 1
+
+\textbf{Linear Dependence and Independence}
+
+Given a list of vectors, $\ell = \{u_1, u_2, \dots, u_k\}$
+
+\textbf{Def 1:}
+
+$\ell$ is called linearly dependent if one (some)
+of the vectors can be written as lin. comb.
+of the rest. (For example, $u_i = \sum_{j \neq i} c_j u_j$)
+
+$\ell$ is called linearly independent if none
+of the vectors can be written as lin. comb.
+of the rest.
+
+
+\textbf{Description:}
+
+This slide introduces the concepts of linear dependence and independence for a set of vectors.  It defines a set of vectors as linearly dependent if at least one vector in the set can be expressed as a linear combination of the other vectors in the set.  Conversely, a set of vectors is linearly independent if no vector can be expressed as a linear combination of the other vectors.  The example given, $u_i = \sum_{j \neq i} c_j u_j$, illustrates a linearly dependent set, where one vector is a linear combination of the others.  This is a fundamental concept in linear algebra, often used in the context of linear programming to determine the dimensionality of the problem.
+
+
+Slide 2
+
+\textbf{Linear Dependence and Independence}
+
+Given a list of vectors, $\ell = \{u_1, u_2, \dots, u_k\}$
+
+\textbf{Def 2:} ($\leftrightarrow$ Def 1.)
+
+$\ell$ is called linearly dependent if
+there are constants (scalars) $c_1, c_2, \dots, c_k$
+\textit{not all zero} (i.e. some non-zero) such that
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+$\ell$ is called linearly independent if
+$c_1 = c_2 = \dots = c_k = 0$ is the only solution of
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+
+\textbf{Description:}
+
+This slide continues the discussion of linear dependence and independence, providing a second, equivalent definition.  It states that a set of vectors is linearly dependent if there exist non-zero constants ($c_1, c_2, \dots, c_k$) that satisfy the equation $c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$.  Conversely, a set of vectors is linearly independent if the only solution to this equation is the trivial solution where all the constants are zero.  This definition is equivalent to the previous one, but phrased in terms of the existence of a non-trivial solution to the vector equation.  This is a crucial concept in linear algebra, particularly in linear programming, as it helps determine the dimensionality of the problem and the potential for redundancy in the set of vectors.
+
+
+Slide 3
+
+\textbf{Linear Dependence and Independence}
+
+Given a list of vectors, $\ell = \{u_1, u_2, \dots, u_k\}$
+
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+\textbf{Dependency Relation / Equation}
+
+$\text{1) Can determine if } u_i's \text{ are lin. dep/ind.}$
+
+$\text{2) Can find all the relationship between the } u_i's$
+
+$\text{3) Can determine which vectors to be}$
+$\text{thrown away.}$
+
+
+\textbf{Description:}
+
+This slide builds upon the previous two, focusing on the practical implications of linear dependence/independence for a set of vectors.  It explicitly labels the equation $c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$ as the "Dependency Relation/Equation."  Crucially, the slide highlights three key applications of this concept:
+
+1. **Determining linear dependence/independence:**  The equation can be used to ascertain whether the vectors are linearly dependent or independent.
+
+2. **Finding relationships between vectors:**  If the vectors are linearly dependent, the equation can reveal relationships between them, allowing us to express one vector as a linear combination of the others.
+
+3. **Identifying redundant vectors:**  The equation can help identify redundant vectors in the set, which can be removed without loss of information.  This is particularly relevant in linear programming, where redundant constraints or variables can be identified and eliminated to simplify the problem.
+
+
+Slide 4
+
+\textbf{Consequences (Properties) of Lin Dep.}
+
+(I) If $\ell = \{u_1, u_2, \dots, u_k\}$ is lin. dep.,
+then $\ell$ can be reduced to $\ell' \subseteq \ell$
+such that $Span(\ell) = Span(\ell')$.
+
+For example: $u_1 = (0, 2)$, $u_2 = (0, 1)$, $u_3 = (2, 3, 4)$.
+$3u_1 + (-4)u_2 + u_3 = \vec{0}$
+
+Let $\vec{v} = 3u_1 + 2u_2 + 3u_3$
+
+
+\textbf{Description:}
+
+This slide explores the consequences of linear dependence for a set of vectors.  It states that if a set of vectors ($\ell$) is linearly dependent, then the set can be reduced to a smaller subset ($\ell'$) that still spans the same vector space.  This means that the original set contains redundant vectors that can be removed without changing the space spanned by the vectors.  The example demonstrates this by showing how a set of three vectors can be reduced to a set of two vectors that still span the same space.  The equation $3u_1 + (-4)u_2 + u_3 = \vec{0}$ shows a linear dependence relationship among the vectors.  The final line introduces a new vector $\vec{v}$ as a linear combination of the original vectors, highlighting how linear combinations can be used to generate new vectors within the spanned space.  This is a key concept in linear programming, as it allows for simplification of the problem by removing redundant constraints or variables.
+
+
+Slide 5
+
+\textbf{Consequences (Properties) of Linear Dependence}
+
+(II) If $\ell = \{u_1, u_2, \dots, u_k\}$ is linearly dependent, then $\ell$ can be reduced to $\ell' \subseteq \ell$ such that $Span(\ell) = Span(\ell')$.
+
+For example: $u_1 = (0, 2)$, $u_2 = (0, 1)$, $u_3 = (2, 3, 4)$.
+$3u_1 + (-4)u_2 + u_3 = \vec{0}$
+
+$\implies u_3 = 3u_1 + 4u_2$
+
+Let $\vec{v} = 5u_1 + 2u_2 + 3u_3$
+$= 5u_1 + 2u_2 + 3(3u_1 + 4u_2)$
+$= (5 + 9)u_1 + (2 + 12)u_2$
+$= 14u_1 + 14u_2$
+$= 14(u_1 + u_2)$
+$\implies \vec{v} \in Span(u_1, u_2)$
+
+
+\textbf{Description:}
+
+This slide continues the discussion of linear dependence and its implications.  It demonstrates how a linearly dependent set of vectors can be reduced to a smaller, linearly independent set that spans the same vector space.  The example uses the same vectors as in the previous slide, showing that $u_3$ can be expressed as a linear combination of $u_1$ and $u_2$.  The key takeaway is that if a set of vectors is linearly dependent, one or more vectors can be removed without changing the span of the set.  This is crucial in linear programming because it allows for simplification of the problem by removing redundant constraints or variables.  The final part of the slide shows how any vector in the original span can be expressed as a linear combination of the reduced set of vectors.
+
+
+Slide 6
+
+\textbf{Consequences (Properties) of Linear Dependence}
+
+(III) If $\ell = \{u_1, u_2, \dots, u_k\}$ is lin. dep.,
+then any vector $\vec{v} \in Span(\ell)$ can be
+represented in an infinitely many ways
+as lin. comb. of the $u_i$'s.
+i.e. the representation is not unique.
+
+For example, $\vec{v} = 2u_1 - u_2 + 2u_3$
+$= 3u_1 - 3u_2 + 3u_3$
+$= -u_1 + 3u_2 + u_3$
+( $3u_1 - 4u_2 + u_3 = 0$)
+( $2(3u_1 - 4u_2 + u_3) = 0$)
+
+
+\textbf{Description:}
+
+This slide continues the discussion of linear dependence, focusing on the non-uniqueness of vector representations.  It states that if a set of vectors ($\ell$) is linearly dependent, then any vector within the span of those vectors can be expressed as a linear combination of the original vectors in infinitely many ways.  This means there isn't a single, unique way to represent a vector as a linear combination of the dependent vectors.  The example demonstrates this by showing how the same vector $\vec{v}$ can be expressed as different linear combinations of the vectors $u_1$, $u_2$, and $u_3$, which are linearly dependent.  This non-uniqueness is important in linear programming because it highlights the potential for redundancy and alternative representations within the problem's solution space.
+
+
+Slide 7
+
+\textbf{Consequences (Properties) of Linear Dependence}
+
+(III) If $\ell = \{u_1, u_2, \dots, u_k\}$ is linearly dependent, then any vector $\vec{v} \in Span(\ell)$ can be represented in an infinitely many ways as lin. comb. of the $u_i$'s.  i.e. the representation is not unique.
+
+For example, $\vec{v} = 2u_1 - u_2 + 2u_3 = 3u_1 - 3u_2 + 3u_3 = -u_1 + 3u_2 + u_3$
+( $3u_1 - 4u_2 + u_3 = 0$)
+( $2(3u_1 - 4u_2 + u_3) = 0$)
+
+
+\textbf{Description:}
+
+This slide continues the discussion of linear dependence, emphasizing the non-uniqueness of vector representations.  It reiterates that if a set of vectors ($\ell$) is linearly dependent, any vector within the span of those vectors can be expressed as a linear combination of the original vectors in infinitely many ways.  The example explicitly demonstrates this non-uniqueness by showing how the same vector $\vec{v}$ can be expressed as different linear combinations of the linearly dependent vectors $u_1$, $u_2$, and $u_3$.  This is a crucial concept in linear programming, as it highlights the potential for alternative representations within the problem's solution space.  The equations shown are examples of how different combinations of the original vectors can yield the same result.
+
+
+Slide 8
+
+How to Eliminate (All the) Redundant Vectors
+
+Given a list $\ell = \{u_1, u_2, \dots, u_k\}$
+
+$\text{1) Consider solving for } c_1, c_2, \dots, c_k$
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+$\text{2) Throw away those vectors with the free}$
+$\text{variables } c_i$'s.
+
+$\text{3) The remaining vectors with the pivot}$
+$\text{variables } c_i$'s are linearly independent.
+
+
+\textbf{Description:}
+
+This slide provides a procedure for eliminating redundant vectors from a set.  It outlines a three-step process:
+
+1. **Solve for coefficients:**  First, solve the equation $c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$ for the coefficients $c_1, c_2, \dots, c_k$.
+
+2. **Discard vectors with free variables:**  Identify the vectors associated with the free variables ($c_i$'s) in the solution and discard them.  These vectors are redundant because they can be expressed as linear combinations of the remaining vectors.
+
+3. **Remaining vectors are linearly independent:** The remaining vectors, corresponding to the pivot variables, are linearly independent.  This reduced set of vectors spans the same vector space as the original set, but without the redundancy.  This process is crucial in linear programming for simplifying the problem by removing redundant constraints or variables.

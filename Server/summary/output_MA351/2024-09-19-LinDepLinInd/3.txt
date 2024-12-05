@@ -1,0 +1,27 @@
+Slide 3
+
+\textbf{Linear Dependence and Independence}
+
+Given a list of vectors, $\ell = \{u_1, u_2, \dots, u_k\}$
+
+$c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$
+
+\textbf{Dependency Relation / Equation}
+
+$\text{1) Can determine if } u_i's \text{ are lin. dep/ind.}$
+
+$\text{2) Can find all the relationship between the } u_i's$
+
+$\text{3) Can determine which vectors to be}$
+$\text{thrown away.}$
+
+
+\textbf{Description:}
+
+This slide builds upon the previous two, focusing on the practical implications of linear dependence/independence for a set of vectors.  It explicitly labels the equation $c_1 u_1 + c_2 u_2 + \dots + c_k u_k = \vec{0}$ as the "Dependency Relation/Equation."  Crucially, the slide highlights three key applications of this concept:
+
+1. **Determining linear dependence/independence:**  The equation can be used to ascertain whether the vectors are linearly dependent or independent.
+
+2. **Finding relationships between vectors:**  If the vectors are linearly dependent, the equation can reveal relationships between them, allowing us to express one vector as a linear combination of the others.
+
+3. **Identifying redundant vectors:**  The equation can help identify redundant vectors in the set, which can be removed without loss of information.  This is particularly relevant in linear programming, where redundant constraints or variables can be identified and eliminated to simplify the problem.

@@ -1,0 +1,20 @@
+Slide 10
+
+Properties of $dim(V)$
+
+\begin{itemize}
+    \item $dim(V) = m$: Any list of $m$ vectors of $V$, $m > dim(V)$, must be linearly dependent.  Then $m \ge dim(V)$.
+    \item $dim(V) = n$: Any list of $m$ linearly independent vectors in $V$, $m \le dim(V)$. Then $m \le n$.
+    \item $Ptf$: Any homogeneous system of $m$ linear equations with at least one more unknown than equations must have at least one free unknown.  Then $m \le n$.
+    \item $dim(V) = n$: The maximum number of linearly independent vectors in $V$ is $n$.
+    \item $Ptf$: Given $A \times b$, there is a list of $n$ vectors in $V$ such that $dim(V) = n$.  The minimum number of vectors to span $V$ is $n$.
+    \item $dim(V) = n$: The number of vectors in any basis of $V$ is $n$.
+    \item $dim(V) = n$: The minimum number of vectors to span $V$ is $n$.
+    \item $dim(V) = n$: Any list of $n$ linearly independent vectors in $V$ spans $V$.
+\end{itemize}
+
+\textbf{Description:}
+
+This slide summarizes the properties of the dimension of a vector space $V$, emphasizing the relationships between the number of vectors, linear independence, and spanning a vector space.  It restates the relationships between the number of vectors in a list, the dimension of the space, and the properties of linear systems.  The slide number is 10 of 17, indicating this is the tenth of a series of slides on linear programming.  The handwritten style and red lines suggest this is a lecture or class note.  The slide likely builds upon the previous slides' discussion of bases and dimensions in vector spaces, providing a concise summary of the key properties and relationships.  The slide emphasizes the minimum number of vectors required to span a vector space and the relationship between linearly independent vectors and spanning a vector space.
+
+

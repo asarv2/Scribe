@@ -1,0 +1,14 @@
+Slide 16
+
+Reduced Row Echelon Form (RREF)
+(Backward Substitution can also be
+achieved using elementary row ops.)
+
+Use the pivot 1's to make all the numbers
+above them to be zero (start from the last row)
+
+\textit{Description:}
+
+This slide describes the process of transforming a matrix into Reduced Row Echelon Form (RREF).  This is a further step beyond Row Echelon Form (REF), which is a crucial intermediate step in Gaussian elimination used to solve systems of linear equations.  The slide shows a visual representation of a matrix in RREF, where the leading entry in each row is 1, all elements below the leading entry in each column are 0, and all elements above the leading entry in each column are also 0.  The slide emphasizes the iterative process of using the pivot 1s to eliminate the numbers above them, starting from the last row.  The asterisks (*) represent arbitrary numbers.  This step is crucial for obtaining a unique solution to the system of equations, which is often used in linear programming.  The slide is part of a larger presentation likely covering Gaussian elimination and its application to linear programming problems.
+
+

@@ -1,0 +1,33 @@
+Slide 7
+
+Markov Chain
+
+Let $a_n =$ population in $A$ in year $n$
+
+$b_n =$ population in $B$ in year $n$
+
+Let $a_0 = 38(k)$, $b_0 = 62(k)$
+
+$a_1 = 0.9 a_0 + 0.07 b_0$
+
+$b_1 = 0.1 a_0 + 0.93 b_0$
+
+$A = \begin{bmatrix} 0.9 & 0.07 \\ 0.1 & 0.93 \end{bmatrix}$
+
+$a_2 = 0.9 a_1 + 0.07 b_1$
+
+$b_2 = 0.1 a_1 + 0.93 b_1$
+
+$[a_2] = [0.9 \quad 0.07] [a_1]$
+
+$[b_2] = [0.1 \quad 0.93] [b_1]$
+
+$= [0.9 \quad 0.07] [0.9 \quad 0.07] [a_0]$
+
+$[0.1 \quad 0.93] [0.1 \quad 0.93] [b_0]$
+
+$= \begin{bmatrix} 0.81 & 0.063 \\ 0.09 & 0.8649 \end{bmatrix} \begin{bmatrix} a_0 \\ b_0 \end{bmatrix}$
+
+\textbf{Description:}
+
+This slide introduces a Markov chain model, likely for population distribution between two states (e.g., city and suburb).  It defines $a_n$ and $b_n$ as the populations in state A and state B, respectively, in year $n$.  The initial populations $a_0$ and $b_0$ are given.  The slide then defines recursive relationships for $a_1$ and $b_1$ in terms of $a_0$ and $b_0$, and similarly for $a_2$ and $b_2$.  These relationships are expressed as matrix multiplications, where the transition probabilities are represented in a transition matrix $A$.  The slide shows how to calculate the populations in subsequent years using matrix multiplication.  The diagram shows the transition probabilities between the two states.  The example likely demonstrates how to model population shifts over time using a Markov chain.

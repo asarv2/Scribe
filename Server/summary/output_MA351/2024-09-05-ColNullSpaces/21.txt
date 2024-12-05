@@ -1,0 +1,28 @@
+Slide 21
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Finding a Particular Solution:  The Key Idea}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item If $Ax = b$ has a solution, then $b$ is in the column space of $A$.
+    \item A particular solution $x_p$ can be found using various methods (e.g., Gaussian elimination, matrix inversion).
+    \item Once a particular solution $x_p$ is found, the general solution is $x = x_p + x_h$, where $x_h$ is any solution to the homogeneous system $Ax = 0$.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide focuses on the practical aspect of finding a particular solution to the linear system $Ax = b$.  It emphasizes that a particular solution ($x_p$) exists only if the vector $b$ is within the column space of the matrix $A$.  The slide then highlights that various methods (like Gaussian elimination or matrix inversion) can be used to find this particular solution.  Crucially, it connects this particular solution to the general solution, which is the sum of the particular solution and any solution to the associated homogeneous system ($Ax = 0$).  This is a key step in solving linear systems, and it's directly relevant to the simplex method in linear programming.  The slide likely follows the previous ones, which introduced the simplex method, pivot operations, and the geometric interpretation of linear systems.
+
+
+
+

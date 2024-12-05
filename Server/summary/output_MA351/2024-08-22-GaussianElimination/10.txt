@@ -1,0 +1,35 @@
+Slide 10
+
+Backward Substitution: Start from the last
+
+$\begin{bmatrix}
+x_1 & x_2 & x_3 & x_4 & | & \\
+1 & 2 & -1 & 0 & | & 1 \\
+0 & 1 & 7 & 5 & | & 0 \\
+0 & 0 & 1 & 1 & | & 2 \\
+0 & 0 & 0 & 1 & | & -3
+\end{bmatrix}$
+
+$x_4 = -3$
+$x_3 + x_4 = 2 \implies x_3 = 2 - x_4 = 2 - (-3) = 5$
+$x_2 + 7x_3 + 5x_4 = 0 \implies x_2 = -7x_3 - 5x_4 = -7(5) - 5(-3) = -35 + 15 = -20$
+$x_1 + 2x_2 - x_3 = 1 \implies x_1 = 1 - 2x_2 + x_3 = 1 - 2(-20) + 5 = 1 + 40 + 5 = 46$
+
+Solution:
+$\begin{bmatrix}
+x_1 \\
+x_2 \\
+x_3 \\
+x_4
+\end{bmatrix} = \begin{bmatrix}
+46 \\
+-20 \\
+5 \\
+-3
+\end{bmatrix}$
+
+\textit{Description:}
+
+This slide continues the backward substitution process from the previous slide.  It shows the step-by-step calculation of the variables $x_1$, $x_2$, $x_3$, and $x_4$ from the upper triangular matrix.  The slide explicitly shows the equations derived from the last row of the matrix and how the values of the variables are determined by substituting known values into the equations above.  The asterisk (*) represents arbitrary numbers.  The resulting solution is presented in a vector form.  This is a crucial step in solving systems of linear equations using Gaussian elimination, which is often used in linear programming.  The slide is part of a larger presentation likely covering Gaussian elimination and its application to linear programming problems.  The process of backward substitution is shown, where the value of $x_4$ is determined first, then used to find $x_3$, and so on, culminating in the solution vector.
+
+

@@ -1,0 +1,24 @@
+Slide 14
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Geometric Interpretation of $Ax = b$}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item The solution to $Ax = b$ is a vector $x$ that, when multiplied by the matrix $A$, results in the vector $b$.
+    \item Geometrically, $b$ is a linear combination of the columns of $A$.
+    \item The solution $x$ is a combination of the columns of $A$ that produces $b$.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide provides a geometric interpretation of the linear system $Ax = b$.  It explains that the solution $x$ to the equation is a vector that, when multiplied by the matrix $A$, produces the vector $b$.  Geometrically, this means that $b$ is a linear combination of the columns of $A$.  The solution $x$ represents the weights used in this linear combination to produce $b$.  The slide likely follows the previous ones, which introduced the simplex method, pivot operations, and the concept of the column space.  This interpretation connects the algebraic representation of the linear system to a geometric understanding of the column space and the solution.

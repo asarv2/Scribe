@@ -1,0 +1,41 @@
+Slide 10
+
+```latex
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\begin{center}
+\textbf{Slide 10}
+\end{center}
+
+\begin{equation*}
+\text{Non-Singular Matrix } A_{mxn} \text{ is called a square matrix if } m = n
+\end{equation*}
+\begin{equation*}
+\text{Given } A_{mxn} \text{ and } B_{m \times 1}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has a unique solution, then } A \text{ is non-singular}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has no solution, then } A \text{ is singular}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has infinitely many solutions, then } A \text{ is singular}
+\end{equation*}
+\begin{equation*}
+\text{If } AX = B \text{ has a unique solution, then } A \text{ is non-singular}
+\end{equation*}
+\begin{equation*}
+\text{If } A \text{ is non-singular, then } AX = B \text{ has a unique solution for any } B
+\end{equation*}
+
+\end{document}
+```
+
+\textbf{Description:}
+
+This slide discusses the concept of singular and non-singular matrices in the context of solving linear systems.  It defines a square matrix as one where the number of rows (m) equals the number of columns (n).  The slide then states that if the system $AX = B$ has a unique solution, then the matrix $A$ is non-singular. Conversely, if the system has no solution or infinitely many solutions, then $A$ is singular.  Crucially, it highlights that a non-singular matrix guarantees a unique solution for any possible right-hand side vector $B$.  The handwritten style suggests a lecture setting.  The slide likely builds upon the previous discussion of matrix rank and the conditions for solving linear systems.

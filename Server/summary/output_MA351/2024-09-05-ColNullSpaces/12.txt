@@ -1,0 +1,26 @@
+Slide 12
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\textbf{Geometric Interpretation of the Simplex Method}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item The simplex method moves from one vertex of the feasible region to another, improving the objective function value at each step.
+    \item Each pivot operation corresponds to a movement along an edge of the feasible region.
+    \item The algorithm terminates when the optimal solution is found at a vertex.
+\end{itemize}
+
+\end{document}
+
+\vspace{0.5cm}
+
+\textbf{Description:}
+
+This slide provides a geometric interpretation of the simplex method in linear programming.  It describes how the simplex method operates by moving from one vertex of the feasible region to another, improving the objective function value at each step.  Each pivot operation corresponds to a movement along an edge of the feasible region.  The algorithm terminates when the optimal solution is found at a vertex.  This geometric perspective helps visualize the iterative process of the simplex method and how it systematically explores the feasible region to find the optimal solution.  The slide likely follows the previous ones, which introduced the simplex method, pivot operations, and tableau representation.
+
+

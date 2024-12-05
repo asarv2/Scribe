@@ -1,0 +1,68 @@
+Slide 5
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+$E_{x3}$
+\begin{equation*}
+x - 6y = 7
+\end{equation*}
+$y = 5$ (free), $x = 7 + 6s$
+
+$(x) = (7 + 6s)$
+$(y) = (5)$
+
+\begin{tikzpicture}[scale=0.8]
+\draw[->] (-2,0) -- (4,0) node[right] {$x$};
+\draw[->] (0,-2) -- (0,4) node[above] {$y$};
+\draw[domain=-1:3,smooth,variable=\x] plot ({\x}, {1/6*\x-7/6});
+\end{tikzpicture}
+one line in $\mathbb{R}^2$ (with infinitely many pts)
+
+$E_{x4}$
+\begin{equation*}
+\begin{cases}
+x + 3y = -1 \\
+4x + 12y = -4
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+\begin{cases}
+(1 & | -1| \\
+4 & | -4|
+\end{cases}
+\rightarrow
+\begin{cases}
+(1 & | -3| \\
+4 & | -1|
+\end{cases}
+\rightarrow
+\begin{cases}
+(0 & | 0| \\
+4 & | -1|
+\end{cases}
+\end{equation*}
+
+$y = 5$ (free) $x = -1 + 3s$
+
+$(x) = (-1 + 3s)$
+$(y) = (5)$
+
+\begin{tikzpicture}[scale=0.8]
+\draw[->] (-2,0) -- (4,0) node[right] {$x$};
+\draw[->] (0,-2) -- (0,4) node[above] {$y$};
+\draw[domain=-1:3,smooth,variable=\x] plot ({\x}, {-1/3*\x+1/3});
+\draw[domain=-1:3,smooth,variable=\x] plot ({\x}, {-1/3*\x+1/3});
+\end{tikzpicture}
+2 lines are the same
+
+\end{document}
+
+\vspace{1cm}
+
+\textbf{Description:}
+
+This slide continues the exploration of linear systems, focusing on cases where the system has infinitely many solutions.  The first example ($E_{x3}$) demonstrates a system with one free variable, leading to a line of solutions in the $xy$-plane. The second example ($E_{x4}$) shows a system where the two equations represent the same line, resulting in infinitely many solutions.  The graphs visually represent the lines of solutions, and the handwritten style is characteristic of lecture notes.  The notation of "free" variables indicates a parameter that can take on any value in the set of real numbers.

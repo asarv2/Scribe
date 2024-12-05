@@ -1,0 +1,11 @@
+Slide 5
+
+$Ab = c_1 \lambda_1 X_1 + c_2 \lambda_2 X_2 + \dots + c_n \lambda_n X_n$
+
+$b = [X_1 \quad X_2 \quad \dots \quad X_n] \begin{bmatrix} c_1 \\ c_2 \\ \vdots \\ c_n \end{bmatrix} = Qc$
+
+$Ab = Q D c = Q D Q^{-1} b$
+
+\textbf{Description:}
+
+This slide continues the explanation of diagonalization and its interpretation as a change of basis.  It explicitly shows the relationship between the original vector $b$ and its transformed version $Ab$ in terms of the eigenvectors and eigenvalues.  The key idea is that applying the transformation $A$ to $b$ is equivalent to applying a diagonal transformation $D$ to the coordinates of $b$ in the eigenvector basis.  The slide emphasizes the matrix multiplication involved in this process, showing how the coordinates in the eigenvector basis ($c$) are related to the coordinates in the original basis ($b$) through the eigenvector matrix $Q$.  The notation is consistent with linear algebra, using matrices and vectors.  The slide likely follows a lecture on linear algebra, where diagonalization is a key concept.
