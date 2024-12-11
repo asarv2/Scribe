@@ -1,0 +1,52 @@
+# 4
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Notations:** Let
+
+* 𝐼 = the number of populations or treatments being compared.
+* 𝑖 = 1, … , 𝐼 is a group index.
+* 𝜇𝑖 = the mean of the 𝑖𝑡ℎ population or the true average response when treatment 𝑖 is applied, 𝑖 = 1, 2, … , 𝐼.
+* The relevant hypotheses are:
+    𝐻0: 𝜇1 = 𝜇2 = ⋯= 𝜇𝐼
+    versus
+    𝐻𝑎: at least two of the 𝜇𝑖’s are different.
+
+
+**Example 25.1 revisit** With 𝜇𝑖 denoting the true average compression strength for boxes of type 𝑖 (𝑖 = 1, 2, 3, 4), the null hypothesis is
+
+𝐻0: 𝜇1 = 𝜇2 = 𝜇3 = 𝜇4
+
+There is a substantial amount of overlap among observations on the first three types of boxes, but compression strengths for the fourth type appear considerably smaller than for the other types. This suggests that 𝐻0 is not true.
+
+Can we just use the independent samples t test 6 times to test the following alternative hypotheses?
+
+𝐻𝑎: 𝜇1 ≠ 𝜇2
+𝐻𝑎: 𝜇1 ≠ 𝜇3
+𝐻𝑎: 𝜇1 ≠ 𝜇4
+𝐻𝑎: 𝜇2 ≠ 𝜇3
+𝐻𝑎: 𝜇2 ≠ 𝜇4
+𝐻𝑎: 𝜇3 ≠ 𝜇4
+
+ANSWER IS NO: Because if 𝐻0 is true for each of the 6 different hypotheses given above (that is if there is no association between the type of shipping boxes and compression strength) then we’d have much more than 6 chances to make a overall type I error (the probability of at least one false rejection among 6 tests).
+
+In general, we have “𝐼” groups that we wish to compare, then we could do 𝑘 = 𝐼(𝐼−1)/2 two-sample t tests. The overall type I error rate is
+
+𝑃(𝑎𝑡 𝑙𝑒𝑎𝑠𝑡 1 𝑡𝑒𝑠𝑡 𝑐𝑜𝑚𝑚𝑖𝑡𝑠 𝑇𝑦𝑝𝑒 𝐼 𝑒𝑟𝑟𝑜𝑟) = 1 −(1 −𝛼)𝑘
+
+| 𝐼 | 𝑘 | α = 0.05 | α = 0.01 |
+|---|---|---|---|
+| 2 | 1 | 0.05 | 0.01 |
+| 3 | 3 | 0.1426 | 0.0297 |
+| 4 | 6 | 0.2649 | 0.0685 |
+| 5 | 10 | 0.4013 | 0.0956 |
+| 6 | 15 | 0.5367 | 0.1399 |
+
+It’s necessary to reduce the number of tests.
+
+
+**Figure Description:**
+
+Below the text, there is a horizontal boxplot.  It displays five boxes, each representing a different type of box (1, 2, 3, 4).  The boxes are positioned horizontally along a number line that spans from approximately 550 to 750.  Each box represents the distribution of compression strength values for that type of box.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values for compression strength (lb).  The figure is placed below the table to visually compare the compression strength distributions for each type of box.  The boxplot is used to visually assess the overlap and differences in compression strength among the different box types, providing a visual aid to the statistical analysis.  This is relevant to the example of comparing the means of multiple groups (in this case, different types of boxes) in the context of ANOVA.

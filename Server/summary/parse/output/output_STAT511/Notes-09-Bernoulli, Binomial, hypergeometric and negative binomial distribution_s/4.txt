@@ -1,0 +1,59 @@
+# Slide 4
+
+Example 9.4 revisit This is a hypergeometric distribution ℎ𝑚(6,10,25).
+
+𝑃(𝑋= 3) = ℎ𝑚(3; 𝑛= 6, 𝑀= 10, 𝑁= 25) =
+
+Mean and variance of 𝒉𝒎(𝒏, 𝑴, 𝑵)
+* 
+𝑬(𝑿) = 𝒏∙
+𝑴
+𝑵
+* 
+𝑽𝒂𝒓(𝑿) = (
+𝑵−𝒏
+𝑵−𝟏) ∙𝒏∙
+𝑴
+𝑵∙(𝟏−
+𝑴
+𝑵)
+
+What is the difference comparing with mean and variance of binomial rv?
+
+The ratio 𝑀/𝑁 is the proportion of S’s in the population. If we replace 𝑀/𝑁 by 𝑝 in 𝐸(𝑋) and 𝑉𝑎𝑟(𝑋), we
+get 𝐸(𝑋) = 𝑛𝑝 and
+𝑉𝑎𝑟(𝑋) = (𝑁−𝑛
+𝑁−1) ∙𝑛∙𝑝∙(1 −𝑝)
+The variances of the binomial and hypergeometric rv’s differ by the factor (𝑁 –  𝑛)/(𝑁 –  1), often called
+the finite population correction factor.
+
+Alternative interpretation:
+* Binomial experiment is drawing from an infinite population,
+* Hypergeometric experiment is drawing from a finite population.
+
+Example 9.5: Five individuals from an animal population thought to be near extinction in a certain
+region have been caught, tagged, and released to mix into the population. After they have had an
+opportunity to mix, a random sample of 10 of these animals is selected.
+Let X be the number of tagged animals in the second sample. If there are actually 25 animals of this
+type in the region, what is the probability that
+a) X = 2?
+𝑃(𝑋= 2) = ℎ𝑚(2; 𝑛= 10, 𝑀= 5, 𝑁= 25) =
+b) X is less than 2?
+𝑃(𝑋< 2) = ∑
+ℎ𝑚(𝑘; 𝑛= 10, 𝑀= 5, 𝑁= 25)
+1
+𝑘=0
+=
+
+
+Note: suppose the population size N is not actually known, so the value x is observed and propose a
+way to estimate N based on x.
+
+(4) Negative Binomial distribution: The binomial rv X is the number of S’s when the number n of trials
+is fixed, whereas the negative binomial distribution arises from fixing the number of S’s desired and
+letting the number of trials be random.
+
+
+**Description of Slide 4:**
+
+This is slide 4 of a lecture on Statistical Methods, continuing the discussion of discrete probability distributions.  The slide focuses on the hypergeometric distribution, contrasting it with the binomial distribution.  It revisits Example 9.4, now explicitly stating the hypergeometric distribution parameters (6, 10, 25).  The slide provides the formulas for the mean and variance of the hypergeometric distribution, highlighting the finite population correction factor that distinguishes it from the binomial distribution.  A key concept is introduced: the difference between sampling with replacement (binomial) and without replacement (hypergeometric).  Example 9.5 provides a practical application, asking for the probability of a specific number of tagged animals in a sample.  The slide also introduces the concept of estimating the population size (N) when it's unknown.  Finally, it briefly introduces the negative binomial distribution as a related concept.  The slide is well-organized, using clear formulas and examples to explain the concepts.  The use of mathematical notation is appropriate for a statistical methods course.

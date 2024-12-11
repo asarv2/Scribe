@@ -1,0 +1,13 @@
+# Slide 26
+
+**Searching in more complicated structures**
+
+Our search approach is built on a tree
+But what if our problem is built on a graph?
+What if there are more than one ways to reach a state?
+If a solution is found, will it be the best?
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, poses questions about extending search algorithms from tree-based structures to graph-based structures.  The text asks if the current search approach, which is based on trees, can be adapted to more complex problems represented by graphs.  The questions highlight the need for more sophisticated search strategies when dealing with graphs, where multiple paths to a solution might exist.  The slide is likely a transition point, setting the stage for a discussion of graph search algorithms and their properties.  The questions are designed to encourage critical thinking about the limitations of tree-based search and the need for more general graph-based search techniques.

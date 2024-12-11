@@ -1,0 +1,44 @@
+# Slide 44
+
+# Tuple Ambiguity in Join
+
+Explicitly indicate your tables for clarity
+
+```sql
+SELECT Customer.CustomerId, FirstName, LastName, BillingCity, BillingState, Total
+FROM Invoice
+JOIN Customer
+ON Customer.CustomerId = Invoice.CustomerId
+WHERE BillingCountry="USA" AND Total > 15
+```
+
+```
+CustomerId	FirstName	LastName	BillingCity	BillingState	Total
+24	Frank	Ralston	Chicago	IL	15.86
+25	Victor	Stevens	Madison	WI	18.86
+26	Richard	Cunningham	Fort Worth	TX	23.86
+```
+
+Or be explicit and succinct with aliases
+
+```sql
+SELECT c.CustomerId, FirstName, LastName, BillingCity, BillingState, Total
+FROM Invoice i
+JOIN Customer c
+ON c.CustomerId = i.CustomerId
+WHERE BillingCountry="USA" AND Total > 15
+```
+
+
+---
+
+**Description:**
+
+This slide addresses the issue of ambiguity when joining tables in SQL, specifically the `Invoice` and `Customer` tables.  The title, "Tuple Ambiguity in Join," highlights the potential problem.  The slide presents two examples of SQL queries designed to join these tables.  The first query uses the full table names (`Customer.CustomerId` and `Invoice.CustomerId`) in the `JOIN` clause, which is considered more explicit.  The second query uses aliases (`c` for `Customer` and `i` for `Invoice`) for the table names, which is considered more concise.  Both queries select specific columns from both tables and filter the results to include only invoices from the "USA" with a total greater than 15.  The output shows the result of the query, a table with the selected columns and the matching data.  The purpose of this slide is to illustrate the importance of explicitly naming the tables and columns in a join operation to avoid ambiguity, especially when tables have common column names.  The context suggests this is part of a lesson on database design and SQL query construction.
+
+
+**Description of the Figure:**
+
+There is no separate figure on this slide.  The slide contains SQL queries and their corresponding output, which is formatted as a table.  The table displays the results of the queries, showing the `CustomerId`, `FirstName`, `LastName`, `BillingCity`, `BillingState`, and `Total` columns.  The table is formatted to clearly show the output of the SQL queries, which are designed to retrieve specific data from the joined tables.  The formatting is designed to highlight the output of the queries, which are designed to retrieve specific data from the joined tables.  The context suggests that the output is a result of a query against a database table, likely the `Invoice` and `Customer` tables, to extract customer information and invoice totals from the USA.  The formatting is designed to highlight the output of the queries, which are designed to retrieve specific data from the joined tables.
+
+

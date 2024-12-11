@@ -1,0 +1,21 @@
+# Slide 35
+
+**Example in Python**
+
+```python
+import scipy.stats as st
+d1 = ...  # first observed data set
+d2 = ...  # second observed data set
+# two independent samples t-test with scipy
+t, p = st.ttest_ind(d1, d2)
+# paired two-sample t-test with scipy
+t, p = st.ttest_rel(d1, d2)
+```
+
+---
+
+**Description of what you see:**
+
+This slide presents Python code for performing two-sample t-tests.  The code snippet demonstrates how to use the `scipy.stats` library to conduct both independent and paired two-sample t-tests.  The code imports the necessary functions, defines two data sets (`d1` and `d2`), and then calls `st.ttest_ind()` for independent samples and `st.ttest_rel()` for paired samples to calculate the t-statistic and p-value for each test.  The code is presented in a way that is clear and easy to understand, showing the steps involved in performing these types of t-tests.  The slide is part of a lecture on Intro to Data Science, demonstrating how to implement statistical tests in Python.  The code is likely an example of how to implement the concepts discussed in previous slides, specifically regarding two-sample t-tests.  The use of `st.ttest_ind()` and `st.ttest_rel()` is crucial for performing these specific types of tests.  The comments indicate the purpose of each line of code.
+
+

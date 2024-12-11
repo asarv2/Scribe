@@ -1,0 +1,16 @@
+# Slide 17
+
+# Pandas vs DBMS
+
+Pandas is a "Data Frame" library in Python, meant for manipulating in-memory data with row and column labels.
+Pandas is not a relational database system, but it contains functions that mirror some functionality of relational databases.
+
+* In particular it has no notion of primary keys (but it does have indexes).
+* Operations in Pandas are typically not in place (that is, they return a new modified DataFrame, rather than modifying an existing one).
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, compares the Pandas library in Python to a Database Management System (DBMS).  The title "Pandas vs DBMS" clearly indicates the topic.  The text explains that Pandas is a Python library for manipulating data in memory, using row and column labels.  Crucially, it's not a relational database system, but it does have some functions similar to those in relational databases.  The key differences are highlighted in the bullet points: Pandas doesn't have primary keys, but it does have indexes, and Pandas operations typically return a new DataFrame instead of modifying the original one.  The slide is purely textual, with no figures.  The content is concise and directly compares the characteristics of Pandas to those of a relational database system.  The purpose of this slide is to establish a contrast between the two approaches to data management, highlighting the differences in their functionalities and data handling.

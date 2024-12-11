@@ -1,0 +1,24 @@
+# Slide 26
+
+Distributed Computing: Background
+Distributed computing rose to prominence in the 70s/80s, often built around 
+“supercomputing,” for scientific computing applications 
+In mid-90s, researchers built a common interface for distributed computing called the 
+message passing interface (MPI) 
+MPI provides a set of tools to run multiple processes (on a single machine or across many 
+machines), allows communication, sending data, and synchronizing execution 
+Still used in scientific computing applications and high performance computing (HPC)
+
+
+---
+
+**Description of the slide:**
+
+This slide provides a brief overview of the background of distributed computing, specifically highlighting the Message Passing Interface (MPI).
+
+* **Historical Context:** The slide notes that distributed computing gained importance in the 1970s and 1980s, often associated with "supercomputing" for scientific applications.
+* **Message Passing Interface (MPI):**  The slide mentions that in the mid-1990s, a common interface called MPI was developed for distributed computing.
+* **Functionality:** MPI provides tools for running multiple processes, enabling communication and synchronization between these processes, even across multiple machines.  This is crucial for distributing tasks and coordinating the flow of data in a distributed system.
+* **Applications:** The slide emphasizes that MPI is still used in scientific computing and high-performance computing (HPC) applications.
+
+

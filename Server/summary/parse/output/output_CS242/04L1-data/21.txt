@@ -1,0 +1,16 @@
+# 21
+
+# Data Frames
+
+Each row corresponds to an example, an entity
+Each column contains data for a specific variable, attribute, feature
+You can access a row, column, cell, or subset
+
+
+---
+
+**Description:**
+
+This slide, titled "Data Frames," defines the structure of a DataFrame.  It's a simple, bulleted list, likely intended as a summary of the key characteristics of a DataFrame in the context of data analysis.  There are no figures on this slide.  The context from the previous slides suggests that this is part of a larger lecture on Introduction to Data Science, specifically focusing on the Pandas library and its data structures.  The slide is likely a transition to a discussion of how to access and manipulate data within a DataFrame.  The slide is a concise explanation of the fundamental structure of a DataFrame.  The bullet points are clear and easy to read.  The slide is likely intended to be a quick review of the concept of a DataFrame.
+
+

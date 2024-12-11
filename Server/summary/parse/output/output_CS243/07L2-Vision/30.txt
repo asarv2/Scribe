@@ -1,0 +1,18 @@
+# Slide 30
+
+**BoF Object Categorization (cont'd)**
+
+**Nearest Neighbor (NN) Classifier**
+
+* **Query image:** A small image of a violin is shown on the left side of the slide.  A bar graph, representing a feature vector, is shown next to the violin image.  The bar graph shows the frequency of different visual words (codewords) in the query image.
+
+* **Model space:** A 3D scatter plot is shown on the right side of the slide.  The scatter plot shows several points, some colored light teal/turquoise and others light pink.  These points represent different categories of objects (e.g., violins, guitars, etc.) in the model space.  The point closest to the query image's feature vector is highlighted in red.
+
+* **Winning class: pink** The text "Winning class: pink" indicates that the nearest neighbor in the model space corresponds to the "pink" category.
+
+* **Assign label of nearest training data point to each test data point:** This text describes the nearest neighbor classification process.  The algorithm assigns the label of the nearest training data point to each test data point (query image).
+
+
+**Description of what you see:**
+
+This slide demonstrates the Nearest Neighbor (NN) classification method for object categorization using Bag-of-Features (BoF).  A query image (a violin) is presented, along with its feature vector (bar graph).  The model space (3D scatter plot) shows the representation of different object categories.  The closest point in the model space to the query image's feature vector is highlighted in red, indicating the predicted category ("pink").  The text explains the process of assigning the label of the nearest training data point to the query image.  The slide visually illustrates how the NN classifier works in the context of BoF for object categorization.  The violin image and the bar graph are used to illustrate the query image's feature vector.  The 3D scatter plot visually represents the model space, where each point corresponds to a category.  The highlighted point in red represents the predicted category for the query image.  The text below the diagram explains the classification process.

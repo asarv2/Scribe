@@ -1,0 +1,75 @@
+# Slide 46
+
+**Moving Average In 2D**
+
+`F[x, y]`
+
+```
+* 1
+9 . [
+1 1
+1
+1 1
+1
+1 1
+1]
+```
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  90 90 90 90 90 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+`G[x, y]`
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  70 70 70 70 70 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+**Source: S. Seitz**
+
+
+**Description of what you see:**
+
+This slide continues the illustration of a 2D moving average filter's operation.  It shows two matrices, `F[x, y]` and `G[x, y]`.  `F[x, y]` represents a portion of an image with a central 5x5 block of 90s, representing a constant intensity region.  `G[x, y]` shows the result of applying a 9x9 moving average filter to `F[x, y]`.  The central 5x5 block of 90s in `F[x, y]` is replaced by a 5x5 block of 70s in `G[x, y]`.  This demonstrates how the moving average filter averages the values of neighboring pixels to produce a smoothed result, effectively reducing noise.  The asterisk and number at the top left of the `F[x, y]` matrix are likely a reference to the size of the filter used in the moving average calculation.  The slide is designed to illustrate the 2D moving average operation and its effect on an image.  The source is attributed to S. Seitz.
+
+

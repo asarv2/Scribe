@@ -1,0 +1,26 @@
+# 24
+
+Following the recipe: what is the set of models?
+
+Step 1: select the set of models
+Linear models seem Ok:
+w<sup>T</sup>x = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub>
+How can we modify the output?
+Let's use the sign of w<sup>T</sup>x to predict the label
+sign(w<sup>T</sup>x) = {
++1  if w<sup>T</sup>x > 0
+-1  if w<sup>T</sup>x ≤ 0
+}
+
+Why is this visually a line?
+
+**(Figure):**
+
+The figure is a scatter plot.  It's positioned centrally on the slide.  The x and y axes are not labeled, but the plot shows a roughly equal distribution of red and blue points.  A diagonal line separates the two clusters of points.  The red and blue points are clearly distinguishable, and the diagonal line is a visual representation of a possible decision boundary.  The points are densely clustered around the line, and the line appears to be a good fit for separating the two classes. The figure is used to illustrate the concept of using a linear model for binary classification.
+
+
+**Description:**
+
+This slide continues the discussion of binary classification.  It introduces the idea of using a linear model (w<sup>T</sup>x = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub>) to predict the label (+1 or -1) by examining the sign of the result.  The slide introduces the concept of a decision boundary, which is visually represented by the diagonal line in the scatter plot.  The figure is crucial to the explanation, as it visually demonstrates how a linear model can be used to separate two classes of data points.  The slide is likely part of a larger lecture on AI Basics, focusing on the application of linear models to binary classification problems.
+
+

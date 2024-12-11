@@ -1,0 +1,30 @@
+# Slide 11
+
+**Statistical Methods**
+
+1. After arranging the five sample means in increasing order,
+
+   13.1  13.3  13.8  14.3  14.5
+
+the two smallest can be connected by a line segment because they differ by less than 0.4.
+
+2. However, this segment cannot be extended further to the right since 13.8 – 13.1 = 0.7 ≥ 0.4.
+
+3. Moving one mean to the right, the pair 𝑥̅<sub>3</sub> and 𝑥̅<sub>2</sub> cannot be underscored because these means differ by more than 0.4.
+
+4. Again moving to the right, the next mean, 13.8, cannot be connected to any further to the right.
+
+5. The last two means can be underscored with the same line segment.
+
+Thus,
+
+* Brands 1 and 4 are not significantly different from one another, but are significantly higher than the other three brands in their true average contents.
+
+* Brand 2 is significantly better than 3 and 5 but worse than 1 and 4.
+
+* Brands 3 and 5 do not differ significantly.
+
+
+**Figure Description:**
+
+There is no figure on this slide. The slide is entirely text-based, presenting the results of a multiple comparisons analysis (likely Tukey's method) for a study comparing five brands of automobile oil filters. The text describes how the sample means were ordered and connected to determine which brands of filters have significantly different average material capture amounts. The output is a summary of the pairwise comparisons, highlighting which brands are significantly different and which are not.  The slide is part of a lecture on Statistical Methods, specifically focusing on the follow-up analysis after a significant ANOVA result.

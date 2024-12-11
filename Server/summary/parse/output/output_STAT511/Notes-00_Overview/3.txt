@@ -1,0 +1,20 @@
+# 3
+
+**Office Hours**
+
+**Office hours:**
+
+|       |       |       |
+| :---- | :---- | :---- |
+| Mon. & Wed. | 1:00 pm – 2:00 pm | MATH 904 / WebEx: qu45 |
+| Tue. & Thu. | TBA | MATH XXX |
+| Friday | TBA | MATH 211 |
+
+**Extra office hours for each exam: TBA on Brightspace.**
+
+
+---
+
+**Description:**
+
+This slide, titled "Office Hours," provides a schedule of the instructor's office hours for the STAT 511: Statistical Methods course.  It's presented in a table format, with columns for the day of the week, the time of the office hours, and the location (room number and/or WebEx ID).  The "TBA" (To Be Announced) entries indicate that the specific location or time for those days is not yet available.  The table is clearly formatted, making it easy for students to find the instructor's office hours.  The bottom line provides additional information about extra office hours, which will be announced later on Brightspace.  The slide is part of the course overview, providing essential information for students to contact the instructor.  The footer indicates this is slide 3 of a 22-slide presentation and includes the course title, instructor's name, and a page number.

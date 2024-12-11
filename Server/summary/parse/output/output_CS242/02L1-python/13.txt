@@ -1,0 +1,30 @@
+# Slide 13
+
+```markdown
+To Understand the Code
+Indentation matters to the meaning of the code:
+* Block structure indicated by indentation
+The first assignment to a variable creates it
+* Variable types don't need to be declared, Python figures out the variable types on its own
+Assignment uses = and comparison uses ==.
+For numbers + * / % are as expected.
+* Special use of + for string concatenation; Special use of % for string formatting (as with printf in C)
+Logical operators are words (and, or, not) not symbols
+Simple printing can be done with print()
+Slides adapted from UPenn CIS530 python tutorial
+```
+
+---
+
+**Description:**
+
+This slide provides a summary of key Python coding concepts, likely in the context of an Intro to Data Science course.  The title, "To Understand the Code," suggests that the content is about understanding how Python code works.  The bullet points explain important aspects of Python syntax and semantics:
+
+* **Indentation:** Python uses indentation to define code blocks, unlike other languages that use braces.
+* **Variable Creation:** The first time a variable is assigned a value, it is created.
+* **Dynamic Typing:** Python automatically determines the data type of a variable based on the assigned value.
+* **Operators:**  Standard arithmetic operators (+, -, \*, /, %) work as expected.  The plus sign (+) is also used for string concatenation.  The percent sign (%) is used for string formatting, similar to `printf` in C.
+* **Logical Operators:** Python uses words (e.g., `and`, `or`, `not`) for logical operations, not symbols.
+* **Printing:** The `print()` function is used for displaying output.
+
+The footer indicates that the content is adapted from a Python tutorial from the University of Pennsylvania's CIS530 course.  There are no figures on this slide.  The text is presented in a clear and concise manner, providing a summary of Python's syntax and features relevant to the course.

@@ -1,0 +1,27 @@
+# 20
+
+```markdown
+Visualizing PCA results
+# map each category to a different color
+data['colors']=data.category.map({'Iris-setosa':'r',
+'Iris-versicolor':'b', 'Iris-virginica':'g'})
+# visualize results for 1st two dimensions
+plt.scatter(X_trans[:,0],X_trans[:,1],c=data['colors'])
+# compare to 1st two dimensions in original data
+plt.scatter(X[:,0],X[:,1],c=data['colors'])
+```
+
+---
+
+**Figure Description:**
+
+The slide displays two scatter plots.  The top plot shows the results of applying PCA to the Iris dataset, with the first two principal components plotted.  The points are colored according to the species of Iris (setosa, versicolor, virginica), represented by red, blue, and green, respectively.  The x and y axes are labeled, but the specific values are not visible in the image.  The plot is in the upper portion of the slide.
+
+The bottom plot shows the original data, with the first two attributes (presumably sepal length and sepal width) plotted.  The points are colored in the same way as the top plot, showing the distribution of the Iris species in the original feature space.  The plot is in the lower portion of the slide.
+
+Both plots are used to visually compare the original data representation with the representation after applying PCA.  The purpose is to illustrate how PCA transforms the data, potentially reducing dimensionality while preserving the essential structure of the data.  The plots are side-by-side, allowing for a direct comparison of the data distributions in the original feature space and the transformed feature space.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, visualizes the results of applying PCA to the Iris dataset.  It displays two scatter plots.  The top plot shows the transformed data, where the x and y axes represent the first two principal components.  The bottom plot shows the original data, where the x and y axes represent the first two attributes of the Iris dataset.  Both plots use the same color scheme to represent the different Iris species (setosa, versicolor, virginica).  The purpose of the slide is to visually demonstrate the effect of PCA on the data, showing how the transformed data can be visualized and compared to the original data.  The plots are crucial for understanding how PCA changes the representation of the data.

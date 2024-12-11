@@ -1,0 +1,20 @@
+# 28
+
+# Empirical risk minimizer
+
+Step 3: minimize the loss:
+
+w* = arg min<sub>w∈ℝ<sup>D</sup></sub> Σ<sub>i=1</sub><sup>N</sup> l(y<sub>i</sub>, w<sup>T</sup>x<sub>i</sub>)
+
+How?
+
+Follow the gradient direction!
+
+**(Figure):**
+
+A graph is shown in the right-hand portion of the slide.  The x-axis is labeled "W" (likely representing a weight or parameter). The y-axis is labeled "Cost". The graph is a curve that is roughly parabolic, opening upwards.  Several arrows are drawn on the curve, pointing downwards.  The arrows represent the direction of the gradient descent algorithm.  A small circle is drawn near the bottom of the curve, which is the minimum point.  The text "WINNER!" is written near the minimum point.  The text "GRADIENT DESCENT" is written above the curve, and the text "COST" is written on the y-axis.  The arrows are labeled with small, downward-pointing triangles.
+
+
+**Description:**
+
+This slide discusses the process of minimizing the loss function in a machine learning model, specifically using gradient descent.  The equation w* = arg min<sub>w∈ℝ<sup>D</sup></sub> Σ<sub>i=1</sub><sup>N</sup> l(y<sub>i</sub>, w<sup>T</sup>x<sub>i</sub>) shows the mathematical formulation of the problem.  The graph visually represents the loss function as a function of the model's parameters (w).  The downward-pointing arrows on the curve illustrate the gradient descent algorithm's iterative process of moving towards the minimum of the loss function.  The "WINNER!" text highlights the goal of finding the optimal parameters that minimize the loss.  The slide is a crucial part of the lecture, as it connects the mathematical formulation of the problem with the iterative optimization algorithm used to solve it.  The graph is essential for understanding the concept of gradient descent and how it works to find the minimum of a function.

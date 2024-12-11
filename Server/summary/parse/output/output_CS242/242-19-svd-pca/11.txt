@@ -1,0 +1,25 @@
+# Slide 11
+
+**SVD**
+
+Every matrix A has a SVD
+
+* The columns of U are left singular vectors of A
+* The columns of V (i.e. the rows of V<sup>T</sup>) are right singular vectors of A
+* The entries of S are the singular values of A.
+
+**(Figure):**  The slide contains a series of three small diagrams, each representing a matrix (A, U, S, V<sup>T</sup>).  These diagrams are positioned in the lower portion of the slide, below the text.
+
+* **Diagram 1 (A):**  A rectangle is shown, labeled "A".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  This represents the original matrix A, with n rows and d columns.
+
+* **Diagram 2 (U):**  A rectangle is shown, labeled "U".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Vertical lines are drawn within the rectangle, representing the columns of the U matrix.  This diagram visually represents the left singular vectors of A.
+
+* **Diagram 3 (S):** A rectangle is shown, labeled "S".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Diagonal lines are drawn within the rectangle, representing the singular values of A.  This diagram visually represents the singular values of A.
+
+* **Diagram 4 (V<sup>T</sup>):** A rectangle is shown, labeled "V<sup>T</sup>".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Horizontal lines are drawn within the rectangle, representing the rows of the V<sup>T</sup> matrix.  This diagram visually represents the right singular vectors of A.
+
+**Description:**
+
+This slide, part of a lecture on Singular Value Decomposition (SVD) within an Intro to Data Science course, visually explains the components of an SVD decomposition.  The diagrams illustrate the dimensions of the matrices (A, U, S, V<sup>T</sup>) and how they relate to each other in the SVD formula.  The slide is designed to provide a visual aid for understanding the mathematical concept of SVD, which is a crucial tool in dimensionality reduction.  The diagrams show the relationships between the original matrix A and the decomposed matrices U, S, and V<sup>T</sup>.  The slide is likely a continuation of the previous slide's discussion of low-rank matrix approximations and how SVD is used to achieve dimensionality reduction.
+
+

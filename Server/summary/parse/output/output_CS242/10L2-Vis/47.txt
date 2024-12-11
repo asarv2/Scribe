@@ -1,0 +1,26 @@
+Slide 47
+
+**Geoms**
+
+*   **One Variable:**  A geom is used to represent data points.  The geom's aesthetic properties are used to represent variables.  Each function returns a layer.  The examples show how to use `geom_area`, `geom_density`, `geom_dotplot`, `geom_freqpoly`, and `geom_histogram` for various data types (continuous and discrete).  The code snippets show the syntax for each geom, including the mapping of aesthetics (e.g., `aes(y = ..density.., ...)`).
+
+*   **Two Variables:**  The examples show how to use `geom_blank`, `geom_jitter`, `geom_point`, `geom_quantile`, `geom_rug`, `geom_smooth`, and `geom_text` to create plots with relationships between two variables.  The code snippets show the syntax for each geom, including the mapping of aesthetics (e.g., `aes(x = cty, y = hwy, color = cyl)`).  The examples also show how to create plots with bivariate distributions.
+
+*   **Continuous Bivariate Distribution:**  The examples show how to use `geom_bin2d`, `geom_density2d`, and `geom_hex` to visualize the distribution of two continuous variables.  The code snippets show the syntax for each geom, including the mapping of aesthetics.
+
+*   **Discrete X, Continuous Y:**  The examples show how to use `geom_bar` and `geom_boxplot` to visualize the relationship between a discrete and a continuous variable.  The code snippets show the syntax for each geom, including the mapping of aesthetics.
+
+*   **Discrete X, Discrete Y:**  The examples show how to use `geom_jitter` and `geom_bar` to visualize the relationship between two discrete variables.  The code snippets show the syntax for each geom, including the mapping of aesthetics.
+
+*   **Continuous Function:**  The examples show how to use `geom_area`, `geom_line`, and `geom_step` to visualize continuous functions.  The code snippets show the syntax for each geom, including the mapping of aesthetics.
+
+*   **Visualizing Error:**  The examples show how to use `geom_crossbar`, `geom_errorbar`, `geom_errorbarh`, `geom_linerange`, and `geom_pointrange` to visualize error bars and ranges.  The code snippets show the syntax for each geom, including the mapping of aesthetics.
+
+*   **Maps:**  The examples show how to use `geom_map` to create maps.  The code snippets show the syntax for each geom, including the mapping of aesthetics.
+
+*   **Three Variables:**  The examples show how to use `geom_raster`, `geom_tile`, and `geom_contour` to visualize relationships between three variables.  The code snippets show the syntax for each geom, including the mapping of aesthetics.
+
+
+**Description of what you see:**
+
+This slide is a reference sheet or cheat sheet for the `ggplot2` library, showing various `geom` functions and their uses.  It's a comprehensive list of geoms, organized by the type of relationship they visualize (one variable, two variables, etc.).  Each geom is described with a brief explanation and example code.  The slide is designed to be a quick reference for users of the `ggplot2` library, allowing them to quickly find the appropriate geom for their visualization needs.  The layout is a table-like format, with different sections for different types of geoms.  The slide is highly informative and useful for learning the library.

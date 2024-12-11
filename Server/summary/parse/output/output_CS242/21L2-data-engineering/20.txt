@@ -1,0 +1,31 @@
+# Slide 20
+
+```
+Mapreduce in python
+def mapreduce_execute(data, mapper, reducer):
+# apply mapper function to data
+values = map(mapper, data)
+=
+# group by key values
+groups = {}
+for items in values:
+for k,v in items:
+if k not in groups:
+groups[k] = [v]
+else:
+groups[k].append(v)
+# now what?
+```
+
+---
+
+**Description of the slide:**
+
+This slide presents Python code for a MapReduce-like function, `mapreduce_execute`.  It takes three arguments: `data` (the input data), `mapper` (a function to map input data to key-value pairs), and `reducer` (a function to reduce the grouped data).
+
+* **Function Definition:** The code defines a function named `mapreduce_execute`.  This function appears to be designed to implement a simplified MapReduce algorithm in Python.
+* **Mapper Application:** The line `values = map(mapper, data)` applies the `mapper` function to each element in the `data` input.  This is the "map" phase of MapReduce, transforming the input data into key-value pairs.
+* **Grouping by Key:** The code initializes an empty dictionary `groups`.  The `for` loops iterate through the `values` (the output of the `map` phase).  For each key-value pair (`k, v`), it checks if the key `k` already exists as a key in the `groups` dictionary.  If not, it creates a new entry in `groups` with `k` as the key and a list containing `v` as the value.  If the key already exists, it appends the value `v` to the existing list associated with that key. This is the "shuffle" and partial "reduce" phase, grouping values by key.
+* **Placeholder:** The line `# now what?` indicates that the function is incomplete.  It suggests that the next step would be to apply a `reducer` function to the `groups` dictionary to perform the final reduction step.
+
+**Overall:** The slide shows a Python implementation of the MapReduce paradigm, focusing on the grouping of data by key.  The code is designed to be a simplified version of a full MapReduce implementation, highlighting the core logic of the process.

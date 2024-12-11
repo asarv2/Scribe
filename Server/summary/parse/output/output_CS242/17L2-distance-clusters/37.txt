@@ -1,0 +1,15 @@
+# Slide 37
+
+**Quantitative evaluation**
+
+For prediction tasks there are a variety of quantitative evaluation metrics
+* Accuracy, squared loss, area under ROC, etc.
+For cluster analysis there is typically no ground truth
+* Evaluation aims measure the "goodness" of the resulting clusters
+
+
+---
+
+**Description:**
+
+This slide discusses quantitative evaluation methods for different types of data analysis tasks.  It's a bulleted list, typical of a slide in a lecture.  The slide's purpose is to introduce the concept of evaluating the quality of results in data science, specifically highlighting the differences between evaluating predictions and evaluating clusters.  There are no figures on this slide.  The content is straightforward and directly explains the different approaches to evaluating the quality of results in data science.  The context suggests that this is part of a larger lecture on data analysis techniques, and this slide specifically introduces the concept of quantitative evaluation for clustering.  The bullet points list common metrics for evaluating predictions (accuracy, squared loss, area under ROC curve) and the different approach needed for evaluating clusters (no ground truth, evaluating "goodness").

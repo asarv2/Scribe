@@ -1,0 +1,25 @@
+## Slide 44
+
+**Causal Inference**
+
+Prediction and causation are very different. Typical questions are:
+
+* **Prediction:** Predict Y after observing X = x
+* **Causation:** Predict Y after setting X = x
+
+Causation involves predicting the effect of an intervention, e.g.:
+
+* **Prediction:** Predict health given that a person takes vitamin C
+* **Causation:** Predict health if I give a person vitamin C
+
+The difference is passively observing X and actively intervening to set X.
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on Introduction to Data Science, introduces the key difference between prediction and causation.  It defines prediction as predicting an outcome (Y) based on observing a variable (X), while causation involves predicting the outcome (Y) after *intervening* to change the variable (X).  The example of predicting health given someone takes vitamin C (prediction) versus predicting health if someone is given vitamin C (causation) illustrates this distinction.  The slide is likely part of a larger discussion on causal inference in data analysis.

@@ -1,0 +1,25 @@
+# 18
+
+```markdown
+Applying PCA
+New data vectors are formed by projecting the data onto the first few principal components (i.e., top m eigenvectors)
+x = [x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>p</sub>] (original instance data)
+A = [a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>p</sub>] (principal component vectors)
+x′<sub>1</sub> = a<sub>1</sub> ⋅ x = Σ<sub>j=1</sub><sup>p</sup> a<sub>1j</sub>x<sub>j</sub>
+...
+x′<sub>m</sub> = a<sub>m</sub> ⋅ x = Σ<sub>j=1</sub><sup>p</sup> a<sub>mj</sub>x<sub>j</sub> for m ≤ p
+x′ = [x′<sub>1</sub>, x′<sub>2</sub>, ..., x′<sub>m</sub>] (transformed instance)
+If m = p then data is transformed
+If m < p then transformation is lossy and dimensionality is reduced
+```
+
+---
+
+**Figure Description:**
+
+The slide contains a mathematical derivation of applying PCA.  A central part of the slide is a series of equations showing how new data vectors (x′) are formed by projecting the original data vectors (x) onto the principal components (a).  The equations use summation notation (Σ) to represent the dot product of the original data vector and the principal component vector.  The equations are presented in a structured format, with each equation clearly labeled.  The equations are placed in the center of the slide, and the variables are clearly defined.  The slide also includes a statement about the implications of different values of m (the number of principal components used).  The slide is focused on the practical application of PCA, showing how to transform data using principal components.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, details the application of Principal Component Analysis (PCA).  The title "Applying PCA" indicates the topic.  The slide presents a series of mathematical equations that describe how to project data onto principal components to create new data vectors.  The equations show how to calculate the new data vectors (x′) using the original data vectors (x) and the principal component vectors (a).  The equations are presented in a clear and organized manner, with each variable clearly defined.  The slide also includes a statement about the implications of different values of m (the number of principal components used).  The slide is focused on the practical application of PCA, showing how to transform data using principal components.  The equations are central to the slide, and the variables are clearly defined.  The slide is designed to provide a detailed explanation of the application of PCA.

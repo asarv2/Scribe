@@ -1,0 +1,200 @@
+# 1
+
+**Introduction to Statistics**
+
+**Statistics: The Art and Science of Learning from Data**
+
+**What is Statistics?**
+
+* Questions Statistics Can Answer
+    * Do people who eat a high fiber cereal for breakfast, on average, weight less that people who skip breakfast?
+
+**Four Main Phases of Statistical Analysis:**
+
+1. The Research Question - Any question about a population or process.
+    * Example: is duct tape better than freezing with dry ice at making warts go away?
+
+2. Design of the study and data collection – Plan for obtaining and analyzing the data to be used to answer the questions of interest.
+    * First decide how to get people for the study and then decide what to measure on them.
+    * In this study there were 51 volunteers, all with warts and all relatively young. They were randomly assigned to one of two treatments: Duct tape (treatment 1) or freezing with dry ice (treatment 2). After a reasonable amount of time, each subject was examined to determine whether they still had warts.
+
+3. Descriptive statistics – Summaries of the data – both graphical and numerical summaries.
+    * Of the 26 patients with duct tape, 85% got rid of their warts compared to only 60% of the patients whose warts were frozen.
+
+4. Conclusions and Inferences – Inferences about a population or process based on the data..
+    * In this study, it was concluded that there was strong statistical evidence that for all people (not just those in the study) duct tape will be more effective than freezing in removing warts.
+    * Above, we inferred that the outcome in the sample generalizes to the general population of people. We can make this inference because getting a similar result with another 51 people is very unlikely if duct tape isn’t better at getting rid of warts.
+
+**KEY POINT 1:** The focus of this course is on data analysis but not the research question, the design of study and data collection.
+
+
+---
+
+**Slide Description:**
+
+This is the first slide of a five-slide presentation on Statistical Methods. The title, "Introduction to Statistics," is prominently displayed at the top, followed by a subtitle, "Statistics: The Art and Science of Learning from Data."  The slide then outlines the core concepts of the course, including what statistics is, the four main phases of statistical analysis, and a key point about the course's focus.
+
+The slide details the four phases of statistical analysis: 1) the research question, 2) study design and data collection, 3) descriptive statistics, and 4) conclusions and inferences.  Crucially, it provides an example of a research question ("is duct tape better than freezing with dry ice at making warts go away?") and describes a hypothetical study design involving 51 volunteers with warts, randomly assigned to either duct tape or freezing treatment.  The slide also includes a descriptive statistic: 85% of patients with duct tape treatment were successfully treated compared to 60% of those treated with freezing.  The slide concludes with a key point emphasizing that the course focuses on data analysis, not the research question or study design itself.
+
+
+# 2
+
+**The Language of Statistics:**
+
+Like every field of study, statistics has its own language. Let's begin by defining a few words that will be used throughout the course.
+
+* **Population:** WHO WE ARE INTERESTED IN - A population is a group of individuals we are interested in and about whom inferences are to be made.
+
+* **Sample:** The sample is the subset of the population whose members were chosen to be in the study.
+
+* **Simple random sample (abbreviated SRS):** I use random sample and SRS interchangeably. A random sample is a sample which is selected by any method equivalent to drawing names out of a hat.
+
+
+**Example:**
+
+Population: all current Purdue students
+
+Sample: 100 randomly chosen students currently taking STAT 511
+
+
+* **Subjects:** WHO WE MEASURE - Subjects are the individual members of the population that are in the study. The set of subjects makes up the sample.
+
+* **Variable(s):** WHAT WE MEASURE - We are usually interested only in certain characteristics of the objects in a population. A variable describes a characteristic of an individual that is measured on each subject in the sample.
+
+* **Values or measurements:** Variable values are the quantities or qualities taken by a variable. Each subject has a variable value.
+
+
+**Notation:**
+
+Use upper case letters X, Y, Z to denote variables,
+
+Use lower case letters x, y, z to show values that variables take.
+
+
+**Example:**
+
+Variable | Values
+------- | --------
+X: regular smoker | x: yes, no
+Y: Age | y: 16, 17, 18, 19 ...
+
+
+* **Data:** The set of variables values measured on the subjects in the sample.
+
+
+---
+
+**Slide Description:**
+
+This slide, titled "The Language of Statistics," introduces key statistical terminology.  It defines population and sample, emphasizing the concept of a simple random sample (SRS).  A visual aid, a Venn diagram, depicts the relationship between a population and a sample, showing the sample as a subset of the population.  The diagram is positioned centrally on the slide, illustrating the concept of sampling.  The slide also provides an example of a population (all current Purdue students) and a sample (100 randomly chosen students taking STAT 511).  The slide then introduces the concept of subjects and variables, explaining how variables are used to measure characteristics of subjects within a sample.  Finally, it introduces the notation used for variables and their values, providing an example of a variable (X: regular smoker) and its possible values (x: yes, no).  The slide concludes by defining data as the set of variable values measured on the subjects in the sample.  The slide number (2) is clearly visible at the bottom right.
+
+
+# 3
+
+**Parameter and Statistic**
+
+* **Parameter:** A parameter is a numerical summary of the variable values taken by all the members of the population.
+
+* **Statistic:** A statistic is a numerical summary of the variable values taken by the subjects in the study.  So, unlike a parameter whose value doesn't change (assuming a stable population), the value of a statistic is variable because its value depends upon which subjects are chosen for the study. A statistic is used to estimate a parameter value.
+
+**Example:**
+
+Parameter: proportion of all current Purdue students who regularly smoke.
+
+Statistic: proportion of these 100 students who are regular smokers.
+
+**Statistical Inference:** A statistical inference is a statement about a population based on measurements of a subset of the population.
+
+**KEY POINT 2:** The subjects in the sample were selected from the population, and so the population is made up of similar individuals.
+
+**KEY POINT 3:** The larger the sample size, the more information you have. The more information you have, the more willing people are to trust your results.
+
+**KEY POINT 4:** Statistics concerns properties of populations. We cannot use statistics to make predictions about particular individuals.
+
+**Learning Goals:**
+
+* **Describe data:**
+    * Recognize which charts, graphs, and statistics are appropriate for a given data set.
+    * Learn how to interpret these graphs and statistics.
+* **Understanding the role of chance in statistics:**
+    * What we measure (variable values) varies between individuals in a population. We use chance to choose our subjects for the study and we get a sample that is representative of the population.
+    * The consequence of this is that the statistic we calculate from our sample is based on chance. If we'd chosen another sample, we could get a different value for our statistic.
+* **Make inferences about the population:**
+    * Learn how statisticians have devised a non-subjective way for making inferences about a population based on data. Learn how statisticians take chance into account when they make inferences.
+    * Learn how to make your own inferences about populations based on data.
+
+
+---
+
+**Slide Description:**
+
+This slide (slide 3) of a presentation on Statistical Methods introduces the concepts of parameters and statistics, contrasting them.  A key difference highlighted is that parameters describe the entire population, while statistics describe a sample drawn from that population.  The example provided is the proportion of Purdue students who smoke regularly.  The parameter refers to the entire student body, while the statistic refers to a sample of 100 students.  The slide also emphasizes the concept of statistical inference, which is drawing conclusions about a population based on a sample.  Three key points are presented, emphasizing the importance of sample size, the nature of populations, and the limitations of statistical analysis.  Finally, the slide outlines the learning goals for the course, focusing on describing data, understanding chance, and making inferences.  The slide number (3) is clearly visible at the bottom right.
+
+
+# 4
+
+**Example 1.1:**
+
+In 2015, a study was done to answer the following question: On average, do male STAT 301 students drive faster than female STAT 301 students? To gather data for this study, a faculty member randomly selected 242 Purdue STAT 301 students (out of 1000+) to be subjects in the study. The researcher decided that the measure of speed she would use was the fastest speed ever driven.
+
+In an online survey, each subject was asked their gender and the fastest speed ever driven. From this data, it was determined that for the subjects in the sample, the average male fastest driving speed was 105 mph and the average female fastest driving speed was 90 mph.
+
+Using statistical techniques you’ll learn in this course, we can infer with reasonable confidence that for all Purdue students who took STAT 301 around 2015, the average male’s fastest driving speed is somewhere between 101 and 109 mph and the average female’s driving speed is between 88 and 92 mph. Consequently, we have statistical evidence that male STAT 301 students, on average, have driven faster than female students taking STAT 301.
+
+Below describes the 4 phases of the statistical analysis used in this study.
+
+1.  Research question: For STAT 301 students, do males, on average, drive faster than females?
+
+2.  Study design: Randomly select 242 Purdue STAT 301 students and survey them about their gender and the fastest speed they’ve ever driven.
+
+3.  Statistics: 105 mph = average fastest driving speed of the males in the sample and 90 mph was the average fastest driving speed of the females in the sample.
+
+4.  Inferences: There are two inferences made above. One inference gives a range of values believed to contain the parameter of interest and the other answers the question.
+
+    *   Inference = range of plausible values for the parameters of interest: for all Purdue STAT 301 students, the average male’s fastest driving speed is somewhere between 101 and 109 mph and the average female’s fastest driving speed is between 88 and 92 mph.
+
+    *   Inference = answer to the question: we have statistical evidence that male STAT 301 students, on average, have driven faster than female students taking STAT 301.
+
+First, we need to describe the following in the context of this study:
+
+*   Population of interest:
+*   Sample:
+*   Variables of interest:
+*   Statistics:
+*   Parameters:
+
+
+---
+
+**Slide Description:**
+
+This is slide 4 of a 5-slide presentation on Statistical Methods.  The slide continues the discussion from previous slides, focusing on a specific example (Example 1.1) of a study conducted in 2015 to determine if male STAT 301 students drive faster than female STAT 301 students.  The slide details the study's methodology, including the research question, study design (random selection of 242 students), data collection (asking about fastest speed ever driven), and the resulting statistics (average male speed of 105 mph and average female speed of 90 mph).  Importantly, the slide then uses statistical techniques (not yet explained in detail) to infer a range of plausible values for the average fastest speeds for all STAT 301 students (males between 101 and 109 mph, females between 88 and 92 mph).  The slide concludes by highlighting the statistical inference that male students, on average, drove faster.  The slide also includes a list of items to be described in the context of the study, which are likely to be discussed in the following slides.  The slide number (4) is clearly visible at the bottom right.
+
+
+# 5
+
+**Example 1.2**
+
+1. The Research Question - Is asthma in children linked to their mother's stress during pregnancy? (Actual question studied by Harvard Medical School researchers.)
+
+2. Design of the study and data collection - 387 pregnant women were selected for the study. Researchers measured the stress levels of the women and determined which had high stress levels. Using the umbilical cord blood, the Immunoglobulin (IgE) - a chemical linked to allergic responses – was measured for each newborn.
+
+3. Descriptive statistics - The relevant numerical summaries are the average IgE level of the group of babies whose mothers were not stressed and the average IgE level of the group of babies whose mom’s stress level was high. The researchers found that the average IgE level of the babies whose mom was stressed was higher than the average IgE level of the babies with unstressed moms.
+
+4. Conclusions and Inferences - The Harvard researchers concluded that "This research adds to a growing body of evidence that links maternal stress, such as that precipitated by financial problems or relationship issues, to changes in children's developing immune systems, even during pregnancy.”
+
+Describe the following in the context of this example:
+
+*   Population:
+*   Sample:
+*   Subject:
+*   Variables of interest:
+*   Statistics:
+*   Parameters of interest:
+
+
+---
+
+**Slide Description:**
+
+This is the fifth and final slide of a presentation on Statistical Methods.  It presents a second example, Example 1.2, focusing on the link between maternal stress and IgE levels in newborns.  The slide outlines the four phases of statistical analysis for this example: 1) the research question, 2) the study design and data collection, 3) descriptive statistics, and 4) conclusions and inferences.  The example details a study involving 387 pregnant women, measuring their stress levels and the IgE levels of their newborns.  The descriptive statistics highlight the average IgE levels of babies born to stressed versus unstressed mothers, showing a statistically significant difference.  The conclusion infers a link between maternal stress and changes in the developing immune systems of children.  The slide concludes with a list of items to be described in the context of the example, which are likely to be discussed in the following slides.  The slide number (5) is clearly visible at the bottom right.  There are no figures on this slide.

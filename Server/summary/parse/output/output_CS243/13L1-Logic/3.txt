@@ -1,0 +1,34 @@
+# 3
+
+**Intelligent Systems Integrate Learning and Reasoning**
+
+*Perception*
+```
+Data
+```
+*Reaction*
+```
+Knowledge
+```
+*Action*
+```
+Learning
+```
+```
+Reasoning
+```
+
+An intelligent agent is a system that perceives its environment and takes actions that maximize its chances of success.
+
+-- Russell & Norvig, 2003
+
+* Pictures from Disney.
+
+
+---
+
+**Description of the slide:**
+
+This slide visually depicts the relationship between data, knowledge, learning, reasoning, and action in intelligent systems.  It uses a series of teal-colored horizontal rectangles and arrows to illustrate a flow.  The rectangles are labeled with the terms "Data," "Knowledge," "Learning," "Reasoning," and "Action."  The arrows connect these elements, indicating the sequence of steps.  The top of the slide has the title "Intelligent Systems Integrate Learning and Reasoning."  A small image of a white robot with blue accents is positioned in the lower left quadrant of the slide.  The text below the diagram explains the concept of an intelligent agent.  The attribution "Russell & Norvig, 2003" and the credit line "* Pictures from Disney" are included at the bottom of the slide.
+
+The robot image is a visual representation of an intelligent agent, illustrating the concept of a system that interacts with its environment.  The arrows and rectangles visually represent the flow of information and processes involved in intelligent systems. The text below the diagram provides a definition of an intelligent agent, further clarifying the concept presented in the slide. The attribution and credit line provide context and source information.

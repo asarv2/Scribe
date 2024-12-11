@@ -1,0 +1,31 @@
+# Slide 25
+
+**Insightful: eureka vs. knowledge building**
+
+**(Image Description):**
+
+This slide presents two interactive visualizations, side-by-side, exploring the global gender gap in PhDs awarded.
+
+**Left Panel (Interactive Visualization 1):**
+
+* **Title:** How Nations Fare in PhDs by Sex [Interactive]
+* **Data:**  The visualization displays a scatter plot of data points, each representing a different nation.  The x-axis likely represents the percentage of female PhD recipients in a given country, and the y-axis likely represents the total number of PhDs awarded in that country.  The size of the data points might represent the total number of PhDs awarded in that country.  The data points are colored, possibly to differentiate between different categories or time periods.  There are interactive elements, allowing users to filter and explore the data.  A legend is present, likely explaining the meaning of the colors and symbols.  The visualization is interactive, allowing users to explore the data further.
+
+* **Purpose:** The visualization is designed to allow users to explore the relationship between the percentage of female PhD recipients and the total number of PhDs awarded in different countries.  The interactive nature allows for a deeper understanding of the global trends and potential exceptions.
+
+**Right Panel (Interactive Visualization 2):**
+
+* **Title:** How Nations Fare in PhDs by Sex [Interactive]
+* **Data:** The visualization displays a line graph or a similar time-series chart.  The x-axis likely represents time (years), and the y-axis likely represents the percentage of female PhD recipients.  The graph shows the trend of the percentage of female PhD recipients over time for different countries.  The data points are connected by lines, allowing for a clear visualization of the trends.  The visualization is interactive, allowing users to filter and explore the data.  A legend is present, likely explaining the meaning of the colors and symbols.
+
+* **Purpose:** The visualization is designed to allow users to explore the trend of the percentage of female PhD recipients over time for different countries.  The interactive nature allows for a deeper understanding of the global trends and potential exceptions.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, demonstrates the concept of insightful visualizations.  The interactive visualizations are designed to allow users to explore the global gender gap in PhDs awarded.  The visualizations are likely intended to encourage users to discover patterns, trends, and exceptions in the data.  The slide is likely part of a discussion on how interactive visualizations can facilitate knowledge building and lead to "eureka" moments.
+
+
+**Description of the Visuals:**
+
+The visualizations are interactive charts, allowing users to explore the data further.  The charts are clearly labeled with titles, axis labels, and data series labels.  The colors used for the different countries are distinct, making it easy to follow the trends for each country.  The interactive elements allow for a deeper understanding of the data.  The overall design is clean and professional, focusing on conveying the data effectively.  The visualizations are positioned side-by-side, allowing for a direct comparison.  The interactive nature of the visualizations is a key feature, allowing users to explore the data further.

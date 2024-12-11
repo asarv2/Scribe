@@ -1,0 +1,41 @@
+# 8
+
+# Multidimensional Convolution
+
+"Feature Map" usually has multiple layers
+
+* An image has R, G, B layers, or "channels"
+One layer has many convolution filters, which create a multichannel output map
+
+Input feature map
+Channels
+<br>
+<img src="https://i.imgur.com/a700000.png" alt="Input feature map">
+<br>
+3x3x3 filter
+<img src="https://i.imgur.com/b700000.png" alt="3x3x3 filter">
+*
+Output feature map
+<img src="https://i.imgur.com/c700000.png" alt="Output feature map">
+=
+
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, explains multidimensional convolution in convolutional neural networks (CNNs).  It illustrates how a CNN processes images with multiple color channels (RGB).
+
+* **Title:** "Multidimensional Convolution" is displayed at the top, indicating the topic of the slide.
+
+* **Text:** The text explains that a "Feature Map" typically has multiple layers, and an image has Red, Green, and Blue (RGB) layers, or channels.  It also explains that one layer in a CNN has multiple convolution filters, which create a multichannel output map.
+
+* **Input Feature Map:** A diagram of an input feature map is shown.  It depicts a 3-layer stack of 3x3 grids.  Each grid represents a channel (e.g., Red, Green, Blue).  The grids are colored differently (light gray, green, and orange) to represent the different channels.  The diagram is positioned on the left side of the slide.  This figure illustrates the input data to the convolution operation, showing the multiple channels of an image.
+
+* **3x3x3 Filter:** A diagram of a 3x3x3 filter is shown.  The filter is a 3x3 grid with three layers, each layer corresponding to a channel.  The numbers in the filter represent the weights used in the convolution operation.  The filter is positioned to the right of the input feature map.  This figure shows the filter used to extract features from the input image.
+
+* **Output Feature Map:** A diagram of an output feature map is shown.  It's a single 2x2 grid, which is a simplified representation of the output of the convolution operation.  The output map is positioned to the right of the filter.  This figure shows the result of applying the filter to the input image.
+
+* **Asterisk (*):** An asterisk is placed between the input feature map and the filter, visually separating the input and the filter.
+
+* **Equal Sign (=):** An equal sign is placed between the filter and the output feature map, visually connecting the filter to the output.
+
+The overall purpose of the slide is to illustrate the concept of multidimensional convolution in CNNs, specifically how the convolution operation is applied to images with multiple color channels.  The diagrams are crucial for understanding the process.

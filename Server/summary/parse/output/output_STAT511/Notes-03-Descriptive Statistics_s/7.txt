@@ -1,0 +1,52 @@
+# Slide 7
+
+**Choosing the best Measure of Center and Variability**
+
+* When dealing with strongly skewed distributions, it is somewhat customary to report the median ("midpoint") rather than the mean ("arithmetic average"). However, a health organization or a government agency may need to include all survival times, and thus calculate the mean, to estimate the cost of medical care for a given disease and plan medical staffing appropriately. Relying only on the median would result in underestimating the medical and financial needs. The mean and median measure center in different ways, and both are useful.
+
+* As a rule of thumb, when there are extreme outliers or the data is very skewed, the median is a preferred measure of center because the mean and standard deviation are affected by extreme observations.
+
+* If the data is only slightly skewed and there are no extreme outliers, then the mean is usually the preferred measure of center.
+
+**Example 3.6 - Baseball Salaries**
+
+In 2011, the total payroll for the New York Yankees was $202,689,028.
+* The average salary was $6,756,300. The standard deviation was $8,468,058.
+* The median salary was $2,100,000.
+
+1. What does this tell us about the shape of the distribution of NYY salaries?
+
+2. Is the average a very good measure of what a "typical" NYY baseball player makes?
+
+**R code:**
+
+```
+x<-c(7,5,14,12,1,13, 2, 12,10, 3, 11, 13, 3, 10, 11, 6, 10, 15, 3, 3)
+mean(x);var(x);sd(x);
+summary(x);
+quantile(x, prob=0.25);
+boxplot(x)
+boxplot(x, x+1.5)
+```
+
+**Describing a Single Categorical Variable**
+
+**Example 3.7: Shark Attacks**
+
+An oceanographer studying sharks wanted to know "Which state has the highest percentage of shark attack?" The researcher randomly selected 367 shark attacks from a list of all shark attacks that occurred in the US between 2000 and 2005. For each individual shark attack in the sample, the state where the attack occurred was identified. There were 289 attacks in Florida, 44 in Hawaii and 34 in California.
+
+1. What is a subject in this sample?
+2. What is the variable?
+3. What type of variable is it?
+
+
+**Figure Descriptions:**
+
+* **Histograms (Likely):**  There are likely two or more histograms positioned side-by-side.  The x-axis would represent the range of values (e.g., sugar or sodium content in cereal). The y-axis would represent the count or frequency of data points within each bin.  These histograms would be used to visually compare the distributions of sugar and sodium content in cereal samples.  The histograms are likely positioned above or near the box plots.
+
+* **Box Plots (Likely):** There are likely three box plots positioned below the histograms. Each box plot would represent a different group (e.g., active smokers, passive smokers, nonsmokers). The box would span from the first quartile (Q1) to the third quartile (Q3), with a line inside representing the median. Whiskers would extend from the box to the minimum and maximum values within 1.5 times the interquartile range (IQR).  Dots or other symbols outside the whiskers would indicate outliers.  The box plots are used to compare the distributions of cotinine levels across the three groups.  The box plots are likely positioned below the histograms.
+
+
+**Overall Description:**
+
+This slide continues the discussion of choosing appropriate measures of center and variability, particularly in the context of skewed data. It introduces an example of baseball salaries and a new example about shark attacks.  The slide also includes R code for data analysis and visualization.  The figures (likely histograms and box plots) are crucial for visually comparing the distributions of different data sets and identifying outliers.  The slide is transitioning from numerical data analysis to categorical data analysis, as evidenced by the shark attack example.

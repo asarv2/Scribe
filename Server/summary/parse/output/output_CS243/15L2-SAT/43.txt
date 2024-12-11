@@ -1,0 +1,23 @@
+# 43
+
+**Encode Hamiltonian Path Problem into SAT**
+
+**Hamiltonian Path Problem**
+
+* Key question: Is there a path in a directed graph that visits every vertex once?
+* Is there a Hamiltonian path in the example graph?
+* 1 → 3 → 4 → 2 → 5
+
+How do we make use of a SAT solver to find this path?
+
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph is a visual representation of the problem instance.  The graph is a simple, directed graph with 5 nodes (1, 2, 3, 4, 5) and several directed edges connecting them.  The edges are not weighted, but the presence of the edges indicates possible paths between the nodes.  The graph is positioned centrally on the slide.  The graph shows node 1 connected to nodes 2 and 3, node 2 connected to nodes 3 and 4, node 3 connected to nodes 4 and 5, node 4 connected to node 5, and node 5 connected to no other nodes.
+
+
+**Description:**
+
+This slide introduces the Hamiltonian Path Problem and its encoding into the Satisfiability (SAT) problem.  The title clearly states the topic.  The text describes the Hamiltonian Path Problem, asking if a path exists in a directed graph that visits each vertex exactly once.  A specific example graph is shown, with vertices labeled 1 through 5 and directed edges connecting them.  The question is posed:  Is there a Hamiltonian path in this example graph?  A suggested path (1 → 3 → 4 → 2 → 5) is also shown.  The final question, "How do we make use of a SAT solver to find this path?", indicates that the following content will likely discuss the process of encoding this graph problem into a SAT formula to be solved by a SAT solver.  The graph is central to the problem, illustrating the vertices and the possible paths.  The overall purpose of the slide is to introduce the problem and motivate the need for encoding it into a SAT problem.  The slide is designed to introduce the Hamiltonian Path Problem and illustrate the problem instance with a simple directed graph.
+
+

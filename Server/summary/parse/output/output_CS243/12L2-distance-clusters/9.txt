@@ -1,0 +1,14 @@
+# 9
+
+# Example: Movies
+
+---
+
+A large, complex network graph is displayed.  Numerous small, colored dots (representing movies) are scattered across the image, connected by thin lines.  The dots are densely clustered in some areas and more sparsely distributed in others.  The colors of the dots appear to be grouped, suggesting clusters of movies with similar characteristics.  Several movie titles (e.g., "The Jacket," "Dark Water," "Dead Birds," "Equilibrium," "G.I. Jane," "Armageddon," "Independence Day," "The Rock," "Super Size Me," "Contact," "The Ring," "Battlestar Galactica," "A Beautiful Mind," "When We Were Kings," "Sin City," "Brave Heart") are labeled near the corresponding clusters of dots.  Some of these labels are accompanied by smaller images of movie posters.  Additional labels (e.g., "Misc Big Budget," "Sci-Fi," "Family," "Sports," "Documentary," "Bonus Material," "IMAX") are also present, indicating categories or characteristics associated with the clusters of movies.  The graph is oriented horizontally, with the movie titles and labels positioned along the left and right sides of the image.  The overall impression is that the graph visualizes a clustering of 17,700 movies based on their characteristics, potentially for Netflix's competitive analysis.  The presence of the movie titles and categories is crucial to understanding the context of the clustering.  The slide is likely part of a lecture on clustering, specifically focusing on movie data and how clustering can be used to group movies with similar characteristics.
+
+
+**Description of what you see:**
+
+The slide displays a large, complex network graph.  The graph shows a large number of small, colored dots, representing movies.  The dots are connected by thin lines, indicating relationships between the movies.  The colors of the dots appear to be grouped, suggesting clusters of movies with similar characteristics.  The movie titles are labeled near the corresponding clusters of dots, and some of these labels are accompanied by small images of movie posters.  Additional labels are present, indicating categories or characteristics associated with the clusters of movies.  The graph is oriented horizontally, with the movie titles and labels positioned along the left and right sides of the image.  The overall impression is that the graph visualizes a clustering of 17,700 movies based on their characteristics, potentially for Netflix's competitive analysis.  The presence of the movie titles and categories is crucial to understanding the context of the clustering.  The slide is likely part of a lecture on clustering, specifically focusing on movie data and how clustering can be used to group movies with similar characteristics.  The title "Example: Movies" indicates that the graph is an example of data that can be clustered.  The citation at the bottom ("Todd Holloway@gmail.com 03/25/2007") indicates the source of the data visualization.
+
+

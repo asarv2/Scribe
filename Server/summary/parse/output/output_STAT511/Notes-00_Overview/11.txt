@@ -1,0 +1,20 @@
+# 11
+
+**Suggested Software**
+
+We do not require specific computer software for this course. Instead,
+students are expected to know how to do the analysis and calculation
+without using existing packages. NO computer is available for exams.
+Excel would be adequate for homework assignments. R, SAS, MATLAB,
+SPSS and other software will also be fine.
+R is suggested since it’s a free software environment for statistical
+computing and graphics. It also compiles and runs on a wide variety of
+UNIX platforms, Windows and MacOS.
+http://www.r-project.org/index.html
+
+
+---
+
+**Description:**
+
+This slide, titled "Suggested Software," discusses the software requirements for the STAT 511: Statistical Methods course.  It explicitly states that no specific software is required for the course.  Students are expected to perform analyses and calculations without relying on pre-existing software packages.  The slide further clarifies that no computer access will be provided for exams.  It suggests Excel as a suitable option for homework assignments, and mentions that other software like R, SAS, MATLAB, and SPSS are also acceptable.  The slide highlights R as a particularly good choice due to its free nature, versatility, and compatibility with various operating systems (UNIX, Windows, and MacOS).  A URL (http://www.r-project.org/index.html) is provided for accessing information about the R project.  The slide is part of the course syllabus, providing students with information about the software tools they can use for the course.  The footer indicates this is slide 11 of 22 and includes the course title, instructor's name, and a page number.

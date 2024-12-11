@@ -1,0 +1,43 @@
+# Slide 14
+
+**Augmenting: Adding Calculated Columns**
+
+# add a new column called "PRICE/SQ FT ($)"
+# price per square feet = list price / living space
+data_zillow['PRICE/SQ FT ($)'] = data_zillow['LIST PRICE ($)'] / data_zillow['LIVING SPACE (SQ FT)']
+
+# add a new column called AGE
+# get current year (don't use 2021!)
+import datetime
+now = datetime.datetime.now()
+current_year = now.year
+# the house age in a new column AGE
+data_zillow['AGE'] = current_year - data_zillow['YEAR']
+data_zillow
+
+```
+INDEX	LIVING SPACE (SQ FT)	BEDS	BATHS	ZIP	YEAR	LIST PRICE ($)	SOLD	PRICE/SQ FT ($)	AGE
+0	2222	3	3.5	32312	1981	250000	NO	112.0	40
+1	1628	3	2.0	32308	2009	185000	NO	113.0	12
+2	3824	5	4.0	32312	1954	399000	NO	104.0	67
+3	1137	3	2.0	32309	1993	150000	NO	131.0	28
+4	3560	6	4.0	32309	1973	315000	YES	88.0	48
+...	...	...	...	...	...	...	...	...	...
+```
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates how to add calculated columns to a DataFrame, specifically `data_zillow`.  The code calculates the price per square foot and the age of the houses.
+
+*   **`PRICE/SQ FT ($) = list price / living space`**: This line calculates the price per square foot by dividing the `LIST PRICE ($) ` by the `LIVING SPACE (SQ FT)` for each row. The result is stored in a new column named `PRICE/SQ FT ($)`.
+*   **`AGE = current year - YEAR`**: This line calculates the age of each house by subtracting the `YEAR` from the current year. The result is stored in a new column named `AGE`.
+*   **`import datetime`**: This line imports the `datetime` module, which is necessary for getting the current date and time.
+*   **`now = datetime.datetime.now()`**: This line gets the current date and time.
+*   **`current_year = now.year`**: This line extracts the current year from the `now` object.
+*   **`data_zillow`**: This line displays the updated DataFrame, which now includes the newly calculated `PRICE/SQ FT ($) ` and `AGE` columns.
+
+The slide includes a table showing a portion of the updated `data_zillow` DataFrame.  The table displays the `INDEX`, `LIVING SPACE (SQ FT)`, `BEDS`, `BATHS`, `ZIP`, `YEAR`, `LIST PRICE ($)`, `SOLD`, `PRICE/SQ FT ($)`, and `AGE` columns.  The `...` indicates that the table continues beyond the displayed rows.  The purpose of this slide is to show how to add calculated columns to a DataFrame, which is a common data wrangling task. The code snippets are crucial for demonstrating the calculation and addition of new columns. The table is essential for showing the effect of the code on the data.
+
+

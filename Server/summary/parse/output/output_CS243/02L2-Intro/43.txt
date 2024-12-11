@@ -1,0 +1,8 @@
+# 43
+
+Why WERE autonomous vehicles chosen as AN AI Grand Challenge?  
+
+
+**Description of what you see:**
+
+This slide displays a single question in a heading-style format.  The question, "Why WERE autonomous vehicles chosen as AN AI Grand Challenge?", is presented in a dark gray font against a light gray background.  The question is centered on the slide.  There are no other elements on the slide.  The font is clear and easy to read.  The question is likely part of a lecture on AI Basics, and it's designed to prompt discussion about the reasons behind selecting autonomous vehicles as a significant challenge in the field of artificial intelligence.  The use of capitalization and the phrasing "Grand Challenge" suggests the question is intended to highlight the importance and complexity of the problem.

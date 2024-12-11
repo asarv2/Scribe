@@ -1,0 +1,22 @@
+# Slide 17
+
+**plt.subplots**
+
+`plt.subplots(nrows=1, ncols=1, sharex=False, sharey=False, ...)`
+
+*   `nrows`, `ncols` define a grid of subplots and axes
+*   `sharex`, `sharey` will use the same x and y limits on the axes
+*   Returns the figure and a list of the axes (or single axes in the 1x1 case)
+
+
+---
+
+**Description of what you see:**
+
+This slide presents the documentation for the `plt.subplots` function in Matplotlib, likely within the context of an Intro to Data Science course.  The title, "plt.subplots," is in a large, bold font, indicating the function being discussed.  The content is a bulleted list, clearly defining the parameters of the function.  The parameters are:
+
+*   **nrows, ncols:** These parameters define the number of rows and columns in the grid of subplots.  This is crucial for creating multiple plots within a single figure.
+*   **sharex, sharey:** These parameters control whether the x-axis and y-axis limits are shared across the subplots.  If set to `True`, the limits will be the same for all subplots; if set to `False`, each subplot will have its own independent limits.  This is important for maintaining consistency or allowing for different scales in different subplots.
+*   **Return Value:** The function returns the figure and a list of the axes.  This allows for further manipulation and customization of the individual subplots.
+
+The overall design is simple and clear, focusing on the function's syntax and parameters.  The slide is likely part of a larger presentation on data visualization techniques, building upon previous slides that have discussed different types of plots and their uses.  The slide introduces the higher-level organizational structures for creating and managing multiple plots within a single figure.  The information is crucial for understanding how to create complex visualizations with multiple components.

@@ -1,0 +1,33 @@
+```markdown
+# 24
+
+# loc and iloc - the same thing in different ways
+
+```python
+data.loc[<row indexes>, <column names>]
+• Can use a number, slice, or list for row indexes
+• Can only use a list of names for column names
+• Includes the last element of a slice (e.g. 3:5 is 3, 4, and 5)
+data.iloc[<row indexes>,<column indexes>]
+• Can use a number, slice, or list for row indexes
+• Can use a number, slice, or list for column indexes
+• Slicing works like strings (e.g 3:5 is 3 and 4)
+```
+
+---
+
+**Description:**
+
+This slide explains the difference between `loc` and `iloc` methods for data selection in Pandas DataFrames.  It's a table-like presentation of the two methods' syntax and how they work.
+
+* **`loc` Method:**  The `loc` method uses *labels* (names) to select rows and columns.  It's important to note that row selection can use numbers, slices, or lists, but column selection *must* use a list of column names.  Crucially, `loc` includes the *last* element in a slice (e.g., 3:5 includes 3, 4, and 5).
+
+* **`iloc` Method:** The `iloc` method uses *integer positions* to select rows and columns.  Both row and column selection can use numbers, slices, or lists of integer positions.  Slicing with `iloc` works like string slicing (e.g., 3:5 selects elements 3 and 4).
+
+* **Purpose:** The slide is designed to help users understand the difference between label-based indexing (`loc`) and integer-position-based indexing (`iloc`) in Pandas DataFrames.  This is a crucial distinction for correctly selecting data from a DataFrame.
+
+* **Visual Elements:** There are no figures in the traditional sense.  The slide is entirely text-based, presenting the syntax and characteristics of `loc` and `iloc` in a clear, organized manner.  The formatting (bullet points, code blocks) is used to highlight the key differences between the two methods.
+
+
+```
+```

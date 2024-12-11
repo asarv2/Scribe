@@ -1,0 +1,10 @@
+# Slide 88
+
+**Description of the Slide:**
+
+This slide introduces the `awk` command-line utility, focusing on its structure and use in data manipulation.  It describes the basic form of an `awk` command as `$ awk options program file`.  An example is given, `awk '{print $1}' myfile`, which prints the first field (`$1`) of each record in the file `myfile`.  The slide explains that `$0` represents the entire line, `$1` the first field, and `$n` the nth field.  Crucially, the slide emphasizes the ability to combine `awk` with other Unix tools like `grep` and `sed` using pipes.  An example is provided: `ps aux | grep "^bgstm" | awk '{print $2 + $3}'`, demonstrating how to chain commands to filter and process data.  The slide is entirely text-based, with no figures or tables.  The purpose is to introduce the `awk` command and its potential for complex data manipulation.
+
+
+**What you see:**
+
+The slide contains text explaining the `awk` command-line utility.  The text describes the basic structure of an `awk` command, including the use of `$1`, `$2`, etc., to access specific fields within a line.  It also shows how `awk` can be used in conjunction with other commands (like `grep`) to perform more complex data manipulations.  The example `ps aux | grep "^bgstm" | awk '{print $2 + $3}'` demonstrates how to chain commands together to filter and process data.  The slide is entirely text-based, with no figures or tables.  The text is formatted to clearly present the information about `awk` and its usage.

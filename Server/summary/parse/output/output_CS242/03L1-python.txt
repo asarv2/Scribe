@@ -1,0 +1,918 @@
+# Slide 1
+
+Introduction to Data Science
+Purdue CS24200
+Tony Bergstrom
+Slides adapted from Jen Neville, CS 24200
+
+
+## Description of the Slide
+
+This is the title slide for a lecture on Introduction to Data Science, part of the Purdue CS24200 course.  The background is a dark gray.  The title "Introduction to Data Science" is large and prominent, followed by the course information (Purdue CS24200 and the instructor's name, Tony Bergstrom).  At the very bottom, a credit line indicates that the slides were adapted from Jen Neville's CS 24200 course.  The text is a light gray color, making it easily readable against the dark background.  There are no images or figures on this slide.  The layout is clean and simple, focusing on the course title and identifying information.
+
+
+# Slide 2
+
+# Python Basics
+
+A review of what you should know from 38003
+
+
+## Description of the Slide
+
+This slide, a muted gray background, has a single heading: "Python Basics".  Below that, in a smaller font, is a subtitle: "A review of what you should know from 38003".  The text is dark gray, making it easily readable against the background.  There are no images or figures on this slide.  The layout is simple and straightforward, clearly indicating the topic of the upcoming content.  The slide is likely part of a larger presentation on Introduction to Data Science, and the subtitle suggests that this slide will cover a review of Python programming concepts that are assumed to be known from a prerequisite course (38003).
+
+
+# Slide 3
+
+# Python Environments
+
+For this course, we will use Python 3
+We will, at least initially, use Python notebooks
+For labs, you will code directly using notebooks in Vocareum
+For homeworks, you can use Vocareum or your own local environment
+To install on your local machine, we recommend using Anaconda
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the Python environment that will be used in the course.  The title, "Python Environments," is clearly displayed at the top.  The content below provides details about the Python version (Python 3), the use of Python notebooks (likely Jupyter Notebooks), and the platforms for coding (Vocareum for labs and homeworks, or a local environment).  The slide also recommends Anaconda for installing Python on a local machine.  The layout is simple and straightforward, presenting the information in a bulleted list format for easy readability.  There are no images or figures on this slide.  The information is crucial for students to understand the technical setup required for the course.
+
+
+# Slide 4
+
+# Anaconda
+
+Download Anaconda: https://www.anaconda.com/download/
+Install by following the instructions on the download page.
+Run Anaconda Navigator
+Install Jupyter Notebook by clicking “Launch Jupyter Notebook 5.0.0” from anaconda GUI.
+To run the notebook, start the notebook server from the command line:
+jupyter notebook
+You should see the notebook open in your browser
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, provides instructions on setting up the Anaconda environment for the course.  The title "Anaconda" is prominent at the top.  The content is a bulleted list, providing step-by-step instructions for downloading, installing, and running Jupyter Notebooks using Anaconda.  The URL for downloading Anaconda is included, and the slide also mentions using the Anaconda Navigator and the command line.  The inclusion of the Anaconda logo (a stylized green circle with a network pattern inside) reinforces the importance of this software for the course.  The slide is designed to guide students through the initial setup process.  The context from previous slides indicates that this is a continuation of the discussion on Python environments and the tools needed for the course.
+
+
+# Slide 5
+
+# Jupyter Notebooks
+
+Jupyter notebooks let you create and share documents that contain
+code, equations, visualizations and narrative text
+Notebooks support many programming languages, including Python, R, Julia, and Scala
+It is based on a set of open standards for interactive computing (like html and CSS)
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, introduces Jupyter Notebooks.  The title "Jupyter Notebooks" is prominently displayed at the top.  The content below explains the functionality of Jupyter Notebooks, highlighting their ability to create and share documents containing code, equations, visualizations, and narrative text.  The slide also mentions that Jupyter Notebooks support various programming languages, including Python, R, Julia, and Scala.  Finally, it notes that Jupyter Notebooks are based on open standards for interactive computing, similar to HTML and CSS.  There are no images or figures on this slide.  The slide is a concise overview of Jupyter Notebooks, providing context for their use in the course.  The context from previous slides indicates that this is a continuation of the discussion on tools and technologies for the course.
+
+
+# Slide 6
+
+# Why Python?
+
+Interpreted language
+Dynamically typed: variables do not have a predefined type
+Rich, built-in collection types:
+* Lists, Tuples, Dictionaries (i.e., maps), Sets
+Concise but unobtrusive object system
+* Every value is an object
+* Classes guide but do not dominate object construction
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the reasons why Python is a suitable language for data science.  The title "Why Python?" is prominently displayed at the top.  The content is a bulleted list, highlighting key features of Python:
+
+* **Interpreted language:**  This means Python code is executed line by line, rather than compiled into machine code first.  This is a common feature of scripting languages.
+* **Dynamically typed:**  Python variables don't need to be explicitly declared with a data type.  This is a characteristic of dynamically typed languages.
+* **Rich, built-in collection types:**  Python provides readily available data structures like lists, tuples, dictionaries, and sets, which are essential for data manipulation.
+* **Concise but unobtrusive object system:** Python's object-oriented features are present but not overly complex or demanding.
+* **Every value is an object:**  This is a fundamental concept in object-oriented programming, where everything in Python is an object.
+* **Classes guide but do not dominate object construction:**  Python's object-oriented approach is flexible and doesn't force a rigid structure.
+
+The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates that the content is sourced from another educational resource.  This is common practice in academic presentations.  There are no images or figures on this slide.  The slide's purpose is to provide a concise overview of Python's strengths relevant to data science.
+
+
+# Slide 7
+
+# Language features
+
+Indentation instead of braces
+Newline separates statements
+Several sequence types
+* Strings '…': made of characters, immutable
+* Lists [...]: made of anything, mutable
+* Tuples (...): made of anything, immutable
+Powerful subscripting (slicing)
+Functions are first class objects
+Exceptions as in Java
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, details the language features of Python.  The title "Language features" is displayed at the top.  The content is a bulleted list, highlighting key aspects of Python's syntax and data structures.  The bullet points describe Python's use of indentation instead of braces for code blocks, its reliance on newlines to separate statements, and its support for various sequence types (strings, lists, and tuples).  Each sequence type is further described in terms of its data composition (characters, anything, etc.) and mutability (immutable or mutable).  The slide also mentions powerful subscripting (slicing) and functions as first-class objects, and the handling of exceptions similar to Java.  The final line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no images or figures on this slide.  The slide's purpose is to provide a concise overview of Python's syntax and data structures, building upon the previous slide's discussion of why Python is a suitable language for data science.
+
+
+# Slide 8
+
+# Dynamic typing
+
+Java: statically typed
+* Variables are declared to refer to objects of a given type
+* Methods use type signatures to enforce contracts
+
+Python
+* Variables come into existence when first assigned to
+* A variable can refer to an object of any type
+* All types are (almost) treated the same way
+* Main drawback: type errors are only caught at runtime
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the concept of dynamic typing in programming languages, contrasting Java's static typing with Python's dynamic typing.  The title "Dynamic typing" is prominently displayed at the top.  The content is presented in a bulleted list format, comparing and contrasting the two approaches.  The bullet points under "Java" describe how variables are explicitly declared with a specific type, and methods use type signatures to enforce type correctness at compile time.  In contrast, the bullet points under "Python" explain how variables are created when assigned a value, can hold objects of any type, and treat all types similarly.  The final bullet point under "Python" highlights the potential drawback of dynamic typing: type errors are only detected during runtime, rather than at compile time.  The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no images or figures on this slide.  The slide's purpose is to explain the difference between static and dynamic typing, emphasizing Python's dynamic approach and its implications for data science.
+
+
+# Slide 9
+
+# Running Python On Unix...
+
+```
+% python                  # opens interpreter 
+>>> 3+3 
+6 
+% python filename.py      # runs script via command line 
+% jupyter notebook        # opens jupyter notebook 
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, provides examples of how to run Python code on a Unix-like operating system (likely a Linux or macOS system).  The title "Running Python On Unix..." is displayed at the top.  The content is a series of command-line instructions, each on a separate line.  Each line shows a command (`% python`, `>>> 3+3`, `% python filename.py`, `% jupyter notebook`) followed by a comment (`# opens interpreter`, `# runs script via command line`, `# opens jupyter notebook`) that explains the purpose of the command.  The commands demonstrate how to open a Python interpreter, execute a simple calculation, run a Python script from a file, and launch a Jupyter Notebook.  The slide is designed to show practical examples of using the command line to interact with Python.  The context from previous slides indicates that this is a continuation of the discussion on Python environments and how to use them.  The "Slides adapted from UPenn CIS530 python tutorial" line indicates the source of the information.
+
+
+# Slide 10
+
+# Playing with Python
+
+```
+>>> 2+3
+5
+>>> 2.0/3
+0.66666666666666663
+>>> x=4.5
+>>> int(x)
+4
+>>> x='abc'
+>>> x[0]
+'a'
+>>> x[1:3]
+'bc'
+>>> x[:2]
+'ab'
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates Python code execution.  The title "Playing with Python" indicates the focus on interactive Python code examples.  The content is a series of Python expressions and their outputs, presented in a way that resembles an interactive Python interpreter session.  Each line starting with `>>>` represents a Python command entered at the interpreter prompt.  The following output shows the result of the command.  For example, `>>> 2+3` is followed by `5`, indicating that the sum of 2 and 3 is 5.  The examples cover basic arithmetic operations (addition, division), variable assignment, type conversion (integer conversion), and string manipulation (accessing characters and substrings).  The slide is designed to illustrate how to use Python interactively and to show the results of different operations.  The "Slides adapted from UPenn CIS530 python tutorial" line indicates the source of the examples.  There are no figures on this slide.
+
+
+# Slide 11
+
+# Playing with Python
+
+```python
+>>> x = ['a', 'b', 'c']
+>>> x[1]
+'b'
+>>> x[1:]
+['b', 'c']
+>>> x[1] = 'd'
+>>> x
+['a', 'd', 'c']
+>>> d = {'alice': 1234, 'bob': 5678, 'clare': 9012}
+>>> d['bob']
+5678
+>>> d['bob'] = 7777
+>>> d
+{'clare': 9012, 'bob': 7777, 'alice': 1234}
+>>> d.keys()
+dict_keys(['clare', 'bob', 'alice'])
+>>> d.items()
+dict_items([('clare', 9012), ('bob', 7777), ('alice', 1234)])
+>>> del d['bob']
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, presents interactive Python code examples.  The title "Playing with Python" indicates the focus on demonstrating Python's functionality through interactive code snippets.  The content is a series of Python commands and their outputs, formatted to resemble an interactive Python interpreter session.  Each line starting with `>>>` represents a Python command entered at the interpreter prompt.  The following output shows the result of the command.  The examples cover list manipulation (accessing elements, slicing, modifying elements), dictionary creation, access, modification, and deletion.  The examples are designed to illustrate how to use Python interactively and to show the results of different operations on lists and dictionaries.  The "Slides adapted from UPenn CIS530 python tutorial" line indicates the source of the examples.  There are no figures on this slide.
+
+
+
+
+# Slide 12
+
+```python
+x = 34 - 23  # A comment.
+y = 'Hello'  # Another one.
+z = 3.45
+if z == 3.45 or y == 'Hello':
+    x = x + 1
+    y = y + ' World'  # String concat.
+    print(x)
+    print(y)
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide presents a Python code example.  The code defines variables `x`, `y`, and `z` with integer, string, and float values, respectively.  It then uses an `if` statement to check if `z` is equal to 3.45 or if `y` is equal to 'Hello'.  If the condition is true, it increments `x` by 1 and concatenates ' World' to `y`. Finally, it prints the updated values of `x` and `y`.  The code demonstrates basic Python syntax, including variable assignment, conditional statements, arithmetic operations, string concatenation, and printing output.  The comments within the code explain the purpose of each line.  The slide is part of a larger presentation on Python programming, likely within an Introduction to Data Science course.  The source of the code example is explicitly noted.
+
+
+
+
+# Slide 13
+
+To Understand the Code
+Indentation matters to the meaning of the code:
+* Block structure indicated by indentation
+The first assignment to a variable creates it
+* Variable types don't need to be declared, Python figures out the variable types on its own
+Assignment uses = and comparison uses ==.
+For numbers + * / % are as expected.
+* Special use of + for string concatenation; Special use of % for string formatting (as with printf in C)
+Logical operators are words (and, or, not) not symbols
+Simple printing can be done with print()
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, provides a summary of key Python coding concepts.  The title "To Understand the Code" suggests that the content will explain how to interpret and understand Python code.  The bullet points explain important aspects of Python syntax and semantics:
+
+* **Indentation:** Python uses indentation to define code blocks, unlike other languages that use braces.
+* **Variable creation:** The first time a variable is assigned a value, it is created.
+* **Dynamic typing:** Python automatically determines the data type of a variable based on the assigned value.
+* **Operators:**  Assignment uses `=`, comparison uses `==`, and arithmetic operators (+, -, *, /, %) behave as expected.
+* **String concatenation:** The `+` operator is used for string concatenation.
+* **String formatting:** The `%` operator is used for string formatting, similar to `printf` in C.
+* **Logical operators:** Logical operators (and, or, not) are written as words, not symbols.
+* **Printing:** The `print()` function is used for displaying output.
+
+The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no figures on this slide.  The slide's purpose is to provide a concise overview of Python's syntax and semantics, preparing students for the subsequent code examples and exercises.
+
+
+# Slide 14
+
+**Basic datatypes**
+
+Integers (default for numbers)
+z = 5 / 2  # Python 2 uses integer division, Python 3 does not
+Floats
+x = 3.456
+Strings
+"abc"       # Can use "" or '' to specify strings
+'abc'
+"matt's"    # Unmatched quotes can appear within the string
+"""a'b"c""" # Use triple double quotes to specify multiline strings,
+            # or combinations of ' and " inside a string
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, introduces basic data types in Python.  It lists examples of integers, floats, and strings.  The examples include integer division (`z = 5 / 2`), a float (`x = 3.456`), and various string representations, including single-quoted, double-quoted, and triple-quoted strings.  The comments within the code explain the use of different quote types and the behavior of integer division in Python 2 versus Python 3.  The slide is designed to provide a basic overview of these fundamental data types in Python, likely as a prelude to more complex data manipulation and analysis techniques.  The source of the information is explicitly noted.  There are no figures on this slide.
+
+
+# Slide 15
+
+**Whitespace**
+
+Whitespace is meaningful in Python: especially indentation and placement of newlines.
+Use a newline to end a line of code. Use \ when must go to next line prematurely.
+No braces {} to mark blocks of code in Python...
+Use consistent indentation instead.
+* The first line with less indentation is outside of the block
+* The first line with more indentation starts a nested block
+Often a colon appears at the start of a new block (E.g., for function and class definitions)
+Start comments with # – the rest of line is ignored.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the importance of whitespace, particularly indentation, in Python code.  The content explains that Python uses indentation to define code blocks instead of curly braces.  The slide emphasizes the need for consistent indentation to structure code correctly.  It also explains the use of newlines to separate statements and the backslash character (`\`) for continuing statements across multiple lines.  The slide further explains that comments begin with the `#` symbol.  The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no figures on this slide.  The slide's purpose is to explain Python's unique approach to code structure, which is crucial for understanding and writing Python code.
+
+
+# Slide 16
+
+**Assignment**
+
+Binding a variable in Python means setting a name to hold a reference to some object.
+
+* Assignment creates references, not copies
+Names in Python do not have an intrinsic type. Objects have types.
+* Python determines the type of the reference automatically based on what data is assigned to it.
+
+You create a name the first time it appears on the left side of an assignment expression:
+x = 3
+
+A reference is deleted via garbage collection after any names bound to it have passed out of scope.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, explains the concept of variable assignment in Python.  The title "Assignment" clearly indicates the topic.  The content explains that assigning a value to a variable in Python creates a *reference* to that value, not a copy.  Crucially, Python determines the type of the variable based on the assigned value.  The example `x = 3` demonstrates how a variable is created when assigned a value.  The final point highlights that variables are cleaned up through garbage collection when they are no longer in use.  The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no figures on this slide.  The slide's purpose is to explain the fundamental concept of variable assignment in Python, which is crucial for understanding how data is handled in Python programs.
+
+
+# Slide 17
+
+**Sequence Types**
+
+Tuple
+* A simple **immutable** ordered sequence of items
+* Items can be of mixed types, including collection types
+
+Strings
+* **Immutable;** Conceptually very much like a tuple
+
+List
+* **Mutable** ordered sequence of items of mixed types
+
+All three sequence types (tuples, strings, and lists) share much of the same syntax and functionality.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the different sequence types in Python.  The title "Sequence Types" clearly indicates the topic.  The content is presented in a bulleted list format, describing the characteristics of tuples, strings, and lists.  Each data type is described in terms of its mutability (immutable or mutable) and its nature as an ordered sequence of items.  The slide emphasizes that these three data types share similar syntax and functionality.  There are no figures on this slide.  The slide's purpose is to provide a concise overview of the different sequence types in Python, likely as a prelude to more detailed discussions on their usage and manipulation.  The source of the information is explicitly noted.
+
+
+# Slide 18
+
+**Sequence Types**
+
+Tuples are defined using parentheses (and commas).
+```
+>>> tu = (23, 'abc', 4.56, (2, 3), 'def')
+```
+Lists are defined using square brackets (and commas).
+```
+>>> li = ["abc", 34, 4.34, 23]
+```
+Strings are defined using quotes ("", ', or """).
+```
+>>> st = "Hello World"
+>>> st = 'Hello World'
+>>> st = """This is a multi-line
+string that uses triple quotes."""
+```
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, demonstrates how to create tuples, lists, and strings in Python.  It shows examples of each data type using the appropriate syntax.  The examples are presented in a way that resembles an interactive Python interpreter session, with the `>>>` prompt indicating user input and the subsequent output.  The slide provides concrete examples of how to define these sequence types, including tuples using parentheses, lists using square brackets, and strings using single or double quotes (or triple quotes for multiline strings).  The examples show that these data types can contain various data types (integers, strings, floats, and even other tuples or lists).  The slide is designed to illustrate the syntax for creating these fundamental data structures in Python.  There are no figures on this slide.
+
+
+
+
+# Slide 19
+
+**Sequence Types**
+
+We can access individual members of a tuple, list, or string using square bracket "array" notation. Note that all are 0 based
+
+```
+>>> tu = (23, 'abc', 4.56, (2,3), 'def')
+>>> tu[1]
+'abc'
+# Second item in the tuple.
+>>> li = ["abc", 34, 4.34, 23]
+>>> li[1]
+34
+# Second item in the list.
+>>> st = "Hello World"
+>>> st[1]
+'e'
+# Second character in string.
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, demonstrates how to access elements within tuples, lists, and strings using indexing.  The title "Sequence Types" indicates the focus on these data structures.  The content is presented in a way that resembles an interactive Python interpreter session.  Each line starting with `>>>` represents a Python command entered at the interpreter prompt.  The output shows the result of the command.  The examples show how to access the second element (index 1) of a tuple (`tu`), a list (`li`), and a string (`st`).  The comments explain the purpose of each command.  The slide is designed to illustrate the indexing syntax for these sequence types in Python.  There are no figures on this slide.
+
+
+
+
+# Slide 20
+
+**Slicing**
+
+Lists can be indexed with positive or negative numbers
+
+```
+>>> tu = (23, 'abc', 4.56, (2,3), 'def')
+```
+
+Positive index: count from the left, starting with 0.
+
+```
+>>> tu[1]
+'abc'
+```
+
+Negative lookup: count from right, starting with -1.
+
+```
+>>> tu[-3]
+4.56
+```
+
+```
+>>> tu = (23, 'abc', 4.56, (2,3), 'def')
+```
+
+Return a copy of the container with a subset of the original members. Start copying at the first index, and stop copying before the second index.
+
+```
+>>> tu[1:4]
+('abc', 4.56, (2,3))
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, demonstrates slicing in Python, specifically with tuples.  The title "Slicing" indicates the focus of the content.  The slide shows examples of accessing elements within a tuple using both positive and negative indexing.  The examples use the `tu` tuple, which contains various data types (integers, strings, floats, and a nested tuple).  The positive index `tu[1]` accesses the second element ('abc') of the tuple, while the negative index `tu[-3]` accesses the fourth element (4.56) from the right.  The final example `tu[1:4]` demonstrates slicing, returning a new tuple containing elements from index 1 up to, but not including, index 4.  The slide is designed to illustrate how to extract portions of a sequence using slicing.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 21
+
+**The 'in' operator**
+
+Boolean test whether a value is in a collection
+
+```
+>>> t = [1, 2, 4, 5]
+>>> 3 in t
+False
+>>> 4 in t
+True
+>>> 4 not in t
+False
+```
+
+For strings, tests for substrings
+
+```
+>>> a = 'abcde'
+>>> 'c' in a
+True
+>>> 'cd' in a
+True
+>>> 'ac' in a
+False
+```
+
+Be careful: the `in` keyword is also used in the syntax of for loops and list comprehensions.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, demonstrates the use of the `in` operator in Python.  The title "The 'in' operator" clearly indicates the topic.  The content is presented in a way that resembles an interactive Python interpreter session.  The examples show how to use `in` to check if a value exists within a list (`t`) and a string (`a`).  The first set of examples checks if the integer values 3 and 4 are present in the list `t`.  The second set of examples checks if the substrings 'c', 'cd', and 'ac' are present in the string `a`.  The output of each `in` or `not in` operation is shown (True or False).  The slide also includes a cautionary note about the `in` keyword's broader use in Python's syntax for loops and list comprehensions.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 22
+
+**The '+' operator**
+
+The + operator produces a new tuple, list, or string by concatenating its arguments.
+
+```
+>>> (1, 2, 3) + (4, 5, 6)
+(1, 2, 3, 4, 5, 6)
+>>> [1, 2, 3] + [4, 5, 6]
+[1, 2, 3, 4, 5, 6]
+>>> "Hello" + " " + "World"
+'Hello World'
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates the use of the `+` operator for concatenation in Python.  The title "The '+' operator" clearly indicates the topic.  The content shows examples of concatenating tuples, lists, and strings using the `+` operator.  The examples are presented in a way that resembles an interactive Python interpreter session, with the `>>>` prompt indicating user input and the subsequent output showing the result of the concatenation.  The examples demonstrate that the `+` operator creates a new sequence (tuple, list, or string) containing all the elements from the original sequences combined.  The slide is designed to illustrate the concatenation operation for different sequence types in Python.  There are no figures on this slide.
+
+
+
+
+# Slide 23
+
+**Lists and tuples**
+
+We can change lists in place. The name li still points to the same memory reference when we're done.
+
+```
+>>> li = ['abc', 23, 4.34, 23]
+>>> li[1] = 45
+>>> li
+['abc', 45, 4.34, 23]
+```
+
+You can't change a tuple. You can make a fresh tuple and assign its reference to a previously used name.
+
+```
+>>> tu = (23, 'abc', 4.56, (2, 3), 'def')
+>>> tu[2] = 3.14
+TypeError: 'tuple' object does not support item assignment
+```
+
+The immutability of tuples means they're faster than lists.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, contrasts the mutability of lists and tuples in Python.  The title "Lists and tuples" clearly indicates the topic.  The content is presented in a way that resembles an interactive Python interpreter session.  The examples demonstrate how lists can be modified in place, while attempting to modify a tuple results in a `TypeError`.  The first example shows a list `li` being modified by changing the second element (index 1) from 23 to 45.  The second example shows an attempt to modify a tuple `tu` by changing the third element (index 2) from 4.56 to 3.14, which raises a `TypeError`.  The slide highlights the key difference in mutability between lists and tuples, and the implications for performance (tuples are faster due to immutability).  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 24
+
+**Operations on lists**
+
+Adding new elements to a list
+
+```
+>>> li = [1, 11, 3, 4, 5]
+>>> li.append('a')  # Note the method syntax
+>>> li
+[1, 11, 3, 4, 5, 'a']
+>>> li.insert(2, 'i')
+>>> li
+[1, 11, 'i', 3, 4, 5, 'a']
+```
+
++ creates a fresh list (with a new memory reference)
+extend operates on list `li` in place.
+
+```
+>>> li.extend([9, 8, 7])
+>>> li
+[1, 2, 'i', 3, 4, 5, 'a', 9, 8, 7]
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates different ways to add elements to a Python list.  The title "Operations on lists" indicates the focus on list manipulation.  The content shows examples of using the `append()` and `insert()` methods to add elements to a list.  The `append()` method adds an element to the end of the list, while `insert()` adds an element at a specified index.  The examples use a list named `li` containing various data types (integers and strings).  The output shows the list after each operation, demonstrating the changes made to the list.  The slide also shows the `extend()` method, which adds multiple elements to the end of the list.  The text explains that `extend()` modifies the list in place, unlike `append()` which creates a new list.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 25
+
+**Operations on lists**
+
+```
+>>> li = ['a', 'b', 'c', 'b']
+>>> li.index('b')  # index of first occurrence*
+1
+>>> li.count('b')  # number of occurrences
+2
+>>> li.remove('b') # remove first occurrence
+>>> li
+['a', 'c', 'b']
+>>> li = [5, 2, 6, 8]
+>>> li.reverse()  # reverse the list *in place*
+>>> li
+[8, 6, 2, 5]
+>>> li.sort()  # sort the list *in place*
+>>> li
+[2, 5, 6, 8]
+>>> li.sort(some_function) # sort in place using user-defined comparison
+```
+
+## Description of the Slide
+
+This slide demonstrates various operations on lists in Python.  The code examples are presented in a way that resembles an interactive Python interpreter session.  The examples show how to use methods like `index()`, `count()`, `remove()`, `reverse()`, and `sort()` to manipulate lists.  The `li` variable is used to store a list of mixed data types (strings and integers).  The output shows the results of each operation, demonstrating how the list is modified.  The comments indicate the purpose of each operation.  The slide is designed to illustrate the use of these list methods in Python.  The `some_function` is likely a user-defined function used for custom sorting logic.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 26
+
+**Dictionaries: A Mapping type**
+
+Dictionaries store a mapping between a set of keys and a set of values
+
+* Keys can be any immutable type
+* Values can be any type
+* Values and keys can be of different types in a single dictionary
+
+You can define, modify, view, lookup, delete the key-value pairs in the dictionary
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide introduces dictionaries as a data structure in Python.  The title, "Dictionaries: A Mapping type," clearly states the topic.  The content is a bulleted list explaining the key characteristics of dictionaries: they map keys to values, keys must be immutable types, and values can be of any type.  The final sentence describes the various operations that can be performed on dictionaries (defining, modifying, viewing, looking up, and deleting key-value pairs).  The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no figures on this slide.  The slide's purpose is to introduce the concept of dictionaries and their fundamental properties.  The context from previous slides suggests that this is part of a larger presentation on data structures in Python, likely within an Introduction to Data Science course.
+
+
+# Slide 27
+
+**Creating and accessing dictionaries**
+
+```python
+>>> d = {'user': 'bozo', 'pswd': 1234}
+>>> d['user']
+'bozo'
+>>> d['pswd']
+1234
+>>> d['bozo']
+KeyError: bozo
+>>> d['user'] = 'clown'
+>>> d
+{'user': 'clown', 'pswd': 1234}
+```
+
+Keys must be unique. Assigning to an existing key replaces its value.
+
+```python
+>>> d['id'] = 45
+>>> d
+{'user': 'clown', 'id': 45, 'pswd': 1234}
+```
+
+Dictionaries are unordered; New entry might appear anywhere in the output. (Dictionaries work by hashing)
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates how to create and access dictionaries in Python.  The examples are presented in a way that resembles an interactive Python interpreter session.  The `>>>` prompts indicate user input, and the subsequent lines show the output of the commands.  The code creates a dictionary `d` with key-value pairs for 'user' and 'pswd'.  It then demonstrates accessing values using their keys.  An attempt to access a non-existent key ('bozo') raises a `KeyError`.  The code shows how to modify an existing key-value pair and add a new key-value pair ('id').  The output shows the updated dictionary after each operation.  The slide emphasizes that dictionaries are unordered and that the order of entries in the output might vary.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 28
+
+**Updating dictionaries**
+
+```python
+>>> d = {'user': 'bozo', 'p': 1234, 'i': 34}
+>>> del d['user']  # Remove one.
+>>> d
+{'p': 1234, 'i': 34}
+>>> d.clear()  # Remove all.
+>>> d
+{}
+>>> a = [1, 2]
+>>> del a[1]  # (del also works on lists)
+>>> a
+[1]
+>>> d = {'user': 'bozo', 'p': 1234, 'i': 34}
+>>> d.keys()  # List of current keys, Python 3 returns iterable object
+dict_keys(['user', 'p', 'i'])
+>>> d.values()  # List of current values.
+dict_values(['bozo', 1234, 34])
+>>> d.items()  # List of item tuples.
+dict_items([('user', 'bozo'), ('p', 1234), ('i', 34)])
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates various ways to update dictionaries in Python.  The examples are presented in a way that resembles an interactive Python interpreter session.  The `>>>` prompts indicate user input, and the subsequent lines show the output of the commands.  The code shows how to remove a key-value pair using `del`, clear all key-value pairs using `clear()`, and access the keys, values, and items of a dictionary using the `keys()`, `values()`, and `items()` methods, respectively.  The examples use a dictionary named `d` containing various key-value pairs.  The output shows the dictionary after each operation, demonstrating the changes made to the dictionary.  The slide also shows that the `del` keyword can be used to remove elements from lists.  The source of the examples is explicitly noted.  There are no figures on this slide.  The context from previous slides suggests that this is part of a larger presentation on data structures in Python, likely within an Introduction to Data Science course.
+
+
+
+
+# Slide 29
+
+**Booleans**
+
+True and False are constants in Python
+
+Other values equivalent to True and False:
+
+*   False: zero, None, empty container or object
+*   True: non-zero numbers, non-empty objects
+
+Comparison operators: ==, !=, <, <=, etc.
+
+*   X and Y have same value: X == Y
+*   Compare with: X is Y
+*   X and Y are two variables that refer to the identical object
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the Boolean data type in Python.  The title "Booleans" clearly indicates the topic.  The content explains that `True` and `False` are the Boolean constants.  It then lists values that are considered equivalent to `True` and `False` (e.g., zero, `None`, empty containers are `False`; non-zero numbers and non-empty containers are `True`).  The slide also mentions comparison operators (==, !=, <, <=, etc.) and how to compare values for equality (`X == Y`) and identity (`X is Y`).  The final point clarifies that `X is Y` checks if `X` and `Y` refer to the same object in memory, not just if they have the same value.  The source of the information is explicitly noted.  There are no figures on this slide.  The slide's purpose is to explain Boolean values and comparisons in Python, which are fundamental to programming logic.
+
+
+
+
+# Slide 30
+
+**Boolean Logic Expressions**
+
+You can also combine Boolean expressions.
+
+* **a and b**  True if a is True and b is True
+* **a or b**  True if a is True or b is True
+* **not a**  True if a is False
+
+Use parentheses as needed to disambiguate complex Boolean expressions.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, explains how to combine Boolean expressions in Python.  The title "Boolean Logic Expressions" clearly indicates the topic.  The content is a bulleted list, showing how the `and`, `or`, and `not` operators work to combine Boolean values.  Each bullet point describes the condition under which the combined expression evaluates to `True`.  The final sentence advises using parentheses for complex expressions to avoid ambiguity.  The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no figures on this slide.  The slide's purpose is to explain Boolean logic operations in Python, which are fundamental to controlling the flow of a program.  The context from previous slides suggests that this is part of a larger presentation on data types and operations in Python, likely within an Introduction to Data Science course.
+
+
+# Slide 31
+
+**if Statements**
+
+Use of indentation for blocks, Colon (:) after boolean expression
+
+```python
+if x == 3:
+    print("X equals 3.")
+elif x == 2:
+    print("X equals 2.")
+else:
+    print("X equals something else.")
+print("This is outside the 'if'.")
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide presents a Python code example demonstrating the use of `if`, `elif`, and `else` statements.  The code uses indentation to define code blocks associated with each conditional statement.  The `if` statement checks if the variable `x` is equal to 3. If true, it prints "X equals 3."  The `elif` statement checks if `x` is equal to 2. If true, it prints "X equals 2."  The `else` block handles all other cases, printing "X equals something else."  Finally, a separate `print` statement outside the conditional block demonstrates code execution after the `if` statement.  The slide is designed to illustrate conditional logic in Python using the `if-elif-else` structure.  The source of the example is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 32
+
+**while Loops**
+
+```python
+>>> x = 3
+>>> while x < 5:
+...     print(x, "still in the loop")
+...     x = x + 1
+3 still in the loop
+4 still in the loop
+>>> x = 6
+>>> while x < 5:
+...     print(x, "still in the loop")
+>>>
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates a `while` loop in Python.  The code initializes a variable `x` to 3.  The `while` loop continues as long as `x` is less than 5.  Inside the loop, it prints the current value of `x` followed by the string "still in the loop".  Then, it increments `x` by 1.  This process repeats until `x` becomes 5, at which point the loop terminates.  A second example shows what happens when `x` is initialized to 6.  In this case, the condition `x < 5` is false from the start, so the loop body is never executed.  The slide is designed to illustrate the syntax and behavior of a `while` loop in Python.  The output shows the values of `x` printed during each iteration of the loop.  The source of the example is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 33
+
+**for Loops**
+
+For-each is Python's only for construction
+A for loop steps through each of the items in a collection type, or any other type of object which is "iterable"
+```
+for <item> in <collection>:
+    <statements>
+```
+If `<collection>` is a list or a tuple, then the loop steps through each element of the sequence.
+If `<collection>` is a string, then the loop steps through each character of the string.
+```
+for someChar in "Hello World":
+    print(someChar)
+```
+`<item>` can be more complex than a single variable name.
+When the elements of `<collection>` are themselves sequences, then `<item>` can match the structure of the elements.
+```
+for (x, y) in [('a', 1), ('b', 2), ('c', 3), ('d', 4)]:
+    print(x)
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+### Description of the Slide
+
+This slide describes the `for` loop construct in Python.  It explains that the `for` loop is a "for-each" loop, iterating over items in a collection (like lists, tuples, or strings).  The syntax is shown, with `<item>` representing the variable that will hold each element during iteration, and `<collection>` representing the sequence being iterated over.  The slide provides examples of iterating over a string ("Hello World") and a list of tuples.  The examples illustrate how the `for` loop can handle more complex structures, such as tuples within a list.  The slide is part of a larger presentation on Python programming, likely within an Introduction to Data Science course.  The source of the information is explicitly noted.  There are no figures on this slide.
+
+
+
+
+# Slide 34
+
+**for Loops and Dictionaries**
+
+```python
+>>> ages = {"Sam": 4, "Mary": 3, "Bill": 2}
+>>> ages
+{'Bill': 2, 'Mary': 3, 'Sam': 4}
+>>> for name in ages.keys():
+...     print(name, ages[name])
+Bill 2
+Mary 3
+Sam 4
+>>>
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+### Description of the Slide
+
+This slide demonstrates how to iterate through a dictionary using a `for` loop in Python.  The code defines a dictionary `ages` mapping names to ages.  The `for` loop iterates over the keys of the dictionary using `ages.keys()`.  Inside the loop, `ages[name]` accesses the value associated with each key, and the code prints the name and age.  The output shows the name and age for each person in the dictionary.  The slide is part of a larger presentation on Python programming, likely within an Introduction to Data Science course.  The source of the example is explicitly noted.  There are no figures on this slide.  The context from previous slides suggests that this is a continuation of the discussion on dictionaries and loops in Python.  The output shows the expected iteration through the dictionary's key-value pairs.
+
+
+# Slide 35
+
+**String Operations**
+
+A number of methods for the string class perform useful formatting operations:
+
+```
+>>> "hello".upper()
+'HELLO'
+>>> "Hello".lower()
+'hello'
+```
+
+Check the Python documentation for many other handy string operations.
+
+Helpful hint: use `<string>.strip()` to strip off final newlines from lines read from files
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+### Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses string operations in Python.  The title "String Operations" clearly indicates the topic.  The content shows examples of using the `.upper()` and `.lower()` methods to manipulate strings.  The examples demonstrate how these methods transform strings to uppercase and lowercase, respectively.  The slide also provides a helpful hint for removing trailing newlines from strings, suggesting the use of the `.strip()` method.  The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no figures on this slide.  The slide's purpose is to introduce string manipulation techniques in Python, likely as a prelude to more complex string processing tasks in data science.  The context from previous slides suggests that this is part of a larger presentation on data types and operations in Python, likely within an Introduction to Data Science course.  The output shows the results of the string manipulation operations.
+
+

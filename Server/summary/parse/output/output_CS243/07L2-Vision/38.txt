@@ -1,0 +1,16 @@
+# Slide 38
+
+**First attempt at a solution**
+
+Let's replace each pixel with an average of all the values in its neighborhood
+
+**Assumptions:**
+
+* Expect pixels to be like their neighbors
+* Expect noise processes to be independent from pixel to pixel
+
+**Description of what you see:**
+
+This slide presents a proposed solution for reducing noise in images, likely in the context of image processing or computer vision.  The text describes a method of replacing each pixel with the average of its neighboring pixels.  The assumptions listed below the method suggest that the approach relies on the idea that neighboring pixels tend to have similar values and that the noise is independent from pixel to pixel.  The slide is likely part of a larger discussion about noise reduction techniques in image processing.  The overall design is simple and straightforward, focusing on the description of the method and its underlying assumptions.
+
+

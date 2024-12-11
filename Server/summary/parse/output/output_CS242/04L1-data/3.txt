@@ -1,0 +1,11 @@
+# 3
+
+# Data
+
+---
+
+**Description:**
+
+This slide, titled "Data," is a single word slide.  The word "Data" is centered on the slide in a dark gray font against a light gray background.  There are no figures or other content on the slide.  The slide likely introduces the topic of data as the subject of the next few slides in the lecture.  The context from the previous slide suggests that this is part of a larger lecture on Introduction to Data Science.
+
+

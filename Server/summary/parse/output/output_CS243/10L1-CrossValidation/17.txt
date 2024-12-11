@@ -1,0 +1,24 @@
+# 17
+
+**Regularized Linear Regression**
+
+New loss function for linear regression:
+
+E(w) = RSS(w) + λ R(w)
+
+R(w) = ||w||<sub>2</sub><sup>2</sup> = w<sub>1</sub><sup>2</sup> + ... + w<sub>k</sub><sup>2</sup>, often called a regularizer
+
+R(w) = ||w||<sub>1</sub> = |w<sub>1</sub>| + ... + |w<sub>k</sub>|, also used (called LASSO)
+
+λ, often called a regularization coefficient
+
+*   λ = 0, no regularization
+*   λ = +∞, best w is 0.
+*   λ controls the trade-off between training error and complexity.
+
+
+**Description:**
+
+This slide introduces the concept of regularized linear regression.  It defines a new loss function (E(w)) that combines the residual sum of squares (RSS) with a regularization term (R(w)).  The regularization term, R(w), can be either the L2 norm (sum of squared weights) or the L1 norm (sum of absolute weights).  The parameter λ controls the strength of the regularization.  A value of λ = 0 means no regularization, while a very large value of λ forces the model to favor a solution with smaller weights (closer to 0).  The slide is likely to be followed by a discussion of how regularization helps to prevent overfitting in linear regression models.  The mathematical formulas are central to the slide, highlighting the core concepts of the technique.  The use of the terms "regularizer," "LASSO," and "regularization coefficient" indicates that the slide is part of a discussion on model complexity and overfitting.  The slide is well-structured, with clear definitions and explanations of the key components of regularized linear regression.
+
+

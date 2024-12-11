@@ -1,0 +1,11 @@
+# 23
+
+**Example: Acquire Data**
+
+---
+
+A scatter plot is displayed, showing a large number of small, black dots scattered across a two-dimensional space.  The dots are densely clustered in some areas and more sparsely distributed in others.  There are no labels or axes on the plot.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+The slide shows a scatter plot of data points.  The plot is a visual representation of a dataset, where each dot represents a data instance.  The density of the dots in certain areas suggests that there might be clusters of similar data points in the dataset.  The absence of labels or axes indicates that the specific values of the data points are not being shown.  The purpose of this slide is to illustrate the concept of acquiring data and visualizing it in a scatter plot format.  The slide is likely part of a lecture on clustering, where the data points are examples of data that could be clustered using algorithms like K-means.  The title "Example: Acquire Data" indicates that the scatter plot is an example of a dataset that has been acquired.

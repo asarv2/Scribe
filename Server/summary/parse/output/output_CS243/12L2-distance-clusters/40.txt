@@ -1,0 +1,15 @@
+# 40
+
+**Example II: Poor Clustering**
+
+---
+
+**Left Panel:** A scatter plot displays data points in three colors (red, blue, and green).  The x-axis ranges from approximately 0 to 1, and the y-axis ranges from approximately 0 to 1.  The data points are not clearly separated into distinct, well-defined clusters.  There are overlaps between the clusters, and the points within each cluster are not tightly grouped.  This visual representation suggests a poor clustering outcome.
+
+**Right Panel:** A large square heatmap is displayed.  The heatmap shows a reordered proximity matrix.  The colors range from dark blue (low similarity/high distance) to red (high similarity/low distance).  Crucially, the block pattern in the heatmap is not as clear or distinct as in the previous example of good clustering.  The lack of strong, diagonal blocks suggests that the clusters are not well-separated and that the clustering algorithm may not have effectively grouped similar data points.  The lack of clear separation in both the scatter plot and the heatmap indicates a poor clustering result.
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on clustering algorithms, provides an example of a "poor clustering" result.  It contrasts with the previous slide's "good clustering" example.  The left panel shows a scatter plot of data points that are not clearly separated into distinct clusters.  The right panel displays a heatmap (reordered proximity matrix) that visually confirms this poor clustering.  The lack of clear block patterns in the heatmap corresponds to the overlapping and indistinct clusters in the scatter plot.  This example is intended to illustrate how a poorly formed clustering will not exhibit a clear block pattern in the proximity matrix visualization.  The slide is designed to help the audience understand the visual cues for identifying poor clustering results.  The data points are not well-separated into distinct clusters, and the heatmap reflects this lack of clear separation.

@@ -1,0 +1,31 @@
+# Slide 26
+
+# Using SQL with RDBMS
+
+Database server: machine that runs RDBMS (e.g., MySQL), provides database "service" to clients
+
+Clients may interact directly with RDBMS
+
+* Client connects to RDBMS (logs in)
+* Client types SQL query and submits
+* RDBMS executes query and returns results to client
+* Repeat (2, 3) at will; disconnect when done
+
+(Some computer programs can interact directly to RDBMS without human intervention)
+
+
+---
+
+**Description of the Slide:**
+
+This slide describes the interaction between clients and a Relational Database Management System (RDBMS) using SQL.  It explains that a database server is a machine that runs the RDBMS (like MySQL) and provides database services to clients.  The slide outlines the typical interaction process:
+
+1.  **Client connects:** The client establishes a connection to the RDBMS.
+2.  **Client submits query:** The client inputs an SQL query.
+3.  **RDBMS executes:** The RDBMS processes the query.
+4.  **Results returned:** The RDBMS sends the results back to the client.
+5.  **Repeat or disconnect:** The client can repeat steps 2-4 as needed or disconnect when finished.
+
+The final sentence notes that some programs can automate this interaction without user intervention.  The slide is purely textual, with no figures.  The content is a high-level overview of the client-server interaction model for accessing and manipulating data in a relational database.  The context suggests this is part of a larger discussion on how to use SQL with a database system.
+
+

@@ -1,0 +1,20 @@
+# Slide 34
+
+**Assumptions of Simple Search Abstraction**
+
+Static: The world does not change on its own, and our actions don't change it.
+Discrete: A finite number of individual states exist rather than a continuous state of options
+Observable: States can be determined by observations
+Deterministic: Action have certain outcomes
+
+
+**Description:**
+
+This slide lists the assumptions underlying simple search abstraction in AI.  The slide is purely textual, presenting a bulleted list of assumptions.  The assumptions are crucial for the applicability of search algorithms, as they define the conditions under which the search methods will be effective.  The assumptions are:
+
+* **Static:** The environment doesn't change independently of the agent's actions.
+* **Discrete:** The problem space has a finite number of states, rather than a continuous range of possibilities.
+* **Observable:** The agent can directly observe the current state of the environment.
+* **Deterministic:** Actions have predictable outcomes; there is no uncertainty in how the environment responds to actions.
+
+These assumptions are important because they simplify the problem, allowing for the application of search algorithms that assume a predictable and well-defined environment.  The slide is likely part of a lecture section introducing search algorithms and their limitations.

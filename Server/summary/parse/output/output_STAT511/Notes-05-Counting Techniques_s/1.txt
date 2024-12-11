@@ -1,0 +1,33 @@
+# Slide 1
+
+**Basic Probability Cont.**
+
+**Counting Techniques**
+
+Counting technique is used to probability calculation when the sample space is finite with equal probability, i.e., S = {𝑠<sub>1</sub>, 𝑠<sub>2</sub>, … … , 𝑠<sub>𝑁</sub>}, and P({𝑠<sub>𝑖</sub>}) = <sup>1</sup>/<sub>𝑁</sub>, then
+
+P(A) = <sup>N(A)</sup>/<sub>N</sub>,
+
+where N(A) is the number of elements in the event A, N is the number of outcomes in the sample space.
+
+**How to count N(A) and N?**
+
+**Product Rule for Ordered Pairs**
+
+* Ordered pair: if 𝑂<sub>1</sub> and 𝑂<sub>2</sub> are objects, then the pair (𝑂<sub>1</sub>, 𝑂<sub>2</sub>) is different from the pair (𝑂<sub>2</sub>, 𝑂<sub>1</sub>)
+    * Example: In a little league baseball team, Angela being the pitcher and Ben the catcher gives a different lineup from the one in which Angela is catcher and Ben is pitcher.
+* Proposition: If the first element or object of an ordered pair can be selected in 𝑛<sub>1</sub> ways, and for each of these 𝑛<sub>1</sub> ways the second element of the pair can be selected in 𝑛<sub>2</sub> ways, then the number of ordered pairs is 𝑛<sub>1</sub> × 𝑛<sub>2</sub>.
+
+
+**Product Rule for k-Tuples**
+
+* k-Tuples: We will call an ordered collection of k objects a k-tuple.
+    * Example: A job consists of k separate tasks, the 𝑖𝑡ℎ of which can be done in 𝑛<sub>𝑖</sub> ways for i=1,…,k, then in how many ways can the entire job be done?
+* Proposition: Suppose a set consists of ordered collections of k elements (k-tuples) and that there are 𝑛<sub>1</sub> possible choices for the first element; for each choice of the first element, there are 𝑛<sub>2</sub> possible choices of the second element; ……; for each possible choice of the first k–1 elements, there are 𝑛<sub>𝑘</sub> choices of the 𝑘𝑡ℎ element. Then there are 𝑛<sub>1</sub> × 𝑛<sub>2</sub> × … … × 𝑛<sub>𝑘</sub> ≔∏<sup>𝑘</sup><sub>𝑖=1</sub> 𝑛<sub>𝑖</sub> possible k-tuples.
+
+
+**Figure Description:**
+
+A tree diagram is present on the slide, starting from the top with a node labeled 𝑂<sub>1</sub>, 𝑂<sub>2</sub>, 𝑂<sub>3</sub>, and 𝑂<sub>4</sub>.  From each of these nodes, branches extend downwards, representing possible choices.  Each branch ends in a small circle, representing an outcome. The diagram illustrates the concept of ordered pairs, showing how different orderings of elements lead to different outcomes.  The tree diagram is used to visually demonstrate the product rule for counting ordered pairs.  The example of a baseball team lineup is used to illustrate the concept of ordered pairs. The diagram is placed below the text explaining the product rule for ordered pairs, and it is oriented vertically, with the root at the top and branches extending downwards. The diagram is crucial to understanding the concept of ordered pairs and how to count the number of possible outcomes.
+
+

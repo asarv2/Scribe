@@ -1,0 +1,14 @@
+# Slide 9
+
+**How to evaluate whether data supports a claim**
+
+---
+
+**Description of what you see:**
+
+This slide, a plain gray background, has a single, centered heading: "How to evaluate whether data supports a claim".  The text is dark gray, large, and bold, filling a small portion of the slide.  There are no figures or other elements on the slide.
+
+
+**Description:**
+
+The slide is a simple title slide for a section of the Intro to Data Science lecture.  The title, "How to evaluate whether data supports a claim", is the only content, indicating the topic of the upcoming lecture material.  The gray background is a consistent color throughout the presentation.  The slide is likely the introduction to a section on evaluating the validity of claims based on data, a crucial aspect of data science.

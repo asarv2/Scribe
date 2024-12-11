@@ -1,0 +1,33 @@
+# Slide 14
+
+**Building a Narrative**
+
+Higher Ed.
+Patti Caresalot
+Passionate Full-Time Instructor, Teaching Focus
+
+* **Description**
+Patti teaches English at Lake Valley College. Her priority is to foster student engagement. She enjoys seeing students connect with the course content, and finds it rewarding to play a part in a student's growth. She actively seeks out feedback from her students to make assignments and assessments better. Patti feels that learning happens when students are actively applying knowledge. Her classes focus on discussion and interaction. Patti is teaching four courses this semester. Two of the courses are fully online with about 30 students each, the other two courses are larger face-to-face lectures with about 90 students each.
+
+* **Challenges**
+
+* **Personal**
+"I'm here for the students, if something's not working, then it needs to change."
+
+* **email:** Patti.Caresalot@D2L.com
+
+* **Coursona Matches**
+(A small graphic showing colored circles with labels GEN, OLN, BND, LEC, TRD, SRD)
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a persona profile for Patti Caresalot, a passionate full-time instructor.  The slide is formatted in a way that resembles a data sheet or a profile card.
+
+* **Visual:** A cartoon-like portrait of a woman (likely Patti) is displayed in the upper left corner of the slide.  The image is simple, showing a woman with dark hair, glasses, and a reddish-orange top.  The image is likely included to represent the persona and make the slide more engaging.
+
+* **Content:** The slide provides a description of Patti's teaching style, her focus, and the challenges she faces.  The "Description" section details her teaching philosophy, her approach to student engagement, and the types of courses she teaches.  The "Challenges" section highlights her personal perspective on teaching and her commitment to student success.  The "Personal" section contains a quote from Patti, expressing her dedication to her students.  The "Coursona Matches" section shows a small graphic of colored circles with labels (GEN, OLN, BND, LEC, TRD, SRD).  These likely represent categories or matching criteria from a platform like Coursera, indicating potential course matches or areas of expertise.
+
+* **Purpose:** The slide's purpose is to introduce a persona, Patti Caresalot, to provide context and insight into the needs and perspectives of a specific instructor.  This is likely part of a larger discussion about understanding the needs of students and instructors in the context of a data science course.  The slide is designed to help the audience understand the instructor's perspective and motivations.

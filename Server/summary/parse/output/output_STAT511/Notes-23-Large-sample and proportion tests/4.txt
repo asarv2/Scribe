@@ -1,0 +1,49 @@
+# 4
+
+**STAT 511 Course Notes – set 23 (W12)**
+
+**Yuan Qu**
+
+𝜌−𝜌<sub>0</sub>
+√𝜌<sub>0</sub>(1−𝜌<sub>0</sub>)/𝑛 ≈ 𝑁(0,1)
+
+when 𝑛𝜌<sub>0</sub> ≥ 10, 𝑛(1 − 𝜌<sub>0</sub>) ≥ 10. In other words, statistic (𝜌−𝜌<sub>0</sub>)/√𝜌<sub>0</sub>(1−𝜌<sub>0</sub>)/𝑛 has a tractable distribution under null, thus can be used as a test statistic for 𝜌. This implies that
+
+**Test statistic:**
+
+𝑍<sub>TS</sub> =  
+𝑝̂ −𝑝<sub>0</sub>
+√𝑝<sub>0</sub>(1−𝑝<sub>0</sub>)/𝑛
+
+
+**Rejection region**
+
+1. {𝑍 > 𝑧<sub>1−𝛼</sub>}, p-value = 𝑃(𝑍 > 𝑧<sub>TS</sub>) if H<sub>a</sub>: 𝑝 > 𝑝<sub>0</sub>
+2. {𝑍 < 𝑧<sub>𝛼</sub>}, p-value = 𝑃(𝑍 < 𝑧<sub>TS</sub>) if H<sub>a</sub>: 𝑝 < 𝑝<sub>0</sub>
+3. {|Z| > 𝑧<sub>1−𝛼/2</sub>}, p-value = 2 × 𝑃(𝑍 > |𝑧<sub>TS</sub>|), if H<sub>a</sub>: 𝑝 ≠ 𝑝<sub>0</sub>
+
+**Note:** this Z test procedure is valid provided that 𝑛𝑝<sub>0</sub> ≥ 10, 𝑛(1 − 𝑝<sub>0</sub>) ≥ 10.
+
+**Example 23.3** Natural cork in wine bottles is subject to deterioration, and as a result wine in such bottles may experience contamination. In a tasting of commercial chardonnays, 16 of 91 bottles were considered spoiled to some extent by cork-associated characteristics. Does this data provide strong evidence for concluding that more than 15% of all such bottles are contaminated in this way at the level 10%?
+
+Let 𝑝 = the true proportion of all commercial chardonnay bottles considered spoiled to some extent by cork-associated characteristics.
+
+1. The null hypothesis is 𝐻<sub>0</sub>: 𝑝 = 0.15.
+The alternative hypothesis is 𝐻<sub>𝑎</sub>: 𝑝 > 0.15, the assertion that the population percentage exceeds 15%.
+
+2. Since 𝑛𝑝<sub>0</sub> = 91(0.15) = 13.65 ≥ 10 and 𝑛(1 − 𝑝<sub>0</sub>) = 91(0.85) = 77.35 ≥ 10, the large-sample test can be used. 𝑝̂ = 16/91 = 0.1758 and the test statistic value is
+
+𝑍<sub>TS</sub> =  
+0.1758 −0.15
+√0.15(1 −0.15)
+= 0.69
+
+3. The form of 𝐻<sub>𝑎</sub> implies that an upper-tailed test is appropriate: Rejection region is {𝑍 ≥ 𝑧<sub>0.90</sub> = 1.28}.
+or the p-value = 𝑃(𝑍 > 0.69) = 1 − 0.7549 = 0.2451.
+
+4. Do not reject 𝐻<sub>0</sub> and ……
+
+
+**Slide Description:**
+
+This slide continues the discussion of hypothesis testing, focusing on the case of a single population proportion.  It presents the test statistic and rejection region for a large sample test of a population proportion.  The slide includes a worked example (Example 23.3) where the proportion of spoiled wine bottles is tested against a null hypothesis of 15%.  The slide clearly states the null and alternative hypotheses, and the calculations for the test statistic and p-value are shown.  The slide concludes with the decision not to reject the null hypothesis based on the p-value.  The slide number (4 of 9) and the course name (STAT 511 Course Notes) are clearly visible at the top.  The author's name (Yuan Qu) is also present.  The title is not explicitly stated, but the content clearly relates to hypothesis testing for a single population proportion.  The use of bullet points and clear headings makes the information easy to follow.  The formulas are presented for calculating the test statistic and p-value.

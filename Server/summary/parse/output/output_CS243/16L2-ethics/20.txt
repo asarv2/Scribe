@@ -1,0 +1,31 @@
+# Slide 20
+
+**Example: The Compass System**
+
+Prediction Fails Differently for Black Defendants
+
+|  | WHITE | AFRICAN AMERICAN |
+|---|---|---|
+| Labeled Higher Risk, But Didn't Re-Offend | 23.5% | 44.9% |
+| Labeled Lower Risk, Yet Did Re-Offend | 47.7% | 28.0% |
+
+
+Non-offending blacks get higher scores
+
+* NB: race is not a feature in the model
+
+So the recall for the "positive" case isn't equal for the groups
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide presents a table illustrating the results of the COMPAS (Correctional Offender Management Profiling for Alternative Sanctions) system, showing how the prediction of recidivism rates differs for Black and White defendants.  The table displays percentages for two categories: "Labeled Higher Risk, But Didn't Re-Offend" and "Labeled Lower Risk, Yet Did Re-Offend."  The percentages for Black defendants are significantly higher in the "Higher Risk" category and lower in the "Lower Risk" category compared to White defendants.  The note "NB: race is not a feature in the model" highlights that the model does not explicitly use race as an input, yet the outcome shows a disparity.  The conclusion, "So the recall for the 'positive' case isn't equal for the groups," emphasizes the unequal accuracy of the model's predictions for different racial groups.  The source is clearly attributed.
+
+
+**Description:**
+
+The slide is a light-gray background with a bold title, "Example: The Compass System."  A table is presented, showing percentages for two categories of recidivism prediction outcomes for White and African American defendants.  The table is clearly formatted, with the categories and percentages easily readable.  The text below the table highlights the disparity in the model's predictions for different racial groups, despite race not being a direct input.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in algorithmic risk assessment tools.

@@ -1,0 +1,224 @@
+# Slide 1
+
+**Basic Probability Cont.**
+
+**Counting Techniques**
+
+Counting technique is used to probability calculation when the sample space is finite with equal probability, i.e., S = {𝑠<sub>1</sub>, 𝑠<sub>2</sub>, … … , 𝑠<sub>𝑁</sub>}, and P({𝑠<sub>𝑖</sub>}) = <sup>1</sup>/<sub>𝑁</sub>, then
+
+P(A) = <sup>N(A)</sup>/<sub>N</sub>,
+
+where N(A) is the number of elements in the event A, N is the number of outcomes in the sample space.
+
+**How to count N(A) and N?**
+
+**Product Rule for Ordered Pairs**
+
+* Ordered pair: if 𝑂<sub>1</sub> and 𝑂<sub>2</sub> are objects, then the pair (𝑂<sub>1</sub>, 𝑂<sub>2</sub>) is different from the pair (𝑂<sub>2</sub>, 𝑂<sub>1</sub>)
+    * Example: In a little league baseball team, Angela being the pitcher and Ben the catcher gives a different lineup from the one in which Angela is catcher and Ben is pitcher.
+* Proposition: If the first element or object of an ordered pair can be selected in 𝑛<sub>1</sub> ways, and for each of these 𝑛<sub>1</sub> ways the second element of the pair can be selected in 𝑛<sub>2</sub> ways, then the number of ordered pairs is 𝑛<sub>1</sub> × 𝑛<sub>2</sub>.
+
+
+**Product Rule for k-Tuples**
+
+* k-Tuples: We will call an ordered collection of k objects a k-tuple.
+    * Example: A job consists of k separate tasks, the 𝑖𝑡ℎ of which can be done in 𝑛<sub>𝑖</sub> ways for i=1,…,k, then in how many ways can the entire job be done?
+* Proposition: Suppose a set consists of ordered collections of k elements (k-tuples) and that there are 𝑛<sub>1</sub> possible choices for the first element; for each choice of the first element, there are 𝑛<sub>2</sub> possible choices of the second element; ……; for each possible choice of the first k–1 elements, there are 𝑛<sub>𝑘</sub> choices of the 𝑘𝑡ℎ element. Then there are 𝑛<sub>1</sub> × 𝑛<sub>2</sub> × … … × 𝑛<sub>𝑘</sub> ≔∏<sup>𝑘</sup><sub>𝑖=1</sub> 𝑛<sub>𝑖</sub> possible k-tuples.
+
+
+**Figure Description:**
+
+A tree diagram is present on the slide, starting from the top with a node labeled 𝑂<sub>1</sub>, 𝑂<sub>2</sub>, 𝑂<sub>3</sub>, and 𝑂<sub>4</sub>.  From each of these nodes, branches extend downwards, representing possible choices.  Each branch ends in a small circle, representing an outcome. The diagram illustrates the concept of ordered pairs, showing how different orderings of elements lead to different outcomes.  The tree diagram is used to visually demonstrate the product rule for counting ordered pairs.  The example of a baseball team lineup is used to illustrate the concept of ordered pairs. The diagram is placed below the text explaining the product rule for ordered pairs, and it is oriented vertically, with the root at the top and branches extending downwards. The diagram is crucial to understanding the concept of ordered pairs and how to count the number of possible outcomes.
+
+
+
+
+# Slide 2
+
+**Permutations and combinations**
+
+Consider a group of *n* distinct individuals or objects ("distinct" means that there is some characteristic that differentiates any particular individual or object from any other). How many ways are there to select a subset of size *k* from the group?
+
+* If a Little League team has 15 players on its roster, how many ways are there to select 9 players to form a starting lineup?
+* If a university bookstore sells ten different laptop computers but has room to display only three of them, in how many ways can the three be chosen?
+
+**Two different scenarios:**
+
+* **The order of selection is important.**
+    * Angela being the pitcher and Ben the catcher gives a different lineup from the one in which Angela is catcher and Ben is pitcher.
+* **Order is not important.**
+    * The laptop display example.
+
+**Permutation:** An ordered subset is called a permutation.
+
+* The number of permutations of size *k* that can be formed from the *n* individuals or objects in a group will be denoted by 𝑃<sub>𝑘,𝑛</sub>.
+* The number of permutations can be determined by using our earlier counting rule for *k*-tuples.
+𝑃<sub>𝑘,𝑛</sub>= 𝑛(𝑛−1) … … (𝑛−𝑘+ 1) =  𝑛! / (𝑛−𝑘)!
+
+**Combination:** An unordered subset is called a combination.
+
+* One way to denote the number of combinations is 𝐶<sub>𝑘,𝑛</sub>, but we shall instead use notation that is quite common in probability books: (<sup>𝑛</sup>⁄<sub>𝑘</sub>). It reads as *n* choose *k*.
+𝐶<sub>𝑘,𝑛</sub>= (<sup>𝑛</sup>⁄<sub>𝑘</sub>) = 𝑛! / [(𝑛−𝑘)!𝑘!] = 𝑛× (𝑛−1) × … × 1 / [(𝑛−𝑘) × … × 1] × [𝑘× … × 1]
+
+
+**Examples 5.1:** A college of engineering has 7 departments, each with one representative on the college's student council. From these 7 representatives, one is to be chosen chair, another vice-chair, and a third secretary. How many ways are there to select the 3 officers?
+
+**In fact,**
+
+1. The chair can be selected in any of 𝑛<sub>1</sub> = 7 ways;
+2. For each way of selecting the chair, there are 𝑛<sub>2</sub> = 6 ways to select the vice-chair, and hence 7 × 6 = 42 (chair, vice-chair) pairs;
+3. Finally, for each way of selecting a chair and vice-chair, there are 𝑛<sub>3</sub> = 5 ways of choosing the secretary.
+
+
+**Figure Description:**
+
+There are no figures on this slide. The content is entirely text-based, explaining the concepts of permutations and combinations, and providing examples. The text is formatted in a way that clearly distinguishes different points and scenarios, making it easy to follow the lecture's progression. The examples and scenarios are presented in a way that is relevant to the course's topic of statistical methods.
+
+
+# Slide 3
+
+**Statistical Methods**
+
+Examples 5.2: Ten teaching assistants grade 4 questions of an exam. The professor wishes to select a different assistant to grade each question (only one assistant per question). In how many ways can the assistants be chosen for grading?
+
+( )( )( )( )
+
+Examples 5.1 revisit: In the student council example, suppose that 3 of the 7 representatives are to be selected to attend a statewide convention. The order of selection is not important; all that matters is which three get selected.
+
+
+NOTE: For any given combination, e.g., {a, b, c}, there are 3! = 6 ways to reorder them to produce permutations. Therefore,
+𝑃<sub>3,7</sub> = (3!) × (<sup>7</sup>⁄<sub>3</sub>)  or (<sup>7</sup>⁄<sub>3</sub>) = 𝑃<sub>3,7</sub>
+<sub>3!</sub>
+
+NOTE: When the order of selection doesn’t matter, the number of possible choices is a combination number.
+𝑃(𝐴) = <sup>𝑁(𝐴)</sup>⁄<sub>𝑁</sub>. How to count N(A) and N?
+
+Examples 5.3: The computers of six faculty members in a certain department are to be replaced. Two of the faculty members have selected laptop machines and the other four have chosen desktop machines. Suppose that only two of the setups can be done on a particular day, and the two computers to be set up are randomly selected from the six.
+
+Let the computers be numbered 1, 2, …, 6. Then one outcome consists of computers 1 and 2, another consists of computers 1 and 3, and so on. There are 15 equally likely outcomes.
+a) What is the probability that both selected setups are for laptop computers?
+b) What is the probability that both selected setups are desktop machines?
+c) What is the probability that at least one selected setup is for a desktop computer?
+d) What is the probability that at least one computer of each type is chosen for setup?
+Assume that the computers are numbered 1-6 as described and that computers 1 and 2 are the two laptops, 3-6 are the desktops. There are 15 possible outcomes:
+𝐶<sub>2,6</sub>= (<sup>6</sup>⁄<sub>2</sub>) = <sup>6!</sup>⁄<sub>2! 4!</sub> = 15
+
+(1,2)
+(1,3)
+(1,4)
+(1,5)
+(1,6)
+
+(2,3)
+(2,4)
+(2,5)
+(2,6)
+
+(3,4)
+(3,5)
+(3,6)
+
+(4,5)
+(4,6)
+
+(5,6)
+
+
+**Figure Description:**
+
+There are no figures on this slide. The content is entirely text-based, presenting examples and questions related to permutations, combinations, and probability calculations. The examples involve scenarios like selecting teaching assistants for grading, student council representatives, and computer setups. The text is formatted in a way that clearly distinguishes different points and scenarios, making it easy to follow the lecture's progression. The examples and scenarios are presented in a way that is relevant to the course's topic of statistical methods.  The list of possible outcomes (1,2), (1,3), etc. is presented in a tabular format, which is typical for listing possible combinations.
+
+
+# Slide 4
+
+**Statistical Methods**
+
+a) P(both are laptops) = P((1,2))
+b) P(both are desktops) = P((3,4), (3,5), (3,6), (4,5), (4,6), (5,6))
+c) P(at least one desktop) = 1 − P(no desktops) =
+Or
+P(at least one desktop) = P(1 desktop and 1 laptop) + P(both are desktops)
+=
+
+Note that the number of cases for one desktop and one laptop is 4*2, even though the order is
+not important.
+d) P(at least one of each type) = 1 − P(both are the same)
+= 1 − [P(both are laptops) + P(both are desktops)]
+=
+or
+P(at least one of each type) = P(1 desktop and 1 laptop)
+=
+
+More complicated counting problems
+
+Examples 5.4 Consider choosing a five-card poker hand from a standard deck of 52 playing cards.
+What is the probability of having four aces?
+
+a) What is the probability of having four aces?
+If we specify that four of the cards are aces, then there are 48 different ways of specifying the
+fifth card. Thus,
+P(four aces) =
+
+b) What is the probability
+of having four of a
+kind?
+P(four of a kind) =
+
+c) What is the probability
+of having exactly one
+pair?
+P(exactly one pair) =
+
+
+**Figure Description:**
+
+There are no figures on this slide. The content is entirely text-based, presenting examples and questions related to probability calculations, specifically in the context of poker hands. The examples involve scenarios like selecting computer setups (laptops and desktops) and calculating probabilities for different poker hand outcomes (four aces, four of a kind, one pair). The text is formatted in a way that clearly distinguishes different points and scenarios, making it easy to follow the lecture's progression. The examples and scenarios are presented in a way that is relevant to the course's topic of statistical methods.  The slide continues the discussion of probability calculations from the previous slides, building on the concepts of permutations and combinations.
+
+
+# Slide 5
+
+**Statistical Methods**
+
+More exercises:
+
+Two pair
+<img src="https://i.imgur.com/999999.png" alt="Two pair">
+Two different pairs in the same hand
+
+Three of a kind
+<img src="https://i.imgur.com/999999.png" alt="Three of a kind">
+Any three numerically matching cards
+
+Full house
+<img src="https://i.imgur.com/999999.png" alt="Full house">
+Combination of three of a kind and a pair in the same hand
+
+Examples 5.5: A particular iPod playlist contains 100 songs, 10 of which are by the Beatles. Suppose the shuffle feature is used to play the songs in random order. What is the probability that the first Beatles song heard is the fifth song played?
+
+#1,  #2,  #3,  #4,  #5
+( ), ( ), ( ), ( ), ( ), … …
+P(1st B is the 5th song played) = 
+Alternative solution,
+P(1st B is the 5th song played) = (  ) / (  ).
+
+B
+
+100 songs
+5 Beatles
+95 Others
+
+That is, we consider all possible places for the 10 Beatles in 100 songs, the number of combinations is ________.
+
+The event of interest corresponds to that the first 4 songs have no Beatles, the 5th is a Beatles and the remaining 9 Beatles are arranged among the rest 95 songs. The number is _________.
+
+NOTE: The tricky part of this type of question is how to define the sample space S, to make all outcomes equally likely, and the event of interest is a well-defined subset of S. There are often multiple ways to consider the sample space, where the equally likely situations are due to the random operation of the experiment.
+
+
+**Figure Description:**
+
+The slide contains several images of poker hands (Two pair, Three of a kind, Full house). These images are small, positioned above the corresponding text descriptions.  They are likely included to visually illustrate the concepts being discussed.  The images are placed above the text to which they relate, and are oriented in a way that is consistent with the overall layout of the slide.  The images are relevant to the topic of statistical methods, specifically in the context of probability calculations related to poker hands.  The images are likely included to help the reader visualize the different poker hand combinations.
+
+
+**Description of the slide content:**
+
+The slide continues the discussion of probability calculations, specifically focusing on a scenario involving an iPod playlist with Beatles songs.  The problem asks for the probability that the first Beatles song heard is the fifth song played.  The slide provides both a direct calculation and an alternative solution, emphasizing the importance of defining the sample space correctly to ensure equally likely outcomes.  The slide also includes a note about the importance of defining the sample space and the event of interest clearly in probability problems.  The slide also includes a table with the number of songs, Beatles songs, and other songs.

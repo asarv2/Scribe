@@ -1,0 +1,23 @@
+# Slide 11
+
+# Example
+
+Given a large text file that contains data about credit card transactions
+* Each line of the file contains a credit card number and an amount of money
+* Determine the sum of all charges for each unique credit card number
+
+# Approaches
+
+* Could use hash table but memory is a problem for large files
+* Counting is simple if file is sorted by card number
+In this case, sorting and placement are crucial
+* Similar with distributed approaches
+
+
+---
+
+**Description of the slide:**
+
+This slide presents an example problem in the context of Intro to Data Science.  It describes a scenario involving a large text file containing credit card transaction data.  The task is to calculate the total charges for each unique credit card number.  The slide then outlines potential approaches to solving this problem, including using a hash table (but noting the memory limitations for large files) and the importance of sorting the data for efficient counting.  The final point highlights the similarity of this problem to distributed approaches, which are likely to be necessary for very large datasets.  There are no figures on this slide.
+
+

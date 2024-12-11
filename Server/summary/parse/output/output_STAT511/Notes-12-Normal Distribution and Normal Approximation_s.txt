@@ -1,0 +1,342 @@
+# 1
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**Quick review of the following from the previous lecture note**
+
+**Nonstandard normal distributions:**
+
+When X ~ N(μ, σ²), probabilities involving X are computed by “standardizing”. The standardized variable is Z = (X – μ)/σ.
+
+Subtracting μ shifts the mean from μ to zero, and then dividing by σ scales the variable so that the standard deviation is 1 rather than σ.
+
+**Proposition**
+
+If X has a normal distribution with mean μ and standard deviation σ, then
+
+Z = (X - μ) / σ
+
+The key idea of the proposition is that by standardizing, any probability involving X can be expressed as a probability involving a standard normal rv Z, so that Appendix Table A.3 can be used.
+
+**Example 12.1** Reaction time for an in-traffic response to a brake signal from standard brake lights can be modeled with a normal distribution having mean value 1.25 sec and standard deviation of 0.46 sec. What is the probability that reaction time is between 1.00 sec and 1.75 sec?
+
+P(1.00 ≤ X ≤ 1.75) =
+
+**Percentiles of the standard normal distribution**
+
+**Example 12.2** Find the 99th percentile of the standard normal distribution.
+
+Appendix Table A.3 gives for fixed z the area under the standard normal curve to the left of z, whereas here we have the area and want the value of z. This is the “inverse” problem to P(Z ≤ z) = ?
+
+Here 0.9901 ≈ 0.9900 lies at the intersection of the row marked “2.3” and column marked “.03”, so the 99th percentile is (approximately) z = 2.33.
+
+The 1st percentile is (approximately) z = -2.33.
+
+
+**Figure Description:**
+
+The slide includes two figures, both depicting standard normal distribution curves.
+
+* **Figure 1:**  A bell-shaped curve, representing the standard normal distribution, is shown. The horizontal axis is labeled with z-values. A shaded area under the curve is highlighted, corresponding to an area of 0.9900. A vertical line is drawn at z = 2.33, indicating the 99th percentile. The label "99th percentile" is placed above the line. Another shaded area, with an area of 0.01, is also shown, with a vertical line at z = -2.33, indicating the 1st percentile. The label "1st percentile" is placed above the line. The figure is positioned in the lower portion of the slide, near the bottom right. The reason for this figure is to illustrate the concept of percentiles in the standard normal distribution, specifically the 99th percentile.
+
+* **Figure 2:**  Similar to Figure 1, this figure shows a bell-shaped curve, representing the standard normal distribution. The horizontal axis is labeled with z-values. A shaded area under the curve is highlighted, corresponding to an area of 0.9900. A vertical line is drawn at z = 2.33, indicating the 99th percentile. The label "99th percentile" is placed above the line. The figure is positioned in the lower portion of the slide, near the bottom right. The reason for this figure is to illustrate the concept of percentiles in the standard normal distribution, specifically the 99th percentile.
+
+
+The figures are crucial for understanding the examples and concepts presented in the lecture, as they visually represent the standard normal distribution and how to find percentiles.
+
+
+# Slide 2
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**2**
+
+**z<sub>α</sub> notation for z Critical Values**
+
+In statistical inference, we will need the values on the horizontal z axis that capture certain small tail areas under the standard normal curve.
+
+**Notation**
+
+z<sub>α</sub> will denote the value on the z axis for which α of the area under the z curve lies to the right of z<sub>α</sub>.
+
+* For example, z<sub>0.10</sub> captures upper-tail area 0.10, and z<sub>0.01</sub> captures upper-tail area 0.01.
+
+Since α of the area under the z curve lies to the right of z<sub>α</sub>, 1 – α of the area lies to its left.
+
+Thus z<sub>α</sub> is the 100(1 – α)th percentile of the standard normal distribution.
+
+By symmetry the area under the standard normal curve to the left of –z<sub>α</sub> is also α. The z<sub>α</sub>'s are usually referred to as z critical values.
+
+
+**Figure Description:**
+
+A figure is present, positioned in the lower-middle portion of the slide. It is a bell-shaped curve, representing the standard normal distribution. The horizontal axis is labeled with z-values, and the vertical axis represents the probability density. A shaded area is highlighted to the right of a vertical line. The shaded area represents a probability (α) and the vertical line represents the corresponding z-value (z<sub>α</sub>). The figure is labeled with "curve" and "Shaded area = P(Z ≥ z<sub>α</sub>) = α". The figure visually illustrates the concept of z-scores and their relationship to the area under the standard normal curve, specifically the area to the right of a particular z-value. The figure is crucial for understanding the notation and concept of z-critical values in the context of statistical inference.  The figure is oriented horizontally.
+
+
+**Table Description:**
+
+A table is present, positioned above the figure. The table contains a series of z-values and their corresponding probabilities. The table is used to look up the z-values for different percentiles of the standard normal distribution. The table is essential for calculating probabilities and percentiles related to the standard normal distribution. The table is oriented vertically.
+
+
+**Overall Context:**
+
+This slide introduces the concept of z-critical values, which are essential for statistical inference. It explains how to find these values using the standard normal distribution and a table of z-scores and their corresponding probabilities. The figure and table are used to illustrate the concept and provide a practical method for finding the z-critical values. This slide builds upon the previous slide's discussion of the standard normal distribution.
+
+
+# Slide 3
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**Example 12.3** The amount of distilled water dispensed by a certain machine is normally distributed with mean value 64 oz and standard deviation 0.78 oz.  
+
+What container size *c* will ensure that overflow occurs only 0.5% of the time?  
+
+If *X* denotes the amount dispensed, the desired condition is that 𝑃(𝑋 >  𝑐) =  0.0050, or, equivalently, that 𝑃(𝑋≤𝑐) =  0.9950. 
+
+The 99.5th percentile of the standard normal distribution is 2.58, so  
+
+𝑐= 𝜇+ 𝑧𝛼 ∙𝜎=             +2.58 ×            =                         (𝑜𝑧). 
+
+
+**Finding the Value of x when given a Probability or a Proportion**
+
+1. In some problems, you will be given a probability and asked to find the corresponding variable value *x*. To do these problems, just work backwards! First DRAW A PICTURE and write this in mathematical notation. 
+2. Figure out what proportion or probability you are given. 
+3. Next, if this probability is not a cumulative probability, determine the cumulative probability associated with the probability you found in step 3. 
+4. Then find the z-score that corresponds to the cumulative probability of interest. 
+5. To find the answer, which is the value of *x*, use the formula 𝑥= 𝜇+ 𝑧𝜎. 
+
+
+**Example 11.4 revisit 𝑋~𝑁(4, 0.25<sup>2</sup>).**
+
+a) What wingspan is longer than 90% of all adult dragonfly wingspans?      
+
+1. First draw a picture and write this in mathematical notation. 
+𝑃(𝑋< ? ) = 0.9000 
+2. The 90% corresponds to a cumulative probability of 0.90. 
+𝜙( ? ) = 0.9000 
+3. This proportion is a cumulative probability so go to step 4. 
+4. Read the corresponding z-score from the left column and top row. 
+i. 
+𝜙( ? ) = 0.8461 
+𝜙(                 ) = 0.8461 
+ii. 
+𝜙( ? ) = 0.9000 
+𝜙(                ) = 0.8997 and 𝜙(1.29) = 0.9015 → 𝜙(1.28) ≈0.9000 
+iii. 
+𝜙( ? ) = 0.6718 
+𝜙(                ) = 0.6700 and 𝜙(                ) = 0.6736 → 𝜙(                ) ≈0.6718 
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Overall Context:**
+
+This slide continues the discussion of normal distributions and how to find values of a variable given a probability or proportion. It provides examples and steps to solve such problems, emphasizing the use of z-scores and cumulative probabilities. The example of dragonfly wingspans is used to illustrate the application of the concepts. The slide builds upon the previous slides by introducing the concept of finding the value of *x* when given a probability.
+
+
+# Slide 4
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+5. Un-standardize to transform the z-score back to the original x scale.
+Since 𝑧= (𝑥– 𝜇)/𝜎, the equation for x is 𝑥= 𝜇+ 𝑧𝜎.
+? 𝑜𝑟 𝑥𝑎= 4 + (1.28) × (0.25) = 4.32.
+ANSWER: The wingspan that is longer than 90% of all adult dragonfly wingspans is 4.32 inches.
+
+b) What wingspan is less than 80% of all adult dragonfly wingspans?
+1. Draw a picture and write this in mathematical notation.
+𝑃(𝑋> ? ) = 0.8000
+2. We are given 0.8000 as the proportion of interest.
+3. NOTE: 0.8000 is NOT a cumulative probability.
+The cumulative probability is
+4. Find the proportion 0.2000 in the body of the Z-table and then look up the z–score.
+𝜙(−0.84) = 0.2005 ≈0.2000,
+𝑧≈−0.84
+5. Un-standardize to transform z– score back to the original x scale using 𝑥= 𝜇+ 𝑧𝜎
+𝑥𝑏=
+Note: The answer to questions of this type will always be a variable value 𝑥.
+
+c) Between what two lengths do the middle 95% of all adult
+dragonfly wingspans fall?
+1. Draw a picture and write this in mathematical
+notation.
+𝑃(? 𝑥𝑐1 < 𝑋< ? 𝑥𝑐2) = 0.9500
+2. Since we want the middle 95%, we actually have to
+look up the numbers corresponding to the boundaries of this region. The cumulative
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+**Overall Context:**
+
+This slide continues the previous discussion of normal distributions and z-scores, focusing on how to find the original variable value (x) given a probability or proportion.  It provides examples and steps to solve problems involving finding specific wingspan values based on percentages of all adult dragonfly wingspans.  The examples are designed to illustrate the application of the concepts and formulas introduced in the previous slides.  The slide also emphasizes the importance of understanding cumulative probabilities versus raw probabilities when using z-tables.
+
+
+# Slide 5
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**probabilities of interest are:**
+
+𝑃(𝑋<?x) = (1 − 0.9500)/2 = 0.0250
+𝜙(                 ) = 0.0.025
+𝑥𝑐1 =                                                                                                  = 4.49.
+
+**Example 12.4** The temperature reading from a thermocouple placed in a constant-temperature medium is normally distributed with mean µ, the actual temperature of the medium, and standard deviation σ.  What would the value of σ have to be to ensure that 95% of all readings are within 0.1 degree of µ?
+
+The probability “X is within 0.1 of its mean” is given by
+
+𝑃(𝜇−0.1 ≤𝑋≤𝜇+ 0.1) = 𝑃(
+(𝜇−0.1) −𝜇
+𝜎
+< 𝑍< (𝜇+ 0.1) −𝜇
+𝜎
+)
+
+=                                                                                                                             
+= 2 × 𝜙(0.1
+𝜎) −1
+
+If we require this to equal 95%, we find
+
+2 × 𝜙(
+0.1
+𝜎) −1 = 0.95 →𝜙(
+0.1
+𝜎) = 0.975 →
+0.1
+𝜎=              from the standard normal table.
+
+Thus, 𝜎=                  = 0.0510.
+
+Alternatively, use the empirical rule: 95% of all values lie within 2 standard deviations of the mean, so
+𝜎=               (This is not quite as precise as the first answer).
+
+**Example 12.5** If bolt thread length is normally distributed, what is the probability that the thread length of a randomly selected bolt is
+
+1. Within 1.5 SDs of its mean value?
+𝑃(𝜇−1.5𝜎≤𝑋≤𝜇+ 1.5𝜎)
+=                                                                                                                                                                    = 0.8664.
+
+2. Father than 2.5 SDs from its mean value?
+𝑃(𝑋< 𝜇−2.5𝜎 𝑜𝑟 𝑋> 𝜇+ 2.5𝜎)
+= 1 −𝑃(𝜇−2.5𝜎≤𝑋≤𝜇+ 2.5𝜎)
+=                                                                                                                                                                     = 0.0124.
+
+3. Between 1 and 2 SDs from its mean value?
+𝑃(𝜇−2𝜎≤𝑋≤𝜇−𝜎  𝑜𝑟  𝜇+ 𝜎≤𝑋≤𝜇+ 2𝜎 )
+= 𝑃(𝑤𝑖𝑡ℎ𝑖𝑛 2𝜎) −𝑝(𝑤𝑖𝑡ℎ𝑖𝑛 1𝜎)
+=                                                                                                                                                                     = 0.2718.
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide continues the examples from the previous slides, demonstrating how to calculate probabilities and proportions for normally distributed data.  It focuses on finding the standard deviation (σ) given a desired probability within a certain range of the mean (µ) and calculating probabilities for different ranges of values relative to the mean and standard deviation.  The examples are practical applications of the concepts of normal distributions and z-scores.  The slide uses the empirical rule as an alternative method for approximating the solutions.
+
+
+# Slide 6
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**Normal Approximation to Binomial Distribution**
+
+If 𝑋~𝐵𝑖(𝑛, 𝑝), in other words X = binomial random variable with n observations and probability p of success on each observation, then the possible values of X are 0, 1, 2, … , 𝑛. If k is any one of these values,  
+𝑃(𝑋= 𝑘) = (𝑛
+𝑘) 𝑝𝑘(1 −𝑝)𝑛−𝑘, 𝑘= 0, 1, … , 𝑛.  
+
+Example 12.6 One of the most frequent reasons for visiting a doctor in the first 2 years of life other than routine well-baby visits is otitis media, a disease of the middle ear. The probability that a child will have no episodes of otitis media is 0.13. Suppose 5 children are chosen at random. The number of children who have had no episodes of otitis media is recorded.  
+Here, 𝑠𝑢𝑐𝑐𝑒𝑠𝑠 =  𝑛𝑜 𝑒𝑝𝑖𝑠𝑜𝑑𝑒𝑠, 𝑛= 5, 𝑝= 𝑃(𝑠𝑢𝑐𝑐𝑒𝑠𝑠) = 0.13.  𝑋~ 𝐵𝑖(𝑛= 5, 𝑝= 0.13)  
+What is the probability that 2 or fewer of the 5 randomly chosen children had no episodes of otitis media?   
+𝑃( 𝑋2 ) = 𝑃( 𝑋= 0 ) + 𝑃( 𝑋= 1 ) + 𝑃( 𝑋= 2 ) 
+=
+5!
+(0!)(5!) (0.13)0(1– 0.13)5 +
+5!
+(1!)(4!) (0.13)1(1– 0.13)4 +
+5!
+(2!)(3!) (0.13)2(1– 0.13)3 
+
+
+Using the binomial formula is awkward when n starts getting large.  
+As n gets larger and larger, the binomial distribution becomes closer and closer to the normal approximation.  
+
+Can we can approximate the distribution to the binomial distribution with the normal distribution?  
+
+
+**Figure Description:**
+
+A figure is present, positioned in the lower-middle portion of the slide. It is a histogram, representing a probability distribution. The horizontal axis is labeled with values, likely representing the number of successes (e.g., number of children with no otitis media). The vertical axis represents the probability density. The histogram shows a bell-shaped curve, which is characteristic of a normal distribution. The curve is superimposed on the histogram, indicating the normal approximation to the binomial distribution. The figure is oriented horizontally. The reason for this figure is to visually illustrate the concept of approximating a binomial distribution with a normal distribution.  The figure shows the normal curve superimposed on a histogram of the binomial distribution, visually demonstrating the convergence of the two distributions as the number of trials (n) increases.  The x-axis is labeled with values from 0 to 18, and the y-axis is labeled with values from 0 to 0.2. The mean of the normal distribution is approximately 0.65, and the standard deviation is approximately 0.75. The histogram bars are centered around these values. The figure is positioned in the lower-middle portion of the slide, near the bottom of the slide.
+
+
+**Overall Context:**
+
+This slide introduces the concept of approximating a binomial distribution with a normal distribution. It provides an example of a binomial distribution problem and shows a visual representation of the normal approximation. The slide builds upon the previous slides by introducing the concept of approximating a binomial distribution with a normal distribution. The figure is crucial for understanding the concept of the normal approximation to the binomial distribution.
+
+
+# Slide 7
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**Normal Approximation to Binomial Distribution**
+
+**Proposition**
+
+Let X be a binomial rv based on n trials with success probability p. Then if the binomial probability histogram is not too skewed, X has approximately a normal distribution with 
+µ<sub>X</sub> = np and σ<sub>X</sub> = √np(1 − p) = √npq.
+
+**In particular, for x = a possible value of X,**
+
+P(X ≤ x) = Bi(x; n, p) ≈ (area under the normal curve to the left of x + 0.5) = φ((x + 0.5 − np)/√npq)
+
+**For practical purposes, n is large enough when both np ≥ 10 and n(1 − p) ≥ 10, the approximation is adequate, since there is then enough symmetry in the underlying binomial distribution.**
+
+A direct proof of this result is quite difficult. In the next chapter we’ll see that it is a consequence of a more general result called the Central Limit Theorem.
+
+In all honesty, this approximation is not so important for probability calculation as it once was. This is because software can now calculate binomial probabilities exactly for quite large values of n.
+
+**Example 12.7** Suppose that 25% of all students at a large public university receive financial aid. Let X be the number of students in a random sample of size 50 who receive financial aid, so that p = 0.25. Then µ<sub>X</sub> = 12.5 and σ<sub>X</sub> = 3.06.
+
+**Since np = 50(0.25) = 12.5 ≥ 10 and n(1 − p) = 37.5 ≥ 10, the approximation can safely be applied.**
+
+The probability that at most 10 students receive aid is
+
+P(X ≤ 10)
+= Bi(10; 50, 0.25)
+≈ φ((10 + 0.5 − 12.5)/√50(0.25)(0.75)) = φ(−0.65) = 0.2578.
+
+The exact probabilities are 0.2622, so the approximations are quite good.
+
+
+**Figure Description:**
+
+A figure is present, but only a brief description is provided in the text.  The figure is a histogram, likely representing a binomial distribution.  A normal curve is superimposed on the histogram.  The figure is positioned in the lower-middle portion of the slide.  The reason for the figure is to visually demonstrate the normal approximation to the binomial distribution.  The figure shows how the normal curve fits over the histogram of the binomial distribution, illustrating the convergence of the two distributions as the number of trials (n) increases.  More detail about the figure's specific characteristics (e.g., axis labels, values) is not provided in the text.
+
+
+**Slide Description:**
+
+This slide continues the discussion of approximating binomial distributions with normal distributions. It provides a worked example (Example 12.7) demonstrating the application of the approximation. The slide also includes a proposition outlining the conditions under which the approximation is valid.  The slide emphasizes the practical use of software for calculating binomial probabilities, making the normal approximation less crucial in modern statistical analysis.

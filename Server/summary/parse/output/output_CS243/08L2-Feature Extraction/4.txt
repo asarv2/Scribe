@@ -1,0 +1,8 @@
+# Slide 4
+
+**Edge Detection**
+
+
+**Description of the slide:**
+
+This slide, titled "Edge Detection," is a simple, single-line title slide.  It's a plain gray background with the text "Edge Detection" centered in a dark gray font.  There are no figures or other content on the slide.  The slide likely introduces the topic of edge detection as a technique used in image processing, which is a precursor to more complex image analysis tasks.  It's a straightforward, introductory slide.

@@ -1,0 +1,30 @@
+# Slide 34
+
+**Detecting and removing bias from models**
+
+Bias is in the data, not the learning algorithm
+Models trained on data will lean any biases in the data
+* ML for resume processing will learn gender bias if data has a gender bias
+* ML for recidivism prediction will learn race bias if data has a race bias
+* ...
+How to deal with bias using transparent models
+* Must keep bias features in data when model is trained
+* Remove what was learned from these bias features after training
+
+If offending bias variables are eliminated prior to training:
+* Often can't tell you still have a problem
+* Makes it harder to correct the problem
+EU General Data Protection Regulation (in effect 2018)
+* Article 9 makes it more difficult to use personal data revealing racial or ethnic origin and other "special categories"
+
+
+---
+
+**Description:**
+
+This slide discusses the source of bias in machine learning models and potential solutions.  It emphasizes that bias originates in the data, not the algorithm itself.  The text explains that models trained on biased data will inevitably reflect those biases.  Examples are given of how models trained on biased data (resume processing and recidivism prediction) will learn and perpetuate those biases.  The slide then suggests a method for dealing with bias in transparent models: keeping the biased features in the data during training, but removing the learned bias after training.  Finally, it notes that removing bias variables *before* training can mask existing problems and make it harder to correct them.  The slide also mentions the EU General Data Protection Regulation (GDPR) and how it impacts the use of personal data revealing sensitive attributes like race or ethnicity.
+
+
+**Description:**
+
+The slide is a light-gray background with a bold title.  The text is presented in a clear, bulleted list format, making it easy to read and understand.  The slide discusses the source of bias in machine learning models and potential solutions.  The text emphasizes that bias is inherent in the data and that models trained on biased data will reflect those biases.  The slide also mentions the EU GDPR and its impact on the use of personal data revealing sensitive attributes.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in machine learning models and potential solutions.

@@ -1,0 +1,17 @@
+# Slide 6
+
+**Why edges?**
+
+Cue to shape and geometry
+* useful for recognition, understanding 3D structure
+
+**Figure Description:**
+
+On the left side of the slide, there is a simple black and white line drawing of a reclining cat-like figure.  This figure is likely an example of how edges can be used to define the shape of an object.  The figure is positioned in the left quadrant of the slide.
+
+On the right side of the slide, there is a black and white drawing of a grid-like perspective view.  Several circles are drawn on the grid, appearing to be at different depths.  This figure is likely meant to illustrate how edges can be used to infer depth and 3D structure in an image.  The grid is a perspective view, with lines converging towards a vanishing point, suggesting depth.  The circles are positioned at different levels on the grid, further emphasizing the concept of depth perception.
+
+
+**Slide Description:**
+
+This slide continues the discussion of edge detection in image processing, focusing on why edges are important.  The text explains that edges provide cues about the shape and geometry of objects, which are useful for object recognition and understanding 3D structure.  The figures on the slide visually illustrate these concepts.  The left figure shows how edges define the shape of an object, while the right figure demonstrates how edges can be used to infer depth and 3D structure.  The credits at the bottom of the slide indicate the sources of the figures.

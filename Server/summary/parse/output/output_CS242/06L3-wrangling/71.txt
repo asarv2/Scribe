@@ -1,0 +1,25 @@
+# Slide 71
+
+**Mismatched Identifiers**
+
+Column names don't always match.  This is especially true when combining data sets from different sources.  In these cases, you have to specify which columns to join on.
+
+```
+df_all = pd.merge(df_student, df_gpa, left_on='Student_ID', right_on='SID')
+df_all.drop('SID', axis=1)
+```
+
+Three tables are shown: `df_student`, `df_gpa`, and `df_all`.
+
+*   **`df_student`**: This table has columns for "Student ID", "Name", and "Email".  Each row represents a student's ID, name, and email address.
+
+*   **`df_gpa`**: This table has columns for "SID" and "GPA".  Each row represents a student's ID and their corresponding GPA.
+
+*   **`df_all`**: This table is the result of merging `df_student` and `df_gpa` based on the 'Student_ID' column from `df_student` and the 'SID' column from `df_gpa`.  The 'SID' column is dropped from the merged DataFrame.  The resulting table shows the combined data, with matching 'Student ID' values appearing in both tables.
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates the importance of specifying join columns when merging DataFrames with potentially mismatched column names.  The example uses two DataFrames, `df_student` and `df_gpa`, with different column names for the student ID ("Student_ID" vs. "SID").  The code `pd.merge(df_student, df_gpa, left_on='Student_ID', right_on='SID')` explicitly specifies the columns to join on, ensuring that the correct rows are matched.  The `df_all.drop('SID', axis=1)` line removes the 'SID' column from the merged DataFrame, as it's a duplicate column.  The slide uses tables to illustrate the input DataFrames and the output DataFrame, highlighting the matching process and the removal of the duplicate column.  The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on merging data from different sources.  The tables are crucial for demonstrating the input and output data, and the code snippets are essential for demonstrating the merging process.  The slide emphasizes the need to be careful when merging data from different sources, especially when column names might not match.

@@ -1,0 +1,24 @@
+# 19
+
+**Distance between discrete data**
+
+Hamming distance
+* Used for bit/binary vectors: counts number of bits that differ
+* Can be used more generally for discrete data, to count matches
+Matching coefficient
+* Hamming distance normalized by number of attributes/bits
+
+A	1	0	1	1	0	0	1	0	0	1
+B	1	0	0	1	0	0	0	0	1	1
+
+Hamming Distance: 3
+Matching coefficient: 7/10
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, discusses Hamming distance and matching coefficients as methods for measuring the dissimilarity between discrete data points, specifically bit/binary vectors.  The slide presents a table-like structure with two rows labeled "A" and "B," each representing a data point.  Each row contains a sequence of 10 bits (0s and 1s).  The slide also shows the calculated Hamming distance (3) and matching coefficient (7/10).  The text explains that Hamming distance counts the number of differing bits, and the matching coefficient normalizes this by the total number of bits.  The slide is designed to illustrate how to calculate these distance measures for discrete data.
+
+

@@ -1,0 +1,18 @@
+# Slide 34
+
+**Clustering will return results, no matter the data**
+
+Four scatter plots are displayed, each showing a different clustering result applied to the same dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left:**  A scatter plot of randomly distributed points, colored red.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are densely packed in some areas and sparsely distributed in others.  This plot represents the raw, unclustered data.
+
+* **Top Right:** A scatter plot of points colored in blue, dark-green, and light-blue.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are clustered, with distinct groups of points of similar color.  This plot represents the result of applying the DBSCAN clustering algorithm.
+
+* **Bottom Left:** A scatter plot of points colored in red, dark-green, and blue.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are clustered, with distinct groups of points of similar color.  This plot represents the result of applying the K-means clustering algorithm.
+
+* **Bottom Right:** A scatter plot of points colored in red, dark-green, and blue.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are clustered, with distinct groups of points of similar color.  This plot represents the result of applying the Complete Link clustering algorithm.
+
+
+**Description:**
+
+This slide demonstrates that different clustering algorithms can produce different results on the same dataset.  The four plots show the output of four different clustering algorithms (random, DBSCAN, K-means, and Complete Link) applied to a dataset of points.  The purpose of the slide is to illustrate that clustering algorithms are not perfect and that the choice of algorithm can significantly affect the resulting clusters.  The slide is likely part of a lecture on clustering algorithms, where the concept of algorithm choice and its impact on results is being discussed.  The different colors and groupings in the plots visually represent the different clusters produced by each algorithm.  The random plot serves as a baseline, showing the raw data without any clustering applied.

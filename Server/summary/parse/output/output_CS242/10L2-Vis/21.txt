@@ -1,0 +1,19 @@
+# Slide 21
+
+**Scatterplot limitations**
+
+Two scatter plots are displayed side-by-side.
+
+* **Left Plot (Overprinting):**  This scatter plot shows a high density of data points, clustered in a roughly triangular or cone-shaped area.  The points are so densely packed that it's difficult to discern individual data points and potentially obscures the underlying patterns or relationships in the data.  The x-axis ranges from approximately 0 to 15, and the y-axis ranges from approximately 0 to 15.  The high density of points in a specific area of the plot indicates that the scatter plot might not be the most effective way to visualize the data, as the details of the distribution within that area might be obscured.
+
+* **Right Plot (Solution: Jitter points):** This scatter plot shows the same data as the left plot, but with a technique called "jittering" applied.  Jittering involves adding a small amount of random noise to the x and/or y coordinates of each data point.  This spreads out the points, making it easier to see the underlying distribution and individual data points, even in areas of high density.  The x-axis and y-axis ranges are similar to the left plot.  The visual effect is that the points are no longer overlapping as much, making the underlying structure of the data more apparent.
+
+
+**Context:**
+
+This slide follows a discussion of scatter plots and their strengths and limitations.  It demonstrates how overprinting (overlapping data points) can obscure the true distribution of data, and how jittering can be a solution to this problem.  The purpose is to illustrate a common issue in data visualization and a technique to address it.
+
+
+**Description of what you see:**
+
+The slide presents two scatter plots side-by-side.  The left plot shows a dense concentration of data points, making it difficult to discern individual data points.  The right plot shows the same data, but with jittering applied, which spreads out the points to improve visualization.  The visual difference between the two plots highlights the importance of considering data density when choosing a visualization technique.  The slide is part of a larger discussion on data visualization techniques in an Intro to Data Science course.

@@ -1,0 +1,12 @@
+# Slide 72
+
+**Description of the Slide:**
+
+This slide demonstrates how to merge DataFrames when the index of one DataFrame needs to be used as a join key.  The code `df_all = pd.merge(df_student, df_gpa, left_index=True, right_on='SID')` merges `df_student` and `df_gpa` using the index of `df_student` (implicitly) and the 'SID' column of `df_gpa`.  The `left_index=True` parameter tells Pandas to use the index of the left DataFrame (`df_student`) as the join key.  The `right_on='SID'` parameter tells Pandas to use the 'SID' column of the right DataFrame (`df_gpa`) as the join key.  The slide includes three tables: `df_student`, `df_gpa`, and `df_all`.  `df_student` has columns "SID", "Name", and "Email"; `df_gpa` has columns "SID" and "GPA"; and `df_all` shows the merged result, containing columns from both DataFrames.  The purpose of the slide is to illustrate how to merge DataFrames when the index of one DataFrame is used as the join key.  The tables are crucial for demonstrating the input and output data, and the code snippet is essential for demonstrating the merging process. The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on merging data from different sources.
+
+
+**What you see:**
+
+The slide displays three tables (`df_student`, `df_gpa`, and `df_all`).  Each table has columns for "SID", "Name", "Email", and "GPA".  The `df_student` table contains student information, `df_gpa` contains student GPA information, and `df_all` is the result of the merge.  The `df_all` table shows the combined data, with the index from `df_student` and the 'GPA' from `df_gpa` where a match is found.  There's a visual representation (arrows) connecting `df_student` and `df_gpa` to `df_all`, illustrating the merging process.  The slide's overall purpose is to illustrate merging DataFrames using the index of one DataFrame as the join key.
+
+

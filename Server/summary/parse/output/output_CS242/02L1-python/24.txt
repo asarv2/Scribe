@@ -1,0 +1,30 @@
+# Slide 24
+
+**Operations on lists**
+
+Adding new elements to a list
+```
+>>> li = [1, 11, 3, 4, 5]
+>>> li.append('a')  # Note the method syntax
+>>> li
+[1, 11, 3, 4, 5, 'a']
+>>> li.insert(2, 'i')
+>>> li
+[1, 11, 'i', 3, 4, 5, 'a']
+```
++ creates a fresh list (with a new memory reference)
+extend operates on list `li` in place.
+```
+>>> li.extend([9, 8, 7])
+>>> li
+[1, 2, 'i', 3, 4, 5, 'a', 9, 8, 7]
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide demonstrates various operations for adding elements to a Python list.  The examples use the `append()` and `insert()` methods to add elements to the end and at a specific index, respectively.  The `extend()` method is also shown, which adds multiple elements from an iterable (in this case, a list) to the end of the existing list.  The `>>>` symbols indicate interactive Python code execution.  The examples show the results of these operations, demonstrating how the list `li` is modified.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The examples are presented in a clear, concise manner, illustrating how to manipulate lists in Python.  The comment `# Note the method syntax` highlights the use of methods to modify lists.  The text explaining the `extend()` method clarifies that it modifies the original list in place, unlike `append()` which creates a new list.

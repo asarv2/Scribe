@@ -1,0 +1,57 @@
+# 13
+
+# JSON Files
+
+JSON originated as a way of encapsulating Javascript objects
+JSON data looks much like a dictionary in Python, with keys and values stored
+Python has built in methods to parse JSON, but
+Pandas can also be used to read and parse JSON files
+
+```json
+{
+"business_id": "PK6aSizckHFWk8i0oxt5DA",
+"full_address": "400 Waterfront Dr E\nHomestead\nHomestead, PA 15120",
+"hours": {},
+"open": true,
+"categories":[
+"Burgers",
+"Fast Food",
+"Restaurants"
+],
+"city": "Homestead",
+"review_count": 5,
+"name": "McDonald's",
+"neighborhoods": [
+"Homestead"
+],
+"longitude": -79.910032,
+"state": "PA",
+"stars": 2,
+"latitude": 40.412086,
+"attributes": {
+"Take-out": true,
+"Wi-Fi": "free",
+"Drive-Thru": true,
+"Good For": {
+"dessert": false,
+"latenight": false,
+"lunch": false,
+}
+}
+}
+```
+
+
+---
+
+**Description:**
+
+This slide, titled "JSON Files," discusses the JSON (JavaScript Object Notation) data format.
+
+* **Definition:** The slide defines JSON as a way to encapsulate JavaScript objects.  It also notes that JSON data is similar to Python dictionaries, using keys and values.
+
+* **Python and Pandas:** The slide mentions that Python has built-in methods for parsing JSON, and that the Pandas library can also be used for this purpose.
+
+* **Example:** The slide includes a JSON example.  This is a complete JSON object, formatted as a code block.  The example shows a nested structure, with key-value pairs and lists.  The example is a restaurant review, with attributes like business ID, address, categories, and attributes.  The example is a typical JSON structure, with nested objects and arrays.  The example is likely intended to illustrate the structure and format of JSON data.  The example is placed below the text description, visually separating the explanation from the practical example.  The example is formatted as a code block, using indentation and proper syntax to highlight the structure of the JSON object.  The example is a complete JSON object, which is a common data format in data science.
+
+

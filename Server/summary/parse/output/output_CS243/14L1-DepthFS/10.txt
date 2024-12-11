@@ -1,0 +1,20 @@
+# Slide 10
+
+**Structural Recursion: a Binary Tree Example**
+
+Searching for the value X in this tree is easy.
+First Examine the current value, V.
+If V == X : return True
+If there are no children, X is not in this tree,
+return False
+If X < V, Search the left tree for X
+If X > V, Search the right tree for X
+
+**(Diagram):**
+
+A binary search tree is presented, visually depicting the hierarchical structure of the data. The root node is located at the top of the diagram, labeled "36".  The tree branches downward, with each node containing a numerical value (e.g., 10, 78, 3, 21, etc.).  Arrows connect the nodes, indicating the parent-child relationships.  The left subtree of a node contains values less than the node's value, and the right subtree contains values greater than the node's value.  This structure is characteristic of a binary search tree.  The nodes are rectangular boxes, filled with a light-blue color, and contain numerical values.  The diagram is oriented vertically, with the root node at the top and the leaf nodes at the bottom.  The diagram is centrally located on the slide and is crucial for understanding the recursive search algorithm described in the text.  The diagram shows the structure of the tree, which is essential for understanding how the search algorithm would traverse the tree to find a specific value.
+
+
+**Description:**
+
+This slide continues the discussion on structural recursion, specifically focusing on how to search for a value within a binary search tree. The diagram visually represents a binary search tree, illustrating the hierarchical structure and the relationships between parent and child nodes. The text provides a recursive algorithm for searching for a value X within the tree. The algorithm examines the current node's value (V) and recursively searches either the left or right subtree based on whether X is less than or greater than V. The diagram and the algorithm together illustrate how to efficiently search for a value in a binary search tree using a recursive approach.  The slide is part of a lecture on AI Basics, focusing on the application of recursion to data structures.

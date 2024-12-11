@@ -1,0 +1,18 @@
+# 16
+
+**Conjunctive Normal Form (CNF)**
+
+A literal is either a propositional variable or the negation of a propositional variable.
+A clause is a disjunction of literals.
+A formula is in conjunctive normal form (CNF), if it is a conjunction of clauses; for instance:
+
+(p ∨ ¬q ∨ r) ∧ (q ∨ r) ∧ (¬p ∨ ¬q) ∧ r
+
+is a CNF on V = {p, q, r}.
+
+
+---
+
+**Description of the slide:**
+
+This slide defines conjunctive normal form (CNF) in propositional logic.  The title, "Conjunctive Normal Form (CNF)," is displayed prominently.  The content defines literals, clauses, and CNF formulas.  A literal is either a propositional variable (like p, q, r) or its negation (like ¬p, ¬q, ¬r).  A clause is a disjunction (∨) of literals.  A formula is in CNF if it's a conjunction (∧) of clauses.  An example is given: (p ∨ ¬q ∨ r) ∧ (q ∨ r) ∧ (¬p ∨ ¬q) ∧ r.  This example shows a formula in CNF, where the formula is a conjunction of four clauses.  The variables are listed as V = {p, q, r}.  The slide is formatted as a definition and example, making it easy to understand the concept.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic and the satisfiability problem.  The slide is likely part of a larger lecture explaining how to represent logical statements in a specific format for easier processing.

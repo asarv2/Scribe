@@ -1,0 +1,23 @@
+# Slide 65
+
+**Pandas Merge**
+
+```
+pd.merge(left, right, how='inner', on=None, left_on=None, right_on=None,
+         left_index=False, right_index=False, sort=True,
+         suffixes=('_x', '_y'), copy=True, indicator=False,
+         validate=None)
+```
+
+*   `left` / `right`: The data frame, their position side by side - affects the `how`.
+*   `how`: one of 'left', 'right', 'inner', 'outer'
+*   `on`: label or list identifying columns / index to be joined upon - often referred to as a key
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents the documentation for the `pd.merge()` function in Pandas.  It shows the function's parameters, including `left`, `right`, `how`, `on`, `left_on`, `right_on`, `left_index`, `right_index`, `sort`, `suffixes`, `copy`, `indicator`, and `validate`.  The descriptions of the parameters explain their roles in merging two DataFrames.  The slide is entirely text-based, containing no figures or tables.  The purpose is to provide a reference for using the `pd.merge()` function in data analysis.  The formatting is typical of a slide presenting function documentation.
+
+

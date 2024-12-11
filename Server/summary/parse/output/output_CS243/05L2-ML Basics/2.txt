@@ -1,0 +1,9 @@
+# 2
+
+# Experience Machine Learning
+
+**Description:**
+
+This slide, a simple, single-line heading, is likely a slide heading for a section of the AI Basics lecture.  The title, "Experience Machine Learning," is centered on the slide in a dark gray font against a light gray background.  It indicates the topic of the upcoming content, which will likely be about machine learning and how it is learned from experience.  The simplicity of the slide suggests it's a transition or introduction to the next section of the lecture.
+
+

@@ -1,0 +1,23 @@
+# Slide 4
+
+```markdown
+**Regular Expressions**
+
+import re
+# compile the regular expression object for reuse
+pattern = re.compile(r"\d") # r"" indicates a raw string
+sen = "This is a test that tests regular expression basics."
+pattern = re.compile(r"Data")
+# match tests if string starts with expression
+re.match(pattern, sen)
+# If matched, functions allow you to use the results
+# group() returns the string matched by the pattern
+# span() returns a tuple with the start, end positions of the 
+match
+```
+
+---
+
+**Description:**
+
+This slide continues the discussion of regular expressions (RegEx) within the Intro to Data Science course.  It presents Python code snippets demonstrating how to use the `re` module for RegEx operations.  The code shows how to compile a regular expression pattern using `re.compile()`, and then how to use the `re.match()` function to test if a string starts with a specific pattern.  The example uses the string "This is a test that tests regular expression basics." and the pattern "\d" (matching digits) and "Data".  The comments within the code explain the purpose of each line, including the use of raw strings (indicated by the `r` prefix).  The slide is focused on practical application of RegEx in Python, showing how to create patterns and test them against strings.  The code examples are crucial for understanding how to use RegEx in data processing tasks.

@@ -1,0 +1,20 @@
+# Slide 28
+
+**Testing more than one hypothesis**
+
+If we perform one hypothesis tests, what is the probability of a false positive? (i.e., reject the null when it is true)
+* P(Making an error) = α (typically 0.05)
+* P(Not making an error) = 1 - α (1-0.05 = 0.95)
+
+In general, if we perform m hypothesis tests, what is the probability of at least one false positive?
+* P(Not making an error in m tests) = (1 - α)<sup>m</sup>  when m=2, 0.95<sup>2</sup>=0.90
+* P(Making at least one error in m tests) = 1 - (1 - α)<sup>m</sup>  1-0.95<sup>2</sup>=0.10
+
+**Figure Description:**
+
+A line graph is positioned on the right side of the slide.  The x-axis is labeled "After conducting m tests," and the y-axis is labeled "P(At least 1 false positive)".  The graph displays a curve that starts at a low value (near 0.0) and increases as the number of tests (m) increases.  The curve approaches 1.0 (100%) as the number of tests increases.  The graph visually demonstrates the increasing probability of at least one false positive as the number of hypothesis tests increases.  The graph is placed on the right side of the slide, likely to visually illustrate the concept of the increasing probability of error when conducting multiple hypothesis tests.  The graph's purpose is to show the relationship between the number of tests performed and the probability of making at least one false positive.  The graph is a visual aid to help understand the concept of multiple hypothesis testing and the associated risk of false positives.
+
+
+**Slide Description:**
+
+This slide discusses the implications of performing multiple hypothesis tests.  It explains that while the probability of a false positive in a single test is relatively low (e.g., 0.05), the probability of at least one false positive increases significantly as the number of tests increases.  The slide uses a formula to calculate the probability of not making an error in multiple tests and the probability of making at least one error.  A line graph visually illustrates this increasing probability.  The slide is part of a presentation on statistical methods, specifically addressing the issue of multiple comparisons and the risk of false positives.

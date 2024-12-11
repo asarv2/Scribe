@@ -1,0 +1,21 @@
+# Slide 49
+
+**Image filtering**
+
+Compute a function of the local neighborhood at each pixel in the image
+
+* Function specified by a "filter" or mask saying how to combine values from neighbors
+* Element-wise multiplication of filter and image patch
+
+Uses of filtering:
+
+* Enhance an image (denoise, resize, etc)
+* Extract information (texture, edges, etc)
+* Detect patterns (template matching)
+
+Adapted from Derek Hoiem
+
+
+**Description of what you see:**
+
+This slide introduces the concept of image filtering in the context of AI Basics.  The text describes the general principle of image filtering as computing a function of the local neighborhood around each pixel in an image.  The method for performing this computation is described as using a filter (or mask) that specifies how to combine the values of neighboring pixels.  The process is further described as an element-wise multiplication of the filter and the image patch.  The slide then lists several common uses of image filtering, including enhancing images (denoise, resize), extracting information (texture, edges), and detecting patterns (template matching).  The slide is likely part of a larger discussion about image processing techniques in AI.  There are no images on the slide; it's purely text-based.

@@ -1,0 +1,50 @@
+# 45
+
+**Perceptrons (Rosenblatt '58)**
+
+```
+        x₁
+        x₂
+in(t)  x₃
+        xₙ
+```
+
+```
+        W₁
+        W₂
+        W₃
+        ...
+        Wₙ
+```
+
+```
+Σ
+```
+
+```
+        w₀(t) = θ
+```
+
+```
+out(t)
+```
+
+**Description of what you see:**
+
+This slide presents a diagram of a perceptron, a fundamental unit in neural networks.  The diagram is a simplified representation of a single perceptron, showing the input values (x₁, x₂, x₃, ..., xₙ), the weights (W₁, W₂, W₃, ..., Wₙ) connecting the inputs to a summation node (Σ), and the output (out(t)).  A threshold value (θ) is also shown.
+
+* **Input Layer:**  The diagram shows a set of input nodes (x₁, x₂, x₃, ..., xₙ) arranged in a vertical column, labeled "in(t)."  These represent the input values to the perceptron.
+
+* **Weights:**  A set of weights (W₁, W₂, W₃, ..., Wₙ) are shown connecting each input node to the summation node (Σ).  These weights determine the influence of each input on the output.
+
+* **Summation Node (Σ):**  A summation node (Σ) is depicted, representing the weighted sum of the inputs.
+
+* **Output Layer:**  The output (out(t)) is shown as a single node, labeled "out(t)."  The output is calculated based on the weighted sum of the inputs and the threshold value.
+
+* **Threshold (θ):**  The threshold value (θ) is shown in the output calculation, indicating the activation threshold for the perceptron.
+
+* **Orientation:** The diagram is oriented horizontally, with the input nodes on the left, the weights connecting to the summation node in the middle, and the output node on the right.
+
+* **Purpose:** The diagram visually illustrates the structure of a perceptron, a fundamental building block in neural networks.  It shows how input values are weighted, summed, and then passed through an activation function to produce an output.  The diagram is likely included to provide a visual representation of the perceptron's architecture, which is crucial for understanding how these networks process information.  The source information at the bottom of the slide indicates the diagram's origin and the creator's work.
+
+

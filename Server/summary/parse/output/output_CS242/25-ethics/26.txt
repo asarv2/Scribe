@@ -1,0 +1,12 @@
+# Slide 26
+
+**Interpretable results**
+
+
+---
+
+**Description of what you see:**
+
+This slide, a plain gray background, has the single, centered title "Interpretable results" in a dark gray font.  It's a simple title slide, likely introducing a section of the Intro to Data Science lecture that will discuss methods for creating or evaluating results that are easy to understand and explain.  There are no figures or images. The text is large enough to be easily readable.
+
+

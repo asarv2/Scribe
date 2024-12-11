@@ -1,0 +1,15 @@
+# Slide 49
+
+**Introduction to PLOTLY**
+
+
+---
+
+**Figure Description:**
+
+There are no figures on this slide.  The slide is a title slide for a new section of the presentation, introducing a data visualization library called Plotly.  The title "Introduction to PLOTLY" is centered on the slide, in a dark gray font, on a light gray background.  This is a typical introductory slide for a new topic in a data science course.
+
+
+**Description of what you see:**
+
+The slide is a simple title slide, introducing the topic of Plotly.  The title is "Introduction to PLOTLY," and the background is a light gray color.  There are no figures or other elements on the slide.  The slide is likely the first in a series of slides that will explain the concepts and usage of Plotly, a data visualization library.  The title "Introduction to PLOTLY" is centered on the slide, in a dark gray font, on a light gray background.  This is a typical introductory slide for a new topic in a data science course.

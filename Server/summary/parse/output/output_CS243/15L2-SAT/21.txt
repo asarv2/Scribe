@@ -1,0 +1,36 @@
+# 17
+
+**Davis-Putnam-Logemann-Loveland (DPLL) Algorithm**
+
+**Input:** A propositional formula φ on a finite set V and a partial assignment v on V such that only variables unassigned by v occur in φ.
+**Output:** true if φ is satisfiable, false otherwise.
+
+DPLL(φ, v) {
+  1. if every clause of φ has a true literal, return true;
+  2. if any clause of φ has all false literals, return false;
+  3. if BCP(φ, v) returns false, then return false;
+  4. choose an p ∈ V that is unassigned in v;
+  5. assign p to true, that is, let v(p) = true;
+  6. if DPLL(φ|<sub>p</sub>, v) returns true, then return true;
+  7. assign p to false, that is, let v(p) = false;
+  8. if DPLL(φ|<sub>¬p</sub>, v) returns true, then return true;
+  9. unassign v(p);  # backtracking takes place here
+ 10. return false;
+}
+
+
+**Description:**
+
+This slide presents the Davis-Putnam-Logemann-Loveland (DPLL) algorithm for solving the satisfiability problem (SAT).  It's a recursive algorithm that takes a propositional formula (φ) and a partial assignment (v) as input.  The algorithm systematically explores possible assignments to variables to determine if a satisfying assignment exists.  The key steps are:
+
+1. **Base Cases:**  Checks if all clauses are satisfied (step 1) or if any clause is unsatisfiable (step 2).
+
+2. **Boolean Constraint Propagation (BCP):**  Performs unit propagation to simplify the formula (step 3).  If BCP detects a conflict, it immediately returns false.
+
+3. **Variable Selection:** Chooses an unassigned variable (step 4).
+
+4. **Recursive Calls:** Recursively calls DPLL with the simplified formula (φ|<sub>p</sub>) after assigning the chosen variable to true (step 5 and 6) and then with the simplified formula (φ|<sub>¬p</sub>) after assigning the chosen variable to false (step 7 and 8).
+
+5. **Backtracking:** If both recursive calls fail, the algorithm backtracks by unassigning the variable (step 9) and returns false (step 10).
+
+The slide clearly outlines the recursive structure and key steps of the DPLL algorithm, which is a fundamental algorithm in SAT solving.

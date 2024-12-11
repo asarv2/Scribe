@@ -1,0 +1,42 @@
+# 1
+
+**Probability Cont.**
+
+* Recall that events A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub> are mutually exclusive if no two have any common outcomes.
+* Exhaustive events are a set of events {A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub>} in a sample space S such that one of event compulsorily occurs while performing the study, that is, (A<sub>1</sub> ∪... ∪A<sub>k</sub>) = S and one A<sub>i</sub> must occur.
+    * Example: while tossing an unbiased coin, there are two possible outcomes - heads or tails. So, these two outcomes are exhaustive events as one of them will definitely occur while flipping the coin.
+
+**The Law of Total Probability**
+
+Let A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub> be mutually exclusive and exhaustive events. Then for any other event B,
+P(B) = P(A<sub>1</sub> ∩B) + ⋯+ P(A<sub>k</sub>∩B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) + ⋯+ P(B|A<sub>k</sub>) × P(A<sub>k</sub>)
+
+**Bayes’ Theorem**
+
+* Used when: know P(B|A) but want P(A|B). For example, diagnostic tests provide P(Test+ | disease), but we are interested in P(disease | Test +).
+* Bayes’ Theorem provides a method for finding P(A|B) from P(B|A).
+
+**Bayes’ Theorem**
+
+Let A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub> be a set of k mutually exclusive and exhaustive events with prior probabilities P(A<sub>j</sub>), j = 1, ..., k. We often know the chance of another event B under each of the events A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub>, i.e. P(B|A<sub>i</sub>). Then the posterior probability of A<sub>j</sub> given that B has occurred is
+P(A<sub>i</sub>|B) = P(A<sub>i</sub>∩B) / P(B) = P(B|A<sub>i</sub>) × P(A<sub>i</sub>) / [P(B|A<sub>1</sub>) × P(A<sub>1</sub>)+...+P(B|A<sub>k</sub>) × P(A<sub>k</sub>)]
+
+**Example 7.1**
+
+An individual has 3 different email accounts. Most of her messages, in fact 70%, come into account #1, whereas 20% come into account #2 and the remaining 10% into account #3. Of the messages into account #1, only 1% are spam, whereas the corresponding percentages for accounts #2 and #3 are 2% and 5%, respectively.
+Let A<sub>i</sub> = {message is from account #i} for i = 1, 2, 3; B = {message is spam}. Then the given percentages imply that
+P(A<sub>1</sub>) = 0.70
+P(A<sub>2</sub>) = 0.20
+P(A<sub>3</sub>) = 0.10
+P(B|A<sub>1</sub>) = 0.01
+P(B|A<sub>2</sub>) = 0.02
+P(B|A<sub>3</sub>) = 0.05
+
+a) What is the probability that a randomly selected message is spam?
+Use the law of total probability,
+P(B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) + P(B|A<sub>2</sub>) × P(A<sub>2</sub>) + P(B|A<sub>3</sub>) × P(A<sub>3</sub>)
+
+
+**Slide Description:**
+
+This is the first slide of a five-slide lecture on probability, specifically focusing on the Law of Total Probability and Bayes' Theorem. The slide introduces these concepts with definitions, examples, and a worked example (Example 7.1) involving email accounts and spam detection. The example is crucial for illustrating the application of the concepts in a practical scenario. The slide also includes formulas for both the Law of Total Probability and Bayes' Theorem, which are essential for understanding the subsequent slides. The slide is well-organized, with clear headings and bullet points, making it easy to follow the lecture's progression. The example is presented in a way that allows for easy understanding of the concepts.

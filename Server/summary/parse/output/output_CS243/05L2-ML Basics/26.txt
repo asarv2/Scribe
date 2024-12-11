@@ -1,0 +1,17 @@
+# 26
+
+**0-1 loss?**
+
+Good idea? What could go wrong?
+No gradient! Almost impossible to minimize!
+
+How can we fix it?
+
+**(Figure):**
+
+A line graph is positioned in the right-hand portion of the slide.  The x-axis ranges from approximately -2 to 2, and the y-axis ranges from 0 to 2.  A horizontal line is drawn at a value of approximately 1.0 on the y-axis.  The horizontal line is constant across the entire range of the x-axis.  The graph is a visual representation of a step function or a function with a discontinuity.  The purpose of the graph is to illustrate the non-differentiable nature of the 0-1 loss function, which is a key point in the discussion of binary classification.
+
+
+**Context:**
+
+This slide continues the discussion of binary classification and the challenges of using the 0-1 loss function.  The slide highlights the fact that the 0-1 loss function is not differentiable, which makes it difficult to use gradient-based optimization methods to minimize the loss.  The line graph visually represents the non-differentiable nature of the 0-1 loss function, as it has a discontinuity at the point where the predicted value equals the true value.  The slide is likely part of a larger lecture on AI Basics, focusing on the limitations of the 0-1 loss function and the need for alternative loss functions in machine learning.

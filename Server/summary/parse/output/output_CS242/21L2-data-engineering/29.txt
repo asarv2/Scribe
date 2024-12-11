@@ -1,0 +1,37 @@
+# Slide 29
+
+What is MapReduce used for?
+
+**Google:**
+* Index building for Google Search
+* Article clustering for Google News
+* Statistical machine translation
+
+**Facebook:**
+* Data mining
+* Ad optimization
+* Spam detection
+
+**Yahoo!:**
+* Index building for Yahoo! Search
+* Spam detection for Yahoo! Mail
+
+**Research:**
+* Analyzing Wikipedia conflicts (PARC)
+* Natural language processing (CMU)
+* Climate simulation (Washington)
+* Bioinformatics (Maryland)
+* Particle physics (Nebraska)
+
+
+---
+
+**Description of the slide:**
+
+This slide lists various applications of the MapReduce programming model.  It's a bulleted list, organized by organization (Google, Facebook, Yahoo!, and Research).  Each organization is associated with a list of tasks for which MapReduce is used.
+
+* **Visual Elements:** The slide uses a simple bulleted list format, with no images or figures.  The text is organized to clearly show the different organizations and the specific tasks they use MapReduce for.
+
+* **Purpose:** The slide is designed to illustrate the broad range of applications for MapReduce.  It demonstrates that MapReduce is not limited to a single domain or task but is applicable to diverse problems in various industries and research areas.  The list of applications provides concrete examples of how MapReduce is used in practice.
+
+

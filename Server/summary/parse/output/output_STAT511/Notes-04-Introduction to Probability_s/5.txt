@@ -1,0 +1,62 @@
+# Slide 5
+
+**STAT 511 Course Notes – set 4**
+
+**Yuan Qu**
+
+b) What is the probability that at least one of the two members whose name begins with C is selected?
+P(at least one of the two members whose name begins with C is selected)
+= 1 − P(no members whose name begins with C is selected) =
+
+c) If the five faculty members have taught for 3, 6, 7, 10, and 14 years, respectively, at the university, what is the probability that the two chosen representatives have a total of at least 15 years’ teaching experience there?
+P(a total of at least 15 years’ teaching experience)
+= 1 − P(a total of < 15) = 1 −  # of elements in {(3,6), (3,7), (3,10), (6,7)} / 10 =
+
+
+• Constructing probability while S is countable:
+o Denote S = {𝑠<sub>1</sub>, 𝑠<sub>2</sub>, 𝑠<sub>3</sub>, … … }, find any sequence of 𝑝<sub>1</sub>, 𝑝<sub>2</sub>, 𝑝<sub>3</sub>, … …, such that ∑𝑝<sub>𝑖</sub> = 1. Then define
+P(A) = ∑ 𝑝<sub>𝑖</sub> {𝑖: 𝑠<sub>𝑖</sub> ∈ 𝐴}.
+
+
+Example of finding probabilities 4.5:
+Booth et al (2003, Journal of the American
+Medical Association, 289, 2801-9) report
+the results of a study conducted in 2003,
+involving 144 adult patients admitted to
+one of 10 hospitals in the greater Toronto
+area. The patients had a diagnosis of
+suspected or probable severe acute
+respiratory syndrome (SARS). The earliest
+symptoms of SARS are shown in the table
+below. Suppose that a patient is selected
+at random from the 144 patients in the
+study.
+
+NOTE: P(randomly chosen patient falls into a category) = proportion of patients in that category.
+
+• The probability that the patient reported a cough.
+P(cough)
+= P(fever with just cough) + P(fever with both prodrome and cough) + P(cough alone)
++ P(Prodrome with just cough) =
+
+• The probability that the patient reported none of the three symptoms.
+P(none of the three symptoms)
+= 1 − P(at least one of the three symptoms) =
+
+
+| Symptom | % of patients |
+|---|---|
+| Fever without prodrome or cough | 29% |
+| Fever with just prodrome | 23% |
+| Fever with just cough | 11% |
+| Fever with both prodrome and cough | 11% |
+| Cough alone | 9% |
+| Prodrome with just cough | 4% |
+| Prodrome alone | 13% |
+
+
+---
+
+**Description of the Slide:**
+
+This slide continues the Statistical Methods lecture, focusing on applying probability concepts to a real-world example.  The top portion of the slide presents two probability problems (b and c) related to selecting faculty members based on their names and teaching experience.  These problems require calculating probabilities based on given data.  The problems are set up to be solved using the principles of probability, including the concept of mutually exclusive events and calculating probabilities from a sample space.  The slide then introduces a general method for constructing probabilities when the sample space is countable.  The example (Example 4.5) uses a medical study (Booth et al, 2003) to illustrate the application of probability to a dataset.  A table is included, showing the proportion of patients with different symptoms of SARS.  The problems on the slide are designed to be solved using the information provided in the table.  The slide is structured to provide a practical application of the concepts introduced in previous slides.

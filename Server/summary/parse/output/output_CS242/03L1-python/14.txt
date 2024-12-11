@@ -1,0 +1,21 @@
+# Slide 14
+
+**Basic datatypes**
+
+Integers (default for numbers)
+z = 5 / 2  # Python 2 uses integer division, Python 3 does not
+Floats
+x = 3.456
+Strings
+"abc"       # Can use "" or '' to specify strings
+'abc'
+"matt's"    # Unmatched quotes can appear within the string
+"""a'b"c""" # Use triple double quotes to specify multiline strings,
+            # or combinations of ' and " inside a string
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, introduces basic data types in Python.  It lists examples of integers, floats, and strings.  The examples include integer division (`z = 5 / 2`), a float (`x = 3.456`), and various string representations, including single-quoted, double-quoted, and triple-quoted strings.  The comments within the code explain the use of different quote types and the behavior of integer division in Python 2 versus Python 3.  The slide is designed to provide a basic overview of these fundamental data types in Python, likely as a prelude to more complex data manipulation and analysis techniques.  The source of the information is explicitly noted.  There are no figures on this slide.

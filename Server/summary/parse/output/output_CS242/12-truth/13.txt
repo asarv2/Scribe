@@ -1,0 +1,16 @@
+# Slide 13
+
+**Bugs in data interpretation**
+
+If visualizations are an accurate and true model of our data, why do we make mistakes interpreting patterns from our plots?
+
+* **Patternicity bug:** Eyes detect interesting patterns regardless, real or not
+* **Storytelling bug:** Coherent explanations for patterns are compelling, real or not
+* **Confirmation bug:** Evidence confirming our position is valued over that which refutes it
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, discusses common cognitive biases that can affect the interpretation of data visualizations.  The slide title, "Bugs in data interpretation," clearly indicates the topic.  The subsequent bullet points list three specific "bugs" or biases: patternicity, storytelling, and confirmation.  Each bug describes a potential pitfall in data interpretation, highlighting how our cognitive processes can lead us to misinterpret data patterns.  The slide is designed to raise awareness of these biases and encourage critical thinking when analyzing data visualizations.  The format is a simple bulleted list, making the information easy to read and understand.  The overall design is clean and uncluttered, focusing on the key concepts.

@@ -1,0 +1,20 @@
+# Slide 17
+
+**Bag of Features (continued)**
+
+**(Image Description):**
+
+The slide displays a graph and a smaller image.
+
+* **Graph:** A bar graph with pink bars. The x-axis is labeled "codewords," and the y-axis is labeled "frequency."  The graph shows the frequency of different codewords (visual words) in an image.  The bars vary in height, indicating the different frequencies of each codeword.
+
+* **Image (inset):** A grayscale image of a car is shown in the upper-right quadrant of the slide.  Several small, rectangular boxes (bounding boxes) are drawn around different parts of the car.  The boxes are colored red and green.  The boxes highlight different features or parts of the car.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of the Bag of Features approach to image classification.  It builds on the previous slide by showing how the frequency of visual words (codewords) can be used to represent an image. The graph displays the frequency of different codewords in an image. The inset image shows a car with bounding boxes around different parts of the car.  The bounding boxes are likely highlighting the visual words that are being counted in the bar graph.  The slide is demonstrating how the frequency of these visual words can be used to represent an image and potentially classify it.
+
+
+**What you see:**
+
+The slide shows a bar graph representing the frequency of visual words (codewords) in an image.  The graph is accompanied by an inset image of a car with bounding boxes around different parts of the car.  The bounding boxes are likely highlighting the visual words that are being counted in the bar graph.  The slide is designed to illustrate the concept of representing an image by the frequency of visual words, which is a key component of the Bag of Features approach.  The graph and the image together demonstrate how the frequency of visual words can be used to represent an image and potentially classify it.

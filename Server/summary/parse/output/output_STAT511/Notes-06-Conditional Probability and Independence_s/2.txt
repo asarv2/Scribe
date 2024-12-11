@@ -1,0 +1,34 @@
+# Slide 2
+
+c) What is the probability that two phones of each type are among the first six serviced?
+
+𝑃(Two phones of each type are among the first six serviced)
+=
+
+**Condition probability**
+
+**Motivating example**
+Suppose you want to calculate the probability a randomly chosen person is colorblind. In the US, 4.25% of the population is colorblind.
+* P(colorblind) = 0.0425.
+Now, suppose you have additional information. Namely, the person to be chosen is male – that means, we are restricting objects to a subset of the population.
+* Since 8% of all men are colorblind, the probability has changed to 0.08.
+
+When we have additional information, we must “condition” our probability based on this additional information or based on this sub-population. The probability adjusted for the additional information is called a conditional probability.
+In this section, we examine how the information “an event B has occurred” affects the probability assigned to A.
+
+**Notation**
+* A = event of interest. P(A) as the original, or unconditional probability, of the event A.
+* B = event that is known to occur. B is the “conditioning event.”
+* In symbols this adjusted probability is written P(A|B). The vertical line in the formula immediately before B designates conditional probability.
+* Wording: P(A|B) is called the conditional probability of A given that B has occurred.
+* For our example, we’d say the probability a randomly chosen person is colorblind (A) given the person chosen is male (B) is 0.08.
+
+**Definition**
+Consider an equal probability case, for any two events A and B with P(B) > 0, the conditional probability of A given that B has occurred is defined by
+
+P(A|B) = N(A∩B)/N(B) = N(A∩B)/N(B)/N
+
+
+**Slide Description:**
+
+This slide, part of a lecture on Statistical Methods (STAT 511), introduces the concept of conditional probability.  It begins with a motivating example illustrating how additional information (e.g., the person being male) changes the probability of an event (e.g., being colorblind).  The slide then defines conditional probability using notation (P(A|B)) and provides a formal definition.  The example of colorblindness is used to illustrate the concept.  The slide also includes a question (c) about the probability of a specific event related to phone service order, which is likely to be addressed in the subsequent slides.  The slide number (2) and the course name (STAT 511) are also present.  The overall structure of the slide is typical of lecture notes, with headings, examples, and definitions.

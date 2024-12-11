@@ -1,0 +1,26 @@
+
+--- Key Terms ---
+artifical intelligence basics
+search algorithms
+linear algebra
+calculus
+neural networks
+machine learning models
+machine learning optimization
+artificial intelligence fundamentals
+reinforcement learning
+--- Problem Types ---
+artifical intelligence basics
+foundational ai concepts
+machine learning algorithms
+ai applications & systems
+linear algebra for ai
+calculus for ai
+ai safety and ethics
+--- Algorithm Solutions ---
+artifical intelligence basics
+fundamental linear algebra
+calculus for machine learning
+supervised machine learning algorithms
+artificial neural networks  fundamentals
+game playing algorithms

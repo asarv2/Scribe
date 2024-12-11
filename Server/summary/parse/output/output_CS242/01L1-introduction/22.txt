@@ -1,0 +1,17 @@
+# Slide 22
+
+**Philosophy of Labs and Homework**
+
+Practice and Build skills with low stakes
+Make mistakes, learn, take the time you need, balance your schedule as you can...
+... I care more that you do all the labs for understanding, then I do about the deadline.
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses the philosophy behind the labs and homework assignments in the Intro to Data Science course.  The text emphasizes that the focus is on practical skill-building with low-stakes assignments.  Students are encouraged to make mistakes, learn from them, and take the time they need to complete the work, balancing their schedules as best they can.  The instructor prioritizes understanding the concepts over meeting deadlines.  The overall message is one of encouraging active learning and a focus on comprehension rather than just completing assignments.

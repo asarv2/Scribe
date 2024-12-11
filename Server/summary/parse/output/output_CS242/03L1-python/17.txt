@@ -1,0 +1,22 @@
+# Slide 17
+
+**Sequence Types**
+
+Tuple
+* A simple **immutable** ordered sequence of items
+* Items can be of mixed types, including collection types
+
+Strings
+* **Immutable;** Conceptually very much like a tuple
+
+List
+* **Mutable** ordered sequence of items of mixed types
+
+All three sequence types (tuples, strings, and lists) share much of the same syntax and functionality.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the different sequence types in Python.  The title "Sequence Types" clearly indicates the topic.  The content is presented in a bulleted list format, describing the characteristics of tuples, strings, and lists.  Each data type is described in terms of its mutability (immutable or mutable) and its nature as an ordered sequence of items.  The slide emphasizes that these three data types share similar syntax and functionality.  There are no figures on this slide.  The slide's purpose is to provide a concise overview of the different sequence types in Python, likely as a prelude to more detailed discussions on their usage and manipulation.  The source of the information is explicitly noted.

@@ -1,0 +1,14 @@
+# Slide 79
+
+**Data munging outside of python/pandas**
+
+---
+
+**Description of the Slide:**
+
+This slide is a title slide, likely introducing a section of the Intro to Data Science lecture that will cover data manipulation techniques that extend beyond the capabilities of Python's Pandas library.  The title, "Data munging outside of python/pandas," clearly indicates the topic.  There are no figures or tables on this slide.  The slide is entirely text-based and serves as a heading for the next section of the lecture.
+
+
+**What you see:**
+
+A plain, light gray background with the title "Data munging outside of python/pandas" centered in a dark gray, sans-serif font.  The title is large enough to be prominent but not overly large.  The slide is entirely text-based and serves as a heading for the next section of the lecture.

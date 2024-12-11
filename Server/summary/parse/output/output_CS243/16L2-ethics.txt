@@ -1,0 +1,828 @@
+# Slide 1
+
+# Introduction to Data Science
+
+Purdue CS24200
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Data Science, likely part of a course called AI Basics.  The title, "Introduction to Data Science," is prominently displayed in a large, clear font.  Below that, the course name, "Purdue CS24200," and the instructor's name, "Tony Bergstrom," are listed.  Finally, a credit line indicates that the slides were adapted from another source, "Jen Neville, CS 24200." The background is a uniform dark gray, making the text stand out.  The overall design is simple and professional, suitable for a presentation introduction.  The slide is likely the first of a series of slides that will cover the topic of data science.
+
+
+# Slide 2
+
+# Bias and Fairness in Data
+
+---
+
+**Description of the Slide:**
+
+This slide, likely part of a lecture on AI Basics, has a single heading: "Bias and Fairness in Data."  The text is centered on the slide, in a plain, sans-serif font, against a light gray background.  There are no figures or other elements on the slide.  The slide's purpose is to introduce the topic of bias and fairness in data, which is likely to be discussed in detail in the subsequent slides.
+
+
+**Description of what you see:**
+
+The slide is a plain, light gray background with the title "Bias and Fairness in Data" in a dark gray, sans-serif font.  The title is centered on the slide.  There are no other elements, such as images, bullet points, or graphs.  The simple design and single heading indicate that this is likely an introductory slide to the topic of bias and fairness in data, which will be explored further in the subsequent slides.
+
+
+# Slide 3
+
+# Why data analysis methods are helpful...
+
+Provide algorithms for tasks not previously amenable to automation (e.g., image analysis)
+Provide advantages over humans doing similar tasks:
+* Inexpensive/scalable/fast
+* Consistent and verifiable
+* More accurate*
+* More fair*, less subject to social biases
+
+*Maybe, sometimes
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on AI Basics, presents a bulleted list of reasons why data analysis methods are helpful.  The title, "Why data analysis methods are helpful...", is in a large, bold font, indicating the topic of the slide.  The bullet points below detail the advantages of using data analysis methods over human methods.  The text is clear and concise, making the information easy to read.  The inclusion of "(e.g., image analysis)" in the first line provides a concrete example of a task that data analysis can handle.  The asterisk (*) next to "More accurate" and "More fair" suggests a caveat or qualification, which is further explained in the final line.  The source is credited at the bottom of the slide.
+
+
+**Description of what you see:**
+
+The slide is a light-colored background with a heading in a bold, dark font.  Below the heading, a list of bullet points describes the advantages of data analysis methods.  The points are presented in a clear, easy-to-read format.  The inclusion of an example (image analysis) and a caveat ("*Maybe, sometimes") makes the information more nuanced and realistic.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on data analysis methods and their applications.
+
+
+# Slide 4
+
+**Automatic Prediction System use Increases**
+
+**Q2'19 sees record funding to AI startups at $7.4B**
+
+Q1'13 - Q2'19 (swipe right to see full data)
+
+Amount of funding ($M)
+
+$8,000M
+$6,000M
+$4,000M
+$2,000M
+$90M
+
+```
+(Graph 1)
+```
+
+*Line graph showing the amount of funding to AI startups in millions of dollars, from Q1 2013 to Q2 2019.  The graph shows a clear upward trend, with funding increasing over time.  The graph is on the left side of the slide.  The x-axis represents the quarters (Q1, Q2, Q3, Q4) and the years (2013-2019). The y-axis represents the amount of funding in millions of dollars.  The graph is used to illustrate the increasing trend of funding for AI startups over time.*
+
+
+```
+(Graph 2)
+```
+
+*Bar graph showing the number of M&A deals in the AI industry from 2010 to 2019.  The graph is on the right side of the slide. The x-axis represents the years (2010-2019). The y-axis represents the number of M&A deals.  The graph shows a significant increase in the number of M&A deals in the AI industry over time, with a peak in 2019.  The graph is used to illustrate the increasing trend of global activity in AI.*
+
+
+Source: CB Insights
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a presentation on AI Basics, displays two graphs illustrating the increasing trend of funding and M&A activity in the AI industry.  The first graph (left) shows the amount of funding to AI startups over time, from 2013 to 2019, with a clear upward trend. The second graph (right) shows the number of M&A deals in the AI industry from 2010 to 2019, also showing a significant increase over time.  The graphs are used to visually represent the increasing use of automatic prediction systems in the AI industry.  The slide is designed to highlight the growth of the AI market and the increasing investment in AI startups.  The source of the data is also clearly indicated.
+
+
+# Slide 5
+
+**Examples in Society**
+
+*Web advertising*  (Image of a collage of images)
+*Lending* (Image of a flowchart/diagram illustrating machine learning in lending)
+*Ridesharing* (Image of a map interface with a highlighted location and a car icon)
+*Public policy* (Image of a robot figure with a scale of justice and a police badge)
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, presents examples of how AI is used in various societal contexts.  It's a grid layout with four sections, each showcasing a different application.
+
+* **Web advertising:** A colorful, chaotic collage image is shown. This image likely represents the complex and diverse nature of web advertising, which is often personalized and targeted based on user data.  The image is a visual representation of the vast amount of data and information used in web advertising.
+
+* **Lending:** A diagram/flowchart is shown. This visual likely illustrates how machine learning algorithms can be used to assess creditworthiness and make lending decisions. The diagram likely shows the steps involved in the process, highlighting the use of data analysis to make lending decisions.
+
+* **Ridesharing:** A map interface is shown. This image likely represents the use of AI in ride-sharing apps, where algorithms are used to match riders with drivers, optimize routes, and provide real-time information. The map interface is a visual representation of the location-based services used in ride-sharing apps.
+
+* **Public policy:** An image of a robot figure with a scale of justice and a police badge is shown. This image likely represents the use of AI in public policy, such as crime prediction or resource allocation. The image is a visual representation of the potential use of AI in public policy, which could involve complex data analysis and prediction.
+
+The slide is designed to illustrate the breadth of AI applications in society, using visual aids to represent the different contexts.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.
+
+
+
+
+# Slide 7
+
+**What could be the problem?**
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, presents a single question in a simple, sans-serif font.  The question, "What could be the problem?", is centered on a white background.  There are no other elements on the slide.  The question is likely posed to prompt discussion or initiate a brainstorming session about potential issues or challenges related to the previous slide's content (likely about ChatGPT and Generative AI).  The simple design and single question indicate that this is a transition slide, leading into a discussion or a new section of the lecture.  The overall design is simple and professional, suitable for a lecture presentation.
+
+
+
+
+# Slide 8
+
+**What could be the problem?**
+
+Data are (about) people, can cause harm
+Algorithmic outcomes often not explainable
+A lot of data incidentally produced by daily life:
+* Social media
+* Ubiquitous cameras, microphones, location tracking
+* Medical treatment
+* Public records
+
+Important new uses
+* Legal: Surveillance, "predictive" policing, sentencing, fraud detection, military applications
+* Economic: School admissions, hiring/promotion, loans, insurance, accounting controls, advertising
+* Medical: Health insurance, diagnosis, decision making
+* Artistic: Copyright/Ownership, Generating new work/performance
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, presents a list of potential problems and important new uses related to AI.  The title, "What could be the problem?", is in a large, bold font, indicating the topic of the slide.  The content is organized into two sections: potential problems and important new uses.  The potential problems section lists concerns about data privacy, algorithmic opacity, and the incidental collection of vast amounts of data.  The important new uses section highlights various applications of AI in different sectors, including legal, economic, medical, and artistic fields.  The slide is designed to encourage critical thinking about the ethical and societal implications of AI.
+
+
+**Description:**
+
+The slide is a simple, clean layout with a heading in a bold, dark font.  Below the heading, the content is presented in a bulleted list format, making it easy to read and understand.  The two sections (problems and uses) are clearly separated, allowing for a clear distinction between the potential drawbacks and the potential benefits of AI.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, and it is likely to be followed by a discussion or Q&A session.
+
+
+# Slide 9
+
+**Ethical concerns**
+
+Preserving privacy
+* Methods for handling sensitive data
+* Uses of data science that undermine privacy
+
+Avoiding bias
+* Data selection and unintentional red-lining
+* Re-inscription of existing biases
+
+Mitigating malicious attacks
+* Intentional subversion of machine learning systems
+* Hazards of learning from the open internet
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, lists ethical concerns related to AI.  It's a bulleted list format, clearly separating different categories of ethical issues.  The categories are "Preserving privacy," "Avoiding bias," and "Mitigating malicious attacks."  Each category lists specific concerns, such as methods for handling sensitive data, unintentional bias in data selection, and malicious attacks on machine learning systems.  The slide is designed to highlight the ethical considerations that need to be addressed when developing and deploying AI systems.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI.
+
+
+# Slide 10
+
+**Anonymized data isn't always safe**
+
+In 1997, Latanya Sweeney identified the Governor of Massachusetts’ (Weld) medical records.
+
+* Massachusetts released hospital records anonymized by removing names, addresses and SSNs
+* Voter records have name, address, ZIP code, birth date, and sex of every voter
+* Sweeney used zip code, birthdate and gender to uniquely identify Weld’s records
+* 87% of US identified by zip, birthdate & gender
+
+Similar with Netflix (using IMDB) and search logs
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide discusses the potential vulnerability of anonymized data.  It uses the example of Latanya Sweeney's 1997 research to illustrate how seemingly anonymized data can still be used to identify individuals.  The slide highlights how seemingly innocuous information, like zip code, birthdate, and gender, can be combined to re-identify individuals in datasets that were intended to be private.  The example of Netflix using IMDB data further emphasizes the point that seemingly anonymized data can be linked to personal information.  The slide is part of a larger discussion on ethical concerns in data handling and the importance of considering potential privacy violations when working with data.  The source is clearly attributed, which is a standard practice in academic presentations.
+
+
+# Slide 11
+
+**Privacy != Security**
+
+Some data cannot be anonymized
+
+* Genome sequences are inherently identifying
+* Even a few hundred well-picked SNPs...
+
+Often, people's desires about their data involve questions of trust
+
+* Willingness to share medical data with academic researchers, but not pharmaceutical companies
+
+Privacy is not a binary value
+
+* Different sorts of exposure to different sorts of people evoke different responses
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, discusses the complexities of data privacy and security.  The title, "Privacy != Security," immediately establishes the key point that simply anonymizing data does not guarantee security.  The bullet points below elaborate on this idea.  The first point highlights that certain types of data, like genome sequences, are inherently identifiable.  The second point expands on this, emphasizing that even a small subset of data points can be enough to re-identify individuals.  The third point introduces the concept of trust, noting that people's willingness to share data varies depending on the recipient and the context.  The final point underscores that privacy is not a simple yes/no concept; different levels of exposure to different entities evoke different responses.  The slide is designed to illustrate the nuances of data privacy and the importance of considering context and trust when handling personal data.  The source is clearly attributed, which is a standard practice in academic presentations.
+
+
+# Slide 12
+
+**Bias in Data Models**
+
+"Objective" algorithms are thought to be free of the biases that plague people.
+Algorithms, especially ones that learn, can inadvertently re-inscribe those biases
+Algorithms are opaque, hard to interrogate
+Increasingly widespread
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, discusses the inherent biases that can be present in data models, despite the common assumption that algorithms are objective.  The text highlights that algorithms, particularly those that learn from data, can unintentionally perpetuate existing societal biases.  The opacity of algorithms, making them difficult to understand, is also noted as a contributing factor to this issue.  The final point emphasizes the increasing prevalence of algorithms in various applications.  The source is clearly attributed, which is a standard practice in academic presentations.  The slide is likely part of a larger discussion on the ethical and societal implications of AI.
+
+
+
+
+# Slide 13
+
+**Proxies for discrimination**
+
+Illegal, and generally perceived as wrong to make choices based on race, gender, religion, national origin, etc. 
+However, proxies for these are everywhere: 
+* Zip codes 
+* Names (gender, race, national origin) 
+* Purchase histories (including movies or tv shows) 
+Machine learning that uses biased historical record + any proxy is likely to re-inscribe bias
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, discusses how seemingly neutral data points can act as proxies for discriminatory factors.  The title, "Proxies for discrimination," immediately sets the stage for the discussion.  The text explains that while it's illegal and generally considered wrong to make decisions based on protected characteristics (race, gender, etc.), data proxies for these characteristics are frequently used in datasets.  The slide lists examples of these proxies: zip codes, names (which can reveal gender and potentially race or national origin), and purchase histories (which can reflect socioeconomic status or other factors correlated with protected characteristics).  The final sentence emphasizes that machine learning models trained on data containing these proxies are likely to perpetuate existing biases.  The source is clearly attributed, which is a standard practice in academic presentations.  The slide is likely part of a larger discussion on bias in AI and the importance of careful data analysis.
+
+
+
+
+# Slide 14
+
+**Discrimination in online ad delivery**
+
+Sweeney observed in 2013 that black-identifying names turned out to be much more likely than white-identifying names to generate ads that including the word "arrest" (60 per cent versus 48 per cent).
+
+Google uses a learning algorithm to place ads that are most often clicked on.
+
+Likely to be a reflection of people clicking on those ads more for 'black' names
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide discusses a specific example of bias in online advertising.  It describes research by Latanya Sweeney showing that in 2013, ads containing the word "arrest" were disproportionately shown to individuals with names associated with Black individuals.  The slide also notes that Google's ad placement algorithm, which prioritizes frequently clicked ads, may be amplifying this bias.  The overall message is that algorithms can inadvertently perpetuate existing societal biases if trained on data containing those biases.  The source is clearly attributed, which is a standard practice in academic presentations.  The slide is part of a larger discussion on bias in AI and the potential for algorithms to reflect and amplify existing societal inequalities.
+
+
+# Slide 15
+
+Women less likely to be shown ads for high-paid jobs on Google, study shows
+
+Automated testing and analysis of company's advertising system reveals male job seekers are shown far more adverts for high-paying executive jobs
+
+Female job seekers are much less likely to be shown adverts on Google for highly paid jobs than men, researchers have found.
+
+The team of researchers from Carnegie Mellon built an automated testing rig called AdFisher that pretended to be a series of male and female job seekers. Their 17,370 fake profiles only visited jobseeker sites and were shown 600,000 adverts which the team tracked and analysed.
+
+One experiment showed that Google displayed adverts for a career coaching service for executive jobs 1,852 times to the male group and only 318 times to the female group. Photograph: Alamy
+
+
+---
+
+**Description:**
+
+This slide presents a news article excerpt about a study revealing gender bias in Google's ad delivery system.  The headline and the first paragraph highlight the key finding: women are less likely to see ads for high-paying jobs on Google compared to men.  The subsequent paragraphs describe the methodology of the study, which involved automated testing using fake job seeker profiles.  The image accompanying the text shows a young woman looking at a laptop, which is a visual representation of the topic of online job searching and the potential for algorithmic bias in this context.  The slide is likely part of a larger discussion on bias in AI systems and the importance of fairness in online advertising.
+
+
+
+
+# Slide 16
+
+**Machine Bias**
+
+There's software used across the country to predict future criminals. And it's biased against blacks.
+
+by Julia Angwin, Jeff Larson, Surya Mattu and Lauren Kirchner, ProPublica
+May 23, 2016
+
+
+---
+
+**Description:**
+
+This slide displays a news article headline and a short excerpt from an article about algorithmic bias in predictive policing software.  The title, "Machine Bias," is in a large, bold font, immediately drawing attention to the topic.  The text below the title is a quote from the article, highlighting the software's bias against Black individuals.  The image is a close-up portrait of two men, one Black and one white, positioned side-by-side.  The image is likely intended to visually represent the subject matter of the article, which is the bias in predictive policing software.  The author and publication are also credited, along with the date of the article.  The slide is likely part of a larger discussion on bias in AI systems and the potential for algorithms to reflect and amplify existing societal inequalities.
+
+
+**Description:**
+
+The slide is a gray background with a dark gray box containing the article excerpt.  The title "Machine Bias" is large and bold, drawing attention to the topic.  The image of the two men is a close-up portrait, likely intended to evoke empathy and highlight the human impact of algorithmic bias.  The text below the title is a quote from the article, emphasizing the bias against Black individuals.  The author and publication information are included, providing context and credibility to the information presented.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI.
+
+
+# Slide 17
+
+**Example: The Compass System**
+
+```
+(Graph 1)
+```
+
+*A bar graph on the left side of the slide displays the distribution of decile scores for Black defendants. The x-axis represents the decile score (1-10), and the y-axis represents the count of defendants in each decile. The bars show a higher concentration of Black defendants in lower decile scores (1-4) compared to higher decile scores (7-10).*
+
+
+```
+(Graph 2)
+```
+
+*A bar graph on the right side of the slide displays the distribution of decile scores for White defendants. The x-axis and y-axis are the same as the graph on the left. The bars show a more even distribution across the decile scores, with a higher concentration in the middle deciles (4-7) compared to the lower deciles (1-3) and higher deciles (8-10) of the Black defendants' graph.*
+
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide presents two bar graphs, side-by-side, illustrating the distribution of decile scores for Black and White defendants using the COMPAS (Correctional Offender Management Profiling for Alternative Sanctions) system.  The graphs visually represent the potential bias in the COMPAS system, as the distribution of scores for Black defendants appears to be skewed towards lower scores compared to the distribution for White defendants.  The source is clearly attributed, which is a standard practice in academic presentations.  The slide is likely part of a larger discussion on bias in algorithmic risk assessment tools.
+
+
+**Description:**
+
+The slide is a light gray background with a title in a bold, dark font.  Two bar graphs are presented, each with a different color (dark gray) and a different x-axis label (Black/White).  The x-axis represents the decile score (1-10), and the y-axis represents the count of defendants in each decile.  The graphs are designed to visually compare the distribution of scores for Black and White defendants, highlighting potential disparities.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in algorithmic risk assessment tools.
+
+
+# Slide 18
+
+Can Predictive Systems Discriminate Unfairly
+When predictive systems are more widely applied in situations where they affect people’s lives, they may run into troubles concerning anti-discrimination laws
+There is no consensus about how to define and even less how to deal with the problem
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, discusses the potential for predictive systems to discriminate unfairly.  The text highlights that as these systems become more prevalent in areas impacting people's lives, they may face legal challenges related to anti-discrimination laws.  The final sentence emphasizes the lack of a clear consensus on how to define and address this issue.  The slide is likely part of a larger discussion on the ethical implications of predictive systems and the need for careful consideration of potential biases.  The source is clearly attributed, which is a standard practice in academic presentations.
+
+
+**Description:**
+
+The slide is a plain, light-colored background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The text discusses the potential for predictive systems to discriminate unfairly, highlighting the lack of consensus on how to define and address this issue.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the potential for bias in predictive systems.
+
+
+# Slide 19
+
+**The Legal Situation**
+
+Anti-discrimination laws in several countries prohibit unfair treatment of people based on protected attributes (e.g. gender, race).  These laws often evaluate the fairness of a decision-making process by means of two distinct notions:
+
+* **Disparate treatment:** if it’s decisions are (partly) based on the subject’s protected attribute information
+* **Disparate impact:** if it’s outcomes disproportionally hurt (or benefit) people with certain sensitive attribute values
+
+Are these ideas in conflict?
+How can they be operationalized?
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, discusses the legal framework surrounding discrimination in the context of AI systems.  It introduces the concepts of "disparate treatment" and "disparate impact" as legal standards for evaluating fairness in decision-making processes.  The slide explains that anti-discrimination laws in many countries prohibit unfair treatment based on protected attributes like gender and race.  The two key legal notions, disparate treatment (decisions based on protected attributes) and disparate impact (outcomes disproportionately affecting certain groups), are presented.  The final questions, "Are these ideas in conflict?" and "How can they be operationalized?", suggest the slide is leading into a discussion about the practical application and potential conflicts between these legal concepts in the context of AI.  The source is clearly attributed, which is a standard practice in academic presentations.
+
+
+**Description:**
+
+The slide is a light-colored background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The slide introduces the legal concepts of disparate treatment and disparate impact, which are used to evaluate the fairness of decision-making processes, particularly in the context of AI.  The questions at the end of the slide suggest that the discussion will move towards practical application and potential conflicts between these legal concepts.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the legal aspects of fairness and discrimination in AI systems.
+
+
+# Slide 20
+
+**Example: The Compass System**
+
+Prediction Fails Differently for Black Defendants
+
+|  | WHITE | AFRICAN AMERICAN |
+|---|---|---|
+| Labeled Higher Risk, But Didn't Re-Offend | 23.5% | 44.9% |
+| Labeled Lower Risk, Yet Did Re-Offend | 47.7% | 28.0% |
+
+
+Non-offending blacks get higher scores
+
+* NB: race is not a feature in the model
+
+So the recall for the "positive" case isn't equal for the groups
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide presents a table illustrating the results of the COMPAS (Correctional Offender Management Profiling for Alternative Sanctions) system, showing how the prediction of recidivism rates differs for Black and White defendants.  The table displays percentages for two categories: "Labeled Higher Risk, But Didn't Re-Offend" and "Labeled Lower Risk, Yet Did Re-Offend."  The percentages for Black defendants are significantly higher in the "Higher Risk" category and lower in the "Lower Risk" category compared to White defendants.  The note "NB: race is not a feature in the model" highlights that the model does not explicitly use race as an input, yet the outcome shows a disparity.  The conclusion, "So the recall for the 'positive' case isn't equal for the groups," emphasizes the unequal accuracy of the model's predictions for different racial groups.  The source is clearly attributed.
+
+
+**Description:**
+
+The slide is a light-gray background with a bold title, "Example: The Compass System."  A table is presented, showing percentages for two categories of recidivism prediction outcomes for White and African American defendants.  The table is clearly formatted, with the categories and percentages easily readable.  The text below the table highlights the disparity in the model's predictions for different racial groups, despite race not being a direct input.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in algorithmic risk assessment tools.
+
+
+# Slide 21
+
+**Description:**
+
+This slide discusses how machine learning models can inadvertently perpetuate stereotypes present in the training data.  The title, "When Machine Learning Reinforces Stereotypes," clearly states the topic.  The text explains that machine learning models can absorb subtle biases from the training data, including various stereotypes.  The bullet point, "• Images, text, …," indicates that these biases can be present in different types of data, such as images and text.  The source is clearly attributed.  The slide is likely part of a larger discussion on bias in AI systems and the importance of careful data curation and model training.
+
+
+**Description:**
+
+The slide is a plain, light-gray background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The title and the text below it explain how machine learning models can absorb biases from the training data.  The bullet point emphasizes that this can happen with various types of data.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in machine learning models.
+
+
+# Slide 22
+
+**Collecting Training Data**
+
+```
+(Diagram)
+```
+
+*A diagram is presented, illustrating a process.  A large, light-blue oval labeled "True Population" is at the bottom of the slide.  A smaller, light-blue oval, labeled "Population Samples," is inside the larger oval.  An arrow connects the "True Population" oval to the "Population Samples" oval.  A dark-gray rectangular box labeled "Machine Learning" is positioned to the right of the "Population Samples" oval.  An arrow connects the "Population Samples" oval to the "Machine Learning" box.  A light-salmon-colored hexagon labeled "Predictor" is positioned to the right of the "Machine Learning" box.  An arrow connects the "Machine Learning" box to the "Predictor" hexagon.  A smaller text box below the "Predictor" hexagon states "Built to make accurate predictions on the Population samples."  A similar set of ovals and boxes is positioned below the first set, but with the text "But not predictive of the True Population" below the "Predictor" hexagon.  The overall layout is clear and visually represents the process of collecting training data and building a predictor.*
+
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+The slide visually depicts the process of collecting training data for a machine learning model.  A diagram shows the relationship between the true population, a sample of the population used for training, and the resulting predictor.  The diagram highlights that a predictor trained on a sample of the population may not accurately reflect the true population.  The diagram is a visual representation of the potential for bias and error in machine learning models due to the limitations of training data.  The source is clearly attributed.  The slide is likely part of a larger discussion on the importance of representative training data and the limitations of machine learning models.
+
+
+**Description:**
+
+The slide is a light-gray background with a title in a bold, dark font.  A diagram is presented, illustrating the process of collecting training data and building a predictor.  The diagram uses ovals and boxes to represent different components of the process, including the true population, a sample of the population, machine learning, and the resulting predictor.  The diagram visually shows the potential disconnect between the training data and the true population, highlighting a potential source of error in machine learning models.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the importance of representative training data and the limitations of machine learning models.
+
+
+# Slide 23
+
+**Amazon scraps secret AI recruiting tool that showed bias against women**
+
+*By Jeffrey Dastin, Reuters*
+
+SAN FRANCISCO (Reuters) – Amazon.com Inc (AMZN.O) machine-learning specialists uncovered a big problem: their new recruiting engine did not like women.
+
+The team had been building computer programs since 2014 to review job applicants' resumes with the aim of mechanizing the search for top talent, five people familiar with the effort told Reuters.
+
+But by 2015, the company realized its new system was not rating candidates for software developer jobs and other technical posts in a gender-neutral way.
+
+That is because Amazon's computer models were trained to vet applicants by observing patterns in resumes submitted to the company over a 10-year period. Most came from men, a reflection of male dominance across the tech industry.
+
+The Seattle company ultimately disbanded the team by the start of last year because executives lost hope for the project, according to the people, who spoke on condition of anonymity. Amazon's recruiters looked at the recommendations generated by the tool.
+
+
+---
+
+**Description:**
+
+This slide presents a news article excerpt about Amazon's AI recruiting tool exhibiting bias against women.  The title and the first paragraph highlight the key finding: Amazon's AI recruiting tool showed bias against women.  The subsequent paragraphs describe the methodology of the tool, which was trained on a dataset heavily skewed towards male applicants.  The article concludes that the tool was ultimately abandoned due to its bias.  The slide is likely part of a larger discussion on bias in AI systems and the importance of careful data curation and model training.  The source is clearly attributed to Reuters and Jeffrey Dastin.  The image is an Amazon logo, which is a visual representation of the company at the center of the news article.
+
+
+
+
+# Slide 24
+
+**Potential Solutions: constrain the algorithm**
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, presents a single heading: "Potential Solutions: constrain the algorithm."  The text is centered on a light gray background.  There are no other elements on the slide.  The heading likely introduces a new section of the lecture, focusing on potential solutions to the problems of bias in algorithms, possibly building on the previous discussion of examples of bias in AI systems.  The overall design is simple and professional, suitable for a lecture presentation.
+
+
+**Description:**
+
+The slide is a light gray background with the title "Potential Solutions: constrain the algorithm" in a dark gray, sans-serif font.  The title is centered on the slide.  There are no other elements, such as images, bullet points, or graphs.  The simple design and single heading indicate that this is likely an introductory slide to the topic of potential solutions to algorithmic bias, which will be explored further in the subsequent slides.
+
+
+# Slide 25
+
+**Fairness through Blindness**
+
+Ignore all irrelevant/protected attributes
+But you don't need to see an attribute to be able to predict it with high accuracy
+• E.g. User visits artofmaniless.com ... has 90% chance of being male
+
+
+---
+
+**Description:**
+
+This slide discusses a potential solution to algorithmic bias: ignoring irrelevant or protected attributes.  The text states that a model can be trained to predict outcomes without needing to consider sensitive attributes like gender.  The example given is a user visiting a website (artofmaniless.com) and having a 90% chance of being male.  The slide suggests that focusing on other, non-sensitive data points can lead to accurate predictions without relying on potentially biased information.  The overall tone is one of exploring a possible solution to the problem of bias in algorithms.
+
+
+**Description:**
+
+The slide is a plain, light-colored background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The text discusses the concept of "fairness through blindness," suggesting that ignoring irrelevant or protected attributes can lead to accurate predictions.  The example of a user visiting a website and being predicted as male illustrates this concept.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on potential solutions to bias in algorithms.
+
+
+# Slide 26
+
+**Group Fairness**
+
+Equalize two groups S, T at the level of outcomes
+
+* For example, S=minority, T=everyone else
+* P( outcome o | S ) = P( outcome o | T )
+
+This is not strong enough as a notion of fairness
+
+* Sometimes desirable, but can be abused
+* Self-fulfilling prophecy: select smartest students in T, random students in S, then students in T will perform better
+
+
+---
+
+**Description:**
+
+This slide discusses the concept of group fairness in the context of AI.  It defines group fairness as equalizing outcomes for two groups (e.g., a minority group S and a majority group T) at the level of outcomes.  The example given is that the probability of a particular outcome for group S should be equal to the probability of that same outcome for group T.  The slide notes that this definition of fairness isn't sufficient, as it can be misused or lead to unintended negative consequences, such as a self-fulfilling prophecy.  The example of selecting the smartest students for one group and random students for another illustrates how this approach can lead to unequal outcomes.
+
+
+**Description:**
+
+The slide is a light-gray background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The slide defines group fairness and provides an example, but also highlights potential issues with this approach, such as self-fulfilling prophecies.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on fairness in algorithms.
+
+
+
+
+# Slide 27
+
+**Description:**
+
+This slide discusses individual fairness in the context of AI.  It defines individual fairness as treating similar individuals similarly.  The two bullet points elaborate on this: similar individuals should be treated similarly for the purpose of the classification task, and they should also be similarly distributed over outcomes.  The final sentence notes that how to achieve this is an active area of research.  The slide is likely part of a larger discussion on fairness in AI algorithms.
+
+
+**Description:**
+
+The slide is a plain, white background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The slide defines individual fairness and provides two criteria for achieving it.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on fairness in algorithms.
+
+
+
+
+# Slide 28
+
+**Interpretable results**
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, presents a single heading: "Interpretable results."  The text is centered on a light gray background.  There are no other elements on the slide.  The heading likely introduces a new section of the lecture, focusing on methods or techniques for making the results of AI algorithms more understandable and explainable.  The overall design is simple and professional, suitable for a lecture presentation.
+
+
+**Description:**
+
+The slide is a light gray background with the title "Interpretable results" in a dark gray, sans-serif font.  The title is centered on the slide.  There are no other elements, such as images, bullet points, or graphs.  The simple design and single heading indicate that this is likely an introductory slide to the topic of interpretable AI results, which will be explored further in the subsequent slides.
+
+
+
+
+# Slide 29
+
+**Can we Trust the Output of a ML Algorithm?**
+
+Sometimes you don't know if you can trust a machine learning prediction...
+
+```
+(Image)
+```
+
+*A cartoon drawing of a person in a doctor's coat, holding a stethoscope, is on the right side of the slide.  The person is looking at a laptop.  A speech bubble coming from the person says "Why should I trust you?".  A speech bubble coming from the laptop says "Jane Doe has the flu".  A simple laptop image is on the left side of the slide, with a network diagram on the screen. The network diagram shows interconnected nodes.*
+
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide poses a question about the trustworthiness of machine learning algorithms.  The title, "Can we Trust the Output of a ML Algorithm?", is in a large, bold font.  The text below the title explains that sometimes it's unclear whether a machine learning prediction can be trusted.  The image on the right shows a cartoon doctor figure questioning the laptop's prediction, which is displayed in a speech bubble.  The laptop image on the left shows a network diagram, representing the complex workings of a machine learning algorithm.  The overall design is simple and uses visual aids to illustrate the question of trust in machine learning outputs.  The source is clearly attributed.
+
+
+**Description:**
+
+The slide is a white background with a title in a bold, dark font.  The text below the title introduces the uncertainty surrounding machine learning predictions.  A cartoon image of a doctor figure, positioned on the right side of the slide, is questioning the laptop's prediction, which is displayed in a speech bubble.  The laptop image on the left side of the slide shows a network diagram, visually representing the complexity of the machine learning algorithm.  The overall design is simple and uses visual aids to illustrate the question of trust in machine learning outputs.  The source is credited at the bottom, which is a standard practice in academic presentations.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the trustworthiness of machine learning algorithms.
+
+
+
+
+# Slide 30
+
+**Can We Understand What the Model is Doing?**
+
+It's easier to trust a prediction if you understand the reasons for it.
+
+```
+(Image)
+```
+
+*A cartoon drawing of a person in a doctor's coat, holding a stethoscope, is on the right side of the slide.  The person is looking at a laptop. A speech bubble coming from the person says "Ok. I can trust you." A speech bubble coming from the laptop says "Jane Doe has the flu". A simple laptop image is on the left side of the slide, with a network diagram on the screen. The network diagram shows interconnected nodes.  Small icons of a thermometer, a pill bottle, and a chair are inside a speech bubble on the left side of the laptop, with the words "Fever", "Headache", and "Fatigue" below them, respectively.*
+
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide discusses the importance of understanding the reasoning behind machine learning predictions for increased trust.  The title, "Can We Understand What the Model is Doing?", is in a large, bold font.  The text below the title emphasizes that understanding the reasons for a prediction makes it more trustworthy.  The image on the right shows a cartoon doctor figure looking at a laptop and expressing trust.  The laptop image on the left shows a network diagram, representing the complex workings of a machine learning algorithm.  The icons of a thermometer, pill bottle, and chair, along with the words "Fever", "Headache", and "Fatigue", within the speech bubble on the left side of the laptop, suggest that the model is considering these factors in its prediction of "Jane Doe has the flu."  The overall design is simple and uses visual aids to illustrate the concept of interpretability in machine learning.  The source is clearly attributed.
+
+
+**Description:**
+
+The slide is a white background with a title in a bold, dark font.  The text below the title emphasizes the importance of understanding the reasoning behind machine learning predictions.  A cartoon image of a doctor figure, positioned on the right side of the slide, is expressing trust in the laptop's prediction.  The laptop image on the left side of the slide shows a network diagram, visually representing the complexity of the machine learning algorithm.  The icons of a thermometer, pill bottle, and chair, along with the words "Fever", "Headache", and "Fatigue", within the speech bubble on the left side of the laptop, suggest that the model is considering these factors in its prediction of "Jane Doe has the flu."  The overall design is simple and uses visual aids to illustrate the concept of interpretability in machine learning.  The source is credited at the bottom, which is a standard practice in academic presentations.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the need for interpretable machine learning models.
+
+
+
+
+# Slide 31
+
+**Understand When the Algorithm Makes No Sense**
+
+Or figuring out when you shouldn't trust a model
+
+```
+(Image)
+```
+
+*A cartoon drawing of a person, likely a woman, is seated at a desk, looking at a laptop.  The person is depicted in a light gray/black and white style.  The person is holding a pen or stylus and appears to be writing or interacting with the laptop.  A speech bubble coming from the person says "You are detecting snow, not wolves! I can't trust you!".  A second speech bubble, coming from the laptop, says "I am 100% sure this is a wolf!".  A simple laptop image is on the left side of the slide, with a network diagram on the screen. The network diagram shows interconnected nodes.  A small image of a snowy landscape is inside the speech bubble coming from the laptop.*
+
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide discusses the importance of recognizing when a machine learning algorithm's output is unreliable or nonsensical.  The title, "Understand When the Algorithm Makes No Sense," is in a large, bold font.  The text below the title explains that it's crucial to know when a model's predictions shouldn't be trusted.  The image on the slide shows a cartoon representation of a person interacting with a laptop.  The person's speech bubble expresses skepticism about the laptop's prediction, while the laptop's speech bubble confidently asserts a different conclusion.  The image of the snowy landscape within the laptop's speech bubble visually reinforces the incongruity between the model's prediction ("wolf") and the actual image ("snow").  The overall design is simple and uses visual aids to illustrate the concept of recognizing when a machine learning model's output is unreliable.  The source is clearly attributed.
+
+
+**Description:**
+
+The slide is a light gray background with a title in a bold, dark font.  The text below the title explains the concept of recognizing when a machine learning model's output is unreliable.  A cartoon image of a person interacting with a laptop is presented, with speech bubbles conveying the person's skepticism and the model's confident prediction.  The image of snow within the laptop's speech bubble visually reinforces the incongruity between the model's prediction and the actual image.  The overall design is simple and uses visual aids to illustrate the concept of recognizing when a machine learning model's output is unreliable.  The source is credited at the bottom, which is a standard practice in academic presentations.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the importance of evaluating the reliability of machine learning models.
+
+
+
+
+# Slide 32
+
+**Description:**
+
+This slide discusses a study on using machine learning to predict pneumonia risk and the probability of death (POD) in patients.  The study, funded by Cost-Effective HealthCare (CEHC) in the mid-1990s, aimed to determine if machine learning could effectively predict pneumonia risk and POD to better manage patient care.  The study found that neural networks were the most accurate models, outperforming traditional methods.  However, due to concerns about the risk of using neural networks on real patients, logistic regression was ultimately chosen instead.  The slide asks the question "Why?" prompting further discussion on the trade-offs between accuracy and risk in medical applications of AI.
+
+
+**Description:**
+
+The slide is a light-background image with text.  The text describes a study using machine learning to predict pneumonia risk and probability of death.  The study found neural networks to be highly accurate but deemed too risky for real-world patient use.  The image in the background shows a person in a medical context, likely a doctor or healthcare professional, interacting with a digital interface displaying medical data and icons related to healthcare.  The overall design is professional and visually emphasizes the medical context of the study.  The slide is likely part of a larger presentation on the ethical and practical considerations of using AI in healthcare.
+
+
+
+
+# Slide 33
+
+**Description:**
+
+This slide discusses a study by Caruana et al. (2015) on using rule-based systems in healthcare, specifically for predicting pneumonia risk.  The study found a counterintuitive result: patients with a history of asthma had a lower risk of dying from pneumonia than the general population.  This was attributed to the fact that patients with asthma were admitted to the ICU with aggressive care, which lowered their risk of dying.  However, the causal reasoning behind this result is flawed, as asthmatics have a much higher risk of dying if not hospitalized.  The slide highlights the potential for rule-based systems (and likely more complex models like neural networks) to learn spurious correlations from data, leading to inaccurate or misleading conclusions.  The slide is part of a larger discussion on the importance of understanding the limitations and potential biases in machine learning models, particularly in healthcare applications.
+
+
+**Description:**
+
+The slide is a light-background image with text.  The text describes a study on using rule-based systems in healthcare.  The study found a counterintuitive result: patients with asthma had a lower risk of dying from pneumonia than the general population.  This was due to the aggressive care given to asthmatic patients in the ICU.  However, the causal reasoning is flawed, as asthmatics have a higher risk if not hospitalized.  The image in the background shows a medical context, likely a doctor or healthcare professional interacting with medical data.  The overall design is professional and visually emphasizes the medical context of the study.  The slide is likely part of a larger presentation on the ethical and practical considerations of using AI in healthcare, specifically focusing on the limitations of rule-based systems and the importance of understanding the underlying causal relationships in data.
+
+
+
+
+# Slide 34
+
+**Detecting and removing bias from models**
+
+Bias is in the data, not the learning algorithm
+Models trained on data will lean any biases in the data
+* ML for resume processing will learn gender bias if data has a gender bias
+* ML for recidivism prediction will learn race bias if data has a race bias
+* ...
+How to deal with bias using transparent models
+* Must keep bias features in data when model is trained
+* Remove what was learned from these bias features after training
+
+If offending bias variables are eliminated prior to training:
+* Often can't tell you still have a problem
+* Makes it harder to correct the problem
+EU General Data Protection Regulation (in effect 2018)
+* Article 9 makes it more difficult to use personal data revealing racial or ethnic origin and other "special categories"
+
+
+---
+
+**Description:**
+
+This slide discusses the source of bias in machine learning models and potential solutions.  It emphasizes that bias originates in the data, not the algorithm itself.  The text explains that models trained on biased data will inevitably reflect those biases.  Examples are given of how models trained on biased data (resume processing and recidivism prediction) will learn and perpetuate those biases.  The slide then suggests a method for dealing with bias in transparent models: keeping the biased features in the data during training, but removing the learned bias after training.  Finally, it notes that removing bias variables *before* training can mask existing problems and make it harder to correct them.  The slide also mentions the EU General Data Protection Regulation (GDPR) and how it impacts the use of personal data revealing sensitive attributes like race or ethnicity.
+
+
+**Description:**
+
+The slide is a light-gray background with a bold title.  The text is presented in a clear, bulleted list format, making it easy to read and understand.  The slide discusses the source of bias in machine learning models and potential solutions.  The text emphasizes that bias is inherent in the data and that models trained on biased data will reflect those biases.  The slide also mentions the EU GDPR and its impact on the use of personal data revealing sensitive attributes.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in machine learning models and potential solutions.
+
+
+# Slide 36
+
+**Follow-up**
+
+NYC's Anti-Bias AI Hiring Law Has Largely Failed So Far
+
+Although other jurisdictions have shown interest in passing laws in a similar vein to LLL 144, lawmakers have been hesitant to move forward with them after seeing NYC's efforts in this area largely flopped.
+
+Last year, New York City became the first U.S. jurisdiction to regulate automated and artificial intelligence (AI) tools in the hiring process. So far, however, employers have paid little attention. The law (Local Law 144) is designed to prevent potential race and gender bias in hiring algorithms by requiring employers to regularly audit these tools. However, as employers have the freedom to decide whether or not to audit the systems covered by LLL 144, the law and overall lax enforcement, it's largely gone ignored. Yet, despite the failure of LLL 144, lawmakers should still anticipate new and more comprehensive regulation surrounding AI and employment into play in the near future.
+
+
+---
+
+**Description:**
+
+This slide presents a news article excerpt about the effectiveness of New York City's anti-bias AI hiring law.  The title, "Follow-up," suggests this slide is a follow-up to previous discussions about algorithmic bias.  The text summarizes a news article reporting that New York City's law requiring audits of AI hiring tools has largely been ineffective.  The article highlights that despite similar laws being considered in other jurisdictions, lawmakers have been hesitant to proceed due to the lack of enforcement and compliance in New York City.  The overall tone is critical of the current state of enforcement and suggests a need for more comprehensive regulations in the future.
+
+
+**Description:**
+
+The slide is a light-gray background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The text summarizes a news article about the effectiveness of New York City's anti-bias AI hiring law.  The article highlights the lack of compliance and enforcement of the law, leading to a lack of impact.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the practical challenges of implementing regulations to address bias in AI systems.  The slide includes links to news articles, which provide additional context and support for the information presented.
+
+
+# Slide 37
+
+**WEAPONS OF MATH DESTRUCTION**
+
+HOW BIG DATA INCREASES INEQUALITY AND THREATENS DEMOCRACY
+
+CATHY O'NEIL
+
+
+---
+
+**Description:**
+
+This slide displays the title and author of a book, likely used as a concluding reference for the lecture.  The title, "WEAPONS OF MATH DESTRUCTION," is in a large, bold font, suggesting a critical perspective on the use of mathematical models and big data.  The subtitle, "HOW BIG DATA INCREASES INEQUALITY AND THREATENS DEMOCRACY," further emphasizes the potential negative consequences of these technologies.  The author's name, "CATHY O'NEIL," is prominently displayed below the title.  The background is a bright yellow with radiating red lines, creating a dynamic and attention-grabbing visual.  The overall design is likely intended to be memorable and impactful, potentially highlighting the book's central argument about the negative consequences of unchecked use of mathematical models and big data.
+
+
+**Description:**
+
+The slide is a bright yellow background with a bold, dark title.  The title, "WEAPONS OF MATH DESTRUCTION," is large and prominent, suggesting a critical perspective on the use of mathematical models and big data.  The subtitle, "HOW BIG DATA INCREASES INEQUALITY AND THREATENS DEMOCRACY," further emphasizes the potential negative consequences of these technologies.  The author's name, "CATHY O'NEIL," is displayed below the title.  The background design includes radiating red lines, creating a dynamic and attention-grabbing visual.  The overall design is likely intended to be memorable and impactful, potentially highlighting the book's central argument about the negative consequences of unchecked use of mathematical models and big data.  The slide is likely the final slide of the presentation, serving as a concluding thought or reference point for the lecture.
+
+

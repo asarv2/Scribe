@@ -1,0 +1,22 @@
+# 9
+
+**Training/test cycle**
+
+*   **Sample Data**
+
+    *   **Training Data**
+
+        *   Estimate model parameters θ from training data
+        *   Evaluation function (applied to training data)
+            *   L(x, θ) = ∏<sub>i</sub> P<sub>θ</sub>(x<sub>i</sub>)
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, visually represents the training/test cycle.  A light gray rectangle, labeled "Sample Data," is positioned on the left side of the slide.  A darker teal rectangle, labeled "Training Data," is positioned to the right of the "Sample Data" box.  The "Training Data" box is larger than the "Sample Data" box, visually emphasizing that the "Training Data" is a subset of the "Sample Data."  Within the "Training Data" box, there are two key concepts:
+
+1.  **Estimate model parameters θ from training data:** This text indicates that the model's parameters (θ) are determined using the training data.
+
+2.  **Evaluation function (applied to training data):** This text indicates that an evaluation function (L(x, θ)) is applied to the training data. The formula L(x, θ) = ∏<sub>i</sub> P<sub>θ</sub>(x<sub>i</sub>) is provided, which is likely a mathematical expression for evaluating the model's performance on the training data.  This formula likely represents a likelihood function, calculating the probability of observing the training data given the model parameters.
+
+The slide's layout and content clearly illustrate the process of using training data to estimate model parameters and evaluate the model's performance on that same data.  The slide is likely to be followed by a discussion of how to use the evaluation function to assess the model's performance and potentially adjust the model parameters.

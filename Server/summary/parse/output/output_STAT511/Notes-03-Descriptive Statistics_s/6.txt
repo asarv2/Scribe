@@ -1,0 +1,47 @@
+# Slide 6
+
+**Example 3.4 modified boxplot:**
+
+*(No image description provided, as there is no image on this slide.)*
+
+
+**Comparing box plots and histograms**
+
+**Example 2.1 revisited:**
+
+Cereal data - Sugar (see page 1)
+
+Cereal data – Sodium (see page 1)
+
+* What box plots do well:
+    * Show all outliers.
+    * Give the 5 number summary.
+
+* What histograms do well:
+    * Indicate the shape of the data’s distribution.
+    * Only with histograms can we tell if a data set has bimodal distribution.
+
+
+**Side-by-Side Boxplots for data comparison**
+
+**Example 3.5:**
+
+Active smokers: 430 418 405 328 200 292 295 272 240 232
+Passive smokers: 254 219 287 257 271 282 148 273 350 293
+Nonsmokers: 155 165 153 207 211 159 199 187 200 213
+
+Sources: Sherif, NA et al (2004) Detection of cotinine in neonate meconium as a marker for nicotine exposure in utero. Eastern Mediterranean Health Journal, 10, 96-105.
+
+
+**Figure Descriptions:**
+
+* **Multiple Histograms:**  There are two histograms, positioned side-by-side.  The x-axis of each histogram represents the range of values (likely sodium or sugar content in cereal). The y-axis represents the count or frequency of data points within each bin.  The histograms are used to visually compare the distributions of sugar and sodium content in cereal samples.
+
+* **Box Plots:** There are three box plots, positioned below the histograms.  Each box plot represents a different group (active smokers, passive smokers, nonsmokers). The box spans from the first quartile (Q1) to the third quartile (Q3), with a line inside representing the median. Whiskers extend from the box to the minimum and maximum values within 1.5 times the interquartile range (IQR).  Dots or other symbols outside the whiskers indicate outliers.  The box plots are used to compare the distributions of cotinine levels across the three groups.
+
+* **Overall:** The figures are used to illustrate the comparison of data distributions using both box plots and histograms.  The histograms show the overall distribution, while the box plots highlight the central tendency and variability within each group.  The side-by-side arrangement of the box plots facilitates direct comparison of the distributions across the different groups.
+
+
+**Slide Description:**
+
+This slide continues the discussion of data visualization techniques, specifically comparing box plots and histograms.  It shows examples of both types of plots, illustrating how they can be used to understand the distribution of data and identify outliers.  The histograms are used to show the overall distribution of the data, while the box plots are used to compare the central tendency and variability of the data across different groups.  The example data (cereal data and cotinine levels) are used to illustrate the application of these visualization techniques.

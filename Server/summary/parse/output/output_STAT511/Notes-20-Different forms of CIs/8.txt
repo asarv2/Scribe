@@ -1,0 +1,53 @@
+# Slide 8
+
+**STAT 511 Course Notes – set 20 (W10)**
+
+**Yuan Qu**
+
+Notation: Let 𝑡<sub>α,𝑣</sub> denotes on the measurement 
+axis for which the area under the t curve with 𝑣 
+df to the right of 𝑡<sub>α,𝑣</sub> is α, that is,  
+
+𝑃(𝑇> 𝑡<sub>α,𝑣</sub>) = α 
+
+𝑡<sub>α,𝑣</sub> is called a t critical value.  
+
+
+Proposition: the one-sample t CI 
+
+Let 𝑋̅ and 𝑆 be the sample mean and sample standard deviation computed from the results of a random 
+sample from a normal population with unknown mean 𝜇.  
+
+* 𝑣= 𝑛−1. 
+* 100(1 – )% confidence interval for 𝝁 is 
+(𝑥̅ −𝑡<sub>𝛼/2,𝑛−1</sub> ∙𝑠/√𝑛, 𝑥̅ + 𝑡<sub>𝛼/2,𝑛−1</sub> ∙𝑠/√𝑛 ) 
+
+or  
+𝑥̅ ± 𝑡<sub>𝛼/2,𝑛−1</sub> ∙𝑠/√𝑛. 
+
+
+We can obtain the t critical value 𝑡<sub>𝛼/2,𝑛−1</sub>  
+
+* by R code “qt(1-alpha, df=v)”,  
+* or use the T table: 
+
+
+Note: If the df you want isn’t in the table, use the df that is the closest smaller number. 
+
+
+Important: The t confidence interval depends on normal assumption; one need to use histogram or QQ 
+plot to diagnose whether this assumption is valid. 
+
+
+Important: If the data presents strong non-normality, but the sample size is large enough, we can use 
+large sample approximated CI. 
+
+
+**Figure Description:**
+
+A small, stylized graph of a t-distribution is positioned in the upper right corner of the slide.  The x-axis represents the measurement values, and the y-axis represents the probability density.  A portion of the curve is shaded to the right of a specific value on the x-axis (labeled 𝑡<sub>α,𝑣</sub>).  The shaded area represents the probability α.  This graph is included to visually illustrate the concept of a critical value (𝑡<sub>α,𝑣</sub>) from a t-distribution, which is essential for calculating confidence intervals.  The graph is a visual representation of the probability associated with the t-statistic, which is used in the calculation of the confidence interval.  The graph is positioned in the upper right corner to complement the text explaining the concept of a t-critical value.
+
+
+**Overall Context:**
+
+This slide continues the discussion of confidence intervals, specifically focusing on the calculation of confidence intervals for a population mean (μ) when the population standard deviation is unknown and the sample size is small.  The slide introduces the t-distribution and its critical values (𝑡<sub>𝛼/2,𝑛−1</sub>) as a necessary tool for this type of calculation.  The graph is a visual aid to help understand the concept of the t-distribution and how to find the critical value needed for the confidence interval calculation.  The slide builds upon the previous slide's introduction of the t-distribution and its properties.

@@ -1,0 +1,29 @@
+# 21
+
+# Classification
+
+**Setup**
+
+*   **Input (feature vector):** x ∈ ℝ<sup>D</sup>
+*   **Output (label):** y ∈ [C] = {1, 2, ..., C}
+*   **Goal:** learn a mapping f: ℝ<sup>D</sup> → [C]
+
+**This lecture:** binary classification
+
+*   **Number of classes:** C = 2
+*   **Labels:** {-1, +1} (cat or dog, fraud or not, ...)
+
+
+**(Figure):**
+
+The slide contains four images arranged in a 2x2 grid.
+
+*   **Top Left:** An image of a group of sheep.
+*   **Top Right:** An image of a horse.
+*   **Bottom Left:** An image of an alpaca.
+*   **Bottom Right:** A scatter plot.  The x and y axes are not labeled, but the plot shows a roughly equal distribution of red and blue points.  A diagonal line separates the two clusters of points.  The red and blue points are clearly distinguishable, and the diagonal line is a visual representation of a possible decision boundary.
+
+
+**Context:**
+
+This slide introduces the concept of classification in machine learning.  The images of sheep, horse, and alpaca are examples of the types of data that might be used in a classification task.  The scatter plot, with its red and blue points and the separating line, is a visual representation of a binary classification problem, where the goal is to learn a function that can distinguish between two classes of data points.  The slide is designed to introduce the basic setup of a classification problem, using a visual example to illustrate the concept.  The images are likely intended to help the viewer understand the types of data that might be used in a classification task.  The scatter plot is crucial to the explanation, as it visually demonstrates the concept of binary classification and the goal of finding a decision boundary.

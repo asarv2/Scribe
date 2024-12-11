@@ -1,0 +1,42 @@
+# 3
+
+# General Automated Reasoning
+
+**Research Objective:** Better reasoning and modeling technology
+
+**Problem Instance**
+![Problem Instance](https://i.imgur.com/your_image_placeholder.png)
+
+*Domain Specific*
+e.g. logistics, chess, planning, verification, ...
+
+**Model Generator (Encoder)**
+*Generic*
+Applicable to all domains within range of modeling language
+
+**General Inference Engine**
+
+**Solution**
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, outlines a general automated reasoning pipeline.  The central idea is to improve reasoning and modeling technology.  The slide visually represents a process with arrows connecting different components.
+
+* **Problem Instance:**  A small image collage is shown, likely representing different types of problems.  The images are likely examples of problem instances from various domains (e.g., a circuit board, a chessboard, a map, a satellite image).  This is shown at the top left of the slide.  The purpose of this image is to illustrate the input to the system.
+
+* **Model Generator (Encoder):**  A box labeled "Model Generator (Encoder)" is shown, with the word "Generic" below it.  This component is positioned in the middle of the slide, indicating its role in the process.  The purpose of this component is to take the problem instance and generate a model.
+
+* **General Inference Engine:**  A box labeled "General Inference Engine" is shown, positioned in the middle right of the slide.  This component is responsible for applying general reasoning rules to the model.
+
+* **Solution:**  A box labeled "Solution" is shown at the bottom right of the slide.  This is the output of the entire process.
+
+* **Domain Specific/Generic:**  The slide uses the terms "Domain Specific" and "Generic" to categorize the model generator.  This distinction is important because a domain-specific model generator would be tailored to a particular problem domain, while a generic model generator would be applicable to a wider range of problems.
+
+* **Arrows:**  Arrows connect the components, visually representing the flow of information from the problem instance to the solution.  The arrows are crucial for understanding the sequence of operations.
+
+* **Text:**  The text below the components describes the characteristics of each component.  For example, the text under "Generic" explains that this component is applicable to all domains within the range of modeling language.
+
+The overall design of the slide is to present a conceptual framework for automated reasoning, highlighting the distinction between domain-specific and generic approaches.  The images are used to illustrate the input and the overall process.
+
+

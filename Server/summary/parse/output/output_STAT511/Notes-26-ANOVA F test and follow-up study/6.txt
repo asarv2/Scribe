@@ -1,0 +1,63 @@
+# Slide 6
+
+**Statistical Methods**
+
+Descriptive Statistics is given:
+
+One Variable Summary
+
+Ex- smoker | Never | Smoker
+---|---|---|
+Mean | 2.64 | 3.27 | 2.99
+Std. Dev. | 0.62 | 0.44 | 0.50
+Median | 2.50 | 3.30 | 3.00
+Minimum | 1.00 | 2.00 | 2.00
+Maximum | 3.80 | 4.00 | 4.00
+Count | 29 | 145 | 49
+1st Quartile | 2.30 | 2.97 | 2.65
+3rd Quartile | 3.25 | 3.66 | 3.30
+
+
+Above right is the normal quantile plot of residuals. This is used to determine if the normality condition is satisfied. The box plot to the right is the one we check for outliers.
+
+Equality of standard deviation? YES.
+
+ANOVA table - Analysis of Variance
+
+Source | DF | Sum of Squares | Mean Square | F Ratio | Prob > F
+---|---|---|---|---|---|
+smoke | 2 | 12.31 | 6.156 | 26.566 | <.0001
+Error | 231 | 53.53 | 0.232 |  |  
+C. Total | 233 | 65.84 |  |  |  
+
+
+Conclusion:
+The data demonstrates statistical evidence that for there is association between smoking and GPR.
+
+
+R code
+y<-c(rnorm(10),rnorm(12, mean=1),rnorm(9))
+x<-factor(c(rep(1,10),rep(2,12),rep(3,9)))
+
+boxplot(y~x)
+qqnorm(y-c (rep(mean(y[1:10]),10),rep(mean(y[11:22]),12),rep(mean(y[23:31]),9)))
+qqline(y-c (rep(mean(y[1:10]),10),rep(mean(y[11:22]),12),rep(mean(y[23:31]),9)))
+
+a1<-aov(y~x)
+summary(a1)
+
+
+**Figure Description:**
+
+The slide contains three figures, arranged horizontally.
+
+1. **Boxplot (left):**  A boxplot is displayed, showing the distribution of a numerical variable (likely GPR) across three categories (e.g., smoking status: never smoked, former smoker, current smoker).  The boxes represent the interquartile range (IQR), the lines within the boxes represent the median, and the whiskers extend to the minimum and maximum values within 1.5 times the IQR.  Outliers are plotted as individual points.  The boxplots are side-by-side, allowing for a visual comparison of the distributions across the categories.  This is used to check for potential outliers and differences in the central tendency and spread of the data.
+
+2. **Normal Q-Q Plot (middle):** A normal Q-Q plot is a scatter plot.  It plots the quantiles of a sample against the quantiles of a standard normal distribution.  If the data are normally distributed, the points on the plot will fall approximately along a straight line.  Deviations from a straight line indicate deviations from normality.  This plot is used to assess the normality assumption for the residuals in the ANOVA analysis.
+
+3. **Boxplot (right):**  A boxplot is displayed, similar to the first boxplot, but it is likely a boxplot of the residuals from the ANOVA model.  This is used to check for outliers in the residuals, which is an important assumption for ANOVA.
+
+
+**Context:**
+
+The slide continues the discussion of ANOVA, specifically focusing on checking the assumptions of the test.  The example uses data on smoking status and GPR (likely Grade Point Ratio). The figures are used to visually assess the normality and equal variance assumptions, which are crucial for the validity of the ANOVA results.  The R code provided shows how to generate these plots and perform the ANOVA test.

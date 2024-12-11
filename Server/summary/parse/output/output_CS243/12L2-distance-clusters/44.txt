@@ -1,0 +1,40 @@
+# 44
+
+**Evaluation via Class Labels: Purity**
+
+Purity: a measure of the extent to which cluster/groups (G) contain objects of a particular class (C)
+
+* Each cluster is assigned the class according to the most numerous class of its elements
+* The purity of each cluster  i in G is determined by the number of examples of class j (N<sub>j</sub>) inside each cluster:
+
+purity(C, G) =  1/N * Σ<sub>i=1</sub><sup>K</sup> max<sub>j</sub> N<sub>j</sub> ∈ G<sub>i</sub>
+
+High purity is easy to achieve when the number of clusters is large
+
+```
+X   X
+X   O
+X   X
+O
+```
+```
+X   X
+O   O
+O   O
+```
+```
+X   O   O
+O   X   O
+O   O   X
+```
+
+1 / 17 * (5 + 4 + 3) = 0.71...
+
+
+---
+
+**Description of what you see:**
+
+Slide 44 of a presentation on clustering algorithms.  The slide defines and illustrates the concept of purity as an objective evaluation metric for clustering.  The text defines purity as a measure of how well clusters contain objects of a particular class.  It explains that each cluster is assigned the class that has the most members within that cluster.  The purity of a clustering is calculated as the average of the maximum number of elements of any class within each cluster.  The formula for purity is shown:  purity(C, G) =  1/N * Σ<sub>i=1</sub><sup>K</sup> max<sub>j</sub> N<sub>j</sub> ∈ G<sub>i</sub>.  The slide also includes three small circular diagrams, each representing a cluster.  The circles are divided into sections, with 'X' and 'O' symbols representing different classes.  The symbols within each circle indicate the distribution of classes within each cluster.  The calculation at the bottom of the slide (1 / 17 * (5 + 4 + 3) = 0.71...) demonstrates how purity is calculated from the example clusters.  The example illustrates how purity is calculated from the distribution of classes within each cluster.  The slide is part of a section on evaluating clustering results using objective metrics.
+
+

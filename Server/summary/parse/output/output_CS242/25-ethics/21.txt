@@ -1,0 +1,12 @@
+# Slide 21
+
+**Amazon's AI Recruiting Tool Biased Against Women**
+
+* **News Article Excerpt:**  Amazon scrapped a secret AI recruiting tool that showed bias against women.  The tool, built by Amazon's machine learning specialists, was designed to review job applications and identify top talent.  However, by 2015, the company realized the system wasn't rating candidates for software developer jobs and other technical positions in a gender-neutral way.  The problem stemmed from the training data, which consisted primarily of resumes from men, reflecting the male dominance in the tech industry.  The company ultimately disbanded the project team due to the persistent bias.
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a news article excerpt about Amazon's AI recruiting tool.  The image is a screenshot of a news article, likely from Reuters, about Amazon's AI recruiting tool.  The image shows the headline "Amazon scraps secret AI recruiting tool that showed bias against women" and a brief summary of the article.  The image is placed at the top of the slide and is oriented to be read as a news article.  The purpose of the image is to illustrate a real-world example of bias in a machine learning system, specifically in the context of hiring.  The image is a news article excerpt, not a data visualization, and is used to demonstrate a specific case study of bias in a machine learning system.  The slide is likely part of a discussion on bias in data science, specifically highlighting how biases in training data can lead to biased outcomes in machine learning models.

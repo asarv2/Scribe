@@ -1,0 +1,25 @@
+# Slide 5
+
+# Data Summary
+
+Measures of location
+* Mean
+* Median
+* Quartiles
+* Mode
+
+Measures of dispersion or variability
+* Variance
+* Standard Deviation
+* Range
+* Skew
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents a list of measures used for summarizing data.  The title "Data Summary" is in a large, bold font at the top.  The content is organized into two sections: "Measures of location" and "Measures of dispersion or variability."  Each section lists several statistical measures.  The format is a bulleted list, making it easy to read and understand the different types of data summaries.  There are no images or figures on this slide.  The overall design is simple and clean, suitable for a presentation on data analysis techniques.
+
+
+**What you see:** A light-colored background with the title "Data Summary" in a dark, bold font.  Below the title, the text is organized into two sections, each with a heading.  Each section contains a bulleted list of statistical measures.  The text is in a standard, easy-to-read font.  There are no images or figures on this slide.  The overall design is simple and clean, suitable for a presentation on data analysis techniques.  The slide is likely part of a larger presentation on exploratory data analysis (EDA), as the previous slide discussed methods for EDA.

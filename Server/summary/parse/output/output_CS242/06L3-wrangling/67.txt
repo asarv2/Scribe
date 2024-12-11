@@ -1,0 +1,65 @@
+# Slide 67
+
+**Inner Joins - the default merge**
+
+The default merge is an inner merge
+
+```
+df_join = pd.merge(df_student, df_gpa)
+```
+
+```
+df_student
+```
+
+```
+SID	Name	Email
+0	2343	Jeanne Garza	garza2@purdue.edu
+1	8990	Amy Benson	bensona@purdue.edu
+2	17652	Howard Nichols	nichols45@purdue.edu
+3	7900	Gregg Brock	brockg@purdue.edu
+4	8762	Noah Murphy	murphy231@purdue.edu
+5	23432	Daniel Jennings	jennings8@purdue.edu
+6	5483	Ricky Flemings	flemingsr@purdue.edu
+```
+
+```
+df_gpa
+```
+
+```
+SID	GPA
+0	2343	3.8
+1	45343	2.6
+2	23432	4.0
+3	8762	3.1
+4	10022	3.5
+```
+
+```
+df_join
+```
+
+```
+SID	Name	Email	GPA
+0	2343	Jeanne Garza	garza2@purdue.edu	3.8
+1	8762	Noah Murphy	murphy231@purdue.edu	3.1
+2	23432	Daniel Jennings	jennings8@purdue.edu	4.0
+```
+
+If no columns to merge on are specified, merge identifies columns with matching names.
+
+The above example is the same as
+
+```
+df_join = pd.merge(df_student, df_gpa, how='inner', on='SID')
+```
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates an inner join (merge) operation in Pandas.  It shows how to combine two DataFrames, `df_student` and `df_gpa`, based on a shared column, 'SID'.  The `pd.merge()` function is used, and by default, it performs an inner join.  The `df_student` DataFrame contains student information (SID, Name, Email), and `df_gpa` contains student GPAs (SID, GPA).  The resulting `df_join` DataFrame contains only the rows where the 'SID' values match in both input DataFrames.  The slide clearly illustrates the inner join operation, showing the input DataFrames and the output DataFrame.  The code snippets are essential for demonstrating the merge process. The tables are crucial for showing the input and output data. The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on merging data from different sources.
+
+

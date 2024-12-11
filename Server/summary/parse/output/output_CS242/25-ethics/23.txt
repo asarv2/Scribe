@@ -1,0 +1,14 @@
+# Slide 23
+
+**Fairness through Blindness**
+
+Ignore all irrelevant/protected attributes
+But you don't need to see an attribute to be able to predict it with high accuracy
+• E.g. User visits artofmaniless.com ... has 90% chance of being male
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on Intro to Data Science, discusses a potential solution to algorithmic bias: ignoring irrelevant or protected attributes when building a predictive model.  The text explains that a model can still be highly accurate in its predictions even if it doesn't consider potentially discriminatory attributes.  The example given is a user visiting a website (artofmaniless.com) and the model predicting a 90% chance of the user being male.  The slide is likely part of a section on solutions to bias in machine learning algorithms.  There are no figures or images on this slide. The text is clear and concise, presenting a specific example of how ignoring irrelevant attributes can potentially mitigate bias.

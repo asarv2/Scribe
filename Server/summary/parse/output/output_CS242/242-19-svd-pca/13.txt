@@ -1,0 +1,30 @@
+# Slide 13
+
+**Matrix Factorization**
+
+Algebraically, given a high-dimensional data matrix X, we can approximate it as a product of two dense matrices A and B with lower "inner" dimensions:
+
+```
+M
+examples
+N attributes
+K latent dims
+N
+K
+B
+N
+X
+A
+```
+
+---
+
+**Description:**
+
+This slide, part of a lecture on matrix factorization in an Intro to Data Science course, introduces a visual representation of the concept.  The slide shows two sets of matrices, each representing a factorization of a high-dimensional data matrix X.
+
+* **Left Matrix:** A light-beige/tan rectangle labeled "X" is shown.  The rectangle has dimensions "M examples" (vertical) and "N attributes" (horizontal).  This represents the original high-dimensional data matrix.
+
+* **Right Matrix:** Two light-teal/green rectangles are shown, labeled "A" and "B".  Matrix "A" has dimensions "M examples" (vertical) and "K latent dims" (horizontal).  Matrix "B" has dimensions "K latent dims" (vertical) and "N attributes" (horizontal).  This represents the factorization of the original matrix X into two lower-dimensional matrices A and B.  The "K latent dims" represent the reduced dimensionality.
+
+* **Visual Representation:** The slide uses a visual representation of matrices to illustrate the concept of matrix factorization.  The matrices are arranged side-by-side, with the original matrix X on the left and the factorized matrices A and B on the right.  The "≈" symbol between the X and A/B matrices indicates that the factorization is an approximation.  The labels "M examples," "N attributes," and "K latent dims" clearly define the dimensions of each matrix.  The purpose of this slide is to visually demonstrate how a high-dimensional matrix can be approximated by the product of two lower-dimensional matrices, which is a core concept in matrix factorization.

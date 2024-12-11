@@ -1,0 +1,38 @@
+# Slide 4
+
+**Population:**
+Unknown mean,
+standard deviation,
+and shape.
+
+?
+
+We draw tons of samples
+from the population and
+calculate their means.
+Notice that the shape of
+many of them isn't normal.
+
+We plot the distribution
+of the means of the
+samples above. The result
+is approximately a normal
+distribution of
+sample means.
+
+**Sampling distribution**
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, visually explains the concept of a sampling distribution.
+
+* **Top portion:** A large, light gray bell curve, labeled "Population," is positioned at the top of the slide.  A question mark is placed above the curve, suggesting the unknown nature of the population's characteristics.  This is a visual representation of a population with unknown mean, standard deviation, and shape.
+
+* **Middle portion:**  Numerous smaller, light pink bell curves are layered below the large population curve.  These curves represent the distributions of means from many different samples drawn from the population.  The arrows pointing down from the large population curve to the smaller curves visually illustrate the process of sampling.  The smaller curves have varying shapes, demonstrating that the distributions of sample means from different samples are not necessarily normal.  The horizontal lines between the curves visually group the samples.
+
+* **Bottom portion:** A smaller, light gray bell curve, labeled "Sampling distribution," is positioned at the bottom of the slide.  This curve represents the distribution of the means of all the samples.  The arrows pointing down from the middle portion to the bottom curve visually illustrate the process of plotting the distribution of sample means.  The bottom curve is a normal distribution, highlighting the central limit theorem.
+
+The slide's purpose is to illustrate the concept of the sampling distribution and how it's related to the population distribution.  It visually demonstrates that even if the population distribution is not normal, the sampling distribution of the means will tend toward a normal distribution as the sample size increases.  The slide uses visual aids to explain a key concept in statistical inference.

@@ -1,0 +1,55 @@
+# Slide 9
+
+**MODERN DATA SCIENTIST**
+
+Data Scientist, the sexiest job of the 21st century, requires a mixture of multidisciplinary skills ranging from an intersection of mathematics, statistics, computer science, communication and business. Finding a data scientist is hard. Finding people who understand who a data scientist is, is equally hard. So here is a little cheat sheet on who the modern data scientist really is.
+
+**MATH & STATISTICS**
+
+* Machine learning
+* Statistical modeling
+* Experiment design
+* Bayesian inference
+* Supervised learning: decision trees, random forests, logistic regression
+* Unsupervised learning: clustering, dimensionality reduction
+* Optimization: gradient descent and variants
+
+**PROGRAMMING & DATABASE**
+
+* Computer science fundamentals
+* Scripting language e.g. Python
+* Statistical computing packages, e.g., R
+* Databases: SQL and NoSQL
+* Relational algebra
+* Parallel databases and parallel query processing
+* MapReduce concepts
+* Hadoop and Hive/Pig
+* Custom reducers
+* Experience with xaaS like AWS
+
+**DOMAIN KNOWLEDGE & SOFT SKILLS**
+
+* Passionate about the business
+* Curious about data
+* Influence without authority
+* Hacker mindset
+* Problem solver
+* Strategic, proactive, creative, innovative and collaborative
+
+**COMMUNICATION & VISUALIZATION**
+
+* Able to engage with senior management
+* Story telling skills
+* Translate data-driven insights into decisions and actions
+* Visual art design
+* R packages like ggplot or lattice
+* Knowledge of any of visualization tools e.g. Flare, D3.js, Tableau
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a comprehensive overview of the skills and knowledge areas required for a modern data scientist.  It's organized into four key categories: Math & Statistics, Programming & Database, Domain Knowledge & Soft Skills, and Communication & Visualization.  Each category lists specific skills and tools relevant to the field.  The slide is designed to provide a clear and concise overview of the multifaceted nature of the data scientist role.  The overall design is visually appealing, using bullet points and clear headings to highlight the key information.
+
+

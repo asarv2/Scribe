@@ -1,0 +1,18 @@
+# Slide 13
+
+**No relationship**
+
+---
+
+**Figure Description:**
+
+A scatter plot is presented, showing the relationship between "Sepal length" (on the horizontal x-axis) and "Sepal width" (on the vertical y-axis).  Numerous data points (small circles) are scattered across the plot area.  There is no discernible pattern or trend in the distribution of the points.  The points are randomly distributed, suggesting a lack of correlation between sepal length and sepal width.  The x-axis ranges from approximately 4.5 to 8.0, and the y-axis ranges from approximately 2.0 to 4.0.  The figure is positioned centrally on the slide and is the primary visual element.  The title "No relationship" above the plot reinforces the visual impression of the data.
+
+**Context:**
+
+This slide, likely part of a presentation on data visualization and analysis in an Intro to Data Science course, is illustrating the concept of a lack of correlation between two variables.  The scatter plot visually demonstrates that there is no apparent linear or non-linear relationship between sepal length and sepal width in the dataset.  This is in contrast to a scatter plot showing a strong relationship, where the points would cluster around a line or curve.
+
+
+**Description of what you see:**
+
+The slide displays a scatter plot.  The plot shows a large number of data points, each represented by a small circle.  The points are scattered randomly across the graph, indicating no clear relationship between the two variables being measured (sepal length and sepal width).  The title "No relationship" above the plot reinforces the visual impression of the data.  The axes are labeled "Sepal length" and "Sepal width," indicating the variables being plotted.  The plot is a visual representation of the lack of correlation between the two variables.

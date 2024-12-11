@@ -1,0 +1,22 @@
+# Slide 7
+
+# Language features
+
+Indentation instead of braces
+Newline separates statements
+Several sequence types
+* Strings “…”: made of characters, immutable
+* Lists […]: made of anything, mutable
+* Tuples (...): made of anything, immutable
+Powerful subscripting (slicing)
+Functions are first class objects
+Exceptions as in Java
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a light gray background, details various language features of Python, likely in the context of the Intro to Data Science course.  The heading "Language features" is in a large, bold font, indicating the topic.  Below the heading, bullet points describe key Python features: indentation instead of braces, newline separation of statements, and different sequence types (strings, lists, and tuples) with their respective mutability characteristics.  The slide also mentions powerful subscripting (slicing), functions as first-class objects, and exception handling similar to Java.  The footer indicates that the slide content is adapted from a Python tutorial from the University of Pennsylvania's CIS530 course.  There are no figures on this slide.  The text is presented in a clear and concise manner, providing a summary of Python's syntax and features relevant to the course.

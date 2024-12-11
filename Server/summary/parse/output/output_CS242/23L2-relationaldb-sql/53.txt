@@ -1,0 +1,24 @@
+# Slide 53
+
+# General Query with Grouping and Aggregation
+
+```
+SELECT s
+FROM r1, ..., rN
+WHERE c1
+GROUP BY a1, ..., aK
+HAVING c2
+```
+
+*   `s` can ONLY contain attributes `a1`, ..., `aK` and/or aggregates
+*   `c1` is any condition on the attributes in `r1`, ..., `rN`
+*   `c2` is any condition on the aggregate expressions
+
+
+---
+
+**Description:**
+
+This slide presents a general form of an SQL query that includes grouping and aggregation.  The slide shows the structure of the query, including the `SELECT`, `FROM`, `WHERE`, `GROUP BY`, and `HAVING` clauses.  The `SELECT` clause (`s`) can only contain attributes (`a1`, ..., `aK`) from the tables (`r1`, ..., `rN`) or aggregate functions.  The `WHERE` clause (`c1`) filters the data before grouping.  The `GROUP BY` clause (`a1`, ..., `aK`) groups the data based on specified attributes.  The `HAVING` clause (`c2`) filters the grouped data based on aggregate expressions.  The slide is purely textual, with no figures.  The content is a conceptual overview of the structure of SQL queries involving grouping and aggregation, providing a general framework for understanding how these operations are performed.  The context suggests this is part of a data analysis or data science lesson, where the goal is to understand the structure of SQL queries for data summarization.
+
+

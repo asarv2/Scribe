@@ -1,0 +1,51 @@
+
+--- Key Terms ---
+artifical intelligence basics
+1. artificial neural networks
+2. machine learning fundamentals
+3. image processing & computer vision
+4. dimensionality reduction & clustering
+5. recommender systems
+6.  search algorithms & problem solving
+7.  satisfiability & automated reasoning
+8.  classical planning
+9.  data analysis & fairness
+10. calculus & linear algebra
+11.  specific datasets & models
+12.  intelligent agents
+13.  graph theory
+--- Problem Types ---
+artifical intelligence basics
+foundations of ai
+game playing ai
+reinforcement learning
+ai ethics and safety
+ai stack and architecture
+search and problem solving
+linear algebra for ai
+calculus for ai
+machine learning fundamentals
+regression and curve fitting
+classification
+computer vision
+convolutional neural networks 
+biological inspiration for neural networks
+data analysis and model selection
+clustering
+recommender systems
+propositional logic
+--- Algorithm Solutions ---
+artifical intelligence basics
+linear algebra
+calculus & optimization
+machine learning algorithms
+image processing
+search algorithms
+artificial neural networks
+data structures & algorithms
+recommender systems
+sat solvers
+distance metrics
+bias mitigation in machine learning
+signal processing
+probability & statistics

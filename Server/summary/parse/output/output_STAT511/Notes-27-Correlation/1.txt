@@ -1,0 +1,37 @@
+# Slide 1
+
+**Simple Linear Regression**
+
+Inferential statistics for the association between 2 numerical variables
+
+When there are 2 variables, we assign one variable to be the explanatory variable or independent variable, and the other the response variable or dependent variable.
+
+* The explanatory variable is thought to "explain" the response.
+* The response variable is the measurement of interest.
+
+**Example 27.1**
+
+1. Does sucrose level (in grams) different for different fruit type (Apple, Orange, Banana)?
+    * Response variable: sucrose level, numerical.
+    * Explanatory variable: fruit type, categorical.
+
+2. Is there association between number of beers consumed & the percentage of alcohol in blood?
+    * Response variable: percentage of alcohol in blood, numerical.
+    * Explanatory variable: number of beers consumed, numerical.
+
+3. How does smoking status(yes or no) associated with survival status after 20 years(yes or no)?
+    * Response variable: survival status after 20 years, categorical.
+    * Explanatory variable: smoking status, categorical.
+
+
+Now we want to make statistical inferences of a population based on the data when there appears to be a linear relationship between the numerical explanatory variable and the numerical response variable.
+i.e. the above example, study 2.
+
+Probabilistically, we consider the explanatory variable as a fixed, nonrandom value (vector), and denote is as x; we consider the response variable as a random variable, denoted by Y (the observed value is denoted as y). And the distribution of Y depends on x.
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the concept of simple linear regression in a statistical methods course.  It defines explanatory and response variables, and provides examples of how these variables are used in different scenarios.  The examples (e.g., sucrose level vs. fruit type, alcohol percentage vs. beer consumption) illustrate the different types of variables (numerical and categorical) that can be used in regression analysis.  The slide also introduces the idea of making inferences about a population based on data, specifically when there's a linear relationship between the explanatory and response variables.  The slide sets the stage for further discussion on the statistical methods used in simple linear regression.  The slide number (1) and the course name (STAT 511) are clearly visible at the top of the slide.  The author's name (Yuan Qu) is also present.  The formatting is standard for lecture notes, with bullet points and numbered lists to organize the information.

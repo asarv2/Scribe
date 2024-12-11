@@ -1,0 +1,31 @@
+# Slide 17
+
+**Example: The Compass System**
+
+```
+(Graph 1)
+```
+
+*A bar graph on the left side of the slide displays the distribution of decile scores for Black defendants. The x-axis represents the decile score (1-10), and the y-axis represents the count of defendants in each decile. The bars show a higher concentration of Black defendants in lower decile scores (1-4) compared to higher decile scores (7-10).*
+
+
+```
+(Graph 2)
+```
+
+*A bar graph on the right side of the slide displays the distribution of decile scores for White defendants. The x-axis and y-axis are the same as the graph on the left. The bars show a more even distribution across the decile scores, with a higher concentration in the middle deciles (4-7) compared to the lower deciles (1-3) and higher deciles (8-10) of the Black defendants' graph.*
+
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide presents two bar graphs, side-by-side, illustrating the distribution of decile scores for Black and White defendants using the COMPAS (Correctional Offender Management Profiling for Alternative Sanctions) system.  The graphs visually represent the potential bias in the COMPAS system, as the distribution of scores for Black defendants appears to be skewed towards lower scores compared to the distribution for White defendants.  The source is clearly attributed, which is a standard practice in academic presentations.  The slide is likely part of a larger discussion on bias in algorithmic risk assessment tools.
+
+
+**Description:**
+
+The slide is a light gray background with a title in a bold, dark font.  Two bar graphs are presented, each with a different color (dark gray) and a different x-axis label (Black/White).  The x-axis represents the decile score (1-10), and the y-axis represents the count of defendants in each decile.  The graphs are designed to visually compare the distribution of scores for Black and White defendants, highlighting potential disparities.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in algorithmic risk assessment tools.

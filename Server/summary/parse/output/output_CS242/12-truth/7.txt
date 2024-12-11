@@ -1,0 +1,21 @@
+# Slide 7
+
+**Duplicate data**
+
+Data set may include data entities that are duplicates, or almost duplicates of one another
+
+* Major issue when merging data from heterogeneous sources
+* Example: same person with multiple email addresses
+
+**Data cleaning methods**
+
+* Find and deal with duplicate entities
+* Find and correct measurement error or outliers
+* Deal with missing values
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on data quality within an Introduction to Data Science course, discusses the issue of duplicate data in datasets.  The title, "Duplicate data," is presented in a large, bold font at the top of the slide.  The slide explains that duplicate data is a common problem, especially when combining data from different sources.  The example of a single person having multiple email addresses illustrates this point.  The slide then lists several data cleaning methods to address this issue, including finding and dealing with duplicate entities, correcting measurement errors or outliers, and dealing with missing values.  The format is a bulleted list, making the information easy to read and understand.  The slide is designed to help students understand the concept of duplicate data and how to deal with it in data analysis.

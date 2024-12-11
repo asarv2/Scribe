@@ -1,0 +1,568 @@
+
+--- Key Terms ---
+intro to data science
+hadoop
+jupyter notebook
+data engineering
+spark
+ethics in data science
+ipython
+sql
+big data systems
+numpy
+pandas
+data science
+clustering methods
+a/b testing
+collaborative filtering
+data never sleeps 10.0
+data manipulation
+python
+mapreduce
+data cleaning
+data management
+dimensionality reduction
+correlation vs. causation
+data visualization
+palindrome
+similarity/distance measures
+hypothesis testing
+data wrangling
+data acquisition
+the data mining process
+data never sleeps 4.0
+fraud prediction
+what you want to do affects what you need
+early identification of heart failure
+big data
+sky image cataloging
+recommender systems
+data science process
+what wal-mart knows about customers' habits
+early detection of sepsis
+machine learning
+data mining
+early data science
+user experience
+personalized autism treatments
+how companies learn your secrets
+detection of early alzheimer's
+modern data scientist
+big data analytics pipeline & stakeholders
+taxonomy of data science
+`del` keyword
+`count` method
+mutable
+`__init__`
+`values` method
+`self`
+`items` method
+`return` keyword
+`csv` module
+interpreted language
+python 3
+`in` operator
+`insert` method
+`extend` method
+`sort` method
+`strip` method
+`sys.argv`
+`upper` method
+`index` method
+immutable
+`def` keyword
+`remove` method
+`none`
+`lower` method
+slicing
+python notebooks
+`keys` method
+`sys` module
+anaconda
+`open` function
+`+` operator
+`reverse` method
+`read` method
+tuples
+indentation
+lists
+`append` method
+dynamically typed
+dictionaries
+json files
+`iloc` method
+structured data
+csv files
+tabular data
+entities
+attributes
+dataframe
+panel
+xml/html files
+`loc` method
+semi-structured data
+unstructured data
+series
+`re.match`
+capturing groups
+tf-idf
+greedy matching
+beautiful soup
+`re.search`
+term frequency
+`re.compile`
+`soup.prettify`
+`match.group`
+inverse document frequency
+regex
+`re` module
+`soup.find_all`
+quantifiers
+raw string
+stemming
+document-term matrix
+stop words
+`re.finditer`
+lazy matching
+`p.find`
+`re.findall`
+`link.get_text`
+`match.span`
+augmenting data
+cleaning data
+missing data
+subsetting data
+combining data
+data munging outside of python/pandas
+transformation
+aggregating data
+data organization
+playfair charts
+hockey stick chart
+map
+strategic communication
+chart
+infographic
+spurious correlations
+minard's visualization
+anscombe's quartet
+candid communication
+bar plot
+clear and concise
+`plt.gridspec`
+`go.heatmap`
+`ax.set_ylim`
+accessibility and inclusivity
+visual estimates
+smoothed density plot
+`plt.boxplot`
+`bins`
+plotly
+`plt.scatter`
+`position`
+`plt.bar`
+`%matplotlib inline`
+grouped bar chart
+`px.box`
+line plot
+`stat`
+`ggplot + geom_point`
+box plot
+violin plot
+`density`
+plotnine
+`plotly.express`
+`geom_point`
+`geom`
+`matplotlib.pyplot.subplots`
+matplotlib.pyplot
+measures of dispersion or variability
+histogram
+`rwidth`
+kernel density estimation
+ggplot
+scatter plot matrix
+`go.scatter`
+`go.histogram`
+`facet`
+baselines and scales of plots
+`coord`
+`plt.hist`
+stacked bar chart
+appropriate choice of visualization
+`plt.plot`
+`geom_smooth`
+`go.box`
+`ax.violinplot`
+`fig.tight_layout`
+exploratory data analysis
+`aes`
+multidimensional scaling
+jitter points
+data integrity
+`ax.set_xlim`
+measures of location
+`matplotlib.pyplot.scatter`
+`theme`
+contour plot
+`data.sort_values`
+interactivity and exploration
+`iloc`
+visual appeal and aesthetics
+context and story
+`ax.set_title`
+`ax.scatter`
+`data['sepal-width'].plot.kde`
+`go.bar`
+`pd.read_csv`
+`scale`
+principal component analysis
+noise
+the truth continuum
+storytelling bug
+confirmation bug
+availability heuristic
+heuristics and biases
+gambler's fallacy
+confirmation bias
+outliers
+missing values
+representativeness heuristic
+data quality
+duplicate data
+patternicity bug
+paired t-test
+two sample t-test
+explaining patterns in data
+asking scientific questions
+two-sided vs. one-sided tests
+sample statistics
+one sample t-test
+claims
+how to increase statistical power
+statistical power
+counterfactuals
+stratified sampling
+sampling distribution
+confidence interval
+margin of error
+representative sample
+simpson's paradox
+standard error
+simple random sampling
+sampling without replacement
+randomization
+sampling
+sampling with replacement
+inertia score
+hierarchical clustering
+matching coefficient
+k-means clustering
+flat clustering
+distance
+soft clustering
+hard clustering
+hamming distance
+personas
+purity
+euclidean distance
+proximity
+elastic mapreduce
+mapper
+gigabytes
+zettabytes
+terabytes
+message passing interface
+reducer
+mean time between failures
+data locality
+mrjob
+combiner
+datanodes
+namenode
+inverted index
+petabytes
+many-to-many relationship
+primary keys
+left join
+having clause
+rdbms
+outer join
+distinct
+foreign keys
+relations
+joins
+grouping
+inner join
+data manipulation language
+data definition language
+hive
+right join
+relational databases
+one-to-one relationship
+entity relationships
+database schema
+aggregation
+database instance
+one-to-many relationship
+pig
+netflix prize
+matrix factorization
+low rank matrix approximations
+singular value decomposition
+latent factors
+embeddings
+root mean square error
+disparate impact
+disparate treatment
+--- Problem Types ---
+intro to data science
+statistical inference and hypothesis testing
+palindrome string detection
+recommender systems
+clustering and dimensionality reduction
+large-scale data analysis
+ethical considerations in data science
+data volume and variety
+data acquisition, cleaning, and manipulation
+data visualization and communication
+applying data mining and machine learning techniques
+identifying appropriate data science techniques for specific tasks
+applying data science to early sepsis detection
+predicting customer behavior based on data
+understanding big data's impact on businesses
+defining the data science process
+using data science for fraud detection
+understanding how companies use data to learn customer secrets
+applying data science to astronomical data analysis
+utilizing machine learning for medical diagnosis
+analyzing user behavior for improved user experience
+improving recommender systems through data analysis
+using data science for personalized medical treatments
+defining the skillset of a modern data scientist
+analyzing historical developments in data science
+working with python data structures
+understanding object-oriented programming in python
+understanding python basics
+file processing in python
+setting up a python environment
+working with pandas dataframes
+defining data
+data acquisition and handling
+tf-idf calculation and application
+string pattern matching with regular expressions
+web page parsing with beautiful soup
+data manipulation
+data cleaning
+data aggregation
+data transformation
+command-line data processing
+data combination
+impact of design choices on data perception
+choosing appropriate visualization types
+understanding spurious correlations
+evaluating the effectiveness of visualizations
+understanding density plots
+illustrating the importance of data visualization
+using ggplot
+creating box plots
+understanding historical visualizations
+understanding visual estimates
+interpreting scatter plots
+addressing limitations of histograms
+considering data aggregation and normalization
+using plotly
+creating grouped bar charts
+addressing limitations of scatter plots
+using contour plots
+visualizing transmission
+creating line plots
+comparing chart types
+creating scatter plots
+data summary
+exploratory data analysis
+choosing effective visualizations
+addressing challenges of varying ranges
+choosing appropriate baselines and scales
+creating bar plots
+combining visualizations
+applying basic principles of visualization
+creating subplots
+using scatterplot matrices
+creating histograms
+cognitive biases in data interpretation
+data quality problems
+visualizing data
+understanding and applying sample statistics
+explaining patterns in data
+asking and answering scientific questions with data
+hypothesis testing
+interpreting statistical results
+evaluating claims based on data
+chi-square test for association
+causal inference
+simpson's paradox
+multiple hypothesis testing
+a/b testing and controlled experiments
+sampling
+expressing uncertainty
+calculating confidence intervals
+k-means clustering
+python example of k-means clustering
+quantitative evaluation
+objective evaluation of clustering
+the k-means algorithm
+examples of clustering
+how to evaluate clusters
+subfields of machine learning
+clustering terminology
+introduction to clustering
+what is clustering?
+personas
+similarity/distance
+interpreting results
+distance measures for discrete data
+subjective evaluation of clustering
+comparing distributed computing paradigms
+handling big data
+understanding mapreduce
+implementing mapreduce in python
+understanding relational databases
+using sql for data manipulation and querying
+working with sqlite
+performing sql joins
+using aggregation and grouping in sql
+comparing pandas and dbms
+working with higher-level query languages
+understanding database schema and instance
+modeling systematic biases in recommender systems
+matrix factorization
+handling missing data in recommender systems
+singular value decomposition
+dimensionality reduction
+principal component analysis
+identifying and mitigating algorithmic bias
+balancing accuracy and interpretability in machine learning models
+defining and measuring fairness in algorithmic outcomes
+ensuring privacy in data science
+--- Algorithm Solutions ---
+intro to data science
+ispalindrome
+ensemble methods
+gradient descent
+reinforcement learning
+cox proportional hazards model
+file reading
+string upper and lower
+csv file reading
+recursive power function
+call by assignment
+dictionary items
+dictionary clear
+list index
+while loop
+list count
+list sort
+if-elif-else statement
+dictionary deletion
+list append
+list remove
+dictionary keys
+for loop
+dictionary creation
+dictionary values
+list reverse
+dictionary access
+list extend
+list insert
+`data.loc[]`
+`pd.dataframe`
+`data.rename`
+`data.iloc[]`
+`data.describe`
+`pd.read_csv`
+tf-idf calculation
+document-term matrix construction
+webpage parsing with beautiful soup
+regular expression matching
+`awk '{print nr "," $0}'`
+`data_zillow.describe`
+`df_weather.fillna`
+`df_final.grade.map(lambda x
+`data_zillow.loc[20] = ...`
+`awk '{print $1}'`
+`data_zillow.columns = [...]`
+`grouped_stock.mean`
+`df_grades.isnull.sum`
+`df_weather.interpolate`
+`mask = ~df_grades.columns.duplicated`
+`data_zillow['price/sq ft '] = ...`
+`grep pattern file`
+`data_zillow['sold'] = ...`
+`df_employee.loc[df_employee.duplicated]`
+`sed 's/,/\t/g'`
+`df_grades.fillna`
+`df_weather.replace`
+`df_grades[df_grades.test2.isnull]`
+`del data_zillow['index']`
+`pd.merge`
+`df_final['final grade'] = ...`
+`data_zillow.sort_index`
+`df_employee.duplicated`
+`df_stock.groupby`
+`df_final['normalized'] = ...`
+`df_employee.drop_duplicates`
+`df_grades = df_grades.loc[
+`pd.concat`
+`data_zillow[['zip','year']]`
+`data_zillow.sort_values`
+`df_weather.dropna`
+`data_zillow[data_zillow.beds == 3]`
+`data_zillow.sample`
+`df_grades.iloc[8, 4] = 50.0`
+`pd.cut`
+`data_zillow = data_zillow.append`
+`wc -l file1.dat`
+`grouped_stock.max`
+isarithmic map
+slope chart
+scatter plot
+linear regression
+proportional symbol map
+line graph
+bar graph
+pie chart
+dot map
+choropleth map
+kernel density estimation
+principal component analysis
+paired t-test
+central limit theorem
+one-sample t-test
+two-sample t-test
+probability of at least one false positive in m tests
+chi-square statistic
+standard error
+confidence interval calculation
+matching coefficient
+k-means algorithm
+euclidean distance
+hamming distance
+purity
+python map
+mapper
+mapreduce
+reducer
+shuffle
+python reduce
+pig latin
+sql join
+sql aggregation
+sql grouping
+matrix factorization
+collaborative filtering
+singular value decomposition
+root mean square error
+individual fairness
+fairness through blindness
+group fairness

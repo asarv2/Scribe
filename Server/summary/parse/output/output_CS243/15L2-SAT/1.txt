@@ -1,0 +1,13 @@
+# 1
+
+CS 24300: AI Basics
+Tony Bergstrom
+
+Slides adapted from Yexiang Xue and Tony Bergstrom
+
+
+---
+
+**Description of the slide:**
+
+This is the title slide for a lecture on AI Basics, part of the CS 24300 course.  The title, "CS 24300: AI Basics," is displayed prominently in a large, light gray font.  Below that, the name of the instructor, "Tony Bergstrom," is written in a smaller, light gray font.  At the very bottom of the slide, in a smaller, light gray font, is a credit line, "Slides adapted from Yexiang Xue and Tony Bergstrom." The background color is a dark gray.  The overall design is simple and professional, focusing on conveying the course title and instructor's name.

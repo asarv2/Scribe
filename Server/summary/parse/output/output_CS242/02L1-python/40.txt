@@ -1,0 +1,26 @@
+# Slide 40
+
+**Importing and Modules**
+
+Use classes & functions defined in another file.
+
+* A Python module is a single file with the same name (plus the .py extension)
+* Like Java import
+
+Where does Python look for module files?
+
+* The list of directories where Python looks: sys.path
+
+To add a directory of your own to this list, append it to this list.
+sys.path.append('/my/new/path')
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide discusses importing modules in Python.  It explains that a Python module is a single file containing functions and classes, similar to how modules work in Java.  The slide highlights the `sys.path` variable, which is a list of directories Python searches for modules.  The example `sys.path.append('/my/new/path')` shows how to add a custom directory to the search path.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The content is presented in a clear, concise manner, providing information on how to import modules from external files and how to modify the search path for those modules.  There are no figures on this slide.
+
+

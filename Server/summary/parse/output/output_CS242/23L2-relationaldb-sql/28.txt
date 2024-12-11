@@ -1,0 +1,20 @@
+# Slide 28
+
+# Joins
+
+Join operations merge multiple tables into a single relation (can be then saved as a new table or just directly used)
+Four typical types of joins:
+* Inner
+* Left
+* Right
+* Outer
+You join two tables on columns from each table, where these columns specify which rows are kept
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the concept of joins in SQL.  It explains that joins combine data from multiple tables into a single result set.  The slide lists the four common types of joins: inner, left, right, and outer.  The final sentence emphasizes that joins use matching columns to determine which rows are included in the combined result.  The slide is purely textual, with no figures.  The content is a concise overview of the topic, likely part of a larger discussion on data manipulation and querying in relational databases.
+
+

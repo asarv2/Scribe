@@ -1,0 +1,54 @@
+# 1
+
+**Two sample confidence interval and hypotheses testing**
+
+Previously, we only consider the inference about a single mean, or a single proportion. Now we extend the study to comparison between the means/proportions of two populations. For example, a hypothesis testing question:
+
+𝐻0:μ1 = μ2  vs  𝐻𝑎: μ1 ≠μ2 
+or 
+𝐻0:𝑝1 = 𝑝2  vs  𝐻𝑎: 𝑝1 ≠𝑝2. 
+
+
+**Difference between two population proportions:**
+a special case of large sample procedure  
+
+
+**Let**
+𝑝1 =the proportion of successes in population #1
+𝑝2 =the proportion of successes in population #2
+
+
+The inferences discussed in this section concern a difference 𝑝1– 𝑝2 between the proportions of two population distributions.
+
+
+• 
+𝐻0 would state that 
+
+𝐻0: 𝑝1– 𝑝2 = 0 or 𝑝1 = 𝑝2
+
+
+**Three possible alternative hypotheses:**
+
+𝐻1: 𝑝1 −𝑝2 > 0   
+𝐻1: 𝑝1 −𝑝2 < 0 
+𝐻1: 𝑝1 −𝑝2 ≠0
+
+
+• 
+Alternatively, it may be appropriate to estimate 𝑝1– 𝑝2 by computing a C level CI.  
+
+
+**Basic Assumptions:**
+
+1. 𝑋1, … , 𝑋𝑚 is a random sample from a Bernoulli (𝑝1) distribution, with unknown 𝑝1. 𝑝1 is the proportion of successes in population #1.
+
+2. 𝑌1, … , 𝑌𝑛 is a random sample from a Bernoulli (𝑝2) distribution, with unknown 𝑝2. 𝑝2 is the proportion of successes in population #2.
+
+3. The X and Y samples are independent of one another.
+
+
+---
+
+**Description of the Slide:**
+
+This slide, titled "Two sample confidence interval and hypotheses testing," introduces the concept of comparing two populations (e.g., means or proportions) in statistical inference.  It begins by highlighting the previous focus on single populations and now extending to comparing two.  The slide then defines the null and alternative hypotheses for comparing two population proportions (p1 and p2).  It also lists the assumptions for this type of analysis, which are crucial for the validity of the inferences.  The slide is clearly organized, using headings and bullet points to present the information in a structured manner.  The text is formatted for readability, with clear explanations and definitions.  The slide number (1) is present at the top, indicating its position in a larger set of lecture notes.  The slide is likely part of a lecture on statistical methods, specifically focusing on hypothesis testing and confidence intervals for comparing two populations.

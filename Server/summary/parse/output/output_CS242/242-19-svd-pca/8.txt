@@ -1,0 +1,17 @@
+# Slide 8
+
+**Dimensionality Reduction**
+
+If there are d dimensions (attributes) in the data, dimensionality reduction refers to methods that transform the data to fewer dimensions, i.e. d'<d
+
+Why reduce the dimensionality?
+* To discard irrelevant features
+* To visualize high dimensional data
+* To reflect "intrinsic" dimensionality of data, which may be smaller than the original number of attributes
+
+
+---
+
+**Description:**
+
+This slide introduces the concept of dimensionality reduction in the context of Intro to Data Science.  The title, "Dimensionality Reduction," is presented in a large, bold font at the top of the slide.  The text below explains the general idea of dimensionality reduction: transforming data from a higher-dimensional space (d dimensions) to a lower-dimensional space (d' dimensions, where d' < d).  The slide then lists three key reasons why dimensionality reduction is performed: discarding irrelevant features, visualizing high-dimensional data, and reflecting the intrinsic dimensionality of the data (which might be lower than the original number of attributes).  The bullet points are well-spaced and easy to read.  The overall design is straightforward and supports the explanation of the topic.

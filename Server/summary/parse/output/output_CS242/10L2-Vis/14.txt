@@ -1,0 +1,19 @@
+# Slide 14
+
+**Linear relationship**
+
+---
+
+**Figure Description:**
+
+A scatter plot is presented, showing the relationship between "Petal length" (on the horizontal x-axis) and "Petal width" (on the vertical y-axis).  Numerous data points (small circles) are scattered across the plot area.  The points generally cluster along a line with a positive slope, indicating a positive correlation between petal length and petal width.  The x-axis ranges from approximately 1 to 7, and the y-axis ranges from approximately 0.5 to 2.5.  The figure is positioned centrally on the slide and is the primary visual element.  The title "Linear relationship" above the plot reinforces the visual impression of the data.  The data points are densely clustered, suggesting a strong linear relationship between the two variables.
+
+
+**Context:**
+
+This slide, likely part of a presentation on data visualization and analysis in an Intro to Data Science course, is illustrating the concept of a positive linear correlation between two variables.  The scatter plot visually demonstrates that there is a clear trend in the data, where as petal length increases, petal width tends to increase as well.  This is in contrast to a scatter plot showing no relationship, where the points would be randomly distributed.
+
+
+**Description of what you see:**
+
+The slide displays a scatter plot.  The plot shows a large number of data points, each represented by a small circle.  The points are clustered along a line with a positive slope, indicating a positive correlation between petal length and petal width.  The title "Linear relationship" above the plot reinforces the visual impression of the data.  The axes are labeled "Petal length" and "Petal width," indicating the variables being plotted.  The plot is a visual representation of a positive linear correlation between the two variables.  The density of the points along the line suggests a strong correlation.

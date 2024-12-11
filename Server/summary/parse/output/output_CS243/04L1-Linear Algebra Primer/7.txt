@@ -1,0 +1,14 @@
+# 7
+
+**Examples of Linear Transforms**
+
+* Rotation
+* Scaling
+* Projections
+
+Essentially it's the mapping of points, lines, planes, spaces to other points, lines, planes, spaces.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, lists examples of linear transformations.  The title, "Examples of Linear Transforms," is presented in a clear, bold font, introducing the topic.  Below the title, three bullet points list specific types of linear transformations: Rotation, Scaling, and Projections.  The final line provides a concise description of what a linear transformation fundamentally does: mapping various geometric elements (points, lines, planes, spaces) to corresponding elements in the same or different spaces.  The slide is entirely text-based, with no figures or images.  The purpose is to provide concrete examples of the abstract concept of linear transformations, which were discussed in the previous slides.  The examples are presented in a simple, bulleted format for easy comprehension.

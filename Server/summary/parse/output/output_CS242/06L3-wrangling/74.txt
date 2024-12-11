@@ -1,0 +1,12 @@
+# Slide 74
+
+**Description of the Slide:**
+
+This slide discusses the potential issue of merging DataFrames with the same column names but different meanings.  It shows two DataFrames, `df_cs101` and `df_cs200`, both containing a "SID" and "Name" column, but the "Score" column in each DataFrame represents different things.  The slide highlights that simply merging these DataFrames using `pd.merge(df_cs101, df_cs200)` would likely produce incorrect results because Pandas would incorrectly join on the common columns.  The slide emphasizes the importance of specifying the correct columns to merge on when the column names are the same but the data they represent is different.  The slide shows examples of how to correctly merge the DataFrames using the `on` parameter to specify the 'SID' column as the join key.  The tables are crucial for demonstrating the input data and the potential issues with incorrect merging. The code snippets are essential for demonstrating the correct merging process. The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on merging data from different sources and the importance of data alignment.
+
+
+**What you see:**
+
+The slide presents a title "Same name, different features".  Below the title, there's text explaining that DataFrames might have the same column names but different meanings.  The slide shows two tables, `df_cs101` and `df_cs200`, each with columns "SID", "Name", and "Score".  The data in the "Score" column is different in each table.  There are arrows connecting the tables to a third table, which shows the result of a merge operation.  The arrows visually represent the merging process.  The slide also includes code examples demonstrating how to correctly merge the DataFrames using the `on` parameter to specify the 'SID' column as the join key.  The code examples show how to use suffixes to distinguish the columns after the merge.  The overall purpose of the slide is to illustrate the importance of specifying the correct columns to merge on when merging DataFrames with potentially mismatched column meanings.
+
+

@@ -1,0 +1,39 @@
+# 53
+
+**Applications of SAT (3)**
+
+**Combinatorial Design**
+
+Complex mathematical structures with desirable properties
+
+*   Latin squares
+*   Quasi groups
+*   Ramsey numbers
+*   Steiner systems
+
+Highly useful for
+
+*   design of experiments
+*   coding theory, cryptography
+*   drug design and testing
+*   crop rotation schedules
+
+And more...
+
+
+**Visual Elements:**
+
+*   **Image (Top Left):** A stylized, circular graph with vertices and lines connecting them.  The vertices are numbered, and the lines suggest connections between them.  The graph appears to be a representation of a graceful graph.
+
+*   **Image (Top Right):** A grid-like structure, similar to a magic square.  The grid contains numbers arranged in a pattern.  The numbers are likely integers, and the pattern suggests a magic square.
+
+*   **Image (Bottom Left):** A stylized image of a baseball bat and a baseball.  The image is likely a representation of a round-robin tournament.
+
+*   **Image (Bottom Right):** A grid-like structure, similar to a magic square.  The grid contains numbers arranged in a pattern.  The numbers are likely integers, and the pattern suggests a magic square.
+
+
+**Description:**
+
+This slide continues the discussion of SAT applications, focusing on combinatorial design problems.  It lists several types of complex mathematical structures (Latin squares, quasi groups, Ramsey numbers, Steiner systems) that can be encoded and solved using SAT solvers.  The slide highlights the practical applications of these structures in various fields, including experimental design, coding theory, cryptography, drug design, and crop rotation scheduling.  The images are visual representations of examples of combinatorial designs that can be solved using SAT.  The top-left image is a graceful graph, the top-right and bottom-right images are magic squares, and the bottom-left image is a round-robin tournament.  The slide is likely part of a lecture on AI Basics, demonstrating the breadth of applications for SAT solvers beyond the more traditional planning and model checking examples.
+
+

@@ -1,0 +1,460 @@
+# 1
+
+**Hypothesis Testing**
+
+The framework of hypothesis testing consists of the following:
+
+* **Step 1.** A pair of hypotheses, H<sub>0</sub> versus H<sub>a</sub>, on a parameter of interest (population level)
+* **Step 2.** A test statistic (based on sample data)
+* **Step 3.** A decision rule (whether to reject H<sub>0</sub> or not). If p-value is small, H<sub>0</sub> is rejected. Otherwise, for p-value is large, H<sub>0</sub> is not rejected.
+* **Step 4.** Conclusions
+
+**Review the examples:**
+
+* 21.5 (one-sided small sample Z test)
+* 21.6 (one-sided large sample Z test)
+* 21.7 (two-sided small sample Z test)
+
+**Two errors that can be committed in a testing procedure:**
+
+* If we reject H<sub>0</sub> when in fact H<sub>0</sub> is true or make a false discovery, this is called a Type I error.
+* If we fail to reject H<sub>0</sub> when in fact H<sub>1</sub> is true or miss an opportunity to make a discovery, this is called a Type II error.
+
+
+|  | H<sub>0</sub> true | H<sub>1</sub> true |
+|---|---|---|
+| **Do not reject H<sub>0</sub>** | Correct (Probability = 1 - α) | Type II error (Probability = β) |
+| **Reject H<sub>0</sub>** | Type I error (Probability = α) | Correct (Probability = Power) |
+
+
+A good testing procedure commits less errors, or more precisely, has a low chance to commit either error.
+
+
+**Description of the Slide:**
+
+This slide introduces the framework for hypothesis testing in a statistical methods course.  It outlines the four key steps involved: defining hypotheses, calculating a test statistic, establishing a decision rule based on the p-value, and drawing conclusions.  The slide also reviews specific examples of hypothesis tests (21.5, 21.6, and 21.7), likely referring to sections or exercises within the course material.  Crucially, it defines and explains Type I and Type II errors, illustrating them with images of a pregnancy test result.  A table summarizes the possible outcomes of a hypothesis test, showing the probabilities of correct decisions and errors.  The slide emphasizes the importance of minimizing both types of errors in a good testing procedure. The table is clearly laid out to show the relationship between the decision made and the truth about the population. The images of pregnancy tests are used to illustrate the concept of false positives (Type I error) and false negatives (Type II error). The slide number (1) is present at the bottom right corner.
+
+# 2
+
+**A general trade-off between type I and II errors:**
+
+For same sample size n and same test statistic, the choice of rejection region can not reduce α and β at the same time.
+
+Because of the suggested guidelines for specifying H<sub>0</sub> and H<sub>a</sub>, a type II error is usually more serious than a type I error.
+
+* We specify an upper bound of the probability of type I error, which is referred to as the significance level of the test, e.g., a level 0.10, 0.05, and 0.01. The corresponding test procedure is called a level α test.
+* A good test statistic yields smaller β subject to the given significance level α.
+
+
+**Alternative decision rule:** a rejection region is the set of all test statistic values for which H<sub>0</sub> will be rejected. The null hypothesis will then be rejected if and only if the observed or computed test statistic value falls in the rejection region.
+
+
+**The framework of hypothesis testing:**
+
+Step 1. A pair of hypotheses, H<sub>0</sub> versus H<sub>a</sub>, on a parameter of interest (population level)
+
+Step 2. A test statistic (based on sample data)
+
+Step 3. Alternative decision rule (whether to reject H<sub>0</sub> or not). If the computed test statistic falls in the rejection region, H<sub>0</sub> is rejected. Otherwise, for the test statistic value is out of the region, H<sub>0</sub> is not rejected.
+
+Step 4. A statistical conclusion
+
+
+**β and power**
+
+We know α denotes the type I error probability and a specified α value is used to determine the test.
+
+The type II error probability is denoted as β. Because there are multiple parameter values under H<sub>a</sub>, there is a different value of β for each value of the parameter consistent with H<sub>a</sub>. Most of the widely used statistical software packages are capable of calculating type II error probabilities. They generally work in terms of power, which is simply 1 – β. A small value of β (close to 0) is equivalent to large power (near 1). A powerful test is the one that has high enough power and therefore good ability to detect when the null hypothesis is false.
+
+
+**Description of the Slide:**
+
+This slide (number 2) continues the discussion of hypothesis testing from the previous slide. It elaborates on the trade-off between Type I and Type II errors, emphasizing that reducing one error often increases the other.  The slide introduces the concept of significance level (α) as a controlled upper bound for the probability of a Type I error.  It also explains how a good test statistic minimizes the probability of a Type II error (β) while maintaining a desired significance level.  The slide then formally outlines the four steps of a hypothesis test, providing a clear structure for conducting such tests. Finally, it introduces the concept of power (1-β) as a measure of a test's ability to detect a false null hypothesis. The slide number (2) is present at the bottom right corner. The content is presented in a clear and organized manner, using bullet points and numbered steps to highlight key concepts.
+
+
+# 3
+
+**Test procedure and calculation of type I and type II error probabilities**
+
+**Example 22.1**
+
+X has the following probability mass function 𝑝(𝑥; 𝜃), where 𝜃 takes value either 0, 1 or 2:
+
+| 𝑝(𝑥; 𝜃) | x=1 | x=2 | x=3 |
+|---|---|---|---|
+| 𝜃= 0 | 0.85 | 0.1 | 0.05 |
+| 𝜃= 1 | 0.1 | 0.4 | 0.5 |
+| 𝜃= 2 | 0.3 | 0.6 | 0.1 |
+
+Assume we have only one data point X, we conduct the following hypotheses testing:
+
+H<sub>0</sub>: 𝜃= 0 vs H<sub>1</sub>: 𝜃≠0
+
+a. The test statistic is just X itself, and the rejection region is {𝑥= 3}, then
+
+𝛼 = 𝑃(𝑥= 3  when H<sub>0</sub> is true) = 𝑃(𝑥= 3 | 𝜃= 0)
+
+𝛽(1) = 𝑃( 𝑥= {1, 2} |  𝜃= 1 )
+
+𝛽(2)= 𝑃( 𝑥= {1, 2} |  𝜃= 2 )
+
+
+b. The test statistic is just X itself, and the rejection region is {x=2 or 3}, then
+
+𝛼 = 𝑃(𝑥= 2 or 3  | 𝜃= 0)
+
+𝛽(1) = 𝑃( 𝑥= 1 |  𝜃= 1 )
+
+𝛽(2)= 𝑃( 𝑥= 1 |  𝜃= 2 )
+
+
+**Example 22.2** A mixture of pulverized fuel ash and Portland cement to be used for grouting should have a compressive strength of more than 1300 KN/m<sup>2</sup>. The mixture will not be used unless experimental evidence indicates conclusively that the strength specification has been met.
+
+Suppose compressive strength for specimens of this mixture is normally distributed with σ=60. Let µ denote the true average compressive strength.
+
+a. What are the appropriate null and alternative hypotheses?
+
+H<sub>0</sub>: 𝜇= 1300 vs. H<sub>a</sub>: 𝜇> 1300
+
+
+**Description of the Slide:**
+
+This slide (number 3) continues the examples from the previous slides, demonstrating the calculation of type I and type II error probabilities in a statistical methods course.  It presents two examples (22.1 and 22.2).  Example 22.1 focuses on a discrete probability distribution (with 𝜃 taking values 0, 1, or 2) and calculates the probabilities of type I and type II errors for different rejection regions.  Example 22.2 introduces a continuous distribution (normal distribution) and defines the null and alternative hypotheses for a specific application involving compressive strength.  The table in Example 22.1 displays the probability mass function (PMF) of a random variable X, which is crucial for calculating the probabilities of interest.  The slide is structured to show the steps involved in hypothesis testing, including defining the hypotheses, choosing a test statistic, and determining the rejection region. The slide number (3) is present at the bottom right corner. The examples are clearly presented, with the relevant calculations and formulas shown. The table is well-organized and easy to read, making it clear how the probabilities are calculated. The context of the examples is provided, making it clear why these calculations are being performed.
+
+
+# 4
+
+**Test procedure and calculation of type I and type II error probabilities (continued)**
+
+**b.** Let 𝑋̅ denote the sample average compressive strength for 𝑛=20 randomly selected specimens. Consider a test procedure that rejects 𝐻<sub>0</sub> when 𝑋̅ ≥ 1331.26. What is the probability distribution of the test statistic when 𝐻<sub>0</sub> is true? What is the probability of a type I error for the test procedure?
+
+𝑋̅ is normally distributed with mean 𝐸(𝑋̅) = 𝜇 and standard deviation  𝜎/√𝑛 = 60/√20 = 13.416. When 𝐻<sub>0</sub> is true, 𝐸(𝑋̅) = 1300. Thus,
+
+𝛼 = 𝑃(𝑋̅ ≥ 1331.26  when 𝐻<sub>0</sub> is true)
+
+= 𝑃(𝑍 ≥ (1331.26−1300)/13.416) = 𝑃(𝑍 ≥ 2.33) = 0.01
+
+**c.** What is the probability distribution of the test statistic when µ=1350? Using the test procedure of part (b), what is the probability that the mixture will be judged unsatisfactory when in fact µ=1350 (a type II error)?
+
+When µ = 1350, 𝑋̅ has a normal distribution with mean 1350 and standard deviation 13.416, so
+
+𝛽(1350) = 𝑃(𝑋̅ < 1331.26  when µ=1350)
+
+= 𝑃(𝑍 ≤ (1331.26−1350)/13.416) = 𝑃(𝑍 ≤ −1.40) = 0.0808
+
+
+**Example 22.3** (Another example of calculating Type II error) The true average voltage drop from collector to emitter of insulated gate bipolar transistors of a certain type is supposed to be at most 2.5 volts. Consider a hypothesis test 𝐻<sub>0</sub>: µ = 2.5 versus 𝐻<sub>𝑎</sub>: µ > 2.5. An investigator selects a sample of 𝑛 = 10 such transistors to test the hypotheses. Assume normal distribution and the standard deviation of the voltage distribution is σ = 0.100. Let significance level α=0.05. How likely is it that 𝐻<sub>0</sub> will not be rejected when in fact µ = 2.6?
+
+Since the distribution is normal and σ = 0.100 is known, we use a 𝑧-test for the hypotheses.
+
+With α=0.05, the rejection region is
+
+{𝑍 > 1.64} = { (𝑋̅−2.5)/0.100/√10 > 1.64} or {𝑋̅ > 2.5 + 1.64 * 0.100/√10}.
+
+The probability of Type II error, or β is
+
+𝛽(2.6) = 𝑃(𝑋̅ < 2.5 + 1.64 * 0.100/√10 | µ=2.6) = 𝑃((𝑋̅ −2.6)/0.100/√10 < 1.64 −√10)
+
+It is 𝑃(𝑍 < −1.52) = 0.064.
+
+
+**Description of the Slide:**
+
+This slide (number 4) continues the examples from the previous slides, demonstrating the calculation of type I and type II error probabilities in a statistical methods course.  It continues Example 22.1 and introduces Example 22.3.  Example 22.1 continues the calculation of probabilities for different rejection regions, now with a normal distribution.  Example 22.3 introduces a new application involving voltage drop in transistors, and calculates the probability of a type II error.  The calculations involve the use of the standard normal distribution (Z) and the formula for the standard error of the mean.  The slide is structured to show the steps involved in hypothesis testing, including defining the hypotheses, choosing a test statistic, and determining the rejection region.  The slide number (4) is present at the bottom right corner.  The examples are clearly presented, with the relevant calculations and formulas shown.  The context of the examples is provided, making it clear why these calculations are being performed.  The formulas are presented in a way that is easy to follow, with clear explanations of the variables involved.
+
+
+# 5
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3**
+
+Let X<sub>1</sub>, ..., X<sub>n</sub> represent a random sample of size n from some population.
+
+* Null hypothesis H<sub>0</sub>: μ = μ<sub>0</sub>, where μ<sub>0</sub> is called null value.
+* Three possible alternative hypotheses
+    1. H<sub>a</sub>: μ > μ<sub>0</sub>, the population mean is greater than μ<sub>0</sub>
+    2. H<sub>a</sub>: μ < μ<sub>0</sub>, the population mean is less than μ<sub>0</sub>
+    3. H<sub>a</sub>: μ ≠ μ<sub>0</sub>, the population mean is not μ<sub>0</sub>
+
+**Case 1: Normal distribution with known variance σ<sup>2</sup>**
+
+The Test statistic is:
+
+TS =  (X̄ - μ<sub>0</sub>) / (σ/√n)  ~ N(0,1)
+
+One reason we choose this test statistic is that if we want to control the type I error, then the test statistic should have a tractable sampling distribution under null hypothesis.
+
+
+Type I error:
+
+α = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∈ Reject Region | μ = μ<sub>0</sub>) = P(Z ∈ Reject Region)
+
+As for type II error:
+
+β(μ) = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∉ Reject Region) = P(N(√n(μ - μ<sub>0</sub>)/σ, 1) ∉ Reject Region)
+
+
+Rejection region and p-value:
+
+1. {Z > z<sub>1-α</sub>}, p-value = P(Z > z<sub>TS</sub>) if H<sub>a</sub>: μ > μ<sub>0</sub>
+2. {Z < z<sub>α</sub>}, p-value = P(Z < z<sub>TS</sub>) if H<sub>a</sub>: μ < μ<sub>0</sub>
+3. {|Z| > z<sub>1-α/2</sub>}, p-value = 2 × P(Z > |z<sub>TS</sub>|), if H<sub>a</sub>: μ ≠ μ<sub>0</sub>
+
+This choice of rejection region is intuitively appealing to the alternative hypotheses setting, also tries to minimize the type II error subject to α.
+
+
+**Description of the Slide:**
+
+This slide (number 5) introduces hypothesis testing for a single population mean, specifically when the population follows a normal distribution and the population variance is known.  The slide outlines the null and alternative hypotheses (H<sub>0</sub> and H<sub>a</sub>) for three possible scenarios (greater than, less than, and not equal to).  It defines the test statistic (TS) as the standardized sample mean (X̄) and shows its relationship to the standard normal distribution (Z).  The slide explains the concept of type I and type II errors, and how the rejection region and p-value are used to control these errors.  The slide also provides formulas for calculating the p-value in each of the three alternative hypothesis scenarios.  The slide number (5) is present at the bottom right corner.  The content is presented in a clear and organized manner, using bullet points and numbered lists to highlight key concepts.  The formulas are presented in a way that is easy to follow, with clear explanations of the variables involved.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.
+
+
+# 6
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3**
+
+Let X<sub>1</sub>, ..., X<sub>n</sub> represent a random sample of size n from some population.
+
+* Null hypothesis H<sub>0</sub>: μ = μ<sub>0</sub>, where μ<sub>0</sub> is called null value.
+* Three possible alternative hypotheses
+    1. H<sub>a</sub>: μ > μ<sub>0</sub>, the population mean is greater than μ<sub>0</sub>
+    2. H<sub>a</sub>: μ < μ<sub>0</sub>, the population mean is less than μ<sub>0</sub>
+    3. H<sub>a</sub>: μ ≠ μ<sub>0</sub>, the population mean is not μ<sub>0</sub>
+
+**Case 1: Normal distribution with known variance σ<sup>2</sup>**
+
+The Test statistic is:
+
+TS =  (X̄ - μ<sub>0</sub>) / (σ/√n)  ~ N(0,1)
+
+One reason we choose this test statistic is that if we want to control the type I error, then the test statistic should have a tractable sampling distribution under null hypothesis.
+
+
+Type I error:
+
+α = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∈ Reject Region | μ = μ<sub>0</sub>) = P(Z ∈ Reject Region)
+
+As for type II error:
+
+β(μ) = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∉ Reject Region) = P(N(√n(μ - μ<sub>0</sub>)/σ, 1) ∉ Reject Region)
+
+
+Rejection region and p-value:
+
+1. {Z > z<sub>1-α</sub>}, p-value = P(Z > z<sub>TS</sub>) if H<sub>a</sub>: μ > μ<sub>0</sub>
+2. {Z < z<sub>α</sub>}, p-value = P(Z < z<sub>TS</sub>) if H<sub>a</sub>: μ < μ<sub>0</sub>
+3. {|Z| > z<sub>1-α/2</sub>}, p-value = 2 × P(Z > |z<sub>TS</sub>|), if H<sub>a</sub>: μ ≠ μ<sub>0</sub>
+
+This choice of rejection region is intuitively appealing to the alternative hypotheses setting, also tries to minimize the type II error subject to α.
+
+
+**Example 21.5 & 21.7**
+
+Example 22.4: A town's main source of income is tourists interested in fishing along the river that runs through town. Sewage and industrial pollutants from a large metropolitan area are dumped into the river upstream from this town. Fish are starting to die and a biologist is hired by the town to see if she can determine the cause of the die off. She suspects that the oxygen is too low in the water for fish to survive. Current research asserts that the mean dissolved oxygen level in water must be at least 5.0 ppm for fish to survive. She randomly selects 8 days in a two-month period and collects water samples each of those 8 days. Her sample mean is 4.81. Assume the standard deviation is known and σ = 0.165 ppm.
+
+She wants to use this data to test the claim that the average oxygen content is below 5.0 ppm.
+
+1. Hypotheses: H<sub>0</sub>: μ = 5.0 vs H<sub>1</sub>: μ < 5.0, where μ is the mean oxygen level.
+
+2. Diagnose normality assumption. Test statistic calculation: Z = (X̄ - μ<sub>0</sub>) / (σ/√n) = (4.81 - 5.0) / (0.165/√8) = −3.257
+
+3. We choose α = 0.05, and rejection region is {Z < −1.645}.
+
+4. Conclusion: (1) Since Z<sub>TS</sub> = −3.257 ∈ R.R., we reject the null hypothesis. (2) There is strong statistical (significant) evidence that the mean oxygen level is lower than 5.0 ppm at 5% significance level.
+
+
+**Sample size determination (optional):**
+
+Figure out the minimum value of n such that β(μ′) < certain threshold value β.
+
+Consider one-side test H<sub>a</sub>: μ > μ<sub>0</sub>, then
+
+β(μ′) = P(X̄ - μ<sub>0</sub> / (σ/√n) < z<sub>α</sub>) = P(N(√n(μ′ - μ<sub>0</sub>)/σ, 1) < z<sub>α</sub>) = P(N(0,1) < z<sub>α</sub> + √n(μ<sub>0</sub> - μ′)/σ)
+
+= Φ(z<sub>α</sub> + √n(μ<sub>0</sub> - μ′)/σ)
+
+For any μ′ > μ.
+
+
+**How is type II error affected by type I error, true mean and sample size?**
+
+In order to ensure that β(μ′) ≤ β, one must have
+
+
+**Description of the Slide:**
+
+Slide 6 continues the discussion of hypothesis testing for a single population mean, focusing on the case where the population variance is known.  It introduces a specific example (Example 22.4) involving dissolved oxygen levels in a river.  The example walks through the steps of a hypothesis test, including defining the hypotheses, calculating the test statistic, determining the rejection region, and drawing a conclusion.  A key part of the slide is the calculation of the test statistic, which is a Z-score.  A histogram is present, but it's not clear what data it represents without more context.  The slide also includes a discussion of sample size determination, which is optional.  The slide number (6) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.
+
+
+# 7
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3 (continued)**
+
+Let X<sub>1</sub>, ..., X<sub>n</sub> represent a random sample of size n from some population.
+
+* Null hypothesis H<sub>0</sub>: μ = μ<sub>0</sub>, where μ<sub>0</sub> is called null value.
+* Three possible alternative hypotheses
+    1. H<sub>a</sub>: μ > μ<sub>0</sub>, the population mean is greater than μ<sub>0</sub>
+    2. H<sub>a</sub>: μ < μ<sub>0</sub>, the population mean is less than μ<sub>0</sub>
+    3. H<sub>a</sub>: μ ≠ μ<sub>0</sub>, the population mean is not μ<sub>0</sub>
+
+**Case 1: Normal distribution with known variance σ<sup>2</sup> (continued)**
+
+Exactly the same result holds for one-sided test H<sub>0</sub>: μ ≤ μ<sub>0</sub>, H<sub>a</sub>: μ > μ<sub>0</sub>.
+For two-sided test H<sub>0</sub>: μ = μ<sub>0</sub>, H<sub>a</sub>: μ ≠ μ<sub>0</sub>, we can obtain some approximated lower bound n ≥ (σ(Z<sub>α/2</sub> + Z<sub>β</sub>)/(μ<sub>0</sub> - μ′))<sup>2</sup>.
+
+**In practice, how to determine the unknown μ′?**
+
+**Statistical versus Practical significance**
+
+* statistical significance = small p-value = μ′ is not exactly 0 (even if it is 0.00000001)
+* practical significant = μ′ is a large value.
+
+In practical science study, we want to have statistically significant result only when there is practical significant.
+
+**A power curve** visualizes the relationships among power, sample size, population variability, and effect size.
+
+**(Figure 1):**  A power curve is shown on the left, with sample size (n) on the x-axis and power on the y-axis.  Three different lines represent different population standard deviations (σ).  The curve shows how power increases as sample size increases, and how different population standard deviations affect the power curve.  The x-axis ranges from approximately 17 to 300. The y-axis ranges from 0 to 1.
+
+**(Figure 2):** A second graph, positioned to the right of the first, displays the relationship between sample size (n) and the margin of error at a 95% confidence level.  Again, different lines represent different population standard deviations (σ).  The x-axis ranges from approximately 15 to 150. The y-axis ranges from 0 to 4.  The graph shows how the margin of error decreases as the sample size increases, and how different population standard deviations affect the margin of error.
+
+A curve similar to a power curve can be used to pick a sample size based on the desired tolerance of our estimates.
+
+
+**Description of the Slide:**
+
+This slide (number 7) continues the discussion of hypothesis testing for a single population mean, specifically when the population variance is known.  It introduces the concept of statistical versus practical significance, emphasizing the importance of both.  The slide also introduces the concept of a power curve, which graphically illustrates the relationship between power, sample size, population variability, and effect size.  Two figures are included. The first figure (left) shows a power curve, illustrating how power increases with sample size and how different population standard deviations affect the power curve. The second figure (right) shows a graph of the margin of error at a 95% confidence level, illustrating how the margin of error decreases with increasing sample size and how different population standard deviations affect the margin of error.  The slide number (7) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.  The figures are crucial for understanding the trade-offs between sample size, power, and variability in the context of hypothesis testing.
+
+
+# 8
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3 (continued)**
+
+Let X<sub>1</sub>, ..., X<sub>n</sub> represent a random sample of size n from some population.
+
+* Null hypothesis H<sub>0</sub>: μ = μ<sub>0</sub>, where μ<sub>0</sub> is called null value.
+* Three possible alternative hypotheses
+    1. H<sub>a</sub>: μ > μ<sub>0</sub>, the population mean is greater than μ<sub>0</sub>
+    2. H<sub>a</sub>: μ < μ<sub>0</sub>, the population mean is less than μ<sub>0</sub>
+    3. H<sub>a</sub>: μ ≠ μ<sub>0</sub>, the population mean is not μ<sub>0</sub>
+
+**Case 2: Normal distribution with unknown variance**
+
+If X's follow normal distribution 𝑁(𝜇<sub>0</sub>,𝜎<sup>2</sup>) (i.e., the null hypothesis is true), then  
+$\frac{\bar{X} - \mu_0}{s/\sqrt{n}}$ follows a t distribution with df n-1. Thus this statistic can be used for hypothesis testing, since it has a tractable sampling distribution under H<sub>0</sub>.
+
+Test statistic:
+TS = $\frac{\bar{X} - \mu_0}{s/\sqrt{n}}$ ~ t(n-1)
+
+When H<sub>0</sub> is true, the test statistic has a t distribution with n – 1 degrees of freedom.
+
+
+P-value:
+
+3. Two-tailed test
+H<sub>1</sub> contains the inequality ≠
+
+P-value = sum of area in two tails
+
+(Figure): A t-distribution curve is shown, centered at 0.  A shaded region extends from a calculated value (labeled "Calculated  𝑥 −𝑥̅") to the left and right tails of the distribution.  The shaded area represents the p-value.  A label "t curve for relevant df" is present, indicating the degrees of freedom associated with the specific t-distribution.
+
+
+**Description of the Slide:**
+
+This slide (number 8) continues the discussion of hypothesis testing for a single population mean, now considering the case where the population variance is unknown.  It introduces the t-distribution as the appropriate sampling distribution for the test statistic.  The test statistic is now  $\frac{\bar{X} - \mu_0}{s/\sqrt{n}}$, where s is the sample standard deviation.  The degrees of freedom are (n-1).  The slide also includes a figure illustrating the calculation of the p-value in a two-tailed test. The figure shows a t-distribution curve with a shaded area representing the p-value, which is the sum of the areas in the two tails of the distribution beyond the calculated test statistic value.  The label "t curve for relevant df" indicates that the specific t-distribution used depends on the degrees of freedom. The slide number (8) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.
+
+
+
+
+# 9
+
+**Rejection region and p-value:**
+
+1. {T > t<sub>1-α,v</sub>}, p-value = P(T > t<sub>TS</sub>), if H<sub>a</sub>: μ > μ<sub>0</sub>
+2. {T < t<sub>α,v</sub>}, p-value = P(T < t<sub>TS</sub>), if H<sub>a</sub>: μ < μ<sub>0</sub>
+3. {|T| > t<sub>1-α/2,v</sub>}, p-value = 2 × P(T > |t<sub>TS</sub>|), if H<sub>a</sub>: μ ≠ μ<sub>0</sub>
+
+
+**Example 22.5** A set of observations on glycerol concentration (mg/mL) for samples of standard-quality (uncertified) white wines are given here: 2.67, 4.62, 4.14, 3.81, 3.83. Suppose the desired concentration value is 4. Assume, the population is normal.
+
+Does the sample data suggest that true average concentration is something other than the desired value?
+
+The data give x̄ = 3.814, s = 0.718.
+
+Assume the distribution of the variable is normal. Let's carry out a test of appropriate hypotheses using the one-sample t test with a significance level of 0.05.
+
+μ = true average glycerol concentration.
+
+1. H<sub>0</sub>: μ = 4 vs. H<sub>a</sub>: μ ≠ 4
+
+2. t<sub>TS</sub> = (3.814 - 4) / (0.718 / √5) = -0.579
+
+3. Using the tail area of -0.579 under the t-curve with df=4, we obtain a p-value of 0.594, as two times the lower tail area of -0.579.
+
+It is still plausible that μ = 4. The deviation of the sample mean 3.814 from its expected value 4 when H<sub>0</sub> is true can be attributed just to sampling variability rather than to H<sub>0</sub> being false.
+
+4. (1) Since p-value is greater than 0.05, fail to reject H<sub>0</sub>. (2) There's no evidence that the true average concentration is something other than the desired value at the significance level, 0.05.
+
+
+The accompanying Minitab output from a request to perform a two-tailed one sample t test shows identical calculated values to those just obtained.
+
+Test of mu = 4 vs not = 4
+Variable	N	Mean	St.Dev	SE Mean	95% CI
+glyc conc	5	3.814	0.718	0.321	(2.922, 4.706)	T	P
+			 		 		 		 		-0.58	0.594
+
+The fact that the last number on output, the "P-value," exceeds 0.05 (and any other reasonable significance level) implies that the null hypothesis can't be rejected.
+
+
+**Description of the Slide:**
+
+This slide (number 9) continues the discussion of hypothesis testing for a single population mean, now focusing on the case where the population variance is unknown.  It provides a specific example (Example 22.5) to illustrate the application of the t-test.  The example involves glycerol concentration in white wine samples.  The slide details the steps of the hypothesis test, including defining the hypotheses, calculating the test statistic (t<sub>TS</sub>), finding the p-value, and drawing a conclusion.  The slide also includes a table showing the Minitab output for the same test, which confirms the calculated p-value.  The slide number (9) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.  The example is clearly presented, with the relevant calculations and formulas shown.  The context of the example is provided, making it clear why these calculations are being performed.  The table of Minitab output is included to show the results of a statistical software package, which is a common way to perform these calculations in practice.  A t-distribution curve is present, but it's not clear what data it represents without more context.  The shaded area in the figure represents the p-value.  The label "t curve for relevant df" indicates that the specific t-distribution used depends on the degrees of freedom.
+
+
+
+
+# 10
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3 (continued)**
+
+**Example 22.6:** Biologists studying the healing of skin wounds measured the rate at which new cells closed a razor cut made in the skin of an anesthetized newt. Here are data from *n* = 18 newts (assume randomly selected), measured in micrometers (millionths of a meter) per hour (μm/h):
+
+29  27  34  40  22  28  14  35  26
+35  12  30  23  18  11  22  23  33
+
+1. We are interested in 5% level hypothesis testing the average healing rate:
+
+   H<sub>0</sub>: μ = 30 vs H<sub>1</sub>: μ ≠ 30
+
+2. *n* < 30 but the histogram and normal quantile plot show the data is roughly normal and the boxplot shows there are no outliers. Therefore, we can assume the population distribution is normal.
+
+   t<sub>TS</sub> = (X̄ - 30) / (s/√18) = -2.21.
+
+3. t critical value is 2.1098.
+
+4. |t<sub>TS</sub>| > 2.1098, we reject the null hypothesis.  There is statistical evidence that the mean healing rate is not 30 at the 0.05 level.
+
+
+**Mean:** 25.67
+**Std Dev:** 8.324
+**Median:** 26.5
+
+
+**Sample size determination (optional):**
+
+Consider one-sided test H<sub>a</sub>: μ > μ<sub>0</sub>, then
+
+β(μ′) = P(X̄ - μ<sub>0</sub> / (s/√n) < t<sub>α,n-1</sub>) = P(N(√n(μ′ - μ<sub>0</sub>)/σ, 1) < t<sub>α,n-1</sub>)
+
+Intuitively, if |μ′ - μ|/σ increases, β decreases.
+
+But, the exact calculation is not straightforward, and involves the non-central t distribution. As a consequence, the sample size determination doesn't have a close formula.
+
+
+**R code:**
+
+power.t.test(delta = 1, sd = 2.5, sig.level = 0.05, power = 0.8, type = "one.sample", alternative = "two.sided")
+power.t.test(n = 12, delta = 1, sd = 2.5, sig.level = 0.05, type = "one.sample", alternative = "two.sided")
+
+
+**Description of the Slide:**
+
+This slide (number 10) continues the discussion of hypothesis testing for a single population mean, specifically when the population variance is unknown.  It presents a new example (Example 22.6) involving the healing rate of skin wounds in newts.  The example walks through the steps of a hypothesis test, including defining the hypotheses, calculating the test statistic (t<sub>TS</sub>), finding the critical value, and drawing a conclusion.  The slide also includes summary statistics (mean, standard deviation, median) for the data.  Crucially, the slide includes a discussion of sample size determination, which is optional.  The slide also includes R code for calculating power, which is a concept related to the probability of correctly rejecting a false null hypothesis.  The slide number (10) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.  The example is clearly presented, with the relevant calculations and formulas shown.  The context of the example is provided, making it clear why these calculations are being performed.  The R code is included to show how to perform these calculations using statistical software.  The slide also includes a brief discussion of the relationship between effect size, sample size, and power.  The figures are crucial for understanding the trade-offs between sample size, power, and variability in the context of hypothesis testing.  The data values are presented in a list format.  The summary statistics (mean, standard deviation, median) are presented below the data.  The R code is presented in a code block.

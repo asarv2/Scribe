@@ -1,0 +1,22 @@
+# Slide 32
+
+**while Loops**
+
+```
+>>> x = 3
+>>> while x < 5:
+	 print(x, "still in the loop")
+	 x = x + 1
+3 still in the loop
+4 still in the loop
+>>> x = 6
+>>> while x < 5:
+	 print(x, "still in the loop")
+>>>
+```
+
+**Description:**
+
+This slide demonstrates the use of a `while` loop in Python.  The code shows a `while` loop that continues as long as the value of `x` is less than 5.  Inside the loop, it prints the current value of `x` and the message "still in the loop".  After each iteration, `x` is incremented by 1.  The first example shows the loop executing twice, printing "3 still in the loop" and "4 still in the loop".  The second example shows the loop not executing at all because the condition `x < 5` is false from the start.  The `>>>` symbols indicate interactive Python code execution.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The examples are presented in a clear, concise manner, illustrating how to use `while` loops for repeated execution of code blocks.
+
+

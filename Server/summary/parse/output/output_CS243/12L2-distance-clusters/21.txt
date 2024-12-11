@@ -1,0 +1,18 @@
+# 21
+
+**K-means clustering**
+
+One of the most commonly-used clustering algorithms, because it is easy to implement and quick to run
+
+The goal is to partition the objects into K disjoint subsets
+
+Assumes the objects (instances) to be clustered are p-dimensional vectors
+
+Uses a distance measure between the objects (typically Euclidean distance)
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a concise explanation of the K-means clustering algorithm.  The text is formatted in a clear, bulleted list format, making it easy to read and understand the key characteristics of the algorithm.  There are no images or figures on the slide.  The slide is likely part of a larger presentation on clustering algorithms, introducing the K-means algorithm as a common and practical approach to grouping data points.  The content is straightforward and directly explains the algorithm's purpose, assumptions, and methodology.

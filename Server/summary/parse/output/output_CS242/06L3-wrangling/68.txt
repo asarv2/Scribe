@@ -1,0 +1,28 @@
+# Slide 67
+
+**The Left Join**
+
+The left join extends the left DataFrame to include features from the right DataFrame.
+
+```
+df_join = pd.merge(df_student, df_gpa, how='left')
+```
+
+Three tables are displayed: `df_student`, `df_gpa`, and `df_join`.
+
+*   **`df_student`**: This table has columns for "SID", "Name", and "Email".  Each row represents a student's ID, name, and email address.
+
+*   **`df_gpa`**: This table has columns for "SID" and "GPA".  Each row represents a student's ID and their corresponding GPA.
+
+*   **`df_join`**: This table is the result of the left join.  It contains all the columns from `df_student` and the "GPA" column from `df_gpa`.  Rows from `df_student` that have a matching "SID" in `df_gpa` will have the corresponding GPA.  Rows from `df_student` that do *not* have a matching "SID" in `df_gpa` will have a NaN value in the "GPA" column.  The order of the rows in `df_join` is the same as in `df_student`.
+
+A directed arrow is shown connecting `df_student` to `df_gpa` and then to `df_join`.  This arrow visually represents the merging process.
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates a left join operation in Pandas, using the `pd.merge()` function.  It shows how to combine two DataFrames (`df_student` and `df_gpa`) based on a shared key ("SID").  The result (`df_join`) includes all rows from the left DataFrame (`df_student`) and the matching columns from the right DataFrame (`df_gpa`).  Rows in `df_student` without a match in `df_gpa` will have NaN values for the columns from `df_gpa`.  The slide uses a visual representation (the arrow) to illustrate the direction of the join.  The tables are crucial for demonstrating the input data and the result of the left join. The code snippet is essential for demonstrating the data manipulation process. The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on merging and combining data from different sources.
+
+

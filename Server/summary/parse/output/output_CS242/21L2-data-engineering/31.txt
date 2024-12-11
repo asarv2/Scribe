@@ -1,0 +1,25 @@
+# Slide 31
+
+**Python: Map and Reduce Functions**
+
+We can get some intuition on MapReduce by examining the map and reduce functions in Python (note: MapReduce ≠ map + reduce)
+
+The map method takes a function and a list (iterable) and applies the function to each element:
+map(f, [a, b, c, ...]) -> [f(a), f(b), f(c), ...]
+
+The reduce method takes a function and a list (iterable) and iteratively applies the function to two elements (next item in the list and result of previous function)
+reduce(g, [a, b, c, ...]) -> g(g(g(a,b),c), ...)
+
+
+---
+
+**Description of the slide:**
+
+This slide introduces the concepts of the `map` and `reduce` functions in Python, which are used to illustrate the core ideas behind the MapReduce programming model.
+
+* **Title:** The title clearly states the topic of the slide: Python Map and Reduce Functions.
+* **Introduction:** The first line explains that the slide aims to provide intuition about MapReduce by comparing it to Python's built-in `map` and `reduce` functions.  The note "MapReduce ≠ map + reduce" is important because it highlights that while conceptually similar, MapReduce is a more complex and distributed system.
+* **Map Function:** The slide defines the `map` function.  It takes a function (`f`) and an iterable (like a list) as input.  The `map` function applies the function `f` to each element of the iterable and returns a new iterable containing the results.
+* **Reduce Function:** The slide defines the `reduce` function.  It takes a function (`g`) and an iterable as input.  The `reduce` function iteratively applies the function `g` to the first two elements of the iterable, then to the result and the next element, and so on, until a single result is obtained.
+
+**Overall:** The slide provides a conceptual introduction to the `map` and `reduce` functions in Python, which are fundamental to understanding the MapReduce paradigm.  The note about MapReduce not being simply `map` plus `reduce` is crucial for understanding the distributed nature of the MapReduce framework.

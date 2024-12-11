@@ -1,0 +1,57 @@
+# 8
+
+**STAT 511 Course Notes – set 23 (W12)**
+
+**Yuan Qu**
+
+Connection between CI and 2-sided test for population mean
+
+Confidence interval is equivalent to the corresponding two-tail test.
+
+Therefore, if
+
+* the alternative hypothesis has a “≠” sign,
+* the confidence level C and the significance level α add to 100%,
+
+A level α two-sided significance test rejects H<sub>0</sub>: μ = μ<sub>0</sub> exactly when μ<sub>0</sub> falls outside a level 1 − α confidence interval for μ.
+
+
+Example 23.5  Newspapers reported that within the county school corporation, the average time spent
+per week by first graders doing HW is 50 minutes. Such claim started several discussions and before
+taking any further steps the school corporation decided to initiate its own study.
+
+A SRS of 40 first graders registered in that school corporation were selected, and their guardians were
+asked to report the number of minutes per week that the student spent doing HW. The average
+time/week out of that sample was 55 minutes/week. If σ=10 minutes/week, perform a significance test,
+at the 10% significance level, to establish whether there is any evidence that the mean of the
+population is different from 50 minutes/week.
+
+n = 40, x̄ = 55, σ = 10, μ<sub>0</sub> = 50, α = 0.1
+
+Hypothesis testing:
+
+1. H<sub>0</sub>: μ = 50  H<sub>a</sub>: μ ≠50
+
+2. z =  (x̄−μ<sub>0</sub>) / (σ/√n) = (55−50) / (10/√40) = 3.16
+
+3. This is a two-sided hypothesis test: p-value = 2 × P(Z > |3.16|) = 2(0.0008) = 0.0016.
+
+4. (1) P-value < α, so reject H<sub>0</sub>. (2) We have significant evidence that the population mean HW
+time/week is not 50 minutes.
+
+
+CI:
+C = 1 −α = 0.9, z<sub>0.95</sub> = 1.645
+
+margin of error = 1.645 × (10/√40) = 2.6
+
+CI = (55 −2.6, 55 + 2.6) = (52.4, 57.6)
+
+Test μ<sub>0</sub> = 50 ?
+
+
+---
+
+**Slide Description:**
+
+This slide (slide 8 of 9) continues the discussion of hypothesis testing, specifically focusing on the connection between confidence intervals (CIs) and two-tailed hypothesis tests for a population mean.  It presents a worked example (Example 23.5) where a sample of 40 first-graders is used to test if the average homework time per week differs from 50 minutes.  The slide clearly outlines the hypotheses, calculates the test statistic (z-score), determines the p-value, and states the decision rule based on the p-value and significance level (α = 0.1).  The slide also calculates and presents a 90% confidence interval for the population mean, which is directly related to the hypothesis test.  The slide number (8 of 9) and the course name (STAT 511 Course Notes) are clearly visible at the top.  The author's name (Yuan Qu) is also present.  The title "Connection between CI and 2-sided test for population mean" clearly indicates the topic of the lecture.  The use of bullet points and clear headings makes the information easy to follow.  The formulas are presented for calculating the test statistic, p-value, and confidence interval.  A diagram showing the relationship between the confidence interval and the rejection region is implied, though not explicitly drawn.

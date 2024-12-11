@@ -1,0 +1,43 @@
+# 8
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+* The total sum of squares (SST) is a measure of the total variation in the data—the sum of all squared deviations about the grand mean. This total variation can be partitioned into two pieces.
+
+* The error sum of squares (SSE) measures variation that would be present whether H<sub>0</sub> is true or false.
+
+* The treatment sum of squares (SSTr) is the amount of variation that can be explained by possible differences in the 𝜇<sub>i</sub>’s. H<sub>0</sub> is rejected if the explained variation is large relative to unexplained variation.
+
+* Fundamental Identity: SST = SSTr + SSE
+
+* The significance of group difference depends on the comparison of between-group-variation (SSTr) vs within-group-variation (SSE)
+
+
+ANOVA table
+
+| Source of Variation | df | Sum of Squares | Mean Square | <i>f</i> |
+|---|---|---|---|---|
+| Treatments | 𝐼 − 1 | SSTr | MSTr = SSTr/(𝐼 − 1) | MSTr/MSE |
+| Error | 𝐼(𝐽 − 1) | SSE | MSE = SSE/𝐼(𝐽 − 1) |  |
+| Total | 𝐼𝐽 − 1 | SST |  |  |
+
+
+The SST, SSTr and SSE are given by:
+
+* DFT = N − 1 = 𝐼𝐽 − 1
+* DFT<sub>r</sub> = 𝐼 − 1
+* DFE = 𝐼(𝐽 − 1)
+* DFT = DFT<sub>r</sub> + DFE
+
+* SST = Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub> − 𝑋̅<sub>⋅⋅</sub>)<sup>2</sup> = Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>𝑋<sub>𝑖𝑗</sub><sup>2</sup> − 1/𝐼𝐽 Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>𝑋<sub>𝑖𝑗</sub><sup>2</sup>
+
+* SSTr = Σ<sub>𝑖=1</sub><sup>𝐼</sup>𝐽(𝑋̅<sub>𝑖⋅</sub> − 𝑋̅<sub>⋅⋅</sub>)<sup>2</sup> = 1/𝐽 Σ<sub>𝑖=1</sub><sup>𝐼</sup>𝑋̅<sub>𝑖⋅</sub><sup>2</sup> − 1/𝐼𝐽 Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>𝑋<sub>𝑖𝑗</sub><sup>2</sup>
+
+* SSE = Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub> − 𝑋̅<sub>𝑖⋅</sub>)<sup>2</sup>
+
+
+**Figure Description:**
+
+There are no figures on this slide.  The slide focuses on the mathematical formulas and concepts related to ANOVA, including the decomposition of total variation into between-group and within-group components.  The ANOVA table is presented to summarize the calculations and the formulas for calculating the sums of squares and mean squares are provided.  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.

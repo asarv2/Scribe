@@ -1,0 +1,17 @@
+# 45
+
+```markdown
+The $1 Million Netflix Prize
+The Netflix Prize was a competition to improve the accuracy of movie recommendations.  The goal was to improve the accuracy of predictions about how much someone is going to love a movie based on their movie preferences.  The prize was $1 million.
+```
+
+**Figure Description:**
+
+The slide displays a screenshot of a Netflix webpage.  The webpage shows various sections, including "Home," "Rules," "Leaderboard," "Register," "Update," "Submit," and "Download."  The background color is red, and there are images of people and movie titles.  The text on the page indicates that the Netflix Prize is a competition to improve the accuracy of movie recommendations.  The purpose of the image is to visually represent the Netflix Prize competition and the context of the lecture, which is likely about recommender systems and the challenges involved in building accurate recommendation systems.  The image is positioned centrally on the slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, introduces the Netflix Prize competition.  The title "The $1 Million Netflix Prize" clearly indicates the topic.  The slide shows a screenshot of a Netflix webpage, which visually represents the competition.  The webpage elements suggest that the competition involved improving movie recommendations based on user preferences.  The image is a visual aid to illustrate the context of the competition and the motivation behind the research.  The slide is likely a transition to a discussion about the challenges and solutions related to recommender systems, using the Netflix Prize as a motivating example.
+
+

@@ -1,0 +1,11 @@
+# Slide 2
+
+# Introduction to Clustering
+Data Science in Business, Chapter 6
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, has the title "Introduction to Clustering" in a large, bold, dark gray font.  Below the title, in a smaller, dark gray font, is the subtitle "Data Science in Business, Chapter 6".  There are no figures or images on the slide. The slide is likely an introduction to a section on clustering algorithms within the broader context of data science, specifically within the framework of a course called "Data Science in Business".

@@ -1,0 +1,21 @@
+# Slide 11
+
+**Example**
+
+Results of 2010 Ukrainian Presidential Election
+
+---
+
+**Figure Description:**
+
+The slide presents three visualizations related to the 2010 Ukrainian Presidential Election.
+
+* **Left Panel:** A map of Ukraine, colored to represent the results of the election.  Regions colored in a light brownish-orange shade indicate areas where Tymoshenko received 51% or more of the vote. Regions colored in a dark blue shade indicate areas where Yanukovych received 51% or more of the vote.  A legend below the map identifies the colors with the corresponding candidates and their political affiliations (pro-Western or pro-Russian).
+
+* **Middle Panel:** Another map of Ukraine, colored to represent the main native language spoken in each region.  Regions colored in a light brownish-orange shade indicate areas where 20% or more of the citizens speak Ukrainian. Regions colored in a dark blue shade indicate areas where 20% or more of the citizens speak Russian.  A legend below the map identifies the colors with the corresponding languages.
+
+* **Right Panel:** A map of Ukraine, with a scatter plot of light brownish-orange circles.  These circles represent cities where protests against President Yanukovych began.  A star marks the location of Kyiv.  The legend below the map identifies the locations of the protests.
+
+**Description of what you see:**
+
+This slide from an Introduction to Data Science course demonstrates how different visualizations can be used to represent and analyze election results.  The three panels show how the election results correlate with language preference and protest locations.  The slide is designed to illustrate the use of maps and scatter plots to visualize data and identify potential relationships between different variables.  The context suggests that the course is discussing data visualization techniques and how to interpret different types of visualizations.  The focus is on the 2010 Ukrainian Presidential Election, and the visualizations are intended to show correlations between voting patterns, language, and protests.

@@ -1,0 +1,21 @@
+# Slide 15
+
+**Whitespace**
+
+Whitespace is meaningful in Python: especially indentation and placement of newlines.
+Use a newline to end a line of code. Use \ when must go to next line prematurely.
+No braces {} to mark blocks of code in Python...
+Use consistent indentation instead.
+* The first line with less indentation is outside of the block
+* The first line with more indentation starts a nested block
+Often a colon appears at the start of a new block (E.g., for function and class definitions)
+Start comments with # – the rest of line is ignored.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide discusses the importance of whitespace, particularly indentation, in Python code.  It emphasizes that Python uses indentation to define code blocks instead of curly braces.  The slide explains that a newline ends a line of code, and the backslash character (`\`) is used to continue a line onto the next line.  The slide also notes that comments begin with the `#` symbol.  The content is presented in a bulleted list format, making it easy to understand the key points.  The footer indicates that the slide content is adapted from a Python tutorial from the University of Pennsylvania's CIS530 course.  There are no figures on this slide.  The text is presented in a clear and concise manner, providing a summary of Python's syntax and features relevant to the Intro to Data Science course.

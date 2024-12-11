@@ -1,0 +1,18 @@
+# Slide 82
+
+**Unix Tools**
+
+Unix tools excel at manipulating strings as data, often using regular expressions
+
+`grep`: filters its input against a pattern
+
+`sed`: applies transformation rules to each line
+
+`awk`: manipulates tabular text files (e.g., CSV)
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces Unix tools commonly used in data science for string manipulation, often employing regular expressions.  The slide lists three key tools: `grep`, `sed`, and `awk`.  `grep` is used for filtering input based on patterns, `sed` for applying transformations to each line, and `awk` for manipulating tabular text files (like CSV).  The slide is entirely text-based, with no figures or tables.  The purpose is to introduce these command-line tools as alternatives to or complements for Python-based data manipulation.

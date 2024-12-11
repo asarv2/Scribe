@@ -1,0 +1,12 @@
+# 8
+
+# Example: Genes
+
+---
+
+A complex network graph is displayed.  Numerous nodes (circles) of varying sizes and colors are interconnected by lines (edges).  The nodes represent genes, and the lines represent relationships or interactions between them.  Different colors and sizes of the nodes likely indicate different categories or clusters of genes.  Labels are associated with some of the nodes, providing information about the specific gene or the cell type it is associated with (e.g., "Astrocytoma," "Smooth muscle," "Intestine").  Some nodes have additional text attached, which likely describes the function or pathway associated with the gene (e.g., "Cytochrome P450 (W,K)").  The overall layout is a complex network visualization, designed to show the relationships between genes and their roles in different biological processes and cell types.  The presence of labels and the network structure is crucial to understanding the concept of clustering in the context of gene expression analysis.  The slide is likely part of a larger presentation on clustering, specifically focusing on gene expression data and how clustering can be used to identify groups of genes with similar expression patterns.
+
+
+**Description of what you see:**
+
+The slide displays a complex network graph.  The graph shows numerous nodes (circles) connected by lines (edges).  The nodes are various colors and sizes, and some have labels attached to them.  The labels include gene names, cell types, and descriptions of functions or pathways.  The lines connecting the nodes represent relationships or interactions between the genes.  The overall impression is that the graph visualizes a complex network of gene interactions, potentially highlighting clusters of genes involved in specific biological processes or cell types.  The graph is a visual representation of gene expression data, and the clustering is implicit in the way the genes are grouped and connected.  The slide is likely part of a lecture on clustering, specifically focusing on gene expression data and how clustering can be used to identify groups of genes with similar expression patterns.  The title "Example: Genes" indicates that the graph is an example of data that can be clustered.  The citation at the bottom ("A promoter-level mammalian expression atlas. Nature, 26 March 2014") indicates the source of the data visualization.

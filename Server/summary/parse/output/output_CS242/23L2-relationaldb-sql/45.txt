@@ -1,0 +1,31 @@
+# Slide 45
+
+```markdown
+# Aggregation
+
+Calculate summary values on your selection with aggregate functions: SUM, COUNT, MIN, MAX, AVG
+
+SELECT AVG(Total)
+FROM Invoice
+WHERE BillingCountry = 'USA'
+
+AVG(Total)
+5.747912
+
+Count is the only aggregation that doesn't need a single attribute specified
+
+SELECT COUNT(*)
+FROM Invoice
+WHERE Total > 10
+
+COUNT(*)
+64
+```
+
+---
+
+**Description:**
+
+This slide presents two SQL queries demonstrating aggregation using aggregate functions in a data science context.  The first query calculates the average `Total` for invoices where the `BillingCountry` is 'USA'. The result, `5.747912`, is displayed below the query. The second query counts the number of invoices where the `Total` is greater than 10. The result, `64`, is displayed below the query.  The slide is purely textual, containing SQL queries and their results.  The context suggests this is part of a lecture on data analysis and querying databases, specifically focusing on using aggregate functions to summarize data.  The queries are designed to calculate summary statistics (average and count) for a specific dataset (invoices).  The output values are presented directly below the corresponding queries.  The slide is formatted to clearly separate the queries and their results.
+
+

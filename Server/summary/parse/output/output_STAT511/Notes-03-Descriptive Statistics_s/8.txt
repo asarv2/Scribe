@@ -1,0 +1,45 @@
+# Slide 8
+
+**Frequency tables**
+
+* Frequency tables list all the variable values along with the number of subjects and the percent of subjects taking each variable value.
+* Usually, the statistic of interest is %.
+
+**Pie Charts**
+
+* The size of each slice corresponds to the percentage of observations in that category.
+
+**Bar Charts**
+
+* For each variable value there is a bar. The height of a bar represents either the percentage of subjects taking that variable value or a count of the number of observations in that category.
+
+**The statistics of interest**
+
+* **Counts**
+    * 289 shark attacks occurred in Florida.
+
+* **Percentages**
+    * 9% of all shark attacks in the sample occurred in California.
+
+* **Proportions**
+    * In the sample, the proportions of shark attacks that occurred in Hawaii is 0.12.
+
+**Example 3.8: example of how charts can be used to give false impressions**
+
+CNN.com posted the first graph on results of poll asking "Do you agree with the court's decision to the remove Terry Schiavo's feeding tube?" A more informative graph from the same data is given on the right.
+
+
+**Figures:**
+
+1. **Table:** A table is positioned in the middle-right portion of the slide. It displays data related to shark attacks. The table has three columns: "State," "Frequency," and "%". The table shows the frequency and percentage of shark attacks for Florida, Hawaii, and California.  This table is used to present the data on shark attack locations.
+
+2. **Pie Chart:** A pie chart is positioned above the table. The pie chart is divided into three sections, representing the percentage of shark attacks in Florida, Hawaii, and California. The size of each section corresponds to the percentage of shark attacks in that location. The pie chart is used to visually represent the proportions of shark attacks in different locations.
+
+3. **Bar Chart:** A bar chart is positioned below the pie chart. The bar chart displays the same data as the table and pie chart, but in a bar format. The height of each bar corresponds to the frequency of shark attacks in each state. The bar chart is used to visually represent the frequency of shark attacks in different locations.
+
+4. **Possible Histograms/Box Plots (Implied):** While not explicitly shown, the text mentions histograms and box plots in the context of comparing data distributions.  The presence of these figures would be implied, as the slide is likely part of a larger set of slides discussing data visualization techniques.
+
+
+**Description of the slide:**
+
+This slide introduces different types of charts used to represent categorical data, specifically focusing on frequency tables, pie charts, and bar charts.  It uses the example of shark attacks to illustrate how these charts can be used to present data.  The slide also highlights the importance of choosing appropriate charts to accurately represent data, as demonstrated by the example of a misleading poll graph.  The figures are used to visually represent the data on shark attack locations and to illustrate the different ways to present the same data.

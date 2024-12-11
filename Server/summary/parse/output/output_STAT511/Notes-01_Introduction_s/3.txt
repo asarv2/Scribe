@@ -1,0 +1,40 @@
+# 3
+
+**Parameter and Statistic**
+
+* **Parameter:** A parameter is a numerical summary of the variable values taken by all the members of the population.
+
+* **Statistic:** A statistic is a numerical summary of the variable values taken by the subjects in the study.  So, unlike a parameter whose value doesn't change (assuming a stable population), the value of a statistic is variable because its value depends upon which subjects are chosen for the study. A statistic is used to estimate a parameter value.
+
+**Example:**
+
+Parameter: proportion of all current Purdue students who regularly smoke.
+
+Statistic: proportion of these 100 students who are regular smokers.
+
+**Statistical Inference:** A statistical inference is a statement about a population based on measurements of a subset of the population.
+
+**KEY POINT 2:** The subjects in the sample were selected from the population, and so the population is made up of similar individuals.
+
+**KEY POINT 3:** The larger the sample size, the more information you have. The more information you have, the more willing people are to trust your results.
+
+**KEY POINT 4:** Statistics concerns properties of populations. We cannot use statistics to make predictions about particular individuals.
+
+**Learning Goals:**
+
+* **Describe data:**
+    * Recognize which charts, graphs, and statistics are appropriate for a given data set.
+    * Learn how to interpret these graphs and statistics.
+* **Understanding the role of chance in statistics:**
+    * What we measure (variable values) varies between individuals in a population. We use chance to choose our subjects for the study and we get a sample that is representative of the population.
+    * The consequence of this is that the statistic we calculate from our sample is based on chance. If we'd chosen another sample, we could get a different value for our statistic.
+* **Make inferences about the population:**
+    * Learn how statisticians have devised a non-subjective way for making inferences about a population based on data. Learn how statisticians take chance into account when they make inferences.
+    * Learn how to make your own inferences about populations based on data.
+
+
+---
+
+**Slide Description:**
+
+This slide (slide 3) of a presentation on Statistical Methods introduces the concepts of parameters and statistics, contrasting them.  A key difference highlighted is that parameters describe the entire population, while statistics describe a sample drawn from that population.  The example provided is the proportion of Purdue students who smoke regularly.  The parameter refers to the entire student body, while the statistic refers to a sample of 100 students.  The slide also emphasizes the concept of statistical inference, which is drawing conclusions about a population based on a sample.  Three key points are presented, emphasizing the importance of sample size, the nature of populations, and the limitations of statistical analysis.  Finally, the slide outlines the learning goals for the course, focusing on describing data, understanding chance, and making inferences.  The slide number (3) is clearly visible at the bottom right.

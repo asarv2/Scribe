@@ -1,0 +1,31 @@
+# Slide 39
+
+**An easy solution**
+
+What happens if we just add 0's for missing data?
+
+```python
+df_weather.fillna({'Highest Temperature (Deg F)': 0,
+                   'Lowest Temperature (Deg F)': 0,
+                   'Weather': 'N/A'})
+```
+
+| Date       | Highest Temperature (Deg F) | Lowest Temperature (Deg F) | Weather |
+|------------|-----------------------------|----------------------------|---------|
+| 2020-03-06 | 38.0                        | 24.0                       | Cloudy  |
+| 2020-03-07 | 50.0                        | 19.0                       | Sunny   |
+| 2020-03-08 | 0.0                         | 0.0                        | N/A     |
+| 2020-03-09 | 0.0                         | 50.0                       | Rain    |
+| 2020-03-10 | 57.0                        | 0.0                        | Cloudy  |
+| 2020-03-11 | 45.0                        | 37.0                       | Cloudy  |
+| 2020-03-12 | 0.0                         | 41.0                       | N/A     |
+| 2020-03-13 | 54.0                        | 0.0                        | Sunny   |
+| 2020-03-14 | 0.0                         | 34.0                       | Snow    |
+| 2020-03-17 | 63.0                        | 45.0                       | Cloudy  |
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates a simple solution for handling missing values in a weather dataset.  The code `df_weather.fillna({'Highest Temperature (Deg F)': 0, 'Lowest Temperature (Deg F)': 0, 'Weather': 'N/A'})` fills all missing values in the specified columns with 0 for numerical columns and 'N/A' for the 'Weather' column.  The output is a table showing the DataFrame after the `fillna()` operation.  The table displays the "Date", "Highest Temperature (Deg F)", "Lowest Temperature (Deg F)", and "Weather" columns.  Each row represents a day's weather record.  The presence of 0's in the temperature columns and 'N/A' in the 'Weather' column indicates that the missing values have been replaced.  The purpose of this slide is to illustrate a straightforward method for filling missing values with default values.  The table is crucial for demonstrating the effect of the `fillna()` operation on the data. The code snippet is essential for demonstrating the data manipulation process. The context suggests that this slide follows a discussion on handling missing data in a weather dataset.

@@ -1,0 +1,21 @@
+# 39
+
+```markdown
+Dealing with missing data
+SVD for partially observed matrix is undefined
+How to handle missing values is an open problem
+Solution 1: replace missing values with 0s or average rating values
+Solution 2: optimize reconstruction error but only over known entries
+
+r<sub>i,j</sub> ≈ u<sub>i</sub> ⋅ v<sub>j</sub>
+min<sub>u,v</sub> Σ<sub>(i,j)∈A</sub> (r<sub>i,j</sub> − u<sub>i</sub> ⋅ v<sub>j</sub>)<sup>2</sup>
+```
+
+**Figure Description:**
+
+There are no figures on this slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, discusses the problem of missing data in the context of recommender systems.  The title "Dealing with missing data" indicates the topic.  The text states that SVD (Singular Value Decomposition) is undefined for a matrix with missing values.  It further emphasizes that handling missing values is an open problem.  Two solutions are proposed: 1) replacing missing values with 0s or the average rating value, and 2) optimizing the reconstruction error, but only over the known entries in the matrix.  The slide also includes the equation r<sub>i,j</sub> ≈ u<sub>i</sub> ⋅ v<sub>j</sub>, which represents the approximation of a rating using matrix factorization, and the minimization equation min<sub>u,v</sub> Σ<sub>(i,j)∈A</sub> (r<sub>i,j</sub> − u<sub>i</sub> ⋅ v<sub>j</sub>)<sup>2</sup>, which represents the optimization problem for finding the best u and v vectors to minimize the error in the known ratings.  The slide is focused on the practical challenges of dealing with missing data in recommender systems and the different approaches to address this issue.

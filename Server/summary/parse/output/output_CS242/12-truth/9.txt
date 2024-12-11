@@ -1,0 +1,15 @@
+# Slide 9
+
+**A visualization is a model**
+
+Visualizations simplify and summarize
+They are not perfect representations
+People do not always read them as intended
+Ideally, a very simple model (visualization) is adequate, and it is interpreted correctly.
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a concise discussion about visualizations.  The title, "A visualization is a model," is presented in a large, bold font at the top of the slide.  The subsequent bullet points explain that visualizations are simplified representations of data, not perfect reproductions, and that human interpretation can vary.  The final sentence emphasizes the ideal scenario of a simple, correctly interpreted visualization.  The slide's purpose is to establish a foundational understanding of visualizations as models, acknowledging their limitations and the importance of proper interpretation. The text is formatted as a bulleted list, making the information easy to read and understand.  The overall design is clean and uncluttered, focusing on the key concepts.

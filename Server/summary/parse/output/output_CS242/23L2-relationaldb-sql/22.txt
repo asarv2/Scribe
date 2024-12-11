@@ -1,0 +1,25 @@
+# Slide 22
+
+# SQL Examples
+
+Defines structure of students table
+```sql
+CREATE TABLE students (
+id_number CHAR(9),
+first_name VARCHAR(20),
+last_name VARCHAR(20),
+date_of_birth DATE,
+hometown VARCHAR(20),
+course CHAR(5),
+points INT,
+PRIMARY KEY (id_number)
+);
+```
+
+---
+
+**Description of the Slide:**
+
+This slide presents an SQL `CREATE TABLE` statement for a table named "students".  It defines the structure of the table, including the data types for each column.  The `id_number` column is specified as the primary key.  The slide is purely textual, containing the SQL code for creating the table.  The context suggests this is part of a lecture on SQL and database design, specifically demonstrating how to define a table structure in SQL.  The code is formatted to show the SQL syntax clearly.  The `CREATE TABLE` statement is a standard SQL command used to define the structure of a table within a relational database.  The `CHAR`, `VARCHAR`, `DATE`, and `INT` data types are used to specify the type of data that can be stored in each column.  The `PRIMARY KEY` clause specifies that the `id_number` column uniquely identifies each row in the table.  The `id_number` column is likely a unique identifier for each student.  The `first_name`, `last_name`, `date_of_birth`, `hometown`, `course`, and `points` columns store information about the student.  The `CHAR` and `VARCHAR` types are used for character strings, `DATE` for dates, and `INT` for integers.  The `PRIMARY KEY` constraint ensures data integrity by guaranteeing that each `id_number` is unique.  The `();` at the end of the statement indicates the end of the SQL command.  The slide is likely part of a larger discussion on database design and SQL syntax.
+
+

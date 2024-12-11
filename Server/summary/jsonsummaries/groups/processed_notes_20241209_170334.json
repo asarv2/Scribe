@@ -1,0 +1,41 @@
+{
+    "Key Terms": [
+        {
+            "Search Algorithms": [
+                "Minimax Search: A decision-making algorithm used in game playing, where the algorithm searches the game tree to find the optimal move for the current player, assuming the opponent will also play optimally.<L[02L2-Intro] 22>\n\nAlpha-Beta Pruning: An optimization technique used to reduce the search space in Minimax search by eliminating branches that cannot affect the optimal decision.<L[02L2-Intro] 23>\n\n"
+            ],
+            "Machine Learning Paradigms": [
+                "Perceptron: A fundamental unit in neural networks, consisting of weighted inputs, a summation node, and an activation function that produces an output based on the weighted sum of inputs and a threshold.<L[02L2-Intro] 45>\n\nReinforcement Learning: A type of machine learning where an agent learns to make decisions by interacting with an environment and receiving rewards or penalties based on its actions.<L[02L2-Intro] 46>\n\n\n"
+            ],
+            "AI Philosophy": [
+                "Turing Test: An operational test for intelligent behavior, where a human evaluator engages in natural language conversations with both a human and a machine, attempting to distinguish them.  The machine passes if the evaluator cannot reliably identify it as such.<L[02L2-Intro] 6><L[02L2-Intro] 7>\n\nChinese Room Argument: A thought experiment that challenges the validity of the Turing Test as a measure of true intelligence, arguing that a system can pass the test without possessing genuine understanding.<L[02L2-Intro] 7>\n\n"
+            ]
+        }
+    ],
+    "Problem Types": [
+        {
+            "AI Foundations": [
+                "Understanding the Nature of Intelligence: This problem explores the definition and characteristics of intelligence, both human and artificial.  It examines various perspectives on what constitutes intelligence and how it can be measured or simulated. <L[02L2-Intro] 5>\n\nDefining Artificial Intelligence: This problem involves formulating a precise definition of artificial intelligence, considering different perspectives and historical contexts.  The challenge lies in capturing the essence of AI while accounting for its evolving nature and diverse applications. <L[02L2-Intro] 5>\n\nPassing the Turing Test: This problem focuses on the implications of passing the Turing Test, a benchmark for machine intelligence.  It explores whether passing the test truly indicates machine intelligence or merely the ability to mimic human behavior. <L[02L2-Intro] 6><L[02L2-Intro] 7>\n\n"
+            ],
+            "AI Systems": [
+                "Bridging the Gap Between Different AI Domains: This problem investigates the similarities and differences between seemingly disparate AI domains, such as game playing and speech synthesis, to identify common principles and approaches. <L[02L2-Intro] 31>\n\nUnderstanding the Components of AI Systems: This problem focuses on identifying and understanding the key components of AI systems, including knowledge representation, decision-making, reasoning, and action selection. <L[02L2-Intro] 36><L[02L2-Intro] 39><L[02L2-Intro] 42>\n\n"
+            ],
+            "AI Challenges": [
+                "Overcoming the Limitations of Search: This problem addresses the computational challenges associated with exhaustive search in complex games like chess and Go.  It explores the need for alternative approaches, such as machine learning, to overcome the limitations of brute-force search. <L[02L2-Intro] 11><L[02L2-Intro] 12>\n\nAddressing the Challenges of Computer Vision: This problem investigates the difficulties in developing computer vision systems that can reliably interpret and understand images.  It highlights the gap between initial expectations and the ongoing challenges in this field. <L[02L2-Intro] 15><L[02L2-Intro] 16>\n\nMitigating AI Safety Risks: This problem focuses on the potential risks associated with AI systems, such as adversarial attacks and biases.  It explores methods for improving the safety and reliability of AI systems. <L[02L2-Intro] 19>\n\nDefining the AI Grand Challenge: This problem explores the reasons behind selecting autonomous vehicles as a significant challenge in the field of artificial intelligence. <L[02L2-Intro] 43>\n\n"
+            ],
+            "AI Ethics": [
+                "Addressing Ethical Concerns in AI: This problem examines the ethical implications of AI systems, particularly concerning bias and fairness.  It explores the need for responsible AI development and deployment. <L[02L2-Intro] 20>\n\n"
+            ],
+            "AI Applications": [
+                "Understanding the Differences Between Game Types: This problem explores the differences between various game types, such as chess and soccer, in terms of their complexity, dynamics, and the challenges they pose for AI algorithms. <L[02L2-Intro] 27>\n\n"
+            ]
+        }
+    ],
+    "Algorithm Solutions": [
+        {
+            "Game Playing AI": [
+                "Minimax Search: A recursive algorithm for two-player zero-sum games that explores the game tree to find the best move for the current player, assuming the opponent also plays optimally.  It alternates between maximizing the score for the current player and minimizing the score for the opponent.<L[02L2-Intro] 22>\n\nAlpha-Beta Pruning: An optimization technique for Minimax search that reduces the search space by avoiding the evaluation of branches that cannot affect the optimal decision. It uses alpha and beta values to prune branches.<L[02L2-Intro] 23>\n\n\n"
+            ]
+        }
+    ]
+}

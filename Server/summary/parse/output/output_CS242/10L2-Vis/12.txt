@@ -1,0 +1,21 @@
+# Slide 12
+
+**Scatter plot (2D)**
+
+Most common plot for bivariate data
+
+*   Horizontal X axis: the suspected independent variable
+*   Vertical Y axis: the suspected dependent variable
+
+Graphically shows:
+
+*   If X and Y are related; Linear or non-linear relationship
+*   If the variation in Y depends on X
+*   Outliers
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a bulleted list describing scatter plots.  The title, "Scatter plot (2D)," is in a bold, sans-serif font.  The content is a concise explanation of the purpose and characteristics of a scatter plot, specifically in the context of bivariate data analysis.  The bullet points clearly define the roles of the x and y axes, highlighting that the x-axis typically represents the independent variable, and the y-axis represents the dependent variable.  The text also explains what a scatter plot can reveal about the relationship between the variables, including whether the relationship is linear or non-linear, and the presence of outliers.  The overall design is simple and straightforward, focusing on the key aspects of scatter plots.  There are no figures on this slide.  The slide is likely part of a larger presentation on data visualization techniques, building upon the previous slides' discussion of Anscombe's Quartet and the importance of visualization in data analysis.

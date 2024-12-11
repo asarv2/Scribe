@@ -1,0 +1,74 @@
+# 13
+
+**Solving the example**
+
+Ax = b, in our example:
+
+A = (
+−3  2
+5  −2)
+x = (
+x
+y)
+b = (
+−2
+7 )
+
+A<sup>-1</sup>Ax = x = A<sup>-1</sup>b
+
+A<sup>-1</sup> =
+1
+2
+1
+2
+5
+4
+3
+4
+
+x =
+1
+2
+1
+2
+5
+4
+3
+4
+(
+−2
+7 )
+=
+1
+2 ⋅−2 + 1
+2 ⋅7
+5
+4 ⋅−2 + 3
+4 ⋅7
+=
+5
+2
+11
+4
+−3( 5
+2) + 2(11
+4 ) = −15
+2
++ 22
+4 = −8
+4 = −2
+5( 5
+2) −2( 11
+4 ) = 25
+2 −22
+4 = 28
+4 = 7
+
+Plugged into our original equations
+
+
+**Description:**
+
+This slide demonstrates the application of the previous concepts to solve a specific system of linear equations.  The title, "Solving the example," clearly indicates the purpose of the slide.  The slide shows the matrix A, the vector x (containing the variables), and the vector b (containing the constants).  It then calculates the inverse of matrix A (A<sup>-1</sup>).  The slide proceeds to calculate the solution vector x by multiplying the inverse of A by b (A<sup>-1</sup>b).  The result is shown as a vector with the values 5/2 and 11/4.  The slide then plugs these values back into the original equations (−3x + 2y = −2 and 5x − 2y = 7) to verify the solution.  The calculations are shown step-by-step, demonstrating the process of solving a system of linear equations using matrix inverses.  The slide is entirely text-based, with no figures other than the matrices and vectors.  The purpose is to provide a concrete example of the application of the concepts discussed in the previous slides.
+
+

@@ -1,0 +1,46 @@
+# 5
+
+**STAT 511 Course Notes – set 17 (W9)**
+
+**Recall the fact that we can use normal to approximate a Binomial distribution.**
+
+Yuan Qu
+
+The CLT can be used to justify the normal approximation to the binomial distribution discussed earlier.
+
+We know that a binomial variable X is the number of successes in a binomial experiment consisting of n independent success/failure trials with p = P(S) for any particular trial. Define a new rv X<sub>1</sub> by
+
+X<sub>1</sub> = { 1, if the 1st trial results in a success
+         0, if the 1st trial results in a failure
+
+and define X<sub>2</sub>, X<sub>3</sub>, ..., X<sub>n</sub> analogously for the other n–1 trials. Each X<sub>i</sub> indicates whether or not there is a success on the corresponding trial.
+
+When the X<sub>i</sub>’s are summed, an 1 is added for every Success that occurs and a 0 for every Failure, so X<sub>1</sub> + ... + X<sub>n</sub> = X. The sample mean of the X<sub>i</sub>’s is p̂ = X/n, the sample proportion of successes. That is, both X and p̂ are approximately normal when n is large.
+
+
+Example 17.4 A poll is conducted in order to learn about the amount of support a candidate (say for president) has. Suppose 50% of the population support the candidate. Suppose the size of the sample/poll is n = 900 people. What is the probability that in the sample, the proportion of those supporting the candidate will be larger than 0.53 (i.e. proportion 0.5 of support in the population while the proportion in the sample is larger than 0.53)?
+
+Let Y<sub>i</sub> = 1 if the i<sup>th</sup> sample supports the candidate and Y<sub>i</sub> = 0 if not. Then
+
+T = Σ<sub>i=1</sub><sup>n</sup> Y<sub>i</sub> ~ Bi(n, p)
+
+The proportion of supporters in the sample is the sample mean of Y<sub>i</sub>, that is,
+
+p̂ = T/n = (1/n) Σ<sub>i=1</sub><sup>n</sup> Y<sub>i</sub> = Y̅
+
+According to the CLT, the sample proportion is normally distributed, with a mean
+
+μ<sub>p̂</sub> = E(p̂) = E(T/n) = (1/n)E(T) = (1/n) * np = p = 0.5
+
+and standard deviation
+
+σ<sub>p̂</sub> = √Var(p̂) = √Var(T/n) = √(1/n<sup>2</sup> * Var(T)) = √(1/n<sup>2</sup> * npq) = √(pq/n) = √(0.5 * 0.5 / 900) = 0.016
+
+Hence the probability in the question is
+
+P(p̂ > 0.53) = P(Z > (0.53 - 0.5)/0.016) = P(Z > 1.875) =
+
+
+**Description of what you see:**
+
+The slide continues the discussion of the Central Limit Theorem (CLT) and its application to binomial distributions.  It provides an example (Example 17.4) of calculating the probability of a sample proportion exceeding a certain value, given a known population proportion and sample size.  The slide shows the steps involved in applying the CLT to binomial data, including calculating the mean and standard deviation of the sample proportion.  The example is crucial for understanding how to use the normal distribution to approximate binomial probabilities.

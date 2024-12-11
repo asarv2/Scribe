@@ -1,0 +1,27 @@
+# Slide 13
+
+**Fraud Prediction**
+
+*(Neville et al 2005)*
+
+600,000+ stock brokers are registered trade on the NASDAQ
+
+FINRA investigates 6,000 brokers/yr to limit fraud and malfeasance
+
+Automatically predict brokers likely to be fraudulent, using network information
+
+ML methods identified new cases that previous hand-crafted rules wouldn't have caught
+
+
+---
+
+**Visual Elements:**
+
+* **Image 1 (Top Left):**  A portion of a screen displaying the NASDAQ ticker tape.  The image shows a curved wall of screens, with various numbers and symbols representing stock prices and other financial data.  The image is likely included to provide context for the discussion of fraud prediction in the stock market.  The image is oriented horizontally.
+
+* **Image 2 (Bottom Right):** A complex network graph.  Numerous lines connect various points, representing relationships or connections between different entities (likely stock brokers).  The lines are colored in various shades of blue, green, and red.  The image is oriented horizontally.  The image is likely included to illustrate the concept of network analysis and how it can be used to identify patterns and relationships that might indicate fraudulent activity.
+
+
+**Description:**
+
+This slide discusses fraud prediction in the stock market.  It highlights the large number of stock brokers registered on the NASDAQ and the significant number of fraud investigations conducted annually by FINRA.  The slide introduces the idea of using machine learning (ML) methods to automatically predict fraudulent brokers based on network information.  The inclusion of the NASDAQ ticker tape image and the social network graph visually reinforces the context of the discussion.  The slide is likely part of a lecture on data mining or machine learning techniques applied to financial fraud detection.

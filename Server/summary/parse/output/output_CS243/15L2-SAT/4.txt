@@ -1,0 +1,41 @@
+# 4
+
+# The Challenge of Exponential Complexity Growth
+
+**Note:** rough estimates, for propositional reasoning
+
+| Case Complexity | Exponential Complexity |
+|---|---|
+| 10<sup>301,020</sup> |  |
+| 10<sup>150,500</sup> |  |
+| 10<sup>6020</sup> |  |
+| 10<sup>3010</sup> |  |
+
+
+**Visual Elements:**
+
+* **Graph:** A graph with a rising curve illustrates the exponential growth of case complexity.  The y-axis is labeled "Case Complexity" and shows logarithmic values (e.g., 10<sup>301,020</sup>). The x-axis is labeled "Exponential Complexity" and shows a linear scale. The curve visually represents the exponential increase in complexity as the problem size grows.
+
+* **Images:** Several small images are positioned along the curve, each representing a different problem domain.  These images are placed at different points on the curve, corresponding to the estimated complexity of each problem.  The images are:
+    * **Small Circuit Board:**  Represents VLSI Verification (0.5M).
+    * **Military Logistics Map:** Represents Military Logistics (1M).
+    * **Chessboard:** Represents Chess (20 steps deep) (20K).
+    * **Satellite Image:** Represents Deep Space Mission Control (50K).
+    * **Car Repair:** Represents Car Repair Diagnosis (100).
+    * **Soldiers:** Represents War Gaming (1M).
+    * **Other Images:**  There are other images, but their exact nature is not clear from the provided image.
+
+* **Numerical Labels:**  Numerical labels (e.g., 100K, 1M, 5M) are placed next to the images, indicating the estimated complexity of each problem.  These labels are positioned on the graph, near the corresponding image.
+
+* **Text Labels:**  Text labels (e.g., "War Gaming," "VLSI Verification") are placed below the images, providing context for the problem represented by each image.
+
+* **Additional Text:**  The text "No. of atoms on the earth," "Seconds until heat death of sun," "Protein folding Calculation (petaflop-year)," are placed on the left side of the graph, with arrows pointing to the corresponding values on the y-axis.  These values are used to illustrate the vastness of the scale of complexity.
+
+**Reasoning:**
+
+This slide is designed to illustrate the significant challenge of exponential complexity growth in various problem domains.  The images and numerical values are used to show how the complexity of problems like war gaming, VLSI verification, and others grows dramatically with the size of the problem.  The graph and the associated data are intended to highlight the difficulty of solving problems with a large number of variables and constraints.  The comparison to other large-scale problems (e.g., the number of atoms on Earth) is used to emphasize the scale of the problem.
+
+
+**Description of the slide:**
+
+This slide from a lecture on AI Basics presents a visual representation of the exponential growth in complexity of various problems.  The graph shows the exponential increase in case complexity as the problem size increases.  The images and labels provide concrete examples of problems with different complexity levels.  The slide aims to convey the significant computational challenges associated with problems involving a large number of variables and constraints.

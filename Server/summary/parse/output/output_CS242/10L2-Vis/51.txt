@@ -1,0 +1,23 @@
+# Slide 51
+
+**Basics of plotly**
+
+```
+plot_ly( x, y, type, mode, color, size )
+```
+
+*   `x` = values for x-axis
+*   `y` = values for y-axis
+*   `type` = to specify the plot that you want to create like "histogram", "surface", "box", etc.
+*   `mode` = format in which you want data to be represented in the plot. Possible values are "markers", "lines", "points".
+*   `color` = values of same length as x, y and z that represents the color of data points or lines in plot.
+*   `size` = values for same length as x, y and z that represents the size of data points or lines in plot.
+
+
+---
+
+**Description of what you see:**
+
+This slide provides a reference table of the parameters for the `plot_ly` function, likely from the Plotly library.  The title "Basics of plotly" is in a bold, sans-serif font.  The `plot_ly` function call is shown, followed by a bulleted list of its parameters.  The parameters are described in a clear and concise manner, explaining their purpose and potential values.  The slide is likely part of a larger presentation on data visualization techniques using Plotly, providing a basic introduction to the function's syntax and usage.  There are no figures on this slide.
+
+

@@ -1,0 +1,27 @@
+# Slide 16
+
+# Example: How to count words in a textfile
+
+the wheels on the bus
+go round and round
+round and round
+round and round
+the wheels on the bus
+go round and round
+all through the town
+
+mapper() Key: ?
+Value: ?
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents an example of using MapReduce to count words in a text file.  It shows a short text snippet and then asks for the key and value that would be used in the mapper function.
+
+* **Content:** The slide displays a short text snippet, likely a sample text file.  The text is a simple children's rhyme about the wheels on a bus.  Below the text, the slide shows the function `mapper()`, with placeholders for the key and value.  This indicates that the mapper function needs to be defined to extract the words from the text and assign them to a key and a value.
+
+* **Purpose:** The slide is an example to illustrate how MapReduce can be used for tasks like word counting.  It's designed to show the input data and the expected output format (key-value pairs) in the context of the MapReduce model.  The placeholders for the key and value emphasize the need to define these elements within the mapper function.
+
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the example text and the mapper function's placeholders.  The text is formatted to clearly show the input text and the mapper function's expected input parameters.

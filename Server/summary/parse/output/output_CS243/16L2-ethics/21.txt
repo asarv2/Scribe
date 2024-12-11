@@ -1,0 +1,10 @@
+# Slide 21
+
+**Description:**
+
+This slide discusses how machine learning models can inadvertently perpetuate stereotypes present in the training data.  The title, "When Machine Learning Reinforces Stereotypes," clearly states the topic.  The text explains that machine learning models can absorb subtle biases from the training data, including various stereotypes.  The bullet point, "• Images, text, …," indicates that these biases can be present in different types of data, such as images and text.  The source is clearly attributed.  The slide is likely part of a larger discussion on bias in AI systems and the importance of careful data curation and model training.
+
+
+**Description:**
+
+The slide is a plain, light-gray background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The title and the text below it explain how machine learning models can absorb biases from the training data.  The bullet point emphasizes that this can happen with various types of data.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on bias in machine learning models.

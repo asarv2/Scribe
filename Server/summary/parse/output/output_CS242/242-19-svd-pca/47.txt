@@ -1,0 +1,10 @@
+# Slide 47
+
+**Rating by date**
+
+**(Figure):** A scatter plot is presented.  The x-axis is labeled "Rating by date" and ranges from approximately 0 to 2500.  The y-axis is labeled "mean score" and ranges from approximately 3.2 to 3.9.  The plot displays a large number of small, red data points scattered across the graph.  The data points show a general trend, with some fluctuations.  The plot is positioned in the center of the slide.  The purpose of the plot is to visualize the mean rating of items (likely movies) over time.  The x-axis likely represents a time-based index or a date, and the y-axis represents the average rating for items at that point in time.  The large number of data points suggests a significant amount of data collected over time.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a scatter plot visualizing the mean rating of items (likely movies) over time.  The x-axis represents a time-based index or date, and the y-axis represents the average rating for items at that point in time.  The plot shows the trend of average ratings over time, which could reveal patterns or biases in how items are rated over time.  The context of this slide is likely to discuss the temporal aspect of ratings data, potentially to identify trends or biases in how ratings are given over time.  The large number of data points suggests a significant amount of data collected over time.  The context is an Intro to Data Science course.

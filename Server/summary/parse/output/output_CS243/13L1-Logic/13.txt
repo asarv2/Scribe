@@ -1,0 +1,15 @@
+# 13
+
+**Validity and satisfiability**
+
+A sentence is valid if it is true in all models (aka tautologies)
+e.g., True, A ∨¬A, A ⇒ A, (A ∧ (A ⇒ B)) ⇒ B
+A sentence is satisfiable if it is true in some model, e.g., A
+A sentence is unsatisfiable if it is true in no models, e.g., A∧¬A
+
+
+---
+
+**Description of the slide:**
+
+This slide defines validity, satisfiability, and unsatisfiability in the context of propositional logic.  The title, "Validity and satisfiability," clearly indicates the topic.  The content is presented in a straightforward, bulleted list format.  Each bullet point defines a concept and provides an example.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic and its components.  The slide is likely part of a larger lecture explaining how to determine the truth values of logical statements and classify them based on their truth values across all possible models.  The examples (e.g., True, A ∨¬A) illustrate common tautologies and demonstrate the concepts being explained.

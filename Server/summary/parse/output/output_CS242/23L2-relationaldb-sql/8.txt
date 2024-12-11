@@ -1,0 +1,27 @@
+# Slide 8
+
+# Foreign Keys
+
+Foreign key: An attribute that points to the primary key of another relation
+
+* If you delete a primary key, need to delete all foreign keys pointing to it
+
+| ID | Last Name | First Name | RoleID |
+|---|---|---|---|
+| 1 | Bergstrom | Anthony | 1 |
+| 2 | Purdue | Peter | 2 |
+| 3 | Doe | John | 3 |
+| 4 | Smith | Jane | 3 |
+
+| RoleID | Role |
+|---|---|
+| 1 | Instructor |
+| 2 | TA |
+| 3 | Student |
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, introduces the concept of foreign keys in relational databases.  The title "Foreign Keys" is displayed at the top.  The text defines a foreign key as an attribute in one table that references the primary key of another table.  The key concept is that if a primary key is deleted, any foreign keys referencing it must also be handled.  The slide presents two tables side-by-side.  The table on the left shows data related to individuals (ID, Last Name, First Name, RoleID).  The table on the right shows data related to roles (RoleID, Role).  The data in the tables is structured in rows and columns, with each row representing a record and each column representing an attribute.  The data includes sample information about individuals and their roles (e.g., Bergstrom Anthony is assigned RoleID 1, which corresponds to Instructor in the second table).  The purpose of this slide is to illustrate the concept of foreign keys and their relationship to primary keys in maintaining data integrity across multiple tables in a relational database.  The tables are formatted with clear column headers and data entries, making the foreign key relationship between the tables easily visible.  The layout is designed to visually represent the concept of a foreign key and its role in relational database design.  The bullet point emphasizes the importance of handling foreign keys when a primary key is deleted.

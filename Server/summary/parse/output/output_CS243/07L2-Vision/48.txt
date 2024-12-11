@@ -1,0 +1,20 @@
+# Slide 48
+
+**Noise reduction using mean filtering**
+
+**(Image Description):**
+
+The slide presents two grayscale images of a cat's head and neck, side-by-side.
+
+* **Left Image:**  This image shows a cat's head and neck, with a noticeable grainy or pixelated appearance.  The image has a speckled, noisy texture.  This image likely represents an image with noise.
+
+* **Right Image:** This image shows the same cat's head and neck, but with the noise significantly reduced.  The image appears smoother and less pixelated.  The details of the cat's fur are more clearly visible.  This image likely represents the result of applying a mean filtering technique to reduce the noise in the image on the left.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, is demonstrating a noise reduction technique called mean filtering.  The images are used to visually show the effect of this technique.  The left image represents an image with noise, and the right image represents the same image after the noise has been reduced using a mean filter.  The slide is likely part of a section discussing image filtering and noise reduction methods.
+
+
+**What you see:**
+
+The slide shows two images of a cat's head and neck.  The image on the left has a grainy appearance, characteristic of noise.  The image on the right is smoother, indicating that the noise has been reduced.  The images are side-by-side, making it easy to compare the difference in quality.  The slide is designed to visually illustrate the effect of mean filtering on an image with noise.

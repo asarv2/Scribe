@@ -1,0 +1,18 @@
+# Slide 10
+
+**So, that's me - now you**
+
+Take ~2-3 minutes to talk to a neighbor, preferably one you don't know.
+Introduce yourself. Try to include:
+
+*   Name
+*   Where you're from
+*   How you got interested in Data Science
+*   What intimidates or excites you about this class
+
+Don't worry, I'm not going to make you introduce this person to the rest of the class
+
+
+**Slide Description:**
+
+This slide instructs the students to spend a few minutes talking to a classmate, preferably someone they don't already know.  The purpose is for students to introduce themselves and share some information about themselves, including their name, location, interest in data science, and their feelings about the course.  The slide emphasizes that the instructor will not require students to introduce their classmates to the rest of the class.  The slide is designed to encourage interaction and networking among students.  There are no figures on this slide.

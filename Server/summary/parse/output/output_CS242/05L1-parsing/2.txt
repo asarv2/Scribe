@@ -1,0 +1,10 @@
+# Slide 2
+
+**RegEx, matching patterns in Strings**
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, displays a single heading: "RegEx, matching patterns in Strings".  The text is centered and in a dark, bold font.  The overall design is simple and straightforward, indicating the topic of the slide is regular expressions (RegEx) for string pattern matching.  The slide is likely part of a larger presentation on data manipulation or text processing techniques within the Intro to Data Science course.

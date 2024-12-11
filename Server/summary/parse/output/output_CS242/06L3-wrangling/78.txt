@@ -1,0 +1,12 @@
+# Slide 78
+
+**Description of the Slide:**
+
+This slide discusses "Many-to-Many" relationships between DataFrames.  It shows two tables (`df_1` and `df_2`) and a diagram illustrating the relationship.  The tables represent a many-to-many relationship, where multiple rows in one DataFrame can correspond to multiple rows in another.  The example likely involves student IDs (`SID`) and courses, where a student can take multiple courses and a course can have multiple students.  The slide highlights that the direct result of merging such DataFrames is a Cartesian product, which might not be the desired outcome.  The text emphasizes that modeling a many-to-many relationship often requires a different approach, such as creating intermediate tables or using a different database design.  The diagram visually represents the many-to-many relationship between the two DataFrames.  The purpose of the slide is to illustrate the concept of a many-to-many relationship and its implications for data merging.
+
+
+**What you see:**
+
+The slide has a title "Many to Many combinations".  Below the title, there's text explaining that data frames can be in a many-to-many relationship.  A bullet point states that there are repeated keys in both data frames.  The text also states that the result is a Cartesian product, and that each element in `df_1` is paired with each element in `df_2` by key.  The text further notes that this might not be the desired outcome and asks how to know if the elements should be paired.  The slide also includes two tables (`df_1` and `df_2`) and a diagram.  `df_1` has a column "SID" and "course", and `df_2` has a column "SID" and "Award".  The diagram shows arrows connecting the tables, visually representing the many-to-many relationship.  The diagram also shows a table with the combined data, which would be a Cartesian product of the two tables.  The slide is part of a lecture on data manipulation and analysis, specifically focusing on merging data from different sources with various relationships.
+
+

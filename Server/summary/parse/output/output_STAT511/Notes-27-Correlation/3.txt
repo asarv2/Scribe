@@ -1,0 +1,32 @@
+# Slide 3
+
+**STAT 511 Course Notes – set 27 (W14)**
+
+**Yuan Qu**
+
+**Example 27.2 revisit**
+
+* Several observations have identical 𝑥 values yet different 𝑦 values (e.g., 𝑥<sub>8</sub> = 𝑥<sub>9</sub> = 0.75, but 𝑦<sub>8</sub> = 1.80 and 𝑦<sub>9</sub> = 1.74). Thus the value of 𝑦 is not determined solely by 𝑥 but also by various other factors.
+
+* There is a strong tendency for 𝑦 to increase as 𝑥 increases. That is, larger values of OSA tend to be associated with larger values of fissure width—a positive relationship between the variables.
+
+* It appears that the value of 𝑦 could be predicted from 𝑥 by finding a line that is reasonably close to the points in the plot. In other words, there is evidence of a substantial (though not perfect) linear relationship between the two variables.
+
+
+In any graph of data, look for the (1) overall pattern and for (2) striking deviations from that pattern.
+
+1) You can describe the overall pattern of a scatterplot by the form, direction and strength of the relationship.
+
+2) An important kind of deviation is outlier, an individual value that falls outside the overall pattern of the relationship.
+
+
+**Form: linear or nonlinear (curve, exponential, parabola)?**
+
+**(Figure Description):**
+
+The slide displays a series of scatterplots, arranged in a grid-like format. Each scatterplot shows a different pattern of data points.  The scatterplots are located in the lower portion of the slide, below the text.  The scatterplots are used to illustrate different forms of relationships between variables.  The scatterplots are intended to help the reader visualize whether the relationship between the variables is linear or non-linear.  The scatterplots are labeled with the words "Linear" or "Nonlinear" to indicate the type of relationship they represent.  The scatterplots are crucial to the understanding of the concept of linear vs. non-linear relationships in the context of simple linear regression.
+
+
+**Slide Description:**
+
+This slide continues the discussion of simple linear regression, focusing on identifying the overall pattern and deviations in a scatterplot.  It revisits Example 27.2, emphasizing the potential for a linear relationship between the variables.  The slide introduces the concept of outliers as deviations from the overall pattern.  Critically, the slide presents a series of scatterplots to visually demonstrate different types of relationships (linear and non-linear).  These plots are essential for understanding how to visually assess the form of the relationship between variables before applying linear regression.  The slide is designed to help students develop the skill of interpreting scatterplots to determine if a linear model is appropriate.

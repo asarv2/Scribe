@@ -1,0 +1,18 @@
+# 24
+
+# How do you play games: Algorithm components
+
+Representation of the state of the game
+Set of actions available
+Planning sequences of actions (look ahead)
+Reasoning about opponent's possible actions
+How to choose between actions?
+
+
+---
+
+**Description:**
+
+This slide, titled "How do you play games: Algorithm components," presents a list of key components involved in designing algorithms for playing games.  The text is in a standard, easy-to-read font.  The bullet points clearly outline the different aspects of game-playing algorithms.  There are no figures on this slide.  The slide is likely part of a larger presentation on AI Basics, and the components listed are likely to be discussed in detail in the following slides.  The slide's purpose is to provide an overview of the key elements involved in creating game-playing AI.  The slide is designed to be informative and engaging, providing a clear picture of the different aspects of game-playing algorithms.
+
+

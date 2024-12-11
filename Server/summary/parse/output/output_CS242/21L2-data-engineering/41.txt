@@ -1,0 +1,79 @@
+# Slide 41
+
+**Matrix multiplication**
+
+First issue: How to represent data in matrices M and N?
+
+```
+M
+j
+```
+
+```
+10.0  0  9.0  9.0  0  0  0  ...
+1.0  3.0 18.0 25.3 0  0  0  ...
+...  ...  ...  ...  ...  ...  ...  ...
+i
+j
+```
+
+```
+N
+k
+```
+
+```
+N,0,0,1.0
+N,0,2,3.0
+N,0,4,2.0
+N,1,0,2.0
+N,3,2,-1.0
+N,3,6,4.0
+N,4,6,5.0
+N,4,0,-1.0
+...
+j
+```
+
+```
+P
+k
+```
+
+```
+M,0,0,10.0
+M,0,2,9.0
+M,0,3,9.0
+M,1,0,1.0
+M,1,1,3.0
+M,1,2,18.0
+M,1,3,25.2
+...
+N,0,0,1.0
+N,0,2,3.0
+N,0,4,2.0
+N,1,0,2.0
+N,3,2,-1.0
+N,3,6,4.0
+N,4,6,5.0
+N,4,0,-1.0
+...
+i
+k
+```
+
+**Description:**
+
+This slide presents the problem of representing data in matrices M and N for matrix multiplication.  It shows three matrices: M, N, and P.  Each matrix is represented as a table with rows and columns.
+
+* **Matrix M:**  A matrix with dimensions i x j.  The slide shows a table with rows labeled 'i' and columns labeled 'j'.  The table cells contain numerical values, such as 10.0, 0, 9.0, 9.0, 0, 0, 0, and so on.  The ellipses (...) indicate that the matrix continues beyond the shown portion.  The values are likely numerical data points.
+
+* **Matrix N:** A matrix with dimensions j x k.  The slide shows a table with rows labeled 'j' and columns labeled 'k'.  The table cells contain numerical values, such as N,0,0,1.0, N,0,2,3.0, and so on.  The ellipses (...) indicate that the matrix continues beyond the shown portion.  The values are likely numerical data points.
+
+* **Matrix P:** A matrix with dimensions i x k.  The slide shows a table with rows labeled 'i' and columns labeled 'k'.  The table cells are empty, indicating that the values of the matrix P are not yet defined.  The ellipses (...) indicate that the matrix continues beyond the shown portion.
+
+* **Equation:** The equation `P[i, k] = Σ M[i, j] • N[j, k]` is shown, defining the mathematical operation for calculating an element in the resulting matrix P.
+
+**Overall:** The slide introduces the problem of matrix multiplication in the context of MapReduce.  It focuses on the representation of data in matrices M and N, which are the input matrices for the multiplication.  The empty matrix P represents the output matrix, which will be calculated using the MapReduce algorithm.  The slide is designed to prepare the audience for the discussion of how to implement matrix multiplication using MapReduce.  The values in the matrices are likely data points, but the exact meaning of the data is not specified.
+
+

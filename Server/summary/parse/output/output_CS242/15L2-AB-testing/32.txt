@@ -1,0 +1,24 @@
+## Slide 32
+
+**p-values considered harmful**
+
+p-values: probability of your data given the null hypothesis
+
+Common Mistakes: probability of the null hypothesis given the data
+
+* The p value cannot tell you your hypothesis is correct
+* The p value does not tell you the probability that your result occurred just by random chance
+* The p values cannot tell you the effect size or the result's importance
+
+p < 0.05 is not a magic line separating real results from false ones
+* It is one piece evidence to consider
+
+
+**Figure Description:**
+
+A histogram is positioned on the right side of the slide.  The x-axis is labeled "p-value" and ranges from approximately 0.00 to 0.10.  The y-axis is labeled "Frequency" and ranges from 0 to approximately 280.  The histogram displays the distribution of p-values from approximately 3,500 published journal papers.  The histogram shows a noticeable concentration of p-values clustered just below 0.05.  A vertical red line is drawn at approximately 0.06 on the x-axis.  The histogram's purpose is to visually demonstrate the frequency distribution of p-values in published research, highlighting a potential tendency for p-values to cluster just below the conventional significance level of 0.05.  The histogram is a visual aid to illustrate the potential issue of p-value interpretation and the tendency for results to cluster around a specific value.  The title of the histogram, "Histogram of p values from ~3,500 published journal papers (from E. J. Masicampo and Daniel Lalande, A peculiar prevalence of p values just below .05, 2012)," provides context for the data and the source of the information.
+
+
+**Slide Description:**
+
+This slide discusses the potential pitfalls of interpreting p-values in statistical analysis.  It highlights that p-values do not indicate the correctness of a hypothesis, the probability of a result occurring by chance, or the effect size.  The slide uses a histogram of p-values from published research to illustrate a potential tendency for results to cluster just below the conventional significance level of 0.05.  The slide is likely part of a presentation on statistical methods, specifically addressing the limitations of p-values and the importance of considering other factors in interpreting results.

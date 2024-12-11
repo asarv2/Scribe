@@ -1,0 +1,33 @@
+# Slide 1
+
+**Basic Probability**
+
+* **Practical Statistics:**
+    * Data is available; we make inference on the properties of the unknown population.
+* **Mathematical Probability:**
+    * We are now dealing with mathematical theory. In this scenario, we have complete information about a population in the form of a census and so know the values of all population parameters. Or we know all about all possible experimental outcomes. We use this information and probability theory (subject of this set of notes) to calculate the chance a random experiment has a particular outcome.
+    * Population is completely known; we study how the data would be like.
+
+**Sample Space and Random Events**
+
+* **Random experiment:** any activity or process whose results are subject to uncertainty. These results are called outcomes. Examples of a random experiment: Selecting at random, one individual from the population (a SRS of size 1).
+* **Practical definition of Probability:**
+    * P(A) = probability that A occurs = number of experiments that A occurs / total number of repeated experiments.
+    * Therefore, in reality, probability can be interpreted as long-run frequency of repeated experiments.
+
+**Probability triplet:** sample space, events, and probability measurement
+
+* **Sample space (S):** A set that contains all possible outcome of an experiment.
+    * **Examples:**
+        * If the experiment consists of tossing a die, the sample space contains  _outcomes_, S = {  }.
+        * If the experiment consists of tossing a coin, the sample space contains _outcomes_, S = { }.
+        * If the experiment consists of tossing THREE coins, the sample space contains all possible combinations of heads and tails, S = { }.
+        * If the experiment is to toss coins INDEFINITE times until a Head appears, then the sample space is S = { }.
+        * Consider an experiment where the observation is reaction time to a certain stimulus. Here, the sample space would consist of _reaction time_ to a certain stimulus, that is, S = _reaction time_.
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the concept of basic probability in the context of statistical methods.  It begins by contrasting practical statistics (where data is incomplete) with mathematical probability (where data is complete).  The slide then defines a random experiment and its outcomes, and introduces the concept of sample space.  Crucially, it provides examples of sample spaces for various experiments, including tossing a die, a coin, and multiple coins.  The final example, tossing a coin until a head appears, highlights the concept of an infinite sample space.  The slide also defines probability using a practical definition and explains how probability can be interpreted as a long-run frequency.  The slide is structured to introduce key concepts and provide examples for better understanding.  The blank spaces for the examples are meant to be filled in with the appropriate outcomes.

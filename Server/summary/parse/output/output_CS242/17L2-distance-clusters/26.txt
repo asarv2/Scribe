@@ -1,0 +1,17 @@
+# Slide 26
+
+**Example: Reassign Clusters**
+
+<img src="image.png" alt="Scatter Plot with Clusters">
+
+
+---
+
+**Description of the Figure:**
+
+A scatter plot is displayed, showing a large number of data points (small circles) scattered across a white background.  The data points are colored in three distinct colors:  reddish-brown, light gray/dark gray, and light blue.  These colors represent different clusters.  Superimposed on the scatter plot are three larger, differently colored stars.  These stars are positioned within the scatter plot, near the center of the clusters of data points.  The red star is near the cluster of reddish-brown points, the light blue star is near the cluster of light blue points, and the dark gray star is near the cluster of dark gray points.  These stars represent the centroids (or means) of the respective clusters.  The plot is two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The data points appear to have been reassigned to clusters based on their proximity to the centroids.  The reassignment is evident in the distribution of the colored points around the centroids.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Reassign Clusters," displays a scatter plot illustrating a step in the K-means clustering algorithm.  The plot shows data points colored by cluster, and the centroids are positioned near the center of each cluster.  This visual representation illustrates the reassignment of data points to clusters based on their proximity to the centroids.  The slide is part of a lecture on clustering algorithms, specifically demonstrating the K-means algorithm.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.  The reassignment of points is the key concept being illustrated.  The slide follows the previous example of computing centroids, showing the next step in the iterative process of the K-means algorithm.

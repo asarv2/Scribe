@@ -1,0 +1,37 @@
+# Slide 1
+
+**Basic Probability Cont.**
+
+**Counting Techniques and More Probability Examples**
+
+**Permutations and combinations**
+
+𝑃<sub>𝑘,𝑛</sub> = 𝑛(𝑛−1) … … (𝑛−𝑘+ 1) =  <sup>𝑛!</sup>⁄<sub>(𝑛−𝑘)!</sub>
+𝐶<sub>𝑘,𝑛</sub>= (<sup>𝑛</sup><sub>𝑘</sub>) = <sup>𝑛!</sup>⁄<sub>(𝑛−𝑘)! 𝑘!</sub>
+
+**Examples 6.1:** A university warehouse has received a shipment of 25 printers, of which 10 are laser printers and 15 are inkjet models. If 6 of these 25 are selected at random to be checked by a particular technician, what is the probability that exactly 3 of these selected are laser printers (so that the other 3 are inkjets)?
+
+This is hypergeometric distribution that we’ll talk about more in Chapter 3. The hypergeometric distribution can be derived by our counting techniques.
+
+𝑃(Exactly 3 of these selected are laser printers) =
+
+**Examples 6.2:** Fifteen telephones have just been received at an authorized service center. Five of these telephones are cellular, five are cordless, and the other five are corded phones. Suppose that these components are randomly allocated the numbers 1, 2, . . . , 15 to establish the order in which they will be serviced.
+
+a) What is the probability that all the cordless phones are among the first ten to be serviced?
+
+We consider all possible orders for five cordless phones that are served among the first 10.
+
+𝑃(All the cordless phones are among the first ten to be serviced) =
+
+b) What is the probability that after servicing ten of these phones, phones of only two of the three types remain to be serviced?
+
+Consider all five of one type are served among the first 10, which is calculated in a). However, that count includes the case that all five of two types are served among the first 10. Therefore, we need to remove 2 such cases. The answer is
+
+𝑃(After servicing 10 of these phones, phones of only 2 of the 3 types remain to be serviced) =
+
+
+---
+
+**Slide Description:**
+
+This slide introduces examples related to probability, specifically focusing on counting techniques (permutations and combinations) and the hypergeometric distribution.  It presents two examples (6.1 and 6.2) related to printer selections and telephone service order.  Example 6.1 involves selecting printers from a shipment, and example 6.2 involves the order of telephones being serviced.  The slide also introduces the concept of hypergeometric distribution, which will be discussed further in a later chapter.  Formulas for permutations and combinations are shown.  The slide sets the stage for further calculations and analysis of probabilities in the context of statistical methods.  The slide is part of a larger lecture series on statistical methods, and the examples are designed to illustrate the application of counting techniques to probability problems.

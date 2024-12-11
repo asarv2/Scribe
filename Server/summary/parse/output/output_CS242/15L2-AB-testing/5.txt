@@ -1,0 +1,22 @@
+# Slide 5
+
+**Confidence Intervals**
+
+Sampling distribution: probability distribution of a statistic (e.g., mean) when calculated from a random sample of size *n*
+
+Standard error: standard deviation of the sampling distribution
+
+SE = σ / √n
+
+Margin of error: confidence interval of sampling distribution
+
+Confidence interval: expression of uncertainty wrt to estimated statistic
+
+E.g., for 95% CI: Given 100 samples of the same size, 95 of the estimated CIs would contain the true value of the statistic
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, defines and explains key concepts related to confidence intervals.  The slide is entirely text-based, with no figures.  The text defines the terms "sampling distribution," "standard error," "margin of error," and "confidence interval."  The slide provides a formula for calculating the standard error (SE) and an example of how a confidence interval works (95% CI).  The slide is likely a continuation of the previous slide's discussion on sampling distributions, building upon that concept to introduce the idea of quantifying uncertainty using confidence intervals.  The slide's purpose is to introduce the concepts of confidence intervals and their relationship to sampling distributions.

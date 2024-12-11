@@ -1,0 +1,25 @@
+# Slide 11
+
+**Privacy != Security**
+
+Some data cannot be anonymized
+
+* Genome sequences are inherently identifying
+* Even a few hundred well-picked SNPs...
+
+Often, people's desires about their data involve questions of trust
+
+* Willingness to share medical data with academic researchers, but not pharmaceutical companies
+
+Privacy is not a binary value
+
+* Different sorts of exposure to different sorts of people evoke different responses
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, discusses the complexities of data privacy and security.  The title, "Privacy != Security," immediately establishes the key point that simply anonymizing data does not guarantee security.  The bullet points below elaborate on this idea.  The first point highlights that certain types of data, like genome sequences, are inherently identifiable.  The second point expands on this, emphasizing that even a small subset of data points can be enough to re-identify individuals.  The third point introduces the concept of trust, noting that people's willingness to share data varies depending on the recipient and the context.  The final point underscores that privacy is not a simple yes/no concept; different levels of exposure to different entities evoke different responses.  The slide is designed to illustrate the nuances of data privacy and the importance of considering context and trust when handling personal data.  The source is clearly attributed, which is a standard practice in academic presentations.

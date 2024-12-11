@@ -1,0 +1,35 @@
+# Slide 23
+
+**Lists and tuples**
+
+We can change lists in place. The name li still points to the same memory reference when we're done.
+
+```
+>>> li = ['abc', 23, 4.34, 23]
+>>> li[1] = 45
+>>> li
+['abc', 45, 4.34, 23]
+```
+
+You can’t change a tuple. You can make a fresh tuple and assign its reference to a previously used name.
+
+```
+>>> tu = (23, 'abc', 4.56, (2, 3), 'def')
+>>> tu[2] = 3.14
+TypeError: 'tuple' object does not support item assignment
+```
+
+The immutability of tuples means they’re faster than lists.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide, titled "Lists and tuples," demonstrates the difference between mutable lists and immutable tuples in Python.  The first part of the slide shows how a list (`li`) can be modified in place.  The code `li[1] = 45` changes the second element of the list from 23 to 45, and the output shows the updated list.  This demonstrates that lists are mutable; changes made to a list directly affect the original list object.
+
+The second part of the slide shows an attempt to modify a tuple (`tu`).  The code `tu[2] = 3.14` tries to change the third element of the tuple, but this results in a `TypeError`.  This demonstrates that tuples are immutable; attempting to change an element of a tuple will raise an error.  The slide concludes by stating that the immutability of tuples makes them potentially faster than lists in certain situations.
+
+The slide uses the `>>>` prompt to indicate interactive Python code.  The examples are presented in a clear, concise manner, highlighting the key difference in mutability between lists and tuples.  The footer indicates that the content is adapted from a Python tutorial from the University of Pennsylvania's CIS530 course.  There are no figures on this slide.

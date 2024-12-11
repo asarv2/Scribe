@@ -1,0 +1,34 @@
+# 4
+
+# Another example
+
+Sheep
+
+![Sheep Image](/path/to/sheep_image.jpg)
+![Sheep Image 2](/path/to/sheep_image2.jpg)
+![Sheep Image 3](/path/to/sheep_image3.jpg)
+
+Horses
+
+![Horse Image 1](/path/to/horse_image1.jpg)
+![Horse Image 2](/path/to/horse_image2.jpg)
+![Horse Image 3](/path/to/horse_image3.jpg)
+
+What about this?
+
+![Llama Image](/path/to/llama_image.jpg)
+
+Difficulty: how to teach computers to do this?
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, presents examples of image recognition.  It's a continuation of the previous slide's theme of inductive reasoning and machine learning.
+
+* **Images:** The slide contains multiple images.  Three images of sheep are shown in a grid-like format, each depicting a group of sheep in different settings (a field, possibly a farm).  Three images of horses are also shown in a similar grid format, one of which is a full-body shot of a horse, another is a close-up of a horse's head and neck, and the third is a full-body shot of a horse in a field.  Finally, a single image of an alpaca is shown in the bottom right corner.  These images are likely examples of the types of visual data that a machine learning algorithm might need to analyze to learn to distinguish between different animal types.  The placement of the images in a grid format helps to visually compare and contrast the different animals.
+
+* **"What about this?" and "Difficulty" text:** The text "What about this?" is positioned below the grid of sheep images and above the alpaca image.  This prompts the viewer to consider how a computer might identify the alpaca as a different animal from the sheep and horses.  The text "Difficulty: how to teach computers to do this?" is positioned below the alpaca image.  This text highlights the challenge of teaching computers to recognize and classify different animal types based on visual data.  This text is crucial to the lecture, as it emphasizes the complexity of image recognition tasks for machine learning algorithms.
+
+* **Context:** The slide is designed to illustrate the difficulty of teaching computers to recognize different animal types based on visual data.  The images are examples of the types of data that a machine learning algorithm might need to analyze to learn to distinguish between different animal types.  The "What about this?" and "Difficulty" text are designed to prompt the viewer to consider the challenges of image recognition tasks for machine learning algorithms.  The slide is a crucial part of the lecture, as it helps to illustrate the complexity of image recognition tasks for machine learning algorithms.
+
+

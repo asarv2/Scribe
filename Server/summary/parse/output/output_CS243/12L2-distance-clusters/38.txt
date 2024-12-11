@@ -1,0 +1,17 @@
+# 38
+
+**Evaluation Approach: Subjective**
+
+Evaluate how well the clusters "fit" the data
+
+* Order the proximity matrix with respect to cluster labels
+* Inspect visually
+
+Good clusterings exhibit clear block pattern
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a method for subjectively evaluating the quality of clusters produced by a clustering algorithm.  The text is formatted in a clear, bulleted list format, making it easy to read and understand the key characteristics of the evaluation process.  There are no images or figures on the slide.  The slide is likely part of a larger presentation on clustering algorithms, introducing a subjective approach to evaluating the quality of clusters.  The content is straightforward and directly explains the two main methods for subjective evaluation: ordering the proximity matrix and visual inspection.  The slide emphasizes the importance of visual inspection in assessing the quality of clusters, suggesting that a clear block pattern in the proximity matrix or visualization indicates well-formed clusters.

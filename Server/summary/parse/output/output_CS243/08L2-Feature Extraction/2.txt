@@ -1,0 +1,13 @@
+# Slide 2
+
+**Bag of Features Object Recognition**
+
+A grayscale image of a street scene with several cars is shown in the upper right quadrant of the slide.  Several bounding boxes (red and green squares) are drawn around the cars in the image.  This indicates that the image is being used to demonstrate object recognition.
+
+A bar graph, in light pink, is displayed on the left side of the slide.  The x-axis represents "codewords" and the y-axis represents "frequency."  The height of each bar corresponds to the frequency of occurrence of a particular codeword.  This graph visually represents the distribution of features extracted from the image.
+
+A set of small grayscale images, arranged horizontally, are shown below the bar graph.  These are examples of the "codewords."  Each codeword represents a visual feature extracted from the image.  A green box highlights one of these codewords, and a red box highlights another.  This visual representation helps to illustrate the concept of feature extraction and how these features are used to represent objects.
+
+**Description of the slide:**
+
+This slide introduces the concept of "Bag of Features" for object recognition.  It shows how images are processed to extract features (codewords), and how the frequency of these features can be used to represent and classify objects.  The image on the right, with the bounding boxes, demonstrates the application of this method to identify cars in a scene.  The bar graph and codewords below the image further illustrate the feature extraction process.  The slide is designed to visually explain the core idea of Bag of Features, a technique used in computer vision for object recognition.

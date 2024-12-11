@@ -1,0 +1,34 @@
+# Slide 11
+
+```markdown
+# Playing with Python
+
+>>> x=['a','b','c']
+>>> x[1]
+'b'
+>>> x[1:]
+['b', 'c']
+>>> x[1]='d'
+>>> x
+['a', 'd', 'c']
+>>> d={'alice':1234, 'bob':5678, 'clare':9012}
+>>> d['bob']
+5678
+>>> d['bob'] = 7777
+>>> d
+{'clare': 9012, 'bob': 7777, 'alice': 1234}
+>>> d.keys()
+dict.keys(['clare', 'bob', 'alice'])
+>>> d.items()
+dict.items([('clare', 9012), ('bob', 7777), ('alice', 1234)])
+>>> del d['bob']
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description of the Slide:**
+
+This slide, titled "Playing with Python," presents a series of interactive Python code examples.  The content is formatted as a Python interpreter session, showing user inputs (preceded by `>>>`) and the corresponding outputs.  The examples demonstrate various Python functionalities, including list manipulation (accessing elements, slicing, modifying elements), dictionary creation and manipulation (accessing values, updating values, deleting keys), and basic data types.  The output of each command is shown immediately below the input, demonstrating the results of the Python operations.  The examples are designed to illustrate how to use Python for basic data manipulation tasks.  The footer indicates that the slide content is adapted from a Python tutorial from the University of Pennsylvania's CIS530 course.  There are no figures on this slide.

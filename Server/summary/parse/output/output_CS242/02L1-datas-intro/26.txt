@@ -1,0 +1,18 @@
+# Slide 26
+
+**Taxonomy of Data Science**
+
+Obtain: pointing and clicking does not scale
+Scrub: the world is a messy place
+Explore: you can see a lot by looking
+Models: always bad, sometimes ugly
+Interpret: the purpose of computing is insight, not numbers
+
+http://www.dataists.com/2010/09/a-taxonomy-of-data-science/
+
+
+**Visual Description:**
+
+This slide has a plain, light-gray background.  The title, "Taxonomy of Data Science," is presented in a dark gray, sans-serif font, centered at the top of the slide.  Below the title, a list of bullet points describes the different stages or aspects of the data science process.  Each bullet point is a concise statement about a particular stage or aspect.  The text is in a standard, easy-to-read sans-serif typeface.  The overall impression is one of a straightforward summary of the data science process, using a concise and memorable taxonomy.  There are no images or figures on this slide.  The text is centered on the slide.  The font is a standard, easy-to-read sans-serif typeface.  The overall impression is one of a straightforward summary of the data science process, using a concise and memorable taxonomy.  The URL at the bottom of the slide is a link to an external website, likely a source for the information presented on the slide.
+
+

@@ -1,0 +1,18 @@
+# Slide 10
+
+**Singular value decomposition**
+
+A singular value decomposition (SVD) of an n × d matrix A expresses the matrix as the product of three "simple" matrices:
+
+A = USV<sup>T</sup>
+
+* U is an n × n orthogonal matrix
+* V is a d × d orthogonal matrix
+* S is an n × d diagonal matrix with nonnegative entries sorted from high to low
+
+
+---
+
+**Description:**
+
+This slide introduces the Singular Value Decomposition (SVD) concept.  It's part of a lecture on dimensionality reduction and matrix factorization within an Intro to Data Science course.  The slide presents the core formula for SVD, A = USV<sup>T</sup>, where A is the original matrix, U, V, and S are the decomposed matrices.  The slide also defines the properties of each of these decomposed matrices: U is an n × n orthogonal matrix, V is a d × d orthogonal matrix, and S is an n × d diagonal matrix with non-negative entries sorted from high to low.  The slide is straightforward and concise, focusing on the mathematical definition of SVD.  The context of the slide is to explain the mathematical tools used in dimensionality reduction techniques.

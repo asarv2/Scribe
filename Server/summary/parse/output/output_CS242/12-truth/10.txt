@@ -1,0 +1,16 @@
+# Slide 10
+
+**Example**
+
+Results of 2012 Ukrainian parliamentary elections
+
+---
+
+**Figure Description:**
+
+The slide displays a map of Ukraine, colored to represent the results of the 2012 Ukrainian parliamentary elections.  The map is a choropleth map, where different shades of color (primarily oranges and blues) are used to represent the proportion of votes received by different political parties.  The intensity of the color corresponds to the percentage of votes in each region.  The map is centered on the slide, and the colors are clearly visible, indicating the distribution of votes across different regions of Ukraine.  A histogram is positioned to the lower-right of the map, showing the distribution of voter turnout (likely the percentage of voters who cast ballots) across the regions.  The histogram's x-axis represents the percentage of voter turnout, and the y-axis represents the frequency or count of regions falling within each percentage range.  The histogram is used to provide a summary of the voter turnout distribution across the regions.  The legend, in Ukrainian, is positioned below the map, providing a key to the colors used to represent the different political parties.  The legend also includes the total number of polling stations (33,646) and the number of votes cast for each party.  The title "Results of 2012 Ukrainian parliamentary elections" is positioned below the map, providing context to the visualization.
+
+
+**Description of what you see:**
+
+This slide from an Introduction to Data Science course presents a visualization of the results of the 2012 Ukrainian parliamentary elections.  The visualization uses a map of Ukraine to show the distribution of votes for different political parties across various regions.  The colors on the map represent the percentage of votes received by each party in each region.  The histogram provides a summary of the voter turnout distribution across the regions.  The slide demonstrates how a choropleth map and a histogram can be used to visualize and understand election results.  The inclusion of the Ukrainian language in the legend and title suggests that the data is specifically related to the Ukrainian election.  The slide is likely part of a section on data visualization techniques, demonstrating how to use maps and histograms to represent election results.

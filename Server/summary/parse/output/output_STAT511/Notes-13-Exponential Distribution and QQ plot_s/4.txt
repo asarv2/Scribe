@@ -1,0 +1,32 @@
+# Slide 4
+
+**STAT 511 Course Notes – set 13 (W7)**
+
+**Yuan Qu**
+
+**Normal**  
+**Bimodal**  
+**Right skewed**
+
+• If the histogram or box plot appears roughly symmetric and unimodal, however, we need a more sensitive way to judge the adequacy of a Normal model.
+
+• The most useful tool for assessing Normality is another graph, the Probability plots (or Normal quantile plot, Normal QQ plot). The essence of such a plot is that if the distribution on which the plot is based is correct, the points in the plot should fall close to a straight line. If the actual distribution is quite different from the one used to construct the plot, the points will likely depart substantially from a linear pattern.
+
+**Sample percentiles**
+Order the *n* sample observations from smallest to largest. Then the *i*<sup>th</sup> smallest observation in the list is taken to be the [100(i – 0.5)/n]<sup>th</sup> sample percentile.
+
+**Population percentiles**
+
+If the sample was actually selected from the specified distribution, the sample percentiles (ordered sample observations) should be reasonably close to the corresponding population distribution percentiles.
+
+Let's consider the (population percentile, sample percentile) pairs — that is, the pairs ([100(i – 0.5)/n]<sup>th</sup> percentile of the distribution, *i*<sup>th</sup> smallest sample observation) for *i* = 1, …, *n*.
+
+
+**Figure Description:**
+
+The slide contains three histograms, each representing a different distribution shape: "Normal," "Bimodal," and "Right skewed."  These histograms are positioned in columns, with each histogram showing a distribution of data values.  The x-axis represents the data values, and the y-axis represents the frequency or count of data points in each bin.  The histograms are visually distinct, with the "Normal" histogram exhibiting a bell-shaped curve, the "Bimodal" histogram having two peaks, and the "Right skewed" histogram having a long tail extending to the right.  The histograms are used to illustrate the different shapes of distributions and how they might appear in data.  The histograms are placed in the upper portion of the slide, above the text.  The purpose of the histograms is to visually demonstrate the concept of different distribution shapes and how they might be identified in data.
+
+
+**Slide Description:**
+
+This slide continues the discussion of statistical methods, focusing on assessing whether a dataset follows a normal distribution.  It introduces the concept of probability plots (or Normal quantile plots) as a more sensitive way to judge normality than histograms or box plots.  The slide explains how to interpret probability plots and how deviations from a straight line indicate departures from a normal distribution.  The slide also introduces the concept of sample percentiles and how they relate to population percentiles, providing a method for comparing sample data to a theoretical distribution.  The inclusion of the histograms is crucial for visually demonstrating the different shapes of distributions and how they might be identified in data.  The slide builds upon the previous slides' discussion of distributions and provides a more in-depth look at assessing normality.

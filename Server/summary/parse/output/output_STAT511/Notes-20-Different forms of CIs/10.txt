@@ -1,0 +1,37 @@
+# Slide 10
+
+**STAT 511 Course Notes – set 20 (W10)**
+
+**Yuan Qu**
+
+Example 20.5 A data set of 30 sweetgum lumbers modulus rupture gives the sample mean and sample standard deviation 7203.191 and 543.5400 and a normal probability plot as:
+
+Q: calculate a confidence interval for true average MOR using a confidence level of 95%.
+
+The CI is based on n – 1 = 29 degrees of freedom, so the necessary t critical value is t<sub>0.025,29</sub> = 2.045.
+The interval estimate is
+
+𝑥̅ ± 𝑡<sub>0.025,29</sub> ∙𝑠/√𝑛 = 7203.191 ± (2.045) ∙543.5400/√30
+
+= 7203.191 ± 202.938
+
+We estimate 7000.253 < μ < 7406.129 that with 95% confidence.
+
+
+Example 20.6 Consider the following sample of fat content (in percentage) of n = 10 randomly selected hot dogs:
+
+25.2  21.3  22.8  17.0  29.8  21.0  25.5  16.0  20.9  19.5
+
+Assuming that these were selected from a normal population distribution. Construct a 95% CI for (interval estimate of) the population mean fat content. For your convenience, the sample mean has been calculated, as 21.90.
+
+
+---
+
+**Figure Description:**
+
+A normal probability plot is shown, positioned above the text.  The x-axis is labeled "Theoretical Quantiles," and the y-axis is labeled "Sample Quantiles."  The plot displays a series of points, roughly following a straight diagonal line.  This plot is used to assess whether the data is approximately normally distributed.  The straightness of the line indicates that the data is likely normally distributed.  The plot is located above the text of Example 20.5, providing visual support for the assumption of normality used in the confidence interval calculation.  The plot is relevant to the statistical methods discussion because it helps determine if the assumptions for the t-test are met.
+
+
+**Overall Context:**
+
+This slide continues the lecture on confidence intervals, specifically focusing on calculating confidence intervals for a population mean using the t-distribution.  It presents two examples, one using a sample of sweetgum lumber data and another using a sample of hot dog fat content.  The first example demonstrates the calculation of a 95% confidence interval for the average modulus of rupture (MOR) of sweetgum lumber, while the second example demonstrates the calculation of a 95% confidence interval for the average fat content of hot dogs.  The normal probability plot is included to visually assess the normality assumption, which is crucial for using the t-distribution.

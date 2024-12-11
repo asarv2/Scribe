@@ -1,0 +1,14 @@
+# Slide 63
+
+**A Visualization of Transmission**
+
+**(Figure Description):**
+
+A large map of the Southeastern United States is displayed.  The map shows the state outlines and major cities.  A large number of small, light-gray dots are scattered across the map, radiating outward from a central point near Atlanta, Georgia.  These dots represent the movement of people.  A red dot is positioned near Atlanta, labeled "Mourner," indicating the origin of the movement.  Other cities, such as Nashville, Birmingham, Charlotte, and Albany, also have clusters of dots around them, showing the spread of movement from the central point.  The density of the dots varies, with a higher concentration radiating outward from the "Mourner" point, suggesting a greater number of movements originating from that location.  The map is designed to visually represent the spread of something (likely a disease or an event) from a central point to other locations.  The title "A Visualization of Transmission" above the map indicates the purpose of the visualization.  The text below the map, "A mourner from Atlanta visit attend a funeral. Days later, through the community in on outbreaks in the country," provides context for the visualization, suggesting that the map represents the spread of an infectious disease or a similar phenomenon.  The URL at the bottom of the slide provides a link to the source of the visualization.
+
+
+**Description of what you see:**
+
+The slide shows a map visualization of the spread of something, likely a disease or an event, from a central point (Atlanta, Georgia).  The map is a geographic representation of the Southeastern United States, with numerous small dots radiating outward from Atlanta.  The dots represent the movement of people or the spread of the phenomenon.  The density of the dots visually indicates the intensity of the spread to different locations.  The title "A Visualization of Transmission" and the accompanying text below the map provide context for the visualization, suggesting that it represents the spread of an infectious disease or a similar phenomenon.  The URL at the bottom of the slide provides a link to the source of the visualization.  The slide is likely part of a discussion on data visualization techniques, specifically how to use maps to represent the spread of something over a geographic area.
+
+

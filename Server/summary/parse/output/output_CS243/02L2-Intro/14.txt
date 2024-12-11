@@ -1,0 +1,11 @@
+# 14
+
+# We've made great progress in AI over the last 60 years...
+But we've also notoriously underestimated problem difficulty...
+
+
+---
+
+**Description:**
+
+This slide presents a concise statement about the progress and challenges in the field of Artificial Intelligence (AI).  The text is a single paragraph, highlighting both the significant advancements made in AI over the past 60 years and the fact that the inherent difficulties of the field have often been underestimated.  There are no figures on this slide.  The slide is likely part of a larger presentation, and the statement is likely to be followed by further discussion or examples to illustrate the points made.  The slide's purpose is to introduce a key theme of the lecture, emphasizing the complex nature of AI research and development.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.  The use of ellipses at the end of each sentence suggests that the statement is a starting point for a larger discussion.

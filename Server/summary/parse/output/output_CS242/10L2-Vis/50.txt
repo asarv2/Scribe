@@ -1,0 +1,16 @@
+# Slide 50
+
+**Why plotly?**
+
+Plotly makes interactive, publication-quality graphs online created using Python and the Django framework
+It is compatible with a number of languages/ tools: R, Python, MATLAB, Perl, Julia, Arduino
+
+
+**(Figure Description):**
+
+A box plot with a smoothed fit line is displayed.  The x-axis represents months (Jan to Nov), and the y-axis represents "Thunderstorms" (a count or measurement).  The box plot shows the distribution of thunderstorm counts for each month.  Each box represents the interquartile range (IQR) of the data for that month, with the line inside the box indicating the median.  The whiskers extend to the minimum and maximum values within 1.5 times the IQR from the box.  Points outside the whiskers are considered outliers and are plotted individually.  A smoothed fit line is overlaid on the box plots, showing a general trend in the data over time.  The line is colored blue, and the shaded area around the line represents the confidence interval.  Numerical values are displayed on the smoothed fit line, indicating the predicted thunderstorm count for each month.  The figure is positioned centrally on the slide.  The title "Box plot with Smoothed Fit" is above the plot.
+
+
+**Description of what you see:**
+
+The slide discusses the advantages of using Plotly for data visualization.  It states that Plotly creates interactive, publication-quality graphs online using Python and the Django framework.  It also highlights Plotly's compatibility with various programming languages and tools.  Below the text, a box plot with a smoothed fit line is shown.  The box plot displays the distribution of thunderstorm counts across different months, and the smoothed fit line shows the trend in the data over time.  The plot is designed to illustrate the interactive and informative nature of Plotly visualizations.  The numerical values on the smoothed fit line provide specific data points for each month.  The title "Box plot with Smoothed Fit" above the plot indicates the type of visualization being displayed.

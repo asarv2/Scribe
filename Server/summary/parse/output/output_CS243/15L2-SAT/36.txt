@@ -1,0 +1,21 @@
+# 36
+
+**Key Advances in SAT Reasoning**
+
+Machine learning to build algorithm portfolios
+* Observation: no single SAT solver is good on every family of instances
+* Features of a given instance can be used to predict, with reasonable accuracy, which solver will work well on it!
+* Solution: design a portfolio solver using ML techniques
+* Based on runtime prediction models
+* Recent work – avoid complex models, use k-NN or clustering
+Automatic parameter tuning (generic and instance-specific)
+* SAT solvers are designed with many ‘hardwired’ parameters
+* Millions of parameter combinations – impossible to explore all by hand!
+* Solution: use automatic parameter tuning tools based on local search, genetic algorithms, etc.
+Efficient unit propagation
+* Data structures: watch-out tables (Chaff); Bitwise operation; Cache strategy, etc.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, discusses key advances in SAT reasoning.  It focuses on using machine learning (ML) techniques to build portfolios of SAT solvers, rather than relying on a single solver for all instances.  The slide highlights the observation that no single SAT solver is universally effective across all problem types.  It suggests that features of a specific SAT problem instance can be used to predict which solver will perform best on that instance.  The slide also mentions automatic parameter tuning as a crucial aspect of improving SAT solver performance, given the vast number of possible parameter combinations.  Finally, it touches on efficient data structures, such as watch-out tables, bitwise operations, and caching, as further optimizations in SAT solvers.  There are no figures on this slide.  The context suggests that this slide summarizes the current state-of-the-art techniques in SAT solving, building upon the previous discussion of DPLL and related algorithms.

@@ -1,0 +1,36 @@
+# 9
+
+**Propositional logic (Semantics)**
+
+Each model specifies true/false for each proposition symbol
+
+E.g.
+S1	S2	S3
+false	true	false
+
+With these symbols, 8 possible models, can be enumerated automatically. Rules for evaluating:
+
+¬S	is true iff	S is false
+S1 ∧ S2	is true iff	S1 is true and S2 is true
+S1 ∨ S2	is true iff	S1 is true or S2 is true
+S1 ⇒ S2	is true iff	S1 is false or S2 is true
+i.e.,	is false iff	S1 is true and S2 is false
+S1 ⇔ S2	is true iff	S1⇒S2 is true and S2⇒S1 is true
+
+Simple recursive process evaluates an arbitrary sentence, e.g.,
+¬S1 ∧ (S2 ∨ S3) = true ∧ (false ∨ true ) = true ∧ true = true
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of propositional logic, focusing on its semantics.  The title, "Propositional logic (Semantics)," indicates the topic.
+
+The slide presents a table-like structure.  The first line defines the concept of a model in propositional logic: each model assigns a truth value (true or false) to each propositional symbol (like S1, S2, S3).  An example is given in the next line, where S1 is false, S2 is true, and S3 is false.
+
+The following lines define how the logical connectives (¬, ∧, ∨, ⇒, ⇔) are evaluated based on the truth values of the propositional symbols they connect.  These rules are crucial for determining the truth value of complex logical expressions.
+
+The final line demonstrates a simple example of how a recursive process can evaluate a more complex propositional sentence.  The example shows how the truth values of simpler parts are combined to determine the truth value of the entire expression.
+
+The overall design is straightforward, using a light gray background and clear text to present the definitions and rules of propositional logic semantics.  There are no figures on this slide.  The content directly follows the previous slide, which introduced the syntax of propositional logic.  The slide is likely part of a larger lecture explaining how to evaluate and manipulate logical statements.

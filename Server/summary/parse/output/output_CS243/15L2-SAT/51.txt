@@ -1,0 +1,29 @@
+# 51
+
+**Applications of SAT (1)**
+
+Model Checking (hardware/software verification)
+* Bounded model checking (BMC)
+* Enhancement techniques: Abstraction and refinement
+* Major groups at Intel, IBM, Microsoft, and universities such as CMU, Cornell, and Princeton
+* SAT has become a dominant back-end technology
+
+Key questions:
+* Safety property: can system ever reach state S?
+* Liveness property: will system always reach T after it gets to S?
+
+Main idea:
+* Encode "reachability" in a finite transition graph
+* CNF encoding: in simple terms, "similar" to planning...
+
+
+**Visual Elements:**
+
+* **Image (Right):** A digital circuit board is shown.  The image is a close-up view of a printed circuit board (PCB).  The board shows numerous electronic components, including integrated circuits (ICs), resistors, capacitors, and other passive components.  The image is positioned in the right-hand side of the slide.  The image is likely included to illustrate the type of hardware that model checking techniques might be applied to.  The image is a visual representation of a hardware component, likely a digital circuit, and is used to illustrate the application of SAT to model checking.
+
+
+**Description:**
+
+This slide discusses the applications of SAT solvers, specifically in the context of model checking.  It introduces the concept of bounded model checking (BMC) as a key application.  The slide also mentions techniques like abstraction and refinement, and the significant adoption of SAT solvers by major technology companies and universities.  The key questions highlight the types of properties that can be verified using SAT-based model checking.  The main idea is that reachability in a finite transition graph can be encoded as a CNF formula, similar to planning problems.  The image of the circuit board is a visual aid to illustrate the practical application of SAT to hardware verification.  The slide is likely part of a lecture on AI Basics, introducing the use of SAT solvers in real-world applications.
+
+

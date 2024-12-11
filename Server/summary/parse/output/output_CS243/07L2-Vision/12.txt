@@ -1,0 +1,8 @@
+# Slide 12
+
+**Bag of Features**
+
+
+**Description of what you see:**
+
+This slide displays a single, centered heading: "Bag of Features".  The background is a neutral gray, and the text is dark gray, making it easily readable.  The simple design focuses attention on the topic of the slide.  The slide is likely introducing the concept of "Bag of Features" as a method for image classification in the context of AI Basics.  It's a straightforward title slide, setting the stage for the subsequent content in the lecture.

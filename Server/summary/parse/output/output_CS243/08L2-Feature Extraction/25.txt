@@ -1,0 +1,23 @@
+# Slide 25
+
+**Corner detection: the math**
+
+Consider shifting the window W by (u, v)
+How do the pixels in W change?
+
+*   Compare each pixel before and after by summing up the squared differences (SSD)
+*   Define an SSD "error":
+    E(u, v) = Σ<sub>(x,y)∈W</sub> [I(x + u, y + v) – I(x, y)]<sup>2</sup>
+
+We want E(u, v) to be as high as possible for all u, v to indicate a corner.
+
+**(Figure):**
+
+A light gray/white, slightly angled, line is drawn diagonally across a dark gray/black background.  A light-blue square is drawn near the bottom left of the diagonal line.  A slightly smaller, slightly offset, light-blue square is drawn inside the first light-blue square.  The two squares are positioned in a way that suggests a window (W) being shifted by a vector (u, v).  The smaller square inside the larger square is meant to represent a patch of pixels within the window.  The diagonal line is likely a visual aid to illustrate the concept of a window being shifted over an image.
+
+
+**Description of what you see:**
+
+This slide continues the discussion of corner detection, focusing on the mathematical formulation.  The text describes how to calculate the "error" (E(u, v)) when shifting a window (W) over an image by a vector (u, v).  The formula calculates the sum of squared differences (SSD) between the pixel intensities in the original window and the shifted window.  The figure visually represents the window (W) being shifted over an image, with the smaller square inside the larger square representing a patch of pixels within the window.  The diagonal line is likely a visual aid to illustrate the concept of a window being shifted over an image.  The slide is part of a lecture on computer vision, specifically on corner detection algorithms.
+
+

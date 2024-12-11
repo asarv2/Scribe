@@ -1,0 +1,14 @@
+# Slide 13
+
+**Textbook Readings**
+
+Bruce, P. and Bruce, A. (2017). Practical statistics for data scientists: 50 essential concepts. O'Reilly Media.
+
+Grus, J. (2015). Data science from scratch. O'Reilly Media.
+
+Schutt, R. and O'Neil, C. (2014). Doing data science. O'Reilly Media.
+
+
+**Slide Description:**
+
+This slide lists recommended textbooks for the Intro to Data Science course.  It's a simple bulleted list of book titles, authors, publication years, and publishers.  Three book covers are displayed, one for each book listed.  The covers are arranged vertically, with the book titles and authors visible on each cover.  The covers are likely images of the book's actual covers, and their purpose is to visually associate the book titles with the recommended readings.  The books are likely used as supplementary material for the course, providing additional information and examples related to the topics covered in the lectures.  The slide is straightforward and informative, providing students with resources to further their learning.

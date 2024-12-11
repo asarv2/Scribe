@@ -1,0 +1,701 @@
+# Slide 1
+
+**Introduction to Data Science**
+
+Purdue CS24200
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Introduction to Data Science.  The title "Introduction to Data Science" is prominently displayed in a large, clear font.  Below that, the course name (Purdue CS24200) and the instructor's name (Tony Bergstrom) are listed.  Finally, a small text at the bottom of the slide indicates the source of the slides, crediting Jen Neville and her CS 24200 course. The background color is a dark gray, making the text stand out.  The overall design is clean and professional, suitable for a course introduction.
+
+
+# Slide 2
+
+**RegEx, matching patterns in Strings**
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, displays a single heading: "RegEx, matching patterns in Strings".  The text is centered and in a dark, bold font.  The overall design is simple and straightforward, indicating the topic of the slide is regular expressions (RegEx) for string pattern matching.  The slide is likely part of a larger presentation on data manipulation or text processing techniques within the Intro to Data Science course.
+
+
+# Slide 3
+
+**Regular Expressions**
+
+Often when parsing, scraping, and processing data you need to search for specified elements in the text
+Regular expression are useful in for these operations
+Regular expressions are sequences of characters that specify a pattern(s) to be matched
+In python the `re` module provides support for regular expressions
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, introduces the concept of Regular Expressions (RegEx).  The title "Regular Expressions" is displayed in a large, bold font at the top.  The body of the slide explains the usefulness of RegEx in data processing tasks like parsing, scraping, and searching for specific elements within text.  It defines RegEx as sequences of characters that define patterns to be matched.  Finally, it mentions the Python `re` module as the tool for implementing RegEx in Python code.  The slide's layout is simple and focuses on conveying the core idea of RegEx and its application in data science.
+
+
+# Slide 4
+
+```markdown
+**Regular Expressions**
+
+import re
+# compile the regular expression object for reuse
+pattern = re.compile(r"\d") # r"" indicates a raw string
+sen = "This is a test that tests regular expression basics."
+pattern = re.compile(r"Data")
+# match tests if string starts with expression
+re.match(pattern, sen)
+# If matched, functions allow you to use the results
+# group() returns the string matched by the pattern
+# span() returns a tuple with the start, end positions of the 
+match
+```
+
+---
+
+**Description:**
+
+This slide continues the discussion of regular expressions (RegEx) within the Intro to Data Science course.  It presents Python code snippets demonstrating how to use the `re` module for RegEx operations.  The code shows how to compile a regular expression pattern using `re.compile()`, and then how to use the `re.match()` function to test if a string starts with a specific pattern.  The example uses the string "This is a test that tests regular expression basics." and the pattern "\d" (matching digits) and "Data".  The comments within the code explain the purpose of each line, including the use of raw strings (indicated by the `r` prefix).  The slide is focused on practical application of RegEx in Python, showing how to create patterns and test them against strings.  The code examples are crucial for understanding how to use RegEx in data processing tasks.
+
+
+# Slide 5
+
+**How to specify pattern to match**
+
+The power of regular expressions comes in the ability to match flexibly over possible sequences of characters
+Characters generally match themselves, for example...
+
+a  This matches the character 'a'
+
+Though there are exceptions:
+
+.  This element matches any character except \n, to match a "." use "\."
+[] This matches one character specified inside [], e.g. [aeiou]
+[^] This matches one character NOT specified inside [] after ^, e.g. [^abc]
+-  This matches one character in range inside []: e.g., [0-9] matches any digit
+^ This matches beginning of line (when not used in [^])
+$ This matches end of line (when not used in [] or [^])
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, continues the discussion of regular expressions (RegEx). It focuses on how to specify patterns within RegEx to match specific characters or sequences of characters.  The slide explains the basic syntax and rules for creating patterns.  It shows examples of how to match a single character (like 'a'), how to match any character (except newline), how to match a character from a set of characters (e.g., [aeiou]), how to match a character that is *not* in a set (e.g., [^abc]), and how to match a character within a range (e.g., [0-9]).  The slide also explains the use of special characters like `^` (beginning of line) and `$` (end of line) in defining patterns.  The examples are presented in a clear, organized manner, making it easy to understand the different ways to specify patterns for matching.  The slide is crucial for understanding the flexibility and power of RegEx in data processing tasks.
+
+
+# Slide 6
+
+**How to specify pattern to match**
+
+There are also special escape characters for categorical groups of characters
+
+`\d`  This matches any digit [0-9]
+`\D`  This matches non-digit characters [^0-9]
+`\s`  This matches whitespace character [ \t\n\r\f\v]
+`\S`  This matches non-whitespace character [^ \t\n\r\f\v]
+`\w`  This matches alphanumeric character [a-zA-Z0-9_]
+`\W`  This matches any non-alphanumeric character [^a-zA-Z0-9]
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, continues the discussion of regular expressions (RegEx). It provides a table-like presentation of special escape characters used in RegEx to match specific categories of characters.  Each line shows a special escape character (`\d`, `\D`, `\s`, `\S`, `\w`, `\W`) followed by a description of what it matches.  The descriptions include the corresponding character sets in square brackets, which define the specific characters that the escape character will match.  For example, `\d` matches any digit (0-9), while `\D` matches any character that is *not* a digit.  This slide is crucial for understanding how to use RegEx to match specific categories of characters, such as digits, whitespace, or alphanumeric characters, in data processing tasks.  The format is clear and concise, making it easy to understand the different escape characters and their corresponding matches.  The slide builds upon the previous slides, which introduced the basic concepts of RegEx and how to specify patterns.
+
+
+# Slide 7
+
+```markdown
+**SOME Regular expression methods in python**
+
+match() Determine if the RE matches at the beginning of the string
+search() Scan through string, look for any location where this RE matches
+findall() Find all substrings the RE matches, return as a list
+finditer() Find all substrings the RE matches, return as a iterable set of Match objects
+```
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, lists several methods available in Python's `re` module for working with regular expressions (RegEx).  The title "SOME Regular expression methods in python" indicates that this is not an exhaustive list of all possible methods, but rather a selection of commonly used ones.  Each method is presented on a separate line, with a brief description of its functionality.  The descriptions explain what each method does:
+
+*   `match()`: Checks if a pattern matches at the beginning of a string.
+*   `search()`: Scans the entire string to find any location where the pattern matches.
+*   `findall()`: Finds all occurrences of the pattern in the string and returns them as a list.
+*   `finditer()`: Finds all occurrences of the pattern and returns an iterable set of `Match` objects, providing more detailed information about each match.
+
+The slide's purpose is to introduce these important methods for using RegEx in Python code within the context of data science tasks.  The format is simple and direct, focusing on the function of each method.  The slide is a continuation of the previous slides, which introduced the concept of RegEx and how to specify patterns.
+
+
+# Slide 8
+
+**How to match repeated characters**
+
+A character by itself matches only one character in a string
+
+a
+This matches the character 'a' exactly once
+
+Can match one or more instances of a character (or set of characters)
+
+a?
+This matches the character 'a' zero or one time
+
+a*
+This matches the character 'a' zero or more times
+
+a+
+This matches the character 'a' one or more times
+
+a{n}
+This matches the character 'a' exactly n times
+
+Can combine these with multiple character matching
+
+\s+
+This matches on one or more whitespace characters
+
+Special characters in regular expressions:
+
+.^$*+?{}\[]|()
+
+Special characters must be escaped to be matched: e.g., \$
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, explains how to use regular expressions (RegEx) to match repeated characters or sequences of characters.  It details the use of quantifiers (e.g., `?`, `*`, `+`, `{n}`) to specify how many times a character or group of characters should appear in a match.  The examples show how to match a single 'a' (`a`), zero or one 'a' (`a?`), zero or more 'a's (`a*`), one or more 'a's (`a+`), and exactly 'n' 'a's (`a{n}`).  The slide also demonstrates how to match one or more whitespace characters using `\s+`.  Crucially, it highlights the need to escape special characters in RegEx patterns (e.g., `\$`) when you want to match them literally.  The examples are presented in a clear, step-by-step manner, making it easy to understand the different ways to specify repeated matches.  The slide builds upon the previous slides, which introduced the basic concepts of RegEx and how to specify patterns.
+
+
+# Slide 9
+
+**Regular Expressions: Examples**
+
+```python
+sen = "This is a test that tests regular expression basics for numbers 1234 and letters A-Z."
+# findall returns a list of matched substrings
+pattern = re.compile(r"test.")
+print(re.findall(pattern, sen))
+['test ', 'tests']
+# finditer returns an iterable collection of match objects
+for match in re.finditer(pattern, sen):
+    print(match.group(), match.span())
+test  (10, 15)
+tests (20, 25)
+```
+
+---
+
+**Description:**
+
+This slide demonstrates the use of the `findall` and `finditer` methods from the `re` module in Python, which are used for regular expression operations.  The code shows how to compile a regular expression pattern (`r"test."`) to find all occurrences of "test" (or "tests") within a given string (`sen`).
+
+*   **`re.findall(pattern, sen)`:** This line uses the `findall` method to find all occurrences of the pattern "test" in the string `sen`. The output is a list containing the matched substrings: `['test ', 'tests']`.  The space after "test" in the output is part of the match because of the `.` in the pattern.
+
+*   **`re.finditer(pattern, sen)`:** This line uses the `finditer` method to find all occurrences of the pattern "test" in the string `sen`. The output is an iterable set of `Match` objects.  The `for` loop iterates through these objects, and for each match, it prints the matched substring (`match.group()`) and the starting and ending positions of the match (`match.span()`).  The output shows the starting and ending indices of each match within the original string.
+
+The slide is part of a larger lecture on regular expressions within the Intro to Data Science course.  It provides practical examples of how to use these methods to extract specific substrings from a string based on a pattern. The output demonstrates the results of these methods, showing the matched substrings and their positions in the input string. The example string `sen` is used to illustrate the functionality of the methods. The output shows the matched substrings and their positions in the input string. The example string `sen` is used to illustrate the functionality of the methods.
+
+
+# Slide 10
+
+**Regular Expressions: Examples**
+
+```
+sen = "This is a test that tests regular expression basics for numbers 1234 and letters A-Z."
+# Match all single digits
+pattern = re.compile(r"\d")
+print(re.findall(pattern, sen))
+['1', '2', '3', '4']
+# Match all digits followed by a space
+pattern = re.compile(r"\d\s+")
+print(re.findall(pattern, sen))
+['4 ']
+# Did you perhaps want to match \d+\s+?
+# Did you really want that space on the end?
+```
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, provides examples of using regular expressions (RegEx) in Python to extract specific patterns from a string.  The example string `sen` contains a mix of text and numbers.
+
+*   **First Example:** The code `pattern = re.compile(r"\d")` compiles a regular expression to match any digit.  `re.findall(pattern, sen)` finds all the digits in the string `sen` and prints them as a list: `['1', '2', '3', '4']`.
+
+*   **Second Example:** The code `pattern = re.compile(r"\d\s+")` compiles a regular expression to match a digit followed by one or more whitespace characters.  `re.findall(pattern, sen)` finds the occurrences of this pattern in the string `sen` and prints them as a list: `['4 ']`.  The output shows that the pattern successfully matched the digit '4' followed by a space.
+
+*   **Questions:** The final two lines are questions prompting the audience to consider alternative patterns or the implications of the space character in the match.  These lines are likely part of a discussion or Q&A session, encouraging the audience to think critically about the regular expression patterns and their results.
+
+The slide is designed to illustrate how to use RegEx to extract specific patterns from text data, and the output demonstrates the results of the different patterns.  The example string `sen` is used to illustrate the functionality of the methods. The output shows the matched substrings and their positions in the input string. The example string `sen` is used to illustrate the functionality of the methods.
+
+
+
+
+# Slide 11
+
+**Grouping**
+
+Often we want the result to provide more information that just whether we found a match or not
+For example, we may operate on only part of the text that matched
+Groupings are used for this. Enclose portions of the regular expression in parentheses to access them via groups
+
+```
+sen = "This is a test that tests regular expression basics for numbers 1234 and letters A-Z."
+pattern = re.compile(r"(\d+)\s+")
+for match in re.finditer(pattern, sen):
+    print("'" + match.group(0) + "'")   # full match'
+    print("'" + match.group(1) + "'")   # first group'
+'1234 '
+'1234'
+```
+
+---
+
+**Description:**
+
+This slide, part of the Intro to Data Science lecture, demonstrates how to use grouping in regular expressions to extract specific parts of a matched string.  The example shows how to extract the numerical part of a string containing both numbers and text.
+
+*   **`sen`:** This variable holds the input string, which contains a sentence with numbers and letters.
+
+*   **`pattern = re.compile(r"(\d+)\s+")`:** This line defines the regular expression pattern.  Crucially, the parentheses `()` around `\d+` create a *capturing group*.  This means that the regular expression engine will remember the portion of the string that matched this group.  The `\s+` matches one or more whitespace characters after the digits.
+
+*   **`for match in re.finditer(pattern, sen):`:** This loop iterates through all matches of the pattern in the string.
+
+*   **`print("'" + match.group(0) + "'")`:** This line prints the *full match*, which includes the digits and the following whitespace.
+
+*   **`print("'" + match.group(1) + "'")`:** This line prints the *first capturing group*, which is just the sequence of digits (`\d+`).
+
+*   **Output:** The output shows that the code correctly extracts the digits "1234" from the input string.  The first `print` statement shows the full match, including the space after the numbers. The second `print` statement shows only the digits.
+
+The slide illustrates the use of capturing groups to extract specific parts of a matched string, which is a powerful technique for data extraction and manipulation in data science. The comments `# full match'` and `# first group'` are helpful annotations to understand the purpose of each `print` statement.
+
+
+# Slide 12
+
+**Order of operations**
+
+There is an order of operations in regular expressions
+
+*   `abc|def` matches the strings "abc" or "def", not "ab(c or d)ef"
+*   You can get around this using parenthesis e.g., a(bc|de)f
+
+By default, regular expressions try to capture as much text as possible (greedy matching)
+
+*   `<(.*)>` applied to `<tag>text</tag>` will match the entire expression
+*   If you want to capture the least amount of text possible use `<(.*?)>`
+the ? makes the matching lazy rather than greedy will just match the `<a>` term
+
+
+---
+
+**Description:**
+
+This slide, part of the Intro to Data Science course, discusses the order of operations in regular expressions (regex) and how to control the matching behavior.
+
+*   **Order of Operations:** The first bullet point explains that regex operators have a specific order of execution.  The example `abc|def` illustrates that the `|` (OR) operator has lower precedence than the other operators.  This means that `abc|def` will match either "abc" or "def", but not "ab(c or d)ef".
+
+*   **Parentheses for Grouping:** The second bullet point explains how parentheses can be used to change the order of operations and create capturing groups.  The example `a(bc|de)f` shows how parentheses force the `|` operator to apply to the `bc` or `de` parts, allowing the regex to match "abcf" or "adef".
+
+*   **Greedy Matching:** The next section explains that by default, regex engines are "greedy," meaning they try to match as much text as possible.  The example `<(.*)>` applied to `<tag>text</tag>` illustrates this.  The `(.*)` part will match the entire string between the `<tag>` and `</tag>` tags, not just the first `<tag>`.
+
+*   **Lazy Matching:** The final bullet point introduces the concept of "lazy" matching.  The example `<(.*?)>` shows how to use the `?` quantifier to make the matching lazy, meaning it will match the *least* amount of text possible.  The example `<(.*?)>` applied to `<tag>text</tag>` will only match the `<a>` part.
+
+The slide is crucial for understanding how to control the behavior of regex matches, especially when dealing with complex patterns in text data.  The examples are clear and illustrate the differences between greedy and lazy matching.
+
+
+# Slide 13
+
+**Regular Expressions: Examples**
+
+```python
+sen = "This is a test that tests regular expression basics for numbers 1234 and letters A-Z."
+# This .* will match everything it can
+pattern = re.compile(r"test.*")
+for match in re.finditer(pattern, sen):
+    print(match.group(), match.span())
+test that tests regular expression basics for numbers 1234 and letters A-Z. (10, 85)
+# This .*? will match as little as it can
+for match in re.finditer(r"test.*?", sen):
+    print(match.group(), match.span())
+test (10, 14)
+test (20, 24)
+```
+
+---
+
+**Description:**
+
+This slide demonstrates examples of regular expression (regex) matching in Python, specifically focusing on the difference between greedy and non-greedy matching.
+
+*   **Greedy Matching:** The first code block uses `test.*`.  The `.*` part is greedy; it will match as much as possible after "test".  The output shows the entire string from "test" to the end of the sentence, along with its starting and ending positions (10, 85).
+
+*   **Non-Greedy Matching:** The second code block uses `test.*?`. The `*?` makes the matching non-greedy (or lazy).  It will match the shortest possible string after "test".  The output shows two matches for "test", each with its starting and ending positions (10, 14) and (20, 24), demonstrating that it only matches the first occurrence of "test" in each case.
+
+The slide is part of a larger lecture on regular expressions within the Intro to Data Science course.  It highlights the importance of understanding the difference between greedy and non-greedy matching when using regular expressions to extract specific parts of a string. The examples are clear and illustrate the different behaviors of the matching patterns. The output shows the matched substrings and their positions in the input string. The example string `sen` is used to illustrate the functionality of the methods.
+
+
+
+
+# Slide 14
+
+**Using Regex**
+
+Regex search patterns get complicated and hard to debug
+
+*   Sometimes it may be better to use multiple patterns rather than a complicated one
+*   Document anything that gets complicated
+
+Use sites to help debug them: https://regex101.com/
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, discusses strategies for dealing with complex regular expression (regex) search patterns.  The slide advises that when regex patterns become overly complex, it might be more efficient and easier to maintain to use multiple, simpler patterns instead.  It also emphasizes the importance of documenting complex regex patterns to aid in understanding and debugging.  Finally, a URL (https://regex101.com/) is provided as a helpful resource for testing and debugging regex patterns.  The overall tone is practical, suggesting strategies for managing the complexity of regex patterns in data analysis tasks.  The slide is likely part of a larger discussion on data manipulation and text processing techniques within the Intro to Data Science course.
+
+
+# Slide 15
+
+**Complications**
+
+What are words?
+This is a sentence.
+Here is a 2nd sentence of 6 total examples.
+The raven's wings are black.
+It's a man-machine hybrid system.
+Who the &#$! did this?
+Sa sae ase u ae usasth.
+
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on Intro to Data Science, presents a series of sentences as examples.  The sentences are presented as a list, one per line.  The title "Complications" suggests that the sentences are intended to illustrate a point about the complexities of natural language processing or text analysis, perhaps highlighting challenges in defining words or sentences, or the difficulty of parsing complex sentences.  The sentences themselves are diverse, including a simple sentence, a more complex one, and one with unusual punctuation.  The presence of these sentences implies that the slide is part of a section of the lecture that is exploring the challenges of working with natural language data.  The slide is likely to be followed by a discussion or further examples related to the complexities of natural language.
+
+
+# Slide 16
+
+**Web page parsing with Beautiful Soup**
+Data Science from Scratch, Ch 9
+
+
+---
+
+**Description:**
+
+This slide is a title slide for a section of the Intro to Data Science course.  The title, "Web page parsing with Beautiful Soup," is presented in a clear, sans-serif font, likely indicating the topic of the upcoming lecture.  The subtitle "Data Science from Scratch, Ch 9" suggests that this is part of a larger chapter or module within a textbook or course material called "Data Science from Scratch."  The background color is a light gray, making the text stand out.  The overall design is clean and professional, typical of a slide used to introduce a new topic.  The slide is likely to be followed by content explaining how to use the Beautiful Soup library for web scraping or parsing HTML/XML documents.
+
+
+# Slide 17
+
+```markdown
+Beautiful Soup: Download a Webpage
+Data Science from Scratch, Ch 9
+
+from bs4 import BeautifulSoup
+import urllib
+r = urllib.request.urlopen('https:/www.cs.purdue.edu').read()
+soup = BeautifulSoup(r)
+# print out results
+print(soup.prettify())
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+ </head>
+ <body>
+  <span>
+   <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+   <meta charset="utf-8"/>
+   <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+   <meta content="width=device-width,initial-scale=1.0,shrink-to-fit=no" name="v
+  </span>
+  <title>
+   Purdue University - Department of Computer Science
+  </title>
+  <!-- Favicon -->
+  <link href="//www.purdue.edu/purdue/images/favicon.ico" rel="shortcut icon"/>
+  <!--CSS-->
+  <link href="https://www.purdue.edu/purdue/fonts/united-sans/united-sans.css" rel="stylesheet"/>
+<link href="https://use.typekit.net/ghc8hdz.css" rel="stylesheet"/>
+```
+
+---
+
+**Description:**
+
+This slide presents Python code for downloading and parsing a webpage using the Beautiful Soup library.  The code snippet demonstrates how to import necessary libraries (`bs4` for Beautiful Soup and `urllib` for fetching the webpage), make a request to a URL (`https://www.cs.purdue.edu`), and then parse the retrieved HTML content using Beautiful Soup.  The `soup.prettify()` method is used to format the parsed HTML for better readability.  The output, which is not fully displayed on the slide, would be the formatted HTML content of the webpage.  The code is designed to illustrate the process of web scraping and parsing using Beautiful Soup, a common task in data science.  The `print(soup.prettify())` line is crucial; it's the command that actually formats and prints the parsed HTML.  The slide is part of a section on web scraping techniques within the Intro to Data Science course.  The URL `https://www.cs.purdue.edu` is likely a sample webpage used for demonstration purposes.  The output would show the structured HTML of the Purdue CS webpage.
+
+
+```markdown
+# Slide 18
+
+**Beautiful Soup: Parse Links**
+Data Science from Scratch, Ch 9
+
+```python
+# find all links, i.e <a href="http://purdue.edu">Check this out!</a>
+links = soup.find_all('a')
+# get text associated with links
+for link in links:
+    linkText = link.get_text().strip()
+    print(linkText)
+# get urls
+for link in links:
+    # gets the href attribute
+    linkUrl = link["href"]
+    # filter for html pages with absolute path
+    if 'http' in linkUrl and '.html' in linkUrl:
+        print(linkUrl)
+```
+
+Skip to main content
+Find Info For
+Academics
+Admissions
+…
+http://www.purdue.edu/newsroom/index.html
+http://www.purdue.edu/president/index.html
+http://www.purdueofficialstore.com/index.html
+http://www.purdue.edu/visit/index.html
+…
+```
+
+**Description:**
+
+This slide presents Python code snippets for parsing web pages using the Beautiful Soup library.  The code is designed to extract links from a webpage and print the associated text and URLs.  The code is structured to find all `<a>` tags (links) on a webpage, extract the text content of each link, and then extract the `href` attribute (the URL) of each link.  The code then filters the URLs to only include those that are absolute URLs (starting with "http") and end with ".html".  The output would be a list of the extracted link text and filtered URLs.  The presence of the "Skip to main content," "Find Info For," "Academics," and "Admissions" text suggests that the code is likely being used to parse a webpage from a university website, possibly Purdue University.  The ellipsis (...) at the end of the output indicates that there are more URLs that would be printed if the full webpage were parsed.  The code is intended to demonstrate how to extract structured data from web pages using Beautiful Soup.  The code is presented in a way that is easy to read and understand, with comments explaining the purpose of each section.
+
+
+# Slide 19
+
+```markdown
+Beautiful Soup: Parse Paragraphs
+Data Science from Scratch, Ch 9
+
+# find all paragraph text without embedded links
+paragraphs = soup.find_all('p')
+for p in paragraphs:
+    if not p.find('a'):  # as in <a href ...
+        pText = p.get_text()
+        print(pText)
+Find Info For
+Quick Links
+Professors Xu, Bianchi, Tian and researchers at Purdue Computer Science
+recently discovered a vulnerability that affects many IoT devices running
+Bluetooth Low Energy (BLE). The research centers around the routine
+reconnection process of BLE devices. The researchers conclude that their
+discovery implies that this vulnerability can potentially affect more
+than 1 billion BLE devices and 16,000 BLE apps.
+```
+
+**Description:**
+
+This slide presents Python code and its intended output related to web scraping using the Beautiful Soup library.  The code snippet aims to extract paragraph text from a webpage, specifically excluding paragraphs that contain embedded links (`<a>` tags).  The code iterates through all paragraphs (`<p>`) found on the page.  If a paragraph does *not* contain an `<a>` tag (checked by `if not p.find('a')`), the paragraph's text content is extracted using `p.get_text()` and printed.  The output shows the extracted paragraph text, which in this case, is a description of a research finding about a vulnerability in Bluetooth Low Energy (BLE) devices.  The text is formatted as a paragraph, with the expected structure of a news article or research summary.  The presence of "Find Info For" and "Quick Links" suggests that the code is likely being used to parse a webpage from a university website, possibly Purdue University, and extract information about research findings.  The code is designed to extract the text content of paragraphs, excluding any links that might be present within those paragraphs.
+
+
+# Slide 20
+
+**Beautiful Soup Documentation**
+
+https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+
+---
+
+**Description:**
+
+This slide displays a single line of text, which is a URL.  The URL, `https://www.crummy.com/software/BeautifulSoup/bs4/doc/`, is a link to the documentation for the Beautiful Soup library.  This is a crucial resource for anyone working with Beautiful Soup, providing information on how to use its functions and methods for parsing HTML and XML documents.  The slide's purpose is to direct the viewer to the official documentation for the library, which is essential for understanding and using the library effectively.  The URL is centrally located on the slide, in a standard text format, and is the only content.  The context of the previous slides suggests that this slide is part of a lecture on web scraping and parsing techniques using Beautiful Soup, and this URL is provided as a reference for further learning and exploration of the library's capabilities.
+
+
+# Slide 21
+
+**TF-IDF - at the high level**
+
+
+---
+
+**Description:**
+
+This slide displays a single heading: "TF-IDF - at the high level".  The text is centered and in a dark, bold font on a light gray background.  The title indicates that the following content will be a high-level overview of the TF-IDF (Term Frequency-Inverse Document Frequency) method.  This is likely part of a lecture on text analysis or natural language processing techniques within the Intro to Data Science course.  The slide is likely to be followed by a more detailed explanation of TF-IDF, possibly including formulas, examples, or code snippets.
+
+
+# Slide 22
+
+|       |       |       |       |       |       |       |       |       |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| the   | it    | this  | or    | so    | me    | person | than  | back  |
+| be    | for   | but   | will  | up    | make  | into  | then  | after |
+| to    | not   | his   | an    | out   | can   | year  | now   | use   |
+| of    | on    | by    | my    | if    | like  | your  | look  | two   |
+| and   | with  | from  | one   | about | time  | good  | only  | how   |
+| a     | he    | they  | all   | who   | no    | some  | come  | our   |
+| in    | as    | we    | would | get   | just  | could | its   | work  |
+| that  | you   | say   | there | which | him   | them  | over  | first |
+| have  | do    | her   | their | go    | know  | see   | think | well  |
+| I     | at    | she   | what  | when  | take  | other | also  | way   |
+|       |       |       |       |       |       |       |       | us    |
+
+
+---
+
+**Description:**
+
+This slide presents a table displaying the most common words in the English language.  The table is organized into columns, with each column containing a list of words.  The words are arranged alphabetically within each column.  The table is likely part of a lecture on text analysis or natural language processing techniques within the Intro to Data Science course.  The purpose of this table is to illustrate the frequency of common words, which is a fundamental concept in various text analysis tasks, such as TF-IDF (Term Frequency-Inverse Document Frequency) calculations.  The table is a visual representation of the frequency distribution of words, which is useful for understanding the characteristics of text data.  The table is well-organized and easy to read, making it suitable for presenting the information in a clear and concise manner.  The context of the previous slide, which discussed TF-IDF, suggests that this table is relevant to the current topic of understanding word frequencies in text.
+
+
+# Slide 23
+
+|       |       |       |       |       |       |       |       |       |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| the   | it    | this  | or    | so    | me    | person | than  | back  |
+| be    | for   | but   | will  | up    | make  | into  | then  | after |
+| to    | not   | his   | an    | out   | can   | year  | now   | use   |
+| of    | on    | by    | my    | if    | like  | your  | look  | two   |
+| and   | with  | from  | one   | about | time  | good  | only  | how   |
+| a     | he    | they  | all   | who   | no    | some  | come  | our   |
+| in    | as    | we    | would | get   | just  | could | its   | work  |
+| that  | you   | say   | there | which | him   | them  | over  | first |
+| have  | do    | her   | their | go    | know  | see   | think | well  |
+| I     | at    | she   | what  | when  | take  | other | also  | way   |
+|       |       |       |       |       |       |       |       | us    |
+
+
+|       |       |       |       |       |       |       |       |       |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| time  | part  | good  | right | be    | come  | have  | think |
+| person| child | first | big   | do    | look  | say   | want  |
+| year  | eye   | new   | high  | get   | give  | make  | use   |
+| way   | woman | last  | different |  |  |  |  |
+| day   | place | long  | small |  |  |  |  |
+| thing | work  | great | large |  |  |  |  |
+| man   | week  | little| next  | go    | find  | know  | tell  |
+| world | case  | own   | early |  |  |  |  |
+| life  | point | other | young | take  | ask   | see   | work |
+| hand  | company| old   | important|       |       |       |       |
+
+
+**Description:**
+
+This slide presents a table, likely part of a lecture on Intro to Data Data Science.  The table is organized into columns, each containing a list of words.  The words are categorized into Nouns, Adjectives, and Verbs.  The words are presented in a tabular format, with each word appearing in a cell.  The words are common English words, and the table is likely intended to illustrate the frequency of these words in the English language.  The table is well-organized and easy to read, making it suitable for presenting the information in a clear and concise manner.  The context of the previous slide, which discussed TF-IDF, suggests that this table is relevant to the current topic of understanding word frequencies in text.  The table is likely used to illustrate the common words that appear in text data, which is a fundamental concept in various text analysis tasks.  The table is presented in a way that is easy to read and understand, with the words organized into categories for clarity.
+
+
+# Slide 24
+
+**TFIDF**
+
+Corpus should be similar to
+documents you are analyzing
+
+*   Classic Literature
+*   AP News stories
+*   Enron Emails
+*   Webpages in Wikipedia
+*   State of the Union Addresses
+
+**State of the Union Topics Unique to Presidencies**
+
+**(Graph Images)**
+
+_Detailed Description of Images:_
+
+The slide displays a collection of bar graphs, each representing the TF-IDF (Term Frequency-Inverse Document Frequency) values for specific words related to the State of the Union addresses given by different US presidents.  Each graph is a separate chart, showing the most frequent words unique to each presidency.  The x-axis represents the value of TF-IDF, and the y-axis lists the words.  The graphs are arranged in a grid-like format, with each graph corresponding to a different president (Ronald Reagan, Bill Clinton, George H. W. Bush, George W. Bush, Barack Obama, and Donald J. Trump).  The color of each bar corresponds to the president.  The graphs are positioned to provide a visual comparison of the topics discussed in each president's State of the Union addresses.  The graphs are crucial for understanding the unique themes and topics that each president highlighted in their speeches.  The presence of the URL at the bottom of the slide (`https://diving4data.com/projects/state-of-the-union-analysis/`) suggests that this data visualization is part of a larger project or analysis focused on State of the Union addresses.
+
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents a summary of the TF-IDF concept and its application to analyzing State of the Union addresses.  The top section lists different types of text corpora that would be suitable for TF-IDF analysis.  The bottom section shows a series of bar graphs, each visualizing the TF-IDF values for specific words related to the State of the Union addresses given by different US presidents.  The graphs visually represent the unique topics discussed in each president's speeches.  The slide is designed to illustrate the practical application of TF-IDF in analyzing textual data, specifically focusing on the unique themes in presidential speeches.
+
+
+
+
+# Slide 25
+
+**TFIDF**
+
+A simple 'bag of words' model of documents
+
+TF: Term Frequency
+for each term in each document, the number of times the word occurs divided by the number of the words in the document
+
+IDF: Inverse Document Frequency
+for each term across the corpus: ln(N / (1 + n<sub>t</sub>))
+where N is the number of documents, and n<sub>t</sub> is the number of documents that contain the term
+
+TFIDF: Multiply TF by IDF to get a sense of words more unique in a document
+
+ln(100/101) = -0.00995
+ln(100/50) = 0.6931
+ln(100/10) = 2.3
+
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, defines TF-IDF (Term Frequency-Inverse Document Frequency).  It explains the concepts of Term Frequency (TF) and Inverse Document Frequency (IDF) in the context of a "bag of words" model for documents.  The slide provides the formulas for calculating TF and IDF, along with a brief explanation of what each component represents.  It also shows example calculations of the natural logarithm (ln) of different ratios, which are likely used in the IDF calculation.  The slide is designed to provide a concise overview of the TF-IDF method, which is a crucial technique in text analysis for identifying important terms in a collection of documents.  The examples of ln calculations are likely to be used in the context of calculating IDF values for specific terms in a corpus of documents.
+
+
+# Slide 26
+
+**Document Term Matrix - A key step**
+
+For doing word based analysis on any natural language text, you'll often construct a table to indicate the document (record) and the number of occurrences of each word (feature)
+
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, introduces the concept of a Document-Term Matrix.  The title, "Document Term Matrix - A key step," clearly indicates the topic.  The text explains that when performing word-based analysis on natural language text, a table is often created to show the relationship between documents and the frequency of each word.  This table, the Document-Term Matrix, is a crucial step in many text analysis tasks, such as those involving TF-IDF calculations.  The slide is likely to be followed by examples or further explanations of how to construct and use such a matrix.  The slide is concise and directly to the point, focusing on the core idea of the Document-Term Matrix.  There are no figures on this slide.
+
+
+# Slide 27
+
+**From Text to Table**
+
+Remove Punctuation / Stop Words
+Convert to same case
+Identify unique words (stem to roots?)
+Count the occurrences of each word
+Add the document to your table
+* Add new columns for new words
+* Record frequencies for appearing words
+* Record zeros for the rest
+Repeat for the corpus
+
+25 "This collar enjoy thou, Beowulf worthy,
+Young man, in safety, and use thou this armor,
+Gems of the people, and prosper thou fully,
+Show thyself sturdy and be to these liegemen
+Mild with instruction! I'll mind thy requital.
+30 Thou hast brought it to pass that far and near
+Forever and ever earthmen shall honor thee,
+Even so widely as ocean surroundeth
+The blusterina bluffs. Be. while thou livest.
+
+Document	collar	enjoy	beowulf	young	man	safety
+Beowulf	—	—	—	—	—	—
+Frankenstein	—	—	—	—	—	—
+Alice in	
+Wonderland	—	—	—	—	—	—
+Pride and	
+Predjudice	—	—	—	—	—	—
+
+
+**Description of the Slide:**
+
+This slide outlines the steps involved in transforming textual data into a structured table format, suitable for analysis.  The top section lists the preprocessing steps required: removing punctuation, converting text to lowercase, identifying unique words (potentially stemming them), counting word occurrences, and populating a table.  The bottom section shows a partially completed table, where the columns represent unique words (like "collar," "enjoy," "beowulf") and the rows represent different documents (like "Beowulf," "Frankenstein").  The empty cells indicate that the frequency counts for those words in those documents have not yet been determined.  The presence of the text from a portion of a literary work (Beowulf) suggests that the slide is part of a lecture on text analysis, specifically on how to prepare text data for quantitative analysis.  The table structure is a key component of the process, allowing for the creation of a Document-Term Matrix, which is a fundamental step in many text analysis tasks, such as TF-IDF calculations.  The slide is designed to illustrate the workflow from raw text to a structured table representation.

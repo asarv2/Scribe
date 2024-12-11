@@ -1,0 +1,28 @@
+# Slide 33
+
+**for Loops**
+
+For-each is Python's only for construction
+A for loop steps through each of the items in a collection type, or any other type of object which is "iterable"
+```
+for <item> in <collection>:
+    <statements>
+```
+If `<collection>` is a list or a tuple, then the loop steps through each element of the sequence.
+If `<collection>` is a string, then the loop steps through each character of the string.
+```
+for someChar in "Hello World":
+    print(someChar)
+```
+`<item>` can be more complex than a single variable name.
+When the elements of `<collection>` are themselves sequences, then `<item>` can match the structure of the elements.
+```
+for (x, y) in [('a', 1), ('b', 2), ('c', 3), ('d', 4)]:
+    print(x)
+```
+
+**Description:**
+
+This slide explains the `for` loop construct in Python.  It emphasizes that the `for` loop in Python is a "for-each" loop, iterating over the elements of an iterable object.  The syntax is shown, with `<item>` representing the variable that will hold each element during an iteration, and `<collection>` representing the iterable object.  The slide provides examples of iterating over a string ("Hello World") and a list of tuples.  The examples demonstrate how the `for` loop can handle different data structures and how the `<item>` variable can be more complex than a simple variable name (e.g., a tuple `(x, y)` in the second example).  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The examples are presented in a clear, concise manner, illustrating the use of `for` loops for iterating over various data structures in Python.
+
+

@@ -1,0 +1,22 @@
+# Slide 8
+
+**Structural Recursion: Traversal**
+
+Breadth First visits a level at a time:
+* 36, 10, 78, 3, 21, 55, 105, ...
+* Check the current node,
+add children to a queue
+
+Depth First traverses down a branch:
+* 36, 10, 3, 1, 6, 21, 15, 28, ...
+* Check current node,
+then left, then right (other orders are possible)
+
+**(Diagram):**
+
+A diagram of a tree structure is presented.  The tree is oriented vertically, with the root node (36) at the top.  The nodes are rectangular boxes, filled with a light-blue color, and contain numerical values (e.g., 36, 10, 78, 3, 21, etc.).  Arrows connect the nodes, indicating the parent-child relationships within the tree structure.  The tree branches downward, showing the hierarchical structure of the nodes.  The nodes are arranged in levels, with nodes at the same level connected to the same parent node.  The diagram visually represents a tree structure, illustrating the concept of traversing the tree using breadth-first and depth-first approaches.  The numbers in the boxes represent data values associated with each node in the tree.  The diagram is centrally located on the slide and is oriented vertically, with the root node at the top and the leaf nodes at the bottom.  The diagram is crucial for understanding the recursive traversal of the tree structure, as it visually demonstrates the hierarchical structure of the nodes and their relationships.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concepts of breadth-first and depth-first traversal of a tree data structure.  The slide uses a diagram of a tree to illustrate these traversal methods.  The diagram shows the hierarchical structure of the tree, with nodes connected by arrows.  The numbers in the boxes represent data values associated with each node.  The text explains that breadth-first traversal visits nodes level by level, while depth-first traversal visits nodes along a branch.  The slide is designed to illustrate the different traversal methods and their application to tree structures.  The example tree is used to demonstrate how these traversal methods would work on a specific tree structure.

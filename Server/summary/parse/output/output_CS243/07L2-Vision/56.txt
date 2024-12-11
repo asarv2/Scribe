@@ -1,0 +1,20 @@
+# Slide 56
+
+**Sharpening filter**
+
+**(Image Description):**
+
+The slide shows a visual representation of a sharpening filter.  On the left side, there's a grayscale image of a portion of a person's face, likely an eye and surrounding area.  This image is labeled "Original."  The image is pixelated, showing distinct blocks of color, suggesting it might be a low-resolution or noisy image.
+
+In the center of the slide, there's a teal/turquoise-colored box containing two 3x3 matrices.  The matrix on the left contains the values `0 0 0`, `0 2 0`, `0 0 0`.  The matrix on the right contains the values `1 1 1`, `1 1 1`, `1 1 1`, with a `1/9` written in the center.  These matrices represent the kernels (filters) used in the sharpening operation.  The left matrix is a blurring kernel, and the right matrix is a sharpening kernel.  The asterisk (*) between the matrices indicates a convolution operation.
+
+On the right side of the slide, there's another grayscale image of the same portion of a person's face as the original image.  This image is labeled as the result of applying the sharpening filter.  The image is noticeably sharper than the original, with more defined edges and details.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, demonstrates the application of a sharpening filter in image processing.  The slide visually shows the original image, the kernel used for sharpening, and the resulting sharpened image.  The visual representation of the kernels and the effect on the image are intended to illustrate the concept of sharpening filters and how they enhance image details.  The source is attributed to D. Lowe.
+
+
+**What you see:**
+
+The slide presents a visual demonstration of a sharpening filter.  The original image is pixelated, and the sharpened image is smoother and more detailed.  The 3x3 matrices represent the kernels used in the sharpening process.  The slide is designed to illustrate the visual effect of applying a sharpening filter to an image.  The use of a grayscale image of a face is a common example for demonstrating image processing techniques.

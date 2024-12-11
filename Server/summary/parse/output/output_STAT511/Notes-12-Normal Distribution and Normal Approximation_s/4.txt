@@ -1,0 +1,40 @@
+# Slide 4
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+5. Un-standardize to transform the z-score back to the original x scale.
+Since 𝑧= (𝑥– 𝜇)/𝜎, the equation for x is 𝑥= 𝜇+ 𝑧𝜎.
+? 𝑜𝑟 𝑥𝑎= 4 + (1.28) × (0.25) = 4.32.
+ANSWER: The wingspan that is longer than 90% of all adult dragonfly wingspans is 4.32 inches.
+
+b) What wingspan is less than 80% of all adult dragonfly wingspans?
+1. Draw a picture and write this in mathematical notation.
+𝑃(𝑋> ? ) = 0.8000
+2. We are given 0.8000 as the proportion of interest.
+3. NOTE: 0.8000 is NOT a cumulative probability.
+The cumulative probability is
+4. Find the proportion 0.2000 in the body of the Z-table and then look up the z–score.
+𝜙(−0.84) = 0.2005 ≈0.2000,
+𝑧≈−0.84
+5. Un-standardize to transform z– score back to the original x scale using 𝑥= 𝜇+ 𝑧𝜎
+𝑥𝑏=
+Note: The answer to questions of this type will always be a variable value 𝑥.
+
+c) Between what two lengths do the middle 95% of all adult
+dragonfly wingspans fall?
+1. Draw a picture and write this in mathematical
+notation.
+𝑃(? 𝑥𝑐1 < 𝑋< ? 𝑥𝑐2) = 0.9500
+2. Since we want the middle 95%, we actually have to
+look up the numbers corresponding to the boundaries of this region. The cumulative
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+**Overall Context:**
+
+This slide continues the previous discussion of normal distributions and z-scores, focusing on how to find the original variable value (x) given a probability or proportion.  It provides examples and steps to solve problems involving finding specific wingspan values based on percentages of all adult dragonfly wingspans.  The examples are designed to illustrate the application of the concepts and formulas introduced in the previous slides.  The slide also emphasizes the importance of understanding cumulative probabilities versus raw probabilities when using z-tables.

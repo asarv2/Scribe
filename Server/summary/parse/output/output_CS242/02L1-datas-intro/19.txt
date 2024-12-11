@@ -1,0 +1,22 @@
+# Slide 19
+
+**Early detection of sepsis**
+
+*Henry et al. 2015*
+
+Electronic health records of 16,234 patients
+
+Cox proportional hazards model. Uses 27 factors, based on routinely collected inputs
+
+ML method correctly predicts septic shock in 85% cases, without increasing false positives
+
+>2/3 of the time, ML method correctly predicted septic shock before any organ dysfunction — a 60% improvement over existing screening protocols.
+
+
+---
+
+**Visual Description:**
+
+The slide has a light-gray background.  The title "Early detection of sepsis" is prominently displayed in a dark, bold font.  Below the title, the author's name and year ("Henry et al. 2015") are listed.  The rest of the text describes the study, including the number of patients (16,234), the type of model used (Cox proportional hazards model), the number of factors considered (27), and the accuracy of the machine learning method in predicting septic shock (85%).  The text also highlights the significant improvement over existing screening protocols (60%).
+
+In the background, there is a somewhat blurry image of a hospital or clinic setting.  It shows a busy scene with people in medical scrubs, computers, and medical equipment.  This image is likely included to provide context for the medical application of the data analysis techniques discussed.  The image is oriented horizontally and takes up a significant portion of the slide's right side.  The image is not a precise representation of the data, but rather a visual cue to the medical context of the study.

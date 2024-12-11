@@ -1,0 +1,28 @@
+# Slide 9
+
+**Challenges: occlusion**
+
+* **Image 1 (Left):** A gray tabby cat is mostly hidden under a patterned, light brownish-gray/beige blanket or cloth. Only the cat's head and upper body are visible. The blanket has a pattern of light and dark shapes, and the edges of the blanket are slightly frayed. The lighting is relatively soft and diffused.
+
+* **Image 2 (Center):** A light gray and white cat is partially hidden within tall grass.  Only parts of the cat's body are visible, and the grass obscures a significant portion of the cat. The grass is a mix of light and dark green/brown tones. The lighting suggests an outdoor setting with natural light.
+
+* **Image 3 (Right):** A light beige/cream-colored couch. A portion of a gray and black striped cat's tail is visible, extending from the middle of the couch. The tail is positioned on top of the couch's cushions. The couch has a textured, quilted or tufted pattern.
+
+
+**Attribution:**
+
+Below each image, the text indicates the image's licensing:
+
+* **Image 1:** "This image is CC0 1.0 public domain"
+* **Image 2:** "This image is CC0 1.0 public domain"
+* **Image 3:** "This image by jonsson is licensed under CC-BY 2.0"
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of challenges in image classification.  It introduces the challenge of occlusion, where parts of an object are hidden or obscured by other objects or elements in the image. The images are presented to visually demonstrate how occlusion can make it difficult for a computer vision system to accurately identify and classify objects.  The images are examples of how parts of the cat are hidden by other objects, making it harder to recognize the cat.  The slide builds on previous slides that discussed viewpoint variation, illumination, and deformation as challenges in image classification.
+
+
+**What you see:**
+
+The slide displays three images, each illustrating a different instance of occlusion.  The images are arranged horizontally, with each image taking up a third of the slide's width.  The images are of cats, but in each case, parts of the cats are hidden by other objects (a blanket, grass, or a couch).  The text below each image indicates the licensing of the image, which is important for understanding the rights associated with using the image.  The overall design of the slide is simple and straightforward, focusing on the visual representation of the concept of occlusion.

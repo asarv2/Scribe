@@ -1,0 +1,15 @@
+# Slide 18
+
+**Subsetting Data**
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain, light gray background, has the single, bold, centered title "Subsetting Data" in a dark gray font.  It's a simple slide, likely serving as a heading for the next section of the lecture, which will cover techniques for selecting specific portions of a dataset in a data science context.  There are no figures or other elements on this slide.
+
+
+**What you see:**
+
+A plain, light gray background with the title "Subsetting Data" centered in a dark gray, sans-serif font.  The title is large enough to be prominent but not overly large.  The slide is entirely text-based.

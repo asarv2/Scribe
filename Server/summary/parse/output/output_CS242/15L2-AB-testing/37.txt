@@ -1,0 +1,20 @@
+## Slide 37
+
+**Sampling**
+
+Sampling is the main technique employed for data selection
+* It is often used for both the preliminary investigation of the data and the final data analysis
+Reasons to sample
+* Obtaining the entire set of data of interest is too expensive or time consuming
+* Processing the entire set of data of interest is too expensive or time consuming
+* Note: Even if you use an entire dataset for analysis, you should be aware of the sampling method that was used to gather the dataset
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on Introduction to Data Science, introduces the concept of sampling.  It explains that sampling is a crucial technique in data science for selecting data subsets for analysis.  The slide highlights that sampling is used both in preliminary investigations and in final analyses.  The reasons for sampling are given as the cost and time associated with processing the entire dataset.  Importantly, the slide emphasizes the importance of understanding the sampling method used to collect the data, even when using the entire dataset for analysis.

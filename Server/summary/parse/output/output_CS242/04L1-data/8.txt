@@ -1,0 +1,19 @@
+# 8
+
+# Structured Data (Relational)
+
+Collection of data items, with varying numbers of properties and relationships among them
+(organization of information is specified by data schema/model), e.g., relational databases,
+graph data
+
+---
+
+**Description:**
+
+This slide, titled "Structured Data (Relational)," introduces the concept of structured data, specifically relational data.  The slide contains a large, complex diagram.
+
+* **Diagram:** The diagram is a visual representation of a relational database schema.  It shows interconnected boxes and lines, representing tables and relationships between them.  The boxes are labeled with names (e.g., "P4_Data_pending," "P4_Data_pending_types").  The lines indicate relationships between the tables.  The boxes and lines are colored and shaded in various shades of light blue, light green, and light pink, making the diagram visually complex but also somewhat organized.  The diagram is large and takes up most of the slide, filling the space from the top to the bottom and from the left to the right.  The diagram is not a simple flowchart, but rather a complex network of interconnected tables and relationships.  The diagram is likely intended to illustrate the structure and relationships within a relational database.  The complexity of the diagram is meant to show the interconnectedness and variety of data within a relational database.
+
+**Overall:** The slide is designed to visually represent the concept of structured data, specifically relational data, by showing a complex diagram of a relational database schema.  The diagram is a key element in illustrating the concept of structured data in the context of a data science course.
+
+

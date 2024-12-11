@@ -1,0 +1,33 @@
+# Slide 8
+
+3.  H<sub>0</sub> implies that a lower-tail test is appropriate. The p-value is p-value = P(T < -1.801) = 0.046
+
+4. Using a significance level of 0.05, we can barely reject the null hypothesis in favor of the alternative hypothesis, confirming the conclusion stated in the article. However, someone demanding more compelling evidence might select α=0.01, a level for which H<sub>0</sub> cannot be rejected.
+
+
+Case 4: X and Y are normal with unknown with equal variances:
+Pooled t procedure
+
+If we can assume that not only that the two population distributions are normal but also that they have equal variances, we can use a pooled t test statistic for difference of the two samples.
+
+Let σ<sup>2</sup> denote the common population variance. Then standardizing X̅ − Y̅ gives
+
+Z<sub>TS</sub> = (X̅ − Y̅) − Δ<sub>0</sub>
+√σ<sup>2</sup>/m + σ<sup>2</sup>/n  
+= (X̅ − Y̅) − Δ<sub>0</sub>
+σ√(1/m + 1/n)
+
+which has a standard normal distribution.
+
+The following weighted average of the two sample variances, called the pooled (i.e., combined) estimator of σ<sup>2</sup>, adjusts for any difference between the two sample sizes:
+
+S<sub>p</sub><sup>2</sup> = ((m − 1)S<sub>1</sub><sup>2</sup> + (n − 1)S<sub>2</sub><sup>2</sup>) / (m + n − 2)
+
+Note: This estimator combines the information of data X and Y together for the estimation. The first sample contributes m − 1 df to the estimator, and the second sample contributes n − 1 df, for a total of m + n − 2 df.
+
+This pooled estimator of σ<sup>2</sup> will be used to substitute unknown population variance σ<sup>2</sup> in the above expression for Z.
+
+
+**Figure Description:**
+
+There is no figure on this slide. The slide is entirely text-based, presenting the statistical methodology for a pooled t-test.  It details the case where the populations are normally distributed, have equal variances, but the variances are unknown. The slide introduces the pooled variance estimator (S<sub>p</sub><sup>2</sup>) and explains how it's used to calculate the test statistic.  The content is a continuation of the previous slides' discussion on hypothesis testing and confidence intervals for comparing two population means, now focusing on the case with unknown and equal variances.  The slide also includes a worked example (Example 24.4) that is referenced in the previous slide.

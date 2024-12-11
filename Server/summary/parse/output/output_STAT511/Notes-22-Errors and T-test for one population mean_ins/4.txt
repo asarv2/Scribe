@@ -1,0 +1,39 @@
+# 4
+
+**Test procedure and calculation of type I and type II error probabilities (continued)**
+
+**b.** Let 𝑋̅ denote the sample average compressive strength for 𝑛=20 randomly selected specimens. Consider a test procedure that rejects 𝐻<sub>0</sub> when 𝑋̅ ≥ 1331.26. What is the probability distribution of the test statistic when 𝐻<sub>0</sub> is true? What is the probability of a type I error for the test procedure?
+
+𝑋̅ is normally distributed with mean 𝐸(𝑋̅) = 𝜇 and standard deviation  𝜎/√𝑛 = 60/√20 = 13.416. When 𝐻<sub>0</sub> is true, 𝐸(𝑋̅) = 1300. Thus,
+
+𝛼 = 𝑃(𝑋̅ ≥ 1331.26  when 𝐻<sub>0</sub> is true)
+
+= 𝑃(𝑍 ≥ (1331.26−1300)/13.416) = 𝑃(𝑍 ≥ 2.33) = 0.01
+
+**c.** What is the probability distribution of the test statistic when µ=1350? Using the test procedure of part (b), what is the probability that the mixture will be judged unsatisfactory when in fact µ=1350 (a type II error)?
+
+When µ = 1350, 𝑋̅ has a normal distribution with mean 1350 and standard deviation 13.416, so
+
+𝛽(1350) = 𝑃(𝑋̅ < 1331.26  when µ=1350)
+
+= 𝑃(𝑍 ≤ (1331.26−1350)/13.416) = 𝑃(𝑍 ≤ −1.40) = 0.0808
+
+
+**Example 22.3** (Another example of calculating Type II error) The true average voltage drop from collector to emitter of insulated gate bipolar transistors of a certain type is supposed to be at most 2.5 volts. Consider a hypothesis test 𝐻<sub>0</sub>: µ = 2.5 versus 𝐻<sub>𝑎</sub>: µ > 2.5. An investigator selects a sample of 𝑛 = 10 such transistors to test the hypotheses. Assume normal distribution and the standard deviation of the voltage distribution is σ = 0.100. Let significance level α=0.05. How likely is it that 𝐻<sub>0</sub> will not be rejected when in fact µ = 2.6?
+
+Since the distribution is normal and σ = 0.100 is known, we use a 𝑧-test for the hypotheses.
+
+With α=0.05, the rejection region is
+
+{𝑍 > 1.64} = { (𝑋̅−2.5)/0.100/√10 > 1.64} or {𝑋̅ > 2.5 + 1.64 * 0.100/√10}.
+
+The probability of Type II error, or β is
+
+𝛽(2.6) = 𝑃(𝑋̅ < 2.5 + 1.64 * 0.100/√10 | µ=2.6) = 𝑃((𝑋̅ −2.6)/0.100/√10 < 1.64 −√10)
+
+It is 𝑃(𝑍 < −1.52) = 0.064.
+
+
+**Description of the Slide:**
+
+This slide (number 4) continues the examples from the previous slides, demonstrating the calculation of type I and type II error probabilities in a statistical methods course.  It continues Example 22.1 and introduces Example 22.3.  Example 22.1 continues the calculation of probabilities for different rejection regions, now with a normal distribution.  Example 22.3 introduces a new application involving voltage drop in transistors, and calculates the probability of a type II error.  The calculations involve the use of the standard normal distribution (Z) and the formula for the standard error of the mean.  The slide is structured to show the steps involved in hypothesis testing, including defining the hypotheses, choosing a test statistic, and determining the rejection region.  The slide number (4) is present at the bottom right corner.  The examples are clearly presented, with the relevant calculations and formulas shown.  The context of the examples is provided, making it clear why these calculations are being performed.  The formulas are presented in a way that is easy to follow, with clear explanations of the variables involved.

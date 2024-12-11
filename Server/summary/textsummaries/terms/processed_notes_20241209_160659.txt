@@ -1,0 +1,71 @@
+
+--- Key Terms ---
+artifical intelligence basics
+turing test
+perceptron
+game tree
+alpha-beta pruning
+minimax search
+reinforcement learning
+partial derivative
+matrix multiplication
+matrix inverse
+derivative
+matrix transposition
+gradient
+linear transform
+matrix
+inductive reasoning
+perceptron loss
+sigmoid function
+gradient descent
+binary classification
+hinge loss
+model evaluation
+stochastic gradient descent
+0-1 loss
+decision boundary
+linear regression
+overfitting
+empirical risk minimizer
+logistic loss
+logistic regression
+--- Problem Types ---
+artifical intelligence basics
+understanding the nature of intelligence
+defining artificial intelligence
+developing algorithms for complex environments
+exploring the similarities between ai tasks
+addressing ai safety concerns
+passing the turing test
+overcoming the limitations of search
+understanding the complexity of ai problems
+solving systems of linear equations
+representing linear transformations with matrices
+matrix arithmetic
+matrix transposition
+calculus in ai
+parallelization of matrix multiplication
+binary classification
+curve fitting
+linear regression
+overfitting
+choosing a loss function
+minimizing loss using gradient descent
+multiple linear regression
+--- Algorithm Solutions ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning
+matrix scalar multiplication
+matrix multiplication
+derivative of sigmoid function
+matrix transposition
+parallel matrix multiplication using domain decomposition
+solving linear equations with invertible matrices
+matrix addition
+logistic regression
+multiple linear regression
+perceptron algorithm
+linear regression
+binary classification using linear models

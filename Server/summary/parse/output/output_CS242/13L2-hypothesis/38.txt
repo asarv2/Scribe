@@ -1,0 +1,30 @@
+# Slide 38
+
+**Statistical power**
+
+Lack of statistical significance does not necessarily imply that H<sub>0</sub> is true.
+Test could have low statistical power:
+
+β
+H<sub>0</sub>
+Critical Value
+H<sub>1</sub>
+(1-β)
+μ<sub>0</sub>
+α
+μ<sub>1</sub>
+β = p(accept H<sub>0</sub> | H<sub>0</sub> false) = p(Type II error)
+α = p(reject H<sub>0</sub> | H<sub>0</sub> true) = p(Type I error)
+
+
+---
+
+**Description of what you see:**
+
+This slide discusses statistical power in the context of hypothesis testing.  It shows a visual representation of two overlapping normal distributions, likely representing the distributions of the test statistic under the null hypothesis (H<sub>0</sub>) and the alternative hypothesis (H<sub>1</sub>).  The x-axis likely represents the test statistic values.  The curves are labeled H<sub>0</sub> and H<sub>1</sub>, and the critical value is marked on the x-axis.  The areas under the curves are shaded to represent the probabilities of different outcomes:
+
+* **β (Type II error):** The area under the H<sub>0</sub> curve to the left of the critical value.  This represents the probability of failing to reject the null hypothesis when it is actually false.
+* **(1-β):** The area under the H<sub>1</sub> curve to the right of the critical value.  This represents the probability of correctly rejecting the null hypothesis when the alternative hypothesis is true.
+* **α (Type I error):** The area under the H<sub>0</sub> curve to the right of the critical value.  This represents the probability of rejecting the null hypothesis when it is actually true.
+
+The slide emphasizes that a lack of statistical significance might be due to low statistical power, meaning the test was not sensitive enough to detect a true effect if one existed.  The labels and shaded areas clearly illustrate the concepts of Type I and Type II errors, significance level, and statistical power.  The slide is part of a lecture on hypothesis testing, focusing on the importance of considering statistical power in interpreting results.

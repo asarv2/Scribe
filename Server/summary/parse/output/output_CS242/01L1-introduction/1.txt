@@ -1,0 +1,13 @@
+# Slide 1
+
+**Introduction to Data Science**
+
+Purdue CS/STAT 24200
+Tony Bergstrom
+
+
+---
+
+**Slide Description:**
+
+This is the title slide for the Introduction to Data Science course.  The title "Introduction to Data Science" is presented in a large, prominent font, likely to grab the audience's attention.  Below that, the course name, "Purdue CS/STAT 24200," and the instructor's name, "Tony Bergstrom," are displayed in a smaller, less prominent font. The background color is a dark gray, which provides a strong contrast to the light gray text, making the text easily readable.  The overall design is clean and professional, suitable for a course introduction.

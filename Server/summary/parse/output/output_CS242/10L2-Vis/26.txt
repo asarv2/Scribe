@@ -1,0 +1,35 @@
+# Slide 26
+
+**Irises**
+
+Sentosa
+Versicolor
+Virginica
+
+Petal
+Sepal
+
+
+---
+
+**Figure Description:**
+
+The slide displays three images of iris flowers, arranged in a 3-column format.  Each image represents a different species of iris:
+
+* **Left Image (Sentosa):**  A close-up image of a purple iris flower.  The flower's petals and sepals are clearly visible.  The image is well-lit and in focus, showing the details of the flower's structure.  The image is positioned in the leftmost column.  Below the image, the text "Sentosa" is displayed, identifying the species.
+
+* **Middle Image (Versicolor):**  A close-up image of a purple iris flower.  The flower's petals and sepals are clearly visible.  The image is well-lit and in focus, showing the details of the flower's structure.  White dotted lines and arrows are superimposed on the image, indicating the petal and sepal regions.  The image is positioned in the middle column.  Below the image, the text "Versicolor" is displayed, identifying the species.
+
+* **Right Image (Virginica):** A close-up image of a light purple iris flower.  The flower's petals and sepals are clearly visible.  The image is well-lit and in focus, showing the details of the flower's structure.  The image is positioned in the rightmost column.  Below the image, the text "Virginica" is displayed, identifying the species.
+
+Above the images, the word "Irises" is displayed in a larger font, acting as a title for the entire set of images.  The overall layout is designed to visually compare the three different iris species.
+
+
+**Context:**
+
+This slide, likely part of an Intro to Data Science presentation, introduces the Iris dataset.  The images are intended to visually represent the three different species of irises that are part of the dataset.  The arrows and labels on the Versicolor image highlight the parts of the flower that are relevant to the data, likely petal and sepal measurements.  The slide is preparing the audience for further analysis of the Iris dataset, which is often used for demonstrating various machine learning and data analysis techniques.
+
+
+**Description of what you see:**
+
+The slide shows three images of iris flowers, each labeled with the species name (Sentosa, Versicolor, and Virginica).  The images are arranged in a grid format, with the Versicolor image having white dotted lines and arrows highlighting the petal and sepal regions.  The slide is likely part of a larger presentation introducing the Iris dataset, which is commonly used in introductory data science courses.  The images are intended to visually represent the different species and their characteristics.

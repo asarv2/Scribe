@@ -1,0 +1,18 @@
+# 15
+
+```markdown
+Principle component analysis
+PCA is a linear dimensionality reduction method dating back to Pearson (1901)
+One of the most useful techniques in exploratory data analysis
+```
+
+---
+
+**Figure Description:**
+
+There are no figures on this slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, introduces Principal Component Analysis (PCA).  The title "Principle component analysis" is displayed in a large, bold font.  The text below defines PCA as a linear dimensionality reduction method, tracing its origins back to Pearson (1901).  It further emphasizes PCA's importance as one of the most useful techniques in exploratory data analysis.  The slide is straightforward and provides a concise introduction to PCA.

@@ -1,0 +1,29 @@
+# Slide 41
+
+```markdown
+Import
+import somefile
+# Everything in somefile.py can be referred to by:
+somefile.className.method("abc")
+somefile.myFunction(34)
+from somefile import *
+# Everything in somefile.py can be referred to by:
+className.method("abc")
+myFunction(34)
+Some useful modules to import, included with Python:
+Module: sys
+- Lots of handy stuff.
+Module: math
+- Mathematical code.
+Exponents; sqrt
+Module: Random
+- Random number code.
+Randrange; Uniform; Choice; Shuffle
+Slides adapted from UPenn CIS530 python tutorial
+```
+
+**Description:**
+
+This slide discusses importing modules in Python, likely within the context of the Intro to Data Science course.  The slide shows examples of how to import functions and classes from a module named `somefile.py`.  The first example uses the `import somefile` statement, allowing access to the module's contents using the `somefile.` prefix (e.g., `somefile.className.method("abc")`).  The second example uses `from somefile import *`, which imports all names from the module without the module prefix.  The slide also provides a list of useful modules that are commonly imported in Python, including `sys`, `math`, and `random`.  The list includes specific functions within the `random` module, such as `randrange`, `uniform`, `choice`, and `shuffle`.  The footer indicates that the content is adapted from a Python tutorial from the University of Pennsylvania's CIS530 course.  There are no figures on this slide.  The text is presented in a clear and concise manner, providing information on importing modules and useful modules for the course.
+
+

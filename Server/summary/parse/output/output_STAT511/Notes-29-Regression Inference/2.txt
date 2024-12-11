@@ -1,0 +1,51 @@
+# Slide 2
+
+**STAT 511 Course Notes – set 29 (W15)**
+
+**Properties**
+
+1.  𝐸(𝛽̂1) = 𝛽1,  𝛽̂1 is unbiased.
+2.  𝑉𝑎𝑟(𝛽̂1) = 𝜎𝛽̂1
+2 = 𝜎2/𝑆𝑥𝑥,  𝜎𝛽̂1 = 𝜎/√𝑆𝑥𝑥
+3.  If we assume the linear model with normal errors, then 𝛽̂1 also has a t distribution.
+
+**Theorem**
+
+The assumptions of the simple linear regression model imply that the standardized variable
+
+𝑡𝑇𝑆= (𝛽̂1 −𝛽10)/ (𝑠/√𝑆𝑥𝑥)
+
+has a t distribution with 𝑛 – 2 df.
+
+In addition, A 100(1 – a)% CI for the slope 𝛽1 of the true regression line is
+
+𝛽̂1 ± 𝑡1−𝛼/2,𝑛−2 ∙𝑠𝛽̂1
+
+**Example 28.2 revisit** Consider a data set on 𝑥 = iodine value (g) and 𝑦 = cetane number for a sample of 14 biofuels.
+
+**Some summary statistics are**
+
+∑𝑥𝑖= 1307.5
+∑𝑦𝑖= 779.2
+∑𝑥𝑖
+2 = 128,913.93
+∑𝑦𝑖
+2   =  43,745.22
+∑𝑥𝑖𝑦𝑖= 71,347.30
+
+from which
+
+𝑆𝑥𝑥= 128,913.93 – (1307.5)2/14 =  6802.7693
+
+Therefore,
+
+𝑠= √𝑀𝑆𝐸= √6.58 = 2.5645
+
+𝑠𝛽̂1 = 𝑠/√𝑆𝑥𝑥 = 2.5645/√6802.7693 = 0.03109
+
+
+**Description of the Slide:**
+
+This is slide 2 of a 12-slide lecture on Statistical Methods (STAT 511).  It continues the discussion from slide 1, focusing on the properties of the estimated slope (𝛽̂1) in a linear regression model.  The slide presents formulas for the expected value (𝐸(𝛽̂1)), variance (𝑉𝑎𝑟(𝛽̂1)), and standard error (𝑠. 𝑒{𝛽̂1}) of the slope estimate.  It also introduces the concept of a t-distribution for the standardized slope estimate (𝑡𝑇𝑆) and how to construct a confidence interval for the true slope (𝛽1).  A specific example (Example 28.2) is introduced, involving a dataset on iodine value (𝑥) and cetane number (𝑦) for 14 biofuels.  The slide provides the necessary summary statistics (∑𝑥𝑖, ∑𝑦𝑖, ∑𝑥𝑖
+2, ∑𝑦𝑖
+2, ∑𝑥𝑖𝑦𝑖) for this example, and calculates 𝑆𝑥𝑥 and the standard error of the slope (𝑠𝛽̂1).  The slide is well-organized, presenting formulas and calculations clearly, and providing context for the example.  The author's name (Yuan Qu) and the course information (STAT 511) are present at the top of the slide.  The slide number (2) is also clearly visible.

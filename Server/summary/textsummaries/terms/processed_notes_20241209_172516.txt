@@ -1,0 +1,28 @@
+
+--- Key Terms ---
+artifical intelligence basics
+turing test
+perceptron
+game tree
+alpha-beta pruning
+minimax search
+reinforcement learning
+--- Problem Types ---
+artifical intelligence basics
+understanding the nature of intelligence
+understanding the differences between game types
+defining artificial intelligence
+designing effective game-playing systems
+bridging the gap between different ai domains
+addressing ethical concerns in ai
+understanding the architecture of advanced ai systems
+addressing the challenges of computer vision
+mitigating ai safety risks
+passing the turing test
+overcoming the limitations of search
+understanding the ai grand challenges
+developing robust and generalizable algorithms
+--- Algorithm Solutions ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning

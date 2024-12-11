@@ -1,0 +1,44 @@
+# Slide 4
+
+**STAT 511 Course Notes – set 7**
+
+**Yuan Qu**
+
+**4**
+
+b) If a person tests positive, what is the probability that they are really HIV+?
+P(HIV+ | test+) =
+
+**The Law and Probability**
+
+**The Collins Case**
+
+In 1964, an elderly woman was mugged in a lane way. Shortly afterward, a witness saw a blonde girl --- her ponytail flying --- run out of the lane way and get into a yellow car driven by a bearded African American man with a moustache, and speed away together.
+
+Eventually, the police arrested Janet and Malcolm Collins, a married couple who matched the description given above and who also owned a yellow car.
+
+What are the chances that a randomly selected couple meets the description?
+
+The prosecuting lawyer invoked the laws of probability. The following probabilities were put to the jury:
+
+* P(Woman having blonde hair) = 1/3
+* P(Woman having a ponytail) = 0.1
+* P(Being an interracial couple) = 0.001
+* P(Driving a yellow car) = 0.1
+* P(Man having a moustache) = 0.25
+* P(African American man wearing a beard) = 0.1
+
+The prosecutor multiplied the numbers using the multiplication rule for independent events to produce a joint probability of
+
+1/3 x 0.1 x 0.001 x 0.1 x 0.25 x 0.1 = 0.000000833
+
+There seems little doubt that Janet and Malcolm Collins are guilty, right?
+
+The jury found them guilty beyond a reasonable doubt. Malcolm Collins received a sentence of “one year to life”; Janet Collins received a sentence of “not less than one year”.
+
+Yet, a few years later, the California Supreme Court overturned the verdict. There was no evidence, it said, that the individual probability values were even roughly accurate. Most important, they were shown to be not independent of one another, as they must be to satisfy the probability law that was applied. The court found that a African American man having a beard is not independent of his being an inter-racial marriage. Indeed, the court heard evidence that there was a 41 percent chance that at least one other couple in the area might have had the admittedly unusual characteristics listed above.
+
+
+**Figure Description:**
+
+There is no figure on this slide.  The slide is entirely text-based, presenting a legal case study (The Collins Case) to illustrate the application of probability calculations and the importance of considering independence of events in probability estimations. The text describes a 1964 mugging case, the witness account, the couple arrested, and the probabilities assigned to various characteristics of the couple. The text also highlights the legal implications of the probability calculations and the subsequent overturning of the guilty verdict by the California Supreme Court. The slide is part of a larger lecture on statistical methods, specifically focusing on the application of probability in legal contexts.

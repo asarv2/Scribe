@@ -1,0 +1,45 @@
+# Slide 35
+
+**Finding Missing Grades**
+
+```
+data2 = pd.read_csv("grades.csv")
+data2
+```
+
+A table is presented, displaying data read from a CSV file named "grades.csv".  The table has columns for "Lastname", "Firstname", "ID", "Test1", "Test2", "Test3", "Test4", and "Final Grade".  Each row represents a student's record, including their name, ID, and test scores.  The data appears to be student grades.
+
+```
+NaN can be good in some cases,
+it's mostly ignored.
+Here, we want a value
+```
+
+These lines provide context.  The text "NaN can be good in some cases, it's mostly ignored" suggests that the slide is discussing how to handle missing values (NaN) in the data.  The line "Here, we want a value" implies that the subsequent content will address strategies for dealing with missing data, potentially by replacing or imputing values.
+
+```
+Check for null, sum them toconvert True to 1
+df_grades.isnull().sum()
+Use isnull to filter your data frame
+df_grades[df_grades.Test2.isnull()]
+```
+
+These lines contain code snippets that will be used to find and filter rows with missing values in the "Test2" column of a DataFrame called `df_grades`.
+
+
+```
+Lastname Firstname
+ID Test1 Test2 Test3 Test4 Final Grade
+8 Airpump Andrew airpump100 49 NaN 90.0 100.0 83 B
+9 Backus Jim backj 48 NaN 97.0 96.0 97 B
+10 Carnivore Art carn400 44 NaN 80.0 60.0 40 D+
+```
+
+A smaller table is presented, showing a subset of the data from the larger table.  This subset focuses on rows where the "Test2" column has a missing value (NaN).  The table shows the "Lastname", "Firstname", "ID", "Test1", "Test2", "Test3", "Test4", and "Final Grade" columns for those rows.
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces a student grade dataset (`grades.csv`) and demonstrates how to identify and filter rows with missing values (NaN) in a Pandas DataFrame.  The slide shows how to use the `.isnull().sum()` method to count missing values in each column and the `.isnull()` method to filter rows based on missing values in a specific column.  The example focuses on the "Test2" column, highlighting the rows where this column contains missing values.  The slide is part of a larger lecture on data cleaning and manipulation techniques, specifically addressing the handling of missing data in a student grade dataset.  The tables are crucial for demonstrating the data and the results of the filtering operations. The code snippets are essential for demonstrating the data analysis process.

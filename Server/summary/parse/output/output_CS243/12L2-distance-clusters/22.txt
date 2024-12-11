@@ -1,0 +1,25 @@
+# 22
+
+**The K-means Algorithm**
+
+Input: Dataset D, number of clusters k
+Output: Set of cluster representatives C, cluster membership vector m
+
+# Initialize cluster representatives C
+Randomly assign k data points from D into each cluster
+Initialize C such that c<sub>i</sub> is mean of points in i<sup>th</sup> cluster
+
+while not converged
+# Data Assignment
+Reassign points in D to closest cluster mean
+Update m such that m<sub>i</sub> is cluster ID of the i<sup>th</sup> point in D
+
+# Relocation of means
+Update C such that c<sub>i</sub> is mean of points in i<sup>th</sup> cluster
+
+
+---
+
+**Description of what you see:**
+
+The slide presents a list of steps for the K-means algorithm.  The text is formatted in a clear, numbered list format, making it easy to read and understand the algorithm's steps.  There are no images or figures on the slide.  The slide is likely part of a larger presentation on clustering algorithms, introducing the K-means algorithm as a common and practical approach to grouping data points.  The content is straightforward and directly explains the algorithm's steps, from initialization to relocation of means.  The use of numbered steps and clear variable names (D, k, C, m) enhances the clarity and understanding of the algorithm.

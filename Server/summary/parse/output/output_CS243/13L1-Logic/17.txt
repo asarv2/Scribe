@@ -1,0 +1,27 @@
+# 17
+
+**Convert Any Functions to CNF**
+
+* CNF(p) = p
+* CNF(-p) = ¬p
+* CNF(φ → ψ) = CNF(¬φ) ⊗ CNF(ψ)
+* CNF(φ ∧ ψ) = CNF(φ) ∧ CNF(ψ)
+* CNF(φ ∨ ψ) = CNF(φ) ⊗ CNF(ψ)
+* CNF(φ ↔ ψ) = CNF(φ → ψ) ∧ CNF(ψ → φ)
+* CNF(¬¬φ) = CNF(φ)
+* CNF(¬(φ → ψ)) = CNF(φ) ∧ CNF(¬ψ)
+* CNF(¬(φ ∧ ψ)) = CNF(¬φ) ⊗ CNF(¬ψ)
+* CNF(¬(φ ∨ ψ)) = CNF(¬φ) ∧ CNF(¬ψ)
+* CNF(φ ↔ ψ) = CNF(φ ∧ ¬ψ) ⊗ CNF(ψ ∧ ¬φ)
+
+where (C<sub>1</sub> ∧ ... ∧ C<sub>n</sub>) ⊗ (D<sub>1</sub> ∧ ... ∧ D<sub>m</sub>) is defined as
+(C<sub>1</sub> ∨ D<sub>1</sub>) ∧ ... ∧ (C<sub>n</sub> ∨ D<sub>m</sub>) where C<sub>1</sub>, ..., C<sub>n</sub>, D<sub>1</sub>, ..., D<sub>m</sub> are clauses.
+
+
+---
+
+**Description of the slide:**
+
+This slide presents a set of rules for converting logical expressions into Conjunctive Normal Form (CNF).  The title, "Convert Any Functions to CNF," clearly indicates the purpose of the slide.  The rules are numbered and use symbols like φ, ψ, p, and ¬ to represent logical expressions and variables.  The rules define how to transform various logical operators (implication, conjunction, disjunction, biconditional, negation) into the CNF format.  The notation "⊗" is used in some rules, which likely represents a specific operation for converting the expressions into CNF.  The final line defines how to combine multiple CNF expressions using the ⊗ operator.  The slide is formatted as a list of rules, making it easy to follow the conversion process.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic, the satisfiability problem, and CNF.  The slide is likely part of a larger lecture explaining how to manipulate logical expressions into a standard form for easier processing by algorithms.
+
+

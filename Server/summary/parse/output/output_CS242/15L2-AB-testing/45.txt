@@ -1,0 +1,25 @@
+## Slide 45
+
+**Counterfactuals and Randomized Experiments**
+
+**Counterfactuals:**
+
+* What effect would you have seen if a person wasn't treated? E.g., If you cloned each person and sent one copy to the hospital for treatment, but not the other, what difference would result in their health?
+
+**Randomization:**
+
+* Short of being able to do the above, we ask use random assignment to assess the difference
+* Construct two groups of people who are nearly identical in every way, send one group to the hospital but not the other, then measure the health differences between the two groups.
+* Randomization provides a way of creating two groups that are as similar as possible prior to treatment:
+* If subjects are randomly assigned to groups, there shouldn't be any systematic difference (e.g., selection bias)
+* Since only difference between the groups is that one gets treated and the other doesn't, we ascribe differences in outcomes to the treatment
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses counterfactuals and randomization as methods for establishing causality in data analysis.  It introduces the concept of a counterfactual, which is the hypothetical outcome that would have occurred if a treatment or intervention had not been applied.  The example of cloning a person and treating one copy while not treating the other illustrates this concept.  The slide then introduces randomization as a practical approach to approximate the counterfactual.  Random assignment of subjects to treatment and control groups aims to create groups that are as similar as possible before the treatment, minimizing the influence of confounding variables.  The key idea is that if the only difference between the groups is the treatment, any observed difference in outcomes can be attributed to the treatment itself.  This is a crucial concept in establishing causal relationships in data science.

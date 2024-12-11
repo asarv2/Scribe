@@ -1,0 +1,37 @@
+# Slide 20
+
+**Filtering to columns**
+
+# select a subset of columns by name
+data_zillow[['ZIP','YEAR']]
+
+```
+ZIP	YEAR
+0	32312	1981
+1	32308	2009
+2	32312	1954
+3	32309	1993
+4	32309	1973
+5	32312	1994
+6	32309	1996
+7	32312	2016
+8	32312	2002
+9	32311	2006
+...	...	...
+```
+
+# another way to select columns by name
+data_zillow.filter(items=['ZIP', 'YEAR'])
+
+# filter() also allows you to filter rows
+# you can specify labels with partial strings
+# see documentation
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates two ways to select specific columns from a DataFrame, `data_zillow`, in a data science context.  The first method uses the double bracket notation `data_zillow[['ZIP','YEAR']]` to select the 'ZIP' and 'YEAR' columns.  The output shows a table with these two columns.  The second method uses the `.filter()` method `data_zillow.filter(items=['ZIP', 'YEAR'])` to achieve the same result.  The output of this method is also a table with only the 'ZIP' and 'YEAR' columns.  The `...` indicates that the table continues beyond the displayed rows.  The slide also includes comments about filtering rows and using partial strings for labels, suggesting that these topics will be covered in subsequent slides or sections of the lecture.  The purpose of this slide is to show different ways to select specific columns from a DataFrame.  The tables are crucial for demonstrating the selection of columns.  The comments are important for understanding the broader context of the lecture.
+
+

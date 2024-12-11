@@ -1,0 +1,46 @@
+# 7
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Hypotheses:**
+
+H<sub>0</sub>: there is no relationship between “type of shipping boxes” and “compression strength”; or
+H<sub>0</sub>: group index has nothing to do with the mean of “compression strength”; or
+H<sub>0</sub>: 𝜇<sub>1</sub> = . . . = 𝜇<sub>𝐼</sub> (constant)
+
+H<sub>a</sub>: “type of shipping boxes” does influence the group mean of “compression strength”; or
+H<sub>a</sub>: There are at least two groups that their group means are different; or
+H<sub>a</sub>: 𝜇<sub>1</sub> = . . . = 𝜇<sub>𝐼</sub> doesn’t hold.
+
+Note: H<sub>a</sub> is not the same statement as saying “all the group means are different.”
+
+
+**Intuition of ANOVA: Sum of Square (variability) decomposition**
+
+```
+(𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>∙∙</sub>)       =        (𝑋̅<sub>𝑖∙</sub>−𝑋̅<sub>∙∙</sub>)        +        (𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>𝑖∙</sub>) 
+```
+
+```
+total           =           between-group           +           within-group 
+deviation       deviation           deviation 
+```
+
+Of course, the individual components 𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>∙∙</sub> sum to 0, so we must square them. It turns out that all cross-product terms cancel, and we have:
+
+```
+∑<sub>𝑖=1</sub><sup>𝐼</sup>∑<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>⋅⋅</sub>)<sup>2</sup> = ∑<sub>𝑖=1</sub><sup>𝐼</sup>∑<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>𝑖⋅</sub>)<sup>2</sup> + ∑<sub>𝑖=1</sub><sup>𝐼</sup>𝐽(𝑋̅<sub>𝑖⋅</sub>−𝑋̅<sub>⋅⋅</sub>)<sup>2</sup>
+```
+
+Total sum of square (SST) = treatment sum of square (SSTr) + error sum of squre (SSE)
+
+Total variation in data = variation within each group + variation among groups
+
+
+**Figure Description:**
+
+Below the text, there are two side-by-side boxplots, labeled (a) and (b).  Both boxplots display three boxes, each representing a different group (labeled "Center 1," "Center 2," and "Center 3").  The boxes are positioned horizontally along a number line.  Each box represents the distribution of values for that group.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values.  Boxplot (a) shows more spread in the data than boxplot (b).  The boxplots are positioned below the text to visually compare the distributions of the data for each group in the two scenarios.  The comparison of the spread in the boxplots (a) and (b) is used to illustrate the concept of between-group and within-group variation, which is central to the F-test in ANOVA.  The presence of the boxplots is crucial for understanding the intuition behind ANOVA, as it visually demonstrates the variability within and between groups.  The different spreads in the boxplots (a) and (b) highlight the different levels of variability in the data, which is a key factor in determining whether the group means are significantly different.
+
+

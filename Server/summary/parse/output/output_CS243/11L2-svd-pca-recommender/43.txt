@@ -1,0 +1,22 @@
+# 43
+
+```markdown
+A Baseline Predictor
+We have expectations on the rating by user i of movie j, even without estimating i's
+attitude towards movies like j
+Rating scale of user u
+* Values of other ratings user gave recently
+(day-specific mood, anchoring, multi-user accounts)
+(Recent) popularity of movie i
+* Selection bias; related to number of ratings user gave
+on the same day ("frequency")
+```
+
+**Figure Description:**
+
+Two small images are positioned to the right of the text.  The image on the left depicts a cartoon character (likely a video game or animation character) seated in a movie theater seat, holding a cup of popcorn.  The image on the right shows multiple film strips, with a still image of a person (likely a movie poster) visible on one of the strips.  These images are likely visual aids to illustrate the concepts of user bias and movie bias, respectively, and how they relate to user-movie interaction.  The images are positioned to the right of the text, and their purpose is to provide a visual representation of the components being discussed.  The images are small and cartoonish, fitting the style of a presentation slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, discusses a baseline predictor for rating systems.  The title "A Baseline Predictor" indicates the topic.  The text describes how we have expectations about a user's rating of a movie (i rating j) even without knowing the user's specific preferences for that movie.  The text then lists factors that influence these expectations:  recent ratings given by the user (which might reflect mood or other biases), the recent popularity of the movie, and selection bias (related to the number of ratings given on the same day).  The two small images to the right of the text are visual aids, likely intended to represent user and movie biases, respectively, and how they contribute to the baseline prediction.  The slide is designed to introduce the concept of a baseline predictor and the factors that influence it.

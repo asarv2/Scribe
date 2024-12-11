@@ -1,0 +1,17 @@
+# 21
+
+**MNIST dataset of handwritten digits**
+
+A training set of 60,000 examples
+A test set of 10,000 examples.
+A larger set is available from NIST.
+The digits have been size-normalized and centered in a fixed-size image.
+
+**(Figure Description):**
+
+A large grid of images is shown.  Each image in the grid is a handwritten digit (0 through 9).  The images are arranged in rows and columns, forming a matrix.  The digits are presented in a standardized format, likely pre-processed to have consistent size and centering.  The purpose of this figure is to visually represent the MNIST dataset, which is a standard dataset used for training and testing machine learning models, particularly for image recognition tasks.  The images are presented in a grid format to allow for easy visual inspection of the data.  The digits are handwritten, and the variations in the handwriting are apparent.  The images are black and white (grayscale), with the digits represented as white characters on a black background.
+
+
+**Description:**
+
+This slide introduces the MNIST dataset, a common benchmark dataset for machine learning, particularly in the context of image recognition.  The slide states that the dataset contains 60,000 training examples and 10,000 test examples of handwritten digits (0-9).  It also mentions that a larger dataset is available from NIST (National Institute of Standards and Technology).  The slide's purpose is to introduce the dataset and its characteristics, highlighting its use in training and testing machine learning models.  The figure is a visual representation of the data, showing examples of the handwritten digits.

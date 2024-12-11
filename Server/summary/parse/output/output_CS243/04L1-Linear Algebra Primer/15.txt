@@ -1,0 +1,25 @@
+# 15
+
+**Multiplication Example**
+
+```
+(1  2  3) (7  8) = (1*7 + 2*9 + 3*11  1*8 + 2*10 + 3*12) = (58  64)
+(4  5  6) (9 10)   (4*7 + 5*9 + 6*11  4*8 + 5*10 + 6*12)   (139 154)
+```
+
+However, in matrix multiplication A⋅B ≠ B⋅A
+
+```
+(7  8) (1  2  3) = (7*1 + 8*4  7*2 + 8*5  7*3 + 8*6) = (39  54  69)
+(9 10) (4  5  6)   (9*1 + 10*4 9*2 + 10*5 9*3 + 10*6)   (49  68  87)
+(11 12) (   )      (11*1 + 12*4 11*2 + 12*5 11*3 + 12*6)   (59  82 105)
+```
+
+In some cases, you may not be able to multiply in both orders, e.x. 2x3 and 3x4
+
+
+**Description:**
+
+This slide provides an example of matrix multiplication.  It shows two 3x3 matrices being multiplied.  The first example demonstrates the multiplication of a 3x3 matrix by a 2x3 matrix, resulting in a 3x3 matrix.  The second example shows the multiplication of a 2x3 matrix by a 3x3 matrix, resulting in a 2x3 matrix.  The slide highlights the fact that matrix multiplication is not commutative (A⋅B ≠ B⋅A).  The examples are presented in a clear, step-by-step format, showing the calculations for each element of the resulting matrix.  The slide also notes that the inner dimensions of the matrices must match for multiplication to be possible.  The matrices are displayed in a standard mathematical notation, with the elements of the matrices clearly labeled.  The purpose of the slide is to illustrate the process of matrix multiplication and the importance of considering the dimensions of the matrices involved.
+
+

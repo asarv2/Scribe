@@ -1,0 +1,18 @@
+# Slide 16
+
+**Mazes – A first problem**
+
+How do we represent a maze in terms of search?
+
+* What is a "State"?
+* What "Actions" can we take
+* How will we search the states?
+
+**(Diagram):**
+
+A simple grid-based maze is shown.  The maze is a 4x4 grid, with walls represented by solid black lines.  The grid is labeled with row and column numbers (0-3).  The maze has a clear start and a possible exit.  The diagram is positioned centrally on the slide and is oriented vertically.  The purpose of the diagram is to illustrate a simple maze problem, which will be used as an example to discuss the representation of states, actions, and search strategies in the context of AI problem-solving.
+
+
+**Description:**
+
+This slide introduces a new problem domain, mazes, as a concrete example for discussing search algorithms in AI.  The slide asks three key questions about representing a maze for search: defining states, possible actions, and the search strategy.  The diagram of the maze is a visual aid to help understand the problem.  The slide is likely part of a lecture section on search algorithms in AI, where mazes are used as a simplified example to illustrate the fundamental concepts of state representation, actions, and search strategies.  The maze is a 4x4 grid, with walls represented by solid black lines.  The grid is labeled with row and column numbers (0-3).  The maze has a clear start and a possible exit.  The diagram is positioned centrally on the slide and is oriented vertically.  The purpose of the diagram is to illustrate a simple maze problem, which will be used as an example to discuss the representation of states, actions, and search strategies in the context of AI problem-solving.

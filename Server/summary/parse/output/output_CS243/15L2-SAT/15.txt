@@ -1,0 +1,34 @@
+# 15
+
+**Simplification of a formula by an evaluated literal**
+
+For the CNF formula φ and a Boolean variables p, we denote by φ|<sub>p</sub> the formula obtained from φ by replacing all occurrences of p by true and simplifying the result by removing:
+
+* all true clauses,
+* all false literals from undefined clauses.
+
+The operation that maps (φ, p) to φ|<sub>p</sub> is called the simplification of φ at p.
+
+Similarly, we define φ|<sub>¬p</sub> as the formula obtained from φ by replacing all occurrences of p by false and simplifying the result by removing:
+
+* all true clauses,
+* all false literals from undefined clauses.
+
+The operation that maps (φ, p) to φ|<sub>¬p</sub> is called the simplification of φ at p.
+
+Example:
+
+φ = (p∨q∨¬r)∧(¬p∨¬r)  →  φ|<sub>p</sub> = q∨¬r.
+
+
+**Description:**
+
+This slide describes a simplification technique for CNF (Conjunctive Normal Form) formulas.  It introduces the concept of simplifying a formula based on the truth value of a specific Boolean variable.
+
+* **φ|<sub>p</sub>:** This notation represents the simplified formula φ where the variable 'p' is assigned the value 'true'.  The simplification process involves removing clauses that become trivially true and removing literals that become trivially false.
+
+* **φ|<sub>¬p</sub>:** This notation represents the simplified formula φ where the variable 'p' is assigned the value 'false'.  The simplification process is similar to φ|<sub>p</sub>, but with 'p' set to false.
+
+* **Example:** The example shows how a specific CNF formula (φ) is simplified when 'p' is assigned the value 'true' (φ|<sub>p</sub>).  The result is a simplified formula (q∨¬r).
+
+The slide is focused on the logical simplification of CNF formulas based on the truth value of a specific variable, which is a key step in many SAT solving algorithms.  There are no figures on this slide.

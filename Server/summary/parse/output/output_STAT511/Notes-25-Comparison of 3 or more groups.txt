@@ -1,0 +1,466 @@
+# 1
+
+**Two sample confidence interval and hypotheses testing**
+
+Previously, we only consider the inference about a single mean, or a single proportion. Now we extend the study to comparison between the means/proportions of two populations. For example, a hypothesis testing question:
+
+𝐻0:μ1 = μ2  vs  𝐻𝑎: μ1 ≠μ2 
+or 
+𝐻0:𝑝1 = 𝑝2  vs  𝐻𝑎: 𝑝1 ≠𝑝2. 
+
+
+**Difference between two population proportions:**
+a special case of large sample procedure  
+
+
+**Let**
+𝑝1 =the proportion of successes in population #1
+𝑝2 =the proportion of successes in population #2
+
+
+The inferences discussed in this section concern a difference 𝑝1– 𝑝2 between the proportions of two population distributions.
+
+
+• 
+𝐻0 would state that 
+
+𝐻0: 𝑝1– 𝑝2 = 0 or 𝑝1 = 𝑝2
+
+
+**Three possible alternative hypotheses:**
+
+𝐻1: 𝑝1 −𝑝2 > 0   
+𝐻1: 𝑝1 −𝑝2 < 0 
+𝐻1: 𝑝1 −𝑝2 ≠0
+
+
+• 
+Alternatively, it may be appropriate to estimate 𝑝1– 𝑝2 by computing a C level CI.  
+
+
+**Basic Assumptions:**
+
+1. 𝑋1, … , 𝑋𝑚 is a random sample from a Bernoulli (𝑝1) distribution, with unknown 𝑝1. 𝑝1 is the proportion of successes in population #1.
+
+2. 𝑌1, … , 𝑌𝑛 is a random sample from a Bernoulli (𝑝2) distribution, with unknown 𝑝2. 𝑝2 is the proportion of successes in population #2.
+
+3. The X and Y samples are independent of one another.
+
+
+---
+
+**Description of the Slide:**
+
+This slide, titled "Two sample confidence interval and hypotheses testing," introduces the concept of comparing two populations (e.g., means or proportions) in statistical inference.  It begins by highlighting the previous focus on single populations and now extending to comparing two.  The slide then defines the null and alternative hypotheses for comparing two population proportions (p1 and p2).  It also lists the assumptions for this type of analysis, which are crucial for the validity of the inferences.  The slide is clearly organized, using headings and bullet points to present the information in a structured manner.  The text is formatted for readability, with clear explanations and definitions.  The slide number (1) is present at the top, indicating its position in a larger set of lecture notes.  The slide is likely part of a lecture on statistical methods, specifically focusing on hypothesis testing and confidence intervals for comparing two populations.
+
+
+# 2
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+Let 𝑇𝑋= ∑𝑋𝑖, 𝑇𝑌= ∑𝑌𝑖, then 𝑇𝑋~𝐵𝑖𝑛(𝑚, 𝑝1) and 𝑇𝑌~𝐵𝑖𝑛(𝑛, 𝑝2).
+
+**Proposition:**
+
+* 𝑝̂1 −𝑝̂2 = 𝑇𝑋/𝑚−𝑇𝑌/𝑛 is a natural estimator for 𝑝1 −𝑝2.
+* 𝑝̂1 −𝑝̂2 is unbiased,
+    * 𝐸(𝑝̂1 −𝑝̂2) = 𝐸(𝑇𝑋/𝑚−𝑇𝑌/𝑛) = 𝐸(𝑇𝑋/𝑚)−𝐸(𝑇𝑌/𝑛) = 𝑝1 −𝑝2
+* 𝑉𝑎𝑟(𝑝̂1 −𝑝̂2) = 𝑝1(1 −𝑝1)/𝑚+ 𝑝2(1 −𝑝2)/𝑛
+* When the counts of “successes” and “failures” in each sample or group, 𝑚𝑝̂1, 𝑚(1 −𝑝̂1), 𝑛𝑝̂2, 𝑛(1 −𝑝̂2) are all at least 10, the standardized variable of 𝑝̂1 −𝑝̂2 has a Z distribution.
+
+
+**Z Confidence interval for the difference in population proportion:**
+The approximate 1 −𝛼 level CI can be easily derived as
+(𝑝̂1 −𝑝̂2) ± 𝑍1−α 2
+⁄ √𝑝̂1(1 −𝑝̂1)
+𝑚
++ 𝑝̂2(1 −𝑝̂2)
+𝑛
+
+
+**Proposition:**
+
+* Under the null hypothesis 𝐻0: 𝑝1 = 𝑝2, we view both samples as coming from a single population with proportion 𝑝1 = 𝑝2 = 𝑝.
+* 𝑉𝑎𝑟(𝑝̂1 −𝑝̂2) = 𝑝(1 −𝑝)
+𝑚
++ 𝑝(1 −𝑝)
+𝑛
+= 𝑝(1 −𝑝)(1
+𝑚+ 1
+𝑛)
+
+To estimate 𝑝, we use:
+𝑝̂ = 𝑇𝑋+ 𝑇𝑌
+𝑚+ 𝑛=
+𝑚
+𝑚+ 𝑛𝑝̂1 +
+𝑛
+𝑚+ 𝑛𝑝̂2
+
+
+**Test statistic:**
+𝑍𝑇𝑆=
+(𝑝̂1 −𝑝̂2) −0
+√𝑝̂(1 −𝑝̂)(1
+𝑚+ 1
+𝑛)
+
+
+**Example 9.11 on page 393.**
+
+
+---
+
+**Description of the Slide:**
+
+This slide (number 2) continues the discussion from the previous slide about statistical inference, specifically focusing on comparing two populations' proportions.  It provides formulas and calculations for estimating the difference between two population proportions (𝑝̂1 −𝑝̂2).  The slide introduces the concept of a Z confidence interval for this difference, along with the necessary assumptions and conditions for its validity.  Crucially, it details how to calculate the variance of the difference in proportions under the null hypothesis (that the proportions are equal).  The slide also defines the test statistic (𝑍𝑇𝑆) used to test the null hypothesis.  The example reference (Example 9.11 on page 393) suggests this is part of a larger statistical methods textbook or course material.  The overall structure and content align with the previous slide's focus on hypothesis testing and confidence intervals for comparing two populations.
+
+
+# 3
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Comparing means of 3 or more groups (ANOVA)**
+
+In previous chapter, we carry out the comparison between the means/proportions of two population means. Now we further extend the study to a comparison of more than two population or treatment means.
+
+**Single Factor ANOVA**
+
+Example 25.1 Consider an experiment in which several different types of shipping boxes were compared with respect to compression strength (lb).
+
+| Type of Box | Compression Strength (lb) | Sample Mean | Sample SD |
+|---|---|---|---|
+| 1 | 655.5 788.3 734.3 721.4 679.1 699.4 | 713.00 | 46.55 |
+| 2 | 789.2 772.5 786.9 686.1 732.1 774.8 | 756.93 | 40.34 |
+| 3 | 737.1 639.0 696.3 671.7 717.2 727.1 | 698.07 | 37.20 |
+| 4 | 535.1 628.7 542.4 559.0 586.9 520.0 | 562.02 | 39.87 |
+
+Grand mean = 682.50
+
+**(Figure):**  A horizontal boxplot is displayed below the table.  The boxplot shows five boxes, each corresponding to a different type of box (1, 2, 3, 4).  The boxes are positioned horizontally along a number line that spans from approximately 550 to 750.  Each box represents the distribution of compression strength values for that type of box.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The figure visually represents the variation in compression strength across different box types.  The horizontal axis is labeled with values for compression strength (lb). The figure is placed below the table to visually compare the compression strength distributions for each type of box.
+
+
+**How many groups are we comparing?**
+
+1. Two variables are of interests:
+    * **Explanatory:** Type of shipping boxes – categorical
+        * A categorical explanatory variable is also called a factor.
+        * The values that a factor can take are levels (Type 1, 2, 3, 4).
+        * The combination of levels of factors are treatments (Treatment 1, 2, 3, 4).
+    * **Response:** compression strength – numerical
+
+We are interested in the relationship between the explanatory and response variable.
+
+
+---
+
+**Description of the Slide:**
+
+This slide (number 3) introduces the concept of Analysis of Variance (ANOVA) for comparing means of three or more groups.  It presents an example (Example 25.1) of comparing different types of shipping boxes based on their compression strength.  The slide includes a table summarizing the data for each box type, showing the compression strength values, sample mean, and sample standard deviation.  A boxplot is included below the table to visually represent the distribution of compression strength for each box type.  The boxplot helps to quickly assess the central tendency and variability of the data for each group.  The slide then defines the explanatory and response variables in the context of the example, highlighting the categorical nature of the explanatory variable (type of box) and the numerical nature of the response variable (compression strength).  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.
+
+
+# 4
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Notations:** Let
+
+* 𝐼 = the number of populations or treatments being compared.
+* 𝑖 = 1, … , 𝐼 is a group index.
+* 𝜇𝑖 = the mean of the 𝑖𝑡ℎ population or the true average response when treatment 𝑖 is applied, 𝑖 = 1, 2, … , 𝐼.
+* The relevant hypotheses are:
+    𝐻0: 𝜇1 = 𝜇2 = ⋯= 𝜇𝐼
+    versus
+    𝐻𝑎: at least two of the 𝜇𝑖’s are different.
+
+
+**Example 25.1 revisit** With 𝜇𝑖 denoting the true average compression strength for boxes of type 𝑖 (𝑖 = 1, 2, 3, 4), the null hypothesis is
+
+𝐻0: 𝜇1 = 𝜇2 = 𝜇3 = 𝜇4
+
+There is a substantial amount of overlap among observations on the first three types of boxes, but compression strengths for the fourth type appear considerably smaller than for the other types. This suggests that 𝐻0 is not true.
+
+Can we just use the independent samples t test 6 times to test the following alternative hypotheses?
+
+𝐻𝑎: 𝜇1 ≠ 𝜇2
+𝐻𝑎: 𝜇1 ≠ 𝜇3
+𝐻𝑎: 𝜇1 ≠ 𝜇4
+𝐻𝑎: 𝜇2 ≠ 𝜇3
+𝐻𝑎: 𝜇2 ≠ 𝜇4
+𝐻𝑎: 𝜇3 ≠ 𝜇4
+
+ANSWER IS NO: Because if 𝐻0 is true for each of the 6 different hypotheses given above (that is if there is no association between the type of shipping boxes and compression strength) then we’d have much more than 6 chances to make a overall type I error (the probability of at least one false rejection among 6 tests).
+
+In general, we have “𝐼” groups that we wish to compare, then we could do 𝑘 = 𝐼(𝐼−1)/2 two-sample t tests. The overall type I error rate is
+
+𝑃(𝑎𝑡 𝑙𝑒𝑎𝑠𝑡 1 𝑡𝑒𝑠𝑡 𝑐𝑜𝑚𝑚𝑖𝑡𝑠 𝑇𝑦𝑝𝑒 𝐼 𝑒𝑟𝑟𝑜𝑟) = 1 −(1 −𝛼)𝑘
+
+| 𝐼 | 𝑘 | α = 0.05 | α = 0.01 |
+|---|---|---|---|
+| 2 | 1 | 0.05 | 0.01 |
+| 3 | 3 | 0.1426 | 0.0297 |
+| 4 | 6 | 0.2649 | 0.0685 |
+| 5 | 10 | 0.4013 | 0.0956 |
+| 6 | 15 | 0.5367 | 0.1399 |
+
+It’s necessary to reduce the number of tests.
+
+
+**Figure Description:**
+
+Below the text, there is a horizontal boxplot.  It displays five boxes, each representing a different type of box (1, 2, 3, 4).  The boxes are positioned horizontally along a number line that spans from approximately 550 to 750.  Each box represents the distribution of compression strength values for that type of box.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values for compression strength (lb).  The figure is placed below the table to visually compare the compression strength distributions for each type of box.  The boxplot is used to visually assess the overlap and differences in compression strength among the different box types, providing a visual aid to the statistical analysis.  This is relevant to the example of comparing the means of multiple groups (in this case, different types of boxes) in the context of ANOVA.
+
+
+# 5
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**ANOVA Test** used when the response is numerical and the explanatory variable is categorical taking 3 or more values. This explanatory variable divides the population into groups. In ANOVA, we use a two-stage process to reduce the number of tests necessary.
+
+1. We begin by using an overall F test to determine whether there are any differences among the means.
+
+2. If there are, then we conduct a set of follow-up tests with the appropriate control of overall type I error that will check each pair of means for significant differences.
+
+
+**Logic behind overall F test:** What would give us an indication that the group means are significantly different?
+
+**(a)** and **(b)**:  Below the text are two boxplots, (a) and (b).  Both boxplots display three boxes, each representing a different group (labeled "Center 1," "Center 2," and "Center 3").  The boxes are positioned horizontally along a number line.  Each box represents the distribution of values for that group.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values.  Boxplot (a) shows more spread in the data than boxplot (b).  The boxplots are positioned below the text to visually compare the distributions of the data for each group in the two scenarios.
+
+
+**Look at the plots above.**
+
+* **Sample means are same for groups in both (a) and (b):**  
+    𝑥̅𝑎,1 = 2.6 = 𝑥̅𝑏,1
+    𝑥̅𝑎,2 = 3.1 = 𝑥̅𝑏,2
+    𝑥̅𝑎,3 = 2.8 = 𝑥̅𝑏,3
+    → what information? Between-group variances are same.
+
+* **Variance between observations in group (a) greater than group (b):**
+    variances in (a) > variances in (b)
+    → what information? Within-group variances are not.
+
+
+**Compare with two-sample t test:**
+
+𝑇= (𝑋̅ −𝑌̅) −(𝜇1 −𝜇2)
+√𝑆1
+2
+𝑚+ 𝑆2
+2
+𝑛  
+= 𝑑𝑖𝑓𝑓𝑒𝑟𝑒𝑛𝑐𝑒  𝑏𝑒𝑡𝑤𝑒𝑒𝑛 𝑔𝑟𝑜𝑢𝑝𝑠
+𝑣𝑎𝑟𝑖𝑎𝑡𝑖𝑜𝑛 𝑤𝑖𝑡ℎ𝑖𝑛 𝑔𝑟𝑜𝑢𝑝𝑠
+
+
+---
+
+**Description of the Slide:**
+
+This slide (number 5) continues the discussion of Analysis of Variance (ANOVA) in the context of comparing means of multiple groups.  It introduces the concept of an overall F-test as a preliminary step in ANOVA.  The slide uses boxplots to visually represent the data distributions for two different scenarios (a) and (b).  The boxplots are crucial for understanding the differences in variability between groups and within groups.  The text explains how to interpret the boxplots in terms of sample means and variances, and how these interpretations relate to the overall F-test and the subsequent two-sample t-tests.  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.
+
+
+# 6
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Overall F test statistic:**
+
+𝐹𝑇𝑆= 𝑣𝑎𝑟𝑖𝑎𝑡𝑖𝑜𝑛 𝑎𝑚𝑜𝑛𝑔 𝑡ℎ𝑒 𝑚𝑒𝑎𝑛𝑠 𝑜𝑓 𝑔𝑟𝑜𝑢𝑝𝑠
+𝑣𝑎𝑟𝑖𝑎𝑡𝑖𝑜𝑛 𝑤𝑖𝑡ℎ𝑖𝑛 𝑔𝑟𝑜𝑢𝑝𝑠
+
+The overall F test procedure for 𝐻0:𝜇1 = 𝜇2 = ⋯= 𝜇𝐼 is based on comparing a measure of differences among the 𝑥𝑖’s (“between-samples” variation) to a measure of variation calculated from within each of the samples.
+
+
+Notations and Assumptions (balanced design)
+
+* There are I different groups corresponding to I different treatments:
+
+𝑋11, . . . , 𝑋1𝐽∼𝑁(𝜇1,𝜎1
+2) are the 𝑛1 samples of the first group;
+𝑋21, . . . , 𝑋2𝐽∼𝑁(𝜇2, 𝜎2
+2) are the 𝑛2 samples of the second group;
+….
+𝑋𝐼1, . . . , 𝑋𝐼𝐽∼𝑁(𝜇𝐼,  𝜎𝐼
+2) are the 𝑛𝐼 samples of the 𝐼-th group.
+
+where all measurements are independent and 𝜎1
+2 = 𝜎2
+2 = ⋯= 𝜎𝐼
+2.
+
+The above statement contains three critical assumptions:
+
+1) INDEPENDENCE.
+
+2) NORMAL.
+
+3) EQUAL VARIANCE.
+
+How to diagnose violations of the above assumptions?
+
+* 𝑥𝑖,𝑗 = the 𝑗𝑡ℎ measurement taken from the 𝑖𝑡ℎ population.
+
+* Group sample mean of each group, 𝑋̅𝑖∙
+𝑋̅ 𝑖∙= 1
+𝑛𝑖
+∑𝑋𝑖𝑗
+𝐽
+𝑗=1
+
+* The grand mean, 𝑋̅ ∙∙
+𝑋̅ ∙∙= 1
+𝑁∑∑𝑋𝑖𝑗
+𝐽
+𝑗=1
+𝐼
+𝑖=1
+
+where 𝑁= 𝐼𝐽 is the total sample size.
+
+
+Note: Graphical approach, such as side-by-side boxplot can visually display the comparison. But usually, side-by-side boxplot can only detect practical significance, but not statistical significance.
+
+
+**Figure Description:**
+
+Below the text, there are two side-by-side boxplots, labeled (a) and (b).  Both boxplots display three boxes, each representing a different group (labeled "Center 1," "Center 2," and "Center 3").  The boxes are positioned horizontally along a number line.  Each box represents the distribution of values for that group.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values.  Boxplot (a) shows more spread in the data than boxplot (b).  The boxplots are positioned below the text to visually compare the distributions of the data for each group in the two scenarios.  The presence of these boxplots is crucial for understanding the concept of comparing means of multiple groups in the context of ANOVA.  The comparison of the spread in the boxplots (a) and (b) is used to illustrate the concept of between-group and within-group variation, which is central to the F-test in ANOVA.
+
+
+
+
+# 7
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Hypotheses:**
+
+H<sub>0</sub>: there is no relationship between “type of shipping boxes” and “compression strength”; or
+H<sub>0</sub>: group index has nothing to do with the mean of “compression strength”; or
+H<sub>0</sub>: 𝜇<sub>1</sub> = . . . = 𝜇<sub>𝐼</sub> (constant)
+
+H<sub>a</sub>: “type of shipping boxes” does influence the group mean of “compression strength”; or
+H<sub>a</sub>: There are at least two groups that their group means are different; or
+H<sub>a</sub>: 𝜇<sub>1</sub> = . . . = 𝜇<sub>𝐼</sub> doesn’t hold.
+
+Note: H<sub>a</sub> is not the same statement as saying “all the group means are different.”
+
+
+**Intuition of ANOVA: Sum of Square (variability) decomposition**
+
+```
+(𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>∙∙</sub>)       =        (𝑋̅<sub>𝑖∙</sub>−𝑋̅<sub>∙∙</sub>)        +        (𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>𝑖∙</sub>) 
+```
+
+```
+total           =           between-group           +           within-group 
+deviation       deviation           deviation 
+```
+
+Of course, the individual components 𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>∙∙</sub> sum to 0, so we must square them. It turns out that all cross-product terms cancel, and we have:
+
+```
+∑<sub>𝑖=1</sub><sup>𝐼</sup>∑<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>⋅⋅</sub>)<sup>2</sup> = ∑<sub>𝑖=1</sub><sup>𝐼</sup>∑<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub>−𝑋̅<sub>𝑖⋅</sub>)<sup>2</sup> + ∑<sub>𝑖=1</sub><sup>𝐼</sup>𝐽(𝑋̅<sub>𝑖⋅</sub>−𝑋̅<sub>⋅⋅</sub>)<sup>2</sup>
+```
+
+Total sum of square (SST) = treatment sum of square (SSTr) + error sum of squre (SSE)
+
+Total variation in data = variation within each group + variation among groups
+
+
+**Figure Description:**
+
+Below the text, there are two side-by-side boxplots, labeled (a) and (b).  Both boxplots display three boxes, each representing a different group (labeled "Center 1," "Center 2," and "Center 3").  The boxes are positioned horizontally along a number line.  Each box represents the distribution of values for that group.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values.  Boxplot (a) shows more spread in the data than boxplot (b).  The boxplots are positioned below the text to visually compare the distributions of the data for each group in the two scenarios.  The comparison of the spread in the boxplots (a) and (b) is used to illustrate the concept of between-group and within-group variation, which is central to the F-test in ANOVA.  The presence of the boxplots is crucial for understanding the intuition behind ANOVA, as it visually demonstrates the variability within and between groups.  The different spreads in the boxplots (a) and (b) highlight the different levels of variability in the data, which is a key factor in determining whether the group means are significantly different.
+
+
+
+
+# 8
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+* The total sum of squares (SST) is a measure of the total variation in the data—the sum of all squared deviations about the grand mean. This total variation can be partitioned into two pieces.
+
+* The error sum of squares (SSE) measures variation that would be present whether H<sub>0</sub> is true or false.
+
+* The treatment sum of squares (SSTr) is the amount of variation that can be explained by possible differences in the 𝜇<sub>i</sub>’s. H<sub>0</sub> is rejected if the explained variation is large relative to unexplained variation.
+
+* Fundamental Identity: SST = SSTr + SSE
+
+* The significance of group difference depends on the comparison of between-group-variation (SSTr) vs within-group-variation (SSE)
+
+
+ANOVA table
+
+| Source of Variation | df | Sum of Squares | Mean Square | <i>f</i> |
+|---|---|---|---|---|
+| Treatments | 𝐼 − 1 | SSTr | MSTr = SSTr/(𝐼 − 1) | MSTr/MSE |
+| Error | 𝐼(𝐽 − 1) | SSE | MSE = SSE/𝐼(𝐽 − 1) |  |
+| Total | 𝐼𝐽 − 1 | SST |  |  |
+
+
+The SST, SSTr and SSE are given by:
+
+* DFT = N − 1 = 𝐼𝐽 − 1
+* DFT<sub>r</sub> = 𝐼 − 1
+* DFE = 𝐼(𝐽 − 1)
+* DFT = DFT<sub>r</sub> + DFE
+
+* SST = Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub> − 𝑋̅<sub>⋅⋅</sub>)<sup>2</sup> = Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>𝑋<sub>𝑖𝑗</sub><sup>2</sup> − 1/𝐼𝐽 Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>𝑋<sub>𝑖𝑗</sub><sup>2</sup>
+
+* SSTr = Σ<sub>𝑖=1</sub><sup>𝐼</sup>𝐽(𝑋̅<sub>𝑖⋅</sub> − 𝑋̅<sub>⋅⋅</sub>)<sup>2</sup> = 1/𝐽 Σ<sub>𝑖=1</sub><sup>𝐼</sup>𝑋̅<sub>𝑖⋅</sub><sup>2</sup> − 1/𝐼𝐽 Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>𝑋<sub>𝑖𝑗</sub><sup>2</sup>
+
+* SSE = Σ<sub>𝑖=1</sub><sup>𝐼</sup>Σ<sub>𝑗=1</sub><sup>𝐽</sup>(𝑋<sub>𝑖𝑗</sub> − 𝑋̅<sub>𝑖⋅</sub>)<sup>2</sup>
+
+
+**Figure Description:**
+
+There are no figures on this slide.  The slide focuses on the mathematical formulas and concepts related to ANOVA, including the decomposition of total variation into between-group and within-group components.  The ANOVA table is presented to summarize the calculations and the formulas for calculating the sums of squares and mean squares are provided.  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.
+
+
+# 9
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Example 25.1 revisit** The ANOVA table for this Example:
+
+| Type of Box | Compression Strength (lb) | Sample Mean | Sample SD |
+|---|---|---|---|
+| 1 | 655.5 788.3 734.3 721.4 679.1 699.4 | 713.00 | 46.55 |
+| 2 | 789.2 772.5 786.9 686.1 732.1 774.8 | 756.93 | 40.34 |
+| 3 | 737.1 639.0 696.3 671.7 717.2 727.1 | 698.07 | 37.20 |
+| 4 | 535.1 628.7 542.4 559.0 586.9 520.0 | 562.02 | 39.87 |
+
+Grand mean = 682.50
+
+| Source of variation | df | Sum of squares | Mean square | <i>f</i> |
+|---|---|---|---|---|
+| Boxes | A | B | C | D |
+| Error | E | F |  |  |
+| Total | G | 161206.00 | 1691.92 |  |
+
+
+**Description of the Slide:**
+
+This slide presents the results of an ANOVA analysis, specifically a revisit of Example 25.1.  It's a continuation of the previous slides, which introduced the concept of ANOVA and the calculations involved.
+
+* **Table 1:** This table shows the original data, including the compression strength values for each type of box (1, 2, 3, and 4).  It also provides the sample mean and sample standard deviation for each box type.  This table is crucial for understanding the data used in the ANOVA analysis.
+
+* **Table 2:** This table is the ANOVA table itself.  It's a summary of the ANOVA results.  The columns represent the source of variation (Boxes, Error, and Total), the degrees of freedom (df), the sum of squares (SS), the mean square (MS), and the calculated F-statistic.  Crucially, the values for Sum of Squares and Mean Square are partially filled in, with placeholders (A, B, C, D, E, F, G) for the actual calculated values.  This table is the core output of the ANOVA analysis, summarizing the variation within and between the groups.  The missing values (A-G) are the results of the calculations performed on the data in Table 1.
+
+The slide's purpose is to present the ANOVA table for the example, allowing for a direct comparison of the variation between different box types and the variation within each box type.  The table is essential for determining if there are statistically significant differences in the mean compression strength among the different box types.  The missing values (A-G) are the results of the calculations performed on the data in Table 1.  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.

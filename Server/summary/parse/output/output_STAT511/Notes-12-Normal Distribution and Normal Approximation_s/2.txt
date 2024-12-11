@@ -1,0 +1,38 @@
+# Slide 2
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**2**
+
+**z<sub>α</sub> notation for z Critical Values**
+
+In statistical inference, we will need the values on the horizontal z axis that capture certain small tail areas under the standard normal curve.
+
+**Notation**
+
+z<sub>α</sub> will denote the value on the z axis for which α of the area under the z curve lies to the right of z<sub>α</sub>.
+
+* For example, z<sub>0.10</sub> captures upper-tail area 0.10, and z<sub>0.01</sub> captures upper-tail area 0.01.
+
+Since α of the area under the z curve lies to the right of z<sub>α</sub>, 1 – α of the area lies to its left.
+
+Thus z<sub>α</sub> is the 100(1 – α)th percentile of the standard normal distribution.
+
+By symmetry the area under the standard normal curve to the left of –z<sub>α</sub> is also α. The z<sub>α</sub>'s are usually referred to as z critical values.
+
+
+**Figure Description:**
+
+A figure is present, positioned in the lower-middle portion of the slide. It is a bell-shaped curve, representing the standard normal distribution. The horizontal axis is labeled with z-values, and the vertical axis represents the probability density. A shaded area is highlighted to the right of a vertical line. The shaded area represents a probability (α) and the vertical line represents the corresponding z-value (z<sub>α</sub>). The figure is labeled with "curve" and "Shaded area = P(Z ≥ z<sub>α</sub>) = α". The figure visually illustrates the concept of z-scores and their relationship to the area under the standard normal curve, specifically the area to the right of a particular z-value. The figure is crucial for understanding the notation and concept of z-critical values in the context of statistical inference.  The figure is oriented horizontally.
+
+
+**Table Description:**
+
+A table is present, positioned above the figure. The table contains a series of z-values and their corresponding probabilities. The table is used to look up the z-values for different percentiles of the standard normal distribution. The table is essential for calculating probabilities and percentiles related to the standard normal distribution. The table is oriented vertically.
+
+
+**Overall Context:**
+
+This slide introduces the concept of z-critical values, which are essential for statistical inference. It explains how to find these values using the standard normal distribution and a table of z-scores and their corresponding probabilities. The figure and table are used to illustrate the concept and provide a practical method for finding the z-critical values. This slide builds upon the previous slide's discussion of the standard normal distribution.

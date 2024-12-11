@@ -1,0 +1,33 @@
+# Slide 31
+
+**How to compute SVD in Python**
+
+```python
+import pandas as pd
+import numpy as np
+# read in data
+data = pd.read_csv("iris.dat", header=None, sep=',')
+X = data.iloc[:, 0:4].values  # Dataframe.values returns a matrix
+X_shape = np.shape(X)
+# do SVD decomposition
+U, s, Vt = np.linalg.svd(X)
+# U, Vt matrices
+# s: vector of eigenvalues
+# Combine s and Vt to simplify our latent factors
+```
+
+**Description:**
+
+This slide presents Python code for computing a Singular Value Decomposition (SVD) on a dataset.  The code is designed for use in an Intro to Data Science course.
+
+The code snippet demonstrates the steps involved in performing SVD:
+
+1. **Import necessary libraries:** `pandas` for data manipulation and `numpy` for numerical operations.
+
+2. **Load and prepare data:** The code loads data from a CSV file named "iris.dat".  It extracts the first four columns (features) into a NumPy array `X`.  The `header=None` and `sep=','` arguments in `pd.read_csv` indicate that the file has no header row and that the data is separated by commas.  The `X_shape = np.shape(X)` line calculates and stores the dimensions of the data matrix.
+
+3. **Perform SVD:** The core of the code is `U, s, Vt = np.linalg.svd(X)`. This line computes the SVD of the matrix `X`, storing the left singular vectors in `U`, the singular values in `s`, and the right singular vectors in `Vt`.
+
+4. **Comments:** The code includes comments explaining the purpose of each section, which is helpful for understanding the code's functionality.
+
+The context of this slide is to demonstrate how to implement SVD in Python, likely following the theoretical explanation of SVD in previous slides.  There are no figures on this slide.  The code is presented in a way that clearly shows the steps involved in computing SVD using the `numpy` library.  The use of the Iris dataset suggests that this is a practical example for illustrating the concept of SVD.

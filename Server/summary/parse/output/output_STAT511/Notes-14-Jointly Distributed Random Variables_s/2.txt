@@ -1,0 +1,75 @@
+# Slide 2
+
+**STAT 511 Course Notes – set 14 (W7)**
+
+**The joint pmf table**
+
+To verify that this is a legitimate pmf:
+
+* 𝑝(𝑥, 𝑦) ≥0
+* ∑∑𝑝(𝑥, 𝑦) = 1
+
+**𝑦** | **15** | **25**
+------- | -------- | --------
+**𝑥** |  |  
+**10** | 0.2 | 0.05
+**20** | 0.1 | 0.15
+**30** | 0.2 | 0.3
+
+**P(Y = 15)**
+= P[(X, Y) ∈{(, 15), (, 15), (, 15)}] = 
+
+**P(Y = X + 5)**
+= P[(X, Y) ∈{(, ), (, ), }] = 
+
+**Marginal Probability Mass function:**
+
+The marginal probability mass function of X, denoted by 𝑝𝑋(𝑥), is given by,
+
+𝑝𝑋(𝑥) = 𝑃(𝑋= 𝑥) = 𝑃[(𝑋, 𝑌) ∈{(𝑥, 𝑟): 𝑟∈𝑅} ] = ∑
+𝑝(𝑥, 𝑦)
+𝑎𝑙𝑙 𝑝𝑜𝑠𝑠𝑖𝑏𝑙𝑒 𝑦
+
+**NOTE:** The marginal pmf of X is exactly the same pmf of X when only information about X is presented. 
+Similarly, the marginal probability mass function of Y is,
+
+𝑝𝑌(𝑦) = 𝑃(𝑌= 𝑦) = 𝑃[(𝑋, 𝑌) ∈{(𝑟, 𝑦): 𝑟∈𝑅} ] = ∑
+𝑝(𝑥, 𝑦)
+𝑎𝑙𝑙 𝑝𝑜𝑠𝑠𝑖𝑏𝑙𝑒 𝑥
+
+
+**Example 14.1 revisit**
+
+The deductible amount of automobile (X) and homeowner (Y) insurance policies:
+
+**p(x,y)** | **0** | **100** | **200**
+------- | -------- | -------- | --------
+**100** |  |  |  
+**250** |  | 0.05 | 0.15
+**30** |  |  |  
+
+𝑝𝑋(100) = 𝑝(100, ) + 𝑝(100, ) + 𝑝(100, ) = 
+And 
+𝑝𝑋(250) = 𝑝(250, ) + 𝑝(250, ) + 𝑝(250, ) = 
+
+The marginal pmf of X is then 
+𝑝𝑋(𝑥) = { ,
+𝑥= 100, 250
+0,
+𝑜𝑡ℎ𝑒𝑟𝑤𝑖𝑠𝑒
+
+Similarly,  
+𝑝𝑌(𝑦) = {
+,
+𝑦= 0, 100
+,
+𝑦= 200
+0,
+𝑜𝑡ℎ𝑒𝑟𝑤𝑖𝑠𝑒
+
+so 𝑃(𝑌≥100) = 𝑝𝑌(100) + 𝑝𝑌(200) = 0.75 as before.
+
+
+**Description of the slide:**
+
+This slide, part of a Statistical Methods course, continues the discussion of multiple random variables, specifically focusing on joint probability mass functions (pmfs).  It presents a table (top right) showing a joint pmf for two discrete random variables, X and Y.  The table displays probabilities for different combinations of X and Y values.  The slide also introduces the concept of marginal probability mass functions (pmfs) for each variable (X and Y).  The slide includes a table (bottom) that is part of an example (Example 14.1 revisit) illustrating how to calculate marginal pmfs from a joint pmf.  The example deals with deductible amounts for automobile and homeowner insurance policies.  The tables are crucial for understanding how to calculate probabilities involving these variables. The layout is clear and organized, with the table clearly separated from the theoretical explanations.  The slide builds upon the concepts introduced in the previous slide.

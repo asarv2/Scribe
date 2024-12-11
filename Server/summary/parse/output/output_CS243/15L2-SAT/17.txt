@@ -1,0 +1,27 @@
+# 17
+
+**Principles of SAT solving algorithms**
+
+The SAT solving algorithms presented hereafter are based on the following ideas:
+
+First, each algorithm is stated as a recursive function taking a propositional formula φ and a partial assignment v as arguments.
+
+Second, these functions may modify their arguments:
+
+* the partial assignment can be extended,
+* the formula φ can be simplified at the newly assigned literal.
+
+Third, before extending the assignment v and simplifying the formula φ, the function checks whether φ can be proved to be true or false, whatever are the values of the remaining unassigned Boolean variables.
+
+
+**Description:**
+
+This slide outlines the fundamental principles behind SAT solving algorithms.  It describes a recursive approach where algorithms operate on a propositional formula (φ) and a partial assignment (v).  The key points are:
+
+1. **Recursive Function:** Algorithms are defined as recursive functions that take both the formula and the partial assignment as input.
+
+2. **Argument Modification:** The functions can modify both the partial assignment (extend it) and the formula (simplify it).  Simplifying the formula is crucial for efficiency, as it reduces the search space.
+
+3. **Pre-Check:** Before making any changes, the algorithm checks if the formula is already definitively true or false, given the current partial assignment.  This pre-check can significantly reduce unnecessary work.
+
+The slide is a high-level overview of the general approach used in SAT solvers, setting the stage for the specific algorithms that might be discussed in subsequent slides.  There are no figures on this slide.

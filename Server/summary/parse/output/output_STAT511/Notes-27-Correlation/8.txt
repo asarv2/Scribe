@@ -1,0 +1,36 @@
+# Slide 8
+
+**STAT 511 Course Notes – set 27 (W14)**
+
+**Yuan Qu**
+
+**(Figure Description):**
+
+The slide contains two figures.
+
+* **Figure 1 (Upper portion):**  This is a scatterplot with the horizontal axis labeled "Weight" and the vertical axis labeled "MPG".  The data points are plotted, showing a general negative trend.  A correlation value, "Correlation, r = 0.3", is displayed below the plot.  The scatterplot is positioned in the upper portion of the slide, likely to visually represent the relationship between weight and miles per gallon (MPG).  The presence of the scatterplot is crucial for understanding the visual representation of the correlation between the two variables.  The correlation value is a numerical summary of the strength and direction of the linear relationship.
+
+* **Figure 2 (Lower portion):** This is a scatterplot with the horizontal axis labeled "Time" and the vertical axis labeled "Average".  The data points are plotted, showing a complex pattern.  A smooth curve is overlaid on the scatterplot.  The scatterplot is positioned in the lower portion of the slide, likely to visually represent the relationship between time and average.  The presence of the scatterplot is crucial for understanding the visual representation of the relationship between the two variables.  The smooth curve is likely a fitted model or trend line, used to summarize the overall pattern of the data.
+
+
+**Text Content:**
+
+The sample correlation of coefficient 𝑟 is a point estimate for 𝜌(𝑋, 𝑌), 
+
+𝜌̂ = 𝑅=
+∑(𝑋𝑖−𝑋̅)
+𝑖
+(𝑌𝑖−𝑌̅)
+√∑(𝑋𝑖−𝑋̅)2∑(𝑌𝑖−𝑌̅)2 
+
+
+We can derive a t-test statistic about the hypothesis 𝐻0: 𝜌= 0, that is, X and Y are independent in the 
+population.  
+
+Both the hypothesis and the t-test statistic are actually equivalent to 𝐻0:𝛽1 = 0 and 𝑡𝑇𝑆=
+𝛽̂1/𝑆𝛽̂1respectively, where 𝛽1 is the slope of simple regression model. 
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of correlation and its relationship to simple linear regression.  It presents two scatterplots, one showing a weak correlation between weight and MPG, and the other showing a more complex relationship between time and average.  The slide also provides the formula for calculating the sample correlation coefficient (r) and explains how a t-test can be used to assess the significance of the correlation.  The slide is designed to illustrate the practical application of correlation and hypothesis testing in the context of simple linear regression.

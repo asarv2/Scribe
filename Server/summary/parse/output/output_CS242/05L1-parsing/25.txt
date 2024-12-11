@@ -1,0 +1,23 @@
+# Slide 25
+
+**TFIDF**
+
+A simple 'bag of words' model of documents
+
+TF: Term Frequency
+for each term in each document, the number of times the word occurs divided by the number of the words in the document
+
+IDF: Inverse Document Frequency
+for each term across the corpus: ln(N / (1 + n<sub>t</sub>))
+where N is the number of documents, and n<sub>t</sub> is the number of documents that contain the term
+
+TFIDF: Multiply TF by IDF to get a sense of words more unique in a document
+
+ln(100/101) = -0.00995
+ln(100/50) = 0.6931
+ln(100/10) = 2.3
+
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, defines TF-IDF (Term Frequency-Inverse Document Frequency).  It explains the concepts of Term Frequency (TF) and Inverse Document Frequency (IDF) in the context of a "bag of words" model for documents.  The slide provides the formulas for calculating TF and IDF, along with a brief explanation of what each component represents.  It also shows example calculations of the natural logarithm (ln) of different ratios, which are likely used in the IDF calculation.  The slide is designed to provide a concise overview of the TF-IDF method, which is a crucial technique in text analysis for identifying important terms in a collection of documents.  The examples of ln calculations are likely to be used in the context of calculating IDF values for specific terms in a corpus of documents.

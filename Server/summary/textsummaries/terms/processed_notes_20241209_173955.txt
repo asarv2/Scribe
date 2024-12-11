@@ -1,0 +1,21 @@
+
+--- Key Terms ---
+artifical intelligence basics
+perceptron
+chinese room argument
+minimax search
+reinforcement learning
+alpha-beta pruning
+turing test
+--- Problem Types ---
+artifical intelligence basics
+addressing ai safety and ethical concerns
+understanding the challenges of real-world ai applications
+bridging the gap between different ai domains
+evaluating intelligent behavior
+overcoming the limits of search
+understanding the nature of intelligence
+--- Algorithm Solutions ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning

@@ -1,0 +1,13 @@
+# Slide 30
+
+**Other Issues with P-values**
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, titled "Other Issues with P-values," is likely a heading for a discussion about potential problems or limitations associated with using p-values in statistical analysis.  The slide's content is limited to the title, suggesting that the following content will delve into specific issues related to p-values, such as their interpretation, potential misuses, or limitations in certain contexts.  The slide is likely part of a larger presentation on statistical methods in data science.

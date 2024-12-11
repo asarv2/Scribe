@@ -1,0 +1,24 @@
+# Slide 9
+
+**Ethical concerns**
+
+Preserving privacy
+* Methods for handling sensitive data
+* Uses of data science that undermine privacy
+
+Avoiding bias
+* Data selection and unintentional red-lining
+* Re-inscription of existing biases
+
+Mitigating malicious attacks
+* Intentional subversion of machine learning systems
+* Hazards of learning from the open internet
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, lists ethical concerns related to AI.  It's a bulleted list format, clearly separating different categories of ethical issues.  The categories are "Preserving privacy," "Avoiding bias," and "Mitigating malicious attacks."  Each category lists specific concerns, such as methods for handling sensitive data, unintentional bias in data selection, and malicious attacks on machine learning systems.  The slide is designed to highlight the ethical considerations that need to be addressed when developing and deploying AI systems.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI.

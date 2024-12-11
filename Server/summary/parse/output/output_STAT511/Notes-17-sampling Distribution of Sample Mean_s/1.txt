@@ -1,0 +1,31 @@
+# 1
+
+**STAT 511 Course Notes – set 17 (W9)**
+
+**Sampling Distribution of the Sample Mean**
+
+Yuan Qu
+
+The previous simulation studies show that when *n* is sufficiently large, the sampling distribution of sample variance and sample mean is more and more normal. Actually, most of the statistics that are based on average have this property. We particularly study the sampling distribution of sample mean in this section.
+
+Proposition: Let X<sub>1</sub>, X<sub>2</sub>, ..., X<sub>n</sub> be a random sample from a distribution with mean value μ and standard deviation σ. Then
+
+1. E(X̄) = μ<sub>X̄</sub> = μ
+2. Var(X̄) = σ<sub>X</sub><sup>2</sup>/n and σ<sub>X̄</sub> = σ<sub>X</sub>/√n
+
+In addition, with T = X<sub>1</sub> + X<sub>2</sub> + ... + X<sub>n</sub>, the sample total: E(T) = nμ<sub>X</sub>, Var(T) = nσ<sub>X</sub><sup>2</sup> and σ<sub>T</sub> = √nσ<sub>X</sub>.
+
+The standard deviation σ<sub>X̄</sub> = σ<sub>X</sub>/√n is often called the standard error of the mean; it describes the magnitude of a typical or representative deviation of the sample mean from the population mean.
+
+Proposition: Let X<sub>1</sub>, X<sub>2</sub>, ..., X<sub>n</sub> be a random sample from a normal distribution with mean μ and standard deviation σ. Then for any *n*, X̄ is normally distributed (with mean μ and standard deviation σ/√n, as is T (with mean nμ and standard deviation √nσ).
+
+
+**Figure Description:**
+
+The figure displays three normal distribution curves, each representing the sampling distribution of the sample mean (X̄) for different sample sizes (*n*).  The curves are positioned horizontally, with the x-axis representing the possible values of the sample mean.  The curves are labeled:
+
+* **X̄ distribution when n = 10:**  This curve is the highest and narrowest of the three, indicating a more concentrated distribution of sample means when the sample size is larger.
+* **X̄ distribution when n = 4:** This curve is wider and flatter than the n=10 curve, showing a less concentrated distribution of sample means when the sample size is smaller.
+* **Population distribution:** This curve is the widest and flattest, representing the distribution of the entire population from which the samples are drawn.  It is positioned below the other two curves, visually demonstrating that the sampling distribution of the sample mean becomes more concentrated around the population mean as the sample size increases.
+
+The figure is crucial for illustrating the central limit theorem, which states that the sampling distribution of the sample mean approaches a normal distribution as the sample size increases, regardless of the shape of the population distribution. The figure visually demonstrates this convergence.  The arrows pointing from the curves to the x-axis label the curves and the arrow pointing from the population distribution curve to the x-axis labels the population distribution.  The figure is placed at the bottom of the slide to visually demonstrate the concept of the sampling distribution of the sample mean.

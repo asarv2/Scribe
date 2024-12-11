@@ -1,0 +1,15 @@
+# 36
+
+**Algorithm components**
+
+* Representation of knowledge about the world
+* Set of decisions (actions)
+* Reasoning about opponents or effects of actions
+* Need to choose between actions
+    * How to choose?
+    * Generalize to new situations?
+
+
+**Description of what you see:**
+
+Slide 36 presents a bulleted list of algorithm components.  The title "Algorithm components" is in a heading-style format, likely a bold, dark font against a light background.  The bullet points below the title describe key aspects of algorithm design, particularly in the context of AI.  The items are presented in a clear and concise manner, focusing on conveying the core elements involved in algorithm design.  The slide is likely part of a larger presentation, and the components listed are likely to be discussed in detail in the following slides.  The inclusion of questions like "How to choose?" and "Generalize to new situations?" suggests the slide is setting the stage for a discussion about decision-making and adaptability in algorithms.

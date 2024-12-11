@@ -1,0 +1,13 @@
+# Slide 55
+
+# Higher-level query languages
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on Introduction to Data Science, introduces the concept of higher-level query languages.  The title, "Higher-level query languages," suggests a discussion about languages that abstract away some of the complexities of SQL, potentially focusing on tools that provide a more user-friendly or domain-specific interface for querying and manipulating data.  The slide is purely textual, with no figures.  The content is a heading, indicating the topic of the upcoming discussion.  The context suggests this is likely a transition to a discussion of tools or libraries that build upon SQL or provide alternative approaches to data querying.
+
+
+
+

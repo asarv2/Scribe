@@ -1,0 +1,24 @@
+# Slide 32
+
+**Matrix Factorization of Ratings Data**
+
+The vector  represents the affinity of user  for each of the latent factors.
+Similarly, the vector  represents the affinity of the movie  for the latent factors.
+
+Example with 3 factors for k
+* Factor 1 ~ action
+* Factor 2 ~ comedy
+* Factor 3 ~ romance
+
+ualice = [0.2, 0.5, 0.3]
+vMiB = [1.1, 0.4, 0.01]
+ralice,MiB = 0.2 * 1.1 + 0.5 * 0.4 + 0.3 * 0.01 = 0.423
+
+**(Figure):** A diagram is shown, representing a matrix factorization of ratings data.  The diagram shows a large, gray rectangle, representing a user-item matrix.  The rows of the matrix represent users, and the columns represent movies.  The matrix is divided into two smaller matrices, one on the left and one on the right.  The left matrix has rows representing users and columns representing latent factors (k).  The right matrix has rows representing latent factors (k) and columns representing movies (d).  A small, light-blue rectangle is highlighted within the large gray rectangle, representing the rating of user "Alice" for the movie "Men in Black (MiB)".  The diagram is positioned in the center of the slide.  The purpose of the figure is to illustrate how matrix factorization decomposes a user-item matrix into two lower-dimensional matrices, representing user and item latent factors.  The example shows how these latent factors can be used to predict ratings for items a user hasn't rated.
+
+
+**Description:**
+
+This slide, part of a lecture on recommender systems in an Intro to Data Science course, introduces matrix factorization as a technique for predicting user ratings.  The figure visually represents the decomposition of a user-item matrix into two lower-dimensional matrices, representing user and item latent factors.  The example shows how these latent factors can be used to predict a rating for a specific user and item pair.  The slide is likely to follow up on previous slides that introduced recommender systems and collaborative filtering.  The context is to explain how matrix factorization can be used to predict missing ratings in a user-item matrix.  The example of "Alice" and "Men in Black (MiB)" is used to illustrate the calculation of a predicted rating.
+
+

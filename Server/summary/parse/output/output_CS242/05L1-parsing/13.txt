@@ -1,0 +1,31 @@
+# Slide 13
+
+**Regular Expressions: Examples**
+
+```python
+sen = "This is a test that tests regular expression basics for numbers 1234 and letters A-Z."
+# This .* will match everything it can
+pattern = re.compile(r"test.*")
+for match in re.finditer(pattern, sen):
+    print(match.group(), match.span())
+test that tests regular expression basics for numbers 1234 and letters A-Z. (10, 85)
+# This .*? will match as little as it can
+for match in re.finditer(r"test.*?", sen):
+    print(match.group(), match.span())
+test (10, 14)
+test (20, 24)
+```
+
+---
+
+**Description:**
+
+This slide demonstrates examples of regular expression (regex) matching in Python, specifically focusing on the difference between greedy and non-greedy matching.
+
+*   **Greedy Matching:** The first code block uses `test.*`.  The `.*` part is greedy; it will match as much as possible after "test".  The output shows the entire string from "test" to the end of the sentence, along with its starting and ending positions (10, 85).
+
+*   **Non-Greedy Matching:** The second code block uses `test.*?`. The `*?` makes the matching non-greedy (or lazy).  It will match the shortest possible string after "test".  The output shows two matches for "test", each with its starting and ending positions (10, 14) and (20, 24), demonstrating that it only matches the first occurrence of "test" in each case.
+
+The slide is part of a larger lecture on regular expressions within the Intro to Data Science course.  It highlights the importance of understanding the difference between greedy and non-greedy matching when using regular expressions to extract specific parts of a string. The examples are clear and illustrate the different behaviors of the matching patterns. The output shows the matched substrings and their positions in the input string. The example string `sen` is used to illustrate the functionality of the methods.
+
+

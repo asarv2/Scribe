@@ -1,0 +1,29 @@
+# Slide 3
+
+**A quick review of recursion**
+
+Recursion is a self reference, eventually terminating in a base case
+
+**Methods:**
+
+* A method can call itself
+* Example Fibonacci
+
+**Data Structures:**
+
+* A data structure can reference itself
+* Example: LinkedList is a node that points to a LinkedList
+* Example: Trees are nodes that point to Trees
+
+
+**Diagram Description:**
+
+The slide includes a diagram illustrating recursion.  A central, light-blue box labeled "fib(n)" is at the top center of the slide.  Two downward-pointing arrows extend from this box, each leading to a similar light-blue box.  The boxes on the bottom level are labeled "fib(n-1)" and "fib(n-2)".  This visual representation demonstrates the recursive calls in a Fibonacci sequence.
+
+Below this, a second diagram depicts a linked list.  A light-blue box labeled "LinkedList" is at the top.  An arrow points from this box to a box labeled "Node".  Another arrow points from the "Node" box to another box labeled "LinkedList".  This illustrates how a linked list can reference itself recursively.
+
+A third diagram, also in light-blue, shows a tree structure.  A central, light-blue circle labeled "Node" is at the top of an inverted triangle.  Two smaller, light-blue triangles, labeled "Tree A" and "Tree B", extend downward from the "Node".  A line labeled "Tree" is below the triangles.  This diagram visually represents how a tree structure can reference itself recursively.
+
+**Overall Context:**
+
+The slide is part of a lecture on AI Basics, specifically focusing on the concept of recursion.  The diagrams are used to illustrate how recursion can be applied to different data structures (methods and data structures).  The Fibonacci sequence example and the linked list and tree examples are likely used to demonstrate the concept of recursive calls and how they are used in programming.

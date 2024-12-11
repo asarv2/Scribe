@@ -1,0 +1,23 @@
+# 9
+
+**4000 pages later**
+
+10236 -10050 0
+10236 -10051 0
+10236 -10235 0
+10008 10009 10010 10011 10012 10013 10014 10015 10016 10017 10018 10019 10020
+10021 10022 10023 10024 10025 10026 10027 10028 10029 10030 10031 10032 10033
+10034 10035 10036 10037 10086 10087 10088 10089 10090 10091 10092 10093 10094
+10095 10096 10097 10098 10099 10100 10101 10102 10103 10104 10105 10106 10107
+10108 -55 -54 53 -52 -51 50 10047 10048 10049 10050 10051 10235 -10236 0
+10237 -10008 0
+10237 -10009 0
+10237 -10010 0
+…
+
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a very long list of numbers.  The numbers are in a simple, unformatted list, and appear to be part of a SAT encoding.  The numbers are likely variable indices and their negations, forming clauses in a DIMACS CNF format.  The large number of entries suggests a very large and complex SAT problem.  The ellipsis (...) at the end indicates that the list continues beyond the displayed portion.  The context from previous slides suggests that this is a continuation of the discussion of SAT encoding and the sheer size of the problems being tackled.  The numbers are arranged in a list format, making it easy to read and understand the encoding.  The large number of entries suggests a very large and complex SAT problem.  The ellipsis (...) at the end indicates that the list continues beyond the displayed portion.  The context from previous slides suggests that this is a continuation of the discussion of SAT encoding and the sheer size of the problems being tackled.
+
+

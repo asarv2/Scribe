@@ -1,0 +1,20 @@
+# Slide 10
+
+**A/B Testing and Controlled Experiments**
+
+Randomly split traffic between two (or more) versions
+Collect metrics of interest, and analyze
+A/B test is the simplest controlled experiment,
+A/B/n refers to multiple treatments
+Must run statistical tests to confirm differences are not due to chance
+Best scientific way to prove causality, i.e., the changes in metrics are caused by changes introduced in the treatment(s)
+
+
+**Figure Description:**
+
+The slide contains two laptop computer icons, labeled "A" and "B".  Both are light-blue outlined with a dark-blue interior.  The icons are positioned side-by-side.  Each laptop icon has a small graphic of a web page with a gear icon, suggesting a website or application.  A vertical bar graph is shown inside each laptop icon.  The bar graph for laptop "A" (labeled "CONTROL") is a reddish-pink color and shows a value of 23%.  The bar graph for laptop "B" (labeled "VARIATION") is a light-green color and shows a value of 37%.  A green upward-pointing arrow is shown next to the bar graph in laptop "B", visually highlighting the increase in the metric.  Below each laptop icon, there are buttons labeled "CONTROL" and "VARIATION" in reddish-pink and light-green, respectively.  These icons and labels visually represent the two different versions (treatments) being compared in an A/B test.  The purpose of the figure is to illustrate the concept of A/B testing, where different versions of a webpage or application are tested to see which performs better.  The numbers (23% and 37%) represent metrics of interest, such as conversion rates or click-through rates.
+
+
+**Description of the Slide Content:**
+
+This slide introduces the concepts of A/B testing and controlled experiments in the context of Intro to Data Science.  The text explains the process of randomly dividing traffic between different versions (treatments) of a product or service, collecting metrics, and analyzing the results to determine if any observed differences are statistically significant.  The figure visually represents the two versions being compared and the metrics being measured.  The slide emphasizes the importance of statistical testing to ensure that any observed differences are not due to chance.

@@ -1,0 +1,24 @@
+# Slide 6
+
+**Challenges: viewpoint variation**
+
+```
+[[105 112 108 111 104 99 106 99 96 103 112 119 104 97 93 87]
+[91 98 102 106 104 79 98 103 99 105 123 136 118 185 94 85]
+[76 85 00 105 128 105 87 06 05 115 112 106 183 09 85]
+[99 81 81 93 120 131 127 100 95 98 102 99 96 93 101 94]
+[106 91 61 64 69 91 88 85 101 107 109 98 75 84 95 95]
+... (many more lines of numbers) ...
+[122 164 148 103 71 56 78 83 93 103 119 139 102 61 69 84]]
+```
+
+**Image Description:**
+
+A grayscale image of a gray tabby cat is displayed in the upper-left quadrant of the slide.  The image is positioned to the left of a large block of numbers.  The numbers represent pixel values, likely RGB values, for each pixel in the image.  The numbers are organized in rows and columns, forming a matrix representation of the image.  The image and the matrix of numbers are intended to illustrate the challenge of viewpoint variation in image classification.  The numbers show how the pixel values change when the camera's viewpoint changes, highlighting the difficulty of creating a model that can recognize the same object from different angles.  The image of the cat is a visual aid to illustrate the concept of viewpoint variation.  The numbers below the image represent the raw pixel data of the image.  The numbers are enclosed in square brackets, indicating that they are part of a matrix.  The large block of numbers below the image represents the numerical data that a computer "sees" when processing the image.  Each number corresponds to a pixel's color value (Red, Green, or Blue).  The numbers are organized in rows and columns, representing the image's pixel grid.  The text below the numerical data explains that an image is a grid of numbers between 0 and 255, where each number represents the color value of a pixel.  The text also states that an 800x600 image has 1,440,000 values.  The purpose of this slide is to illustrate the difference between how humans perceive images (semantically) and how computers represent them (numerically).
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that introduced image classification and the semantic gap.  It's designed to show the raw numerical data that a computer uses to represent an image, highlighting the challenge of viewpoint variation.  The slide is crucial for understanding how AI systems process visual information and the difficulties in creating models that can recognize objects from different perspectives.  The slide is likely part of a section discussing the challenges of image classification.
+
+

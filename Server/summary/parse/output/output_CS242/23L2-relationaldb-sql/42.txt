@@ -1,0 +1,22 @@
+# Slide 42
+
+# Ordering Results
+
+```
+SELECT CustomerId, Total
+FROM Invoice
+WHERE BillingCountry = "USA"
+ORDER BY Total DESC, InvoiceDate
+LIMIT 5
+```
+
+This SQL query selects the `CustomerId` and `Total` columns from the `Invoice` table, filtering for invoices where the `BillingCountry` is "USA".  The results are then ordered in descending order based on the `Total` amount, and then ascending order based on the `InvoiceDate`.  Finally, only the top 5 results are returned.  The output shows a table with `CustomerId` and `Total` columns, presenting the top 5 customers in terms of total spending in the USA, ordered by total spending (highest first) and then by invoice date (oldest first).  The "..." indicates that there are more rows in the full result set that are not shown.
+
+
+---
+
+**Description:**
+
+This slide presents an SQL query designed to retrieve and order invoice data for customers in the USA.  The query selects `CustomerId` and `Total` from the `Invoice` table, filters by `BillingCountry = "USA"`, orders the results in descending order by `Total` (highest total first) and then ascending order by `InvoiceDate` (oldest invoice date first), and limits the output to the top 5 results.  The output table shows the `CustomerId` and corresponding `Total` amounts for the top 5 customers who made purchases in the USA, sorted by total spending and then by invoice date.  The presence of the `...` indicates that the full result set contains more rows than are displayed on the slide.  The context suggests this is part of a data analysis or data science exercise, where the goal is to identify the top customers based on their spending in the USA.  The query is designed to retrieve the most relevant information for this analysis.
+
+

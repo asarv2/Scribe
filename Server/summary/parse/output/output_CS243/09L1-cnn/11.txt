@@ -1,0 +1,23 @@
+# 11
+
+# Why convolution? Not fully connected?
+
+Sparse connectivity: being affected by less
+
+**Top Left:**
+
+* **Sparse connections:** The text "Sparse connections due to small convolution kernel" is displayed.  This indicates that convolution creates fewer connections between neurons compared to a fully connected network, because the convolution kernel (filter) operates on a small, local region of the input data.
+
+* **Diagram (Top):** A diagram of a network is shown.  It depicts a layer of neurons (circles) connected to another layer of neurons.  The connections between the neurons are not fully connected; instead, each neuron in the top layer is connected to only a few neurons in the bottom layer.  The connections are shown as lines.  This diagram visually represents the sparse connectivity characteristic of convolution.  The neurons in the top layer are labeled $s_1$, $s_2$, $s_3$, $s_4$, and $s_5$.  The neurons in the bottom layer are labeled $x_1$, $x_2$, $x_3$, $x_4$, and $x_5$.  The connections between the neurons are shown as lines, and each line has a weight associated with it.  This diagram is positioned in the top half of the slide.
+
+
+**Bottom:**
+
+* **Dense connections:** The text "Dense connections" is displayed.  This text explains that a fully connected network has many connections between neurons.
+
+* **Diagram (Bottom):** A diagram of a network is shown.  It depicts a layer of neurons (circles) connected to another layer of neurons.  The connections between the neurons are fully connected; each neuron in the top layer is connected to every neuron in the bottom layer.  The connections are shown as lines.  This diagram visually represents the dense connectivity characteristic of a fully connected network.  The neurons in the top layer are labeled $s_1$, $s_2$, $s_3$, $s_4$, and $s_5$.  The neurons in the bottom layer are labeled $x_1$, $x_2$, $x_3$, $x_4$, and $x_5$.  The connections between the neurons are shown as lines, and each line has a weight associated with it.  This diagram is positioned in the bottom half of the slide.
+
+
+**Description of the slide:**
+
+This slide visually compares the connectivity patterns in a convolutional neural network (CNN) with a fully connected neural network.  The top diagram shows a sparse connectivity pattern, where each neuron in the top layer is connected to only a few neurons in the bottom layer, reflecting the local receptive field of convolution.  The bottom diagram shows a dense connectivity pattern, where each neuron in the top layer is connected to every neuron in the bottom layer, characteristic of a fully connected network.  The text emphasizes that convolution's sparse connectivity is a key reason for its efficiency and effectiveness in processing data like images, where local patterns are important.  The slide is designed to highlight the difference in connectivity and its impact on the network's structure and computational cost.

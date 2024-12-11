@@ -1,0 +1,76 @@
+# Slide 6
+
+**WHO'S USING IT?**
+
+Companies across a variety of industries are leveraging Big Data as a competitive advantage, with Financial Services taking the lead followed by Technology, Telecommunications, and Retail.
+
+**BUSINESSES INVESTING IN BIG DATA, BY REGION**
+
+*(Charts showing investment percentages by region: North America, Europe, Middle East & Africa, Asia Pacific, and Latin America.)*
+
+**TOP HIGH-IMPACT USE CASES**
+
+Big Data enables data discovery, helping you find new insights and ask questions you never knew to ask. Integrate and analyze structured and unstructured data across all channels to better understand and discover the customer journey, find new revenue streams, gain huge operational efficiencies, and more.
+
+**BIG DATA "USE CASES" WITHIN BUSINESSES**
+
+*(Pie chart showing the percentage breakdown of use cases: 48% Customer Analytics, 21% Operational Analytics, 12% Fraud & Compliance, 10% New Product & Service Innovation, 10% Enterprise Data Warehouse Optimization.)*
+
+**BIG DATA USAGE, BY INDUSTRY**
+
+*(Bar chart showing the percentage of big data usage by industry: Technology, Financial Services, Government, Healthcare, Retail, Advertising & Entertainment, Gaming, Energy, Data Consulting, E-Commerce, Shipping, and Transportation.)*
+
+**CUSTOMER ANALYTICS**
+
+* Increase customer acquisition
+* Reduce churn
+* Increase revenue per customer
+* Improve existing products
+
+**OPERATIONAL ANALYTICS**
+
+* Industrial monitoring and optimization
+* Supply chain efficiency
+* IT operation analytics
+* Network planning and optimization
+
+**NEW PRODUCT & SERVICE INNOVATION**
+
+* Integrated analytics
+* Data-driven new products
+* Data-improved service offerings
+
+**IS BIG DATA RIGHT FOR YOU?**
+
+As technology grows, Big Data will become crucial in understanding your customer, company, and industry. Enterprises that leverage and combine data from multiple sources will gain a deeper understanding of their customer interactions, including what gets them to spend more time with their product, what causes churn and, ultimately, how to improve purchasing decisions. Companies that properly interpret their Big Data will get faster insight to boost production efficiency and develop new data-driven products and services, which will help them gain a competitive edge over their peers.
+
+**The Global Hadoop* Market**
+
+$50.2B by 2020
+
+**$1.5B in 2012**
+
+*(Image of a globe with a dollar amount.)*
+
+*(Text explaining that petabytes of data are generated every minute through mobile, digital ads, social media, web logs, electronic devices, and sensors.)*
+
+**DataMeer**
+
+*(Small logo and text about DataMeer.)*
+
+
+---
+
+**Description of Slide 6:**
+
+This slide, part of a lecture on Introduction to Data Science, presents an overview of Big Data, its applications, and its impact on businesses.  The slide uses various charts and graphs to illustrate the points being made.
+
+* **Charts and Graphs:**  Several charts (pie, bar, and line graphs) are used to visually represent data about Big Data usage, investment, and industry applications.  These charts are crucial for understanding the scale and scope of Big Data's impact.  The pie chart, for example, shows the breakdown of Big Data use cases within businesses.  The bar chart shows the percentage of big data usage by industry.  The line graph shows the investment in big data by region.  These charts are placed strategically to support the text and provide a visual representation of the data.
+
+* **Data Points:** The slide includes specific data points, such as the projected $50.2B market value for Hadoop by 2020 and the $1.5B figure for 2012.  These figures are important for illustrating the growth and financial implications of Big Data.
+
+* **Visual Elements:** The globe image with the dollar amount is used to illustrate the massive amount of data being generated.  The DataMeer logo and text are likely a reference to a company or tool related to Big Data analysis.  These visual elements are used to make the slide more engaging and informative.
+
+* **Text:** The text on the slide explains the concept of Big Data, its use cases, and its potential benefits for businesses.  The text is organized logically, with headings and bullet points to highlight key information.  The text is crucial for understanding the concepts being presented.
+
+The overall design of the slide is to present a comprehensive overview of Big Data, using visuals to support the text and make the information more accessible and understandable.

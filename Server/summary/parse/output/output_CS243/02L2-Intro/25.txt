@@ -1,0 +1,9 @@
+# 25
+
+# Autonomous robots
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single, simple title: "Autonomous robots."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on autonomous robots.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of autonomous robots, such as their design, capabilities, or applications.

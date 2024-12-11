@@ -1,0 +1,37 @@
+# 11
+
+```markdown
+SVD
+Every matrix A has a SVD
+• The columns of U are left singular vectors of A
+• The columns of V (i.e. the rows of V<sup>T</sup>) are right singular vectors of A
+• The entries of S are the singular values of A.
+```
+
+```
+d
+n
+d
+d
+:
+n
+n
+n
+...
+A
+d
+U
+S
+V<sup>T</sup>
+```
+
+---
+
+**Figure Description:**
+
+The slide displays a visual representation of the Singular Value Decomposition (SVD) of a matrix A.  Three matrices, U, S, and V<sup>T</sup>, are shown, each with their dimensions labeled (e.g., U is n x d).  The matrices are arranged in a horizontal row, with A positioned above the decomposition.  The matrix A is a rectangle with the label "A" in the center.  The matrix U is to the left of A, the matrix S is centered between A and V<sup>T</sup>, and the matrix V<sup>T</sup> is to the right of A.  Each matrix is visually represented as a rectangle.  Within each matrix, there are vertical and horizontal lines, which are intended to represent the columns and rows of the matrices.  The lines are not uniformly colored, but rather have a gradient of colors, which are not uniform across the matrices.  The figure is used to illustrate the decomposition of matrix A into three matrices, U, S, and V<sup>T</sup>, which are crucial components of the SVD process.  The figure is placed in the lower-right portion of the slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, continues the discussion on Singular Value Decomposition (SVD).  It visually represents the decomposition of a matrix A into three matrices: U, S, and V<sup>T</sup>.  The slide shows the dimensions of each matrix (e.g., U is n x d).  The figure is a visual aid to help understand the relationship between the original matrix A and the decomposed matrices U, S, and V<sup>T</sup>.  The slide is focused on the practical application of SVD, showing how a matrix can be broken down into these component matrices.  The figure is crucial for understanding the concept of SVD, as it visually demonstrates the decomposition process.

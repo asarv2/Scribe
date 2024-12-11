@@ -1,0 +1,45 @@
+# Slide 34
+
+**Grouped Bar Chart**
+
+```python
+categories = iris.category.unique()
+c = ["#00A5FC","#007979","#008800","#215419"]
+byCategory = {x:iris[iris.category==x] for x in categories}
+swMean = [byCategory[y]['sepal-width'].mean() for y in byCategory.keys()]
+slMean = [byCategory[y]['sepal-length'].mean() for y in byCategory.keys()]
+pwMean = [byCategory[y]['petal-width'].mean() for y in byCategory.keys()]
+plMean = [byCategory[y]['petal-length'].mean() for y in byCategory.keys()]
+display(plMean)
+[1.464, 4.26, 5.552]
+plPlot = plt.bar(xpos - 3*bwidth/2, plMean, bwidth, color=c[0], label = "Petal Length")
+slPlot = plt.bar(xpos + bwidth/2, slMean, bwidth, color=c[2], label = "Sepal Length")
+pwPlot = plt.bar(xpos - bwidth/2, pwMean, bwidth, color=c[1], label = "Petal Width")
+swPlot = plt.bar(xpos + 3*bwidth/2, swMean, bwidth, color=c[3], label = "Sepal Width")
+plt.ylabel('Length')
+plt.title('Combined lengths of petal and sepals')
+plt.legend((plPlot[0],pwPlot[0],slPlot[0],swPlot[0]), ("Petal Length", "Petal Width", "Sepal Length", "Sepal Width"))
+plt.show()
+```
+
+**(Figure Description):**
+
+A grouped bar chart is displayed, visualizing the average petal length, petal width, sepal length, and sepal width for each of the three iris species (Iris-setosa, Iris-versicolor, and Iris-virginica).  The chart is a grouped bar chart, with four separate bars for each species, representing the average values for each measurement.
+
+* **X-axis:**  The x-axis is labeled with the iris species names: "Iris-setosa", "Iris-versicolor", and "Iris-virginica".  These labels are evenly spaced along the x-axis.
+
+* **Y-axis:** The y-axis represents the average length or width values, ranging from approximately 0 to 7.  The y-axis is labeled "Length".
+
+* **Bars:** Four groups of bars are displayed for each species.  The bars are grouped closely together, with each group representing a different measurement (petal length, petal width, sepal length, and sepal width).  The height of each bar within a group corresponds to the average value for that measurement for the specific iris species.  The bars are colored differently to distinguish between the four measurements.  A legend is present, clearly labeling each group of bars with the corresponding measurement type.
+
+
+**Context:**
+
+This slide builds upon previous discussions of data visualization techniques, specifically histograms and bar plots.  The code calculates the average values for each iris species across different measurements (sepal length, sepal width, petal length, and petal width) and then creates a grouped bar chart to visually compare these averages.  The grouped bar chart allows for a direct comparison of the average values for each measurement across the three species.  The slide is likely part of a larger presentation on descriptive statistics and data visualization using the Iris dataset.
+
+
+**Description of what you see:**
+
+The slide shows a grouped bar chart and the Python code used to generate it.  The plot displays four groups of bars, each corresponding to a different measurement (petal length, petal width, sepal length, and sepal width).  The height of each bar within a group represents the average value for that measurement for a specific iris species.  The code calculates the average values and then uses Matplotlib to create the grouped bar plot.  The plot is a visual representation of the average values for each measurement across the three iris species.  The code is clear and concise, demonstrating the steps involved in creating the grouped bar plot.  The legend makes it easy to distinguish between the different measurements.
+
+

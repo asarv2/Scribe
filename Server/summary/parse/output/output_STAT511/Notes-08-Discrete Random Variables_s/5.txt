@@ -1,0 +1,37 @@
+# Slide 5
+
+**Example 8.8** Consider a university having 15,000 students and let X = number of courses for which a randomly selected student is registered. The pmf of X follows:
+
+| X | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+| p(x) | 0.01 | 0.03 | 0.13 | 0.25 | 0.39 | 0.17 | 0.02 |
+| Number registered | 150 | 450 | 1950 | 3750 | 5850 | 2550 | 300 |
+
+μ = 1 ∙ p(1) + 2 ∙ p(2) + ... + 7 ∙ p(7)
+
+If we think of the population as consisting of the X values 1, 2, ..., 7, then μ = 4.57 is the population mean.
+
+**Example 8.9** Let X be the number of children born up to and including the first boy. Assume p is the probability of having a boy in each birth, then p(x) = (1 - p)<sup>x-1</sup> ∙ p for all positive integer x. Then the mean is E(X) = Σ x ∙ (1 - p)<sup>x-1</sup> ∙ p = 1/p
+
+**NOTE:** one needs to be careful about infinite summation.
+
+Sometimes interest will focus on the expected value of some function h(X) rather than on just E(X).
+Define a new r.v. Y = h(X), then
+E[h(X)] = E(Y) = Σ y ∙ P(Y = y) = Σ y ∙ P(X ∈ {x: h(x) = y}) = Σ h(x) ∙ p(x).
+
+**Proposition:** the expected value of a function of discrete r.v. X is E[h(X)] = Σ h(x) ∙ p(x).
+
+**Example 8.1 revisit:** Consider also the experiment of tossing a fair coin three times independently. Define the random variable X to be the number of heads obtained in the three tosses.
+
+| x | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| p(x) | 1/8 | 3/8 | 3/8 | 1/8 |
+
+What is E(3 - X)?
+
+**Proposition:** E(a ∙ X + b) = a ∙ E(X) + b. (Or, using alternative notation, μ<sub>aX+b</sub> = a ∙ μ<sub>X</sub> + b)
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of random variables and their expected values, within the context of Statistical Methods.  It presents Example 8.8, which calculates the expected value (mean) of a random variable representing the number of courses registered for by a student in a university.  The example includes a table showing the probability mass function (pmf) for this random variable.  Example 8.9 introduces a different random variable, the number of children born until the first boy, and calculates its expected value.  The slide also revisits Example 8.1, providing the pmf for the number of heads in three coin tosses.  Crucially, the slide introduces the concept of the expected value of a function of a random variable (E[h(X)]), showing how to calculate it using the pmf.  The slide concludes with a proposition about the expected value of a linear transformation of a random variable.  The tables are essential for understanding the probability distributions and calculations.  The overall structure of the slide is consistent with the previous slides, maintaining a clear and organized presentation of the concepts.

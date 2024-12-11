@@ -1,0 +1,19 @@
+# 8
+
+# The very first ML problem – linear regression
+
+Find the best line
+Which line is the best?
+How do you define "best"?
+Why are the blue(ish) lines worse?
+
+![Scatter Plot](/path/to/image.jpg)
+
+**Description of the Figure:**
+
+The figure is a scatter plot, positioned centrally on the slide.  The x-axis is labeled "Square footage" and the y-axis is labeled "Sale Price".  The y-axis uses a logarithmic scale, as indicated by "2.5 x 10<sup>6</sup>".  Numerous data points are plotted, each represented by a small colored dot.  The colors of the dots vary slightly, suggesting different data sets or categories.  Several lines are drawn on the plot, representing different linear regression models.  A black line is the most prominent, and there are a few light-blue/purple lines.  The black line appears to be a better fit to the overall trend of the data points than the light-blue/purple lines.  The purpose of the plot is to visually represent the relationship between house prices and square footage, and to illustrate the concept of linear regression as a fundamental machine learning problem.  The different lines on the plot highlight the different possible models and the need to choose the "best" one.
+
+
+**Context:**
+
+This slide continues the discussion of linear regression as the first machine learning problem.  The scatter plot shows the relationship between house prices and square footage, with multiple possible regression lines.  The questions posed ("Find the best line," "Which line is the best?", "How do you define 'best'?", "Why are the blue(ish) lines worse?") are designed to prompt the viewer to consider the criteria for evaluating the quality of a linear regression model.  The slide is designed to introduce the concept of model evaluation and the need to choose the best-fitting line to the data.  The different lines on the plot highlight the different possible models and the need to choose the "best" one.

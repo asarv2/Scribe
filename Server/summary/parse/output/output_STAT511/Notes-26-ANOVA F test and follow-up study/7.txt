@@ -1,0 +1,47 @@
+# Slide 7
+
+**Statistical Methods**
+
+More on ANOVA overall F test
+
+For t-test,
+
+* take the difference in means (𝑥̅<sub>1</sub> −𝑥̅<sub>2</sub>)
+* divide by the amount of sampling variation it has 𝑆𝐸<sub>𝑥̅<sub>1</sub>−𝑥̅<sub>2</sub></sub>
+* if (𝑥̅<sub>1</sub> −𝑥̅<sub>2</sub>) is big compared to the amount of variability expected by chance, |𝑡<sub>𝑇𝑆</sub>| is large; so reject H<sub>0</sub>.
+
+
+For F-test,
+
+* take average squared difference between the means (MSTr)
+* divide it by the amount of sampling variation it has (MSE)
+* if MSTr is large compared to the amount of variability expected by chance (MSE), 𝑓<sub>𝑇𝑆</sub> is large; so reject H<sub>0</sub>.
+
+
+F-test and t-test are completely analogous:
+
+* F deals with average squared differences between sample means; t deals with the differences between the means.
+* F can deal with several means at once.
+
+
+Could actually do an F-test with only 2 samples?
+
+* would find that 𝑓<sub>𝑇𝑆</sub>= 𝑡<sub>𝑇𝑆</sub><sup>2</sup> for the same set of data.
+* critical value: 𝐹<sub>α,1,𝑑𝑓</sub>= 𝑡<sub>α/2,</sub><sub>𝑑𝑓</sub><sup>2</sup>
+* decisions and p-values would be exactly the same.
+
+
+Why not just do t-tests on each pair?
+
+* You could, but the probability of making overall type I error (at least one type I error) is bigger than just the 𝛼 you use for each test.
+* With 𝐼 groups, there are (𝐼<sup>2</sup>) possible pairs to test simultaneously. Probability of type I error = .05 on first test, .05 on second test, …etc. The more tests you do, the more likely you are to make at least one mistake.
+
+
+**Figure Description:**
+
+There is no figure on this slide. The slide is entirely text-based, presenting a discussion of the ANOVA overall F-test and its relationship to the t-test.  The text explains the logic behind the F-test, comparing it to the t-test, and highlighting the increased risk of Type I error when performing multiple t-tests instead of a single F-test.  The slide is part of a lecture on Statistical Methods, specifically focusing on ANOVA.
+
+
+**Description of the slide content:**
+
+This slide continues the discussion of ANOVA, focusing on the overall F-test. It explains the logic behind the F-test, comparing it to the t-test, and highlighting the increased risk of Type I error when performing multiple t-tests instead of a single F-test. The slide is structured to provide a deeper understanding of the rationale behind using ANOVA for comparing means of multiple groups.

@@ -1,0 +1,55 @@
+# 20
+
+# Getting data from a file
+
+```python
+import pandas as pd
+# read in data in csv format (sep=',' is default)
+data_oscar = pd.read_csv("oscar_age_female.csv")
+# print data
+data_oscar
+```
+
+```
+   Index  Year  Age                  Name                                         Movie
+0      1  1928   22            Janet Gaynor  Seventh Heaven,Street Angel and Sunrise: A Son...
+1      2  1929   37            Mary Pickford                                    Coquette
+2      3  1930   28          Norma Shearer                                  The Divorcee
+3      4  1931   63          Marie Dressler                                       Min and Bill
+4      5  1932   32             Helen Hayes                         The Sin of Madelon Claudet
+5      6  1933   26      Katharine Hepburn                                Morning Glory
+6      7  1934   31       Claudette Colbert                               It Happened One Night
+```
+
+```python
+# length and columns
+print(len(data_oscar))
+print(data_oscar.columns)
+```
+
+```
+89
+Index(['Index', 'Year', 'Age', 'Name', 'Movie'], dtype='object')
+```
+
+
+---
+
+**Description:**
+
+This slide demonstrates how to read data from a CSV file into a Pandas DataFrame and then display the DataFrame's contents.
+
+* **Import Statement:** The slide shows the Python code to import the Pandas library, aliased as `pd`.
+
+* **Reading CSV:** The slide shows the Python code to read data from a CSV file named "oscar_age_female.csv" into a Pandas DataFrame named `data_oscar`.  The `pd.read_csv()` function is used for this purpose.  The file likely contains data about female Oscar winners, including their year of winning, age, name, and the movie they won for.
+
+* **Printing DataFrame:** The slide shows the output of the `data_oscar` variable, which is a Pandas DataFrame.  The output is a formatted table, showing the contents of the DataFrame.  The table has columns for 'Index', 'Year', 'Age', 'Name', and 'Movie'.  The values in the table are the data read from the CSV file.
+
+* **Length and Columns:** The slide shows the Python code to print the length (number of rows) of the DataFrame and the column names of the DataFrame.  The output shows that the DataFrame has 7 rows and 5 columns.
+
+* **Code Formatting:** The Python code is presented within code blocks, using backticks (````python`) to indicate code.  The code is formatted to be easily readable, with proper indentation and variable names.  The code is a complete Python script, which is a common way to present code examples in a data science lecture.
+
+* **Data Display:** The slide displays the DataFrame in a tabular format, which is a common way to present data in a data science context.  The table is formatted to be easily readable, with clear row and column headers.  The table is positioned below the Python code examples, visually separating the code from the output.  The table is a key element in illustrating the contents of the DataFrame.  The table is likely intended to show the data in a structured format, making it easier to understand the values and relationships between them.
+
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on the Pandas library.  The slide demonstrates how to read data from a CSV file into a Pandas DataFrame and then display the DataFrame's contents.  The code example is a complete Python script, which is a common way to present code examples in a data science lecture.  The code is likely intended to illustrate the reading of a CSV file into a Pandas DataFrame, which is a fundamental operation in data analysis using Pandas.

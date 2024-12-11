@@ -1,0 +1,40 @@
+# Slide 3
+
+**Histograms: The most common graph used to describe the distribution of a numerical variable is the histogram.**
+
+
+**Reading Histograms:**
+
+* Variable values are plotted on the horizontal axis. The range of values for the left bar is 0 up to 2 but not including 2, etc.
+* The height of each bar is its frequency or the proportion of subjects taking values in that range.
+
+
+**NOTE:** The shape of a histogram of the same data set can vary depending on how wide the bars are. Here, the bars are 2 wide but the other histogram of sugar has bars of width 2.5. The 2 histograms of sugar look different. Same data set but the range of values for each box is slightly different.
+
+
+**R code:**
+```R
+x <- c(7, 5, 14, 12, 1, 13, 2, 12, 10, 3, 11, 13, 3, 10, 11, 6, 10, 15, 3, 3)
+hist(x); hist(x, breaks = c(0, 4, 8, 12, 16))
+```
+
+**Histogram of SUGAR (grams)**
+
+[Image of a histogram]
+
+**Next:** what does this histogram tell us about the distribution?
+
+**Example 2.2** How unusual is a no-hitter or a one-hitter in a major league baseball game, and how frequently does a team get more than 10, 15, or even 20 hits?
+
+The right table is a frequency distribution for the number of hits per team per game for all nine-inning games that were played between 1989 and 1993.
+
+Proportion of games with at most two hits =
+
+Proportion of games with between 5 and 10 hits (inclusive) =
+
+Other proportions can be obtained similarly.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of descriptive statistics, focusing on histograms.  It explains how to read a histogram, emphasizing that the horizontal axis represents the variable values and the height of each bar corresponds to the frequency or proportion of data points within that range.  The slide highlights that the shape of a histogram can change depending on the width of the bars used.  The slide also introduces a new example (Example 2.2) about the frequency of hits in baseball games, providing a table of frequency distribution data.  The slide includes R code for creating histograms with different break points, demonstrating the flexibility of the R programming language in data visualization.  The histogram itself visually displays the distribution of the sugar content data.  The table provides data on the number of hits per game in baseball. The slide is designed to help students understand how to interpret histograms and apply them to real-world data analysis.

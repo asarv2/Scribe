@@ -1,0 +1,38 @@
+# 8
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3 (continued)**
+
+Let X<sub>1</sub>, ..., X<sub>n</sub> represent a random sample of size n from some population.
+
+* Null hypothesis H<sub>0</sub>: μ = μ<sub>0</sub>, where μ<sub>0</sub> is called null value.
+* Three possible alternative hypotheses
+    1. H<sub>a</sub>: μ > μ<sub>0</sub>, the population mean is greater than μ<sub>0</sub>
+    2. H<sub>a</sub>: μ < μ<sub>0</sub>, the population mean is less than μ<sub>0</sub>
+    3. H<sub>a</sub>: μ ≠ μ<sub>0</sub>, the population mean is not μ<sub>0</sub>
+
+**Case 2: Normal distribution with unknown variance**
+
+If X's follow normal distribution 𝑁(𝜇<sub>0</sub>,𝜎<sup>2</sup>) (i.e., the null hypothesis is true), then  
+$\frac{\bar{X} - \mu_0}{s/\sqrt{n}}$ follows a t distribution with df n-1. Thus this statistic can be used for hypothesis testing, since it has a tractable sampling distribution under H<sub>0</sub>.
+
+Test statistic:
+TS = $\frac{\bar{X} - \mu_0}{s/\sqrt{n}}$ ~ t(n-1)
+
+When H<sub>0</sub> is true, the test statistic has a t distribution with n – 1 degrees of freedom.
+
+
+P-value:
+
+3. Two-tailed test
+H<sub>1</sub> contains the inequality ≠
+
+P-value = sum of area in two tails
+
+(Figure): A t-distribution curve is shown, centered at 0.  A shaded region extends from a calculated value (labeled "Calculated  𝑥 −𝑥̅") to the left and right tails of the distribution.  The shaded area represents the p-value.  A label "t curve for relevant df" is present, indicating the degrees of freedom associated with the specific t-distribution.
+
+
+**Description of the Slide:**
+
+This slide (number 8) continues the discussion of hypothesis testing for a single population mean, now considering the case where the population variance is unknown.  It introduces the t-distribution as the appropriate sampling distribution for the test statistic.  The test statistic is now  $\frac{\bar{X} - \mu_0}{s/\sqrt{n}}$, where s is the sample standard deviation.  The degrees of freedom are (n-1).  The slide also includes a figure illustrating the calculation of the p-value in a two-tailed test. The figure shows a t-distribution curve with a shaded area representing the p-value, which is the sum of the areas in the two tails of the distribution beyond the calculated test statistic value.  The label "t curve for relevant df" indicates that the specific t-distribution used depends on the degrees of freedom. The slide number (8) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.
+
+

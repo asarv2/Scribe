@@ -1,0 +1,56 @@
+# Slide 1
+
+**Regression Inference**
+
+Goal 2: We now want to know if the value of one variable can tell us something about the value of the other variable if there is a linear relationship.
+
+The questions of interest (and are required) include:
+
+*   Is the linear relationship significant?
+*   How precise is the estimated line (slope)?
+
+**Population model equation,**
+
+𝑌𝑖= 𝛽0 + 𝛽1𝑥𝑖+ 𝜖𝑖
+
+Where the quantities 𝜖𝑖’s in the model equation are independent normal random variables,  𝜖𝑖~𝑁(0, 𝜎2).
+
+LS Regression model (the fitted line) as
+
+𝑦̂𝑖= 𝑏0 + 𝑏1𝑥𝑖= 𝛽̂0 + 𝛽̂1𝑥𝑖
+
+
+**Inference about the slope parameter 𝜷𝟏**
+
+The slope 𝛽1 of the population regression line is the true average change in the dependent variable 𝑌 associated with a 1-unit increase in the independent variable 𝑥.
+
+The slope of the least squares line, 𝛽̂1, gives a point estimate of 𝛽1. In the same way that a confidence interval for 𝜇 and procedures for testing hypotheses about 𝜇 were based on properties of the sampling distribution of 𝑥̅, further inferences about 𝛽1 are based on thinking of 𝛽̂1 as a statistic and investigating its sampling distribution.
+
+Recall that
+
+𝑏1 = 𝛽̂1 =
+∑(𝑥𝑖−𝑥̅)(𝑦𝑖−𝑦̅)
+∑(𝑥𝑖−𝑥̅)2
+= 𝑆𝑥𝑦
+𝑆𝑥𝑥
+
+
+We can rewrite 𝛽̂1 as,
+
+𝛽̂1 =
+∑(𝑥𝑖−𝑥̅)𝑦𝑖−∑(𝑥𝑖−𝑥̅)𝑦̅
+𝑆𝑥𝑥
+=
+∑(𝑥𝑖−𝑥̅)𝑦𝑖−0
+𝑆𝑥𝑥
+= ∑
+(𝑥𝑖−𝑥̅
+𝑆𝑥𝑥
+) 𝑦𝑖
+𝑛
+𝑖=1
+
+
+**Description of the Slide:**
+
+This is the first slide of a 12-slide lecture on Statistical Methods, specifically focusing on regression inference.  The slide introduces the concept of regression inference, highlighting the goal of determining if a linear relationship exists between two variables and the importance of assessing the significance and precision of the estimated relationship (slope).  It defines the population model equation, which includes the intercept (𝛽0), slope (𝛽1), and error term (𝜖𝑖).  The slide also introduces the least squares regression model (the fitted line) and the slope parameter (𝛽1).  Crucially, it explains that the slope of the least squares line (𝑏1) is an estimate of the population slope (𝛽1) and that further inferences about 𝛽1 rely on understanding its sampling distribution.  The slide concludes with the formula for calculating 𝑏1 and a rewritten version of the formula, emphasizing the importance of the sample data (𝑥𝑖, 𝑦𝑖) in estimating the slope.  The slide number (1) and the course name (STAT 511) are clearly visible at the top.  The author's name (Yuan Qu) is also present.  The overall layout is clear and concise, with a logical progression of ideas.

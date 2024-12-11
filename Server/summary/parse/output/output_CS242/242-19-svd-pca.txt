@@ -1,0 +1,2262 @@
+# Slide 1
+
+# Introduction to Data Science
+
+Purdue CS24200
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Introduction to Data Science.  The background is a dark gray.  The title "Introduction to Data Science" is large and prominent, in a light gray font.  Below that, in a smaller, light gray font, are the course information: "Purdue CS24200" and "Tony Bergstrom" (presumably the instructor).  Finally, at the very bottom, in a very small, light gray font, is a credit line: "Slides adapted from Jen Neville, CS 24200".  This indicates that the lecture materials are based on a previous version of the course.  The overall design is clean and simple, focusing on the title and course information.
+
+
+# Slide 2
+
+# Matrix factorization
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, displays the single, centered text "Matrix factorization" in a dark gray, sans-serif font.  The text is large enough to be easily readable.  The simplicity of the slide indicates that this is likely a title slide for a section or topic on matrix factorization within the Intro to Data Science course.  It's a straightforward, uncluttered slide, focusing solely on the topic.
+
+
+
+
+# Slide 3
+
+# Matrix Factorization Motivation
+
+High-dimensional data will often have simpler structure, e.g.
+* Topics in documents/products
+* Product characteristics (reliability, cost etc.)
+* User preferences/demographics
+* Etc.
+
+These effects can be approximated using a lower-dimensional model
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Matrix Factorization within an Intro to Data Science course, introduces the motivation behind the technique.  The title, "Matrix Factorization Motivation," is presented in a large, bold font at the top of the slide.  Below that, the text explains that high-dimensional data often exhibits simpler underlying structures.  The bullet points list examples of such structures: topics in documents or products, product characteristics (like reliability and cost), and user preferences/demographics.  The final sentence states that these underlying structures can be approximated using a lower-dimensional model.  The slide's layout is simple and clear, focusing on the key concepts and their relationships.  The bullet points are well-spaced and easy to read.  The overall design is straightforward and supports the explanation of the topic.
+
+
+# Slide 4
+
+**Matrix Factorization Motivation**
+
+Usually, the data vary more strongly in some dimensions than others
+
+Fitting a linear (simplifying assumption) model to the (k) strongest directions gives a good approximation to the data
+
+
+---
+
+**Description:**
+
+A scatter plot is shown in the lower portion of the slide.  The plot displays a set of red circles (data points) scattered across a two-dimensional space.  A light reddish-pink line is drawn through the data points, representing a linear regression model.  The line is a best-fit line, attempting to capture the general trend of the data.  The scatter plot is positioned in the lower half of the slide, below the text.  The purpose of the plot is to visually illustrate the concept of matrix factorization.  The data points represent some dataset, and the line represents a simplified model that captures the most important variations in the data.  The text above the plot explains that the data often varies more strongly in some dimensions than others, and that fitting a linear model to the strongest directions provides a good approximation of the data.  The slide is part of a lecture on matrix factorization, and the plot is used to illustrate the motivation behind this technique.  The context of the lecture is Intro to Data Science.
+
+
+# Slide 5
+
+**Matrix Factorization**
+
+Columns of B represent a vector of latent "factor" values for the nth movie
+Rows of A represent a vector of "factor" values for the mth user
+Choice of k determines how many latent factors to use
+Embeddings: vector of latent factor values (for an item) projects it down into k-dimensional space
+
+```
+N movies       K latent dims      N samples
+      |-------------------|-------------------|
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 |                   |
+      |                 
+
+# Slide 6
+
+**Two Dimensional Embedding of Movies**
+
+```
+Factor vector 2
+-0.5
+-1.0
+-1.5
+1.5
+1.0
+0.5
+0.0
+```
+
+**(Figure):** A scatter plot is positioned in the lower portion of the slide.  The plot displays numerous data points (represented as text labels of movie titles) scattered across a two-dimensional space defined by "Factor vector 1" on the x-axis and "Factor vector 2" on the y-axis.  The plot is oriented with the x-axis horizontally and the y-axis vertically.  Each data point is labeled with the name of a movie (e.g., "Freddy Got Fingered," "Kill Bill: Vol. 1," "The Wizard of Oz").  The movies are positioned at different coordinates within the plot, indicating their relative positions in the two-dimensional embedding space.  The color of the background is a light beige/tan.  The axes are clearly labeled, and the values on the axes range from -1.5 to 1.5 for both factor vectors.  The figure is included to visually represent the latent factors of movies in a two-dimensional space.  This helps to illustrate how matrix factorization can group movies with similar characteristics together.
+
+
+**Description of the Slide:**
+
+This slide, part of a lecture on matrix factorization in an Intro to Data Science course, presents a two-dimensional visualization of movie embeddings.  The title, "Two Dimensional Embedding of Movies," is displayed at the top of the slide.  The figure is a scatter plot where each point represents a movie, and its position in the plot corresponds to its latent factor values.  The labels on the points are the names of the movies.  The axes are labeled "Factor vector 1" and "Factor vector 2," indicating the dimensions of the embedding space.  The figure is from a research paper (Koren, Bell, Volinksy, IEEE Computer, 2009), suggesting that this is a well-known example used to illustrate the concept of matrix factorization.  The slide is designed to help the audience understand how movies can be grouped based on their latent factors.
+
+
+# Slide 7
+
+**SVD and PCA**
+
+
+---
+
+**Description:**
+
+This slide, a plain gray background, displays the single, centered text "SVD and PCA" in a dark gray, sans-serif font.  The text is large enough to be easily readable.  The simplicity of the slide indicates that this is likely a title slide for a section or topic on Singular Value Decomposition (SVD) and Principal Component Analysis (PCA) within the Intro to Data Science course.  It's a straightforward, uncluttered slide, focusing solely on the topic.
+
+
+**What you see:** A plain gray slide with the title "SVD and PCA" in a dark gray font.  The slide is likely the introduction to a section of the lecture that will cover both SVD and PCA, potentially discussing their relationship or how they are used in data science.
+
+
+# Slide 8
+
+**Dimensionality Reduction**
+
+If there are d dimensions (attributes) in the data, dimensionality reduction refers to methods that transform the data to fewer dimensions, i.e. d'<d
+
+Why reduce the dimensionality?
+* To discard irrelevant features
+* To visualize high dimensional data
+* To reflect "intrinsic" dimensionality of data, which may be smaller than the original number of attributes
+
+
+---
+
+**Description:**
+
+This slide introduces the concept of dimensionality reduction in the context of Intro to Data Science.  The title, "Dimensionality Reduction," is presented in a large, bold font at the top of the slide.  The text below explains the general idea of dimensionality reduction: transforming data from a higher-dimensional space (d dimensions) to a lower-dimensional space (d' dimensions, where d' < d).  The slide then lists three key reasons why dimensionality reduction is performed: discarding irrelevant features, visualizing high-dimensional data, and reflecting the intrinsic dimensionality of the data (which might be lower than the original number of attributes).  The bullet points are well-spaced and easy to read.  The overall design is straightforward and supports the explanation of the topic.
+
+
+# Slide 9
+
+**Low Rank Matrix Approximations**
+
+Consider an n × d matrix X, which represents a set of n examples, each with d attributes.  
+What's a good notion of dimensionality reduction for these matrices?  
+Reduce the rank of the matrix (from d to k < d):  
+Linear algebra—the following are equivalent definitions for the rank of a matrix X to be k: 
+* The largest linearly independent subset of columns of X has size k,  
+ie. all d columns of X arise as linear combinations of only k different n-vectors 
+* The largest linearly independent subset of rows of X has size k,  
+ie. all n rows of X arise as linear combinations of only k different d-vectors 
+* X can be written as the product of a (n × k) matrix A and a (k × d) matrix B.
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on dimensionality reduction within an Intro to Data Science course, introduces the concept of low-rank matrix approximations.  The title, "Low Rank Matrix Approximations," is presented in a large, bold font at the top of the slide.  The text below defines a matrix X as an n x d matrix representing n examples with d attributes.  The question posed is how to perform dimensionality reduction on this matrix.  The solution is to reduce the rank of the matrix from d to k, where k < d.  The slide then presents three equivalent linear algebra definitions for a matrix X to have rank k.  These definitions are presented in bullet points, making them easy to read and understand.  The overall design is straightforward and supports the explanation of the topic.  The context of the lecture is Intro to Data Science, and the slide is likely a transition to the discussion of SVD and PCA.
+
+
+# Slide 10
+
+**Singular value decomposition**
+
+A singular value decomposition (SVD) of an n × d matrix A expresses the matrix as the product of three "simple" matrices:
+
+A = USV<sup>T</sup>
+
+* U is an n × n orthogonal matrix
+* V is a d × d orthogonal matrix
+* S is an n × d diagonal matrix with nonnegative entries sorted from high to low
+
+
+---
+
+**Description:**
+
+This slide introduces the Singular Value Decomposition (SVD) concept.  It's part of a lecture on dimensionality reduction and matrix factorization within an Intro to Data Science course.  The slide presents the core formula for SVD, A = USV<sup>T</sup>, where A is the original matrix, U, V, and S are the decomposed matrices.  The slide also defines the properties of each of these decomposed matrices: U is an n × n orthogonal matrix, V is a d × d orthogonal matrix, and S is an n × d diagonal matrix with non-negative entries sorted from high to low.  The slide is straightforward and concise, focusing on the mathematical definition of SVD.  The context of the slide is to explain the mathematical tools used in dimensionality reduction techniques.
+
+
+# Slide 11
+
+**SVD**
+
+Every matrix A has a SVD
+
+* The columns of U are left singular vectors of A
+* The columns of V (i.e. the rows of V<sup>T</sup>) are right singular vectors of A
+* The entries of S are the singular values of A.
+
+**(Figure):**  The slide contains a series of three small diagrams, each representing a matrix (A, U, S, V<sup>T</sup>).  These diagrams are positioned in the lower portion of the slide, below the text.
+
+* **Diagram 1 (A):**  A rectangle is shown, labeled "A".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  This represents the original matrix A, with n rows and d columns.
+
+* **Diagram 2 (U):**  A rectangle is shown, labeled "U".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Vertical lines are drawn within the rectangle, representing the columns of the U matrix.  This diagram visually represents the left singular vectors of A.
+
+* **Diagram 3 (S):** A rectangle is shown, labeled "S".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Diagonal lines are drawn within the rectangle, representing the singular values of A.  This diagram visually represents the singular values of A.
+
+* **Diagram 4 (V<sup>T</sup>):** A rectangle is shown, labeled "V<sup>T</sup>".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Horizontal lines are drawn within the rectangle, representing the rows of the V<sup>T</sup> matrix.  This diagram visually represents the right singular vectors of A.
+
+**Description:**
+
+This slide, part of a lecture on Singular Value Decomposition (SVD) within an Intro to Data Science course, visually explains the components of an SVD decomposition.  The diagrams illustrate the dimensions of the matrices (A, U, S, V<sup>T</sup>) and how they relate to each other in the SVD formula.  The slide is designed to provide a visual aid for understanding the mathematical concept of SVD, which is a crucial tool in dimensionality reduction.  The diagrams show the relationships between the original matrix A and the decomposed matrices U, S, and V<sup>T</sup>.  The slide is likely a continuation of the previous slide's discussion of low-rank matrix approximations and how SVD is used to achieve dimensionality reduction.
+
+
+
+
+# Slide 12
+
+**SVD for matrix reconstruction**
+
+Columns of U: latent factor affinities for entities (n)
+Rows of V<sup>T</sup>: latent factor affinities for attributes (d)
+Diagonal entries of S: eigenvalues of A
+Latent factors reconstruct matrix A
+A[i, j] = U[i, :] S V<sup>T</sup>[:, j]
+Eigenvalues in S only scale the value in U or V
+Let V<sup>T</sup> = S V<sup>T</sup>
+A[i, j] = U[i, :] V<sup>T</sup>[:, j]
+Dot product of the Entity's latent factor with the Attribute's latent factor to get the Entity i's jth attribute value
+Use only the top k factors to approximate results
+
+**(Figure 1):**  Three matrices are shown in the lower portion of the slide.  Each is a rectangle with dimensions labeled.
+
+* **Matrix A:**  A rectangle with dimensions "n" (vertical) and "d" (horizontal).  This represents the original matrix A.
+
+* **Matrix U:** A rectangle with dimensions "n" (vertical) and "d" (horizontal).  This represents the U matrix in the SVD decomposition.
+
+* **Matrix S:** A rectangle with dimensions "n" (vertical) and "d" (horizontal).  This represents the S matrix in the SVD decomposition.  Diagonal lines are drawn within the rectangle.
+
+* **Matrix V<sup>T</sup>:** A rectangle with dimensions "n" (vertical) and "d" (horizontal).  This represents the V<sup>T</sup> matrix in the SVD decomposition.
+
+
+**(Figure 2):**  Three matrices are shown in the lower portion of the slide, positioned to the right of the first set of matrices.  Each is a rectangle with dimensions labeled.
+
+* **Matrix U:** A rectangle with dimensions "n" (vertical) and "d" (horizontal).  Vertical lines are drawn within the rectangle.
+
+* **Matrix S:** A rectangle with dimensions "n" (vertical) and "d" (horizontal).  Diagonal lines are drawn within the rectangle.
+
+* **Matrix V<sup>T</sup>:** A rectangle with dimensions "n" (vertical) and "d" (horizontal).  Horizontal lines are drawn within the rectangle.
+
+
+**Description:**
+
+This slide, part of a lecture on Singular Value Decomposition (SVD) within an Intro to Data Science course, explains how SVD can be used to reconstruct a matrix.  The slide shows the formula for reconstructing a matrix A using the SVD decomposition (A = U S V<sup>T</sup>).  The slide also visually represents the matrices involved in the decomposition.  The figures are used to illustrate the dimensions of the matrices and how they relate to each other in the SVD formula.  The slide is likely a continuation of the previous slide's discussion of low-rank matrix approximations and how SVD is used to achieve dimensionality reduction.  The slide is focused on the practical application of SVD in matrix reconstruction.
+
+
+# Slide 13
+
+**Matrix Factorization**
+
+Algebraically, given a high-dimensional data matrix X, we can approximate it as a product of two dense matrices A and B with lower "inner" dimensions:
+
+```
+M
+examples
+N attributes
+K latent dims
+N
+K
+B
+N
+X
+A
+```
+
+---
+
+**Description:**
+
+This slide, part of a lecture on matrix factorization in an Intro to Data Science course, introduces a visual representation of the concept.  The slide shows two sets of matrices, each representing a factorization of a high-dimensional data matrix X.
+
+* **Left Matrix:** A light-beige/tan rectangle labeled "X" is shown.  The rectangle has dimensions "M examples" (vertical) and "N attributes" (horizontal).  This represents the original high-dimensional data matrix.
+
+* **Right Matrix:** Two light-teal/green rectangles are shown, labeled "A" and "B".  Matrix "A" has dimensions "M examples" (vertical) and "K latent dims" (horizontal).  Matrix "B" has dimensions "K latent dims" (vertical) and "N attributes" (horizontal).  This represents the factorization of the original matrix X into two lower-dimensional matrices A and B.  The "K latent dims" represent the reduced dimensionality.
+
+* **Visual Representation:** The slide uses a visual representation of matrices to illustrate the concept of matrix factorization.  The matrices are arranged side-by-side, with the original matrix X on the left and the factorized matrices A and B on the right.  The "≈" symbol between the X and A/B matrices indicates that the factorization is an approximation.  The labels "M examples," "N attributes," and "K latent dims" clearly define the dimensions of each matrix.  The purpose of this slide is to visually demonstrate how a high-dimensional matrix can be approximated by the product of two lower-dimensional matrices, which is a core concept in matrix factorization.
+
+
+# Slide 14
+
+**SVD vs PCA**
+
+PCA and SVD are closely related
+
+* SVD is a general operation defined on all matrices
+* Principle component analysis (PCA) refers to a data analysis technique for dimensionality reduction. To apply PCA to matrix A, the task reduces to computing the SVD of A
+
+We will see that SVD gives strictly more information than PCA, namely the matrix U
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on dimensionality reduction in an Intro to Data Science course, compares Singular Value Decomposition (SVD) and Principal Component Analysis (PCA).  The title, "SVD vs PCA," is presented in a large, bold font at the top of the slide.  The text below explains the relationship between the two techniques.  The first bullet point states that SVD is a general operation applicable to all matrices.  The second bullet point explains that PCA is a specific data analysis technique for dimensionality reduction, and that applying PCA to a matrix A is equivalent to computing the SVD of A.  The final sentence highlights that SVD provides more information than PCA, specifically the matrix U.  The slide is straightforward and concise, focusing on the relationship and differences between SVD and PCA.  The context of the slide is to explain the relationship between these two important dimensionality reduction techniques.
+
+
+# Slide 15
+
+**Principle component analysis**
+
+PCA is a linear dimensionality reduction method dating back to Pearson (1901)
+One of the most useful techniques in exploratory data analysis
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on dimensionality reduction in an Intro to Data Science course, introduces Principal Component Analysis (PCA).  The title, "Principle component analysis," is presented in a large, bold font at the top of the slide.  The text below defines PCA as a linear dimensionality reduction method, tracing its origins back to Pearson (1901).  It also highlights PCA as a valuable technique in exploratory data analysis.  The slide is straightforward and concise, focusing on the introduction and context of PCA.  The context of the slide is to introduce PCA as a specific dimensionality reduction technique, likely leading into a more detailed explanation of how it works.
+
+
+# Slide 16
+
+**PCA example**
+
+PCA finds the directions (principal components)
+that maximize the variance of the data
+Principal vectors are orthogonal
+Gives best axis to project
+Interactive example:
+http://setosa.io/ev/principal-component-analysis/
+
+**(Figure):** A scatter plot is positioned in the lower portion of the slide.  The plot displays numerous data points (represented as '+' symbols).  The points are scattered across a two-dimensional space.  Two lines are drawn through the data points.  One line, in red, is labeled "1st principal vector". The other line, in blue, is labeled "2nd principal vector".  The blue line has a negative slope and passes through the center of the data cloud. The red line has a positive slope and is oriented at a steeper angle than the blue line.  The axes are labeled with values ranging from -5 to 5.  The plot is oriented with the x-axis horizontally and the y-axis vertically.  The purpose of the plot is to visually illustrate the concept of principal component analysis (PCA).  The data points represent some dataset, and the lines represent the principal components that capture the most important variations in the data.  The lines are drawn to maximize the variance of the data points.
+
+
+**Description:**
+
+This slide, part of a lecture on Principal Component Analysis (PCA) within an Intro to Data Science course, visually demonstrates the concept of PCA.  The figure is a scatter plot showing a dataset and the principal components derived from it.  The red and blue lines represent the principal components, which are orthogonal to each other.  The interactive example link provides a way to explore PCA in more detail.  The slide is designed to help the audience understand how PCA finds directions that maximize the variance of the data, and how these directions can be used to project the data onto a lower-dimensional space.
+
+
+# Slide 17
+
+**PCA: High level approach**
+
+Given data matrix X with p dimensions (attributes)
+
+* Mean center each column of X (i.e. subtract from each attribute value the mean of that attribute)
+* Compute the p x p covariance matrix: Σ = X<sup>T</sup>X
+* Find eigenvectors and eigenvalues of the symmetric covariance matrix Σ
+The eigenvectors correspond to the principle components of X
+* Select the m eigenvectors with largest eigenvalues to reduce dimensionality
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Principal Component Analysis (PCA) in an Intro to Data Science course, outlines the high-level steps involved in performing PCA.  The title, "PCA: High level approach," clearly indicates the topic.  The bullet points detail the procedure:
+
+1. **Mean centering:**  The data matrix X's columns are centered by subtracting the mean of each attribute from all values in that column. This is a crucial preprocessing step in PCA to ensure that the principal components are not biased by the means of the attributes.
+
+2. **Covariance matrix computation:** The covariance matrix Σ is calculated using the formula Σ = X<sup>T</sup>X.  This matrix quantifies the relationships between the attributes.
+
+3. **Eigenvalue decomposition:** The eigenvectors and eigenvalues of the symmetric covariance matrix Σ are found.  Eigenvectors represent the principal components, and eigenvalues represent the variance explained by each component.
+
+4. **Dimensionality reduction:** The m eigenvectors corresponding to the largest eigenvalues are selected.  This step reduces the dimensionality of the data by projecting it onto the principal components that capture the most variance.
+
+The slide is straightforward and provides a concise overview of the PCA algorithm.  There are no figures on this slide.  The context of the slide is to provide a high-level overview of the PCA algorithm, likely leading into a more detailed explanation of each step in the next slides.
+
+
+# Slide 18
+
+**Applying PCA**
+
+New data vectors are formed by projecting the data onto the first few principal components (i.e., top m eigenvectors)
+
+x = [x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>p</sub>] (original instance)
+
+A = [a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>p</sub>] (principal components)
+
+x′<sub>1</sub> = a<sub>1</sub>x = Σ<sup>p</sup><sub>j=1</sub> a<sub>1j</sub>x<sub>j</sub>
+
+...
+
+x′<sub>m</sub> = a<sub>m</sub>x = Σ<sup>p</sup><sub>j=1</sub> a<sub>mj</sub>x<sub>j</sub> for m ≤ p
+
+x′ = [x′<sub>1</sub>, x′<sub>2</sub>, ..., x′<sub>m</sub>] (transformed instance)
+
+If m = p then data is transformed
+
+If m < p then transformation is lossy and dimensionality is reduced
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Principal Component Analysis (PCA) in an Intro to Data Science course, details the application of PCA to transform data.  The slide shows the mathematical formulas used to project original data points (x) onto principal components (A) to create new transformed data points (x′).  The equations demonstrate how each component of the transformed data (x′<sub>m</sub>) is calculated by taking a weighted sum of the original data components (x<sub>j</sub>), where the weights are the elements of the principal component matrix (a<sub>mj</sub>).  The slide also explains the conditions under which the transformation is lossless (m = p) or lossy (m < p), and how dimensionality reduction occurs in the latter case.  There is no figure on this slide.  The context of the slide is to explain the practical application of PCA, following the theoretical explanation of the PCA algorithm in the previous slide.
+
+
+# Slide 19
+
+**How to apply PCA in python**
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn import decomposition
+from sklearn import preprocessing
+
+# read in data and mean center
+data = pd.read_csv('iris.dat')
+X = data.iloc[:,0:4].values
+X_scaled = preprocessing.scale(X, with_std=False)
+
+# initialize PCA model with four components
+pca = decomposition.PCA(n_components=4)
+
+# fit PCA model with scaled data and output transformed data
+X_trans = pca.fit_transform(X_scaled)
+```
+
+---
+
+**Description:**
+
+This slide presents Python code for applying Principal Component Analysis (PCA) to a dataset.  It's part of an Intro to Data Science lecture, demonstrating the practical implementation of PCA using the scikit-learn library.
+
+The code snippet shows the steps involved in applying PCA:
+
+1. **Import necessary libraries:** `pandas` for data manipulation, `matplotlib.pyplot` for potential plotting, `sklearn.decomposition` for PCA, and `sklearn.preprocessing` for data scaling.
+
+2. **Load and prepare data:** The code loads data from a CSV file named 'iris.dat' using pandas.  It then extracts the relevant features (columns 0 to 3) into a NumPy array `X`.  Crucially, it scales the data using `preprocessing.scale(X, with_std=False)`.  This step is important for PCA, as it ensures that features with larger values don't disproportionately influence the principal components.  The `with_std=False` parameter likely indicates that the data is scaled by subtracting the mean of each feature, but not by dividing by the standard deviation.
+
+3. **Initialize PCA model:** A PCA model is created using `decomposition.PCA(n_components=4)`.  This specifies that the dimensionality should be reduced to 4 components.
+
+4. **Apply PCA:** The `fit_transform` method is used to apply PCA to the scaled data (`X_scaled`). The result, the transformed data, is stored in `X_trans`.
+
+The code is presented in a way that clearly shows the steps involved in applying PCA in Python, using the scikit-learn library.  The context of the slide is to demonstrate how to implement PCA in a practical setting, likely following the theoretical explanation of PCA in previous slides.  There are no figures on this slide.
+
+
+# Slide 20
+
+**Visualizing PCA results**
+
+```python
+# map each category to a different color
+data['colors']=data.category.map({'Iris-setosa':'r',
+'Iris-versicolor': 'b', 'Iris-virginica':'g'})
+# visualize results for 1st two dimensions
+plt.scatter(X_trans[:,0],X_trans[:,1],c=data['colors'])
+# compare to 1st two dimensions in original data
+plt.scatter(X[:,0],X[:,1],c=data['colors'])
+```
+
+**(Figure 1):**  The top portion of the slide displays a scatter plot.  The x-axis and y-axis are labeled, but the specific values are not visible.  The plot shows data points of different colors (red, blue, and green).  The colors correspond to different categories of the Iris dataset (e.g., 'Iris-setosa', 'Iris-versicolor', 'Iris-virginica').  The data points are clustered in the plot, with some overlap between the different colors.  The plot is positioned in the upper half of the slide.
+
+**(Figure 2):** The bottom portion of the slide displays another scatter plot.  The x-axis and y-axis are labeled, but the specific values are not visible.  The plot shows data points of different colors (red, blue, and green).  The colors correspond to different categories of the Iris dataset.  The data points are clustered in the plot, with some overlap between the different colors.  The plot is positioned in the lower half of the slide.
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, visualizes the results of applying PCA to the Iris dataset.  The code snippet shown maps each category of the Iris dataset to a different color (red, blue, and green).  Two scatter plots are generated. The top plot displays the data points projected onto the first two principal components (obtained from the `X_trans` variable). The bottom plot displays the original data points in the first two dimensions.  The purpose of this visualization is to compare the distribution of the data in the original space with the distribution after applying PCA.  The visual comparison helps to understand how PCA has transformed the data and which features are most important in separating the different categories.  The code is designed to help the audience understand how to visualize the results of PCA in Python.  The context of the slide is to demonstrate the practical application of PCA and how to visualize the results of the transformation.  The Iris dataset is likely being used as a common example for illustrating PCA.
+
+
+# Slide 21
+
+**How to choose number of dimensions**
+
+In PCA, each transformed dimension explains a 
+proportion of the variance of the data  
+As m (the number of components) increases the 
+total explained variance cannot increase 
+Look at the total proportion of variance explained 
+by each dimension to choose number of 
+dimensions 
+Pick number that provides a good tradeoff 
+between accuracy (large proportion of variance 
+explained) and complexity (small number of 
+dimensions)  
+
+**(Figure):** A line graph is positioned in the lower-right portion of the slide.  The x-axis is labeled "principal component" and ranges from 0 to 25.  The y-axis is a logarithmic scale, labeled "10<sup>x</sup>", and ranges from approximately 10<sup>-6</sup> to 10<sup>2</sup>.  Two lines are plotted on the graph:
+
+* **Blue line (dots):**  Represents the "explained variance ratio" for each principal component.  This line shows the proportion of variance explained by each individual principal component.  The values decrease as the principal component number increases.
+
+* **Green line (dashed):** Represents the "cumulative explained variance ratio".  This line shows the cumulative proportion of variance explained by the first *m* principal components.  The values increase as the principal component number increases, but the rate of increase slows down as the number of components increases.
+
+The graph visually displays how the proportion of variance explained by each principal component changes as the number of components increases.  The graph is used to help determine the optimal number of principal components to use for dimensionality reduction, balancing accuracy (large cumulative explained variance) and complexity (small number of components).
+
+
+**Description:**
+
+This slide, part of a lecture on Principal Component Analysis (PCA) in an Intro to Data Science course, discusses how to choose the optimal number of dimensions (principal components) to retain after applying PCA.  The figure is a line graph that plots the explained variance ratio and the cumulative explained variance ratio against the principal component number.  The graph is used to visually assess the trade-off between the amount of variance explained and the number of dimensions retained.  The goal is to select a number of principal components that captures a significant portion of the variance while keeping the dimensionality low.  The context of this slide is to follow up on the previous slides that discussed how to apply PCA and transform data, now focusing on how to choose the best number of components to use for dimensionality reduction.
+
+
+# Slide 22
+
+**How to compute PCA in Python (Cont)**
+
+```python
+# choose number of dimensions
+plt.scatter(range(1, 5),pca.explained_variance_ratio_)
+plt.show()
+```
+
+**(Figure):** A scatter plot is shown in the lower portion of the slide.  The x-axis is labeled "principal component" and ranges from 1 to 4.  The y-axis is labeled "explained variance ratio" and ranges from 0 to 0.7.  Several data points are plotted, each representing the explained variance ratio for a corresponding principal component.  The points are connected by a line, showing the cumulative explained variance as the number of principal components increases.  The plot is used to visually determine the optimal number of principal components to retain for dimensionality reduction.  The x-axis values are integers (1, 2, 3, 4), representing the principal components. The y-axis values are the explained variance ratios for each component.  The plot is positioned in the lower portion of the slide, below the code snippet.
+
+
+**Description:**
+
+This slide, part of a lecture on Principal Component Analysis (PCA) in an Intro to Data Science course, shows Python code and a plot to help determine the optimal number of principal components to use in a PCA transformation. The code, `plt.scatter(range(1, 5), pca.explained_variance_ratio_)`, plots the explained variance ratio for each of the first four principal components.  The plot visually displays how much variance each component explains.  The goal is to select the minimum number of components that capture a significant portion of the total variance.  The context of this slide is to follow up on the previous slides that discussed how to apply PCA and visualize the results, now focusing on how to choose the optimal number of components based on the explained variance.  The plot is crucial for making this decision.
+
+
+# Slide 23
+
+**Example: Intel Berkeley Lab**
+
+**(Figure):** A floor plan is shown.  The figure is a detailed architectural floor plan, likely of the Intel Berkeley Lab.  It depicts the layout of the building's interior spaces, including offices, meeting rooms, a kitchen, and other areas.  The plan is oriented with north at the top.  The layout is presented as a two-dimensional map, showing the arrangement of rooms and their relative positions.  Each room or area is represented by a shape (rectangle, square, etc.) and labeled with a number (e.g., 50, 51, 52).  The numbers likely correspond to sensor locations or other identifiers within the building.  The lines and shapes represent walls, partitions, and the boundaries of different spaces.  The purpose of this figure is to show a real-world example of a space where sensor data might be collected and analyzed.  The context of this slide is likely to introduce a new dataset or example, potentially related to sensor data analysis, in the Intro to Data Science course.  The floor plan is a visual representation of the physical space where the data is collected.
+
+
+**Description:**
+
+This slide presents a floor plan of the Intel Berkeley Lab.  The floor plan is a visual representation of the physical layout of the building.  The numbers on the floor plan likely correspond to sensor locations or other identifiers.  The purpose of this slide is to introduce a new dataset or example, potentially related to sensor data analysis, in the Intro to Data Science course.  The floor plan is a visual representation of the physical space where the data is collected.  The slide is likely part of a section on data collection or sensor data analysis.  The context of the slide is to introduce a new dataset or example, potentially related to sensor data analysis, in the Intro to Data Science course.  The floor plan is a visual representation of the physical space where the data is collected.
+
+
+# Slide 24
+
+**Example: Intel Berkeley Lab**
+
+**(Figure):** A scatter plot is positioned in the lower portion of the slide.  The x-axis is labeled "Distance between a pair of sensors" and ranges from approximately 0 to 3.  The y-axis is labeled "Link quality" and ranges from approximately 0 to 1.  The plot displays a large number of small, blue data points scattered across the graph.  The data points show a strong negative correlation; as the distance between sensors increases, the link quality tends to decrease.  The plot is used to visualize the relationship between the distance between a pair of sensors and the quality of the link between them.  This is likely sensor data from the Intel Berkeley Lab, showing how link quality degrades with increasing distance.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a scatter plot visualizing sensor link quality data from the Intel Berkeley Lab.  The x-axis represents the distance between pairs of sensors, and the y-axis represents the link quality between those sensors.  The plot shows a strong negative correlation: as the distance increases, the link quality generally decreases.  The large number of data points suggests a significant amount of data collected, likely from a network of sensors within the Intel Berkeley Lab.  The purpose of this plot is to illustrate the relationship between sensor distance and link quality, which is a key aspect of understanding sensor network performance.  The context of this slide is likely to discuss data analysis techniques, such as correlation analysis or regression, applied to this sensor data.
+
+
+# Slide 25
+
+**Example: Intel Berkeley Lab Map**
+
+**(Figure 1):** A detailed architectural floor plan, likely of the Intel Berkeley Lab, is shown.  The figure is a two-dimensional map of the building's interior.  It depicts the layout of offices, meeting rooms, a kitchen, and other areas.  The plan is oriented with north at the top.  Each room or area is represented by a shape (rectangle, square, etc.) and labeled with a number (e.g., 50, 51, 52).  These numbers likely correspond to sensor locations or other identifiers within the building.  The lines and shapes represent walls, partitions, and the boundaries of different spaces.  The floor plan is a visual representation of the physical space where the data is collected.  It's positioned in the lower portion of the slide, within a red border.
+
+**(Figure 2):** A scatter plot is positioned in the upper portion of the slide, above the floor plan.  The x-axis is labeled "Distance between a pair of sensors" and ranges from approximately 0 to 3.  The y-axis is labeled "Link quality" and ranges from approximately 0 to 1.  The plot displays a large number of small, blue data points scattered across the graph.  The data points show a strong negative correlation; as the distance between sensors increases, the link quality tends to decrease.  This plot is used to visualize the relationship between the distance between a pair of sensors and the quality of the link between them.  This is likely sensor data from the Intel Berkeley Lab, showing how link quality degrades with increasing distance.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a visual representation of sensor data from the Intel Berkeley Lab.  The top portion of the slide shows a scatter plot of sensor link quality versus distance.  The bottom portion of the slide shows a floor plan of the Intel Berkeley Lab.  The floor plan is likely used to visualize the results of applying PCA to a 54x54 matrix of pairwise sensor link qualities.  The PCA analysis has projected the data down to two dimensions, and the resulting coordinates are used to position the sensor locations on the floor plan.  The goal is to demonstrate how PCA can reveal the spatial layout of the building from the sensor data.  The slide is likely part of a section on data visualization and the application of PCA to real-world sensor data.
+
+
+# Slide 26
+
+**Recommender Systems**
+
+Primarily sourced from Padhraic Smyth, UC Irvine
+
+
+---
+
+**Description:**
+
+This slide is a title slide for a section on Recommender Systems.  It's a simple, single-line title slide, with the text "Recommender Systems" in a large, bold, dark gray font against a light gray background.  Below the title, in a smaller, light gray font, is the credit line: "Primarily sourced from Padhraic Smyth, UC Irvine".  The overall design is clean and uncluttered, focusing solely on the topic title and the source of the material.  There are no figures.
+
+
+**What you see:** A plain, light gray background with the title "Recommender Systems" in a large, bold, dark gray font.  Below the title, in a smaller, light gray font, is a credit line indicating the source of the material.  The slide is likely the introduction to a section of the lecture that will cover recommender systems, potentially discussing different types of recommender systems, their applications, or algorithms used in them.
+
+
+# Slide 27
+
+**Recommender System Algorithms**
+
+*Input*
+* (user, item, rating) tuples for items that the user has explicitly rated
+* Typically represented as a user-item matrix
+
+*Output*
+* (user, item, rating) tuples for items that the user has not rated
+* Can be thought of as filling in the missing entries of the user-item matrix
+
+Most algorithms infer missing ratings based on the ratings of similar users
+
+
+**Description:**
+
+This slide introduces the concept of recommender system algorithms.  It describes the input data as tuples of (user, item, rating) for items that a user has explicitly rated.  This input is typically organized as a user-item matrix.  The output is defined as tuples of (user, item, rating) for items that a user has *not* yet rated.  The slide explains that recommender systems can be viewed as a process of filling in the missing entries in the user-item matrix.  Finally, it notes that most recommender algorithms predict missing ratings based on the ratings of similar users.  The slide is a high-level overview, setting the stage for a discussion of specific recommender system algorithms.  There are no figures.
+
+
+# Slide 28
+
+**Ratings Data**
+
+**(Figure):** A grid-like table is shown.  The table is a matrix representation of ratings data, likely for a recommender system.  The rows represent users (480,000 users), and the columns represent movies (17,700 movies).  The cells of the table contain numerical values, which likely represent ratings given by users to movies.  The values are not all visible, but some examples are shown (e.g., 1, 3, 4, 5).  The table is positioned in the center of the slide.  The table's dimensions are large, indicating a massive dataset.  The purpose of the figure is to visually represent the structure of the ratings data, which is a crucial input for recommender systems.  The values in the table are likely ratings given by users to movies, ranging from 1 to 5 (or similar).  The large size of the table (480,000 users x 17,700 movies) highlights the scale of the data.
+
+
+**Description:**
+
+This slide displays a visual representation of ratings data, likely for a recommender system.  The figure is a grid-like table, where rows represent users (480,000) and columns represent movies (17,700).  The cells contain numerical values, representing ratings given by users to movies.  The values shown are integers between 1 and 5, suggesting a rating scale.  The large size of the table (480,000 users by 17,700 movies) indicates a massive dataset, typical of real-world recommender system applications.  The slide is likely part of a section on recommender systems, specifically introducing the structure of the data used to train and operate such systems.  The context is an Intro to Data Science course.
+
+
+# Slide 29
+
+**Recommender Systems: Collaborative Filtering**
+
+**(Figure):**  A network of stick figures is shown.  Each stick figure represents a user.  Some stick figures have speech bubbles above them containing numbers (e.g., 1, 2, 5).  Other speech bubbles contain a question mark.  The stick figures are interconnected with lines, suggesting relationships between users.  The figures are positioned across the slide, not in a strict grid, but scattered in a way that suggests connections between users.  The numbers in the speech bubbles likely represent ratings given by users to items (e.g., movies).  The question marks indicate items that a user has not yet rated.  The purpose of this figure is to illustrate the concept of collaborative filtering in recommender systems.  It visually represents how a recommender system might identify similar users to predict ratings for items a user hasn't rated.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, introduces collaborative filtering in recommender systems.  The figure is a visual representation of how the algorithm works.  The stick figures represent users, and the numbers in the speech bubbles represent ratings.  The question marks indicate items that a user hasn't rated, and the connections between the stick figures suggest relationships between users based on their ratings.  The slide is likely to follow up on previous slides that introduced recommender systems and the data they use.  The figure is a key element in explaining how collaborative filtering identifies similar users to predict ratings for items a user hasn't rated.  The context is an Intro to Data Science course.
+
+
+# Slide 30
+
+**Recall: SVD**
+
+Every matrix A has a SVD
+
+* The columns of U are left singular vectors of A
+* The columns of V (i.e. the rows of V<sup>T</sup>) are right singular vectors of A
+* The entries of S are the singular values of A.
+
+**(Figure):**  The slide contains four small diagrams, each representing a matrix.  They are positioned in the lower portion of the slide, arranged roughly in a 2x2 grid.
+
+* **Diagram 1 (A):** A rectangle is shown, labeled "A".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  This represents the original matrix A, with n rows and d columns.
+
+* **Diagram 2 (U):** A rectangle is shown, labeled "U".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Vertical lines are drawn within the rectangle, representing the columns of the U matrix.
+
+* **Diagram 3 (S):** A rectangle is shown, labeled "S".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Diagonal lines are drawn within the rectangle, representing the singular values of A.  The diagonal lines are not continuous, but rather are short segments.
+
+* **Diagram 4 (V<sup>T</sup>):** A rectangle is shown, labeled "V<sup>T</sup>".  The rectangle has dimensions "n" (vertical) and "d" (horizontal).  Horizontal lines are drawn within the rectangle, representing the rows of the V<sup>T</sup> matrix.
+
+
+**Description:**
+
+This slide, part of a lecture on Singular Value Decomposition (SVD) within an Intro to Data Science course, visually explains the components of an SVD decomposition.  The diagrams illustrate the dimensions of the matrices (A, U, S, V<sup>T</sup>) and how they relate to each other in the SVD formula.  The slide is designed to provide a visual aid for understanding the mathematical concept of SVD, which is a crucial tool in dimensionality reduction.  The diagrams show the relationships between the original matrix A and the decomposed matrices U, S, and V<sup>T</sup>.  The context of the slide is likely a review or a reminder of the SVD decomposition, possibly leading into a discussion of its applications in the following slides.
+
+
+
+
+# Slide 31
+
+**How to compute SVD in Python**
+
+```python
+import pandas as pd
+import numpy as np
+# read in data
+data = pd.read_csv("iris.dat", header=None, sep=',')
+X = data.iloc[:, 0:4].values  # Dataframe.values returns a matrix
+X_shape = np.shape(X)
+# do SVD decomposition
+U, s, Vt = np.linalg.svd(X)
+# U, Vt matrices
+# s: vector of eigenvalues
+# Combine s and Vt to simplify our latent factors
+```
+
+**Description:**
+
+This slide presents Python code for computing a Singular Value Decomposition (SVD) on a dataset.  The code is designed for use in an Intro to Data Science course.
+
+The code snippet demonstrates the steps involved in performing SVD:
+
+1. **Import necessary libraries:** `pandas` for data manipulation and `numpy` for numerical operations.
+
+2. **Load and prepare data:** The code loads data from a CSV file named "iris.dat".  It extracts the first four columns (features) into a NumPy array `X`.  The `header=None` and `sep=','` arguments in `pd.read_csv` indicate that the file has no header row and that the data is separated by commas.  The `X_shape = np.shape(X)` line calculates and stores the dimensions of the data matrix.
+
+3. **Perform SVD:** The core of the code is `U, s, Vt = np.linalg.svd(X)`. This line computes the SVD of the matrix `X`, storing the left singular vectors in `U`, the singular values in `s`, and the right singular vectors in `Vt`.
+
+4. **Comments:** The code includes comments explaining the purpose of each section, which is helpful for understanding the code's functionality.
+
+The context of this slide is to demonstrate how to implement SVD in Python, likely following the theoretical explanation of SVD in previous slides.  There are no figures on this slide.  The code is presented in a way that clearly shows the steps involved in computing SVD using the `numpy` library.  The use of the Iris dataset suggests that this is a practical example for illustrating the concept of SVD.
+
+
+# Slide 32
+
+**Matrix Factorization of Ratings Data**
+
+The vector  represents the affinity of user  for each of the latent factors.
+Similarly, the vector  represents the affinity of the movie  for the latent factors.
+
+Example with 3 factors for k
+* Factor 1 ~ action
+* Factor 2 ~ comedy
+* Factor 3 ~ romance
+
+ualice = [0.2, 0.5, 0.3]
+vMiB = [1.1, 0.4, 0.01]
+ralice,MiB = 0.2 * 1.1 + 0.5 * 0.4 + 0.3 * 0.01 = 0.423
+
+**(Figure):** A diagram is shown, representing a matrix factorization of ratings data.  The diagram shows a large, gray rectangle, representing a user-item matrix.  The rows of the matrix represent users, and the columns represent movies.  The matrix is divided into two smaller matrices, one on the left and one on the right.  The left matrix has rows representing users and columns representing latent factors (k).  The right matrix has rows representing latent factors (k) and columns representing movies (d).  A small, light-blue rectangle is highlighted within the large gray rectangle, representing the rating of user "Alice" for the movie "Men in Black (MiB)".  The diagram is positioned in the center of the slide.  The purpose of the figure is to illustrate how matrix factorization decomposes a user-item matrix into two lower-dimensional matrices, representing user and item latent factors.  The example shows how these latent factors can be used to predict ratings for items a user hasn't rated.
+
+
+**Description:**
+
+This slide, part of a lecture on recommender systems in an Intro to Data Science course, introduces matrix factorization as a technique for predicting user ratings.  The figure visually represents the decomposition of a user-item matrix into two lower-dimensional matrices, representing user and item latent factors.  The example shows how these latent factors can be used to predict a rating for a specific user and item pair.  The slide is likely to follow up on previous slides that introduced recommender systems and collaborative filtering.  The context is to explain how matrix factorization can be used to predict missing ratings in a user-item matrix.  The example of "Alice" and "Men in Black (MiB)" is used to illustrate the calculation of a predicted rating.
+
+
+
+
+# Slide 33
+
+**Latent Factor Visualization**
+
+**(Figure):** A scatter plot is presented in the center of the slide.  The x-axis is labeled "Factor vector 1," and the y-axis is labeled "Factor vector 2."  Both axes range from approximately -1.5 to 1.5.  Numerous data points are plotted, each representing a movie title.  The points are colored differently, and some movie titles are written next to their corresponding points.  Examples of movie titles include "Freddy Got Fingered," "Half Baked," "Carol," "Bob," "Alice," "The Wizard of Oz," and others.  The plot is positioned in the center of the slide.  The purpose of the plot is to visually represent the latent factors of movies in a two-dimensional space.  The different colors and positions of the points indicate how movies are grouped based on their latent factors.  The movie titles next to the points help to identify which movie corresponds to each data point.
+
+
+**Description:**
+
+This slide, part of a lecture on recommender systems in an Intro to Data Science course, presents a visualization of movie latent factors.  The scatter plot shows the projection of movies onto a two-dimensional space defined by latent factors.  Each movie is represented by a point, and its position in the plot corresponds to its latent factor values.  The different colors and positions of the points indicate how movies are grouped based on their latent factors.  The movie titles next to the points help to identify which movie corresponds to each data point.  The context of this slide is to illustrate how matrix factorization can group movies with similar characteristics together, based on the latent factors.  The figure is from a research paper (Koren, Bell, Volinksy, IEEE Computer, 2009), suggesting that this is a well-known example used to illustrate the concept of matrix factorization.  The slide is likely part of a section on recommender systems and how latent factors can be used to predict user preferences.
+
+
+
+
+# Slide 34
+
+**Computation of Matrix Factors**
+
+**Problem 1:**
+
+Most of the entries in R are missing, i.e., only 100 x 10<sup>6</sup> / (480k x 17k) ~ 1% are present
+
+
+**Description:**
+
+This slide, part of a lecture on recommender systems in an Intro to Data Science course, introduces a problem related to the computation of matrix factors.  The text states that most entries in a matrix R (likely a user-item rating matrix) are missing.  The example given shows that only approximately 1% of the entries are present in the matrix.  This is a significant sparsity issue, which is a common challenge in recommender systems.  The context of this slide is to introduce the problem of missing data in the user-item rating matrix, which is a crucial factor in the design and implementation of recommender systems.  The numbers (480k x 17k) suggest a very large dataset, typical of real-world recommender systems.  The slide is likely to lead into a discussion of methods for handling missing data or for computing matrix factors in the presence of missing values.
+
+
+# Slide 35
+
+**Dealing with missing data**
+
+SVD for partially observed matrix is undefined
+How to handle missing values is an open problem
+Solution 1: replace missing values with 0s or average rating values
+Solution 2: optimize reconstruction error but only over known entries
+
+ri,j ≈ ui ⋅˜vj
+minu,v ∑
+(i,j)∈A
+(rij −ui ⋅˜vj)2
+
+
+**Description:**
+
+This slide discusses the problem of missing data in the context of recommender systems, specifically how it affects Singular Value Decomposition (SVD).  The slide states that SVD is undefined for a matrix with missing values.  It highlights that handling missing values is an open problem in this context.  Two potential solutions are presented:
+
+1. **Solution 1:** Replacing missing values with 0s or the average rating value.  This is a simple, but potentially inaccurate, approach.
+
+2. **Solution 2:** Optimizing the reconstruction error, but only considering the known entries.  This solution attempts to find the best possible matrix factors (u<sub>i</sub> and v<sub>j</sub>) that minimize the error in reconstructing the known ratings.  The mathematical expression shown, `minu,v ∑ (rij −ui ⋅˜vj)2`, represents the objective function for this optimization problem, where (i,j)∈A indicates that the sum is taken only over the known entries in the matrix.  The notation `ri,j ≈ ui ⋅˜vj` suggests that the predicted rating `ri,j` is approximated by the dot product of the latent factors `ui` and `˜vj`.  The context of this slide is to discuss strategies for dealing with the inherent sparsity of user-item rating matrices in recommender systems.  There are no figures on this slide.
+
+
+# Slide 36
+
+**Computation of Matrix Factors**
+
+**Problem 1:**
+
+Most of the entries in R are missing, i.e., only 100 x 10<sup>6</sup> / (480k x 17k) ~ 1% are present
+
+**Problem 2:**
+
+Ratings are biased
+
+
+**Description:**
+
+This slide, part of a lecture on recommender systems in an Intro to Data Science course, discusses two key problems in computing matrix factors for recommender systems.
+
+* **Problem 1 (Sparsity):** The slide highlights the significant sparsity issue in the rating matrix (R).  The example given shows that only approximately 1% of the entries are present in the matrix.  This means that most user-item rating combinations are missing, which is a common challenge in real-world recommender systems.  The numbers (480k x 17k) suggest a very large dataset, typical of real-world recommender systems.  The calculation (100 x 10<sup>6</sup> / (480k x 17k)) is used to illustrate the degree of sparsity.
+
+* **Problem 2 (Bias):** The slide mentions that ratings are biased.  This implies that the ratings might not be truly representative of user preferences due to various factors, such as the tendency of users to rate items more or less favorably based on personal biases or other external influences.  This bias can affect the accuracy of recommender systems if not addressed.
+
+The context of this slide is to introduce the challenges in computing matrix factors for recommender systems, specifically the issues of sparsity and bias in the rating data.  The slide is likely to lead into a discussion of methods for addressing these problems, such as imputation techniques or bias correction methods.  There are no figures on this slide.
+
+
+# Slide 37
+
+**Modeling Systematic Biases**
+
+```
+μ = overall mean rating
+b<sub>u</sub> = mean rating for user u
+b<sub>i</sub> = mean rating for movie i
+```
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, introduces a method for modeling systematic biases in ratings data, likely for a recommender system.  The slide defines three variables:
+
+* **μ (mu):**  Represents the overall average rating across all users and movies.
+
+* **b<sub>u</sub>:** Represents the average rating bias for a specific user u.  This accounts for the tendency of some users to rate items higher or lower than the average.
+
+* **b<sub>i</sub>:** Represents the average rating bias for a specific movie i.  This accounts for the tendency of some movies to receive higher or lower ratings than the average, potentially due to genre, popularity, or other factors.
+
+The context of this slide is to introduce a way to model and account for these biases in the rating data, which can improve the accuracy of recommender systems.  There are no figures on this slide.  The slide is likely a precursor to a discussion of how these biases can be incorporated into a model to predict ratings more accurately.
+
+
+# Slide 38
+
+**Components of a rating predictor**
+
+**Baseline predictor**
+
+* Separates users and movies
+* Often overlooked
+* Benefits from insights into users' behavior
+
+**User-movie interaction**
+
+* Characterizes the matching between users and movies
+* Attracts most research in the field
+* Benefits from algorithmic and mathematical innovations
+
+
+**(Figure 1):**  Two small images are positioned on the right side of the slide.  The image on the left shows a cartoon character (likely a video game character) sitting in a movie theater seat, holding a soda and popcorn. The image on the right shows a stylized representation of film reels or movie frames.  These images are likely used to visually represent the concepts of "User Bias" and "Movie Bias" respectively.  The images are simple and cartoonish, and their purpose is to provide a visual aid for the concepts being discussed.
+
+**(Figure 2):** A third image, positioned below the two images on the right, shows a cartoon character (likely the same as in the left image) sitting in a movie theater seat, holding a soda and popcorn.  Below this image, there are three horizontal arrows pointing to the right, with a stylized representation of film reels or movie frames behind them.  This image is likely used to visually represent the concept of "User-Movie Interaction".  The images are simple and cartoonish, and their purpose is to provide a visual aid for the concepts being discussed.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, discusses the components of a rating predictor, likely in the context of recommender systems.  The slide breaks down the components into "Baseline predictor" and "User-movie interaction," each with supporting bullet points.  The images are simple cartoon representations of these concepts, likely to aid in understanding the different aspects of a rating prediction model.  The slide is likely part of a section on recommender systems, specifically introducing the different components that contribute to a rating prediction model.  The context is an Intro to Data Science course.
+
+
+# Slide 39
+
+**A Baseline Predictor**
+
+We have expectations on the rating by user i of movie j, even without estimating i's attitude towards movies like j
+Rating scale of user u
+* Values of other ratings user gave recently (day-specific mood, anchoring, multi-user accounts)
+(Recent) popularity of movie i
+* Selection bias; related to number of ratings user gave on the same day ("frequency")
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide discusses a baseline predictor for rating prediction, likely in the context of recommender systems.  It argues that even without a detailed understanding of a user's preferences, we can make predictions based on general factors.  The slide lists several factors that influence a baseline prediction:
+
+* **User's past ratings:**  The user's recent ratings, which might reflect their current mood or other temporary factors.  This also includes potential anchoring effects or multiple user accounts.
+
+* **Movie popularity:** The recent popularity of the movie, which can influence ratings.
+
+* **Selection bias:**  The number of ratings a user gives on the same day, which could indicate a selection bias.
+
+The slide is likely part of a section on recommender systems, specifically discussing how to build a baseline predictor for rating prediction.  The context is an Intro to Data Science course.  The two images on the right are simple cartoon representations of a user and a movie, likely to aid in understanding the concepts being discussed.  The images are not crucial to the content of the slide but are used to make the concepts more accessible.
+
+
+# Slide 40
+
+**Modeling Systematic Biases**
+
+```
+rij ≈ μ + b<sub>i</sub> + b<sub>j</sub> + u<sub>i</sub> ⋅ v<sub>j</sub>
+```
+
+Rating: Mean rating + bias for user i + bias for movie j + user-movie interactions
+
+**Example:**
+
+* Mean rating μ = 3.7
+* You are a critical reviewer; your ratings are 1 lower than the mean: b<sub>i</sub> = −1
+* Star Wars gets a mean rating of 0.5 higher than average movie: b<sub>j</sub> = 0.5
+* Predicted rating for you on Star Wars: 3.7 + 1 − 0.5 = 3.2
+
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide introduces a method for modeling systematic biases in ratings data, likely for a recommender system.  The formula `rij ≈ μ + b<sub>i</sub> + b<sub>j</sub> + u<sub>i</sub> ⋅ v<sub>j</sub>` shows how the predicted rating (`r<sub>ij</sub>`) is calculated as the sum of the overall mean rating (`μ`), user bias (`b<sub>i</sub>`), movie bias (`b<sub>j</sub>`), and the interaction term (`u<sub>i</sub> ⋅ v<sub>j</sub>`).  The example demonstrates how to use this formula to predict a rating.  The example shows a user with a negative bias (`b<sub>i</sub> = -1`) rating a movie with a positive bias (`b<sub>j</sub> = 0.5`).  The overall mean rating (`μ`) is 3.7.  The predicted rating for this user on this movie is 3.2.  The slide is likely part of a section on recommender systems, specifically discussing how to model and account for biases in the rating data to improve the accuracy of predictions.  There are no complex figures on this slide.  The context is an Intro to Data Science course.
+
+
+# Slide 41
+
+**The $1 Million Question**
+
+**(Figure):** The slide displays a screenshot of the Netflix website, likely from the Netflix Prize page.  The image shows various elements of the Netflix website, including navigation bars, buttons, and text boxes.  The overall design and layout of the page are consistent with the typical appearance of a website.  The purpose of this figure is to introduce the Netflix Prize, a competition that focused on improving the accuracy of movie recommendations.  The context of this slide is to introduce a real-world example of a problem in recommender systems, specifically the challenge of improving recommendation accuracy.  The image is a visual representation of the Netflix Prize competition, which is a significant example in the field of recommender systems.
+
+
+**Description:**
+
+This slide introduces the Netflix Prize, a competition that aimed to improve the accuracy of movie recommendations.  The image is a screenshot of the Netflix website, likely from the Netflix Prize page.  The image shows various elements of the Netflix website, including navigation bars, buttons, and text boxes.  The overall design and layout of the page are consistent with the typical appearance of a website.  The purpose of this figure is to introduce the Netflix Prize, a competition that focused on improving the accuracy of movie recommendations.  The context of this slide is to introduce a real-world example of a problem in recommender systems, specifically the challenge of improving recommendation accuracy.  The image is a visual representation of the Netflix Prize competition, which is a significant example in the field of recommender systems.  The text on the slide likely discusses the goals and challenges of the Netflix Prize, which is a significant example in the field of recommender systems.  The context is an Intro to Data Science course.
+
+
+# Slide 42
+
+**Training Data**
+
+100 million ratings (matrix is 99% sparse)
+Rating = [user, movie-id, time-stamp, rating value]
+Generated by users between Oct 1998 and Dec 2005
+Users randomly chosen among set with at least 20 ratings
+• Small perturbations to help with anonymity
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide describes the training data for a recommender system, likely the Netflix Prize dataset.  It states that the data consists of 100 million ratings, which is highly sparse (99% of the matrix entries are empty).  The format of each rating is specified as a tuple containing the user, movie ID, timestamp, and rating value.  The data was generated by users between October 1998 and December 2005.  Importantly, users were randomly selected and had to have at least 20 ratings.  The inclusion of "small perturbations to help with anonymity" suggests that the data was anonymized to protect user privacy.  The slide is likely part of a section on recommender systems, specifically describing the dataset used for training and evaluating the models.  The context is an Intro to Data Science course.  There are no figures on this slide.
+
+
+# Slide 43
+
+**Ratings Data**
+
+**(Figure):** A grid-like table is shown, representing a matrix of ratings data.  The table is positioned centrally on the slide.  The rows are labeled "480,000 users" and the columns are labeled "17,700 movies".  The table cells contain numerical values (e.g., 1, 3, 4, 5) and question marks ("?").  The question marks represent missing or unknown ratings.  A significant portion of the cells in the lower-right quadrant of the table are filled with question marks, indicating a large number of missing ratings.  The table's dimensions are large, highlighting the sparsity of the data.  The purpose of the figure is to visually represent the structure of the ratings data, specifically the presence of missing values, which is a common characteristic of real-world recommender system datasets.  The context is an Intro to Data Science course, and the slide is likely part of a section on recommender systems, specifically discussing the data used to train and evaluate recommender systems.
+
+
+**Description:**
+
+The slide displays a visual representation of a user-item rating matrix.  The matrix is highly sparse, meaning a vast majority of the cells contain unknown ratings (represented by "?").  The dimensions of the matrix (480,000 users by 17,700 movies) indicate a very large dataset, typical of real-world recommender systems.  The presence of a "Test Data Set" label and the concentration of question marks in the lower-right quadrant suggests that this portion of the data is reserved for testing the performance of recommender systems.  The slide is likely part of a discussion about the structure and characteristics of the Netflix Prize dataset, which is a well-known example in the field of recommender systems.  The context is an Intro to Data Science course.
+
+
+# Slide 44
+
+**The competition**
+
+Netflix had ~2000 Employees, less in engineering, less on recommender
+Competition was open to anyone
+* Data was anonymized
+* Competitors submit predictions for 3 million test items
+* At most 1 submission per day
+Prize of $1,000,000 if error is 10% lower than Netflix's current system
+* Improvements of 1% from the previous year qualifies for a smaller $50k prize
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide describes the Netflix Prize competition.  The text details the competition's characteristics:
+
+* **Participants:** Netflix had approximately 2000 employees, with fewer involved in engineering and recommender systems. The competition was open to anyone.
+
+* **Data:** The data used in the competition was anonymized.
+
+* **Submissions:** Competitors submitted predictions for 3 million test items.  There was a limit of one submission per day.
+
+* **Prizes:** A $1,000,000 prize was awarded if the error rate was 10% lower than Netflix's current system.  Improvements of 1% from the previous year also qualified for a smaller $50,000 prize.
+
+* **Source:** The slide's content is attributed to Padhraic Smyth, UC Irvine CS277.
+
+The context of this slide is to introduce the Netflix Prize as a real-world example of a large-scale recommender system competition, likely to be followed by a discussion of the dataset, evaluation metrics, or the challenges of the competition.  The slide is a summary of the competition's key aspects.  There are no figures on this slide.
+
+
+# Slide 45
+
+**Scoring**
+
+Minimize the root mean square error
+
+```
+1
+|R|
+∑
+(u,i)∈R
+(r<sub>ui</sub> − r̂<sub>ui</sub>)<sup>2</sup>
+```
+
+Does not correlate with user satisfaction, but it is widely understood and easy to evaluate
+
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide describes the scoring metric used in the Netflix Prize competition.  The formula shown, `1/|R| * Σ_{(u,i)∈R} (r<sub>ui</sub> − r̂<sub>ui</sub>)<sup>2</sup>`, calculates the root mean square error (RMSE).  It's a common metric for evaluating the accuracy of predictions, in this case, movie recommendations.  The formula sums the squared differences between the actual ratings (`r<sub>ui</sub>`) and the predicted ratings (`r̂<sub>ui</sub>`) for all user-movie pairs (`(u,i)`) in the dataset (`R`).  The result is then divided by the total number of ratings (`|R|`) to get the average error.  The slide emphasizes that while this metric is widely used and easy to calculate, it doesn't directly reflect user satisfaction with the recommendations.  The slide is likely part of a discussion about the evaluation methods used in the Netflix Prize competition.  There are no figures on this slide.
+
+
+
+
+# Slide 46
+
+**RMSE Baseline Scores**
+
+1.054 - naively predict the mean user rating for each movie
+0.953 - Netflix's then current system (Cinematch) as of 2006
+0.941 - nearest neighbor method using correlation
+0.857 - this or better was the required 10% reduction to trigger the $1M
+
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide presents RMSE (Root Mean Squared Error) baseline scores for different recommendation systems, likely from the Netflix Prize competition.  The scores represent the error rates of various prediction methods.  The values (1.054, 0.953, 0.941, 0.857) are RMSE values, indicating the average difference between predicted and actual user ratings.  A lower RMSE indicates a more accurate prediction model.  The slide shows the baseline performance of a naive prediction method, Netflix's existing system, and a nearest-neighbor method.  The last score (0.857) is significant because it represents the threshold required to win the $1 million prize in the Netflix Prize competition.  The slide is likely part of a discussion about the evaluation metrics and baseline performance in the context of recommender systems, specifically the Netflix Prize.  There are no figures on this slide.
+
+
+
+
+# Slide 47
+
+**Rating by date**
+
+**(Figure):** A scatter plot is presented.  The x-axis is labeled "Rating by date" and ranges from approximately 0 to 2500.  The y-axis is labeled "mean score" and ranges from approximately 3.2 to 3.9.  The plot displays a large number of small, red data points scattered across the graph.  The data points show a general trend, with some fluctuations.  The plot is positioned in the center of the slide.  The purpose of the plot is to visualize the mean rating of items (likely movies) over time.  The x-axis likely represents a time-based index or a date, and the y-axis represents the average rating for items at that point in time.  The large number of data points suggests a significant amount of data collected over time.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a scatter plot visualizing the mean rating of items (likely movies) over time.  The x-axis represents a time-based index or date, and the y-axis represents the average rating for items at that point in time.  The plot shows the trend of average ratings over time, which could reveal patterns or biases in how items are rated over time.  The context of this slide is likely to discuss the temporal aspect of ratings data, potentially to identify trends or biases in how ratings are given over time.  The large number of data points suggests a significant amount of data collected over time.  The context is an Intro to Data Science course.
+
+
+# Slide 48
+
+**Rating by movie age**
+
+**(Figure):** A scatter plot is presented. The x-axis is labeled "movie age (days)" and ranges from approximately 0 to 2500. The y-axis is labeled "mean score" and ranges from approximately 3.2 to 3.9.  Numerous small, red data points are scattered across the graph, showing a general upward trend.  The trend suggests that, on average, movie ratings tend to increase as the movie ages.  The text "Movies improve with age...?" is written above the plot, indicating a possible observation or question about this trend. The plot is positioned centrally on the slide.
+
+
+**Description:**
+
+This slide displays a scatter plot visualizing the relationship between movie age (in days) and the average rating of that movie.  The x-axis represents the age of the movie, and the y-axis represents the average rating.  The plot shows a general upward trend, suggesting that, on average, movies tend to receive higher ratings as they get older.  The large number of data points indicates a significant amount of data used to generate the plot.  The question mark at the end of the text "Movies improve with age...?" suggests that this trend might not be universally true or might require further investigation.  The context of this slide is likely to discuss the temporal aspect of ratings data, potentially to identify trends or biases in how ratings are given over time.  The context is an Intro to Data Science course.  The plot is a visual representation of the data, allowing for an initial observation of the relationship between movie age and average rating.
+
+
+# Slide 49
+
+**Effect of Bias on Model Complexity**
+
+**(Figure):** A line graph is presented.  The x-axis is labeled "Millions of parameters" and ranges from approximately 10 to 100,000.  The y-axis is labeled "RMSE" and ranges from approximately 0.87 to 0.91.  Two lines are plotted on the graph:
+
+* **Red line (labeled "Plain"):**  Represents the RMSE values for a model without bias correction.  The line shows a decreasing trend, indicating that the RMSE decreases as the number of parameters increases.  The line starts at a value of approximately 0.91 and decreases to approximately 0.875.
+
+* **Blue line (labeled "With biases"):** Represents the RMSE values for a model that accounts for biases.  The line shows a similar decreasing trend, but the RMSE values are consistently lower than the "Plain" line for the same number of parameters.  The line starts at a value of approximately 0.905 and decreases to approximately 0.88.
+
+The horizontal dashed lines on the graph represent the RMSE values at 0.905 and 0.9.  The graph visually displays the effect of incorporating bias correction into a recommender system model.  The x-axis values are in millions of parameters, and the y-axis values are RMSE values.  The plot is positioned centrally on the slide.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a graph comparing the RMSE values of a recommender system model with and without bias correction, as the number of model parameters increases.  The x-axis represents the complexity of the model (number of parameters), and the y-axis represents the prediction error (RMSE).  The graph shows that, in general, the model with bias correction (blue line) consistently achieves lower RMSE values than the model without bias correction (red line) for the same number of parameters.  This suggests that incorporating bias correction into the model improves the accuracy of the predictions.  The context of this slide is likely to discuss the trade-off between model complexity and prediction accuracy in the context of recommender systems, specifically the Netflix Prize competition.  The graph is a visual representation of the results, allowing for a comparison of the performance of the two models.  The values on the graph (e.g., 10, 100, 1000, 10000) are in millions of parameters.  The y-axis values are RMSE values.  The horizontal dashed lines are likely reference points for comparing the performance of the two models.
+
+
+# Slide 50
+
+**Approach: Everything but The Kitchen Sink…**
+
+Many options for modeling
+
+* Different numbers of factors, different ways to model time, different ways to handle implicit information
+* Other models: Nearest-neighbor models, restricted Boltzmann machines, …
+Model averaging was useful…
+* Linear model combining, neural network combining, gradient boosted decision tree combining
+
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide, likely part of a lecture on recommender systems within an Intro to Data Science course, discusses the various approaches taken to model the data.  The title "Approach: Everything but The Kitchen Sink…" suggests a broad exploration of different modeling techniques.  The bullet points highlight several options considered:
+
+* **Different numbers of factors, different ways to model time, different ways to handle implicit information:** This indicates that the researchers experimented with various dimensions of latent factors, time-based models, and methods to incorporate implicit user preferences.
+
+* **Other models:**  The mention of nearest-neighbor models, restricted Boltzmann machines, and other unspecified models suggests that a wide range of algorithms were explored.
+
+* **Model averaging:**  The phrase "Model averaging was useful…" implies that combining predictions from multiple models was a successful strategy.
+
+* **Linear model combining, neural network combining, gradient boosted decision tree combining:**  These bullet points further emphasize the use of various model combination techniques.
+
+The slide is likely a summary of the diverse modeling strategies employed in a particular study or project, highlighting the exploratory nature of the approach.  There are no figures on this slide.  The context is an Intro to Data Science course, and the slide is likely a concluding or summary slide for a section on recommender systems.
+
+
+# Slide 51
+
+**The big picture: Solution of BellKor's Pragmatic Chaos**
+
+All developed CF models:
+
+*   **SBRAMF**
+*   **BRISMF**
+*   **SVD-Time**
+*   **MF1**
+*   **NSVDD**
+*   **RBM day;E FRBM**
+*   **Split RBM**
+*   **3K43K1**
+*   **BK3 3K2**
+*   **Movie KNN V. Baseline**
+*   **DRBM SVD++**
+*   **JSVD2**
+*   **BK5-SVD++**
+*   **GTE**
+*   **MF2**
+*   **SVD-AUF Movie KNN**
+*   **Integrated M. RBM**
+*   **CTD/MTD**
+*   **SVDNN**
+*   **User KNN Classif.**
+*   **ModeKNN 1...5 Asym. 1/2/3**
+
+approx. 500 predictors → Probe Blending → 200 blends → Probe Blending → 30 blends → Linear Blend → 10.09% improvement
+
+**Figure:** A diagram showing a flow of data through various recommender system models.  The diagram is a visual representation of the different models used and how they are combined to improve prediction accuracy.  The diagram shows a central oval labeled "All developed CF models" containing many different model names.  Arrows flow from this oval to two "Probe Blending" ovals, then to a "Linear Blend" oval.  The diagram visually represents the process of combining predictions from multiple models to achieve a better overall prediction.  The diagram is a visual representation of the solution to the Netflix Prize competition, showing the various models used and how they were combined.  The context is an Intro to Data Data Science course, and the slide is likely a summary slide for a section on recommender systems.
+
+
+**Description:**
+
+This slide presents a visual overview of the solution developed by the BigChaos team for the Netflix Prize competition.  The diagram shows a complex pipeline of different collaborative filtering (CF) models, each contributing to the final prediction.  The "Probe Blending" stages suggest that the predictions from multiple models are combined using a probing mechanism.  The "Linear Blend" stage indicates that the final prediction is a weighted average of the predictions from the 30 blended models.  The 10.09% improvement figure highlights the success of this combined approach in improving prediction accuracy over the baseline Netflix system.  The slide is a summary of the solution's architecture, showing the variety of models used and the process of combining them.  The context is an Intro to Data Science course, and the slide is likely a summary slide for a section on recommender systems.
+
+
+# Slide 52
+
+**$1 Million Prize awarded Sept 21, 2009**
+
+**(Figure):** A full-frame image is shown, depicting a group of people holding a large check. The check is prominently displayed, and it clearly states "NETFLIX" and "BellKor's Pragmatic Chaos".  The check also shows the amount, "ONE MILLION", and the recipient, "The Netflix Prize".  The people in the image are dressed in business attire, and they appear to be celebrating the award of the prize.  The image is positioned centrally on the slide.  The context of this image is to visually represent the awarding of the Netflix Prize, a significant event in the history of recommender systems.  The image is a photograph of the actual event, likely taken at a conference or awards ceremony.  The people in the image are likely the winners of the Netflix Prize.
+
+
+**Description:**
+
+This slide, the final slide of the presentation, is a celebratory image of the moment when the $1 million Netflix Prize was awarded.  The image shows the winners of the competition, likely a team or group of individuals, holding a large check.  The check is clearly visible and includes the details of the award, including the amount, the recipient, and the date.  The image is a photograph of a real-world event, likely a conference or awards ceremony.  The context of this slide is to conclude the presentation on recommender systems, specifically the Netflix Prize competition, by visually highlighting the achievement of the winning team.  The image is a powerful visual representation of the success of the winning team and the significance of the competition.
+
+

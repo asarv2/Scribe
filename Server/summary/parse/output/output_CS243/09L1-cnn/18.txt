@@ -1,0 +1,15 @@
+# 18
+
+# Example Learned Convolution Filters
+
+Alex Krizhevsky et al., "ImageNet Classification with Deep Convolutional Neural Networks," NIPS, 2012
+
+
+**Description of the slide:**
+
+This slide displays a grid of small images, likely learned convolution filters from a convolutional neural network (CNN).  The filters are arranged in two rows and multiple columns.  Each small image within the grid represents a learned filter.  The filters are grayscale and exhibit various patterns and textures.  The filters are likely learned during the training process of the CNN, and they are designed to detect specific features in images.  The purpose of this slide is to visually demonstrate the types of filters that a CNN can learn, showing the patterns and textures that the network has identified as important for image recognition.  The filters are likely from a model trained on a large dataset like ImageNet.  The title "Example Learned Convolution Filters" clearly indicates the content of the slide.  The attribution at the bottom of the slide, "Alex Krizhevsky et al., "ImageNet Classification with Deep Convolutional Neural Networks," NIPS, 2012," credits the source of the filters and the research paper where they were first described.
+
+
+**Detailed Description of the Figures:**
+
+The figure is a large grid of smaller images.  Each small image is a grayscale representation of a learned convolution filter.  The filters are arranged in a grid pattern, with each filter occupying a square within the grid.  The filters exhibit various patterns, including edges, textures, and other visual features.  The colors within the filters range from dark gray to light gray, with variations in shading and intensity.  The filters are likely different sizes, but the exact dimensions are not discernible from the image.  The filters are arranged in two rows, with multiple columns of filters in each row.  The overall purpose of the figure is to visually represent the learned filters from a CNN, demonstrating the diverse patterns and features that the network has identified as important for image recognition.  The grid format makes it easy to compare the different filters and observe the variety of patterns.

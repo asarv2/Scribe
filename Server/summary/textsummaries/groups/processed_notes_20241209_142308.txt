@@ -1,0 +1,38 @@
+
+--- Key Terms ---
+artifical intelligence basics
+fundamental linear algebra
+machine learning foundations
+supervised learning algorithms
+neural networks
+image processing and computer vision
+unsupervised learning
+search algorithms
+artificial intelligence 
+logic and reasoning
+recommender systems
+data analysis and bias
+--- Problem Types ---
+artifical intelligence basics
+foundational ai concepts
+ai ethics and safety
+machine learning fundamentals
+computer vision
+deep learning
+linear algebra for ai
+recommender systems
+automated reasoning and sat solving
+real-world ai applications
+--- Algorithm Solutions ---
+artifical intelligence basics
+linear algebra
+machine learning fundamentals
+classification algorithms
+neural networks
+image processing
+search algorithms
+recommender systems
+clustering algorithms
+optimization algorithms
+sat solving
+dynamic programming

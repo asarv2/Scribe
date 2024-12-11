@@ -1,0 +1,19 @@
+# Slide 14
+
+# MapReduce
+
+**Basic process**
+
+* **Map:** transforms data records into pairs, each with a key and a value
+* **Shuffle:** uses a hash function so that all pairs with the same key end up next to each other and on the same machine
+* **Reduce:** processes records in batches, where all pairs with the same key are processed at the same time
+
+Idempotence of Mapper and Reducer provides fault tolerance
+* multiple operations on same input gives same output
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, describes the basic MapReduce process.  It outlines the three key steps: Map, Shuffle, and Reduce.  The slide explains how the Map step transforms data into key-value pairs, the Shuffle step groups these pairs by key, and the Reduce step processes the grouped data.  The slide also mentions the importance of idempotence in MapReduce for fault tolerance, meaning that multiple operations on the same input will produce the same output.  There are no figures on this slide.  The content is entirely text-based, focusing on the description of the MapReduce process.

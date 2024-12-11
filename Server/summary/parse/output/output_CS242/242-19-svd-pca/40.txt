@@ -1,0 +1,23 @@
+# Slide 40
+
+**Modeling Systematic Biases**
+
+```
+rij ≈ μ + b<sub>i</sub> + b<sub>j</sub> + u<sub>i</sub> ⋅ v<sub>j</sub>
+```
+
+Rating: Mean rating + bias for user i + bias for movie j + user-movie interactions
+
+**Example:**
+
+* Mean rating μ = 3.7
+* You are a critical reviewer; your ratings are 1 lower than the mean: b<sub>i</sub> = −1
+* Star Wars gets a mean rating of 0.5 higher than average movie: b<sub>j</sub> = 0.5
+* Predicted rating for you on Star Wars: 3.7 + 1 − 0.5 = 3.2
+
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide introduces a method for modeling systematic biases in ratings data, likely for a recommender system.  The formula `rij ≈ μ + b<sub>i</sub> + b<sub>j</sub> + u<sub>i</sub> ⋅ v<sub>j</sub>` shows how the predicted rating (`r<sub>ij</sub>`) is calculated as the sum of the overall mean rating (`μ`), user bias (`b<sub>i</sub>`), movie bias (`b<sub>j</sub>`), and the interaction term (`u<sub>i</sub> ⋅ v<sub>j</sub>`).  The example demonstrates how to use this formula to predict a rating.  The example shows a user with a negative bias (`b<sub>i</sub> = -1`) rating a movie with a positive bias (`b<sub>j</sub> = 0.5`).  The overall mean rating (`μ`) is 3.7.  The predicted rating for this user on this movie is 3.2.  The slide is likely part of a section on recommender systems, specifically discussing how to model and account for biases in the rating data to improve the accuracy of predictions.  There are no complex figures on this slide.  The context is an Intro to Data Science course.

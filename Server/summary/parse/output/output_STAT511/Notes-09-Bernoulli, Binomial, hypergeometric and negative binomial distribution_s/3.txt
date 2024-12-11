@@ -1,0 +1,57 @@
+# Slide 3
+
+Discrete Distribution II:  
+Hypergeometric and Negative Binomial 
+
+The hypergeometric and negative binomial distributions are both related to the binomial distribution. 
+Suppose there are N balls (M red balls, and N-M black balls) in a urn. Every time, you draw a ball from 
+the urn. Let X be the total number of red balls among n draws. 
+• 
+If every time after you draw the ball, you actually put the ball back into the urn, i.e. draw with 
+replacement, then X follows a 𝐵𝑖𝑛(𝑛,𝑀/𝑁) distribution. 
+• 
+If every time after you draw the ball, you don’t put the ball back into the urn, i.e. draw without 
+replacement, then X follows the so-called hypergeometric distribution ℎ𝑚(𝑛, 𝑀, 𝑁). 
+
+The hypergeometric distribution is the exact probability model for the number of S’s when sampling 
+without replacement from a finite dichotomous (S or F) population, where the sample size is n and the 
+population size N. 
+
+(3) The hypergeometric distribution 
+1. The population or set to be sampled consists of N individuals, objects, or elements (a finite 
+population). 
+
+2. Each individual can be characterized as a success (S) or a failure (F), and there are M 
+successes in the population. 
+
+3. A sample of n individuals is selected without replacement in such a way that each subset of size 
+n is equally likely to be chosen. 
+The random variable of interest is X = the number of S’s in the sample. The probability distribution of X 
+depends on the parameters n, M, and N. 
+
+Example 9.4 A university warehouse has received a shipment of 25 printers, of which 10 are laser 
+printers and 15 are inkjet models. If 6 of these 25 are selected at random to be checked by a particular 
+technician, what is the probability that exactly 3 of these selected are laser printers (so that the other 3 
+are inkjets)? 
+This is a hypergeometric distribution, ℎ𝑚(𝑛= 6, 𝑀= 10, 𝑁= 25). 
+
+pmf of 𝒉𝒎(𝒏, 𝑴, 𝑵):  
+𝑷(𝑿= 𝒙) = 𝒉𝒎(𝒙; 𝒏, 𝑴, 𝑵) =
+(𝑴
+𝒙) (𝑵−𝑴
+𝒏−𝒙)
+(𝑵
+𝒏)
+
+For x, an integer, satisfying max {0, 𝑛−𝑁+ 𝑀} ⩽𝑥⩽min{𝑛, 𝑀}.
+
+
+**Description of Slide 3:**
+
+This is slide 3 of a lecture on Statistical Methods, continuing the discussion of discrete probability distributions.  The slide introduces the hypergeometric distribution, a discrete probability distribution that describes the probability of getting *k* successes in a sample of size *n* drawn *without replacement* from a finite population of size *N* containing *M* successes.  The slide contrasts this with the binomial distribution, which assumes sampling *with replacement*.
+
+The slide includes a key example (Example 9.4) illustrating the application of the hypergeometric distribution to a real-world scenario: selecting printers from a shipment.  The example clearly defines the parameters (N=25, M=10, n=6) and asks for the probability of getting exactly 3 laser printers in the sample.
+
+The slide also provides the formula for the probability mass function (pmf) of the hypergeometric distribution, which is crucial for calculating probabilities in this context.  The formula is presented in a clear and concise manner.
+
+The slide is well-organized and uses clear language and examples to explain the concepts.  The example problem is relevant and helps illustrate the application of the hypergeometric distribution.  The use of mathematical notation is appropriate for a statistical methods course.

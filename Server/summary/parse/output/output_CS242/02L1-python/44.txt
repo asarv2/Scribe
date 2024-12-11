@@ -1,0 +1,28 @@
+# Slide 44
+
+```markdown
+A simple class definition: student
+
+class student:
+   """A class representing a student."""
+   def __init__(self,n,a):
+       self.full_name = n
+       self.age = a
+   def get_age(self):
+       return self.age
+There is no “new” keyword as in Java.
+Merely use the class name with () notation and assign the result to a variable.
+__init__ serves as a constructor for the class. 
+Example:
+b = student("Bob", 21)
+An __init__ method can take any number of arguments.
+Like other functions & methods, arguments can be defined with default values, making them optional to the caller. 
+But no real overloading
+Slides adapted from UPenn CIS530 python tutorial
+```
+
+**Description:**
+
+This slide provides a Python class definition for a `student` class.  The class is designed to represent student information, likely in the context of an Intro to Data Science course.  The `__init__` method is a constructor that initializes the `full_name` and `age` attributes of a `student` object.  The `get_age` method returns the student's age.  The example `b = student("Bob", 21)` demonstrates how to create an instance of the `student` class and assign it to the variable `b`.  The slide also explains that Python classes don't require a separate "new" keyword for object creation, and the `__init__` method acts as a constructor.  The slide is part of a larger set of lecture notes on object-oriented programming in Python, likely within the context of the Intro to Data Science course.  There are no figures on this slide.
+
+

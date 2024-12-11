@@ -1,0 +1,33 @@
+# Slide 45
+
+```
+hadoop components
+hadoop
+The goal of Hadoop is to use commonly available servers in a very large cluster, where each server has a set of inexpensive
+internal disk drives.
+Initially, Hadoop consisted of two main components: a Hadoop Distributed File System (HDFS) and a distributed computing
+engine that lets you implement and run programs as MapReduce jobs.
+Distributed file system (HDFS)
+• Data is divided into blocks, and copies of these blocks are stored on other servers in the Hadoop cluster. That is, an
+individual file is actually stored as smaller blocks that are replicated across multiple servers in the entire cluster.
+• Single namespace for entire cluster; Replicates data 3x for fault-tolerance
+MapReduce framework
+• For higher performance, MapReduce assigns workloads to those servers where the data is to be processed and stored.
+This is known as data locality.
+• Manages work distribution & fault-tolerance; Colocated with file system
+```
+
+**Description:**
+
+This slide describes the components of the Hadoop framework.  It's a bulleted list explaining the Hadoop Distributed File System (HDFS) and the MapReduce framework.
+
+* **Overall Goal:** The slide begins by stating that Hadoop uses a large cluster of inexpensive servers with local disk drives.
+* **HDFS (Hadoop Distributed File System):**  HDFS is described as a distributed file system.  Key aspects of HDFS are:
+    * **Data Division:** Data is divided into blocks, and copies of these blocks are stored on multiple servers within the Hadoop cluster.  This is a key aspect of fault tolerance.
+    * **Single Namespace:**  HDFS provides a single namespace for the entire cluster, making it easier to manage files across the distributed system.
+    * **Replication:** Data is replicated three times (3x) for fault tolerance.  This means that if one server fails, the data is still available on other servers.
+* **MapReduce Framework:** The MapReduce framework is described as a distributed computing engine.  Key aspects of the MapReduce framework are:
+    * **Data Locality:** MapReduce assigns workloads to servers where the data is located, improving performance.  This is called "data locality."
+    * **Work Distribution and Fault Tolerance:** MapReduce manages the distribution of work and provides fault tolerance, reducing the need for manual intervention.  It's colocated with the file system.
+
+The slide is formatted as a bulleted list, making the information easy to read and understand.  The overall purpose is to provide a high-level overview of the Hadoop framework's components and their roles in large-scale data processing.  The image of the yellow elephant logo is a visual representation of the Hadoop project.

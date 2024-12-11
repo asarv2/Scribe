@@ -1,0 +1,18 @@
+# 9
+
+**STAT 511 Course Notes – set 23 (W12)**
+
+**Yuan Qu**
+
+Statistical significance in practical uses
+
+* Practical significance relates to whether a result from a statistical hypothesis test is useful in real life. Statistical significance is just one piece of the puzzle when it comes to assessing practical significance.
+
+* Statistical significance means the null hypothesis:  H<sub>0</sub>: μ = μ<sub>0</sub> is rejected. Statistical significance may not mean practical difference from μ<sub>0</sub>. If we increase the sample size n, any small departure from H<sub>0</sub> will be detected, which may not be practically important.
+
+
+---
+
+**Slide Description:**
+
+This slide (slide 9 of 9) summarizes the key takeaway from the lecture.  It discusses the difference between statistical significance and practical significance in the context of hypothesis testing.  The slide emphasizes that statistical significance (rejecting the null hypothesis) doesn't necessarily imply a practically meaningful difference.  Increasing the sample size can lead to detecting even small deviations from the null hypothesis, but these deviations might not be important in a real-world application.  The slide is presented in a concise, bulleted format, summarizing the key concepts of the lecture.  The slide number (9 of 9) and the course name (STAT 511 Course Notes) are clearly visible at the top, along with the author's name (Yuan Qu).  The title "Statistical significance in practical uses" clearly indicates the topic of the lecture.

@@ -1,0 +1,52 @@
+# Slide 3
+
+**Statistical Methods**
+
+Examples 5.2: Ten teaching assistants grade 4 questions of an exam. The professor wishes to select a different assistant to grade each question (only one assistant per question). In how many ways can the assistants be chosen for grading?
+
+( )( )( )( )
+
+Examples 5.1 revisit: In the student council example, suppose that 3 of the 7 representatives are to be selected to attend a statewide convention. The order of selection is not important; all that matters is which three get selected.
+
+
+NOTE: For any given combination, e.g., {a, b, c}, there are 3! = 6 ways to reorder them to produce permutations. Therefore,
+𝑃<sub>3,7</sub> = (3!) × (<sup>7</sup>⁄<sub>3</sub>)  or (<sup>7</sup>⁄<sub>3</sub>) = 𝑃<sub>3,7</sub>
+<sub>3!</sub>
+
+NOTE: When the order of selection doesn’t matter, the number of possible choices is a combination number.
+𝑃(𝐴) = <sup>𝑁(𝐴)</sup>⁄<sub>𝑁</sub>. How to count N(A) and N?
+
+Examples 5.3: The computers of six faculty members in a certain department are to be replaced. Two of the faculty members have selected laptop machines and the other four have chosen desktop machines. Suppose that only two of the setups can be done on a particular day, and the two computers to be set up are randomly selected from the six.
+
+Let the computers be numbered 1, 2, …, 6. Then one outcome consists of computers 1 and 2, another consists of computers 1 and 3, and so on. There are 15 equally likely outcomes.
+a) What is the probability that both selected setups are for laptop computers?
+b) What is the probability that both selected setups are desktop machines?
+c) What is the probability that at least one selected setup is for a desktop computer?
+d) What is the probability that at least one computer of each type is chosen for setup?
+Assume that the computers are numbered 1-6 as described and that computers 1 and 2 are the two laptops, 3-6 are the desktops. There are 15 possible outcomes:
+𝐶<sub>2,6</sub>= (<sup>6</sup>⁄<sub>2</sub>) = <sup>6!</sup>⁄<sub>2! 4!</sub> = 15
+
+(1,2)
+(1,3)
+(1,4)
+(1,5)
+(1,6)
+
+(2,3)
+(2,4)
+(2,5)
+(2,6)
+
+(3,4)
+(3,5)
+(3,6)
+
+(4,5)
+(4,6)
+
+(5,6)
+
+
+**Figure Description:**
+
+There are no figures on this slide. The content is entirely text-based, presenting examples and questions related to permutations, combinations, and probability calculations. The examples involve scenarios like selecting teaching assistants for grading, student council representatives, and computer setups. The text is formatted in a way that clearly distinguishes different points and scenarios, making it easy to follow the lecture's progression. The examples and scenarios are presented in a way that is relevant to the course's topic of statistical methods.  The list of possible outcomes (1,2), (1,3), etc. is presented in a tabular format, which is typical for listing possible combinations.

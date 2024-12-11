@@ -1,0 +1,40 @@
+# Slide 8
+
+**How to match repeated characters**
+
+A character by itself matches only one character in a string
+
+a
+This matches the character 'a' exactly once
+
+Can match one or more instances of a character (or set of characters)
+
+a?
+This matches the character 'a' zero or one time
+
+a*
+This matches the character 'a' zero or more times
+
+a+
+This matches the character 'a' one or more times
+
+a{n}
+This matches the character 'a' exactly n times
+
+Can combine these with multiple character matching
+
+\s+
+This matches on one or more whitespace characters
+
+Special characters in regular expressions:
+
+.^$*+?{}\[]|()
+
+Special characters must be escaped to be matched: e.g., \$
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, explains how to use regular expressions (RegEx) to match repeated characters or sequences of characters.  It details the use of quantifiers (e.g., `?`, `*`, `+`, `{n}`) to specify how many times a character or group of characters should appear in a match.  The examples show how to match a single 'a' (`a`), zero or one 'a' (`a?`), zero or more 'a's (`a*`), one or more 'a's (`a+`), and exactly 'n' 'a's (`a{n}`).  The slide also demonstrates how to match one or more whitespace characters using `\s+`.  Crucially, it highlights the need to escape special characters in RegEx patterns (e.g., `\$`) when you want to match them literally.  The examples are presented in a clear, step-by-step manner, making it easy to understand the different ways to specify repeated matches.  The slide builds upon the previous slides, which introduced the basic concepts of RegEx and how to specify patterns.

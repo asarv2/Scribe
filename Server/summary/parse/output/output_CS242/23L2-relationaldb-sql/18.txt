@@ -1,0 +1,16 @@
+# Slide 18
+
+# Basic SQL
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a single heading: "Basic SQL".  The text is centered on the slide, in a dark gray font against a light gray background.  This slide likely introduces the topic of basic SQL commands and syntax, which is relevant to data manipulation and querying in relational databases.  There are no figures on this slide.
+
+
+**Description of the Figure:**
+
+There is no figure on this slide.  The slide is entirely text-based.
+
+

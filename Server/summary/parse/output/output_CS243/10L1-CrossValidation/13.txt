@@ -1,0 +1,18 @@
+# 13
+
+**Training & Testing Errors**
+
+*   **Prediction Error**
+
+    *   A line graph is shown, with the x-axis labeled "Model Complexity" and ranging from "Low" to "High." The y-axis is labeled "Prediction Error."
+    *   Two curves are plotted on the graph:
+        *   **Light cyan curve (Training Sample):** This curve starts at a high prediction error for low model complexity, then decreases to a minimum, and subsequently increases as model complexity increases. The curve is a U-shape.
+        *   **Red curve (Test Sample):** This curve starts at a high prediction error for low model complexity, then decreases to a minimum, and subsequently increases as model complexity increases. The curve is also a U-shape.  It is positioned slightly above the light cyan curve, indicating a higher error rate for the test sample at most points.
+    *   Arrows are used to point to the minimum points of the curves. An arrow labeled "Training Sample" points from the light cyan curve to its minimum point. A similar arrow labeled "Test Sample" points from the red curve to its minimum point.
+    *   Labels "High Bias, Low Variance" and "Low Bias, High Variance" are positioned to the left and right of the graph, respectively, to indicate the different scenarios. These labels are associated with the curves, indicating the characteristics of the model in each scenario.
+    *   The labels "High Bias, Low Variance" and "Low Bias, High Variance" are positioned to the left and right of the graph, respectively, to indicate the different scenarios. These labels are associated with the curves, indicating the characteristics of the model in each scenario.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, visually depicts the trade-off between bias and variance in machine learning models. The graph shows how the prediction error changes with increasing model complexity for both the training and testing data. The light cyan curve represents the error on the training data, while the red curve represents the error on the test data. The U-shapes of the curves illustrate the concept of overfitting and underfitting. The arrows and labels help to clarify the relationship between the curves and the concepts of bias and variance. The slide is likely to be followed by a discussion of how to choose the optimal model complexity to achieve good generalization performance. The graph is a crucial visual aid in understanding the relationship between model complexity, training error, and test error, which are key concepts in machine learning. The different colors of the curves help distinguish between the training and test data. The arrows pointing to the minimum points of the curves highlight the optimal model complexity for each dataset. The labels "High Bias, Low Variance" and "Low Bias, High Variance" are used to categorize the different scenarios.

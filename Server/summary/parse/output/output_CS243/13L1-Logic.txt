@@ -1,0 +1,668 @@
+# 1
+
+CS 24300: AI Basics
+Tony Bergstrom
+
+Slides adapted from Yexiang Xue and Tony Bergstrom
+
+
+---
+
+**Description of the slide:**
+
+This is the title slide for a lecture on AI Basics, part of the CS 24300 course.  The title, "CS 24300: AI Basics," is displayed prominently in a large, light gray font.  Below that, the name of the instructor, "Tony Bergstrom," is written in a smaller, light gray font.  At the very bottom of the slide, in a smaller, light gray font, is a credit line, "Slides adapted from Yexiang Xue and Tony Bergstrom." The background color is a dark gray.  The overall design is simple and professional, focusing on conveying the course title and instructor's name.
+
+
+# 2
+
+**Logic and the Satisfiability Problem**
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, simply displays the title "Logic and the Satisfiability Problem" in a dark gray font against a light gray background.  The title is centered on the slide.  There are no figures or other elements on the slide.  The title indicates the topic of the upcoming lecture content.
+
+
+# 3
+
+**Intelligent Systems Integrate Learning and Reasoning**
+
+*Perception*
+```
+Data
+```
+*Reaction*
+```
+Knowledge
+```
+*Action*
+```
+Learning
+```
+```
+Reasoning
+```
+
+An intelligent agent is a system that perceives its environment and takes actions that maximize its chances of success.
+
+-- Russell & Norvig, 2003
+
+* Pictures from Disney.
+
+
+---
+
+**Description of the slide:**
+
+This slide visually depicts the relationship between data, knowledge, learning, reasoning, and action in intelligent systems.  It uses a series of teal-colored horizontal rectangles and arrows to illustrate a flow.  The rectangles are labeled with the terms "Data," "Knowledge," "Learning," "Reasoning," and "Action."  The arrows connect these elements, indicating the sequence of steps.  The top of the slide has the title "Intelligent Systems Integrate Learning and Reasoning."  A small image of a white robot with blue accents is positioned in the lower left quadrant of the slide.  The text below the diagram explains the concept of an intelligent agent.  The attribution "Russell & Norvig, 2003" and the credit line "* Pictures from Disney" are included at the bottom of the slide.
+
+The robot image is a visual representation of an intelligent agent, illustrating the concept of a system that interacts with its environment.  The arrows and rectangles visually represent the flow of information and processes involved in intelligent systems. The text below the diagram provides a definition of an intelligent agent, further clarifying the concept presented in the slide. The attribution and credit line provide context and source information.
+
+
+# 4
+
+**The Quest for Machine Reasoning**
+
+Logic reasoning: a cornerstone of Artificial Intelligence
+
+Objective: Develop foundations and technology to enable effective, practical, large-scale automated reasoning
+
+H. Simon (1956): ... within ten years, computers would beat the world chess champion, compose "aesthetically satisfying" original music, and prove new mathematical theorems...
+
+Achieved in 40 Years (not 10)
+
+* 1997 the music composed by David Cope's programs cannot be distinguished from that composed by Mozart, Beethoven, and Bach.
+* 1976 (simplified and accepted 1997), a computer was used in the proof of the long-unsolved "four color problem.
+* 1996, deep blue beat Garry Kasparov
+
+Herbert Simon Portrait: [https://en.m.wikipedia.org/wiki/File:Herbert_simon_red_complete.jpg](https://en.m.wikipedia.org/wiki/File:Herbert_simon_red_complete.jpg)
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, presents a historical overview of the quest for machine reasoning.  The title, "The Quest for Machine Reasoning," is displayed in a large, bold font at the top of the slide.  Below the title, the text describes logic reasoning as a cornerstone of Artificial Intelligence and outlines the objective of developing foundations and technology for effective, practical, and large-scale automated reasoning.  The slide then lists accomplishments in machine reasoning, achieved over a longer period than initially predicted, including specific milestones like the 1997 music composition by David Cope's programs and the 1976/1997 proof of the four-color theorem.  The slide also includes a 1996 achievement of Deep Blue beating Garry Kasparov.  At the bottom of the slide, there is a URL to a portrait of Herbert Simon.
+
+The figure at the bottom of the slide is a portrait of Herbert Simon.  It is positioned in the lower-left corner of the slide.  The reason for its inclusion is to likely provide context and credit to a key figure in the field of AI and automated reasoning.  The portrait is a visual aid to connect the historical context of the achievements discussed on the slide with a prominent figure in the field.  The URL provides a link to the source of the image, which is likely a Wikipedia page or similar online resource.
+
+
+# 5
+
+**The Quest for Machine Reasoning**
+
+Machine Reasoning (1960-90s)
+Computational complexity of reasoning appeared to severely limit real-world applications
+
+Current reasoning technology
+Revisiting the challenge: Significant progress with new ideas / tools for dealing with complexity (scale-up), uncertainty, and multi-agent reasoning
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, discusses the evolution of machine reasoning.  The title, "The Quest for Machine Reasoning," is displayed prominently at the top.  The slide is structured to contrast the challenges of machine reasoning in the 1960s-1990s with the current state of the field.
+
+The first section, "Machine Reasoning (1960-90s)," highlights the computational complexity of reasoning during that period, which was seen as a significant limitation for real-world applications.
+
+The second section, "Current reasoning technology," indicates a shift in perspective.  It suggests that current approaches are revisiting the challenges of machine reasoning with new ideas and tools.  The phrase "Significant progress with new ideas / tools for dealing with complexity (scale-up), uncertainty, and multi-agent reasoning" implies that researchers are addressing the limitations of the past.
+
+The slide's layout is straightforward, using clear headings and concise text to present the contrast between the historical context and the current state of machine reasoning.  There are no figures on this slide.
+
+
+# 6
+
+**General Automated Reasoning**
+
+Research Objective: Better reasoning and modeling technology
+
+Problem Instance
+```
+Domain Specific
+```
+e.g. logistics, chess,
+planning, verification, ...
+
+```
+Model
+Generator
+(Encoder)
+```
+```
+Generic
+```
+Applicable to all domains within
+range of modeling language
+
+```
+General
+Inference
+Engine
+```
+```
+Solution
+```
+
+Impact: Faster solutions in several domains
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, outlines a process for general automated reasoning.  It uses a flowchart-like diagram to illustrate the steps involved.
+
+The top of the slide displays the title "General Automated Reasoning."  Below that, the research objective is stated: "Better reasoning and modeling technology."
+
+The slide then presents a visual representation of the process.  There are several boxes, each with a label.  The boxes are arranged in a horizontal sequence, with arrows connecting them.  The boxes are:
+
+* **Problem Instance:**  This box is at the left of the diagram and contains a small image collage.  The images are of different types of problems, such as a circuit board, a chessboard, a map, and a satellite image.  These images represent examples of domain-specific problems.  The purpose of these images is to visually illustrate the input to the system.
+
+* **Domain Specific:** This box is below the "Problem Instance" box and is labeled as "Domain Specific."  The text below this box provides examples of specific problem domains, such as logistics, chess, planning, and verification.  This indicates that the system can handle various types of problems.
+
+* **Model Generator (Encoder):** This box is positioned in the middle of the diagram and is labeled "Model Generator (Encoder)."  The text below this box indicates that this component is "Generic."  This suggests that the model generator is not specific to a particular domain but can be applied to a range of problems.
+
+* **Generic:** This box is below the "Model Generator (Encoder)" box and is labeled "Generic."  The text below this box explains that the "Model Generator (Encoder)" is applicable to all domains within the range of modeling languages.  This emphasizes the generality of the model generator.
+
+* **General Inference Engine:** This box is positioned to the right of the "Model Generator (Encoder)" box and is labeled "General Inference Engine."  This component is responsible for processing the model generated by the previous step.
+
+* **Solution:** This box is at the far right of the diagram and is labeled "Solution."  This box represents the output of the entire process.
+
+* **Impact:** The final line states the impact of this process as "Faster solutions in several domains."  This highlights the potential benefit of the system.
+
+The overall design of the slide uses a light gray background and teal-colored arrows and boxes to visually separate the different components of the process.  The images within the "Problem Instance" box are small, but they are clearly visible and relevant to the context of the lecture.  The purpose of the images is to illustrate the variety of problems that the system can handle.
+
+
+# 7
+
+**Reasoning Can Be Defined Using Logic**
+
+Conclusion: a statement expressing the particular question being asked
+Assumptions: a collection of statements expressing all the relevant information available to the program
+Solving automated problems: proving the conclusion from the given assumptions by the systematic application of rules of deduction
+E.g., prove mathematical theorems, decide winning move when playing games.
+Logic is the language of automated reasoning.
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, defines reasoning using logic.  The title, "Reasoning Can Be Defined Using Logic," is displayed in a large, bold font at the top of the slide.  The content below the title describes the components of logical reasoning:
+
+* **Conclusion:**  A statement that represents the question or goal.
+* **Assumptions:**  Statements that provide the known information or premises.
+* **Solving automated problems:**  The process of using rules of deduction to derive the conclusion from the assumptions.
+* **Examples:**  The slide provides examples of how this process works, such as proving mathematical theorems or determining the best move in a game.
+* **Logic as a language:**  The slide emphasizes that logic is the language used for automated reasoning.
+
+The slide's layout is simple, using a light gray background and a clear, concise presentation of the concepts.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed general automated reasoning and the components of intelligent systems.  The slide is likely a continuation of the discussion of how intelligent systems can use logic to solve problems.
+
+
+# 8
+
+**Propositional logic (syntax)**
+
+Propositional logic is the simplest logic – illustrates basic ideas
+
+The proposition symbols P1, P2 etc are sentences
+
+If S is a sentence, ¬S is a sentence (negation)
+
+If S1 and S2 are sentences, S1 ∧ S2 is a sentence (conjunction)
+
+If S1 and S2 are sentences, S1 ∨ S2 is a sentence (disjunction)
+
+If S1 and S2 are sentences, S1 ⇒ S2 is a sentence (implication)
+
+If S1 and S2 are sentences, S1 ⇔ S2 is a sentence (biconditional)
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, introduces the syntax of propositional logic.  The title, "Propositional logic (syntax)," is displayed in a large, bold font at the top of the slide.  The content below the title defines the fundamental components and rules of propositional logic syntax.  The slide explains how propositional symbols (like P1, P2) form the basis of sentences, and how logical connectives (negation, conjunction, disjunction, implication, and biconditional) combine these symbols to create more complex sentences.  The slide is structured as a list of definitions, making it easy to understand the basic building blocks of propositional logic.  There are no figures on this slide.
+
+
+
+
+# 9
+
+**Propositional logic (Semantics)**
+
+Each model specifies true/false for each proposition symbol
+
+E.g.
+S1	S2	S3
+false	true	false
+
+With these symbols, 8 possible models, can be enumerated automatically. Rules for evaluating:
+
+¬S	is true iff	S is false
+S1 ∧ S2	is true iff	S1 is true and S2 is true
+S1 ∨ S2	is true iff	S1 is true or S2 is true
+S1 ⇒ S2	is true iff	S1 is false or S2 is true
+i.e.,	is false iff	S1 is true and S2 is false
+S1 ⇔ S2	is true iff	S1⇒S2 is true and S2⇒S1 is true
+
+Simple recursive process evaluates an arbitrary sentence, e.g.,
+¬S1 ∧ (S2 ∨ S3) = true ∧ (false ∨ true ) = true ∧ true = true
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of propositional logic, focusing on its semantics.  The title, "Propositional logic (Semantics)," indicates the topic.
+
+The slide presents a table-like structure.  The first line defines the concept of a model in propositional logic: each model assigns a truth value (true or false) to each propositional symbol (like S1, S2, S3).  An example is given in the next line, where S1 is false, S2 is true, and S3 is false.
+
+The following lines define how the logical connectives (¬, ∧, ∨, ⇒, ⇔) are evaluated based on the truth values of the propositional symbols they connect.  These rules are crucial for determining the truth value of complex logical expressions.
+
+The final line demonstrates a simple example of how a recursive process can evaluate a more complex propositional sentence.  The example shows how the truth values of simpler parts are combined to determine the truth value of the entire expression.
+
+The overall design is straightforward, using a light gray background and clear text to present the definitions and rules of propositional logic semantics.  There are no figures on this slide.  The content directly follows the previous slide, which introduced the syntax of propositional logic.  The slide is likely part of a larger lecture explaining how to evaluate and manipulate logical statements.
+
+
+# 10
+
+**Truth Table**
+
+| P | Q | ¬P | P∧Q | P∨Q | P→Q | P↔Q |
+|---|---|----|------|------|------|------|
+| false | false | true | false | false | true | true |
+| false | true | true | false | true | true | false |
+| true | false | false | false | true | false | false |
+| true | true | false | true | true | true | true |
+
+
+---
+
+**Description of the slide:**
+
+This slide presents a truth table for propositional logic.  The table is organized in columns, each representing a propositional variable (P, Q) and logical expressions involving those variables (¬P, P∧Q, P∨Q, P→Q, P↔Q).  Each row of the table shows the truth values of P and Q, and the corresponding truth values of the logical expressions.  The truth values are represented as "true" or "false."  The table is a standard way to define the semantics of logical connectives.  The table is centered on the slide and is a key component of the lecture on propositional logic.  The colors of the "true" and "false" values in the table are red and green, respectively.  The table is a standard truth table, used to show the truth values of different logical expressions based on the truth values of the variables.  The table is a key component of the lecture on propositional logic.
+
+
+
+
+# 11
+
+**Let's Try it:**
+
+X = false, Y = false, Z = true
+X → (Y ∧ Z)
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, presents a simple propositional logic problem for evaluation.  The title, "Let's Try it:", indicates that the slide is a practical example.  The content below the title provides the following information:
+
+* **X = false, Y = false, Z = true:**  These lines define the truth values of the propositional variables X, Y, and Z.  This is crucial for evaluating the expression.
+
+* **X → (Y ∧ Z):** This line presents a logical expression involving the variables X, Y, and Z, using the implication operator (→) and conjunction operator (∧).  This is the expression that needs to be evaluated given the truth values of X, Y, and Z.
+
+The slide's layout is simple, using a light gray background and a clear, concise presentation of the problem.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic syntax and semantics.  The slide is likely part of a larger lecture explaining how to apply the concepts of propositional logic to evaluate logical expressions.
+
+
+
+
+# 12
+
+**Logical Equivalence**
+
+(α ∧ β) ≡ (β ∧ α)  commutativity of ∧
+(α ∨ β) ≡ (β ∨ α)  commutativity of ∨
+((α ∧ β) ∧ γ) ≡ (α ∧ (β ∧ γ))  associativity of ∧
+((α ∨ β) ∨ γ) ≡ (α ∨ (β ∨ γ))  associativity of ∨
+¬(¬α) ≡ α  double-negation elimination
+(α → β) ≡ (¬β → ¬α)  contraposition
+(α ↔ β) ≡ ((α → β) ∧ (β → α))  biconditional elimination
+¬(α ∧ β) ≡ (¬α ∨ ¬β)  De Morgan
+¬(α ∨ β) ≡ (¬α ∧ ¬β)  De Morgan
+(α ∧ (β ∨ γ)) ≡ ((α ∧ β) ∨ (α ∧ γ))  distributivity of ∧ over ∨
+(α ∨ (β ∧ γ)) ≡ ((α ∨ β) ∧ (α ∨ γ))  distributivity of ∨ over ∧
+
+
+---
+
+**Description of the slide:**
+
+This slide presents a list of logical equivalences in propositional logic.  Each line shows an equivalence between two logical expressions, along with a brief description of the logical rule used to derive the equivalence.  The expressions use standard logical operators: ∧ (conjunction), ∨ (disjunction), ¬ (negation), → (implication), ↔ (biconditional).  The equivalences are fundamental to manipulating and simplifying logical statements.  The slide is formatted as a list, with each equivalence clearly labeled and its corresponding rule.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic syntax and semantics.  The slide is likely part of a larger lecture explaining how to manipulate and simplify logical expressions using logical equivalences.
+
+
+# 13
+
+**Validity and satisfiability**
+
+A sentence is valid if it is true in all models (aka tautologies)
+e.g., True, A ∨¬A, A ⇒ A, (A ∧ (A ⇒ B)) ⇒ B
+A sentence is satisfiable if it is true in some model, e.g., A
+A sentence is unsatisfiable if it is true in no models, e.g., A∧¬A
+
+
+---
+
+**Description of the slide:**
+
+This slide defines validity, satisfiability, and unsatisfiability in the context of propositional logic.  The title, "Validity and satisfiability," clearly indicates the topic.  The content is presented in a straightforward, bulleted list format.  Each bullet point defines a concept and provides an example.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic and its components.  The slide is likely part of a larger lecture explaining how to determine the truth values of logical statements and classify them based on their truth values across all possible models.  The examples (e.g., True, A ∨¬A) illustrate common tautologies and demonstrate the concepts being explained.
+
+
+# 14
+
+**Examples**
+
+```
+p ∧ (q ∨ ¬p) ∧ (¬q ∨ ¬r)  satisfiable
+p ∧ (q ∨ ¬p) ∧ (¬q ∨ ¬p)  unsatisfiable
+```
+
+---
+
+**Description of the slide:**
+
+This slide provides examples of propositional logic statements and their satisfiability.  The title "Examples" indicates that the slide presents illustrative cases.  Two logical expressions are shown, each followed by a classification ("satisfiable" or "unsatisfiable").  The expressions use propositional variables (p, q, r) and logical connectives (∧, ∨, ¬).  The expressions are likely examples of statements that can be evaluated for truth values based on different assignments of truth values to the variables.  The slide's purpose is to demonstrate how to determine if a propositional logic statement is satisfiable or unsatisfiable.  The expressions are presented in a simple, clear format, making it easy to understand the examples.
+
+
+
+
+# 15
+
+**The Satisfiability Problem**
+
+Let 𝑉 be a finite set of Boolean valued variables and let 𝜙 denote a propositional formula on 𝑉
+an assignment 𝑣 on 𝑉 is a satisfying assignment for 𝜙 if we have 𝑣(𝜙) = true.
+The propositional formula 𝜙 is satisfiable if there exists a satisfying assignment for 𝜙.
+Deciding whether or not a propositional formula is satisfiable is called the Boolean satisfiability problem, denoted by SAT.
+
+
+---
+
+**Description of the slide:**
+
+This slide defines the Satisfiability Problem (SAT) in propositional logic.  The title, "The Satisfiability Problem," is presented in a large, bold font.  The content below the title defines the key concepts:
+
+* **Variables:**  A finite set of Boolean variables (𝑉) is defined.
+* **Formula:** A propositional formula (𝜙) is defined on these variables.
+* **Satisfying Assignment:** An assignment (𝑣) of truth values (true/false) to the variables in 𝑉 is a satisfying assignment for 𝜙 if the formula evaluates to true when the assignment is applied.
+* **Satisfiable Formula:** A formula (𝜙) is satisfiable if there exists at least one satisfying assignment.
+* **Boolean Satisfiability Problem (SAT):** The problem of determining whether a given propositional formula is satisfiable.
+
+The slide is straightforward and uses clear definitions to introduce the core concept of SAT.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic and its components.  The slide is likely part of a larger lecture explaining how to determine if a logical statement can be made true by assigning values to its variables.
+
+
+# 16
+
+**Conjunctive Normal Form (CNF)**
+
+A literal is either a propositional variable or the negation of a propositional variable.
+A clause is a disjunction of literals.
+A formula is in conjunctive normal form (CNF), if it is a conjunction of clauses; for instance:
+
+(p ∨ ¬q ∨ r) ∧ (q ∨ r) ∧ (¬p ∨ ¬q) ∧ r
+
+is a CNF on V = {p, q, r}.
+
+
+---
+
+**Description of the slide:**
+
+This slide defines conjunctive normal form (CNF) in propositional logic.  The title, "Conjunctive Normal Form (CNF)," is displayed prominently.  The content defines literals, clauses, and CNF formulas.  A literal is either a propositional variable (like p, q, r) or its negation (like ¬p, ¬q, ¬r).  A clause is a disjunction (∨) of literals.  A formula is in CNF if it's a conjunction (∧) of clauses.  An example is given: (p ∨ ¬q ∨ r) ∧ (q ∨ r) ∧ (¬p ∨ ¬q) ∧ r.  This example shows a formula in CNF, where the formula is a conjunction of four clauses.  The variables are listed as V = {p, q, r}.  The slide is formatted as a definition and example, making it easy to understand the concept.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic and the satisfiability problem.  The slide is likely part of a larger lecture explaining how to represent logical statements in a specific format for easier processing.
+
+
+# 17
+
+**Convert Any Functions to CNF**
+
+* CNF(p) = p
+* CNF(-p) = ¬p
+* CNF(φ → ψ) = CNF(¬φ) ⊗ CNF(ψ)
+* CNF(φ ∧ ψ) = CNF(φ) ∧ CNF(ψ)
+* CNF(φ ∨ ψ) = CNF(φ) ⊗ CNF(ψ)
+* CNF(φ ↔ ψ) = CNF(φ → ψ) ∧ CNF(ψ → φ)
+* CNF(¬¬φ) = CNF(φ)
+* CNF(¬(φ → ψ)) = CNF(φ) ∧ CNF(¬ψ)
+* CNF(¬(φ ∧ ψ)) = CNF(¬φ) ⊗ CNF(¬ψ)
+* CNF(¬(φ ∨ ψ)) = CNF(¬φ) ∧ CNF(¬ψ)
+* CNF(φ ↔ ψ) = CNF(φ ∧ ¬ψ) ⊗ CNF(ψ ∧ ¬φ)
+
+where (C<sub>1</sub> ∧ ... ∧ C<sub>n</sub>) ⊗ (D<sub>1</sub> ∧ ... ∧ D<sub>m</sub>) is defined as
+(C<sub>1</sub> ∨ D<sub>1</sub>) ∧ ... ∧ (C<sub>n</sub> ∨ D<sub>m</sub>) where C<sub>1</sub>, ..., C<sub>n</sub>, D<sub>1</sub>, ..., D<sub>m</sub> are clauses.
+
+
+---
+
+**Description of the slide:**
+
+This slide presents a set of rules for converting logical expressions into Conjunctive Normal Form (CNF).  The title, "Convert Any Functions to CNF," clearly indicates the purpose of the slide.  The rules are numbered and use symbols like φ, ψ, p, and ¬ to represent logical expressions and variables.  The rules define how to transform various logical operators (implication, conjunction, disjunction, biconditional, negation) into the CNF format.  The notation "⊗" is used in some rules, which likely represents a specific operation for converting the expressions into CNF.  The final line defines how to combine multiple CNF expressions using the ⊗ operator.  The slide is formatted as a list of rules, making it easy to follow the conversion process.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic, the satisfiability problem, and CNF.  The slide is likely part of a larger lecture explaining how to manipulate logical expressions into a standard form for easier processing by algorithms.
+
+
+
+
+# 17
+
+**Conversion to CNF**
+
+B ⇔ (P ∨ Q)
+
+Eliminate ⇔, replacing α ⇔ β with (α ⇒ β)∧(β ⇒ α)
+
+• (B ⇒ (P ∨ Q)) ∧ ((P ∨ Q) ⇒ B)
+
+Eliminate ⇒, replacing α ⇒ β with ¬α∨ β.
+
+• (¬B ∨ P ∨ Q) ∧ (¬(P ∨ Q) ∨ B)
+
+Move ¬ inwards using de Morgan's rules and double-negation:
+
+• (¬B ∨ P ∨ Q) ∧ ((¬P ∧ ¬ Q) ∨ B)
+
+Apply distributivity law (∧ over ∨) and flatten:
+
+• (¬B ∨ P ∨ Q) ∧ (¬P ∨ B) ∧ (¬ Q ∨ B)
+
+
+---
+
+**Description of the slide:**
+
+This slide details the steps for converting a logical expression into Conjunctive Normal Form (CNF).  The title, "Conversion to CNF," clearly indicates the topic.  The example expression is "B ⇔ (P ∨ Q)," which is a biconditional statement involving variables B, P, and Q.  The steps are presented in a structured format, with each step clearly labeled.  The steps demonstrate the application of logical equivalences to transform the initial expression into a series of clauses connected by conjunctions (∧).  The slide shows the intermediate steps involved in the conversion process, which is crucial for understanding the transformation from a complex logical expression to a CNF form.  The use of symbols like ¬, ∨, and ∧ clearly indicates the logical operations being performed.  The slide is formatted to be easily followed, with each step presented in a clear and concise manner.
+
+
+# 19
+
+**The Satisfiability Problem**
+
+Let 𝑉 be a finite set of Boolean valued variables and let 𝜙 denote a CNF formula on 𝑉
+an assignment 𝑣 on 𝑉 is a satisfying assignment for 𝜙 if we have 𝑣(𝜙) = true.
+The propositional formula 𝜙 is satisfiable if there exists a satisfying assignment for 𝜙.
+Deciding whether or not a propositional formula is satisfiable is called the Boolean satisfiability problem, denoted by SAT.
+
+
+---
+
+**Description of the slide:**
+
+This slide defines the Satisfiability Problem (SAT) in the context of a lecture on AI Basics.  The title, "The Satisfiability Problem," is presented in a large, bold font.  The content below the title defines the key concepts:
+
+* **Variables:** A finite set of Boolean variables (𝑉) is defined.
+* **Formula:** A propositional formula (𝜙) in Conjunctive Normal Form (CNF) is defined on these variables.  This is important because the problem is specifically defined for CNF formulas.
+* **Satisfying Assignment:** An assignment (𝑣) of truth values (true/false) to the variables in 𝑉 is a satisfying assignment for 𝜙 if the formula evaluates to true when the assignment is applied.
+* **Satisfiable Formula:** A formula (𝜙) is satisfiable if there exists at least one satisfying assignment.
+* **Boolean Satisfiability Problem (SAT):** The problem of determining whether a given propositional formula (in CNF) is satisfiable.
+
+The slide is straightforward and uses clear definitions to introduce the core concept of SAT, specifically in the context of CNF formulas.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic, CNF, and the general concept of satisfiability.  The slide is likely part of a larger lecture explaining how to determine if a logical statement can be made true by assigning values to its variables, specifically in the context of CNF formulas.
+
+
+# 20
+
+**Applications of SAT (1)**
+
+Model Checking (hardware/software verification)
+* Bounded model checking (BMC)
+* Enhancement techniques: Abstraction and refinement
+* Major groups at Intel, IBM, Microsoft, and universities such as CMU, Cornell, and Princeton
+* SAT has become a dominant back-end technology
+
+Key questions:
+* Safety property: can system ever reach state S?
+* Liveness property: will system always reach T after it gets to S?
+
+Main idea:
+* Encode "reachability" in a finite transition graph
+* CNF encoding: in simple terms, "similar" to planning...
+
+
+---
+
+**Description of the slide:**
+
+This slide discusses applications of the Satisfiability Problem (SAT) in model checking.  The title, "Applications of SAT (1)," indicates this is likely the first of multiple slides on this topic.
+
+The slide presents a bulleted list of points.  The first section, "Model Checking (hardware/software verification)," describes how SAT is used in this area.  The bullet points under this section detail specific applications like bounded model checking (BMC) and enhancement techniques using abstraction and refinement.  The mention of major tech companies and universities (Intel, IBM, Microsoft, CMU, Cornell, Princeton) suggests the practical importance and widespread adoption of SAT in industry and academia.  The final bullet under this section states that SAT has become a dominant back-end technology, highlighting its crucial role in the process.
+
+The "Key questions" section lists two important questions related to system properties: safety and liveness.  These questions are likely used to guide the model checking process.
+
+The "Main idea" section explains the core concept behind the application.  The first bullet describes how "reachability" in a finite transition graph is encoded using SAT.  The second bullet explains that CNF encoding is similar to planning, suggesting a connection between SAT and automated planning techniques.
+
+In the lower right quadrant of the slide, there is a small image of a circuit board.  The image is a close-up view of a printed circuit board (PCB) with numerous components, including integrated circuits, resistors, capacitors, and connectors.  The image is likely included to visually represent the hardware/software verification aspect of the discussion.  The image is oriented horizontally and is positioned in the lower right quadrant of the slide.  Its inclusion is likely to provide a visual aid to the discussion of model checking in hardware and software verification.
+
+
+# 21
+
+**Applications of SAT (2)**
+
+Classical Planning
+* Parallel step optimal plans
+* E.g., SATPLAN-06 fastest in this category at IPC-06 planning competition
+Main idea:
+* Create planning graph, unfolded up to T steps
+* Encode legal transitions as CNF
+* Variables: action vars, fact vars for each time step t
+* Clauses encode action preconditions, effects, mutual exclusion, etc.
+e.g., (actionA_(t+1) ⇒ preA1_t AND preA2_t AND preA3_t),
+(NOT actionA_t OR NOT actionB_t), …
+
+
+---
+
+**Description of the slide:**
+
+This slide continues the discussion of SAT applications, focusing on classical planning.  The title, "Applications of SAT (2)," indicates this is a continuation of the previous slide's topic.
+
+The slide presents a bulleted list, continuing the discussion from the previous slide.  The content focuses on how SAT is used in classical planning.  The first bullet point, "Parallel step optimal plans," describes the type of planning problems addressed.  The second bullet point provides a specific example, mentioning the SATPLAN-06 program's success in a planning competition.  The "Main idea" section outlines the key steps in using SAT for planning:
+
+* **Create planning graph, unfolded up to T steps:** This describes the process of constructing a graph representing the possible states and actions in a planning problem.  The "unfolded up to T steps" part indicates that the graph considers a limited number of future steps.
+* **Encode legal transitions as CNF:** This step is crucial; it translates the rules and constraints of the planning problem into a CNF formula, which can then be solved using SAT solvers.
+* **Variables:** The variables used in the CNF formula are described as action variables and fact variables for each time step.
+* **Clauses:** The clauses in the CNF formula encode various aspects of the planning problem, including action preconditions, effects, and mutual exclusion constraints.  The example (actionA_(t+1) ⇒ preA1_t AND preA2_t AND preA3_t), (NOT actionA_t OR NOT actionB_t), ... illustrates how these constraints are represented.
+
+The slide includes two images.  The image on the right side of the slide shows a robotic rover-like vehicle on a sandy surface, likely a representation of a planning problem involving a robot in a specific environment.  The image on the left side of the slide shows a satellite in space.  The images are likely included to provide visual context for the discussion of planning problems, which could involve robots or other agents in various environments.  The images are oriented horizontally and are positioned in the right and left quadrants of the slide, respectively.  Their inclusion is likely to provide visual aids to the discussion of planning problems, which could involve robots or other agents in various environments.
+
+
+
+
+# 22
+
+**Applications of SAT (3)**
+
+**Combinatorial Design**
+
+Complex mathematical structures with desirable properties
+
+*   Latin squares
+*   Quasi groups
+*   Ramsey numbers
+*   Steiner systems
+
+Highly useful for
+
+*   design of experiments
+*   coding theory, cryptography
+*   drug design and testing
+*   crop rotation schedules
+
+And more...
+
+
+---
+
+**Image Descriptions:**
+
+*   **Top Left:** A gray-scale image of a network of interconnected circles with numbers.  The numbers are likely part of a graph or network structure.  The image is positioned in the top left quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a graceful graph.
+
+*   **Top Middle:** A gray-scale image of a grid of small squares, each containing a representation of a die.  The dice are colored in various shades of color.  The image is positioned in the top middle quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a magic square.
+
+*   **Bottom Left:** A gray-scale image of a baseball bat and a baseball.  The image is positioned in the bottom left quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a round-robin tournament.
+
+*   **Bottom Right:** A gray-scale image of a grid of numbers.  The numbers are arranged in a square pattern.  The image is positioned in the bottom right quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a magic square.
+
+
+**Overall Description:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of SAT applications by focusing on combinatorial design problems.  It lists various types of combinatorial designs (Latin squares, quasi groups, Ramsey numbers, Steiner systems) and their practical applications.  The images are likely included to provide visual representations of the types of problems that fall under combinatorial design.  The slide is structured to show the breadth of applications for SAT solvers in different areas of mathematics and computer science.
+
+
+
+
+# 23
+
+**Applications of SAT (4)**
+
+Has been applied to solve sub-problems in many domains!
+
+* Test pattern generation
+* Scheduling
+* Optimal Control
+* Protocol Design (e.g., for networks)
+* Multi-agent systems
+* E-Commerce (E-auctions and electronic trading agents), etc.
+
+
+---
+
+**Image Descriptions:**
+
+*There are no images on this slide.*
+
+
+**Overall Description:**
+
+This slide lists additional applications of the Satisfiability Problem (SAT) in various domains.  The bullet points highlight diverse areas where SAT solvers can be used to address specific sub-problems.  The slide is likely part of a larger lecture explaining the practical applications of SAT algorithms beyond the theoretical concepts.  The content is concise and focuses on the practical utility of SAT solvers in different fields.  The slide is formatted as a bulleted list, making it easy to read and understand the various applications.
+
+
+# 24
+
+**Satisfiability → 3-Satisfiability**
+
+To reduce the unrestricted SAT problem to 3-SAT, transform each clause l<sub>1</sub> ∨ ... ∨ l<sub>n</sub> to a conjunction of n − 2 clauses
+
+* (l<sub>1</sub> ∨ l<sub>2</sub> ∨ x<sub>2</sub>) ∧
+* (¬x<sub>2</sub> ∨ l<sub>3</sub> ∨ x<sub>3</sub>) ∧
+* (¬x<sub>3</sub> ∨ l<sub>4</sub> ∨ x<sub>4</sub>) ∧ ... ∧
+* (¬x<sub>n−3</sub> ∨ l<sub>n−2</sub> ∨ x<sub>n−2</sub>) ∧
+* (¬x<sub>n−2</sub> ∨ l<sub>n−1</sub> ∨ l<sub>n</sub>)
+
+where x<sub>2</sub>, ..., x<sub>n−2</sub> are fresh variables not occurring elsewhere.
+
+Although the two formulas are not logically equivalent, they are equisatisfiable.
+
+https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
+
+
+---
+
+**Image Descriptions:**
+
+*There are no images on this slide.*
+
+
+**Overall Description:**
+
+This slide explains the reduction of the general satisfiability problem (SAT) to the 3-satisfiability problem (3-SAT).  It details how to transform an arbitrary SAT formula into an equivalent 3-SAT formula.  The key is to introduce new variables (x<sub>2</sub>, ..., x<sub>n−2</sub>) to create clauses with exactly three literals.  The slide emphasizes that while the original and transformed formulas are not logically equivalent, they are *equisatisfiable*, meaning they have the same set of satisfying assignments.  The URL at the bottom of the slide provides a link to a Wikipedia page on the Boolean satisfiability problem, likely for further reading.  The slide is formatted as a numbered list of clauses, which is a standard way to represent logical expressions in CNF.

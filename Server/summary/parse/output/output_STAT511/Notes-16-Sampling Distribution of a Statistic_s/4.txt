@@ -1,0 +1,39 @@
+# Slide 4
+
+3. Repeat 1 and 2 many times (say 1000 times, depending on your computing power) and obtain ℎ<sub>1</sub>, … , ℎ<sub>𝑛</sub>.
+
+4. Make a histogram of (ℎ<sub>1</sub>, … , ℎ<sub>𝑛</sub>).
+
+R code to derive the sampling distribution of sample variance of n=9 exponential observations:
+
+n=9; N=1000; H<-numeric(N)
+
+for(i in 1 : N)
+{
+ D<-rexp(n, 1); H[i]<-var(D);
+}
+
+hist(H);qqnorm(H); qqline(H)
+
+
+There are 3 Distinct Distribution for a numerical variable:
+
+* Population Distribution (theoretical distribution).
+* Data Distribution – Observed distribution of data from a single sample.
+* Sampling Distribution (theoretical distribution) - Probability Distribution of some statistic, it is the distribution of the set of statistic calculated from the set of all possible samples from the parent population distribution.
+
+
+**Figures:**
+
+The slide includes three figures, all placed in the upper right quadrant of the slide.
+
+* **Figure 1 (Histogram):** A histogram displaying a distribution of values. The x-axis is labeled "H" and the y-axis is labeled "Frequency". The histogram shows a distribution that appears roughly bell-shaped, centered around a value near 1.  The histogram is likely a result of a simulation study, showing the distribution of the sample variance calculated from a large number of random samples of size 9 from an exponential distribution.  This figure is crucial for visualizing the shape of the sampling distribution of the sample variance.
+
+* **Figure 2 (Normal Q-Q Plot):** A Normal Q-Q plot. The x-axis is labeled "Theoretical Quantiles" and the y-axis is labeled "Sample Quantiles". The plot shows a roughly straight line, indicating that the data in the histogram are approximately normally distributed.  The Q-Q plot is used to assess whether the data follow a normal distribution.  This figure is crucial for verifying the normality assumption of the sampling distribution of the sample variance.
+
+* **Figure 3 (Normal Q-Q Plot):** A Normal Q-Q plot, similar to Figure 2, but likely with different data.  This plot is also used to assess the normality of the sampling distribution.
+
+
+**Description:**
+
+This slide builds upon the previous slides by demonstrating how to empirically estimate the sampling distribution of a statistic (in this case, the sample variance) using simulation.  The R code provided shows how to generate a large number of samples from an exponential distribution, calculate the sample variance for each sample, and then create a histogram and Q-Q plot to visualize the distribution of these sample variances.  The figures are crucial for understanding the shape and normality of the sampling distribution, which is a key concept in statistical inference.  The slide is part of a larger lecture on statistical methods, likely covering topics such as sampling distributions, simulation, and statistical inference.

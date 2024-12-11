@@ -1,0 +1,33 @@
+# 9
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Example 25.1 revisit** The ANOVA table for this Example:
+
+| Type of Box | Compression Strength (lb) | Sample Mean | Sample SD |
+|---|---|---|---|
+| 1 | 655.5 788.3 734.3 721.4 679.1 699.4 | 713.00 | 46.55 |
+| 2 | 789.2 772.5 786.9 686.1 732.1 774.8 | 756.93 | 40.34 |
+| 3 | 737.1 639.0 696.3 671.7 717.2 727.1 | 698.07 | 37.20 |
+| 4 | 535.1 628.7 542.4 559.0 586.9 520.0 | 562.02 | 39.87 |
+
+Grand mean = 682.50
+
+| Source of variation | df | Sum of squares | Mean square | <i>f</i> |
+|---|---|---|---|---|
+| Boxes | A | B | C | D |
+| Error | E | F |  |  |
+| Total | G | 161206.00 | 1691.92 |  |
+
+
+**Description of the Slide:**
+
+This slide presents the results of an ANOVA analysis, specifically a revisit of Example 25.1.  It's a continuation of the previous slides, which introduced the concept of ANOVA and the calculations involved.
+
+* **Table 1:** This table shows the original data, including the compression strength values for each type of box (1, 2, 3, and 4).  It also provides the sample mean and sample standard deviation for each box type.  This table is crucial for understanding the data used in the ANOVA analysis.
+
+* **Table 2:** This table is the ANOVA table itself.  It's a summary of the ANOVA results.  The columns represent the source of variation (Boxes, Error, and Total), the degrees of freedom (df), the sum of squares (SS), the mean square (MS), and the calculated F-statistic.  Crucially, the values for Sum of Squares and Mean Square are partially filled in, with placeholders (A, B, C, D, E, F, G) for the actual calculated values.  This table is the core output of the ANOVA analysis, summarizing the variation within and between the groups.  The missing values (A-G) are the results of the calculations performed on the data in Table 1.
+
+The slide's purpose is to present the ANOVA table for the example, allowing for a direct comparison of the variation between different box types and the variation within each box type.  The table is essential for determining if there are statistically significant differences in the mean compression strength among the different box types.  The missing values (A-G) are the results of the calculations performed on the data in Table 1.  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.

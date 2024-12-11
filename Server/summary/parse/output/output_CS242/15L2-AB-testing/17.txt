@@ -1,0 +1,23 @@
+# Slide 17
+
+**Hard to Assess the Value of Ideas: Data Trumps Intuition**
+
+➤ Features are built because teams believe they are useful.
+But most experiments show that features fail to move the metrics they were designed to improve
+➤ We joke that our job is to tell clients that their new baby is ugly
+➤ Based on experiments at Microsoft (paper)
+■ 1/3 of ideas were positive ideas and statistically significant
+■ 1/3 of ideas were flat: no statistically significant difference
+■ 1/3 of ideas were negative and statistically significant
+➤ At Bing, the success rate is lower
+➤ The low success rate has been documented many times across multiple companies
+If you start running controlled experiments, you will be humbled!
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses the difficulty of evaluating the value of new ideas, particularly in software development.  It highlights the common observation that many features, despite being believed useful, fail to improve key metrics when tested.  The slide uses the example of experiments at Microsoft and Bing to illustrate a low success rate for new ideas.  The statistic that 1/3 of ideas are positive, 1/3 are flat, and 1/3 are negative, based on experiments, emphasizes the importance of data-driven decision-making.  The final statement, "If you start running controlled experiments, you will be humbled!", reinforces the idea that relying on intuition alone can be misleading.

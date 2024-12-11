@@ -1,0 +1,27 @@
+# Slide 50
+
+**Approach: Everything but The Kitchen Sink…**
+
+Many options for modeling
+
+* Different numbers of factors, different ways to model time, different ways to handle implicit information
+* Other models: Nearest-neighbor models, restricted Boltzmann machines, …
+Model averaging was useful…
+* Linear model combining, neural network combining, gradient boosted decision tree combining
+
+Slide via: Padhraic Smyth, UC Irvine CS277
+
+
+**Description:**
+
+This slide, likely part of a lecture on recommender systems within an Intro to Data Science course, discusses the various approaches taken to model the data.  The title "Approach: Everything but The Kitchen Sink…" suggests a broad exploration of different modeling techniques.  The bullet points highlight several options considered:
+
+* **Different numbers of factors, different ways to model time, different ways to handle implicit information:** This indicates that the researchers experimented with various dimensions of latent factors, time-based models, and methods to incorporate implicit user preferences.
+
+* **Other models:**  The mention of nearest-neighbor models, restricted Boltzmann machines, and other unspecified models suggests that a wide range of algorithms were explored.
+
+* **Model averaging:**  The phrase "Model averaging was useful…" implies that combining predictions from multiple models was a successful strategy.
+
+* **Linear model combining, neural network combining, gradient boosted decision tree combining:**  These bullet points further emphasize the use of various model combination techniques.
+
+The slide is likely a summary of the diverse modeling strategies employed in a particular study or project, highlighting the exploratory nature of the approach.  There are no figures on this slide.  The context is an Intro to Data Science course, and the slide is likely a concluding or summary slide for a section on recommender systems.

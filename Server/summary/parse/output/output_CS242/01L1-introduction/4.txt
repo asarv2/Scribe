@@ -1,0 +1,24 @@
+# Slide 4
+
+**Topics**
+
+Introduction: What is Data Science? Examples, applications, and results obtained using data science techniques. Overview of the data science process.
+
+Background and basics: Review of Python. Using Python notebooks. Types of data and data representations. How to acquire data (e.g., crawling), how to process and parse data. Data manipulation, data wrangling, and data cleaning.
+
+Visualization and basic statistics: Visualization principles and goals. Basic plots in Python. The importance of communicating results. Visualizing distributions and relationships.
+
+Hypothesis testing and causality: Introduction to statistical inference, populations/samples. Overview of hypothesis testing, A/B testing, and how to draw conclusions from data. Correlation vs causation.
+
+Similarity and clustering: Definitions and examples of common similarity/distance measures. Overview of basic clustering methods and how to interpret/evaluate results. Dimensionality reduction.
+
+Collaborative filtering: Recommender systems and collaborative filtering, including basic methods and applications.
+
+Large scale analysis: Data engineering overview. Discussion of databases and SQL, mapReduce processing, Spark, and Hadoop.
+
+Ethics: Overview of ethical issues of privacy, fairness, and bias in data science.
+
+
+**Slide Description:**
+
+This slide, titled "Topics," lists the specific subjects that will be covered in the Intro to Data Science course.  The topics are presented in a bulleted list format, each topic representing a key area of data science.  The topics are organized in a logical order, starting with an introduction to data science and progressing through various techniques and concepts.  The slide is designed to provide a clear overview of the course's content.  There are no figures on this slide.  The content directly follows the previous slide's goals, outlining the specific areas of study that will be used to achieve those goals.

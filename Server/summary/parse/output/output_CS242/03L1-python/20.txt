@@ -1,0 +1,43 @@
+# Slide 20
+
+**Slicing**
+
+Lists can be indexed with positive or negative numbers
+
+```
+>>> tu = (23, 'abc', 4.56, (2,3), 'def')
+```
+
+Positive index: count from the left, starting with 0.
+
+```
+>>> tu[1]
+'abc'
+```
+
+Negative lookup: count from right, starting with -1.
+
+```
+>>> tu[-3]
+4.56
+```
+
+```
+>>> tu = (23, 'abc', 4.56, (2,3), 'def')
+```
+
+Return a copy of the container with a subset of the original members. Start copying at the first index, and stop copying before the second index.
+
+```
+>>> tu[1:4]
+('abc', 4.56, (2,3))
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, demonstrates slicing in Python, specifically with tuples.  The title "Slicing" indicates the focus of the content.  The slide shows examples of accessing elements within a tuple using both positive and negative indexing.  The examples use the `tu` tuple, which contains various data types (integers, strings, floats, and a nested tuple).  The positive index `tu[1]` accesses the second element ('abc') of the tuple, while the negative index `tu[-3]` accesses the fourth element (4.56) from the right.  The final example `tu[1:4]` demonstrates slicing, returning a new tuple containing elements from index 1 up to, but not including, index 4.  The slide is designed to illustrate how to extract portions of a sequence using slicing.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+

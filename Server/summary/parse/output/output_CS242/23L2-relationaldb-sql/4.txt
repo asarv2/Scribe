@@ -1,0 +1,20 @@
+# Slide 4
+
+# Relations
+
+Conceptually relational databases are based on tables
+The term technical term "relation" can be interchanged with the standard notion we have of "tabular data"
+
+| ID | Last Name | First Name | Role |
+|---|---|---|---|
+| 1 | Bergstrom | Anthony | Instructor |
+| 2 | Yin | Haoteng | TA |
+| 3 | Doe | John | Student |
+| 4 | Smith | Jane | Student |
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, further explains the concept of relational databases.  The title "Relations" is displayed at the top.  The text below explains that relational databases are fundamentally based on tables.  The key point is that the term "relation" in a database context is interchangeable with the more common concept of "tabular data."  A table is presented as an example, showing columns for "ID," "Last Name," "First Name," and "Role."  The table contains sample data, including names, roles (Instructor, TA, Student), and unique IDs.  This table is a concrete illustration of how relational databases organize data in tabular form.  The table is centered on the slide and is formatted with clear column headers and data entries.  The purpose of this slide is to provide a practical example of a relational database table, demonstrating the concept of data organization.

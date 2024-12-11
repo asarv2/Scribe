@@ -1,0 +1,1121 @@
+# Slide 1
+
+Introduction to Data Science
+Purdue CS24200
+Tony Bergstrom
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Introduction to Data Science, part of the Purdue CS24200 course.  The background is a uniform dark gray.  The title "Introduction to Data Science" is displayed prominently in a larger, light gray font.  Below that, in a smaller, light gray font, are the course information: "Purdue CS24200" and "Tony Bergstrom" (presumably the instructor).  Finally, at the very bottom, in a very small, light gray font, is a credit line: "Slides adapted from Jen Neville, CS 24200".  There are no figures or images on the slide. The slide's purpose is to introduce the course and its instructor.
+
+
+# Slide 2
+
+# Expressing Uncertainty
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, has the single heading "Expressing Uncertainty" in a dark gray, sans-serif font.  It's a simple title slide, likely introducing the topic of uncertainty in data science.  There are no figures or other elements on the slide.  The slide is likely part of a larger presentation on data science, and this particular slide is setting the stage for a discussion on how uncertainty is handled in data analysis.
+
+
+# Slide 3
+
+# Expressing Uncertainty without hypothesis test
+
+Headline: 'Catalan public opinion swings toward "no" for independence, says survey' 19 Dec 2014
+
+Do you want Catalonia
+to become an independent state?
+No
+45.3%
+Yes
+44.5%
+No answer
+10.2%
+
+Margin of error: +/-2.95
+Level of confidence = 95%
+
+No uncertainty quantification
+
+
+Do you want Catalonia
+to become an independent state?
+No
+45.3%
+Yes
+44.5%
+No answer
+10.2%
+
+Margin of error: +/-2.95
+Level of confidence = 95%
+
+With uncertainty quantification
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a comparison of how uncertainty is expressed in a survey about Catalan independence.  The top portion of the slide shows a bar graph with percentages for "No," "Yes," and "No Answer" to the question of Catalan independence.  The bars are colored blue for "No," red for "Yes," and gray for "No Answer."  The bars are accompanied by a horizontal line representing the margin of error.  The bars are labeled with the percentages and the margin of error.  The bottom portion of the slide shows the same data, but with error bars (vertical lines) added to the bars.  These error bars visually represent the uncertainty in the survey results.  The slide is designed to illustrate the difference between presenting survey results without and with uncertainty quantification.  The headline and date at the top provide context for the survey.  The text below the graphs explains the margin of error and confidence level.  The slide is a visual aid to explain the concept of uncertainty in data analysis.  The use of the Catalan independence survey is a real-world example to illustrate the concept.
+
+
+# Slide 4
+
+**Population:**
+Unknown mean,
+standard deviation,
+and shape.
+
+?
+
+We draw tons of samples
+from the population and
+calculate their means.
+Notice that the shape of
+many of them isn't normal.
+
+We plot the distribution
+of the means of the
+samples above. The result
+is approximately a normal
+distribution of
+sample means.
+
+**Sampling distribution**
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, visually explains the concept of a sampling distribution.
+
+* **Top portion:** A large, light gray bell curve, labeled "Population," is positioned at the top of the slide.  A question mark is placed above the curve, suggesting the unknown nature of the population's characteristics.  This is a visual representation of a population with unknown mean, standard deviation, and shape.
+
+* **Middle portion:**  Numerous smaller, light pink bell curves are layered below the large population curve.  These curves represent the distributions of means from many different samples drawn from the population.  The arrows pointing down from the large population curve to the smaller curves visually illustrate the process of sampling.  The smaller curves have varying shapes, demonstrating that the distributions of sample means from different samples are not necessarily normal.  The horizontal lines between the curves visually group the samples.
+
+* **Bottom portion:** A smaller, light gray bell curve, labeled "Sampling distribution," is positioned at the bottom of the slide.  This curve represents the distribution of the means of all the samples.  The arrows pointing down from the middle portion to the bottom curve visually illustrate the process of plotting the distribution of sample means.  The bottom curve is a normal distribution, highlighting the central limit theorem.
+
+The slide's purpose is to illustrate the concept of the sampling distribution and how it's related to the population distribution.  It visually demonstrates that even if the population distribution is not normal, the sampling distribution of the means will tend toward a normal distribution as the sample size increases.  The slide uses visual aids to explain a key concept in statistical inference.
+
+
+# Slide 5
+
+**Confidence Intervals**
+
+Sampling distribution: probability distribution of a statistic (e.g., mean) when calculated from a random sample of size *n*
+
+Standard error: standard deviation of the sampling distribution
+
+SE = σ / √n
+
+Margin of error: confidence interval of sampling distribution
+
+Confidence interval: expression of uncertainty wrt to estimated statistic
+
+E.g., for 95% CI: Given 100 samples of the same size, 95 of the estimated CIs would contain the true value of the statistic
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, defines and explains key concepts related to confidence intervals.  The slide is entirely text-based, with no figures.  The text defines the terms "sampling distribution," "standard error," "margin of error," and "confidence interval."  The slide provides a formula for calculating the standard error (SE) and an example of how a confidence interval works (95% CI).  The slide is likely a continuation of the previous slide's discussion on sampling distributions, building upon that concept to introduce the idea of quantifying uncertainty using confidence intervals.  The slide's purpose is to introduce the concepts of confidence intervals and their relationship to sampling distributions.
+
+
+# Slide 6
+
+**Calculating the confidence interval of a mean**
+
+(Point value) ± Z × standard error
+
+↑
+
+Remember that
+standard error = 
+standard deviation
+√sample size
+
+↓
+therefore...
+
+↑
+
+(Point value) ± Z × 
+standard deviation
+√sample size
+
+Note: Statisticians often use
+"sample size minus 1" (or n-1) here,
+rather than simply the sample size.
+This is a correction applied when dealing
+with smallish sample sizes, and when the
+standard deviation of the population is
+unknown (almost always!).
+If the sample size is large, the "minus 1"
+correction doesn't make a big difference.
+
+For a 95% confidence level
+standard deviation
+(Point value) ± 1.96 × √sample size
+
+For a 99% confidence level
+standard deviation
+(Point value) ± 2.58 × √sample size
+
+In a standard normal distribution, 95% of the scores lie between –1.96 and 1.96 standard deviations from the mean.
+99% of the scores lie between –2.58 and 2.58 standard deviations from the mean.
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, details the calculation of confidence intervals for a mean.  The slide is formatted as a flowchart, with arrows connecting different parts of the calculation.
+
+* **Top portion:** The title "Calculating the confidence interval of a mean" is displayed prominently.  Below the title, the formula (Point value) ± Z × standard error is presented.
+
+* **Middle portion:**  The slide visually explains the relationship between standard error and standard deviation.  A series of arrows and text boxes show the steps involved in calculating the confidence interval.  The text emphasizes the concept of standard error as the standard deviation of the sampling distribution.  The formula for standard error is shown.  The text also includes a note about the correction factor "n-1" used in calculating standard error when the population standard deviation is unknown.
+
+* **Bottom portion:** The slide provides specific values for calculating confidence intervals for 95% and 99% confidence levels.  The formulas for these calculations are shown, including the corresponding Z-values (1.96 and 2.58).  The slide concludes with a statement about the relationship between Z-scores and standard deviations in a standard normal distribution.
+
+The slide's purpose is to provide a clear and visual explanation of how to calculate confidence intervals for a mean, including the role of standard error and the Z-score.  The use of arrows and text boxes helps to guide the viewer through the calculation process.  The inclusion of the note about the correction factor "n-1" is important for understanding the nuances of statistical calculations.  The final statements about Z-scores and standard deviations in a standard normal distribution provide context for the values used in the confidence interval calculations.
+
+
+# Slide 7
+
+**Example**
+
+Suppose at a Math camp, a group of 12-year-old girls wants to get a sense of the average height at the camp
+
+They randomly choose a sample of 40 girls, measure them and get a distribution with mean of 5.3 feet and a standard deviation of 0.5
+
+Therefore: SE = 0.5 / √40 = 0.5/6.32 = 0.08
+
+Thus the 95% and 99% confidence intervals are:
+
+5.3 feet ± 1.96 × 0.5 feet / √40 girls  ↓
+5.3 feet ± 0.16
+
+5.3 feet ± 2.58 × 0.5 feet / √40 girls ↓
+5.3 feet ± 0.21
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, provides an example of calculating confidence intervals.  The example uses the heights of 12-year-old girls at a math camp.
+
+* **Top portion:** The title "Example" is displayed prominently.  The problem statement describes a scenario where the average height of 12-year-old girls at a math camp is being estimated.
+
+* **Middle portion:** The example details how a sample of 40 girls was measured, resulting in a mean height of 5.3 feet and a standard deviation of 0.5 feet.  The standard error (SE) is calculated.
+
+* **Bottom portion:** The 95% and 99% confidence intervals are calculated using the formula from the previous slide.  The calculations are shown, with the results clearly displayed.  The arrows point to the final results of the calculations.
+
+* **Figure:** A normal distribution curve (gray) is shown with the x-axis labeled "Heights" and values ranging from 4.0 to 6.0.  The mean (5.3 feet) is marked on the x-axis.  The curve visually represents the distribution of heights in the sample.  The figure is placed below the problem statement and above the calculations.  It's there to illustrate the concept of the sampling distribution of the mean height, which is central to the calculation of confidence intervals.  The figure helps visualize the data and the uncertainty around the estimated mean height.
+
+
+
+
+# Slide 8
+
+**Disclosing uncertainty**
+
+Confidence intervals are a means to display the uncertainty in the data, this is crucial information to include in visualizations
+Some types of visualizations naturally encode the uncertainty by summarizing the distribution
+Note: there is a difference between the distribution of the statistic (e.g., girls heights) and the sampling distribution (e.g., average height)
+
+**(Figure):**
+
+A series of three visualizations are shown, each representing a different type of plot.
+
+1.  **On a dot plot:**  A simple dot plot is shown, with several data points represented by dots.  Vertical error bars are associated with each dot.  These error bars visually represent the uncertainty in the data points.  The placement of the error bars is directly above and below each data point.
+
+2.  **On a bar chart:** A bar chart is shown, with several bars representing different categories or groups.  Vertical error bars are associated with the top and bottom of each bar.  These error bars visually represent the uncertainty in the average values represented by each bar.  The placement of the error bars is directly above and below the top and bottom of each bar.
+
+3.  **On a time-series chart:** A time-series chart is shown, with data points plotted over time.  A shaded area is shown above and below the line representing the data points.  This shaded area visually represents the uncertainty in the data points over time.  The shaded area is above and below the line representing the data points.
+
+4.  **Violin Plot Modified Box Plot:** A violin plot is shown, which is a combination of a box plot and a kernel density plot.  The plot shows the distribution of the data, with a thicker part of the violin representing the higher density of data points.  A box plot is also shown, with the median, quartiles, and whiskers.  The plot also shows the 95% and 99% confidence intervals.  The placement of the plot is in the bottom right corner of the slide.
+
+
+---
+
+**Description of the Slide:**
+
+This slide discusses the importance of visualizing uncertainty in data, specifically using confidence intervals.  It highlights how some visualizations inherently show uncertainty, like error bars on dot plots and bar charts.  The slide also introduces the concept of a sampling distribution, contrasting it with the distribution of the statistic itself.  The figure is a visual aid to illustrate how uncertainty can be displayed in different types of plots.  The slide is likely part of a larger presentation on data visualization techniques and the importance of conveying uncertainty in data analysis.
+
+
+# Slide 9
+
+**A/B testing and controlled experiments**
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a simple title.  The title, "A/B testing and controlled experiments," is displayed in a dark gray, sans-serif font against a light gray background.  There are no figures or other elements on the slide.  The slide is likely introducing the topic of A/B testing and controlled experiments, which are common methods in data science for comparing different versions of something (e.g., a website design) to see which performs better.
+
+
+
+
+# Slide 10
+
+**A/B Testing and Controlled Experiments**
+
+Randomly split traffic between two (or more) versions
+Collect metrics of interest, and analyze
+A/B test is the simplest controlled experiment,
+A/B/n refers to multiple treatments
+Must run statistical tests to confirm differences are not due to chance
+Best scientific way to prove causality, i.e., the changes in metrics are caused by changes introduced in the treatment(s)
+
+
+**Figure Description:**
+
+The slide contains two laptop computer icons, labeled "A" and "B".  Both are light-blue outlined with a dark-blue interior.  The icons are positioned side-by-side.  Each laptop icon has a small graphic of a web page with a gear icon, suggesting a website or application.  A vertical bar graph is shown inside each laptop icon.  The bar graph for laptop "A" (labeled "CONTROL") is a reddish-pink color and shows a value of 23%.  The bar graph for laptop "B" (labeled "VARIATION") is a light-green color and shows a value of 37%.  A green upward-pointing arrow is shown next to the bar graph in laptop "B", visually highlighting the increase in the metric.  Below each laptop icon, there are buttons labeled "CONTROL" and "VARIATION" in reddish-pink and light-green, respectively.  These icons and labels visually represent the two different versions (treatments) being compared in an A/B test.  The purpose of the figure is to illustrate the concept of A/B testing, where different versions of a webpage or application are tested to see which performs better.  The numbers (23% and 37%) represent metrics of interest, such as conversion rates or click-through rates.
+
+
+**Description of the Slide Content:**
+
+This slide introduces the concepts of A/B testing and controlled experiments in the context of Intro to Data Science.  The text explains the process of randomly dividing traffic between different versions (treatments) of a product or service, collecting metrics, and analyzing the results to determine if any observed differences are statistically significant.  The figure visually represents the two versions being compared and the metrics being measured.  The slide emphasizes the importance of statistical testing to ensure that any observed differences are not due to chance.
+
+
+# Slide 11
+
+**A/B Testing and Controlled Experiments**
+
+**Advantage of controlled experiments**
+
+Controlled experiments test for causal relationships, not simply correlations
+* The gold standard in science
+* The only way to prove efficacy of drugs in FDA drug tests
+When the variants run concurrently, only two things can explain differences:
+* The "feature(s)" (A vs. B)
+* Random chance
+All other effects are the same in both the conditions
+To control for random chance, statistical tests are used to test for significance
+
+
+**Figure Description:**
+
+* **Visual:** The slide contains two laptop computer icons, light-blue outlined with a dark-blue interior, positioned side-by-side.  Each laptop icon has a small graphic of a web page with a gear icon, suggesting a website or application.  A vertical bar graph is shown inside each laptop icon.  The bar graph for laptop "A" (labeled "CONTROL") is a reddish-pink color and shows a value of 23%.  The bar graph for laptop "B" (labeled "VARIATION") is a light-green color and shows a value of 37%.  A green upward-pointing arrow is shown next to the bar graph in laptop "B", visually highlighting the increase in the metric.  Below each laptop icon, there are buttons labeled "CONTROL" and "VARIATION" in reddish-pink and light-green, respectively.
+
+* **Placement and Purpose:** The figure is placed on the slide to visually represent the concept of A/B testing, where different versions of a webpage or application are tested to see which performs better. The numbers (23% and 37%) represent metrics of interest, such as conversion rates or click-through rates.  The visual aids help to illustrate the comparison between the two versions and the observed difference in the metric.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of A/B testing and controlled experiments, focusing on the advantages of using controlled experiments.  The text emphasizes that controlled experiments are the gold standard for establishing causal relationships, not just correlations.  The example of FDA drug tests highlights the importance of this method in determining the efficacy of treatments.  The slide also explains that when comparing different versions (treatments) in a controlled experiment, only the treatment itself and random chance can explain any observed differences.  The figure is a visual aid to illustrate the concept of A/B testing, showing two versions (A and B) and the metrics being measured.
+
+
+# Slide 12
+
+**First controlled experiment for medical purposes**
+
+Scurvy is a disease that results from vitamin C deficiency
+Killed over 100,000 people in the 16th-18th centuries, mostly sailors
+* E.g., Lord Anson's circumnavigation voyage from 1740 to 1744 started with 1,800 sailors and only about 200 returned; most died from scurvy
+Dr. James Lind noticed lack of scurvy in Mediterranean ships
+* Gave some sailors limes (treatment), others ate regular diet (control)
+* Experiment was so successful, British sailors are still called limeys
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, describes a historical example of a controlled experiment.  The slide details the first controlled experiment for medical purposes, focusing on the disease scurvy.  The text explains that scurvy is caused by vitamin C deficiency and that it killed a significant number of people in the 16th and 18th centuries, particularly sailors.  The example of Lord Anson's voyage illustrates the devastating impact of scurvy.  Dr. James Lind's experiment is highlighted as a crucial early controlled experiment.  The experiment involved giving some sailors limes (a treatment) while others ate a regular diet (control).  The success of this experiment is emphasized by the fact that British sailors are still called "limeys" today.  The slide's purpose is to illustrate the concept of controlled experiments and their historical significance, using a real-world example.  There are no figures on this slide.
+
+
+# Slide 13
+
+**Lind's Experimental details**
+
+Lind's hypothesis was that scurvy was due to putrefaction of the body which could be helped by acids
+
+* The experiment was done on 12 sailors split into 6 pairs
+
+* Each pair got a different treatment: cider, elixir vitriol, vinegar, sea-water, nutmeg+barley water, oranges+lemon
+
+* The sailors given two oranges and one lemon per day and recovered
+
+Lind didn't understand the reason and tried treating Scurvy with concentrated lemon juice called "rob." But the lemon juice was concentrated by heating it, which destroyed the vitamin C.
+
+Lesson: Even when you find a significant effect, the reasons are often not understood.
+Controlled experiments tell you which variant won, not why.
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, details the specifics of Dr. James Lind's experiment on scurvy.  The text explains Lind's hypothesis about the cause of scurvy (putrefaction helped by acids).  It then outlines the experimental design: 12 sailors were divided into 6 pairs, each pair receiving a different treatment (various liquids and citrus fruits).  The treatment that included oranges and lemons was successful in curing scurvy.  The slide also notes that Lind, while successful in identifying the treatment, didn't understand the underlying reason (vitamin C).  The slide serves as a historical example of a controlled experiment, illustrating the importance of understanding the *what* (the result) versus the *why* (the mechanism) in scientific experiments.  There are no figures on this slide.
+
+
+# Slide 14
+
+**Experimentation at Scale**
+
+➤ I've been fortunate to work at an organization that values being data-driven
+➤ We finish about ~300 experiment treatments at Bing every week.
+(Since most experiments run for a week or two, there are a similar number of concurrent treatments running.
+These are "real" useful treatments, not 3x10x10 MVT = 300)
+➤ See Google's KDD 2010 paper on Overlapping Experiment Infrastructure and
+Our KDD 2013 paper on challenges of scaling experimentation: [http://bit.ly/ExPScale](http://bit.ly/ExPScale)
+➤ Each variant is exposed to between 100K and millions of users, sometimes tens of millions
+➤ 90% of eligible users are in experiments (10% are a global holdout changed once a year)
+➤ There is no single Bing. Since a user is exposed to 15 concurrent experiments, they get one of 5<sup>15</sup> = 30 billion variants (debugging takes a new meaning).
+➤ Until 2014, the system was limiting usage as it scaled.
+Now the limits come from engineers' ability to code new ideas
+
+
+**Figure:**
+
+A line graph, titled "Bing Experimentation Growth (2008-2015)", is positioned below the text.  The x-axis is labeled with time, spanning from approximately 2008 to 2015, broken down into weekly increments.  The y-axis, labeled "Completed Treatments," shows the number of treatments completed each week.  The graph displays a steep upward trend in the number of completed treatments, with a noticeable increase in the number of treatments from 2008 to 2014.  The trend appears to flatten out after 2014.  A dashed line is also present, representing a trendline that roughly follows the upward trend of the data points.  A legend is present, indicating that the data points represent "All Treatments" and "Mobile."  The graph is placed below the text, illustrating the exponential growth of experimentation at Bing over time.  The graph's purpose is to visually demonstrate the scale of experimentation at Bing, showing the significant increase in the number of experiments conducted over the years.
+
+
+**Slide Description:**
+
+This slide discusses the scale of experimentation at an organization (likely Bing).  It highlights the large number of experiments run weekly (~300), the significant number of users exposed to these experiments (between 100K and tens of millions), and the challenges of scaling such an operation.  The figure visually represents the growth of experimentation at Bing over time, demonstrating the exponential increase in the number of experiments conducted.  The slide is likely part of a presentation on the challenges and successes of large-scale experimentation.
+
+
+# Slide 15
+
+**Experiments in Design**
+
+**A**
+Web | MSN | Images | Video | News | Maps | Shopping
+Popular Searches: Fireworks safety | Rihanna | Campaign patriotism
+Live Search
+
+**B**
+Web | MSN | Images | Video | News | Maps | Shopping
+Fireworks safety | Rihanna | Campaign patriotism
+Search
+Live Search
+
+**A has a taller search box**
+**A has a magnifying glass vs “Search” in B**
+**B has a larger, more button-like interface**
+**Positioning of “Live Search”**
+**Inclusion of “Popular Searches” label**
+
+Information from KDD’15 Keynote: Ronny Kohavi, Microsoft Distinguished Engineer, General Manager of Analysis and Experimentation
+
+
+**Figure Description:**
+
+The slide presents two mockups of search interfaces, labeled "A" and "B".  Both mockups are designed to resemble web search pages.  The interface labeled "A" has a taller search box and a magnifying glass icon.  The interface labeled "B" has a larger search button and a different layout.  The text below the mockups describes the differences between the two designs, including the search box height, the magnifying glass icon, the button-like interface, the positioning of the "Live Search" label, and the inclusion of a "Popular Searches" label.  The figure is a visual aid to illustrate the different design elements being tested in an A/B test.  The mockups are placed above the text descriptions, and the text descriptions are placed below the mockups.  The purpose of the figure is to show the specific design elements that are being compared in the experiment.
+
+
+**Slide Description:**
+
+This slide presents a specific example of an A/B test.  It shows two different designs for a search interface (A and B).  The text below the mockups lists the design differences between the two versions.  The slide is likely part of a presentation on A/B testing, illustrating how different design elements can be tested to see which performs better.  The information is from a KDD'15 keynote, suggesting it's a real-world example of a design experiment.
+
+
+# Slide 16
+
+**Example: Underlining Links**
+
+The slide displays two side-by-side browser windows, each showing a search result page for Amazon.com.  Both windows show the same search results, but the layout and design elements are different.  The left-hand window (labeled "A") and the right-hand window (labeled "B") are visually distinct.
+
+* **Left Window (A):**  The search box is taller than the one in the right-hand window.  It also features a magnifying glass icon instead of the word "Search."
+
+* **Right Window (B):** The search box is shorter and has a larger, more button-like "Search" button.  The layout of the page elements is different.
+
+The text below the windows describes the differences in design elements between the two versions, including the search box height, the magnifying glass icon, the button-like interface, the positioning of the "Live Search" label, and the inclusion of a "Popular Searches" label.  The slide is an example of an A/B test, where different design elements are tested to see which performs better.  The information is from a KDD'15 keynote, suggesting it's a real-world example of a design experiment.
+
+**Figure Description:**
+
+The figure is two side-by-side screenshots of web pages, specifically search results pages for Amazon.com.  The purpose of the figure is to visually illustrate the different design elements being tested in an A/B test.  The screenshots are placed above the text descriptions, and the text descriptions are placed below the screenshots.  The screenshots are representative of the two different versions (A and B) of the search interface.  The differences in the design elements (search box height, magnifying glass, button size, etc.) are clearly visible in the screenshots.  The screenshots are intended to help the audience understand the specific design elements being compared in the experiment.
+
+
+**Slide Description:**
+
+This slide provides a concrete example of an A/B test, showing two different designs for a search interface (A and B).  The text below the mockups lists the design differences between the two versions.  The slide is likely part of a presentation on A/B testing, illustrating how different design elements can be tested to see which performs better.  The information is from a KDD'15 keynote, suggesting it's a real-world example of a design experiment.  The slide uses screenshots of actual search results pages to make the example more concrete and relatable.
+
+
+# Slide 17
+
+**Hard to Assess the Value of Ideas: Data Trumps Intuition**
+
+➤ Features are built because teams believe they are useful.
+But most experiments show that features fail to move the metrics they were designed to improve
+➤ We joke that our job is to tell clients that their new baby is ugly
+➤ Based on experiments at Microsoft (paper)
+■ 1/3 of ideas were positive ideas and statistically significant
+■ 1/3 of ideas were flat: no statistically significant difference
+■ 1/3 of ideas were negative and statistically significant
+➤ At Bing, the success rate is lower
+➤ The low success rate has been documented many times across multiple companies
+If you start running controlled experiments, you will be humbled!
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses the difficulty of evaluating the value of new ideas, particularly in software development.  It highlights the common observation that many features, despite being believed useful, fail to improve key metrics when tested.  The slide uses the example of experiments at Microsoft and Bing to illustrate a low success rate for new ideas.  The statistic that 1/3 of ideas are positive, 1/3 are flat, and 1/3 are negative, based on experiments, emphasizes the importance of data-driven decision-making.  The final statement, "If you start running controlled experiments, you will be humbled!", reinforces the idea that relying on intuition alone can be misleading.
+
+
+# Slide 18
+
+**Chi-square test for association of discrete counts**
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a single, simple heading in a dark gray, sans-serif font against a light gray background.  The heading, "Chi-square test for association of discrete counts," is the only content on the slide.  There are no figures or other elements.  The slide is likely introducing the topic of the chi-square test, a statistical method used to determine if there is a significant association between two categorical variables.  The slide's purpose is to introduce the topic of the chi-square test for association.
+
+
+
+
+# Slide 19
+
+**Types of hypothesis tests**
+
+|       | **Continuous** | **Discrete** |
+|-------|----------------|--------------|
+| **Parametric** | **One Sample**<br>T-test<br>**Two Samples**<br>T-test<br>Paired T-test | **One Sample**<br>Chi-square or binomial test<br>**Two Samples**<br>Fisher's or chi-square test<br>McNemar's test |
+| **Non-Parametric** | **One Sample**<br>Wilcoxon test<br>**Two Samples**<br>Mann-Whitney test<br>Wilcoxon test |  |
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a table summarizing different types of hypothesis tests in a data science context.  The table is organized by whether the data is continuous or discrete, and whether the test is parametric or non-parametric.  Each cell in the table contains the name of a specific hypothesis test appropriate for the combination of data type and test type.  The table is a visual aid to help quickly identify the appropriate statistical test for a given dataset.  The table is well-organized and easy to read, making it a useful tool for data scientists.  The slide is likely part of a larger presentation on statistical methods in data science.
+
+
+# Slide 20
+
+**Consider Exercise and Smoking**
+
+We collect data on two categorical variables
+
+* Exercise - Frequently, None, Some
+* Smoking - Heavy, Never, Occasional, Regular
+
+Every data point should have a categorical classification for both variables
+
+Since they are categorical, a t-test will not work
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses the use of categorical variables in a data science context.  It introduces two categorical variables, "Exercise" and "Smoking," with their possible values.  The slide emphasizes that since the variables are categorical, a t-test (a statistical test typically used for continuous data) is not appropriate.  The slide is likely part of a larger presentation on choosing the correct statistical tests based on the type of data being analyzed.
+
+
+# Slide 21
+
+**contingency table**
+
+A contingency table is a cross-tabulation of *n* paired observations into categories
+
+* Each cell shows the count of observations that fall into the category defined by its row (r) and column (c) heading
+
+
+Freq	None	Some
+Heavy	7	1	3
+Never	87	18	84
+Occas	12	3	4
+Regul	9	1	7
+
+Smoking
+Exercise
+
+
+**Figure Description:**
+
+The slide displays a contingency table.  The table is structured with rows representing different categories of "Smoking" (Heavy, Never, Occas, Regul) and columns representing different categories of "Exercise" (None, Some).  Each cell in the table contains a numerical value, representing the count of observations that fall into the corresponding row and column categories.  For example, the cell in the first row and first column (Heavy, None) contains the value "7," indicating that 7 observations were categorized as both "Heavy" smokers and "None" exercisers.  The table is presented in a clear and organized manner, making it easy to understand the frequency distribution of the paired categorical variables.  The table is positioned centrally on the slide, and its purpose is to show the counts of observations categorized by both smoking and exercise habits.
+
+
+**Slide Description:**
+
+This slide introduces the concept of a contingency table in the context of Intro to Data Science.  It defines a contingency table as a cross-tabulation of paired observations into categories.  The table itself shows the counts of observations categorized by smoking habits (Heavy, Never, Occasional, Regular) and exercise habits (None, Some).  The slide is likely part of a larger presentation on statistical methods, specifically on analyzing categorical data.
+
+
+# Slide 22
+
+**chi-square test**
+
+Given a contingency table for variables A and B, test the hypothesis that there is an association between the variables:
+
+H<sub>0</sub>: Variable A is independent of variable B
+H<sub>1</sub>: Variable A is not independent of variable B
+
+Use the chi-square test to test this hypothesis
+
+* This test compares the observed frequencies in the cells to the expected frequencies
+* The *n* observations are categorized into *c* columns and *r* rows and then the observed frequency *o<sub>ij</sub>* is compared with the expected frequency *e<sub>ij</sub>* (across all cells)
+
+χ<sup>2</sup> = Σ<sub>i,j</sub>  (O<sub>ij</sub> − E<sub>ij</sub>)<sup>2</sup> / E<sub>ij</sub>
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the chi-square test, a statistical method used to determine if there's a significant association between two categorical variables (A and B) represented in a contingency table.  The null hypothesis (H<sub>0</sub>) posits that the variables are independent, while the alternative hypothesis (H<sub>1</sub>) suggests a dependence.  The chi-square test compares observed frequencies (O<sub>ij</sub>) in each cell of the contingency table to expected frequencies (E<sub>ij</sub>) under the assumption of independence.  The formula for calculating the chi-square statistic (χ<sup>2</sup>) is presented, showing the sum of squared differences between observed and expected frequencies, divided by the expected frequencies.  The slide is part of a larger presentation on statistical methods in data science, specifically focusing on hypothesis testing for categorical data.  There are no figures on this slide.
+
+
+# Slide 23
+
+**contingency table - Expected Values**
+
+|       | **Exercise Observed** |
+|-------|-----------------------|
+|       | **None** | **Some** | **Totals** | **Pct** | **Exercise Expected** |
+|       |            |            |            |            | **None** | **Some** |
+| **Smoking** | **Freq** | **Freq** | **Totals** | **Pct** | **Freq** | **Freq** |
+| Heavy | 7 | 1 | 11 | 5% | 5.8 | 1.2 | 4.9 |
+| Never | 87 | 18 | 189 | 80% | 92 | 18 | 78 |
+| Occas | 12 | 3 | 19 | 8% | 9.2 | 1.8 | 7.8 |
+| Regul | 9 | 1 | 7 | 7% | 8.0 | 1.6 | 6.9 |
+| **Totals** | **115** | **23** | **236** | **100%** |  |  |  |
+
+χ<sup>2</sup> = Σ<sub>i,j</sub>  (O<sub>ij</sub> − E<sub>ij</sub>)<sup>2</sup> / E<sub>ij</sub>
+
+**Degrees of Freedom:**
+
+(r − 1) ⋅ (c − 1) = 3 ⋅ 2 = 6
+
+
+---
+
+**Figure Description:**
+
+The slide displays a contingency table.  The table is structured with rows representing different categories of "Smoking" (Heavy, Never, Occas, Regul) and columns representing different categories of "Exercise" (None, Some).  Each cell in the table contains a numerical value, representing the count of observations that fall into the corresponding row and column categories.  For example, the cell in the first row and first column (Heavy, None) contains the value "7," indicating that 7 observations were categorized as both "Heavy" smokers and "None" exercisers.  The table also includes additional columns for totals and percentages, and a separate section for "Exercise Expected" values.  The table is presented in a clear and organized manner, making it easy to understand the frequency distribution of the paired categorical variables.  The table is positioned centrally on the slide, and its purpose is to show the counts of observations categorized by both smoking and exercise habits, along with expected values for each cell.  The formula for calculating the chi-square statistic (χ<sup>2</sup>) is also shown at the bottom of the table, and the degrees of freedom are calculated.  The table is crucial for performing a chi-square test to determine if there's a significant association between smoking and exercise habits.
+
+
+**Slide Description:**
+
+This slide presents a contingency table, which is a crucial component for performing a chi-square test.  The table shows the observed frequencies of different combinations of smoking habits (Heavy, Never, Occasional, Regular) and exercise habits (None, Some).  Crucially, it also includes the expected frequencies for each cell, which are calculated under the assumption of independence between the two variables.  The table is used to calculate the chi-square statistic, a measure of the difference between observed and expected frequencies, to determine if there's a statistically significant association between smoking and exercise habits.  The degrees of freedom are also calculated, which is a parameter needed for the chi-square test.
+
+
+# Slide 24
+
+**Example in Python**
+
+Chi-square tests are often used in A/B testing
+
+|       | Not Converted | Converted |
+|-------|----------------|------------|
+| A     | 4514           | 486        |
+| B     | 4473           | 527        |
+
+```python
+from scipy.stats import chi2_contingency
+
+observed = ... # data in contingency table
+chisq, p = chi2_contingency(observed)
+
+# for this example chisq = 1.76 and p = 0.185
+```
+
+**Figure Description:**
+
+The slide displays a table, which is a contingency table.  The table shows the counts of observations categorized by two variables, likely representing different versions (A and B) of a product or feature, and whether or not a user converted (Converted) or did not convert (Not Converted).  The values in the table (4514, 486, 4473, 527) represent the observed frequencies for each combination of version and conversion status.  The table is positioned centrally on the slide, and its purpose is to show the data used in a chi-square test.  Below the table, Python code is presented.  The code snippet shows how to perform a chi-square test using the `scipy.stats` library in Python.  The code is intended to illustrate how to analyze the data in the contingency table using Python.  The final line of text provides the results of the chi-square test for this specific example, showing the chi-square statistic (chisq) and the p-value (p).
+
+
+**Slide Description:**
+
+This slide provides a Python example of how to perform a chi-square test on a contingency table.  The table shows observed counts for two groups (A and B) and their conversion rates.  The Python code demonstrates how to import the necessary function from the `scipy.stats` library and perform the chi-square test.  The slide is likely part of a presentation on statistical methods in data science, specifically on hypothesis testing for categorical data, and how to implement these tests in Python.  The example is presented to illustrate the practical application of the chi-square test in A/B testing.
+
+
+# Slide 25
+
+**Example in R**
+
+```R
+> library(MASS)
+> contTable = table(survey$Smoke, survey$Exer)
+> contTable
+        Freq None Some
+  Heavy    7    1    3
+  Never   87   18   84
+  Occas   12    3    4
+  Regul    9    1    7
+> chisq.test(contTable)
+
+Pearson's Chi-squared test
+data:  contTable
+X-squared = 5.4885, df = 6, p-value = 0.4828
+```
+
+**Figure Description:**
+
+The slide displays R code and output.  The code shows how to perform a chi-square test in R using the `MASS` library.  The `table()` function is used to create a contingency table from the `survey$Smoke` and `survey$Exer` variables.  The `chisq.test()` function is then used to perform the chi-square test on the contingency table.  The output shows the chi-square statistic, degrees of freedom, and p-value.  The output is presented in a standard R console format.  The purpose of the code and output is to demonstrate how to perform a chi-square test in R and interpret the results.
+
+
+**Slide Description:**
+
+This slide provides an example of performing a chi-square test in R.  The code shows how to create a contingency table from data (likely from a dataset called `survey`) and then use the `chisq.test()` function to calculate the chi-square statistic, degrees of freedom, and p-value.  The output of the test is presented, which is crucial for determining if there's a statistically significant association between the categorical variables `Smoke` and `Exer`.  The slide is part of a presentation on statistical methods in data science, specifically on hypothesis testing for categorical data, and how to implement these tests in R.
+
+
+# Slide 26
+
+What happens when you test multiple hypotheses?
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide poses a question about the implications of testing multiple hypotheses.  It's a simple, direct question, likely setting the stage for a discussion about the challenges and considerations involved in multiple hypothesis testing, such as the increased risk of false positives.  The slide is likely part of a larger presentation on statistical methods in data science.
+
+
+# Slide 27
+
+**Things identified as cancer risks**
+
+(Altman and Simon, JNCI 1992)
+
+Electric razors
+Fluorescent lights
+Allergies
+Being a waiter
+Owning a pet bird
+Eating hot dogs
+Being short
+Being tall
+Having a refrigerator
+…
+
+
+**Figure Description:**
+
+The slide displays a list of items identified as potential cancer risks, according to a study by Altman and Simon in 1992.  The list is presented in a bulleted format, with each item on a separate line.  The items are: Electric razors, Fluorescent lights, Allergies, Being a waiter, Owning a pet bird, Eating hot dogs, Being short, Being tall, and Having a refrigerator.  There are ellipses (...) at the end of the list, suggesting that there may be more items on the original list that were not included on the slide.  The list is positioned centrally on the slide.  The purpose of the list is to present the findings of the study, highlighting various factors that were considered potential cancer risks.  The source of the information is cited as (Altman and Simon, JNCI 1992), indicating that the list is based on a specific research paper or report.  The slide is likely part of a presentation on cancer risk factors or a discussion of the limitations of epidemiological studies.
+
+
+**Slide Description:**
+
+This slide presents a list of factors identified as potential cancer risks in a study by Altman and Simon in 1992.  The list includes items such as electric razors, fluorescent lights, and various lifestyle factors.  The slide is likely part of a presentation on cancer risk factors, highlighting the findings of a particular study and the potential limitations of such research.  The ellipses at the end of the list suggest that the full list from the original source may be longer.
+
+
+# Slide 28
+
+**Testing more than one hypothesis**
+
+If we perform one hypothesis tests, what is the probability of a false positive? (i.e., reject the null when it is true)
+* P(Making an error) = α (typically 0.05)
+* P(Not making an error) = 1 - α (1-0.05 = 0.95)
+
+In general, if we perform m hypothesis tests, what is the probability of at least one false positive?
+* P(Not making an error in m tests) = (1 - α)<sup>m</sup>  when m=2, 0.95<sup>2</sup>=0.90
+* P(Making at least one error in m tests) = 1 - (1 - α)<sup>m</sup>  1-0.95<sup>2</sup>=0.10
+
+**Figure Description:**
+
+A line graph is positioned on the right side of the slide.  The x-axis is labeled "After conducting m tests," and the y-axis is labeled "P(At least 1 false positive)".  The graph displays a curve that starts at a low value (near 0.0) and increases as the number of tests (m) increases.  The curve approaches 1.0 (100%) as the number of tests increases.  The graph visually demonstrates the increasing probability of at least one false positive as the number of hypothesis tests increases.  The graph is placed on the right side of the slide, likely to visually illustrate the concept of the increasing probability of error when conducting multiple hypothesis tests.  The graph's purpose is to show the relationship between the number of tests performed and the probability of making at least one false positive.  The graph is a visual aid to help understand the concept of multiple hypothesis testing and the associated risk of false positives.
+
+
+**Slide Description:**
+
+This slide discusses the implications of performing multiple hypothesis tests.  It explains that while the probability of a false positive in a single test is relatively low (e.g., 0.05), the probability of at least one false positive increases significantly as the number of tests increases.  The slide uses a formula to calculate the probability of not making an error in multiple tests and the probability of making at least one error.  A line graph visually illustrates this increasing probability.  The slide is part of a presentation on statistical methods, specifically addressing the issue of multiple comparisons and the risk of false positives.
+
+
+# Slide 29
+
+**Adjusting for multiple hypotheses**
+
+Active area of statistics - many different methods have been developed
+"Adjusting p-values for the number of hypothesis tests performed"
+* Means controlling the Type I error rate
+* Simple corrections ensure that experiment-wide Type I error rates are controlled
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses methods for adjusting p-values when multiple hypothesis tests are performed.  It notes that this is an active area of statistical research, with various methods developed to control the Type I error rate (false positive rate) when multiple comparisons are made.  The slide emphasizes that simple corrections can be used to control the experiment-wide Type I error rate.  The slide is likely part of a presentation on statistical methods, specifically addressing the issue of multiple comparisons and how to adjust for them.
+
+
+# Slide 30
+
+**Bonferonni Correction**
+
+Very simple method for ensuring that the overall Type I error rate
+* α is maintained over m independent hypothesis tests
+* Rejects any hypothesis with p-value ≤ α/m
+
+For example, to ensure an experiment-wide Type I error rate of 0.05
+* If 10,000 hypothesis tests are performed using the Bonferonni Correction
+* Each test uses a p-value of 0.05/10000 = 5 x 10<sup>-6</sup> to declare significance
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide describes the Bonferroni correction, a method used to adjust p-values when performing multiple hypothesis tests.  It explains that the Bonferroni correction maintains the overall Type I error rate (false positive rate) by adjusting the individual p-value thresholds.  The example given shows how a p-value of 0.05 for an experiment-wide error rate is adjusted to a much lower value (5 x 10<sup>-6</sup>) when 10,000 individual tests are performed.  The slide is part of a presentation on statistical methods, specifically addressing the issue of multiple comparisons and how to adjust for them.
+
+
+# Slide 30
+
+**Other Issues with P-values**
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, titled "Other Issues with P-values," is likely a heading for a discussion about potential problems or limitations associated with using p-values in statistical analysis.  The slide's content is limited to the title, suggesting that the following content will delve into specific issues related to p-values, such as their interpretation, potential misuses, or limitations in certain contexts.  The slide is likely part of a larger presentation on statistical methods in data science.
+
+
+## Slide 32
+
+**p-values considered harmful**
+
+p-values: probability of your data given the null hypothesis
+
+Common Mistakes: probability of the null hypothesis given the data
+
+* The p value cannot tell you your hypothesis is correct
+* The p value does not tell you the probability that your result occurred just by random chance
+* The p values cannot tell you the effect size or the result's importance
+
+p < 0.05 is not a magic line separating real results from false ones
+* It is one piece evidence to consider
+
+
+**Figure Description:**
+
+A histogram is positioned on the right side of the slide.  The x-axis is labeled "p-value" and ranges from approximately 0.00 to 0.10.  The y-axis is labeled "Frequency" and ranges from 0 to approximately 280.  The histogram displays the distribution of p-values from approximately 3,500 published journal papers.  The histogram shows a noticeable concentration of p-values clustered just below 0.05.  A vertical red line is drawn at approximately 0.06 on the x-axis.  The histogram's purpose is to visually demonstrate the frequency distribution of p-values in published research, highlighting a potential tendency for p-values to cluster just below the conventional significance level of 0.05.  The histogram is a visual aid to illustrate the potential issue of p-value interpretation and the tendency for results to cluster around a specific value.  The title of the histogram, "Histogram of p values from ~3,500 published journal papers (from E. J. Masicampo and Daniel Lalande, A peculiar prevalence of p values just below .05, 2012)," provides context for the data and the source of the information.
+
+
+**Slide Description:**
+
+This slide discusses the potential pitfalls of interpreting p-values in statistical analysis.  It highlights that p-values do not indicate the correctness of a hypothesis, the probability of a result occurring by chance, or the effect size.  The slide uses a histogram of p-values from published research to illustrate a potential tendency for results to cluster just below the conventional significance level of 0.05.  The slide is likely part of a presentation on statistical methods, specifically addressing the limitations of p-values and the importance of considering other factors in interpreting results.
+
+
+## Slide 33
+
+**p-value as often interpreted**
+
+```
+P-VALUE	INTERPRETATION
+0.001	HIGHLY SIGNIFICANT
+0.01	
+0.02	
+0.03	
+0.04	
+0.049	SIGNIFICANT
+0.050	OH CRAP REDO CALCULATIONS, ON THE EDGE OF SIGNIFICANCE
+0.051	
+0.06	
+0.07	HIGHLY SUGGESTIVE, SIGNIFICANT AT THE P<0.10 LEVEL
+0.08	
+0.09	
+0.099	
+≥0.1	HEY, LOOK AT THIS INTERESTING SUBGROUP ANALYSIS
+```
+
+"If all else fails, use 'significant at p > 0.05 level', and hope no one notices."
+
+
+**Figure Description:**
+
+A table-like structure, not a true table, is presented on the slide.  It visually represents a guide for interpreting p-values.  The left column lists different p-value ranges (e.g., 0.001, 0.01, 0.02, etc.).  The right column provides corresponding interpretations of the p-value, ranging from "HIGHLY SIGNIFICANT" to "HEY, LOOK AT THIS INTERESTING SUBGROUP ANALYSIS."  The structure is not a formal table, but rather a visual aid to illustrate how p-values are often interpreted, with a focus on the common practice of using the 0.05 threshold as a cutoff for significance.  The structure is positioned centrally on the slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on data science, illustrates how p-values are often interpreted, highlighting the common practice of using a p-value of 0.05 as a threshold for significance.  The table-like structure visually guides the interpretation of p-values, ranging from highly significant to less significant results.  The final statement, "If all else fails, use 'significant at p > 0.05 level', and hope no one notices," is a critical commentary on the potential misuse or misinterpretation of p-values.  The slide is likely part of a discussion about the limitations and proper interpretation of p-values in statistical analysis.
+
+
+## Slide 34
+
+**What a nerdy debate about p-values shows about science – and how to fix it**
+
+The case for, and against, redefining "statistical significance."
+By Brian Resnick | @B_resnick | brian@vox.com | Jul 31, 2017, 12:00pm EDT
+
+There's a huge debate going on in social science right now. The question is simple, and strikes near the heart of all research: What counts as solid evidence?
+
+The answer matters because many disciplines are currently in the midst of a "replication crisis" where even textbook studies aren't holding up against rigorous retesting. The list includes: ego depletion, the idea that willpower is a finite resource; the facial feedback hypothesis, which suggested if we activate muscles used in smiling, we become happier; and many more.
+
+Now a group of 72 prominent statisticians, psychologists, economists, sociologists, political scientists, biomedical researchers, and others want to disrupt the status quo. A forthcoming paper in the journal Nature Human Behavior argues that results should only be deemed "statistically significant" if they pass a higher threshold.
+
+"We propose a change to P< 0.005," the authors write. "This simple step would immediately improve the reproducibility of scientific research in many fields."
+
+**Figure Description:**
+
+The slide contains a graphic of an open briefcase or case, with various charts, graphs, and diagrams inside.  The briefcase is open, revealing its contents, which are meant to represent the different elements of scientific research and data analysis.  The image is positioned in the upper-left quadrant of the slide.  The purpose of the image is to visually represent the complex nature of scientific research and the debate surrounding statistical significance.  The image is a visual metaphor for the discussion of p-values and their role in scientific research.  The image is likely intended to be engaging and to help the reader visualize the topic being discussed.
+
+
+**Slide Description:**
+
+This slide introduces the topic of a debate about p-values in scientific research.  It highlights the "replication crisis" in some fields, where established findings are not consistently reproducible.  The slide introduces the idea that a group of prominent researchers are advocating for a stricter threshold for statistical significance (P < 0.005) to improve the reproducibility of scientific research.  The image of the open briefcase is a visual metaphor for the complex nature of scientific research and the debate surrounding statistical significance.
+
+
+# Slide 35
+
+**Redefining Statistical Significance**
+
+We propose to change the default P-value threshold for statistical significance from 0.05 to 0.005 for claims of new discoveries.
+
+The lack of reproducibility of scientific studies has caused growing concern over the credibility of claims of new discoveries based on.
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation likely on statistical methods or scientific research, proposes a change to the standard p-value threshold for declaring statistical significance in scientific findings.  The text states that researchers propose lowering the threshold from 0.05 to 0.005 for new discoveries, citing concerns about the reproducibility of scientific studies.  The slide is likely part of a discussion about the limitations of current statistical practices and the need for stricter standards in scientific research.
+
+
+# Slide 36
+
+**Sampling**
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, titled "Sampling," is likely a heading for a section of the presentation on data science that will discuss various sampling methods.  The slide's content is limited to the title, suggesting that the following content will delve into different sampling techniques, such as random sampling, stratified sampling, or cluster sampling, and their applications in data analysis.  The slide is likely part of a larger presentation on data collection and analysis methods.
+
+
+## Slide 37
+
+**Sampling**
+
+Sampling is the main technique employed for data selection
+* It is often used for both the preliminary investigation of the data and the final data analysis
+Reasons to sample
+* Obtaining the entire set of data of interest is too expensive or time consuming
+* Processing the entire set of data of interest is too expensive or time consuming
+* Note: Even if you use an entire dataset for analysis, you should be aware of the sampling method that was used to gather the dataset
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on Introduction to Data Science, introduces the concept of sampling.  It explains that sampling is a crucial technique in data science for selecting data subsets for analysis.  The slide highlights that sampling is used both in preliminary investigations and in final analyses.  The reasons for sampling are given as the cost and time associated with processing the entire dataset.  Importantly, the slide emphasizes the importance of understanding the sampling method used to collect the data, even when using the entire dataset for analysis.
+
+
+## Slide 38
+
+**Types of probability sampling**
+
+Simple random sampling
+* There is an equal probability of selecting any particular item
+Sampling without replacement
+* As each item is selected, it is removed from the population
+Sampling with replacement
+* Items are not removed from the population as they are selected for the sample; the same item can be picked up more than once
+Stratified sampling
+* Split the data into several partitions; then draw random samples from each partition
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on Introduction to Data Science, outlines different types of probability sampling methods.  It defines simple random sampling, where each item has an equal chance of being selected.  It contrasts this with sampling without replacement, where selected items are removed from the pool, and sampling with replacement, where items can be selected multiple times.  Finally, it describes stratified sampling, where the data is divided into groups (strata) before random samples are drawn from each group.  The slide is likely part of a larger presentation on data collection and analysis techniques.
+
+
+## Slide 39
+
+**Sampling**
+
+The key principle for effective sampling is the following:
+
+* Using a sample will work almost as well as using the entire data set, if the sample is representative of the population
+* A sample is representative if it has approximately the same property (of interest) as the original set of data
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on Introduction to Data Science, discusses the key principle of effective sampling.  It emphasizes that a sample can be just as useful as the entire dataset if the sample is representative of the population.  A representative sample shares the same key characteristics as the larger population.  The slide is likely part of a larger presentation on data collection and analysis techniques.
+
+
+# Slide 40
+
+**Causality**
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, titled "Causality," is likely a heading for a section of the presentation on Introduction to Data Science that will discuss the concept of causality in the context of data analysis.  The slide's content is limited to the title, suggesting that the following content will delve into the topic of causality, potentially discussing how to establish causal relationships from data, the challenges in doing so, or the difference between correlation and causation.  The slide is likely part of a larger presentation on data analysis methods.
+
+
+## Slide 41
+
+**Simpson's paradox**
+
+Simpson's paradox occurs when groups of data show one particular trend, but this trend is reversed when the groups are combined together.  Understanding and identifying this paradox is important for correctly interpreting data. This result is particularly problematic when frequency data is unduly given causal interpretations.
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide introduces Simpson's paradox, a statistical phenomenon where a trend appears in different groups of data but disappears or reverses when the groups are combined.  The slide emphasizes the importance of understanding and recognizing this paradox, especially when interpreting frequency data, to avoid drawing incorrect causal conclusions.  The slide is likely part of a larger presentation on data analysis and interpretation, focusing on the limitations of drawing causal inferences from aggregate data.
+
+
+## Slide 42
+
+**Example**
+
+In the early 1970s, the University of California, Berkeley was sued for gender discrimination over admission to graduate school.
+
+Of the 8442 male applicants for the fall of 1973, 44% were admitted, but only 35% of the 4351 female applicants were accepted.
+
+Assuming the applicants' qualifications were similar, this pattern indeed appeared consistent with gender discrimination.
+
+However, when researchers looked more closely within specific departments, this bias against women went away, and even reversed in several cases.
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide provides an example of Simpson's Paradox.  It describes the case of the University of California, Berkeley, in the early 1970s, where a disparity in admission rates between male and female applicants for graduate school initially suggested gender discrimination.  However, a deeper analysis within specific departments revealed that the overall pattern was not consistent with discrimination.  The example illustrates how aggregate data can be misleading and how disaggregating data can reveal different trends.
+
+
+## Slide 43
+
+**Data/Explanation**
+
+| Department | Male Applicants | Female Applicants | % Male Admit | % Female Admit |
+|---|---|---|---|---|
+| A | 825 | 108 | 62 | 82 |
+| B | 560 | 25 | 63 | 68 |
+| C | 325 | 593 | 37 | 34 |
+| D | 417 | 375 | 33 | 54 |
+
+Women applied in higher numbers to departments with lower admittance rates.
+One would expect that higher admittance rates across all groups leads to a higher admittance rate overall.
+
+*   This is true if the group sizes are equal.
+*   When group sizes differ, the totals for each side may be dominated by particular groups.
+
+How do we avoid this type of paradox?
+Design your study to identify and account for all possible hidden variables.
+
+
+**Figure Description:**
+
+The slide displays a table.  The table is organized into columns, with the first column labeled "Department," followed by columns for "Male Applicants," "Female Applicants," "% Male Admit," and "% Female Admit."  Each row represents a different department (A, B, C, and D).  The table shows the number of male and female applicants to each department, along with the percentage of male and female applicants who were admitted.  The table is centrally located on the slide.  The table's purpose is to illustrate Simpson's Paradox.  The data in the table shows that while the overall admission rate for men is higher than for women, when looking at each department individually, the admission rate for women is often higher than for men.  This illustrates how aggregate data can be misleading and how disaggregating data can reveal different trends.  The text below the table explains the phenomenon and how to avoid it.
+
+
+**Slide Description:**
+
+This slide provides a concrete example of Simpson's Paradox.  The table shows data on the admission rates of male and female applicants to different departments at a university.  The data initially suggests a disparity in admission rates between men and women.  However, the text below the table explains that this disparity disappears when looking at the data for each department individually.  This illustrates how aggregate data can be misleading and how disaggregating data is crucial for accurate interpretation.  The slide also provides advice on how to avoid this type of paradox in research design.
+
+
+## Slide 44
+
+**Causal Inference**
+
+Prediction and causation are very different. Typical questions are:
+
+* **Prediction:** Predict Y after observing X = x
+* **Causation:** Predict Y after setting X = x
+
+Causation involves predicting the effect of an intervention, e.g.:
+
+* **Prediction:** Predict health given that a person takes vitamin C
+* **Causation:** Predict health if I give a person vitamin C
+
+The difference is passively observing X and actively intervening to set X.
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on Introduction to Data Science, introduces the key difference between prediction and causation.  It defines prediction as predicting an outcome (Y) based on observing a variable (X), while causation involves predicting the outcome (Y) after *intervening* to change the variable (X).  The example of predicting health given someone takes vitamin C (prediction) versus predicting health if someone is given vitamin C (causation) illustrates this distinction.  The slide is likely part of a larger discussion on causal inference in data analysis.
+
+
+## Slide 45
+
+**Counterfactuals and Randomized Experiments**
+
+**Counterfactuals:**
+
+* What effect would you have seen if a person wasn't treated? E.g., If you cloned each person and sent one copy to the hospital for treatment, but not the other, what difference would result in their health?
+
+**Randomization:**
+
+* Short of being able to do the above, we ask use random assignment to assess the difference
+* Construct two groups of people who are nearly identical in every way, send one group to the hospital but not the other, then measure the health differences between the two groups.
+* Randomization provides a way of creating two groups that are as similar as possible prior to treatment:
+* If subjects are randomly assigned to groups, there shouldn't be any systematic difference (e.g., selection bias)
+* Since only difference between the groups is that one gets treated and the other doesn't, we ascribe differences in outcomes to the treatment
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses counterfactuals and randomization as methods for establishing causality in data analysis.  It introduces the concept of a counterfactual, which is the hypothetical outcome that would have occurred if a treatment or intervention had not been applied.  The example of cloning a person and treating one copy while not treating the other illustrates this concept.  The slide then introduces randomization as a practical approach to approximate the counterfactual.  Random assignment of subjects to treatment and control groups aims to create groups that are as similar as possible before the treatment, minimizing the influence of confounding variables.  The key idea is that if the only difference between the groups is the treatment, any observed difference in outcomes can be attributed to the treatment itself.  This is a crucial concept in establishing causal relationships in data science.

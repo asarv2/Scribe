@@ -1,0 +1,37 @@
+# 12
+
+```markdown
+# Put it in Python
+
+import pandas
+from sklearn import linear_model
+
+df = pandas.read_csv("data.csv")
+
+X = df[['Weight', 'Volume']]
+y = df['CO2']
+
+regr = linear_model.LinearRegression()
+regr.fit(X, y)
+
+# predict the CO2 emission of a car where the weight is 2300kg, and the volume is 1300cm3:
+predictedCO2 = regr.predict([[2300, 1300]])
+
+print(predictedCO2)
+
+| Car | Model | Volume | Weight | CO₂ |
+|---|---|---|---|---|
+| Toyota | Aygo | 1000 | 790 | 99 |
+| Mitsubishi | Space Star | 1200 | 1160 | 95 |
+| Skoda | Citigo | 1000 | 929 | 95 |
+| Fiat |  | 500 | 900 | 865 | 90 |
+```
+
+**Description of the Figure:**
+
+This slide presents Python code for implementing a multiple linear regression model.  The code imports necessary libraries, reads data from a CSV file ("data.csv"), defines the independent variables (Weight, Volume) and the dependent variable (CO₂), creates a linear regression model, fits the model to the data, and then predicts the CO₂ emission for a new car with a specified weight and volume.  The code is presented in a clear, well-formatted manner, with comments explaining the purpose of each step.  Below the code, a table is displayed.  The table shows data for different car models, including their volume, weight, and CO₂ emissions.  The table is formatted with clear column headers and data values.  The table is likely used to illustrate the data that the Python code is working with.  The table is positioned below the code, suggesting a relationship between the code and the data it processes.  The table is a crucial part of the slide, as it provides a concrete example of the type of data that might be used in a multiple linear regression model.  The table is formatted as a standard table, with rows representing different car models and columns representing the car's characteristics.  The table is aligned with the mathematical equations, suggesting a connection between the theoretical framework and the practical application of the model.
+
+
+**Context:**
+
+This slide follows the previous discussion of multiple linear regression, showing how to implement the model in Python.  The code is designed to demonstrate the practical application of the mathematical concepts introduced earlier.  The table provides a concrete example of the data used in the model.  The slide is a crucial part of the lecture, as it bridges the gap between the theoretical concepts and the practical implementation of multiple linear regression using Python.

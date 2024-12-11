@@ -1,0 +1,55 @@
+# Slide 3
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**Example 12.3** The amount of distilled water dispensed by a certain machine is normally distributed with mean value 64 oz and standard deviation 0.78 oz.  
+
+What container size *c* will ensure that overflow occurs only 0.5% of the time?  
+
+If *X* denotes the amount dispensed, the desired condition is that 𝑃(𝑋 >  𝑐) =  0.0050, or, equivalently, that 𝑃(𝑋≤𝑐) =  0.9950. 
+
+The 99.5th percentile of the standard normal distribution is 2.58, so  
+
+𝑐= 𝜇+ 𝑧𝛼 ∙𝜎=             +2.58 ×            =                         (𝑜𝑧). 
+
+
+**Finding the Value of x when given a Probability or a Proportion**
+
+1. In some problems, you will be given a probability and asked to find the corresponding variable value *x*. To do these problems, just work backwards! First DRAW A PICTURE and write this in mathematical notation. 
+2. Figure out what proportion or probability you are given. 
+3. Next, if this probability is not a cumulative probability, determine the cumulative probability associated with the probability you found in step 3. 
+4. Then find the z-score that corresponds to the cumulative probability of interest. 
+5. To find the answer, which is the value of *x*, use the formula 𝑥= 𝜇+ 𝑧𝜎. 
+
+
+**Example 11.4 revisit 𝑋~𝑁(4, 0.25<sup>2</sup>).**
+
+a) What wingspan is longer than 90% of all adult dragonfly wingspans?      
+
+1. First draw a picture and write this in mathematical notation. 
+𝑃(𝑋< ? ) = 0.9000 
+2. The 90% corresponds to a cumulative probability of 0.90. 
+𝜙( ? ) = 0.9000 
+3. This proportion is a cumulative probability so go to step 4. 
+4. Read the corresponding z-score from the left column and top row. 
+i. 
+𝜙( ? ) = 0.8461 
+𝜙(                 ) = 0.8461 
+ii. 
+𝜙( ? ) = 0.9000 
+𝜙(                ) = 0.8997 and 𝜙(1.29) = 0.9015 → 𝜙(1.28) ≈0.9000 
+iii. 
+𝜙( ? ) = 0.6718 
+𝜙(                ) = 0.6700 and 𝜙(                ) = 0.6736 → 𝜙(                ) ≈0.6718 
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Overall Context:**
+
+This slide continues the discussion of normal distributions and how to find values of a variable given a probability or proportion. It provides examples and steps to solve such problems, emphasizing the use of z-scores and cumulative probabilities. The example of dragonfly wingspans is used to illustrate the application of the concepts. The slide builds upon the previous slides by introducing the concept of finding the value of *x* when given a probability.

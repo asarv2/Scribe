@@ -1,0 +1,14 @@
+# Slide 15
+
+**Illustration**
+
+Fundamentally this models the distribution p(x |H₀) and then determines the probability of the observed x or a more extreme value
+
+**Figure 1:**
+
+A bell-shaped curve, likely a normal distribution, is plotted on a graph.  The x-axis is labeled "x" and the y-axis is labeled "p(x)".  The curve is centered around zero.  Two shaded areas, each extending from the tails of the curve, are visible.  The shaded areas are positioned at the far left and far right tails of the distribution.  The x-axis values range from approximately -3 to 3.  The y-axis values range from 0 to 0.4.  The curve represents a probability distribution, specifically the probability distribution of a sample mean (x̄) given a null hypothesis (H₀).  The shaded areas represent the probability of observing the sample mean (x̄) or a more extreme value, which is the p-value.  The area under the curve within the shaded regions is labeled "p = Area".  The figure is positioned in the lower-right quadrant of the slide.  The figure is crucial for illustrating the concept of calculating the p-value in hypothesis testing.
+
+
+**Description of what you see:**
+
+This slide provides a visual illustration of how to calculate the p-value in a hypothesis test.  It shows a normal distribution curve, with shaded areas representing the p-value.  The p-value is the probability of observing the sample mean (x̄) or a more extreme value, given that the null hypothesis (H₀) is true.  The slide is part of a lecture on hypothesis testing, specifically illustrating the calculation of the p-value using a probability distribution.  The figure is essential for understanding the concept of p-value calculation in hypothesis testing.  The slide is likely part of a lecture on hypothesis testing, specifically illustrating the calculation of the p-value using a probability distribution.

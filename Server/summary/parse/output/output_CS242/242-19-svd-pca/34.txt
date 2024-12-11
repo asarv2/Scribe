@@ -1,0 +1,12 @@
+# Slide 34
+
+**Computation of Matrix Factors**
+
+**Problem 1:**
+
+Most of the entries in R are missing, i.e., only 100 x 10<sup>6</sup> / (480k x 17k) ~ 1% are present
+
+
+**Description:**
+
+This slide, part of a lecture on recommender systems in an Intro to Data Science course, introduces a problem related to the computation of matrix factors.  The text states that most entries in a matrix R (likely a user-item rating matrix) are missing.  The example given shows that only approximately 1% of the entries are present in the matrix.  This is a significant sparsity issue, which is a common challenge in recommender systems.  The context of this slide is to introduce the problem of missing data in the user-item rating matrix, which is a crucial factor in the design and implementation of recommender systems.  The numbers (480k x 17k) suggest a very large dataset, typical of real-world recommender systems.  The slide is likely to lead into a discussion of methods for handling missing data or for computing matrix factors in the presence of missing values.

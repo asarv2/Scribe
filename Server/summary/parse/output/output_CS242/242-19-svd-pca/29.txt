@@ -1,0 +1,10 @@
+# Slide 29
+
+**Recommender Systems: Collaborative Filtering**
+
+**(Figure):**  A network of stick figures is shown.  Each stick figure represents a user.  Some stick figures have speech bubbles above them containing numbers (e.g., 1, 2, 5).  Other speech bubbles contain a question mark.  The stick figures are interconnected with lines, suggesting relationships between users.  The figures are positioned across the slide, not in a strict grid, but scattered in a way that suggests connections between users.  The numbers in the speech bubbles likely represent ratings given by users to items (e.g., movies).  The question marks indicate items that a user has not yet rated.  The purpose of this figure is to illustrate the concept of collaborative filtering in recommender systems.  It visually represents how a recommender system might identify similar users to predict ratings for items a user hasn't rated.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, introduces collaborative filtering in recommender systems.  The figure is a visual representation of how the algorithm works.  The stick figures represent users, and the numbers in the speech bubbles represent ratings.  The question marks indicate items that a user hasn't rated, and the connections between the stick figures suggest relationships between users based on their ratings.  The slide is likely to follow up on previous slides that introduced recommender systems and the data they use.  The figure is a key element in explaining how collaborative filtering identifies similar users to predict ratings for items a user hasn't rated.  The context is an Intro to Data Science course.

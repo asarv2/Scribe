@@ -1,0 +1,45 @@
+# 9
+
+**Rejection region and p-value:**
+
+1. {T > t<sub>1-α,v</sub>}, p-value = P(T > t<sub>TS</sub>), if H<sub>a</sub>: μ > μ<sub>0</sub>
+2. {T < t<sub>α,v</sub>}, p-value = P(T < t<sub>TS</sub>), if H<sub>a</sub>: μ < μ<sub>0</sub>
+3. {|T| > t<sub>1-α/2,v</sub>}, p-value = 2 × P(T > |t<sub>TS</sub>|), if H<sub>a</sub>: μ ≠ μ<sub>0</sub>
+
+
+**Example 22.5** A set of observations on glycerol concentration (mg/mL) for samples of standard-quality (uncertified) white wines are given here: 2.67, 4.62, 4.14, 3.81, 3.83. Suppose the desired concentration value is 4. Assume, the population is normal.
+
+Does the sample data suggest that true average concentration is something other than the desired value?
+
+The data give x̄ = 3.814, s = 0.718.
+
+Assume the distribution of the variable is normal. Let's carry out a test of appropriate hypotheses using the one-sample t test with a significance level of 0.05.
+
+μ = true average glycerol concentration.
+
+1. H<sub>0</sub>: μ = 4 vs. H<sub>a</sub>: μ ≠ 4
+
+2. t<sub>TS</sub> = (3.814 - 4) / (0.718 / √5) = -0.579
+
+3. Using the tail area of -0.579 under the t-curve with df=4, we obtain a p-value of 0.594, as two times the lower tail area of -0.579.
+
+It is still plausible that μ = 4. The deviation of the sample mean 3.814 from its expected value 4 when H<sub>0</sub> is true can be attributed just to sampling variability rather than to H<sub>0</sub> being false.
+
+4. (1) Since p-value is greater than 0.05, fail to reject H<sub>0</sub>. (2) There's no evidence that the true average concentration is something other than the desired value at the significance level, 0.05.
+
+
+The accompanying Minitab output from a request to perform a two-tailed one sample t test shows identical calculated values to those just obtained.
+
+Test of mu = 4 vs not = 4
+Variable	N	Mean	St.Dev	SE Mean	95% CI
+glyc conc	5	3.814	0.718	0.321	(2.922, 4.706)	T	P
+			 		 		 		 		-0.58	0.594
+
+The fact that the last number on output, the "P-value," exceeds 0.05 (and any other reasonable significance level) implies that the null hypothesis can't be rejected.
+
+
+**Description of the Slide:**
+
+This slide (number 9) continues the discussion of hypothesis testing for a single population mean, now focusing on the case where the population variance is unknown.  It provides a specific example (Example 22.5) to illustrate the application of the t-test.  The example involves glycerol concentration in white wine samples.  The slide details the steps of the hypothesis test, including defining the hypotheses, calculating the test statistic (t<sub>TS</sub>), finding the p-value, and drawing a conclusion.  The slide also includes a table showing the Minitab output for the same test, which confirms the calculated p-value.  The slide number (9) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.  The example is clearly presented, with the relevant calculations and formulas shown.  The context of the example is provided, making it clear why these calculations are being performed.  The table of Minitab output is included to show the results of a statistical software package, which is a common way to perform these calculations in practice.  A t-distribution curve is present, but it's not clear what data it represents without more context.  The shaded area in the figure represents the p-value.  The label "t curve for relevant df" indicates that the specific t-distribution used depends on the degrees of freedom.
+
+

@@ -1,0 +1,12 @@
+# Slide 20
+
+**Beautiful Soup Documentation**
+
+https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+
+---
+
+**Description:**
+
+This slide displays a single line of text, which is a URL.  The URL, `https://www.crummy.com/software/BeautifulSoup/bs4/doc/`, is a link to the documentation for the Beautiful Soup library.  This is a crucial resource for anyone working with Beautiful Soup, providing information on how to use its functions and methods for parsing HTML and XML documents.  The slide's purpose is to direct the viewer to the official documentation for the library, which is essential for understanding and using the library effectively.  The URL is centrally located on the slide, in a standard text format, and is the only content.  The context of the previous slides suggests that this slide is part of a lecture on web scraping and parsing techniques using Beautiful Soup, and this URL is provided as a reference for further learning and exploration of the library's capabilities.

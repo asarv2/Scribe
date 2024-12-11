@@ -1,0 +1,40 @@
+# Slide 4
+
+**Automatic Prediction System use Increases**
+
+**Q2'19 sees record funding to AI startups at $7.4B**
+Q1'13 - Q2'19 (swipe right to see full data)
+Amount of funding (SM)
+$8,000M
+$6,000M
+$4,000M
+$2,000M
+90M
+
+**(Graph 1):**  A line graph displays the amount of funding (in millions of dollars) to AI startups, broken down by quarter, from Q1 2013 to Q2 2019.  The x-axis represents the quarters, and the y-axis represents the amount of funding.  The line shows a clear upward trend, with a significant increase in funding in recent years.  The graph is located on the left side of the slide.
+
+**(Graph 2):** A bar graph displays the number of mergers and acquisitions (M&A) deals in the AI industry, broken down by year, from 2010 to 2019. The x-axis represents the years, and the y-axis represents the number of deals.  The graph shows a significant increase in the number of M&A deals in recent years.  The graph is located on the right side of the slide.
+
+**Global activity in AI**
+Number of M&A deals
+120
+80
+40
+0
+2010  12  14  16  17*
+*To Dec 4th
+
+Source: CB Insights
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents data visualizations illustrating the increasing funding and M&A activity in the Artificial Intelligence (AI) industry.  The slide uses two graphs to convey this information.
+
+* **Graph 1 (left):**  A line graph displays the amount of funding (in millions of dollars) to AI startups over time.  The upward trend visually represents the growth in investment in AI startups.  The graph is crucial for understanding the increasing financial support for AI development.
+
+* **Graph 2 (right):** A bar graph displays the number of mergers and acquisitions (M&A) deals in the AI industry.  The increasing height of the bars visually represents the growing number of AI-related business deals.  This graph complements the funding graph, showing another aspect of the AI industry's expansion.
+
+The data presented on the slide is likely intended to demonstrate the significant growth of the AI industry, highlighting the increasing interest and investment in this field.  The source, "CB Insights," indicates the data's origin.  The "swipe right" instruction suggests that there is more data available for the line graph.

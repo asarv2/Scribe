@@ -1,0 +1,21 @@
+# Slide 24
+
+**BoF: main steps**
+
+Characterize objects in terms of parts or local features
+
+
+**Description of what you see:**
+
+The slide presents a visual representation of the main steps in the Bag-of-Features (BoF) approach to image analysis.  It's a simple, clear slide with a title and a series of images illustrating the concept.
+
+* **Title:** "BoF: main steps" is displayed at the top of the slide, in a clear, bold font.  This indicates the topic of the slide.
+
+* **Subtitle:** "Characterize objects in terms of parts or local features" is displayed below the title.  This provides a concise description of the BoF method's core principle.
+
+* **Images:** The slide contains three columns of images. Each column shows a different object (a face, a bicycle, and a violin).  Within each column, there are several smaller images, each depicting a part or local feature of the larger object.  For example, the face column shows parts of the face (eyes, nose, mouth), the bicycle column shows parts of the bicycle (wheel, frame, handlebars), and the violin column shows parts of the violin (body, neck, bow).  These smaller images are arranged in a way that suggests they are extracted features from the larger images.  The arrangement of the images in the columns and the presence of multiple parts of each object visually represent the idea of characterizing an object by its constituent parts.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed the Bag-of-Features (BoF) method and its components, such as the visual dictionary.  The images on this slide are likely examples of the types of local features that are extracted from images to create a BoF representation.  The slide is designed to illustrate the first step in the BoF process: characterizing objects in terms of their constituent parts or local features.  The slide is likely part of a section discussing the practical application of BoF in image analysis.  The images are used to visually represent the concept of breaking down an object into its component parts for analysis.

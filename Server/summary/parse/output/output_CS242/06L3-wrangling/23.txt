@@ -1,0 +1,44 @@
+# Slide 23
+
+**Employee Information**
+
+You are looking at a list of employees...
+
+```
+df_employee = pd.read_csv('employees.csv')
+df_employee
+df_employee.shape
+(20, 4)
+```
+
+...and you notice the data has duplicates
+
+| First Name | ID | Last Login Time | Team |
+|---|---|---|---|
+| Douglas | 785 | 5/1/20 12:42 | Marketing |
+| Jerry | 222 | 5/2/20 5:50 | Finance |
+| Christina | 543 | 5/2/20 17:19 | Engineering |
+| Thomas | 234 | 5/1/20 6:53 | Legal |
+| Maria | 102 | 5/3/20 11:17 | Finance |
+| Jerry | 222 | 5/1/20 17:00 | Finance |
+| Larry | 366 | 5/1/20 16:47 | Client Services |
+| Maria | 478 | 5/2/20 11:17 | Finance |
+| Dennis | 189 | 5/2/20 1:35 | Legal |
+| Ruby | 331 | 5/1/20 16:20 | Product |
+| Benjamin | 420 | 5/1/20 22:06 | Legal |
+| Frances | 682 | 5/2/20 6:51 | Business Development |
+| Terry | 777 | 5/1/20 18:30 | Client Services |
+| Benjamin | 420 | 5/1/20 22:06 | Legal |
+| Christina | 543 | 5/2/20 13:19 | Engineering |
+| Jerry | 222 | 5/1/20 13:00 | Finance |
+| Douglas | 785 | 5/1/20 12:42 | Marketing |
+| Ruby | 331 | 5/1/20 16:20 | Product |
+| John | 800 | 5/1/20 12:00 | Business Development |
+| Benjamin | 420 | 5/1/20 22:06 | Legal |
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a table of employee information, likely from a CSV file named 'employees.csv'.  The table has four columns: "First Name", "ID", "Last Login Time", and "Team".  The data appears to be a list of employees, with their respective IDs, login times, and teams.  The text at the top of the slide indicates that the data has been loaded into a pandas DataFrame called `df_employee`, and its shape is (20, 4), meaning it has 20 rows and 4 columns.  The final line, "...and you notice the data has duplicates", suggests that the instructor is highlighting the presence of duplicate entries in the data, which is a common issue in data analysis.  The table is formatted in a standard tabular format, with each row representing an employee and each column representing an attribute of the employee.  The data in the table is likely used as an example dataset for the subsequent discussion of data cleaning and manipulation techniques.

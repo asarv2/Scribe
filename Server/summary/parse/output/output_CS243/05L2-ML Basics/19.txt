@@ -1,0 +1,18 @@
+# 19
+
+# What if I fit this with a degree-9 polynomial?
+
+**(Figure):**
+
+The slide displays three subplots, each showing a scatter plot of data points (blue circles) and two fitted lines.  The x-axis is labeled "x" and the y-axis is labeled "t" in all three plots.
+
+* **Left Subplot (M = 1):**  A red straight line is fitted to the data points.  The line is a poor fit, as it does not closely follow the overall trend of the data.  The data points are scattered above and below the line.
+
+* **Middle Subplot (M = 3):** A red straight line and a green curved line are fitted to the data points. The green curve is a better fit than the red line, but still doesn't perfectly capture the data's trend.  The data points are somewhat closer to the green curve than to the red line.
+
+* **Right Subplot (M = 9):** A red straight line and a green highly complex curved line are fitted to the data points. The green curve is a very close fit to the data points, almost perfectly following the data's trend.  However, the green curve exhibits significant oscillations and fluctuations, suggesting overfitting.  The curve has many peaks and valleys, and it appears to be overly complex compared to the data points.
+
+
+**Context:**
+
+This slide continues the discussion of curve fitting and the potential for overfitting.  The three subplots demonstrate how increasing the degree of the polynomial (from M=1 to M=9) can lead to a better fit to the training data, but also to overfitting.  The red line in each subplot represents a simple linear fit, while the green line represents a polynomial fit of increasing degree.  The blue circles represent the data points.  The slide is designed to illustrate the trade-off between model complexity and the ability to generalize to unseen data.  The increasing complexity of the green curve in the right subplot highlights the potential for overfitting as the model becomes more complex.

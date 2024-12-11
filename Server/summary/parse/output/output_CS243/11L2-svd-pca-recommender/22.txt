@@ -1,0 +1,19 @@
+# 22
+
+```markdown
+How to compute PCA in Python (Cont)
+# choose number of dimensions
+plt.scatter(range(1, 5),pca.explained_variance_ratio_)
+plt.show()
+```
+
+---
+
+**Figure Description:**
+
+A simple scatter plot is shown.  The x-axis is labeled with the numbers 1, 2, 3, and 4, representing the principal components.  The y-axis shows the explained variance ratio, ranging from approximately 0.0 to 0.7.  Several data points are plotted, each corresponding to a principal component and its associated explained variance ratio.  The points are connected by a line, showing the trend of the explained variance ratio as the number of principal components increases.  The plot is located in the lower-right portion of the slide.  The purpose of the plot is to visually represent the explained variance ratio for each principal component, which is crucial for determining the optimal number of components to retain in the PCA transformation.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, shows Python code for visualizing the explained variance ratio in PCA.  The code uses `plt.scatter` to plot the explained variance ratio for each principal component (1 through 4).  The x-axis represents the principal component number, and the y-axis represents the explained variance ratio.  The plot is a simple scatter plot, with each point representing the explained variance ratio for a particular principal component.  The plot is intended to help the user visually determine the optimal number of principal components to use in the PCA transformation, based on the proportion of variance explained by each component.  The code `plt.show()` indicates that the plot will be displayed in a separate window.  The slide is part of a larger discussion on PCA and how to choose the optimal number of dimensions for a given dataset.

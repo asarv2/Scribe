@@ -1,0 +1,61 @@
+# Slide 23
+
+Example: How to count words in a textfile
+
+```
+the wheels on the bus
+go round and round
+round and round
+round and round
+the wheels on the bus
+go round and round
+all through the town
+```
+
+```
+mapper()
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('all', 1), ('through', 1), ('the', 1), ('town', 1)]
+```
+
+```
+group by key
+(and, [1, 1, 1, 1])
+(on, [1, 1])
+(all, [1])
+(bus, [1, 1])
+(town, [1])
+(round, [1, 1, 1, 1, 1, 1, 1, 1])
+(through, [1])
+(go, [1, 1])
+(the, [1, 1, 1, 1, 1])
+(wheels, [1, 1])
+```
+
+```
+reducer()
+Key: ?
+Output: ?
+```
+
+---
+
+**Description of the slide:**
+
+This slide continues the example of using MapReduce to count words in a text file.  It visually represents the process, showing the input text, the output of the mapper function, and the intermediate step of grouping the key-value pairs.
+
+* **Input Text:** The slide displays a short text snippet, a children's rhyme, which is the input data for the MapReduce process.
+* **Mapper Output:** Below the input text, the slide shows the output of the mapper function.  This output is a list of lists, where each inner list represents the words and their counts from a single line of the input text.  For example, `[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]` shows the words and their counts from the first line of the input.
+* **Grouping by Key:** The slide then shows the result of grouping the key-value pairs from the mapper output.  This is the "shuffle" phase of MapReduce, where all values associated with the same key are grouped together.  For example, `(and, [1, 1, 1, 1])` shows that the word "and" appears four times in the input text.
+* **Reducer Placeholder:** The final part of the slide shows the `reducer()` function, which is not yet implemented, and asks for the key and output.  This indicates that the next step in the MapReduce process is to combine the grouped values to produce the final word counts.
+
+**Visual Representation:**
+
+The slide uses a diagram to visually represent the flow of data through the MapReduce process.  The diagram shows the input text, the mapper output, the grouping by key, and the reducer function.  The arrows and boxes visually represent the different stages of the process and the flow of data between them.  The diagram is designed to help students understand the intermediate steps of the MapReduce process, specifically the grouping of data by key.
+
+

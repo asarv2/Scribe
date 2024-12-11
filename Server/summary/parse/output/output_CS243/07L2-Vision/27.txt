@@ -1,0 +1,26 @@
+# Slide 27
+
+**BoF: main steps (cont'd)**
+
+Step 3:  Assign visual words to images
+
+**(Image Description):**
+
+The slide displays a diagram illustrating the third step in the Bag-of-Features (BoF) method.
+
+* **Title:** "BoF: main steps (cont'd)" is displayed at the top, indicating a continuation of the previous slide's topic.
+
+* **Step 3:** "Step 3: Assign visual words to images" is displayed below the title, clearly labeling the current step.
+
+* **Image (left):** A still image, likely a photograph or a similar image, is shown.  It depicts a group of people, possibly in a social setting.  Several light-reddish/pinkish ellipses are drawn around different parts of the people in the image.  These ellipses are superimposed on the image, and small red dots are located within each ellipse.  The ellipses and dots are likely highlighting key features or points extracted from the image.  The image is positioned on the left side of the slide.
+
+* **Arrow:** A black arrow points from the image to a series of vertical, stacked, rectangular boxes on the right side of the slide.  The boxes are empty, but their arrangement suggests that they represent a list of extracted features or data.  The arrow visually connects the image to the feature extraction process.
+
+* **Text:** The text "Step 1: Features extraction (e.g., Scale-Invariant Feature Transform, SIFT, features)" is positioned above the image.  This text clearly labels the step as feature extraction and provides examples of common feature extraction methods.  The ellipses (...) at the end of the text indicate that there may be other methods not explicitly listed.
+
+* **Diagram (center-right):** A diagram shows a set of clusters (groups of points) in a 2D space.  Each cluster is represented by a group of teal/turquoise dots.  The clusters are positioned in a way that suggests they represent different visual words in the visual vocabulary.  The diagram is positioned in the center-right of the slide.  The diagram visually represents the process of assigning visual words to images based on the extracted features.
+
+
+**Description of what you see:**
+
+This slide visually represents the third step of the Bag-of-Features (BoF) method: assigning visual words to images.  The slide shows how extracted features from an image are matched to the visual vocabulary (clusters) learned in the previous step.  The image on the left shows an example image with highlighted features.  The arrow indicates the flow of the process, moving from the image to the assignment of visual words.  The clusters in the diagram on the right represent the visual vocabulary, and the process of assigning visual words to the image is visually represented by the connections between the image features and the clusters.  The slide is designed to illustrate the process of matching extracted features to the learned visual vocabulary, which is a crucial step in the BoF method for image analysis.  The diagram in the center-right shows the clustering of features, which is a key part of the visual vocabulary creation process.

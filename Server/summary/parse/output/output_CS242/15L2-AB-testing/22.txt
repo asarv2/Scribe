@@ -1,0 +1,22 @@
+# Slide 22
+
+**chi-square test**
+
+Given a contingency table for variables A and B, test the hypothesis that there is an association between the variables:
+
+H<sub>0</sub>: Variable A is independent of variable B
+H<sub>1</sub>: Variable A is not independent of variable B
+
+Use the chi-square test to test this hypothesis
+
+* This test compares the observed frequencies in the cells to the expected frequencies
+* The *n* observations are categorized into *c* columns and *r* rows and then the observed frequency *o<sub>ij</sub>* is compared with the expected frequency *e<sub>ij</sub>* (across all cells)
+
+χ<sup>2</sup> = Σ<sub>i,j</sub>  (O<sub>ij</sub> − E<sub>ij</sub>)<sup>2</sup> / E<sub>ij</sub>
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the chi-square test, a statistical method used to determine if there's a significant association between two categorical variables (A and B) represented in a contingency table.  The null hypothesis (H<sub>0</sub>) posits that the variables are independent, while the alternative hypothesis (H<sub>1</sub>) suggests a dependence.  The chi-square test compares observed frequencies (O<sub>ij</sub>) in each cell of the contingency table to expected frequencies (E<sub>ij</sub>) under the assumption of independence.  The formula for calculating the chi-square statistic (χ<sup>2</sup>) is presented, showing the sum of squared differences between observed and expected frequencies, divided by the expected frequencies.  The slide is part of a larger presentation on statistical methods in data science, specifically focusing on hypothesis testing for categorical data.  There are no figures on this slide.

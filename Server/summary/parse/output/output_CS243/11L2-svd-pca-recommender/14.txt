@@ -1,0 +1,20 @@
+# 14
+
+```markdown
+SVD vs PCA
+PCA and SVD are closely related
+* SVD is a general operation defined on all matrices
+* Principle component analysis (PCA) refers to a data analysis technique for dimensionality reduction. To apply PCA to matrix A, the task reduces to computing the SVD of A
+We will see that SVD gives strictly more information than PCA, namely the matrix U
+```
+
+---
+
+**Figure Description:**
+
+There are no figures on this slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, compares Singular Value Decomposition (SVD) and Principal Component Analysis (PCA).  The slide states that PCA and SVD are closely related.  It highlights that SVD is a general operation applicable to all matrices, while PCA is a data analysis technique specifically for dimensionality reduction.  Crucially, the slide explains that applying PCA to a matrix A involves computing the SVD of A.  Finally, it notes that SVD provides more information than PCA, specifically the matrix U.  The slide is focused on the relationship between SVD and PCA, emphasizing the broader applicability of SVD and its role in PCA.

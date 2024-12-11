@@ -1,0 +1,33 @@
+# Slide 46
+
+```markdown
+File Processing with Python
+The basics of reading:
+fileptr = open('filename')
+somestring = fileptr.read()
+for line in fileptr:
+	print(line)
+fileptr.close()
+Use libraries for easier parsing of file types
+import csv                      #csv file reader
+import sys
+f = open(sys.argv[1], 'rt')
+reader = csv.reader(f)
+for row in reader:
+	print(row)                   #['1', 'a', '3.5']
+	print(float(row[2])+1)       #4.5
+f.close()
+Slides adapted from UPenn CIS530 python tutorial
+```
+
+**Description:**
+
+This slide provides code examples for file processing in Python, likely within the context of an Intro to Data Science course.  The code demonstrates basic file reading using the `open()` function and a `for` loop.  It also shows how to use the `csv` module for reading CSV (Comma Separated Values) files.
+
+* **Basic File Reading:** The first part of the code shows how to open a file (`fileptr = open('filename')`), read its entire content into a string (`somestring = fileptr.read()`), and then iterate through each line (`for line in fileptr: print(line)`).  Finally, the file is closed (`fileptr.close()`).
+
+* **CSV File Reading:** The second part of the code imports the `csv` and `sys` modules.  It opens a CSV file specified as a command-line argument (`f = open(sys.argv[1], 'rt')`).  It then creates a `csv.reader` object (`reader = csv.reader(f)`) to parse the file.  The code iterates through each row (`for row in reader:`) in the CSV file.  Inside the loop, it prints the row (`print(row)`) and then converts the third element of the row to a float, adds 1 to it, and prints the result (`print(float(row[2])+1)`).  Finally, the file is closed (`f.close()`).
+
+The comments `#['1', 'a', '3.5']` and `#4.5` are inline comments showing the expected output of the code when processing a sample CSV row.  The slide is focused on demonstrating how to read and process data from files, including CSV files, using Python.  The code examples are presented in a clear, concise manner, illustrating the use of Python's built-in functions and modules for file processing.
+
+

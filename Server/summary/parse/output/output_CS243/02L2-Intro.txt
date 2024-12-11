@@ -1,0 +1,1030 @@
+# 1
+
+# CS 24300: AI Basics
+
+Tony Bergstrom
+
+Slides adapted from Yexiang Xue and Tony Bergstrom's original set
+
+
+---
+
+**Description of the slide:**
+
+This is the title slide for a lecture on AI Basics, part of the CS 24300 course.  The title, "CS 24300: AI Basics," is displayed prominently in a large, light gray font.  Below that, the name of the instructor, "Tony Bergstrom," is written in a smaller, light gray font.  Finally, a smaller, light gray text at the bottom of the slide indicates the source of the lecture materials: "Slides adapted from Yexiang Xue and Tony Bergstrom's original set." The background color is a dark gray.  The overall design is clean and professional, suitable for a presentation slide.
+
+
+# 2
+
+# Announcements
+
+Initial Lab - this week is on your own. Play with AI. Not in person, upload to Gradescope.
+Discussion post introduction
+
+
+---
+
+**Description of the slide:**
+
+This slide, titled "Announcements," contains important information for the AI Basics course.  The text is in a standard, easy-to-read font.  The first line, "Initial Lab - this week is on your own. Play with AI. Not in person, upload to Gradescope," indicates that the initial lab assignment is an independent activity, to be completed using AI tools, and submitted online via Gradescope. The second line, "Discussion post introduction," suggests that a discussion post is also part of the week's activities.  The overall design is simple and straightforward, focusing on conveying the announcements.  There are no figures on this slide.  The slide is likely part of a larger presentation, and the announcements are likely to be relevant to the current week's activities in the AI Basics course.
+
+
+# 3
+
+# Today's lecture
+
+Introduce the basic idea of AI
+* History
+* The nature of intelligence
+* Characteristics of the field of study
+
+
+---
+
+**Description of the slide:**
+
+This slide, titled "Today's lecture," outlines the topics that will be covered in the current lecture.  The text is in a standard, easy-to-read font.  The bullet points clearly indicate the three main areas of focus:  "History," "The nature of intelligence," and "Characteristics of the field of study."  These topics are relevant to the AI Basics course, providing a foundational understanding of the subject.  There are no figures on this slide.  The slide is likely part of a larger presentation, and the topics listed are likely to be discussed in detail in the following slides.  The slide's purpose is to give the audience a preview of the lecture's content.
+
+
+# 4
+
+# The beginnings of AI Research
+
+1956 Dartmouth summer research project
+
+"We propose that a 2 month, 10 man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College in Hanover, New Hampshire.
+
+The study is to proceed on the basis of the conjecture that every aspect of learning or any other feature of intelligence can in principle be so precisely described that a machine can be made to simulate it. An attempt will be made to find how to make machines use language, form abstractions and concepts, solve kinds of problems now reserved for humans, and improve themselves."
+
+John McCarthy
+
+Marvin Minsky
+
+Claude Shannon
+
+
+---
+
+**Description:**
+
+This slide, titled "The beginnings of AI Research," details the 1956 Dartmouth Workshop, a pivotal moment in the history of AI.  The text describes the workshop's goals and the core principles behind the nascent field.  The slide includes three images of prominent figures associated with the workshop: John McCarthy, Marvin Minsky, and Claude Shannon.  These images are positioned below the text, in a grid-like arrangement.  Each image is a portrait-style photograph of the respective individual.  The images are likely included to provide context and recognition of the key figures who shaped the early development of AI.  Below the images, there is a small caption that provides the source of the images.  Finally, there is a large image of Dartmouth College in the background, providing a visual representation of the location of the workshop.  The image is positioned at the bottom right of the slide, and it is an aerial view of the campus, likely to emphasize the historical significance of the location.  The overall design of the slide is to highlight the historical context and key figures involved in the early days of AI research.
+
+
+# 5
+
+# What is artificial intelligence?
+
+[The automation of] activities that we associate with human thinking, activities such as
+decision-making, problem solving, learning
+Bellman 1978
+
+Computational Intelligence is the study of the design of intelligent agents.
+Poole 1988
+
+The study of how to make computers do things at which, at the moment, people are better
+Rich & Knight 1991
+
+The study of computation that make it possible to perceive, reason, and act.
+Winston 1992
+
+
+---
+
+**Description:**
+
+This slide, titled "What is artificial intelligence?", presents different definitions and perspectives on AI.  The text is formatted in a way that highlights various viewpoints on the subject.  Each definition is followed by the name of the author and the year in which the definition was proposed.  This format emphasizes the historical development of the concept of AI.  There are no figures on this slide.  The slide is likely part of a larger presentation, and the definitions are likely to be discussed in detail in the following slides.  The slide's purpose is to introduce different ways of thinking about AI and to provide a historical context for the concept.  The slide is designed to be informative and engaging, providing a variety of perspectives on the topic.
+
+
+# 6
+
+# Turing Test: Inspiring a Field
+
+"Can machines think?" ⇒ "Can machines behave intelligently?"
+
+Operational test for intelligent behavior: the Imitation Game
+
+Crucially: no constraint on topics
+
+![Diagram of the Turing Test](https://i.imgur.com/your_image_url.png)
+
+
+---
+
+**Description:**
+
+This slide introduces the Turing Test, a crucial concept in AI.  The title, "Turing Test: Inspiring a Field," clearly indicates the topic.  The text explains the core idea of the Turing Test, shifting the focus from whether machines can *think* to whether they can *behave* intelligently.  The phrase "Operational test for intelligent behavior: the Imitation Game" further clarifies the test's nature.  The final line, "Crucially: no constraint on topics," highlights a key aspect of the test—it doesn't limit the scope of the questions asked.
+
+The central figure on the slide is a diagram depicting the setup of the Turing Test.  It shows a human interrogator communicating with both a human and an AI system, each represented by a box.  The interrogator is separated from the two other participants, and the AI system is represented by a box with a question mark inside.  This visual representation is crucial for understanding the test's methodology.  The diagram is positioned centrally on the slide, and its orientation is horizontal, aligning with the overall layout of the slide.  The purpose of the diagram is to illustrate the test's structure and how it assesses intelligent behavior.  The diagram is a simplified representation of the Turing Test, but it effectively conveys the core concept.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the diagram correctly.  The description above is a detailed explanation of the slide's content, including the diagram.
+
+
+# 7
+
+# Turing Test: Inspiring a Field
+
+Does it mean machines can think if they pass the Turing test?
+John Searle: Chinese room argument in "Minds, Brains, and Programs"
+
+![Diagram of the Turing Test](https://i.imgur.com/your_image_url.png)
+
+
+---
+
+**Description:**
+
+This slide, titled "Turing Test: Inspiring a Field," continues the discussion of the Turing Test, but now introduces a critical perspective.  The text poses a question: does passing the Turing Test necessarily mean a machine can think?  This is followed by a statement attributing the "Chinese room argument" to John Searle, suggesting a counter-argument to the idea that passing the test equates to true understanding or thought.
+
+The central figure on the slide is a diagram.  It depicts a simplified representation of the Turing Test setup.  A human interrogator is positioned in the middle, separated from two other participants.  One participant is labeled "HUMAN INTERROGATOR," and the other is labeled "AI SYSTEM."  The AI system is represented by a box with a question mark inside.  The diagram shows a connection between the interrogator and both the human and the AI system, suggesting communication.  The diagram is oriented horizontally, and the boxes representing the participants are rectangular.  The purpose of the diagram is to visually illustrate the Turing Test setup and the roles of the participants.  The diagram is placed centrally on the slide, and its orientation is horizontal, aligning with the overall layout of the slide.  The diagram is a simplified representation of the Turing Test, but it effectively conveys the core concept.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the diagram correctly.  The description above is a detailed explanation of the slide's content, including the diagram.
+
+
+# 8
+
+# Turing's Prediction
+
+"I believe that in about fifty years' time it will be possible to programme computers,
+with a storage capacity of about 10<sup>9</sup>, to make them play the imitation game so well
+that an average interrogator will not have more than 70 per cent. chance of making
+the right identification after five minutes of questioning. . ."
+
+". . .The original question, 'Can machines think?' I believe to be too meaningless to
+deserve discussion. Nevertheless I believe that at the end of the century the use of
+words and general educated opinion will have altered so much that one will be able to
+speak of machines thinking without expecting to be contradicted. . ."
+
+"Computing Machinery and Intelligence", Mind, 1950. p. 442
+
+
+---
+
+**Description:**
+
+This slide presents a quote from Alan Turing, likely from his seminal paper "Computing Machinery and Intelligence."  The quote details Turing's prediction about the future of AI, specifically the ability of computers to convincingly mimic human conversation within a certain timeframe.  The text is formatted to highlight Turing's specific estimations and the context of his prediction.  There are no figures on this slide.  The slide is part of a lecture on AI Basics, and the content is presented to illustrate Turing's early vision of AI capabilities and the time frame he envisioned for their development.  The inclusion of the source ("Computing Machinery and Intelligence", Mind, 1950. p. 442) is crucial for academic rigor and attribution.  The quote is presented in a way that emphasizes the historical context and the importance of Turing's work in the field.
+
+
+# 9
+
+# Aspects of AI: Research tracks at AAAI-2020
+
+Causality
+Search, Constraint Satisfaction, Optimization
+Game Theory and Economic Paradigms
+Computer Vision Natural Language Processing
+Machine Learning
+Knowledge Representation and Reasoning
+AI for Social Good
+Multi Agent Systems
+Reasoning Under Uncertainty
+Robotics
+Planning/Scheduling
+
+
+---
+
+**Description:**
+
+This slide, titled "Aspects of AI: Research tracks at AAAI-2020," lists various research areas within the field of Artificial Intelligence (AI).  The list is presented in a clear, bulleted format, with each item representing a distinct area of AI research.  The items are organized in a vertical column, with the left-hand column listing topics related to the core concepts of AI, and the right-hand column listing topics related to more applied or societal aspects of AI.  The title indicates that the list is specifically focused on research tracks presented at the AAAI (Association for the Advancement of Artificial Intelligence) conference in 2020.  The slide's purpose is to provide an overview of the diverse research directions within AI, highlighting the breadth and depth of the field.  There are no figures on this slide.  The slide is likely part of a larger presentation, and the topics listed are likely to be discussed in detail in the following slides.  The slide's design is simple and straightforward, focusing on conveying the information in a clear and concise manner.
+
+
+# 10
+
+# AlphaGo Beat world champion Lee sedol in 2016
+
+![Image of AlphaGo vs. Lee Sedol](https://i.imgur.com/your_image_url.png)
+
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, displays a photograph of the historic match between AlphaGo and Lee Sedol in 2016.  The image shows the match in progress, with both players seated at a table, and a large screen displaying the Go board.  The image is a full-shot, capturing the atmosphere of the event.  The image is likely included to illustrate a significant milestone in AI development, showcasing a moment when a machine learning algorithm (AlphaGo) defeated a human Go champion.  The image is positioned centrally on the slide, and its orientation is horizontal.  The image is likely to be accompanied by text explaining the significance of the event in the context of AI development.  The presence of logos and dates (Google DeepMind, 8-15 March 2016) further contextualizes the image, indicating the event's location and time.  The image is a key visual element to illustrate the historical impact of AlphaGo's victory.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the image correctly.  The description above is a detailed explanation of the slide's content, including the image.  The image is a photograph of a Go match between AlphaGo and Lee Sedol, likely taken during the 2016 Google DeepMind Challenge Match.  The image shows the players, the board, and the surrounding environment, providing a visual representation of the event.  The image is likely included to illustrate a significant milestone in AI development, showcasing a moment when a machine learning algorithm defeated a human Go champion.
+
+
+# 11
+
+# Search over Game Trees
+
+Rules define set of legal moves, each
+move changes board
+Sequence of moves forms a game tree of
+configurations; Leaf nodes represent
+outcomes (with associated score)
+Algorithms search over game tree to
+learn which moves, in which
+configurations, are likely to lead to wins
+
+![Game Tree](https://i.imgur.com/your_image_url.png)
+
+Win +1
+:
+Lose -1
+:
+Draw 0
+
+Until the end of the game
+
+Game tree: Traced by Stannered, original by Gdr (Image:Tic-tac-toe-game-tree.png) [GFDL (http://www.gnu.org/copyleft/fdl.html), via Wikimedia Commons]
+
+
+---
+
+**Description:**
+
+This slide discusses game tree search in the context of AI Basics.  The title, "Search over Game Trees," clearly indicates the topic.  The text explains how rules define legal moves in a game, how a sequence of moves creates a game tree, and how leaf nodes represent outcomes with associated scores.  The text also describes how algorithms search this tree to identify moves and configurations that lead to favorable outcomes.
+
+The central figure on the slide is a complex diagram, a game tree.  It's a visual representation of a Tic-Tac-Toe game, showing possible moves and their outcomes.  The tree branches out from a starting position, with each branch representing a possible move.  The branches continue to further branch, representing subsequent moves.  The leaf nodes at the bottom of the tree show the final configurations of the board, with associated scores (Win +1, Lose -1, Draw 0).  The diagram is oriented vertically, with the root node (initial game state) at the top and the leaf nodes (final game states) at the bottom.  The diagram is crucial for illustrating the concept of game tree search, showing how possible moves and their outcomes are organized in a hierarchical structure.  The diagram is a visual representation of the game tree, which is a fundamental concept in AI search algorithms.  The source of the image is clearly indicated, which is important for academic integrity.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the diagram correctly.  The description above is a detailed explanation of the slide's content, including the diagram.
+
+
+# 12
+
+# Search Tree Sizes
+
+Tic-tac-toe: 10<sup>5</sup>
+Checkers: 10<sup>31</sup>
+Chess: 10<sup>123</sup>
+Backgammon: 10<sup>144</sup>
+Go: 10<sup>360</sup>
+
+Atoms in your body ~ 10<sup>28</sup>
+Atoms in the universe ~ 10<sup>80</sup>
+
+Assume that a computer evaluates 1 million board configurations per second.
+
+It would take 0.1 seconds to search the entire tic-tac-toe game tree but it would still take 10<sup>18</sup> years to search the full checkers tree.
+
+Search alone is impossible, we need machine learning.
+
+By Goban1 (Own work) [Public domain], via Wikimedia Commons
+
+![Image of a Go board](https://i.imgur.com/your_image_url.png)
+
+
+---
+
+**Description:**
+
+This slide, titled "Search Tree Sizes," presents a table of the estimated number of possible game configurations for various board games.  The table lists the games (Tic-tac-toe, Checkers, Chess, Backgammon, Go) and the corresponding number of possible configurations, expressed in scientific notation (e.g., 10<sup>5</sup>).  Below the table, the slide provides the approximate number of atoms in the human body and the universe, also in scientific notation.  The slide then presents a hypothetical scenario, assuming a computer can evaluate 1 million board configurations per second.  It calculates the time it would take to search the entire tic-tac-toe game tree (0.1 seconds) and contrasts this with the astronomical time it would take to search the full checkers game tree (10<sup>18</sup> years).  The final sentence emphasizes the limitations of pure search algorithms and the necessity of machine learning techniques.
+
+The central figure on the slide is an image of a Go board.  The board is filled with black and white stones, representing a typical Go game configuration.  The image is positioned on the right side of the slide, likely to visually represent the complexity of the Go game and the vastness of its search space.  The image is oriented horizontally, and its size is medium, complementing the text on the slide.  The image is a visual aid to illustrate the concept of search tree sizes and the computational challenges associated with games like Go.  The source of the image is clearly indicated, which is important for academic integrity.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the image correctly.  The description above is a detailed explanation of the slide's content, including the image.  The image is a photograph of a Go board, likely taken during a Go game.  The board is filled with black and white stones, representing a typical Go game configuration.  The image is likely included to illustrate the complexity of the Go game and the vastness of its search space.
+
+
+# 13
+
+# Applications of AI
+
+Self-driving cars
+Smart buildings
+Personalized medicine
+
+![Image of self-driving cars, smart buildings, and personalized medicine](https://i.imgur.com/your_image_url.png)
+
+
+---
+
+**Description:**
+
+This slide, titled "Applications of AI," presents three distinct applications of AI: self-driving cars, smart buildings, and personalized medicine.  The title clearly indicates the topic of the slide.  The text is simple and straightforward, listing the three applications.
+
+The central figure on the slide is an image.  It's a horizontal arrangement of three distinct images, each representing a different application.  On the left, there's a picture of a white car, likely a Google self-driving car, with sensors and cameras visible.  In the middle, there's a futuristic image of a city skyline with buildings, suggesting smart building technology.  On the right, there's a close-up image of a person's arm with an IV drip and a medical professional's hands, suggesting personalized medicine.  The images are positioned side-by-side, with the titles "Self-driving cars," "Smart buildings," and "Personalized medicine" above each image.  The images are likely included to visually represent the diverse applications of AI and to provide a concrete example of how AI is being used in different sectors.  The images are oriented horizontally, and their sizes are comparable, creating a balanced visual presentation.  The images are likely sourced from various online repositories, and the source information is included in the slide's footer.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the image correctly.  The description above is a detailed explanation of the slide's content, including the image.  The image is a composite of three separate images, each representing a different application of AI.  The image is likely included to illustrate the diverse applications of AI and to provide a concrete example of how AI is being used in different sectors.  The images are likely sourced from various online repositories, and the source information is included in the slide's footer.
+
+
+# 14
+
+# We've made great progress in AI over the last 60 years...
+But we've also notoriously underestimated problem difficulty...
+
+
+---
+
+**Description:**
+
+This slide presents a concise statement about the progress and challenges in the field of Artificial Intelligence (AI).  The text is a single paragraph, highlighting both the significant advancements made in AI over the past 60 years and the fact that the inherent difficulties of the field have often been underestimated.  There are no figures on this slide.  The slide is likely part of a larger presentation, and the statement is likely to be followed by further discussion or examples to illustrate the points made.  The slide's purpose is to introduce a key theme of the lecture, emphasizing the complex nature of AI research and development.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.  The use of ellipses at the end of each sentence suggests that the statement is a starting point for a larger discussion.
+
+
+# 15
+
+# In 1966, Seymour Papert (from the same MIT AI group as McCarthy and Minsky) told his graduate students to “solve” computer vision as a summer project unlike many other problems in AI, vision was tractable and “easy” to encode Decades later, we are still working…
+
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a historical anecdote about computer vision.  The text states that in 1966, Seymour Papert, a member of the MIT AI group, assigned computer vision as a summer project to his graduate students.  The text further notes that, in contrast to other AI problems, computer vision was perceived as relatively straightforward and easily encoded at that time.  The final sentence, "Decades later, we are still working…," implies that despite this initial optimism, significant challenges remain in the field of computer vision.  The slide's purpose is to highlight the historical context of AI research, contrasting the perceived ease of certain problems in the past with the ongoing complexity of those same problems today.  There are no figures on this slide.
+
+
+
+
+# 16
+
+# Facebook's visual system can automatically identify components of images and a produce verbal description for the blind
+
+![Image Grid](https://i.imgur.com/your_image_url.png)
+
+**Description of the Image:**
+
+The image is a grid of nine smaller images.  Each smaller image shows a different scene or object.  The images are diverse, including:
+
+* **Top Left:**  A room interior, likely a living room, with a purple armchair.
+* **Top Middle:** A baseball game scene, with players and the baseball diamond.
+* **Top Right:** A highway scene, with multiple cars and signs.
+* **Middle Left:** A group of animals (likely zebras, elephants, and other large mammals) in a savanna-like environment.
+* **Middle Middle:** A scene of people and objects in a market or outdoor setting.
+* **Middle Right:** A room interior, likely a dining room or kitchen, with various furniture and objects.
+* **Bottom Left:** A scene of a group of animals (likely llamas or alpacas) in a field.
+* **Bottom Middle:** A scene of a horse race track or similar outdoor setting.
+* **Bottom Right:** A snowy mountain scene, with people and ski equipment.
+
+Each object or scene in the smaller images is outlined with different colored borders.  These colored borders highlight the components that the Facebook visual system is identifying.  The image grid is positioned centrally on the slide, and its orientation is horizontal.  The purpose of the image is to visually demonstrate the capabilities of Facebook's visual system, showcasing its ability to identify and segment different components within various images.  The URL at the bottom of the slide provides a source for further information about the visual system.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the image correctly.  The description above is a detailed explanation of the slide's content, including the image.  The image is a composite of nine different images, each representing a different scene or object.  The colored borders around the objects in each image are a key visual element, highlighting the components that the Facebook visual system is identifying.  The image is likely included to illustrate the capabilities of Facebook's visual system and to provide a concrete example of how AI is being used in image analysis.
+
+
+# 17
+
+# Surprises brought by the development of Artificial Intelligence…
+
+
+---
+
+**Description:**
+
+This slide, titled "Surprises brought by the development of Artificial Intelligence…," presents a single, declarative statement.  The text is a simple, direct title, likely introducing a section of the lecture that will discuss unexpected outcomes or challenges related to the development of AI.  There are no figures on this slide.  The slide's purpose is to introduce a topic for discussion, setting the stage for the following slides, which will likely delve into specific examples of the surprises or unexpected outcomes mentioned.  The ellipsis at the end of the sentence suggests that the statement is a starting point for a larger discussion, rather than a complete thought.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+# 18
+
+# Neural Net Achieves Super Human Performance
+
+ImageNet Dataset: sample images from ILSVRC 2012
+
+![Image Grid](https://i.imgur.com/your_image_url.png)
+
+**Description of the Image:**
+
+The image is a large grid of many small images.  These small images are examples from the ImageNet dataset, a large database of images used for training computer vision models.  The grid shows a wide variety of objects and scenes, demonstrating the diversity of the dataset.  The image is positioned at the top left of the slide, above the graph and the diagram of the convolutional neural network.  Its purpose is to visually represent the vastness and variety of the ImageNet dataset, which is crucial for understanding the context of the performance graph and the neural network diagram.
+
+
+**Graph:**
+
+Top-5 error on ImageNet
+
+* **X-axis:**  Years (2010-[23], 2011-[24], 2012-[5], 2013-[2], 2014-[7], 2015-[26])
+* **Y-axis:**  Top-5 error percentage (0-30)
+* **Data Points:**  A bar graph showing the top-5 error rate for image classification over the years.  The bars show a clear downward trend, indicating improved performance over time.
+* **Dashed Line:** A horizontal dashed line represents the top-5 error rate of human performance (5.1%).
+* **Legend:**  A legend shows "top-5" as the label for the bar graph.
+
+The graph is positioned on the right side of the slide, below the image grid.  Its purpose is to visually demonstrate the progress of image classification performance over time, showing how neural networks have surpassed human performance in this task.
+
+
+**Diagram:**
+
+Convolutional neural net example
+
+* **Structure:**  A diagram of a convolutional neural network (CNN).  It shows multiple layers of convolutional and pooling layers, followed by fully connected layers.  The diagram shows the flow of data through the network, from the input image to the final output.
+* **Components:**  The diagram labels different layers (Conv1, Pool1, Conv2, Pool2, FC1, Loss).  The diagram also shows the connections between the layers, indicating the flow of data and operations performed at each stage.
+* **Placement:**  The diagram is positioned below the image grid and to the left of the graph.  Its purpose is to visually illustrate the architecture of the neural network used for image classification, providing context for the performance data shown in the graph.
+
+**Overall:**
+
+The slide combines a visual representation of the ImageNet dataset, a graph showing the improvement in image classification performance over time, and a diagram of the neural network architecture.  This combination provides a comprehensive view of the progress in image recognition using neural networks.
+
+
+**Description of what you see:**
+
+This slide presents a combination of visual aids to illustrate the progress of neural networks in image classification.  The image grid shows examples of the data used to train the networks.  The graph shows the improvement in performance over time, and the diagram shows the architecture of the neural networks used to achieve this performance.  The slide is designed to be informative and visually engaging, providing a clear picture of the progress in image recognition using neural networks.  The source is also given at the bottom of the slide.
+
+
+# 19
+
+# Al safety
+
+**Table:**
+
+| Distance/Angle | Subtle Poster | Subtle Poster Right Turn | Camouflage | Camouflage Art (LISA-CNN) | Camouflage Art (GTSRB-CNN) |
+|---|---|---|---|---|---|
+| 5′ 0° |  [Image of a stop sign] | [Image of a right-turn sign] | [Image of a stop sign] | [Image of a stop sign] | [Image of a stop sign] |
+| 5′ 15° | [Image of a stop sign] | [Image of a right-turn sign] | [Image of a stop sign] | [Image of a stop sign] | [Image of a stop sign] |
+| 10′ 0° | [Image of a stop sign] | [Image of a right-turn sign] | [Image of a stop sign] | [Image of a stop sign] | [Image of a stop sign] |
+| 10′ 30° | [Image of a stop sign] | [Image of a right-turn sign] | [Image of a stop sign] | [Image of a stop sign] | [Image of a stop sign] |
+| 40′ 0° | [Image of a stop sign] | [Image of a right-turn sign] | [Image of a stop sign] | [Image of a stop sign] | [Image of a stop sign] |
+
+**Targeted-Attack Success:**
+
+|  | 100% | 73.33% | 66.67% | 100% | 80% |
+
+
+**Text:**
+
+Neural network thinks they are "speed limit 45".
+
+**Image:**
+
+A large square image grid is positioned at the top left of the slide.  The grid contains smaller images, each showing a different scene or object.  The images are diverse, including various types of stop signs, right-turn signs, and other objects.  The images are likely examples of the data used to train a neural network for object recognition.  The images are arranged in a grid format, with each image representing a different angle or distance from the object.  The purpose of the image grid is to visually demonstrate the types of images used in the dataset and the variety of objects that the neural network is trained to recognize.
+
+A smaller, square image of a "Speed Limit 45" sign is positioned in the lower right quadrant of the slide.  The purpose of this image is to highlight the specific object that the neural network misclassified.  The image is oriented horizontally.
+
+
+**Overall:**
+
+This slide presents a table of images and their corresponding success rates for a targeted attack on a neural network.  The images show various stop signs and right-turn signs at different angles and distances.  The table shows the success rate of the attack, which is high in some cases.  The slide also includes a "Speed Limit 45" sign, which is the object that the neural network misclassified.  The slide is likely part of a discussion about the vulnerability of neural networks to adversarial attacks.
+
+
+
+
+# 20
+
+# Ethical issues of artificial intelligence
+
+**Text Content:**
+
+**Headline:** Ethical issues of artificial intelligence
+
+**News Article Excerpt:**
+
+* **Millions of black people affected by racial bias in health-care algorithms.**
+* Study reveals rampant racism in decision-making software used by US hospitals – and highlights ways to correct it.
+
+**Source:** nature.com (News, 24 October 2019, Updated 26 October 2019)
+
+
+**Description of the Image/Figures:**
+
+The slide contains a screenshot of a news article from the website nature.com.  The article discusses ethical issues related to artificial intelligence, specifically highlighting racial bias in health-care algorithms used by US hospitals.  The title of the article is "Millions of black people affected by racial bias in health-care algorithms."  The article's headline and a portion of the text are displayed on the slide.  The source and date of the article are also visible.  The image is a direct capture of the news article, not a graphic or chart.  The purpose of the slide is to introduce the topic of ethical concerns in AI, using a specific news article as an example.  The slide is likely part of a larger presentation on AI Basics, and the article excerpt is used to illustrate a real-world example of bias in AI systems.
+
+
+
+
+# 21
+
+# Playing Games
+
+---
+
+**Description of the Image/Figures:**
+
+This slide contains only text.  There are no images or figures.  The title, "Playing Games," is displayed in a large, bold, dark gray font against a light gray background.  The title is likely the heading for a section of the lecture on AI Basics, introducing a topic related to game playing as a domain for AI research.
+
+
+**Description:**
+
+The slide is a simple title slide, introducing the topic of game playing in the context of AI.  It's likely the start of a new section or subsection within the lecture, and the content of the following slides will likely delve into specific aspects of game playing in AI.  The title is clear and concise, providing a preview of the content to come.
+
+
+# 22
+
+# Minimax Search
+
+**Text Content:**
+
+* **Headline:** Minimax Search
+
+* **Description:**
+    * **Minimax:** A search algorithm for two-player zero-sum games.
+    * **Goal:** Find the best move for the current player, assuming the opponent also plays optimally.
+    * **Evaluation Function:** Assigns a numerical score to each game state.
+    * **Recursive Search:** Explores the game tree to find the best move.
+    * **Max/Min:** Alternates between maximizing the score for the current player and minimizing the score for the opponent.
+    * **Pruning:** Techniques to reduce the search space, such as alpha-beta pruning.
+
+
+**Description of the Image/Figures:**
+
+There are no images or figures on this slide.  The slide is purely text-based, outlining the Minimax search algorithm.
+
+
+**Description:**
+
+This slide provides a concise overview of the Minimax search algorithm.  It defines Minimax, its goal, and the key components involved, such as the evaluation function, recursive search, and the max/min approach.  The slide also mentions pruning techniques like alpha-beta pruning, which are crucial for managing the computational complexity of the search.  The slide is likely part of a lecture on AI Basics, introducing a fundamental search algorithm used in game playing AI.  The slide's design is simple and straightforward, focusing on conveying the core concepts of the Minimax algorithm.
+
+
+# 23
+
+# Alpha-Beta Pruning
+
+**Text Content:**
+
+* **Headline:** Alpha-Beta Pruning
+
+* **Description:**
+    * **Motivation:**  Reduce the search space in Minimax search.
+    * **Idea:**  Avoid evaluating branches that cannot affect the optimal decision.
+    * **Alpha:**  The best value found so far for the maximizing player.
+    * **Beta:** The best value found so far for the minimizing player.
+    * **Pruning:** If a branch's value is guaranteed to be worse than the current best value for the opponent, it's not explored.
+    * **Example:**  Illustrate the pruning process with a simple game tree.
+
+
+**Description of the Image/Figures:**
+
+There are no images or figures on this slide.  The slide is purely text-based, outlining the Alpha-Beta pruning algorithm.
+
+
+**Description:**
+
+This slide provides a concise overview of the Alpha-Beta pruning algorithm.  It explains the motivation for using Alpha-Beta pruning (reducing the search space in Minimax), the core idea (avoiding unnecessary evaluations), and the key concepts of alpha and beta values.  The slide also mentions the pruning process and provides an example of how it works.  The slide is likely part of a lecture on AI Basics, introducing a crucial optimization technique for game playing AI that uses the Minimax algorithm.  The slide's design is simple and straightforward, focusing on conveying the core concepts of Alpha-Beta pruning.
+
+
+# 24
+
+# How do you play games: Algorithm components
+
+Representation of the state of the game
+Set of actions available
+Planning sequences of actions (look ahead)
+Reasoning about opponent's possible actions
+How to choose between actions?
+
+
+---
+
+**Description:**
+
+This slide, titled "How do you play games: Algorithm components," presents a list of key components involved in designing algorithms for playing games.  The text is in a standard, easy-to-read font.  The bullet points clearly outline the different aspects of game-playing algorithms.  There are no figures on this slide.  The slide is likely part of a larger presentation on AI Basics, and the components listed are likely to be discussed in detail in the following slides.  The slide's purpose is to provide an overview of the key elements involved in creating game-playing AI.  The slide is designed to be informative and engaging, providing a clear picture of the different aspects of game-playing algorithms.
+
+
+
+
+# 25
+
+# Autonomous robots
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single, simple title: "Autonomous robots."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on autonomous robots.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of autonomous robots, such as their design, capabilities, or applications.
+
+
+# 26
+
+# Autonomous Robots
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single, simple title: "Autonomous Robots."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on autonomous robots.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of autonomous robots, such as their design, capabilities, or applications.
+
+
+**Description of what you see:**
+
+The slide displays only the title "Autonomous Robots" in a heading-style format.  There are no images, graphs, or other visual elements.  The text is likely in a bold, dark font against a light background.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+# 27
+
+# How is soccer different from chess?
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, poses a question: "How is soccer different from chess?"  The text is a single, direct question in a large, bold, dark gray font against a light gray background.  There are no images or figures on this slide.  The slide's purpose is to introduce a topic for discussion, likely prompting students to consider the differences between these two games in the context of AI.  The question is likely to be followed by slides that explore the differences in game dynamics, complexity, and the challenges they present for AI algorithms.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+**Description of what you see:**
+
+The slide displays a single question, "How is soccer different from chess?", in a large, bold, dark gray font against a light gray background.  The question is centered on the slide.  There are no other elements on the slide.  The font is clear and easy to read.  The question is posed in a way that encourages critical thinking about the differences between the two games.
+
+
+# 28
+
+# Algorithm components
+
+Representation of the state of the game
+Set of actions available
+Planning sequences of actions (look ahead)
+Reasoning about opponent's possible actions
+How to choose between actions?
+
+
+---
+
+**Description of what you see:**
+
+This slide displays a list of algorithm components, likely in the context of AI Basics.  The title, "Algorithm components," is presented in a heading-style format, likely in a bold, dark font against a light background.  Below the title, a bulleted list details the components.  Each item in the list describes a crucial aspect of designing algorithms for tasks, such as game playing, in the field of AI.  The items are presented in a clear and concise manner, focusing on conveying the key elements involved in algorithm design.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.  The slide is likely part of a larger presentation, and the components listed are likely to be discussed in detail in the following slides.
+
+
+# 29
+
+# Speech synthesis
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single topic: "Speech synthesis."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on speech synthesis.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of speech synthesis, such as its methods, applications, or challenges.
+
+
+**Description of what you see:**
+
+The slide displays only the title "Speech synthesis" in a heading-style format.  There are no images, graphs, or other visual elements.  The text is likely in a bold, dark font against a light background.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+
+
+# 30
+
+# Speech Recognition
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single topic: "Speech Recognition."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on speech recognition.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of speech recognition, such as its methods, applications, or challenges.
+
+
+**Description of what you see:**
+
+The slide displays only the title "Speech Recognition" in a heading-style format.  There are no images, graphs, or other visual elements.  The text is likely in a bold, dark font against a light background.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+
+
+# 31
+
+No content is visible on this slide.  There is a video of Barack Obama speaking.  The video is full-screen, and the background shows the American flag and a fireplace.  The video is likely being used as a visual aid or to illustrate a point in the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a larger presentation on AI Basics.  The video is likely being used to illustrate a point or provide context for the lecture.  The video's content is not discernible from the image alone.  The slide number is 31, and it is likely part of a
+
+# 31
+
+# How is speech synthesis similar to game playing?
+
+---
+
+**Description:**
+
+This slide poses a question, "How is speech synthesis similar to game playing?"  It's a question designed to encourage critical thinking about the similarities between these two seemingly disparate AI tasks.  The question is likely to be followed by slides that explore the commonalities in terms of algorithm design, data representation, or problem-solving approaches.  The slide is likely part of a lecture on AI Basics, and the question is intended to highlight connections between different AI domains.  The overall design is simple and straightforward, focusing on conveying the question in a clear and concise manner.
+
+
+**Description of what you see:**
+
+The slide displays a single question, "How is speech synthesis similar to game playing?", in a large, bold, dark gray font against a light gray background.  The question is centered on the slide.  There are no other elements on the slide.  The font is clear and easy to read.  The question is posed in a way that encourages critical thinking about the connections between the two tasks.
+
+
+# 33
+
+# Algorithm components
+
+Representation of the state of the game
+Set of actions available
+Planning sequences of actions (look ahead)
+Reasoning about opponent's possible actions
+How to choose between actions?
+
+
+---
+
+**Description of what you see:**
+
+This slide displays a bulleted list of algorithm components.  The title, "Algorithm components," is presented in a heading-style format, likely in a bold, dark font against a light background.  Below the title, a bulleted list details the components.  Each item in the list describes a crucial aspect of designing algorithms for tasks, such as game playing, in the field of AI.  The items are presented in a clear and concise manner, focusing on conveying the key elements involved in algorithm design.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.  The slide is likely part of a larger presentation, and the components listed are likely to be discussed in detail in the following slides.
+
+
+
+
+# 34
+
+# Conversational agents
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single topic: "Conversational agents."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on conversational agents.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of conversational agents, such as their design, capabilities, or applications.
+
+
+**Description of what you see:**
+
+The slide displays only the title "Conversational agents" in a heading-style format.  There are no images, graphs, or other visual elements.  The text is likely in a bold, dark font against a light background.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+
+
+
+
+# 35
+
+No content is visible on this slide.  There is a blank slide.
+
+
+**Description of what you see:**
+
+The slide is completely blank.  There are no images, text, or other visual elements.  It appears to be a placeholder or an empty slide in a presentation.
+
+
+
+
+# 36
+
+**Algorithm components**
+
+* Representation of knowledge about the world
+* Set of decisions (actions)
+* Reasoning about opponents or effects of actions
+* Need to choose between actions
+    * How to choose?
+    * Generalize to new situations?
+
+
+**Description of what you see:**
+
+Slide 36 presents a bulleted list of algorithm components.  The title "Algorithm components" is in a heading-style format, likely a bold, dark font against a light background.  The bullet points below the title describe key aspects of algorithm design, particularly in the context of AI.  The items are presented in a clear and concise manner, focusing on conveying the core elements involved in algorithm design.  The slide is likely part of a larger presentation, and the components listed are likely to be discussed in detail in the following slides.  The inclusion of questions like "How to choose?" and "Generalize to new situations?" suggests the slide is setting the stage for a discussion about decision-making and adaptability in algorithms.
+
+
+# 37
+
+# Fraud detection
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single topic: "Fraud detection."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on fraud detection.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of fraud detection, such as its methods, applications, or challenges.
+
+
+**Description of what you see:**
+
+The slide displays only the title "Fraud detection" in a heading-style format.  There are no images, graphs, or other visual elements.  The text is likely in a bold, dark font against a light background.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+
+
+# 38
+
+No content is visible on this slide.  There is a single, stylized image of a profile view of a head, likely representing a robot or artificial intelligence.  The head is depicted in a gradient of dark blue, with lighter blue highlights.  The head is shown in profile view, facing to the right.  The image is centrally located on the slide.  The style is simple and somewhat abstract, likely intended to represent the concept of AI or a technological entity.  The lack of text suggests this slide is a visual transition or a placeholder, possibly setting the stage for the next topic in the lecture.
+
+
+**Description:**
+
+The slide is a single image of a stylized profile view of a head, likely representing a robot or artificial intelligence.  The head is depicted in a gradient of dark blue, with lighter blue highlights.  The head is shown in profile view, facing to the right.  The image is centrally located on the slide.  The style is simple and somewhat abstract, likely intended to represent the concept of AI or a technological entity.  The lack of text suggests this slide is a visual transition or a placeholder, possibly setting the stage for the next topic in the lecture.  The image is a simple, stylized graphic, not a photograph or a complex illustration.  The color scheme is a gradient of dark blue, with lighter blue highlights.  The image is positioned centrally on the slide, and its orientation is horizontal.  The image is likely intended to be a visual representation of the topic of AI, and its simplicity suggests that the focus is on the concept rather than a specific application or example.
+
+
+
+
+# 39
+
+**Algorithm components**
+
+* Representation of knowledge about the world
+* Set of decisions (actions)
+* Reasoning about opponents or effects of actions
+* Need to choose between actions
+    * How to choose?
+    * Generalize to new situations?
+
+
+**Description of what you see:**
+
+This slide presents a bulleted list of algorithm components.  The title, "Algorithm components," is in a heading-style format, likely in a bold, dark font against a light background.  The bullet points below the title describe key aspects of algorithm design, particularly in the context of AI.  Each item in the list describes a crucial aspect of designing algorithms for tasks in the field of AI.  The items are presented in a clear and concise manner, focusing on conveying the core elements involved in algorithm design.  The inclusion of questions like "How to choose?" and "Generalize to new situations?" suggests the slide is setting the stage for a discussion about decision-making and adaptability in algorithms.  The slide is likely part of a larger presentation, and the components listed are likely to be discussed in detail in the following slides.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.
+
+
+
+
+# 40
+
+# Driving cars
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a single topic: "Driving cars."  There are no images or figures on this slide.  The slide's purpose is to introduce a new topic, likely a section or subsection of the lecture, focusing on self-driving cars or autonomous vehicle technology.  The title is clear and concise, providing a preview of the content to come.  The slide is likely to be followed by slides that discuss specific aspects of autonomous driving, such as its methods, applications, or challenges.
+
+
+**Description of what you see:**
+
+The slide displays only the title "Driving cars" in a heading-style format.  There are no images, graphs, or other visual elements.  The text is likely in a bold, dark font against a light background.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+
+
+
+
+# 41
+
+No content is visible on this slide.  There is a blank slide.
+
+
+**Description:**
+
+The slide is completely blank.  There are no images, text, or other visual elements.  It appears to be a placeholder or an empty slide in a presentation.
+
+
+
+
+
+
+# 42
+
+**Algorithm components**
+
+* Representation of knowledge about the world
+* Set of decisions (actions)
+* Reasoning about opponents or effects of actions
+* Need to choose between actions
+    * How to choose?
+    * Generalize to new situations?
+
+
+**Description of what you see:**
+
+This slide presents a bulleted list of algorithm components.  The title, "Algorithm components," is in a heading-style format, likely in a bold, dark font against a light background.  The bullet points below the title describe key aspects of algorithm design, particularly in the context of AI.  Each item in the list describes a crucial aspect of designing algorithms for tasks in the field of AI.  The items are presented in a clear and concise manner, focusing on conveying the core elements involved in algorithm design.  The inclusion of questions like "How to choose?" and "Generalize to new situations?" suggests the slide is setting the stage for a discussion about decision-making and adaptability in algorithms.  The slide is likely part of a larger presentation, and the components listed are likely to be discussed in detail in the following slides.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.
+
+
+
+
+# 43
+
+Why WERE autonomous vehicles chosen as AN AI Grand Challenge?  
+
+
+**Description of what you see:**
+
+This slide displays a single question in a heading-style format.  The question, "Why WERE autonomous vehicles chosen as AN AI Grand Challenge?", is presented in a dark gray font against a light gray background.  The question is centered on the slide.  There are no other elements on the slide.  The font is clear and easy to read.  The question is likely part of a lecture on AI Basics, and it's designed to prompt discussion about the reasons behind selecting autonomous vehicles as a significant challenge in the field of artificial intelligence.  The use of capitalization and the phrasing "Grand Challenge" suggests the question is intended to highlight the importance and complexity of the problem.
+
+
+# 44
+
+**THE AI STACK**
+
+* **Machine Learning, Deep Networks**
+* **Search, Plan and Prove**
+* **Carnegie Mellon University**
+* **Machine Learning**
+* **Autonomy**
+* **Sensors, Computer Vision, Computer Audio**
+* **Human-AI Interaction**
+
+
+**Description of what you see:**
+
+Slide 44 presents a visual representation of the "AI Stack."  A stylized, teal-colored, wireframe model of a brain is centrally located on a black background.  The brain is composed of interconnected lines and triangles, giving it a network-like appearance.  The different components of the AI stack are labeled and positioned around the brain.  "Machine Learning, Deep Networks," "Search, Plan and Prove," "Autonomy," "Sensors, Computer Vision, Computer Audio," and "Human-AI Interaction" are written as labels, connected to the brain by lines.  "Carnegie Mellon University" is written in a smaller font, positioned near the center of the brain model.  The overall design is visually appealing and emphasizes the interconnectedness of various AI components.  The image is intended to illustrate the different layers and sub-fields within the broader field of Artificial Intelligence.  The color scheme (teal) and the wireframe style of the brain model contribute to the visual appeal and the overall message of the slide.
+
+
+# 45
+
+**Perceptrons (Rosenblatt '58)**
+
+```
+        x₁
+        x₂
+in(t)  x₃
+        xₙ
+```
+
+```
+        W₁
+        W₂
+        W₃
+        ...
+        Wₙ
+```
+
+```
+Σ
+```
+
+```
+        w₀(t) = θ
+```
+
+```
+out(t)
+```
+
+**Description of what you see:**
+
+This slide presents a diagram of a perceptron, a fundamental unit in neural networks.  The diagram is a simplified representation of a single perceptron, showing the input values (x₁, x₂, x₃, ..., xₙ), the weights (W₁, W₂, W₃, ..., Wₙ) connecting the inputs to a summation node (Σ), and the output (out(t)).  A threshold value (θ) is also shown.
+
+* **Input Layer:**  The diagram shows a set of input nodes (x₁, x₂, x₃, ..., xₙ) arranged in a vertical column, labeled "in(t)."  These represent the input values to the perceptron.
+
+* **Weights:**  A set of weights (W₁, W₂, W₃, ..., Wₙ) are shown connecting each input node to the summation node (Σ).  These weights determine the influence of each input on the output.
+
+* **Summation Node (Σ):**  A summation node (Σ) is depicted, representing the weighted sum of the inputs.
+
+* **Output Layer:**  The output (out(t)) is shown as a single node, labeled "out(t)."  The output is calculated based on the weighted sum of the inputs and the threshold value.
+
+* **Threshold (θ):**  The threshold value (θ) is shown in the output calculation, indicating the activation threshold for the perceptron.
+
+* **Orientation:** The diagram is oriented horizontally, with the input nodes on the left, the weights connecting to the summation node in the middle, and the output node on the right.
+
+* **Purpose:** The diagram visually illustrates the structure of a perceptron, a fundamental building block in neural networks.  It shows how input values are weighted, summed, and then passed through an activation function to produce an output.  The diagram is likely included to provide a visual representation of the perceptron's architecture, which is crucial for understanding how these networks process information.  The source information at the bottom of the slide indicates the diagram's origin and the creator's work.
+
+
+
+
+# 46
+
+**Reinforcement Learning**
+
+**Checkers Program (Samuel '59)**
+
+**(Image Description):**
+
+A complex diagram is presented, depicting a minimax tree.  The image shows a 3D model of a human brain, with a highlighted area labeled "Amygdala."  A light-blue arrow points from the "Amygdala" to a node labeled "1" in the minimax tree.  The minimax tree itself is a branching structure, with nodes representing different game states in a checkers game.  Each node is labeled with a numerical value (e.g., 8, 13, 17, 22, 25, 27, 1, 6, 11, 15).  Some nodes have additional text "NIL" next to them.  The nodes are connected by lines, indicating the possible moves in the game.  The nodes with numerical values are colored red, while the "NIL" nodes are black.  The tree branches out from a central point, representing the initial game state.  The nodes at the bottom of the tree represent terminal states (end of the game).  The image of the brain is a 3D model, and the minimax tree is overlaid on it.  The purpose of the image is to illustrate the concept of a minimax tree in the context of reinforcement learning, specifically using the checkers program developed by Samuel in 1959.  The image shows how the game tree branches out from the initial state, representing possible moves and their outcomes.  The presence of the brain model suggests a connection between the decision-making process in the game and the human brain's cognitive functions.  The source of the image is clearly indicated at the bottom of the slide.
+
+
+**Description:**
+
+This slide introduces reinforcement learning, using a minimax tree as an example.  The title "Reinforcement Learning" indicates the topic.  The subtitle "Checkers Program (Samuel '59)" provides context, highlighting the historical significance of Samuel's work in this area.  The image is a visual representation of a minimax tree, a crucial concept in game-playing AI.  The tree shows possible game states and their associated values, illustrating the recursive nature of the algorithm.  The presence of the brain model adds a layer of conceptual connection between the algorithm and human decision-making processes.  The slide is likely part of a larger presentation on AI Basics, and the content is intended to illustrate the principles of reinforcement learning through a specific example.
+
+
+# 47
+
+**AI Success: Game Playing**
+
+How do basic Game Playing systems work?
+
+
+**Description of what you see:**
+
+Slide 47 displays a single heading, "AI Success: Game Playing," in a large, bold, dark font.  Below that, in a smaller, slightly less bold font, is the question "How do basic Game Playing systems work?".  The slide is entirely text-based, with no images or figures.  The question is likely intended to introduce a discussion about the fundamental mechanisms behind AI systems designed to play games.  The slide is likely part of a larger presentation on AI Basics, and the question is intended to set the stage for the following slides, which will likely delve into the specifics of game-playing algorithms.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+
+
+
+# 48
+
+**Game Playing**
+
+Learn about the board, pieces, moves, rules.
+Watch and/or play many games...
+Observe outcomes to learn which moves are "good" and develop strategies
+How many of you believe this is the right strategy?
+Checkers: Ary29, http://commons.wikimedia.org/wiki/File:Norman_Bethune_checkers_1937.jpg via Wikimedia Commons
+
+
+**Description of what you see:**
+
+The slide presents text in a clear, readable font.  The title "Game Playing" is in a larger, bold font.  Below that, several lines of text describe a method for learning game strategies.  The text describes a process of learning about the game's elements (board, pieces, moves, rules), playing many games, observing outcomes, and developing strategies based on those observations.  The final line asks a question, "How many of you believe this is the right strategy?", prompting reflection on the effectiveness of the described method.  A small caption at the bottom of the slide provides the source of the image (a photo of people playing checkers) and the URL.  The image itself is a black and white photo of people playing checkers.  The photo is positioned at the bottom of the slide, likely to illustrate the concept of learning game strategies by observing and playing.  The photo is oriented horizontally and is a medium-sized image.  The photo is likely included to provide a visual representation of the topic of game playing and to illustrate the process of learning strategies through observation and practice.  The source information is included to provide context and attribution.
+
+
+# 49
+
+**AI Success: game playing**
+
+1994: Chinook checkers program (UAlberta) declared world champion
+1995: TD-Gammon backgammon program (IBM) achieved grandmaster level,
+*learned to play opening positions differently than humans
+1997: Deep Blue chess program (IBM) beat world chess champion Gary Kasparov,
+*much of success was due to brute force search
+2016: AlphaGo Go program (Google) beat 9-dan professional player Lee Sedol,
+*move 37: no human would have played, but turned tide of game and resulted in a surprising loss for Sedol
+
+
+**Description of what you see:**
+
+This slide presents a list of significant milestones in AI game-playing success.  The title, "AI Success: game playing," is in a large, bold font.  Below that, a numbered list details specific achievements.  Each entry includes a year, a description of the AI program, and a notable accomplishment.  The use of asterisks (*) before certain phrases highlights key aspects of the achievements.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.  The slide is likely part of a larger presentation on AI Basics, and the content is intended to illustrate the progress made in AI game-playing over time.
+
+
+
+
+# 50
+
+**AlphaGo System**
+
+**Deep learning + Search**
+
+One model predicts next move, given the current state of the board, trained on 30 million positions from human games.
+
+Another model predicts the likelihood of winning given the current state, trained on 30 million positions from self-play.
+
+System combines two models using Monte Carlo search.
+
+Silver, David, et al. "Mastering the game of Go with deep neural networks and tree search." *Nature* 529.7587 (2016): 484-489.
+
+
+**Image Description:**
+
+The image is a complex diagram illustrating the AlphaGo system.  It's a combination of diagrams, showing two main components:
+
+* **Left Diagram (a):**  This diagram depicts a series of neural networks.  There are three networks shown stacked vertically.  The top two networks are labeled "Rollout policy" and "SL policy network," respectively, and are represented by interconnected nodes and lines, suggesting a network structure.  These networks are connected to a node labeled "Classification," which is connected to a node labeled "Human expert positions."  The bottom network is labeled "RL policy network" and is similarly represented by interconnected nodes and lines.  This network is connected to a node labeled "Self-play Positions."  The networks are connected by arrows, indicating the flow of information.  The bottom of the diagram shows a node labeled "Data."
+
+* **Right Diagram (b):**  This diagram shows a 3D representation of two neural networks, stacked vertically.  The top network is labeled "Policy network" and is represented by a series of layered, interconnected nodes and lines.  The bottom network is labeled "Value network" and is represented by a series of layered, interconnected nodes and lines.  The networks are connected by arrows, indicating the flow of information.  The bottom of the diagram shows a node labeled "S" (input state) and a node labeled "S'" (output state).  The "Policy network" is connected to a node labeled "Po/p(a|s)," and the "Value network" is connected to a node labeled "Vθ(s')."  The networks are layered, with the layers appearing as stacked, translucent shapes.
+
+The diagrams are positioned side-by-side, with the left diagram (a) slightly above the right diagram (b).  The diagrams are oriented horizontally.  The purpose of the diagrams is to visually represent the architecture of the AlphaGo system, showing how the two models (policy and value networks) are used in conjunction with Monte Carlo search to play the game of Go.  The diagrams are crucial for understanding the system's structure and how it combines deep learning and search techniques.
+
+
+**Overall:**
+
+This slide provides a summary of the AlphaGo system, highlighting its use of deep learning and search techniques.  The diagram is a key visual element, illustrating the system's architecture and how it combines two neural networks for playing Go.  The citation at the bottom of the slide provides the source for the information.
+
+

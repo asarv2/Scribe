@@ -1,0 +1,32 @@
+# Slide 31
+
+# Inner Join
+
+Only return the rows where the two joined columns contain the same value (usually what you want)
+Only these two rows have an entry in "Person" and an entry in "Grades"
+
+| ID | Last Name | First Name | RoleID |
+|---|---|---|---|
+| 1 | Bergstrom | Anthony | 1 |
+| 2 | Purdue | Peter | 2 |
+| 3 | Doe | John | 3 |
+| 4 | Smith | Jane | 3 |
+
+| StudentID | HW1 | HW2 |
+|---|---|---|
+| 3 | 35 | 42 |
+| 4 | 37 | 41 |
+| 17 | 31 | 36 |
+| 82 | 40 | 44 |
+
+
+---
+
+**Description:**
+
+This slide presents an example of an inner join in SQL.  It shows two tables, "Person" and "Grades," with sample data.  The "Person" table has columns for `ID`, `Last Name`, `First Name`, and `RoleID`.  The "Grades" table has columns for `StudentID`, `HW1`, and `HW2`.  The text emphasizes that an inner join returns only the rows where the join condition (likely `ID` or `StudentID`) matches in both tables.  The example visually demonstrates how only rows with matching `StudentID` values in both tables are included in the result of the inner join.  The slide is formatted to clearly display the two tables and the concept of an inner join.  The purpose is to illustrate a practical example of an inner join, showing how it combines data from two tables based on a common column.
+
+
+**Description of the Figure:**
+
+There is no separate figure in the slide.  The tables are part of the textual content, not a separate image.  The tables are formatted to visually represent the data from two tables, which are likely to be joined in a query.  The tables are used to illustrate the example of an inner join, which is the topic of the slide.  The formatting of the tables, with clear column headers and data entries, makes the relationships between the tables easily visible.  The layout is designed to visually represent the concept of an inner join and its application in a data science context.

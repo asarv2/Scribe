@@ -1,0 +1,18 @@
+# Slide 12
+
+**Discrimination in online ad delivery**
+
+Sweeney observed in 2013 that black-identifying names turned out to be much more
+likely than white-identifying names to generate ads that including the word "arrest" (60
+per cent versus 48 per cent).
+Google uses a learning algorithm to place ads that are most often clicked on.
+Likely to be a reflection of people clicking on those ads more for 'black' names
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, discusses a specific example of bias in online advertising.  The title, "Discrimination in online ad delivery," clearly indicates the topic.  The text describes an observation by Sweeney in 2013 that black-identifying names were more likely to receive ads containing the word "arrest" compared to white-identifying names.  This suggests a potential bias in the algorithm used to deliver ads.  The text also mentions that Google uses a learning algorithm to select ads, and that this algorithm might be reflecting existing biases in user behavior.  The source, "Lawrence Hunter, Colorado School of Mines," is at the bottom, indicating the origin of the information.  There are no figures or images on this slide. The text is clear and concise, presenting a specific case study of potential bias in online advertising.  The slide likely follows the previous discussion of proxies for discrimination, providing a concrete example of how such biases can manifest in real-world applications.

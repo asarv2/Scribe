@@ -1,0 +1,50 @@
+# Slide 5
+
+**Drawing Whiskers and Outliers in Box Plots**
+
+* Drawing a whisker out from each end of the box to the smallest and largest observations that are not outliers.
+* Indicating each outlier by a dot, cycle, or square.
+
+**Mean, Median, and Quartiles in a Box Plot**
+
+```
+Mean
+Median
+3rd Quartile
+1st Quartile
+```
+
+**Interquartile Range (IQR)**
+
+Whiskers extend to the furthest observations that are no more than 1.5 IQR from the edges of the box. Mild outliers are observations between 1.5 IQR and 3 IQR from the edges of the box. Extreme outliers are greater than 3 IQR from the edges of the box.
+
+**Identifying Distribution Shape Using Box Plots**
+
+* **Skewed:** One whisker will be much longer than the other.
+* **Symmetric:** The whiskers will be approximately equal in length.
+
+**Example 3.3 Revisited: Identifying Outliers in a Data Set**
+
+The five-number summary is as follows:
+
+* Smallest: 40
+* Lower fourth: 72.5
+* Median: 90
+* Upper fourth: 96.5
+* Largest: 125
+* IQR: 28
+
+1.5 × IQR = 42
+The low outlier < Q₁ − 1.5 × IQR = 70 − 42 = 28.
+The high outlier > Q₃ + 1.5 × IQR = 98 + 42 = 140.
+
+So, there is no outlier in this data set.
+
+**Figure Description:**
+
+A box plot is shown, positioned below the text. The box plot visually represents the five-number summary of a dataset. The box spans from the first quartile (Q1) to the third quartile (Q3), with a line inside representing the median. Whiskers extend from the box to the minimum and maximum values within 1.5 times the interquartile range (IQR).  There are also symbols (dots, circles, or squares) outside the whiskers to indicate any outliers.  The horizontal axis below the box plot shows a number line, ranging from 40 to 125, representing the data values.  The box plot is used to visualize the distribution of the data and identify any potential outliers.  A separate, smaller box plot is shown to the right of the main box plot, illustrating a skewed distribution.  Another smaller box plot is shown to the right of that, illustrating a symmetric distribution.  These smaller box plots are used to illustrate the visual differences between skewed and symmetric distributions.
+
+
+**Description of the slide:**
+
+This slide continues the discussion of box plots and outliers in the context of statistical methods. It provides a detailed explanation of how to construct and interpret box plots, including the identification of outliers based on the interquartile range (IQR).  The example demonstrates how to calculate the five-number summary and use it to determine if any outliers exist in a given dataset. The box plot is a crucial visual tool for understanding the distribution of data and identifying potential outliers. The example data set is used to illustrate the calculation of the five-number summary and the identification of outliers. The slide also shows how to use box plots to visually identify the shape of a distribution (skewed or symmetric).

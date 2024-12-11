@@ -1,0 +1,38 @@
+# Slide 24
+
+# SQL Example Continued
+
+```
+Table
+id_number	first_name	last_name	date_of_birth	hometown	course	points
+112345678	Aoife	Ahern	1993-01-25	Cork	ck401	500
+112467389	Barry	Barry	1980-06-30	Tralee	ck402	450
+112356489	Ciara	Callaghan	1993-03-14	Limerick	ck401	425
+112986347	Declan	Duffy	1993-11-03	Cork	ck407	550
+112561728	Eimear	Early	1993-07-18	Thurles	ck406	475
+112836467	Fionn	Fitzgerald	1994-06-13	Bandon	ck405	485
+```
+
+**SQL Query**
+
+```sql
+SELECT first_name, last_name
+FROM students
+WHERE points >= 500;
+```
+
+**Result**
+
+```
+first_name	last_name
+Aoife	Ahern
+Declan	Duffy
+```
+
+---
+
+**Description of the Slide:**
+
+This slide presents an SQL query example, specifically designed to retrieve data from a `students` table.  The table structure is shown, including columns for `id_number`, `first_name`, `last_name`, `date_of_birth`, `hometown`, `course`, and `points`.  Sample data is provided for each row.  The SQL query `SELECT first_name, last_name FROM students WHERE points >= 500;` is shown, demonstrating how to filter the `students` table to only include rows where the `points` value is 500 or greater.  The result of the query, a table containing only the `first_name` and `last_name` columns for the matching rows, is also displayed.  The slide is formatted to clearly separate the table, query, and result, making the example easy to follow.  The red highlights in the table indicate the rows that meet the criteria of the query.  The purpose of this slide is to illustrate a practical SQL query example, demonstrating how to filter data based on a condition.
+
+

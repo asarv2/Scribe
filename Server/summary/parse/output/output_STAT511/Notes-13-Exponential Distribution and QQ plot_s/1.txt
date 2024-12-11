@@ -1,0 +1,49 @@
+# Slide 1
+
+**STAT 511 Course Notes – set 13 (W7)**
+
+**Yuan Qu**
+
+**Quick review of the following from the previous lecture note**
+
+* 𝑃(𝑍 < 𝑧_𝑠𝑐𝑜𝑟𝑒) is what you will find on the Normal table. What if you want to know something else?
+* 𝑃(𝑍 > 𝑧𝑠𝑐𝑜𝑟𝑒) = 1 –  𝑃(𝑍 ≤ 𝑧𝑠𝑐𝑜𝑟𝑒)
+* 𝑃(𝑍 = 𝑧𝑠𝑐𝑜𝑟𝑒) = 0. Therefore
+* 𝑃(𝑍 ≤ 𝑧𝑠𝑐𝑜𝑟𝑒) = 𝑃(𝑍 < 𝑧𝑠𝑐𝑜𝑟𝑒)
+* 𝑃(𝑍 ≥ 𝑧𝑠𝑐𝑜𝑟𝑒) = 𝑃(𝑍 > 𝑧𝑠𝑐𝑜𝑟𝑒)
+* 𝑃(𝑎 < 𝑍 < 𝑏) = 𝑃(𝑍 < 𝑏) –  𝑃(𝑍 < 𝑎)
+Z scores tell you how far (measured in standard deviations) the original observations fall from the mean.
+
+**“Forwards” Normal Problems:** find a probability if you have 𝑋~𝑁(𝜇, 𝜎) and a sample score to work with
+
+1. Convert X to Z: 𝑧=
+𝑥−𝜇
+𝜎 .
+2. Rearrange (if necessary) the inequality so that it uses < 𝑜𝑟≤. Remember that 𝑃(𝑍 > 𝑧𝑠𝑐𝑜𝑟𝑒) =
+1 –  𝑃(𝑍 ≤ 𝑧𝑠𝑐𝑜𝑟𝑒).
+3. Look up the probability for your z-score on Table A.
+4. If z-score is between 2 table values, either pick the closer one or average the two closest values.
+
+**“Backwards” Normal Problems:** if you are given the probability and know 𝑋~𝑁(𝜇, 𝜎), but you don’t know the sample’s score (backwards from the previous problems).
+
+1. Treat it as 𝑃(𝑍 ≤ 𝑧𝑠𝑐𝑜𝑟𝑒) = 𝑡ℎ𝑒 𝑔𝑖𝑣𝑒𝑛 𝑝𝑟𝑜𝑏𝑎𝑏𝑖𝑙𝑖𝑡𝑦. Work backward from the probability in Table A to a corresponding z-score.
+2. Adjust to < if necessary by doing the “1-“ trick.
+3. If you have a 2-sided probability, use 𝑃(−𝑧 < 𝑍 < 𝑧) = 2 × 𝑃(𝑍 < 𝑧𝑠𝑐𝑜𝑟𝑒) – 1.
+4. Convert the z-score to x by converting with 𝑥= 𝜇+ 𝑧× 𝜎.
+
+**Mixed forwards and backwards problems:**
+
+**Example 13.1** IQ Scores are Normally distributed with a mean of 100 and a standard deviation of 15. 𝑋~𝑁(100, 152)
+
+1. What percent of the population scores between 100 and 120?
+𝑃(100 < 𝑋< 120) =
+
+2. Between what two scores does the central 20% of the population have?
+𝑃(𝑥1 < 𝑋< 𝑥2) = 20%, 𝑥1 =? , 𝑥2 =?
+
+
+---
+
+**Description of the Slide:**
+
+This is the first slide of a six-slide lecture on statistical methods, specifically focusing on normal distributions and Z-scores. The slide presents a review of concepts from the previous lecture, followed by a detailed explanation of "forward" and "backward" problems involving normal distributions.  It introduces the use of Z-tables (Table A) for finding probabilities and converting between Z-scores and raw scores.  The slide also includes an example problem (IQ scores) to illustrate the application of these concepts.  The example problem is clearly labeled and shows the steps required to solve the problem. The formatting is clear and easy to read, with bullet points and numbered lists to organize the information. The slide is well-structured and provides a comprehensive overview of the topic.

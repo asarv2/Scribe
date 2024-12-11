@@ -1,0 +1,50 @@
+# Slide 77
+
+**One-to-Many Relationships**
+
+Consider the relationship of instructors to courses. One instructor teaches many courses. We have a DataFrame for instructors (`df_1`) and a separate one for courses (`df_2`). A course has a key, `InstructorID`, which allows us to reference the instructor data in `df_1`.  When we merge, pandas combines the instructor with every record sharing the same key.
+
+```
+pd.merge(df_1, df_2)
+```
+
+The following tables are shown:
+
+**df_1 (Instructors):**
+
+| InstructorID | Name |
+|---|---|
+| 111 | Jack |
+| 589 | Cindy |
+| 764 | Gary |
+
+
+**df_2 (Courses):**
+
+| InstructorID | Course |
+|---|---|
+| 111 | Math200 |
+| 111 | CS200 |
+| 111 | CS255 |
+| 589 | CS101 |
+| 764 | ChE101 |
+
+
+**Result of pd.merge(df_1, df_2):**
+
+| InstructorID | Name | Course |
+|---|---|---|
+| 111 | Jack | Math200 |
+| 111 | Jack | CS200 |
+| 111 | Jack | CS255 |
+| 589 | Cindy | CS101 |
+| 764 | Gary | ChE101 |
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates a one-to-many relationship between instructors and courses.  It shows how a merge operation, using `pd.merge(df_1, df_2)`, combines the instructor information with the course information based on the common `InstructorID` column.  The example clearly illustrates that one instructor can teach multiple courses, resulting in multiple rows in the merged DataFrame for each instructor.  The tables (`df_1`, `df_2`, and the result) are crucial for demonstrating the one-to-many relationship and the outcome of the merge operation.  The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on merging data from different sources with various relationships.
+
+

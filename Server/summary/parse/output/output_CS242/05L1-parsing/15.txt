@@ -1,0 +1,18 @@
+# Slide 15
+
+**Complications**
+
+What are words?
+This is a sentence.
+Here is a 2nd sentence of 6 total examples.
+The raven's wings are black.
+It's a man-machine hybrid system.
+Who the &#$! did this?
+Sa sae ase u ae usasth.
+
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on Intro to Data Science, presents a series of sentences as examples.  The sentences are presented as a list, one per line.  The title "Complications" suggests that the sentences are intended to illustrate a point about the complexities of natural language processing or text analysis, perhaps highlighting challenges in defining words or sentences, or the difficulty of parsing complex sentences.  The sentences themselves are diverse, including a simple sentence, a more complex one, and one with unusual punctuation.  The presence of these sentences implies that the slide is part of a section of the lecture that is exploring the challenges of working with natural language data.  The slide is likely to be followed by a discussion or further examples related to the complexities of natural language.

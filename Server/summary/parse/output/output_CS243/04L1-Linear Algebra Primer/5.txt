@@ -1,0 +1,28 @@
+# 5
+
+**So what does a matrix represent?**
+
+A Linear Transform
+
+T: R<sup>2</sup> → R<sup>2</sup>  
+T(x) =  
+```
+( 0  -1 )
+( 1   0 )
+```
+
+As a transform, we are mapping some space to other points to other points in space.
+
+https://textbooks.math.gatech.edu/ila/linear-transformations.html
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, explains how a matrix represents a linear transformation.  The title, "So what does a matrix represent?", is in a larger, bold font, prompting the question.  The slide then introduces a linear transformation, denoted as "T," which maps points in a 2-dimensional space (R<sup>2</sup>) to other points in the same space (R<sup>2</sup>).  The transformation is defined by a 2x2 matrix:
+
+```
+( 0  -1 )
+( 1   0 )
+```
+
+This matrix is central to the explanation, showing how the transformation operates on input vectors.  The final line provides a URL to a resource on linear transformations, likely for further reading or reference.  The slide's purpose is to illustrate the concept of a matrix as a representation of a linear transformation, a crucial concept in linear algebra and its applications in AI.  The URL is a hyperlink to a website, indicating that the information is sourced from an external resource.

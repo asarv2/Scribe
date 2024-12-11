@@ -1,0 +1,54 @@
+# Slide 40
+
+**More complexity**
+
+0 is a bad default value in this case because 0 is an arbitrary temperature.
+Analyzing trends across days, the 0 will have an notable impact.
+Smooth over missing data using `ffill` (forward fill) to push previous values forward into the empty spots
+```python
+df_weather.fillna(method='ffill')
+```
+Or also, `bfill`
+```python
+df_weather.fillna(method='bfill')
+```
+
+**Additional useful points:**
+`axis=1` to `ffill` or `bfill` on the row
+`limit=1` to only allow it to push forward one row/col
+
+| Date       | Highest Temperature (Deg F) | Lowest Temperature (Deg F) | Weather |
+|------------|-----------------------------|----------------------------|---------|
+| 2020-03-06 | 38.0                        | 24.0                       | Cloudy  |
+| 2020-03-07 | 50.0                        | 19.0                       | Sunny   |
+| 2020-03-08 | 50.0                        | 19.0                       | Sunny   |
+| 2020-03-09 | 50.0                        | 50.0                       | Rain    |
+| 2020-03-10 | 57.0                        | 50.0                       | Cloudy  |
+| 2020-03-11 | 45.0                        | 37.0                       | Cloudy  |
+| 2020-03-12 | 45.0                        | 41.0                       | Cloudy  |
+| 2020-03-13 | 54.0                        | 41.0                       | Sunny   |
+| 2020-03-14 | 54.0                        | 34.0                       | Snow    |
+| 2020-03-17 | 63.0                        | 45.0                       | Cloudy  |
+
+
+| Date       | Highest Temperature (Deg F) | Lowest Temperature (Deg F) | Weather |
+|------------|-----------------------------|----------------------------|---------|
+| 2020-03-06 | 38.0                        | 24.0                       | Cloudy  |
+| 2020-03-07 | 50.0                        | 19.0                       | Sunny   |
+| 2020-03-08 | 57.0                        | 50.0                       | Rain    |
+| 2020-03-09 | 57.0                        | 50.0                       | Rain    |
+| 2020-03-10 | 57.0                        | 37.0                       | Cloudy  |
+| 2020-03-11 | 45.0                        | 37.0                       | Cloudy  |
+| 2020-03-12 | 54.0                        | 41.0                       | Sunny   |
+| 2020-03-13 | 54.0                        | 34.0                       | Sunny   |
+| 2020-03-14 | 63.0                        | 34.0                       | Snow    |
+| 2020-03-17 | 63.0                        | 45.0                       | Cloudy  |
+
+
+---
+
+**Description of the Slide:**
+
+This slide discusses the complexities of filling missing values in a time-series dataset (weather data).  It highlights that using a simple value like 0 to fill missing temperatures can introduce inaccuracies in trend analysis.  The slide presents two methods for handling missing data: `ffill` (forward fill) and `bfill` (backward fill).  It also introduces the concept of `axis=1` and `limit=1` for more controlled filling.  Two tables are shown, one using `ffill` and the other using `bfill`, demonstrating how these methods propagate values forward or backward.  The purpose is to illustrate the impact of different imputation methods on the data and the importance of considering the context of the data when handling missing values.  The code snippets are essential for demonstrating the data manipulation process. The tables are essential for showing the effect of the code on the data, specifically the filling of missing values. The context suggests that this slide is part of a larger lecture on data cleaning and manipulation techniques, specifically focusing on time-series data.
+
+

@@ -1,0 +1,43 @@
+# Slide 2
+
+**STAT 511 Course Notes – set 27 (W14)**
+
+**Yuan Qu**
+
+**Example 27.2** Consider a study of visual and musculoskeletal problems associated with the use of visual display terminals (VDTs).
+
+The accompanying table represents data on Y = ocular surface area (cm²) and X = width of the horizontal width of the eye opening, in cm.
+
+
+The data can be organized into two columns as in the right table, or we say we have *n* observations (𝑥₁, 𝑦₁), …, (𝑥ₙ, 𝑦ₙ).
+
+**Goal 1:** We want to describe the association between two variables, graphically and numerically.
+
+* **Graphical summary:** Scatterplot.
+* **Numerical summary:** Sample correlation.
+
+**Goal 2:** We also want to know if the value of one variable can tell us something about the value of the other variable if there is a linear relationship.
+
+* **Regression.**
+
+
+**Correlation**
+
+To reveal the possible connection between *x* and *y*, we can use the scatterplot.
+
+**Graphical representation: scatterplot**
+
+A scatterplot shows the relationship between two numerical variables measured on the same individuals.
+
+* The values of the explanatory variable appear on the horizontal axis.
+* The values of the response variable appear on the vertical axis.
+
+
+**Figure Description:**
+
+A scatterplot is displayed in the lower right portion of the slide.  The horizontal axis is labeled "Width" (likely width of the eye opening, the explanatory variable), and the vertical axis is labeled "HPG" (likely ocular surface area, the response variable).  The plot shows a collection of data points, each representing a pair of values (width, HPG) from the study.  The scatterplot visually displays the relationship between the two variables.  The purpose of the scatterplot is to graphically represent the association between the width of the eye opening and the ocular surface area.  The scatterplot is used to determine if there is a linear relationship between the two variables.
+
+
+**Slide Description:**
+
+This slide continues the discussion of simple linear regression from the previous slide.  It introduces the concept of a scatterplot as a graphical tool for visualizing the relationship between two numerical variables.  The example given is the relationship between ocular surface area and the width of the eye opening.  The slide explains that the explanatory variable is plotted on the horizontal axis and the response variable on the vertical axis.  The scatterplot is a crucial step in determining if there is a linear relationship between the variables, which is a prerequisite for using linear regression.  The slide also introduces the concept of correlation as a numerical summary of the association between the variables.

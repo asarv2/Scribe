@@ -1,0 +1,26 @@
+# Slide 36
+
+# Left join in SQLite/Pandas
+
+Pandas way
+```python
+df_person.merge(df_grades, how="left", left_on="id", right_on="person_id")
+```
+
+SQLite way
+```sql
+cursor.execute("SELECT * FROM person LEFT JOIN grades ON person.id = grades.person_id")
+```
+
+---
+
+**Description:**
+
+This slide provides code examples for performing a left join operation in both Pandas and SQLite.  The Pandas example uses the `.merge()` method on DataFrames, specifying the `how="left"` parameter to perform a left join.  The `left_on` and `right_on` arguments specify the columns to join on from the respective DataFrames.  The SQLite example uses the `LEFT JOIN` clause in an SQL query, specifying the join condition using the `ON` clause.  The code is formatted to show the syntax for each method, making it clear how to perform the left join operation.  The context suggests this is part of a lecture on data manipulation and querying in relational databases, specifically focusing on how to perform left joins using different approaches.
+
+
+**Description of the Figure:**
+
+There is no figure on this slide.  The slide is entirely text-based, containing code examples and explanations.  The code examples demonstrate how to perform a left join using both Pandas and SQLite, which are two different approaches to data manipulation.  The code is formatted to show the syntax for each method, making it clear how to perform the join operation.  The context suggests this is part of a lecture on data manipulation and querying in relational databases, specifically focusing on how to perform left joins using different approaches.
+
+

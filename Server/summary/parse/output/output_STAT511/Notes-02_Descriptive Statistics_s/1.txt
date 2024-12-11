@@ -1,0 +1,65 @@
+# Slide 1
+
+**Descriptive Statistics**
+
+**Exploring Data with Graphs and Numerical Summaries**
+
+Data sets contain information about some group of individuals or experimental units. This information is organized into variables.
+
+* A variable describes a characteristic measured on a subject or experimental unit in the study.
+
+**Example 2.1:** A nutritionist collected information on 20 popular brands of cereals. The right table is her data set.
+
+The variables are: sodium, sugar and CODE.
+
+* Sodium = number of mg in one serving of cereal
+* Sugar = number of grams of sugar in one serving of cereal
+* CODE = whether the cereal is considered an Adult cereal (A) or a Children's cereal (C)
+
+What are the subjects of this study?
+
+
+**Main types of variables**
+
+Numerical (Quantitative) Variables: A variable is called numerical if each variable value is a number. Two Sub-types of Numerical variables:
+
+* **Discrete:** Numerical variables that can only take certain fixed values, with no intermediate values possible.
+* **Continuous:** Continuous variables can take on any real numerical value over an interval.
+
+Categorical (Qualitative) Variables: A variable is called categorical if the variable values represent some quality (as opposed to quantity) of the subject. Sub-types:
+
+* **Nominal:** variables are purely qualitative and unordered (i.e. eye color).
+* **Ordinal:** variables can be ranked (i.e. stage of cancer).
+
+**Example:** In example 2.1, are any of the variables numerical? What variable in example 2.1 is categorical? Is it nominal or ordinal?
+
+
+**Table:**
+
+| CEREAL | SODIUM(mg) | SUGAR(g) | CODE |
+|---|---|---|---|
+| Frosted Mini Wheats | 0 | 7 | A |
+| Apple Bran | 260 | 5 | A |
+| Apple Jacks | 125 | 14 | C |
+| Capt Crunch | 220 | 12 | C |
+| Cheerios | 290 | 1 | C |
+| Cinnamon Toast | 210 | 13 | C |
+| Corn Flakes | 290 | 2 | A |
+| Raisin Bran | 210 | 12 | A |
+| Crackling Oat Bran | 140 | 10 | A |
+| Crispix | 220 | 3 | A |
+| Frosted Flakes | 200 | 11 | C |
+| Fruit Loops | 125 | 13 | C |
+| Grape Nuts | 170 | 3 | A |
+| Honey Nut Cheerios | 250 | 10 | C |
+| Honeycomb | 180 | 11 | C |
+| Life | 150 | 6 | A |
+| Oatmeal Raisin Crisp | 170 | 10 | A |
+| Sugar Smacks | 70 | 15 | C |
+| Special K | 230 | 3 | A |
+| Wheaties | 205 | 3 | A |
+
+
+**Description of the Slide:**
+
+This is the first slide of a six-slide lecture on Statistical Methods, specifically focusing on Descriptive Statistics. The slide introduces the concept of variables in data sets and provides an example (Example 2.1) of a nutritionist's data collection on cereal brands.  A table displays the data collected, including the cereal name, sodium content (in mg), sugar content (in grams), and a code indicating whether the cereal is for adults (A) or children (C). The slide then defines numerical (quantitative) and categorical (qualitative) variables, further breaking down numerical variables into discrete and continuous types, and categorical variables into nominal and ordinal types.  The slide concludes with a question prompting the students to identify the numerical and categorical variables in the example and determine if the categorical variable is nominal or ordinal. The table is central to the slide, providing the data set for the example. The text surrounding the table explains the variables and their meaning. The slide's structure is designed to introduce the key concepts of variables and data types in the context of a real-world example.

@@ -1,0 +1,21 @@
+# Slide 25
+
+**Interpretation**
+
+People do not use proper statistical/probabilistic reasoning... instead people use heuristics which can bias decisions
+
+Heuristics can often be very effective (and efficient) for social inferences and decision-making
+
+...but be aware that heuristics can bias our interpretation of results from exploratory data analysis and other modeling efforts
+
+
+---
+
+**Figure Description:**
+
+The slide features an image of the book cover for "Thinking, Fast and Slow" by Daniel Kahneman. The book cover is positioned in the upper-right quadrant of the slide. The cover displays the title "Thinking, Fast and Slow" in a large, bold font.  Below the title, the author's name, "Daniel Kahneman," is displayed in a slightly smaller, but still prominent, font. The cover also includes the text "WINNER OF THE NOBEL PRIZE IN ECONOMICS" and a quote about the book. The book cover is a visual cue to the topic of the slide, which is about heuristics and biases in decision-making, as described by the psychologists Tversky and Kahneman.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, introduces the concept of heuristics and biases in decision-making.  The slide uses the book cover of "Thinking, Fast and Slow" by Daniel Kahneman to visually represent the topic.  The book cover is a visual aid to connect the theoretical concepts of heuristics and biases with a well-known work in the field of psychology.  The slide is likely part of a section on cognitive biases and how they can affect decision-making in data analysis.  The book cover is a visual representation of the topic, and the text on the slide provides a summary of the concepts.  The slide also includes a smaller box with the title "Simple Heuristics That Make Us Smart" and the names of the authors, Gerd Gigerenzer, Peter M. Todd, and the ABC Research Group.  This suggests a connection between the concepts of heuristics and their effectiveness in decision-making.

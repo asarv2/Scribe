@@ -1,0 +1,33 @@
+# Slide 10
+
+**Regular Expressions: Examples**
+
+```
+sen = "This is a test that tests regular expression basics for numbers 1234 and letters A-Z."
+# Match all single digits
+pattern = re.compile(r"\d")
+print(re.findall(pattern, sen))
+['1', '2', '3', '4']
+# Match all digits followed by a space
+pattern = re.compile(r"\d\s+")
+print(re.findall(pattern, sen))
+['4 ']
+# Did you perhaps want to match \d+\s+?
+# Did you really want that space on the end?
+```
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, provides examples of using regular expressions (RegEx) in Python to extract specific patterns from a string.  The example string `sen` contains a mix of text and numbers.
+
+*   **First Example:** The code `pattern = re.compile(r"\d")` compiles a regular expression to match any digit.  `re.findall(pattern, sen)` finds all the digits in the string `sen` and prints them as a list: `['1', '2', '3', '4']`.
+
+*   **Second Example:** The code `pattern = re.compile(r"\d\s+")` compiles a regular expression to match a digit followed by one or more whitespace characters.  `re.findall(pattern, sen)` finds the occurrences of this pattern in the string `sen` and prints them as a list: `['4 ']`.  The output shows that the pattern successfully matched the digit '4' followed by a space.
+
+*   **Questions:** The final two lines are questions prompting the audience to consider alternative patterns or the implications of the space character in the match.  These lines are likely part of a discussion or Q&A session, encouraging the audience to think critically about the regular expression patterns and their results.
+
+The slide is designed to illustrate how to use RegEx to extract specific patterns from text data, and the output demonstrates the results of the different patterns.  The example string `sen` is used to illustrate the functionality of the methods. The output shows the matched substrings and their positions in the input string. The example string `sen` is used to illustrate the functionality of the methods.
+
+

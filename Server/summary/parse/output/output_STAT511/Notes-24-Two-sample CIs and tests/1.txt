@@ -1,0 +1,42 @@
+# 1
+
+**Two sample confidence interval and hypotheses testing**
+
+Previously, we only consider the inference about a single mean, or a single proportion. Now we extend the study to comparison between the means/proportions of two populations. For example, a hypothesis testing question:
+
+𝐻0:μ1 = μ2  vs  𝐻𝑎: μ1 ≠μ2 
+or 
+𝐻0: 𝑝1 = 𝑝2  vs  𝐻𝑎:𝑝1 ≠𝑝2. 
+
+
+**Matched pairs samples vs independent samples**
+
+There are two ways to design a study to compare the means of 2 groups:
+
+* **Independent samples** – Study in which subjects are randomly selected and measured or an experiment with a completely randomized design.
+
+* **Matched Pairs Design** – Study in which subjects are somehow paired. (i.e. matched pair design, before and after studies in which each subject is measured twice – once before treatment and once after treatment).
+
+
+**Example 24.1: Test if taking practice exam helps one type of learner more than another type.**
+
+**Design 1 - Completely Randomized:**
+
+* Randomly assign students to take MC practice exam (group 2) or no practice exam (group 1).
+* Compare 2 groups.
+
+
+**Definition: independent data**
+
+The data consists of two group of samples, {𝑋1, … , 𝑋𝑚} and {𝑌1, … , 𝑌𝑛}. {𝑋1, … , 𝑋𝑚} is a random sample from a distribution with mean μ1 and variance σ1<sup>2</sup>; {𝑌1, … , 𝑌𝑛} is a random sample from a distribution with mean μ2 and variance σ2<sup>2</sup>; and X’s and Y’s are independent to each other.
+
+
+**Figure Description:**
+
+A flowchart is presented, illustrating the process of a completely randomized design for comparing the effectiveness of a practice exam. The flowchart visually depicts the steps involved in the experiment.
+
+* **Placement:** The flowchart is positioned below the example description.
+* **Orientation:** The flowchart is oriented horizontally, with boxes and arrows representing the different stages of the experiment.
+* **Reason:** The flowchart is included to visually represent the experimental design. It clearly shows how students are randomly assigned to either a group that takes a practice exam or a group that does not, and how the exam results are compared.  The arrows and boxes make the process easy to follow.  The figure helps the reader understand the experimental design and how the data is collected.  The figure also shows the comparison of the results between the two groups.
+
+

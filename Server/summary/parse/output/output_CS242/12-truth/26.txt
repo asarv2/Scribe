@@ -1,0 +1,20 @@
+# Slide 26
+
+**Science Confirms: Politics Wrecks Your Ability to Do Math**
+
+Farewell, Enlightenment: New research suggests that people even solve math problems differently if their political ideology is at stake.
+-By Chris Mooney | Wed Sep. 4, 2013 12:59 PM EDT
+
+1000+ participants were asked about their political views and also asked a series of questions to gauge their mathematical reasoning ability. Participants were then asked to solve a fairly difficult problem that involved interpreting the results of a (fake) scientific study. One group was given a problem involving the effectiveness of a new skin cream. The other group was given a mathematically similar problem, but the data involved the effectiveness of a gun control measure. What was the result? Highly numerate people were more susceptible to letting politics skew their reasoning than were those with less mathematical ability.
+
+
+---
+
+**Figure Description:**
+
+The slide image shows a person with their head in their hands, in front of a chalkboard covered in mathematical equations. The image is likely intended to visually represent the idea that even complex mathematical problems can be affected by political views. The background of the image is a chalkboard with various mathematical equations written on it. The person in the image is wearing a dark-colored shirt. The image is positioned in the left portion of the slide.
+
+
+**Description of what you see:**
+
+This slide, the final one in a presentation, summarizes a study's findings. The study, by Kahan et al. (2013), investigated how political views can influence mathematical reasoning.  The slide's title, "Science Confirms: Politics Wrecks Your Ability to Do Math," highlights the central theme.  The text describes a study where participants were asked about their political views and mathematical reasoning ability.  They were then presented with a difficult math problem, either related to a skin cream or gun control.  The surprising result was that highly numerate individuals were more susceptible to letting their political views influence their reasoning than those with less mathematical ability. The image of the person with their head in their hands, in front of a chalkboard covered in mathematical equations, is likely intended to visually represent the idea that even complex mathematical problems can be affected by political views. The slide is designed to be a concluding statement about the study's findings.

@@ -1,0 +1,19 @@
+# Slide 28
+
+**Harris detector example**
+
+**(Figure):**
+
+The slide displays two images side-by-side.  Both images show a stylized, cartoonish representation of a cow.  The cows are identical in shape and design, but one is slightly rotated.
+
+* **Image 1 (left):** The cow is positioned with its head slightly turned to the left.  The cow is white with black spots, and its legs are thin, light-gray strings.  The cow's neck is also a light-gray string.  The cow's face has a simple, cartoonish design.
+
+
+* **Image 2 (right):** The cow is positioned with its head slightly turned to the right.  The cow is white with black spots, and its legs are thin, light-gray strings.  The cow's neck is also a light-gray string.  The cow's face has a simple, cartoonish design.
+
+
+**Description of what you see:**
+
+This slide demonstrates the Harris corner detector.  The two images of the cows are likely examples of how the detector identifies corners in an image.  The slight rotation between the two images is meant to illustrate how the detector would identify corners even when the object is rotated.  The cartoonish style of the cows is likely to make the corner detection more apparent, as the corners are more distinct than in a more complex image.  The slide is designed to visually demonstrate the concept of corner detection using the Harris detector.
+
+

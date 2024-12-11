@@ -1,0 +1,9 @@
+# Slide 42
+
+**FIGURE 5.3: The scale (i.e., σ) of the Gaussian used in a derivative of Gaussian filter has significant effects on the results. The three images show estimates of the derivative in the x direction of an image of the head of a zebra obtained using a derivative of Gaussian filter with σ one pixel, three pixels, and seven pixels (left to right). Note how images at a finer scale show some hair, the animal's whiskers disappear at a medium scale, and the fine stripes at the top of the muzzle disappear at the coarser scale.**
+
+**Description of what you see:**
+
+This slide presents an image analysis example, specifically demonstrating how the scale parameter (σ) of a Gaussian filter affects the results of a derivative of Gaussian filter.  Three images of a zebra's head are shown, each processed with a different Gaussian filter scale.  The images are arranged horizontally, with the leftmost image using a smaller σ (likely 1 pixel), the middle image using a medium σ (likely 3 pixels), and the rightmost image using a larger σ (likely 7 pixels).  The caption explains that the scale of the Gaussian filter significantly impacts the details visible in the resulting derivative image.  At a finer scale (smaller σ), more fine details like hair are visible.  At a medium scale, details like whiskers disappear.  At a coarser scale (larger σ), even larger features like the fine stripes on the muzzle disappear.  The slide is likely part of a lecture on image processing, specifically on the use of Gaussian filters and their impact on feature extraction.  The source is credited as FIGURE 5.3.
+
+

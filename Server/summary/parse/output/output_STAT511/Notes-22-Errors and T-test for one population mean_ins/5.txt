@@ -1,0 +1,42 @@
+# 5
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3**
+
+Let X<sub>1</sub>, ..., X<sub>n</sub> represent a random sample of size n from some population.
+
+* Null hypothesis H<sub>0</sub>: μ = μ<sub>0</sub>, where μ<sub>0</sub> is called null value.
+* Three possible alternative hypotheses
+    1. H<sub>a</sub>: μ > μ<sub>0</sub>, the population mean is greater than μ<sub>0</sub>
+    2. H<sub>a</sub>: μ < μ<sub>0</sub>, the population mean is less than μ<sub>0</sub>
+    3. H<sub>a</sub>: μ ≠ μ<sub>0</sub>, the population mean is not μ<sub>0</sub>
+
+**Case 1: Normal distribution with known variance σ<sup>2</sup>**
+
+The Test statistic is:
+
+TS =  (X̄ - μ<sub>0</sub>) / (σ/√n)  ~ N(0,1)
+
+One reason we choose this test statistic is that if we want to control the type I error, then the test statistic should have a tractable sampling distribution under null hypothesis.
+
+
+Type I error:
+
+α = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∈ Reject Region | μ = μ<sub>0</sub>) = P(Z ∈ Reject Region)
+
+As for type II error:
+
+β(μ) = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∉ Reject Region) = P(N(√n(μ - μ<sub>0</sub>)/σ, 1) ∉ Reject Region)
+
+
+Rejection region and p-value:
+
+1. {Z > z<sub>1-α</sub>}, p-value = P(Z > z<sub>TS</sub>) if H<sub>a</sub>: μ > μ<sub>0</sub>
+2. {Z < z<sub>α</sub>}, p-value = P(Z < z<sub>TS</sub>) if H<sub>a</sub>: μ < μ<sub>0</sub>
+3. {|Z| > z<sub>1-α/2</sub>}, p-value = 2 × P(Z > |z<sub>TS</sub>|), if H<sub>a</sub>: μ ≠ μ<sub>0</sub>
+
+This choice of rejection region is intuitively appealing to the alternative hypotheses setting, also tries to minimize the type II error subject to α.
+
+
+**Description of the Slide:**
+
+This slide (number 5) introduces hypothesis testing for a single population mean, specifically when the population follows a normal distribution and the population variance is known.  The slide outlines the null and alternative hypotheses (H<sub>0</sub> and H<sub>a</sub>) for three possible scenarios (greater than, less than, and not equal to).  It defines the test statistic (TS) as the standardized sample mean (X̄) and shows its relationship to the standard normal distribution (Z).  The slide explains the concept of type I and type II errors, and how the rejection region and p-value are used to control these errors.  The slide also provides formulas for calculating the p-value in each of the three alternative hypothesis scenarios.  The slide number (5) is present at the bottom right corner.  The content is presented in a clear and organized manner, using bullet points and numbered lists to highlight key concepts.  The formulas are presented in a way that is easy to follow, with clear explanations of the variables involved.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.

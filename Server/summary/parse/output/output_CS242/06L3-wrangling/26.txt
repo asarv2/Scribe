@@ -1,0 +1,22 @@
+# Slide 26
+
+**Using the booleans as a selector**
+
+You can use a boolean Series to select elements from the data frame
+`df_employee.loc[df_employee.duplicated()]`
+
+This may also be a custom method applied to the data frame, as long as it returns the correct number of boolean values.
+
+|  | First Name | ID | Last Login Time | Team |
+|---|---|---|---|---|
+| 13 | Benjamin | 420 | 5/1/20 22:06 | Legal |
+| 16 | Douglas | 785 | 5/1/20 12:42 | Marketing |
+| 17 | Ruby | 331 | 5/1/20 16:20 | Product |
+| 19 | Benjamin | 420 | 5/1/20 22:06 | Legal |
+
+
+---
+
+**Description of the Slide:**
+
+This slide builds on the previous one, demonstrating how to use the boolean Series returned by `df_employee.duplicated()` to select duplicate rows from the `df_employee` DataFrame.  The code `df_employee.loc[df_employee.duplicated()]` is shown, selecting rows where the `duplicated()` method returns `True`.  The output is a table showing the duplicate rows.  The table has columns for "First Name", "ID", "Last Login Time", and "Team".  Each row in the table represents a duplicate entry from the original `df_employee` DataFrame.  The slide emphasizes that this method can be adapted to use any custom method that returns a boolean Series of the correct length.  The purpose of this slide is to show how to use boolean indexing to select specific rows based on a condition (in this case, duplicate rows).  The table is crucial for demonstrating the result of the boolean indexing operation.  The comments explain the broader context of using boolean Series for selection.

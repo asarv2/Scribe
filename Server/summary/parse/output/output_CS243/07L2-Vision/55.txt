@@ -1,0 +1,17 @@
+# Slide 55
+
+**Sharpening**
+
+`f<sub>sharp</sub> = f + α(f − f<sub>blur</sub>)`
+= (1 + α)f − αf<sub>blur</sub>
+= (1 + α)(w * f) − α(v * f)
+= ((1 + α)w − αv) * f
+
+**(Image Description):**
+
+The slide presents the mathematical formula for image sharpening.  A teal/turquoise-colored box contains two 3x3 matrices.  The matrix on the left contains the values 0, 0, 0, 0, 1, 0, 0, 0, 0.  The matrix on the right contains the values 1, 1, 1, 1, 1, 1, 1, 1, 1, divided by 9.  The matrices are positioned side-by-side, with arrows pointing from the matrices to the equation.  The arrows visually connect the matrices to the equation, indicating that the matrices represent the kernels (filters) used in the equation.  The equation itself is presented in a clear, mathematical format, showing the relationship between the original image (f), the blurred image (f<sub>blur</sub>), the sharpening filter (w), and the blurring filter (v), and the scaling factor (α).  The equation demonstrates how to calculate the sharpened image (f<sub>sharp</sub>) by combining the original image with a scaled difference between the original and blurred images.
+
+
+**What you see:**
+
+The slide presents the mathematical formula for image sharpening.  The formula shows how to calculate a sharpened image (`f<sub>sharp</sub>`) from the original image (`f`), the blurred image (`f<sub>blur</sub>`), and a sharpening kernel (`w`) and a blurring kernel (`v`).  The formula is presented in a clear, mathematical format, showing the relationship between the different components.  Two 3x3 matrices are shown, representing the kernels used in the equation.  The matrices are visually connected to the equation, indicating their role in the calculation.  The slide is designed to illustrate the mathematical concept of image sharpening.  The use of the equation and the matrices is a key part of the slide, as it shows the mathematical representation of the sharpening process.

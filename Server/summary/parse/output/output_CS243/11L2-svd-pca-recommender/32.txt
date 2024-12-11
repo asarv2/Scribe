@@ -1,0 +1,27 @@
+# 32
+
+```markdown
+Ratings Data
+480,000 users
+17,700 movies
+1 3 4
+3 5 5
+4 5 5
+3 3
+2 2 2
+5
+2 1 1
+3 3
+1
+```
+
+**Figure Description:**
+
+A grid-like table is shown, representing a user-item matrix.  The table is not fully filled; only some cells contain numerical values (1, 2, 3, 4, 5).  The table has rows labeled "users" (with a value of 480,000) and columns labeled "movies" (with a value of 17,700).  The numbers in the cells represent ratings given by users to movies.  The table is presented in a way that visually represents the sparsity of the data, as only a few cells contain values.  The purpose of the table is to illustrate the structure of the ratings data, which is a crucial input for recommender systems.  The table is positioned centrally on the slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, displays a visual representation of ratings data.  The title "Ratings Data" indicates the topic.  The table shows a portion of a user-item matrix, where rows represent users (480,000 in total) and columns represent movies (17,700 in total).  The numbers in the table cells represent ratings given by users to movies, ranging from 1 to 5.  The table is not fully populated, highlighting the sparsity of the data, meaning many user-movie combinations do not have ratings.  The slide is designed to illustrate the structure of the data used in recommender systems, where the goal is to predict missing ratings based on existing ones.  The numbers 1, 3, 4, 3, 5, 5, etc., are examples of ratings in the table.  The layout is simple and clear, focusing on the data structure.
+
+

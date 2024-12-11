@@ -1,0 +1,23 @@
+# 5
+
+# What is artificial intelligence?
+
+[The automation of] activities that we associate with human thinking, activities such as
+decision-making, problem solving, learning
+Bellman 1978
+
+Computational Intelligence is the study of the design of intelligent agents.
+Poole 1988
+
+The study of how to make computers do things at which, at the moment, people are better
+Rich & Knight 1991
+
+The study of computation that make it possible to perceive, reason, and act.
+Winston 1992
+
+
+---
+
+**Description:**
+
+This slide, titled "What is artificial intelligence?", presents different definitions and perspectives on AI.  The text is formatted in a way that highlights various viewpoints on the subject.  Each definition is followed by the name of the author and the year in which the definition was proposed.  This format emphasizes the historical development of the concept of AI.  There are no figures on this slide.  The slide is likely part of a larger presentation, and the definitions are likely to be discussed in detail in the following slides.  The slide's purpose is to introduce different ways of thinking about AI and to provide a historical context for the concept.  The slide is designed to be informative and engaging, providing a variety of perspectives on the topic.

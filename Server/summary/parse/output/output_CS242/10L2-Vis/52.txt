@@ -1,0 +1,37 @@
+# Slide 52
+
+**Plotly Basics**
+
+```
+plot_ly( x, y, type, mode, color, size )
+```
+
+*   `x` = values for x-axis
+*   `y` = values for y-axis
+*   `type` = to specify the plot that you want to create like "histogram", "surface", "box", etc.
+*   `mode` = format in which you want data to be represented in the plot. Possible values are "markers", "lines", "points".
+*   `color` = values of same length as x, y and z that represents the color of data points or lines in plot.
+*   `size` = values for same length as x, y and z that represents the size of data points or lines in plot.
+
+**Basic Charts**
+
+*   **Line Plots:** `trace = go.Scatter(x=[1, 2], y=[1, 2])`
+*   **Scatter Plots:** `trace = go.Scatter(x=[1, 2, 3], y=[1, 2, 3])`
+*   **Bubble Charts:** `trace = go.Scatter(x=[1, 2, 3], y=[1, 2, 3], marker=dict(color=['red', 'blue', 'green'], size=[30, 80, 200]))`
+*   **Bar Charts:** `trace = go.Bar(x=[1, 2], y=[1, 2])`
+*   **Area Plots:** `trace = go.Scatter(x=[1, 2], y=[1, 2], fill="tonexty")`
+*   **Heatmaps:** `trace = go.Heatmap(z=[[[1, 2, 3, 4], [5, 6, 7, 8]]])`
+*   **Histograms:** `trace = go.Histogram(x=[1, 2, 3, 3, 3, 4, 5])`
+*   **Box Plots:** `trace = go.Box(x=[1, 2, 3, 3, 3, 4, 5])`
+
+
+**Layout**
+
+*   `layout = go.Layout(showlegend=True, legend=dict(x=0.2, y=0.5))`
+
+
+**Description of what you see:**
+
+This slide is a reference sheet for the `plotly` library, specifically the `plot_ly` function.  It's a table-like layout with the function call and its parameters at the top.  Below that, it lists various plot types that can be created using `plotly`, along with example code snippets for each.  The slide is designed to be a quick reference guide for users of the `plotly` library, allowing them to quickly find the appropriate plot type and syntax for their visualization needs.  The layout section shows how to customize the appearance of the plot, such as adding a legend.  The slide is highly informative and useful for learning the library.  The layout is organized into sections for different plot types and includes example code snippets for each.  The overall design is clear and concise, making it easy to understand the different plot types and their corresponding syntax.
+
+

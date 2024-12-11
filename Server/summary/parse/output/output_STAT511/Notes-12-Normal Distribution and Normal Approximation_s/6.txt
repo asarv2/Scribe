@@ -1,0 +1,39 @@
+# Slide 6
+
+**STAT 511 Course Notes – set 12**
+
+**Yuan Qu**
+
+**Normal Approximation to Binomial Distribution**
+
+If 𝑋~𝐵𝑖(𝑛, 𝑝), in other words X = binomial random variable with n observations and probability p of success on each observation, then the possible values of X are 0, 1, 2, … , 𝑛. If k is any one of these values,  
+𝑃(𝑋= 𝑘) = (𝑛
+𝑘) 𝑝𝑘(1 −𝑝)𝑛−𝑘, 𝑘= 0, 1, … , 𝑛.  
+
+Example 12.6 One of the most frequent reasons for visiting a doctor in the first 2 years of life other than routine well-baby visits is otitis media, a disease of the middle ear. The probability that a child will have no episodes of otitis media is 0.13. Suppose 5 children are chosen at random. The number of children who have had no episodes of otitis media is recorded.  
+Here, 𝑠𝑢𝑐𝑐𝑒𝑠𝑠 =  𝑛𝑜 𝑒𝑝𝑖𝑠𝑜𝑑𝑒𝑠, 𝑛= 5, 𝑝= 𝑃(𝑠𝑢𝑐𝑐𝑒𝑠𝑠) = 0.13.  𝑋~ 𝐵𝑖(𝑛= 5, 𝑝= 0.13)  
+What is the probability that 2 or fewer of the 5 randomly chosen children had no episodes of otitis media?   
+𝑃( 𝑋2 ) = 𝑃( 𝑋= 0 ) + 𝑃( 𝑋= 1 ) + 𝑃( 𝑋= 2 ) 
+=
+5!
+(0!)(5!) (0.13)0(1– 0.13)5 +
+5!
+(1!)(4!) (0.13)1(1– 0.13)4 +
+5!
+(2!)(3!) (0.13)2(1– 0.13)3 
+
+
+Using the binomial formula is awkward when n starts getting large.  
+As n gets larger and larger, the binomial distribution becomes closer and closer to the normal approximation.  
+
+Can we can approximate the distribution to the binomial distribution with the normal distribution?  
+
+
+**Figure Description:**
+
+A figure is present, positioned in the lower-middle portion of the slide. It is a histogram, representing a probability distribution. The horizontal axis is labeled with values, likely representing the number of successes (e.g., number of children with no otitis media). The vertical axis represents the probability density. The histogram shows a bell-shaped curve, which is characteristic of a normal distribution. The curve is superimposed on the histogram, indicating the normal approximation to the binomial distribution. The figure is oriented horizontally. The reason for this figure is to visually illustrate the concept of approximating a binomial distribution with a normal distribution.  The figure shows the normal curve superimposed on a histogram of the binomial distribution, visually demonstrating the convergence of the two distributions as the number of trials (n) increases.  The x-axis is labeled with values from 0 to 18, and the y-axis is labeled with values from 0 to 0.2. The mean of the normal distribution is approximately 0.65, and the standard deviation is approximately 0.75. The histogram bars are centered around these values. The figure is positioned in the lower-middle portion of the slide, near the bottom of the slide.
+
+
+**Overall Context:**
+
+This slide introduces the concept of approximating a binomial distribution with a normal distribution. It provides an example of a binomial distribution problem and shows a visual representation of the normal approximation. The slide builds upon the previous slides by introducing the concept of approximating a binomial distribution with a normal distribution. The figure is crucial for understanding the concept of the normal approximation to the binomial distribution.

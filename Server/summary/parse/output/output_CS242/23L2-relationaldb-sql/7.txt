@@ -1,0 +1,26 @@
+# Slide 7
+
+# Primary Keys
+
+Primary key: Unique ID for every tuple in a relation (i.e. every row in the table), each 
+relation must have exactly one primary key
+
+| ID | Last Name | First Name | RoleID |
+|---|---|---|---|
+| 1 | Bergstrom | Anthony | 1 |
+| 2 | Purdue | Peter | 2 |
+| 3 | Doe | John | 3 |
+| 4 | Smith | Jane | 3 |
+
+| RoleID | Role |
+|---|---|
+| 1 | Instructor |
+| 2 | TA |
+| 3 | Student |
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, introduces the concept of primary keys in relational databases.  The title "Primary Keys" is displayed at the top.  The text below defines a primary key as a unique identifier for each row (tuple) in a table (relation).  Crucially, each table must have exactly one primary key.  Two tables are presented side-by-side.  The table on the left shows data with columns for "ID," "Last Name," "First Name," and "RoleID."  The table on the right shows data with columns for "RoleID" and "Role."  The data in both tables is structured in rows and columns, with each row representing a record and each column representing an attribute.  The data includes sample information about individuals and their roles (e.g., Bergstrom Anthony is assigned RoleID 1, which corresponds to Instructor in the second table).  The purpose of this slide is to illustrate the concept of primary keys as unique identifiers within a relational database, and how they are used to link data across multiple tables.  The tables are formatted with clear column headers and data entries, making the primary key relationship between the tables easily visible.  The layout is designed to visually represent the concept of a primary key and its role in relational database design.

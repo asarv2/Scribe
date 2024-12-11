@@ -1,0 +1,22 @@
+# Slide 19
+
+**Canny edge detector**
+
+**(Figure):**
+
+The slide displays three images of a cat, arranged in a 3-column format.  Each column represents a different stage in the Canny edge detection process.
+
+* **Column 1 (left):** This column shows the original grayscale image of a cat.  The cat is in a relaxed position, and the image shows the details of its fur, face, and the texture of the object it is resting on.
+
+
+* **Column 2 (middle):** This column shows the output of the gradient calculation applied to the original image.  The image is grayscale, but the intensity values are adjusted to highlight the edges of the cat's features.  The edges appear as darker lines and contours, emphasizing the transitions between different shades in the original image.  There are several areas where the gradient is high, such as the outline of the cat's head, ears, and body.  The edges are not perfectly crisp, but they are more pronounced than in the original image.
+
+
+* **Column 3 (right):** This column shows the output of the Canny edge detector applied to the gradient image.  The image is a binary image, with the edges of the cat highlighted as white lines against a black background.  The edges are now much more precise and well-defined compared to the gradient image.  The edges are thinner and more focused, and the noise has been significantly reduced.  The edges of the cat's head, ears, and body are clearly delineated.  The edges of the object the cat is resting on are also visible.
+
+
+**Description of what you see:**
+
+The slide demonstrates the Canny edge detector, a technique used in image processing to identify edges in an image.  The three columns of images show the original grayscale image, the gradient image, and the final output of the Canny edge detector.  The original image is a grayscale image of a cat.  The gradient image highlights the edges of the cat's features, and the Canny edge detector image shows the edges in a more precise and well-defined manner.  The yellow and red circles around the cat's head in the gradient and Canny images are likely used to highlight the areas where the edge detection is being applied.  The slide is designed to illustrate the steps involved in the Canny edge detection process and the differences between the original image and the processed images.
+
+

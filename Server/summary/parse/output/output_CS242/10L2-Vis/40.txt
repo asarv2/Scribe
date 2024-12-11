@@ -1,0 +1,18 @@
+# Slide 40
+
+**One Last thing**
+
+There are multiple pre-defined stylesheets,
+if you want to go with default themes
+• plt.style.use("ThemeName")
+
+**(Figure Description):**
+
+The slide displays a collection of visualizations, likely generated using Python libraries like Matplotlib and Seaborn.  The visualizations are arranged in a grid-like format, with multiple rows and columns.  Each cell in the grid contains a different plot type, such as scatter plots, histograms, and possibly other types of plots.  The plots are labeled with titles and axis labels, and the colors and styles vary across the different plots.  The plots are examples of different styles or themes that can be applied to visualizations.  The plots are positioned across the slide, filling most of the available space.  The overall layout is designed to showcase various visualization styles and themes.  The slide is likely part of a larger presentation on data visualization techniques, specifically highlighting the use of different styles and themes in Matplotlib and Seaborn.
+
+
+**Description of what you see:**
+
+The slide shows a collection of visualizations, likely generated using Python libraries like Matplotlib and Seaborn.  The visualizations are arranged in a grid-like format, with multiple rows and columns.  Each cell in the grid contains a different plot type, such as scatter plots, histograms, and possibly other types of plots.  The plots are labeled with titles and axis labels, and the colors and styles vary across the different plots.  The plots are examples of different styles or themes that can be applied to visualizations.  The slide is likely part of a larger presentation on data visualization techniques, specifically highlighting the use of different styles and themes in Matplotlib and Seaborn.  The different plots are examples of the default style, seaborn style, and a tableau-colorblind10 style.  The grayscale style is also shown.  The plots are positioned across the slide, filling most of the available space.  The overall layout is designed to showcase various visualization styles and themes.  The slide is likely part of a larger presentation on data visualization techniques, specifically highlighting the use of different styles and themes in Matplotlib and Seaborn.
+
+

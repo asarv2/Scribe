@@ -1,0 +1,21 @@
+# Slide 8
+
+**Claims**
+
+Imagine a group of prostate cancer patients currently diagnosed at age 67, all of whom die at age 70.
+Each survived only three years, so the five-year survival of this group is 0 percent. Now imagine that
+the same group is diagnosed with prostate cancer by PSA tests earlier, at age 60, but they all still die at
+age 70.
+If the patients in the second group lived to the age of 65, their five-year survival rate would be 100
+percent, although they all died by age 70.
+Even though the survival rate has changed dramatically, nothing has changed about the time of death.
+Are American men half as likely to die from prostate cancer as British men are? No. The risk is about
+the same: About 26 prostate cancer deaths per 100,000 American men versus 27 per 100,000 in
+Britain.
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on Intro to Data Science, presents a thought experiment and a related claim about prostate cancer survival rates.  The text describes a hypothetical scenario where a group of patients diagnosed at age 67 have a 0% five-year survival rate because they all die by age 70.  The scenario then changes to the same group being diagnosed earlier at age 60, but still dying at age 70.  The point is made that the five-year survival rate would be 100% if they lived to age 65, but the time of death remains the same.  The slide concludes with a claim about the similar risk of prostate cancer death in American and British men, citing statistics of 26 and 27 deaths per 100,000 men, respectively.  The slide is designed to illustrate how focusing solely on survival rates can be misleading and that other factors, like the time of diagnosis, need to be considered.  There are no figures on this slide.

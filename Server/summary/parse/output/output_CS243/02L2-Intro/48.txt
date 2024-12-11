@@ -1,0 +1,14 @@
+# 48
+
+**Game Playing**
+
+Learn about the board, pieces, moves, rules.
+Watch and/or play many games...
+Observe outcomes to learn which moves are "good" and develop strategies
+How many of you believe this is the right strategy?
+Checkers: Ary29, http://commons.wikimedia.org/wiki/File:Norman_Bethune_checkers_1937.jpg via Wikimedia Commons
+
+
+**Description of what you see:**
+
+The slide presents text in a clear, readable font.  The title "Game Playing" is in a larger, bold font.  Below that, several lines of text describe a method for learning game strategies.  The text describes a process of learning about the game's elements (board, pieces, moves, rules), playing many games, observing outcomes, and developing strategies based on those observations.  The final line asks a question, "How many of you believe this is the right strategy?", prompting reflection on the effectiveness of the described method.  A small caption at the bottom of the slide provides the source of the image (a photo of people playing checkers) and the URL.  The image itself is a black and white photo of people playing checkers.  The photo is positioned at the bottom of the slide, likely to illustrate the concept of learning game strategies by observing and playing.  The photo is oriented horizontally and is a medium-sized image.  The photo is likely included to provide a visual representation of the topic of game playing and to illustrate the process of learning strategies through observation and practice.  The source information is included to provide context and attribution.

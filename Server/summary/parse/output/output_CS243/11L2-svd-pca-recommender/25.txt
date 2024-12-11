@@ -1,0 +1,20 @@
+# 25
+
+```markdown
+Example: Intel Berkeley Lab Map
+Given a 54x54 matrix of pairwise link qualities
+Use PCA to project down to two principal dimensions
+Visualize transformed data
+PCA discovered the map of the lab
+```
+
+---
+
+**Figure Description:**
+
+The slide displays a floor plan of a building, likely the Intel Berkeley Lab.  The floor plan is a top-down view, showing the layout of rooms and spaces.  The plan is drawn with red lines outlining the walls and boundaries of different areas.  Various numbered black circles are scattered throughout the plan.  These numbers likely correspond to sensor locations within the building.  The plan also includes labels for different areas, such as "OFFICE," "STORAGE," "LAB," "SERVER," "KITCHEN," and "COMMENCE."  The plan is oriented with north at the top, and the layout of the rooms and spaces is clearly depicted.  The floor plan is framed by a red border.  In the upper-right quadrant of the slide, a scatter plot is visible.  The plot shows a large number of small, blue data points scattered across the graph.  The x and y axes are not labeled, but the plot is likely a visualization of the transformed data from the 54x54 matrix of pairwise link qualities, using PCA to project the data down to two principal dimensions.  The purpose of the floor plan is to visually represent the physical layout of the Intel Berkeley Lab, and the scatter plot is used to visualize the transformed data, which is likely to reveal relationships or patterns in the data that correspond to the physical layout.  The combination of the floor plan and the scatter plot is intended to demonstrate how PCA can reveal the underlying structure of the data, in this case, the layout of the building.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, presents an example of using Principal Component Analysis (PCA) to visualize the layout of the Intel Berkeley Lab.  The slide title, "Example: Intel Berkeley Lab Map," indicates the context.  The text describes how a 54x54 matrix of pairwise link qualities was used as input for PCA.  The PCA transformation was used to project the data down to two principal dimensions, and the transformed data is visualized in a scatter plot in the upper-right quadrant of the slide.  The floor plan in the lower-left quadrant of the slide shows the actual physical layout of the building.  The purpose of the slide is to demonstrate how PCA can be used to discover the underlying structure of data, in this case, the layout of the building, from a dataset of pairwise link qualities.  The combination of the floor plan and the scatter plot is intended to show a visual correlation between the data and the physical layout.  The numbered circles on the floor plan likely correspond to sensor locations, and the scatter plot is a visualization of the relationships between these sensors.

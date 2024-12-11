@@ -1,0 +1,19 @@
+# Slide 7
+
+# Example: Images
+
+---
+
+**Description of the Slide:**
+
+The slide displays an example of image clustering.  It shows a split-screen layout.
+
+* **Top Half:** A full-color photograph of a street scene.  The scene shows a road with a van, other cars, and buildings on either side.  There are trees and vegetation along the sides of the road.  The image is a typical street scene, likely taken from a camera mounted on a vehicle or a fixed position.
+
+* **Bottom Half:** A segmented image of the same street scene.  The image is in shades of color, with different areas of the image colored differently.  These colors represent different categories or clusters.  For example, the road is one color, the van is another, the buildings are another, and the vegetation is another.  Labels such as "MOVING CAR," "STATIONARY VEGETATION," "STATIONARY ROAD," "STATIONARY BUILDING," and "STATIONARY PAVEMENT" are placed next to the corresponding colored areas.  These labels indicate the cluster to which each part of the image belongs.
+
+**Reasoning:**
+
+The purpose of this slide is to illustrate how clustering can be applied to images.  The top image shows the raw data, and the bottom image shows the result of applying a clustering algorithm to the image data.  The algorithm has identified different objects and regions in the image and grouped them into distinct clusters based on their visual characteristics.  This is a common task in computer vision, where identifying and classifying objects in images is crucial for tasks like self-driving cars, object recognition, and image analysis.
+
+

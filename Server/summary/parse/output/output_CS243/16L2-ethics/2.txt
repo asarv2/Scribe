@@ -1,0 +1,14 @@
+# Slide 2
+
+# Bias and Fairness in Data
+
+---
+
+**Description of the Slide:**
+
+This slide, likely part of a lecture on AI Basics, has a single heading: "Bias and Fairness in Data."  The text is centered on the slide, in a plain, sans-serif font, against a light gray background.  There are no figures or other elements on the slide.  The slide's purpose is to introduce the topic of bias and fairness in data, which is likely to be discussed in detail in the subsequent slides.
+
+
+**Description of what you see:**
+
+The slide is a plain, light gray background with the title "Bias and Fairness in Data" in a dark gray, sans-serif font.  The title is centered on the slide.  There are no other elements, such as images, bullet points, or graphs.  The simple design and single heading indicate that this is likely an introductory slide to the topic of bias and fairness in data, which will be explored further in the subsequent slides.

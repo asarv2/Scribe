@@ -1,0 +1,31 @@
+# 18
+
+**Naïve Solver**
+
+Input: A propositional formula φ on a finite set V and a partial assignment v on V such that only variables unassigned by v occur in φ.
+Output: true if φ is satisfiable, false otherwise.
+
+Naive_SAT(φ, v) {
+  1. if every clause of φ has a true literal, return true;
+  2. if any clause of φ has all false literals, return false;
+  3. choose an p ∈ V that is unassigned in v;
+  4. assign p to true, that is, let v(p) = true;
+  5. if Naive_SAT(φ|<sub>p</sub>, v) returns true, then return true;  # this is a recursive call
+  6. assign p to false, that is, let v(p) = false;
+  7. if Naive_SAT(φ|<sub>¬p</sub>, v) returns true, then return true; # this is a recursive call
+  8. unassign v(p); # backtracking takes place here
+  9. return false;
+}
+
+
+**Description:**
+
+This slide presents a recursive algorithm for solving the Satisfiability (SAT) problem, called "Naïve Solver."  The algorithm takes a propositional formula (φ) and a partial assignment (v) as input.  The algorithm recursively tries different assignments to variables until either a satisfying assignment is found or all possibilities are explored.
+
+* **Input:** The input is a formula φ and a partial assignment v.  The formula φ is a set of clauses (conjunctions of literals).  The partial assignment v assigns truth values to some variables in the formula.
+
+* **Output:** The output is true if the formula is satisfiable (a complete assignment exists that makes all clauses true) and false otherwise.
+
+* **Algorithm (Naive_SAT):** The algorithm is presented as a recursive function.  It checks if all clauses are already satisfied (step 1) or if any clause is unsatisfiable (step 2).  If neither of these conditions is met, it selects an unassigned variable (step 3), tries assigning it true (step 4 and 5), and recursively calls itself with the simplified formula (φ|<sub>p</sub>).  If this recursive call returns true, the algorithm returns true.  Otherwise, it tries assigning the variable false (step 6 and 7), and recursively calls itself with the simplified formula (φ|<sub>¬p</sub>).  If this recursive call returns true, the algorithm returns true.  If both assignments fail, it backtracks by unassigning the variable (step 8) and returns false (step 9).
+
+The slide is a clear presentation of a basic recursive algorithm for SAT solving, illustrating the core concepts of backtracking and simplification.  There are no figures on this slide.

@@ -1,0 +1,19 @@
+# Slide 57
+
+**Example Problem**
+
+Suppose you have user data in one file
+Website browsing data in another in another file
+And you need to find the top 5 most visited
+pages by all users aged 18-25
+
+**Description of the Figure:**
+
+The slide presents a flowchart diagram.  The flowchart depicts a sequence of steps to solve a data analysis problem.  The boxes represent different processing stages, and the arrows indicate the flow of data between these stages.  The boxes are labeled with descriptive actions, such as "Load Users," "Filter by Age," "Load Pages," "Join on Names," "Group on url," "Count clicks," "Order by clicks," and "Take top 5."  These labels clearly indicate the steps involved in the data processing pipeline.  The flowchart is positioned centrally on the slide, making it the primary visual element.  The purpose of the flowchart is to illustrate the sequence of operations required to solve the problem of finding the top 5 most visited pages by users aged 18-25.  The flowchart is a visual representation of the data processing pipeline, which is a common way to represent the steps involved in a data analysis task.  The flowchart is well-suited to the context of the lecture, as it visually demonstrates the sequence of operations required to solve the problem.
+
+
+**Description of the Slide:**
+
+The slide presents a problem statement and a visual representation of a data processing pipeline.  The problem statement describes a task of finding the top 5 most visited web pages by users aged 18-25, given two data files: one containing user data and another containing website browsing data.  The flowchart visually represents the steps involved in solving this problem, showing the sequence of operations from loading data to filtering, joining, grouping, counting, ordering, and finally selecting the top 5 results.  The slide is likely part of a lecture or tutorial on data processing, specifically introducing the concept of a data pipeline and how it can be used to solve data analysis problems.  The flowchart is a key visual aid for understanding the problem and the steps needed to solve it.
+
+

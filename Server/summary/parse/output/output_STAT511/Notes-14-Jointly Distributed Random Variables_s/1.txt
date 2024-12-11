@@ -1,0 +1,48 @@
+# Slide 1
+
+**Multiple Random Variables**
+
+In the last course notes, we only consider the case of one single random variable. In this note, we consider the case where there are multiple random variables. We aim to understand how to study the relationship among these random variables.
+
+**Probability distribution of two discrete random variables**
+
+Assume that there are two random variables, X and Y, and both of them are Discrete and defined on the sample space S of an experiment.
+
+**Joint Probability Mass function p(x, y)** is defined for each pair of numbers (x, y) by:
+
+p(x, y) = P(X = x and Y = y)
+
+For any set A which is a subset of R², its associated probability is
+
+P((X, Y) ∈ A) = ΣΣ_{(x,y)∈A} p(x, y)
+
+**Note:** joint probability is a legitimate probability mass function defined on 2-dimensional real space. All the probability axioms still hold.
+
+**Example 14.1** The deductible amount of automobile (X) and homeowner (Y) insurance policies:
+
+To verify that this is a legitimate pmf:
+
+* p(x, y) ≥ 0
+* ΣΣ p(x, y) = 1
+
+Then, p(100, 100) = P(X = 100 and Y = 100) = P('$100 deductible on both policies') = 0.10.
+
+The probability P(Y ≥ 100) is computed by summing probabilities of all (x, y) pairs for which y ≥ 100:
+
+P(Y ≥ 100) = p(100, 100) + p(250, 100) + p(100, 200) + p(250, 200) =
+
+
+**Example 14.2** Consider a population (of total number 1000) associated with 2 discrete variables X and Y. The census data is given in the following table:
+
+| Number | Variable Y |
+|---|---|
+|  | 15 | 25 |
+| Variable X |  |  |
+| 10 | 200 | 50 |
+| 20 | 100 | 150 |
+| 30 | 200 | 300 |
+
+
+**Description of the slide:**
+
+This slide introduces the concept of multiple random variables in a statistical methods course. It defines the joint probability mass function (pmf) for two discrete random variables, X and Y, and provides an example (Example 14.1) to illustrate how to verify if a given pmf is legitimate.  Example 14.2 presents a table of census data, showing the relationship between two discrete variables (X and Y) and their associated counts. The table is crucial for understanding how to calculate probabilities involving these variables. The table is formatted in a standard tabular format, with rows representing different values of X and columns representing different values of Y. The values in the table represent the number of individuals in the population that have the corresponding values of X and Y. The table is placed in the lower portion of the slide, clearly separated from the theoretical explanations above. The table is essential for the example problem (Example 14.2) that follows. The slide's layout is clear and organized, making it easy to follow the concepts being presented.

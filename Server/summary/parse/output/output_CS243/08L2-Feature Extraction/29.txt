@@ -1,0 +1,22 @@
+# Slide 29
+
+**Harris features (in red)**
+
+**(Figure):**
+
+The slide presents two nearly identical images of a stylized, cartoonish cow.  Both cows are white with black spots, and their legs and necks are thin, light-gray strings.  The cows' faces have simple, cartoonish designs.
+
+* **Image 1 (left):** The cow is positioned with its head slightly turned to the left.
+
+
+* **Image 2 (right):** The cow is positioned with its head slightly turned to the right.
+
+
+Numerous small, bright red dots are scattered across both images.  These dots are concentrated on the cow's legs, hooves, and the edges of the body, particularly at the joints and corners.  The dots are not uniformly distributed; they are more densely clustered in areas where the image has sharp changes in intensity or where the shape of the cow changes.
+
+
+**Description of what you see:**
+
+This slide demonstrates the output of the Harris corner detector.  The two images show a stylized cow, and the red dots highlight the detected corners.  The Harris corner detector identifies points in an image where the image's intensity changes significantly in multiple directions.  The red dots mark these locations, which are often important features for object recognition and image analysis tasks.  The slide is likely part of a lecture on computer vision, specifically on feature extraction techniques.  The source is not credited.
+
+

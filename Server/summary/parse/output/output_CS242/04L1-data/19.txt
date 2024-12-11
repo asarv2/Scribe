@@ -1,0 +1,26 @@
+# 19
+
+# Displaying the data frame
+
+# `print(data_sales)` will print in text
+# `display(data_sales)` will prettify it
+# or just have the variable be the last item in the box
+`data_sales`
+`len(data_sales)`
+4
+
+|       | Asia      | Africa     | Americas   | Australia/Oceania | Europe     |
+|-------|------------|------------|------------|--------------------|------------|
+| **0** | $43567    | $13459    | $40045    | $27890            | $33569    |
+| **1** | $28945    | $12005    | $44589    | $34569            | $45700    |
+| **2** | $36900    | $14589    | $52398    | $45690            | $56890    |
+| **3** | $67890    | $57894    | $107890   | $78930            | $66003    |
+
+
+---
+
+**Description:**
+
+This slide displays the contents of a Pandas DataFrame named `data_sales`.  The slide shows the output of the `data_sales` variable, which is a table of sales figures for different regions (Asia, Africa, Americas, Australia/Oceania, Europe).  The table is presented in a tabular format, with rows representing different data points (0, 1, 2, 3) and columns representing the different regions.  The values in the table are dollar amounts, formatted with a dollar sign ($) and commas as thousands separators.  The slide also includes the Python code `len(data_sales)`, which returns the number of rows in the DataFrame, which is 4.  The slide is likely part of a lecture demonstrating how to display and work with data in a Pandas DataFrame.  The table is a visual representation of the data contained within the `data_sales` DataFrame.  The table is formatted to be easily readable, with clear row and column headers.  The table is positioned below the Python code examples, visually separating the code from the output.  The table is a key element in illustrating the contents of the DataFrame.  The table is likely intended to show the data in a structured format, making it easier to understand the values and relationships between them.  The table is a visual representation of the data contained within the `data_sales` DataFrame.  The table is formatted to be easily readable, with clear row and column headers.  The table is positioned below the Python code examples, visually separating the code from the output.  The table is a key element in illustrating the contents of the DataFrame.  The table is likely intended to show the data in a structured format, making it easier to understand the values and relationships between them.
+
+

@@ -1,0 +1,31 @@
+# Slide 14
+
+**Visual words**
+
+**(Image Description):**
+
+The slide displays a grid of small images, each containing a highlighted feature.  There are three rows of images, with each row containing four columns.  Each image in the grid shows a different object or part of an object.
+
+* **Row 1:**  The images depict various human faces.  A yellow circle highlights the eye region of each face.
+
+* **Row 2:** The images show portions of vehicle wheels.  A yellow circle highlights the center of each wheel.
+
+* **Row 3:** The images show portions of airplanes.  A yellow circle highlights the nose/front area of each airplane.
+
+* **Row 4:** The images show portions of car license plates.  A yellow circle highlights the license plate area of each car.
+
+A small red dot is located within each yellow circle.
+
+**Attribution:**
+
+At the bottom right of the slide, there is a citation: "[Sivic et al., ‘05]".
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slide that introduced the concept of "Bag of Features."  The images and highlighted features illustrate the idea of "visual words."  Each highlighted area represents a "visual word" – a basic visual element that can be used to describe an image.  The slide demonstrates how these visual words can be extracted from images and used to represent the content of the image in a way that is less sensitive to variations in viewpoint, illumination, and other factors.  The citation at the bottom indicates the source of the visual words concept.
+
+
+**What you see:**
+
+The slide presents a visual representation of visual words.  The grid of images, each with a highlighted feature, clearly demonstrates the concept of extracting visual elements from images.  The consistent highlighting of specific parts of different objects (eyes, wheels, airplane noses, license plates) emphasizes the idea of invariant features.  The red dot within the yellow circle is a visual cue to the specific location of the feature.  The overall design is simple and straightforward, focusing on the visual representation of the concept.

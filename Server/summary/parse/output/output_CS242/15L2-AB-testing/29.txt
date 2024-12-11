@@ -1,0 +1,18 @@
+# Slide 29
+
+**Adjusting for multiple hypotheses**
+
+Active area of statistics - many different methods have been developed
+"Adjusting p-values for the number of hypothesis tests performed"
+* Means controlling the Type I error rate
+* Simple corrections ensure that experiment-wide Type I error rates are controlled
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses methods for adjusting p-values when multiple hypothesis tests are performed.  It notes that this is an active area of statistical research, with various methods developed to control the Type I error rate (false positive rate) when multiple comparisons are made.  The slide emphasizes that simple corrections can be used to control the experiment-wide Type I error rate.  The slide is likely part of a presentation on statistical methods, specifically addressing the issue of multiple comparisons and how to adjust for them.

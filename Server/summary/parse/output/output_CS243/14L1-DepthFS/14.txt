@@ -1,0 +1,16 @@
+# Slide 14
+
+**Problem Solving as Search**
+
+Search: Exploration of possibilities
+* Abstraction of general problem solving method
+
+Basic ingredients:
+* States: describe configuration of environment
+* Actions: activities which move you from one state to another
+* Search algorithm: determines which actions should be tried in which order to find solution
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concept of problem-solving as a search process.  The title, "Problem Solving as Search," is presented in a clear, sans-serif font.  The content is a bulleted list, explaining the key components of this approach.  "Search" is described as the exploration of possibilities, and the method is presented as an abstraction of general problem-solving.  The "basic ingredients" are listed as "States," "Actions," and "Search algorithm."  States describe the environment's configuration, actions are activities that change the state, and the search algorithm determines the order in which actions are tried to find a solution.  The slide is straightforward and provides a concise overview of the topic.

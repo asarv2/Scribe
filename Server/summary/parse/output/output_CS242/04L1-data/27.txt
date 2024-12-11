@@ -1,0 +1,41 @@
+# 27
+
+# PANDAS: Looping over data
+
+```python
+for i in range(10):  # loop over first ten rows of data frame
+    tmpyr = data.iloc[i,1]
+    tmpage = data.iloc[i,2]
+    tmpname = data.iloc[i,3]
+    print(tmpname + ": current age (if still alive) =" + str(2018-tmpyr+tmpage))
+```
+
+```
+Janet Gaynor: current age (if still alive) = 112
+Mary Pickford: current age (if still alive) = 126
+Norma Shearer: current age (if still alive) = 116
+Marie Dressler: current age (if still alive) = 150
+Helen Hayes: current age (if still alive) = 118
+Katharine Hepburn: current age (if still alive) = 111
+Claudette Colbert: current age (if still alive) = 115
+Bette Davis: current age (if still alive) = 110
+Luise Rainer: current age (if still alive) = 109
+Luise Rainer: current age (if still alive) = 109
+```
+
+---
+
+**Description:**
+
+This slide demonstrates a Python code snippet using Pandas to loop over a portion of a DataFrame and calculate the current age of individuals, based on their year of birth and the current year (2018).
+
+* **Code Snippet:** The slide presents a `for` loop in Python, likely within a Jupyter Notebook or similar interactive environment.  The loop iterates over the first ten rows (indexed 0 to 9) of a DataFrame named `data`.  Inside the loop:
+    * `tmpyr = data.iloc[i,1]`: Extracts the year from the second column (index 1) of the current row.
+    * `tmpage = data.iloc[i,2]`: Extracts the age from the third column (index 2) of the current row.
+    * `tmpname = data.iloc[i,3]`: Extracts the name from the fourth column (index 3) of the current row.
+    * `print(...)`: Prints the name followed by the calculated current age (2018 - year + age).  The `str()` function converts the calculated age to a string for concatenation with the name.
+
+* **Output:** The slide displays the output of the code.  Each line shows the name of a person and their calculated current age (if still alive), based on the data in the DataFrame.  The output is a list of name-age pairs.  The output is formatted as a list of strings, each containing a name and a calculated age.  The output is likely intended to show the results of applying the calculation to the first ten rows of the DataFrame.
+
+
+**Overall:** This slide is part of a data analysis session, demonstrating how to iterate over a Pandas DataFrame and perform calculations on specific columns.  The code snippet is designed to calculate and display the current age of individuals based on their birth year and age at the time of the data collection.  The output is a clear demonstration of the results of the calculations.

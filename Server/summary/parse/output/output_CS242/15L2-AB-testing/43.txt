@@ -1,0 +1,29 @@
+## Slide 43
+
+**Data/Explanation**
+
+| Department | Male Applicants | Female Applicants | % Male Admit | % Female Admit |
+|---|---|---|---|---|
+| A | 825 | 108 | 62 | 82 |
+| B | 560 | 25 | 63 | 68 |
+| C | 325 | 593 | 37 | 34 |
+| D | 417 | 375 | 33 | 54 |
+
+Women applied in higher numbers to departments with lower admittance rates.
+One would expect that higher admittance rates across all groups leads to a higher admittance rate overall.
+
+*   This is true if the group sizes are equal.
+*   When group sizes differ, the totals for each side may be dominated by particular groups.
+
+How do we avoid this type of paradox?
+Design your study to identify and account for all possible hidden variables.
+
+
+**Figure Description:**
+
+The slide displays a table.  The table is organized into columns, with the first column labeled "Department," followed by columns for "Male Applicants," "Female Applicants," "% Male Admit," and "% Female Admit."  Each row represents a different department (A, B, C, and D).  The table shows the number of male and female applicants to each department, along with the percentage of male and female applicants who were admitted.  The table is centrally located on the slide.  The table's purpose is to illustrate Simpson's Paradox.  The data in the table shows that while the overall admission rate for men is higher than for women, when looking at each department individually, the admission rate for women is often higher than for men.  This illustrates how aggregate data can be misleading and how disaggregating data can reveal different trends.  The text below the table explains the phenomenon and how to avoid it.
+
+
+**Slide Description:**
+
+This slide provides a concrete example of Simpson's Paradox.  The table shows data on the admission rates of male and female applicants to different departments at a university.  The data initially suggests a disparity in admission rates between men and women.  However, the text below the table explains that this disparity disappears when looking at the data for each department individually.  This illustrates how aggregate data can be misleading and how disaggregating data is crucial for accurate interpretation.  The slide also provides advice on how to avoid this type of paradox in research design.

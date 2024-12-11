@@ -1,0 +1,40 @@
+# Slide 2
+
+**Permutations and combinations**
+
+Consider a group of *n* distinct individuals or objects ("distinct" means that there is some characteristic that differentiates any particular individual or object from any other). How many ways are there to select a subset of size *k* from the group?
+
+* If a Little League team has 15 players on its roster, how many ways are there to select 9 players to form a starting lineup?
+* If a university bookstore sells ten different laptop computers but has room to display only three of them, in how many ways can the three be chosen?
+
+**Two different scenarios:**
+
+* **The order of selection is important.**
+    * Angela being the pitcher and Ben the catcher gives a different lineup from the one in which Angela is catcher and Ben is pitcher.
+* **Order is not important.**
+    * The laptop display example.
+
+**Permutation:** An ordered subset is called a permutation.
+
+* The number of permutations of size *k* that can be formed from the *n* individuals or objects in a group will be denoted by 𝑃<sub>𝑘,𝑛</sub>.
+* The number of permutations can be determined by using our earlier counting rule for *k*-tuples.
+𝑃<sub>𝑘,𝑛</sub>= 𝑛(𝑛−1) … … (𝑛−𝑘+ 1) =  𝑛! / (𝑛−𝑘)!
+
+**Combination:** An unordered subset is called a combination.
+
+* One way to denote the number of combinations is 𝐶<sub>𝑘,𝑛</sub>, but we shall instead use notation that is quite common in probability books: (<sup>𝑛</sup>⁄<sub>𝑘</sub>). It reads as *n* choose *k*.
+𝐶<sub>𝑘,𝑛</sub>= (<sup>𝑛</sup>⁄<sub>𝑘</sub>) = 𝑛! / [(𝑛−𝑘)!𝑘!] = 𝑛× (𝑛−1) × … × 1 / [(𝑛−𝑘) × … × 1] × [𝑘× … × 1]
+
+
+**Examples 5.1:** A college of engineering has 7 departments, each with one representative on the college's student council. From these 7 representatives, one is to be chosen chair, another vice-chair, and a third secretary. How many ways are there to select the 3 officers?
+
+**In fact,**
+
+1. The chair can be selected in any of 𝑛<sub>1</sub> = 7 ways;
+2. For each way of selecting the chair, there are 𝑛<sub>2</sub> = 6 ways to select the vice-chair, and hence 7 × 6 = 42 (chair, vice-chair) pairs;
+3. Finally, for each way of selecting a chair and vice-chair, there are 𝑛<sub>3</sub> = 5 ways of choosing the secretary.
+
+
+**Figure Description:**
+
+There are no figures on this slide. The content is entirely text-based, explaining the concepts of permutations and combinations, and providing examples. The text is formatted in a way that clearly distinguishes different points and scenarios, making it easy to follow the lecture's progression. The examples and scenarios are presented in a way that is relevant to the course's topic of statistical methods.

@@ -1,0 +1,17 @@
+# Slide 24
+
+**Hypothesis testing framework**
+
+Set null (H₀) and alternative (H₁) hypothesis
+Pick significance level (e.g., α=0.05)
+Choose test: one vs two sample, one vs two sided, paired or not
+Calculate test statistic and associated p value
+• p-value is the probability of observing current data (or more extreme), if the null hypothesis is true
+Make a decision about whether the hypothesis is supported by comparing the p value to the significance level (e.g., if p<α then reject H₀)
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a framework for hypothesis testing.  It outlines the steps involved in a hypothesis test, including defining the null and alternative hypotheses, setting a significance level, choosing an appropriate statistical test, calculating the test statistic and p-value, and making a decision based on the p-value and significance level.  The slide is a summary of the key steps in the hypothesis testing process, which is a crucial aspect of data analysis.  There are no figures on this slide.  The slide is likely part of a lecture on hypothesis testing, providing a structured overview of the process.

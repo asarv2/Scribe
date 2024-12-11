@@ -1,0 +1,18 @@
+# 24
+
+```markdown
+Example: Intel Berkeley Lab
+Distance between a pair of sensors
+Link quality
+```
+
+---
+
+**Figure Description:**
+
+A scatter plot is presented, centrally located on the slide.  The x-axis is labeled "Distance between a pair of sensors," and the y-axis is labeled "Link quality."  Both axes have numerical scales, but the specific values are not visible in the image.  The plot displays a large number of small, blue data points.  The data points are clustered, with a general downward trend: as the distance between sensors increases, the link quality tends to decrease.  The plot visually represents the relationship between the distance between sensor pairs and the quality of the link between them.  The purpose of the plot is to illustrate the correlation between these two variables, likely in the context of a network or sensor system analysis.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, presents a scatter plot illustrating the relationship between the distance between sensor pairs and the quality of the link between them.  The plot shows a large number of data points, each representing a pair of sensors.  The x-axis represents the distance between the sensors, and the y-axis represents the link quality.  The data points are clustered, and there's a general downward trend, indicating that as the distance between sensors increases, the link quality tends to decrease.  The plot is likely part of an example related to sensor networks or similar systems, where understanding the relationship between distance and link quality is important.  The title "Example: Intel Berkeley Lab" suggests that the data is from the Intel Berkeley Lab, and the plot is used to visualize the data collected from the sensor network in that location.

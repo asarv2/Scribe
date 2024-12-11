@@ -1,0 +1,31 @@
+# Slide 3
+
+# Subfields of Machine learning
+
+Supervised Learning
+Given paired inputs/outputs (X, y)
+Goal is to learn f from training data, f(X) = y
+Evaluated it on "new" (test) data.
+Examples
+* Classification: y is discrete (y are class labels, X refers to attributes)
+* Regression: y is continuous
+
+Unsupervised learning
+Given examples of inputs X
+Learn a function f to simplify the data, f(X) = y
+Examples:
+* Clustering: y is discrete (y are cluster memberships)
+* Matrix factorization: y are continuous (y are embeddings)
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a table-like structure outlining two major subfields of machine learning: Supervised Learning and Unsupervised Learning.  The slide is formatted with clear headings for each subfield.  Under each heading, it lists the key characteristics and examples of each type.
+
+* **Supervised Learning:**  This section defines supervised learning as a process where paired input-output data (X, y) is provided. The goal is to learn a function (f) from the training data such that f(X) = y.  The learned function is then evaluated on new, unseen data.  Examples of supervised learning are classification (where the output y is discrete, representing class labels) and regression (where the output y is continuous).
+
+* **Unsupervised Learning:** This section defines unsupervised learning as a process where only input data (X) is provided. The goal is to learn a function (f) that simplifies the data, such that f(X) = y.  Examples of unsupervised learning are clustering (where the output y is discrete, representing cluster memberships) and matrix factorization (where the output y is continuous, representing embeddings).
+
+The slide's purpose is to introduce the fundamental concepts of supervised and unsupervised learning, highlighting the differences in the types of data used and the goals of each approach.  There are no figures on this slide.

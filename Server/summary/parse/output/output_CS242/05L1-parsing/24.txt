@@ -1,0 +1,27 @@
+# Slide 24
+
+**TFIDF**
+
+Corpus should be similar to
+documents you are analyzing
+
+*   Classic Literature
+*   AP News stories
+*   Enron Emails
+*   Webpages in Wikipedia
+*   State of the Union Addresses
+
+**State of the Union Topics Unique to Presidencies**
+
+**(Graph Images)**
+
+_Detailed Description of Images:_
+
+The slide displays a collection of bar graphs, each representing the TF-IDF (Term Frequency-Inverse Document Frequency) values for specific words related to the State of the Union addresses given by different US presidents.  Each graph is a separate chart, showing the most frequent words unique to each presidency.  The x-axis represents the value of TF-IDF, and the y-axis lists the words.  The graphs are arranged in a grid-like format, with each graph corresponding to a different president (Ronald Reagan, Bill Clinton, George H. W. Bush, George W. Bush, Barack Obama, and Donald J. Trump).  The color of each bar corresponds to the president.  The graphs are positioned to provide a visual comparison of the topics discussed in each president's State of the Union addresses.  The graphs are crucial for understanding the unique themes and topics that each president highlighted in their speeches.  The presence of the URL at the bottom of the slide (`https://diving4data.com/projects/state-of-the-union-analysis/`) suggests that this data visualization is part of a larger project or analysis focused on State of the Union addresses.
+
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents a summary of the TF-IDF concept and its application to analyzing State of the Union addresses.  The top section lists different types of text corpora that would be suitable for TF-IDF analysis.  The bottom section shows a series of bar graphs, each visualizing the TF-IDF values for specific words related to the State of the Union addresses given by different US presidents.  The graphs visually represent the unique topics discussed in each president's speeches.  The slide is designed to illustrate the practical application of TF-IDF in analyzing textual data, specifically focusing on the unique themes in presidential speeches.
+
+

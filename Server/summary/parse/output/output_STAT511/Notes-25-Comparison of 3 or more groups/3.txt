@@ -1,0 +1,43 @@
+# 3
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Comparing means of 3 or more groups (ANOVA)**
+
+In previous chapter, we carry out the comparison between the means/proportions of two population means. Now we further extend the study to a comparison of more than two population or treatment means.
+
+**Single Factor ANOVA**
+
+Example 25.1 Consider an experiment in which several different types of shipping boxes were compared with respect to compression strength (lb).
+
+| Type of Box | Compression Strength (lb) | Sample Mean | Sample SD |
+|---|---|---|---|
+| 1 | 655.5 788.3 734.3 721.4 679.1 699.4 | 713.00 | 46.55 |
+| 2 | 789.2 772.5 786.9 686.1 732.1 774.8 | 756.93 | 40.34 |
+| 3 | 737.1 639.0 696.3 671.7 717.2 727.1 | 698.07 | 37.20 |
+| 4 | 535.1 628.7 542.4 559.0 586.9 520.0 | 562.02 | 39.87 |
+
+Grand mean = 682.50
+
+**(Figure):**  A horizontal boxplot is displayed below the table.  The boxplot shows five boxes, each corresponding to a different type of box (1, 2, 3, 4).  The boxes are positioned horizontally along a number line that spans from approximately 550 to 750.  Each box represents the distribution of compression strength values for that type of box.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The figure visually represents the variation in compression strength across different box types.  The horizontal axis is labeled with values for compression strength (lb). The figure is placed below the table to visually compare the compression strength distributions for each type of box.
+
+
+**How many groups are we comparing?**
+
+1. Two variables are of interests:
+    * **Explanatory:** Type of shipping boxes – categorical
+        * A categorical explanatory variable is also called a factor.
+        * The values that a factor can take are levels (Type 1, 2, 3, 4).
+        * The combination of levels of factors are treatments (Treatment 1, 2, 3, 4).
+    * **Response:** compression strength – numerical
+
+We are interested in the relationship between the explanatory and response variable.
+
+
+---
+
+**Description of the Slide:**
+
+This slide (number 3) introduces the concept of Analysis of Variance (ANOVA) for comparing means of three or more groups.  It presents an example (Example 25.1) of comparing different types of shipping boxes based on their compression strength.  The slide includes a table summarizing the data for each box type, showing the compression strength values, sample mean, and sample standard deviation.  A boxplot is included below the table to visually represent the distribution of compression strength for each box type.  The boxplot helps to quickly assess the central tendency and variability of the data for each group.  The slide then defines the explanatory and response variables in the context of the example, highlighting the categorical nature of the explanatory variable (type of box) and the numerical nature of the response variable (compression strength).  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.

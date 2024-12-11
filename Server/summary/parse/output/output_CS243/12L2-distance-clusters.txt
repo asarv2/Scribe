@@ -1,0 +1,836 @@
+# 1
+
+# AI Basics
+
+Purdue CS24300
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the slide:**
+
+This is a title slide for a lecture on AI Basics.  The title "AI Basics" is displayed prominently in a large, bold, light gray font.  Below that, in a smaller, light gray font, are the course information (Purdue CS24300) and the instructor's name (Tony Bergstrom).  At the very bottom, in a very small, light gray font, is a credit line indicating the source of the slides (Slides adapted from Jen Neville, CS 24200). The background color is a dark gray.  The overall design is simple and clean, focusing on the title and course information.
+
+
+# 2
+
+# Introduction to Clustering
+Data Science in Business, Chapter 6
+
+---
+
+**Description of the slide:**
+
+This is a title slide for a lecture on clustering. The title "Introduction to Clustering" is displayed in a large, bold, dark gray font.  Below the title, in a smaller, dark gray font, is the course information: "Data Science in Business, Chapter 6". The background color is a light gray.  The overall design is simple and clean, focusing on the title and course information.
+
+
+**Description of what you see:**
+
+The slide is a plain, light gray background with the title "Introduction to Clustering" in a bold, dark gray font.  Below the title, in a smaller, dark gray font, is the subtitle "Data Science in Business, Chapter 6".  There are no images or other visual elements on the slide. The slide is likely the first in a series of slides about clustering, introducing the topic for the lecture.
+
+
+# 3
+
+# Subfields of Machine Learning
+
+Supervised Learning
+Given paired inputs/outputs (X, y)
+Goal is to learn f from training data, f(X) = y
+Evaluated it on "new" (test) data.
+Examples
+* Classification: y is discrete (y are class labels, X refers to attributes)
+* Regression: y is continuous
+
+Unsupervised Learning
+Given examples of inputs X
+Learn a function f to simplify the data, f(X) = y
+Examples:
+* Clustering: y is discrete (y are cluster memberships)
+* Matrix factorization: y are continuous (y are embeddings)
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, presents a table-like structure outlining the two main subfields of machine learning: Supervised Learning and Unsupervised Learning.  The slide is formatted with clear headings for each subfield, followed by descriptions of their characteristics and examples.
+
+**Visual Description:**
+
+The slide is a simple, two-column layout.  The left column is titled "Supervised Learning" and the right column is titled "Unsupervised Learning".  Each column lists key characteristics and examples of the respective learning type.  The text is presented in a clear, easy-to-read font.  There are no images or figures on the slide. The layout is designed to clearly differentiate between the two types of machine learning. The use of bullet points enhances readability and emphasizes the key concepts.  The slide is likely part of a larger presentation explaining the different types of machine learning tasks.
+
+
+# 4
+
+# What is Clustering?
+
+Clustering: the process of grouping a set of objects into classes of similar objects
+
+* Objects within a cluster should be similar
+* Objects from different clusters should be dissimilar
+
+Clustering is the most common form of unsupervised learning
+
+* Learning from unlabeled raw data
+* A frequent and important task that finds many applications in data science
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, defines clustering and its characteristics.  The slide is formatted with a clear title ("What is Clustering?") followed by a definition of clustering and bullet points that describe the key characteristics of a good clustering algorithm.  The text is presented in a clear, easy-to-read font.  There are no images or figures on the slide. The slide is likely part of a larger presentation explaining the different types of machine learning tasks, specifically focusing on unsupervised learning and the clustering technique.  The slide is designed to introduce the concept of clustering to the audience.
+
+
+# 5
+
+# Examples
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, is a simple slide with the word "Examples" in a dark gray font.  The background is a light gray.  There are no other elements on the slide.  This slide is likely a placeholder for the next slide, which will contain examples related to the topic being discussed.  The slide is designed to signal a transition to the examples section of the lecture.
+
+
+**What you see:**
+
+The slide is a plain, light gray background.  The only text on the slide is the word "Examples" in a dark gray, sans-serif font.  The word "Examples" is centered on the slide.  The font size is medium-large, making it easily visible.  The overall design is simple and clean, focusing on the word "Examples" to indicate the upcoming content.
+
+
+# 6
+
+# Example: Documents
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, presents a collection of news articles or documents.  The layout shows a split-screen format, with sections labeled "U.S." and "World".  Each section contains several news snippets, each with a title, source, and timestamp.  The titles are news headlines, and the sources are news outlets.  The timestamps indicate when the articles were published.  The slide is designed to provide examples of the types of data that might be used in a clustering analysis.  The articles are likely chosen to illustrate different topics or categories.
+
+
+**Visual Description:**
+
+The slide displays a grid-like structure with two main columns, labeled "U.S." and "World".  Each column contains several smaller boxes, each representing a news article.  Within each box, there is a title (e.g., "Glenn Youngkin, Terry McAuliffe make final pitch to Virginians in hotly contested governor race"), a source (e.g., "New York Post"), and a timestamp (e.g., "5 hours ago").  There are images associated with some of the articles, likely representing the subject of the article.  The images are small and are likely thumbnails of larger images.  The layout is designed to present a variety of news articles in a concise and easily digestible format.  The overall design is simple and clean, focusing on the text content of the news articles.  The presence of the "View Full Coverage" links suggests that the articles are clickable links to the full news stories.  The slide is likely part of a larger presentation on clustering, where the news articles are used as examples of data points that could be clustered based on their topics or themes.
+
+
+# 7
+
+# Example: Images
+
+---
+
+**STATIONARY VEGETATION**
+**MOVING CAR**
+**STATIONARY ROAD**
+**STATIONARY CAR**
+**STATIONARY FENCE**
+**STATIONARY BUILDING**
+**STATIONARY PAVEMENT**
+
+
+---
+
+**Description of the slide:**
+
+The slide displays two images side-by-side.  The image on the left is a full-color photograph of a street scene, showing a road, cars, buildings, and vegetation.  The image on the right is a segmented version of the same scene.  The segmented image shows the same elements as the photograph, but each element is colored differently.  For example, the road is colored purple, the cars are colored teal and light green, the buildings are colored red-brown, and the vegetation is colored yellow-green.  Labels are placed next to the colored areas, identifying what each color represents (e.g., "STATIONARY VEGETATION," "MOVING CAR," "STATIONARY ROAD").
+
+**Detailed Description:**
+
+The slide shows a split-screen layout.  The top half of the slide displays a full-color photograph of a street scene.  The bottom half of the slide shows a segmented version of the same scene.  The segmentation is a visual representation of clustering.  The colors in the segmented image correspond to different categories or clusters of objects in the scene.  The labels next to the colored areas provide a key to the segmentation.  The purpose of this slide is to illustrate how clustering can be used to segment an image into different categories of objects.  The presence of the segmented image and the labels is crucial to understanding the concept of clustering in the context of image analysis.  The slide is likely part of a larger presentation on clustering, specifically focusing on image segmentation as an application of clustering techniques.
+
+
+# 8
+
+# Example: Genes
+
+---
+
+A complex network graph is displayed.  Numerous nodes (circles) of varying sizes and colors are interconnected by lines (edges).  The nodes represent genes, and the lines represent relationships or interactions between them.  Different colors and sizes of the nodes likely indicate different categories or clusters of genes.  Labels are associated with some of the nodes, providing information about the specific gene or the cell type it is associated with (e.g., "Astrocytoma," "Smooth muscle," "Intestine").  Some nodes have additional text attached, which likely describes the function or pathway associated with the gene (e.g., "Cytochrome P450 (W,K)").  The overall layout is a complex network visualization, designed to show the relationships between genes and their roles in different biological processes and cell types.  The presence of labels and the network structure is crucial to understanding the concept of clustering in the context of gene expression analysis.  The slide is likely part of a larger presentation on clustering, specifically focusing on gene expression data and how clustering can be used to identify groups of genes with similar expression patterns.
+
+
+**Description of what you see:**
+
+The slide displays a complex network graph.  The graph shows numerous nodes (circles) connected by lines (edges).  The nodes are various colors and sizes, and some have labels attached to them.  The labels include gene names, cell types, and descriptions of functions or pathways.  The lines connecting the nodes represent relationships or interactions between the genes.  The overall impression is that the graph visualizes a complex network of gene interactions, potentially highlighting clusters of genes involved in specific biological processes or cell types.  The graph is a visual representation of gene expression data, and the clustering is implicit in the way the genes are grouped and connected.  The slide is likely part of a lecture on clustering, specifically focusing on gene expression data and how clustering can be used to identify groups of genes with similar expression patterns.  The title "Example: Genes" indicates that the graph is an example of data that can be clustered.  The citation at the bottom ("A promoter-level mammalian expression atlas. Nature, 26 March 2014") indicates the source of the data visualization.
+
+
+# 9
+
+# Example: Movies
+
+---
+
+A large, complex network graph is displayed.  Numerous small, colored dots (representing movies) are scattered across the image, connected by thin lines.  The dots are densely clustered in some areas and more sparsely distributed in others.  The colors of the dots appear to be grouped, suggesting clusters of movies with similar characteristics.  Several movie titles (e.g., "The Jacket," "Dark Water," "Dead Birds," "Equilibrium," "G.I. Jane," "Armageddon," "Independence Day," "The Rock," "Super Size Me," "Contact," "The Ring," "Battlestar Galactica," "A Beautiful Mind," "When We Were Kings," "Sin City," "Brave Heart") are labeled near the corresponding clusters of dots.  Some of these labels are accompanied by smaller images of movie posters.  Additional labels (e.g., "Misc Big Budget," "Sci-Fi," "Family," "Sports," "Documentary," "Bonus Material," "IMAX") are also present, indicating categories or characteristics associated with the clusters of movies.  The graph is oriented horizontally, with the movie titles and labels positioned along the left and right sides of the image.  The overall impression is that the graph visualizes a clustering of 17,700 movies based on their characteristics, potentially for Netflix's competitive analysis.  The presence of the movie titles and categories is crucial to understanding the context of the clustering.  The slide is likely part of a lecture on clustering, specifically focusing on movie data and how clustering can be used to group movies with similar characteristics.
+
+
+**Description of what you see:**
+
+The slide displays a large, complex network graph.  The graph shows a large number of small, colored dots, representing movies.  The dots are connected by thin lines, indicating relationships between the movies.  The colors of the dots appear to be grouped, suggesting clusters of movies with similar characteristics.  The movie titles are labeled near the corresponding clusters of dots, and some of these labels are accompanied by small images of movie posters.  Additional labels are present, indicating categories or characteristics associated with the clusters of movies.  The graph is oriented horizontally, with the movie titles and labels positioned along the left and right sides of the image.  The overall impression is that the graph visualizes a clustering of 17,700 movies based on their characteristics, potentially for Netflix's competitive analysis.  The presence of the movie titles and categories is crucial to understanding the context of the clustering.  The slide is likely part of a lecture on clustering, specifically focusing on movie data and how clustering can be used to group movies with similar characteristics.  The title "Example: Movies" indicates that the graph is an example of data that can be clustered.  The citation at the bottom ("Todd Holloway@gmail.com 03/25/2007") indicates the source of the data visualization.
+
+
+
+
+# 10
+
+# Example: Dog Breeds
+
+---
+
+A circular dendrogram is displayed, showing a hierarchical clustering of dog breeds.  The circular layout shows the relationships between different dog breeds, with breeds that are more closely related positioned closer together on the circle.  The breeds are represented by small colored dots, and the colors are not consistently associated with any particular breed group.  The lines connecting the dots form a branching structure, indicating the hierarchical relationships.  The dendrogram is oriented in a circular fashion, with the branches radiating outward from a central point.  The inner circle of the dendrogram contains the names of various dog breeds, such as "Poodle," "German Shepherd," "Labrador Retriever," "Golden Retriever," "Bulldog," "Boxer," "Beagle," "Basset Hound," and many others.  The outer ring of the dendrogram contains a vertical dendrogram, which shows the hierarchical relationships between the breeds in a more traditional tree-like structure.  The vertical dendrogram is a separate representation of the same clustering data, showing the branching relationships between the breeds.  The vertical dendrogram is oriented vertically, with the branches extending downward from the top.  The vertical dendrogram is positioned on the right side of the slide.  The colors and sizes of the dots in the circular dendrogram are not consistently associated with any particular breed group.  The purpose of this slide is to illustrate how clustering can be used to group similar dog breeds based on their genetic and phenotypic characteristics.  The presence of the circular and vertical dendrograms, along with the names of the dog breeds, is crucial to understanding the concept of clustering in the context of dog breed analysis.  The slide is likely part of a lecture on clustering, specifically focusing on dog breed data and how clustering can be used to group dog breeds with similar characteristics.
+
+
+**Description of what you see:**
+
+The slide displays a circular dendrogram, a visual representation of hierarchical clustering.  The dendrogram shows the relationships between various dog breeds.  The breeds are represented by small colored dots, and the colors are not consistently associated with any particular breed group.  The lines connecting the dots form a branching structure, indicating the hierarchical relationships.  The dendrogram is oriented in a circular fashion, with the branches radiating outward from a central point.  The inner circle of the dendrogram contains the names of various dog breeds.  The outer ring of the dendrogram contains a vertical dendrogram, which shows the hierarchical relationships between the breeds in a more traditional tree-like structure.  The vertical dendrogram is positioned on the right side of the slide.  The colors and sizes of the dots in the circular dendrogram are not consistently associated with any particular breed group.  The purpose of this slide is to illustrate how clustering can be used to group similar dog breeds based on their genetic and phenotypic characteristics.  The presence of the circular and vertical dendrograms, along with the names of the dog breeds, is crucial to understanding the concept of clustering in the context of dog breed analysis.  The slide is likely part of a lecture on clustering, specifically focusing on dog breed data and how clustering can be used to group dog breeds with similar characteristics.  The title "Example: Dog Breeds" indicates that the graph is an example of data that can be clustered.  The legend at the bottom of the slide shows the color-coding for the hierarchical clustering, with different colors representing different similarity ranges.  The legend also includes a key for the different sizes of the dots.
+
+
+
+
+# 11
+
+# Personas
+
+---
+
+To provide a common understanding across all teams.
+
+---
+
+**Description of what you see:**
+
+The slide displays a grid of twelve simple, cartoon-like portraits of people.  The portraits are arranged in two rows of six, and each portrait depicts a different person with varying hairstyles, skin tones, and clothing.  The style is minimalist, using simple lines and colors to represent the features of each person.  The portraits are evenly spaced and sized, filling most of the slide's area.  Below the grid of portraits, there is a single line of text: "To provide a common understanding across all teams."
+
+**Detailed Description:**
+
+The slide is likely part of a presentation or lecture on AI Basics, focusing on the concept of personas.  The portraits represent different user types or target audiences for a product or service.  The purpose of these personas is to help teams understand the needs, motivations, and behaviors of these different user groups.  The simple, stylized design of the portraits suggests a focus on conveying the core characteristics of each persona rather than detailed realism.  The text below the portraits emphasizes the importance of shared understanding among teams, suggesting that the personas are intended to facilitate communication and collaboration.  The slide is designed to introduce the concept of personas and their role in project planning and development.
+
+
+# 12
+
+**Gathering Data**
+
+|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
+
+# 13
+
+**Gathering Data**
+
+|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
+
+# 14
+
+**Gathering Data**
+
+|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
+
+# 14
+
+**Gathering Data**
+
+|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
+
+# 14
+
+**Similarity/Distance**
+
+---
+
+**Description of what you see:**
+
+This slide, likely part of a lecture on AI Basics, has a plain, light gray background.  The only text on the slide is the heading "Similarity/Distance" in a dark gray, sans-serif font.  The text is centered on the slide.  The font size is medium-large, making it easily visible.  The overall design is simple and clean, focusing on the heading to indicate the topic of the upcoming content.
+
+
+**Detailed Description:**
+
+The slide is a simple title slide, likely introducing the concept of similarity and distance measures in the context of clustering algorithms.  It's a straightforward transition to the next section of the lecture, which will likely discuss different methods for quantifying how similar or dissimilar data points are.  The absence of any other content suggests that this is a preparatory slide, setting the stage for the subsequent discussion of similarity and distance metrics.
+
+
+# 17
+
+**Distance measures**
+
+If objects have the same fixed set of numeric attributes, then the
+data objects can be thought of as points in a multi-dimensional
+space, where each dimension represents a distinct attribute
+
+Euclidean distance is the most commonly used
+distance measure for continuous data:
+
+dE(x, y) = √∑<sub>i=1</sub><sup>p</sup> (x<sub>i</sub> − y<sub>i</sub>)<sup>2</sup>
+
+Here p is the number of attributes/dimensions
+
+Proximity: general term to indicate similarity
+and dissimilarity
+
+Distance: measure of dissimilarity
+
+---
+
+A large, colorful grid-like image is displayed.  It's a heatmap, where each cell represents the distance between two data points.  The color of each cell corresponds to a numerical distance value.  The colors range from a deep blue (low distance/high similarity) to red (high distance/low similarity).  The grid is square, and the x and y axes are not labeled with specific values, but the image shows a clear pattern of clustering.  The image is positioned centrally on the slide.  The heatmap is a visual representation of the distances between 100 different data points.  The purpose of the heatmap is to illustrate the concept of distance measures in clustering.  It shows how different data points are related to each other based on their numerical attributes.
+
+
+**Description of what you see:**
+
+Slide 17 of a presentation on AI Basics.  The slide title is "Distance measures."  The content explains the concept of Euclidean distance as a measure of dissimilarity between data points.  A heatmap is shown, which visually represents the distances between 100 different data points.  The colors in the heatmap correspond to different distance values, with darker blues representing smaller distances and warmer colors (reds, oranges) representing larger distances.  The heatmap is a visual aid to illustrate the concept of distance measures in the context of clustering.  The slide is likely part of a larger presentation on clustering algorithms, where the concept of distance is fundamental to how clusters are formed.
+
+
+# 18
+
+**Example with matplotlib**
+
+```python
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+from scipy.spatial import distance_matrix
+xyLocations = [[random.randrange(0,10), random.gauss(5,3)] for i in range(25)]
+xyLocs = pd.DataFrame(xyLocations)
+distances = distance_matrix(xyLocs.values,xyLocs.values)
+print(distances[:5,:5])
+[[0.         4.95848922 5.50745126 2.31171825 4.68541685]
+ [4.95848922 0.         1.96229046 2.67138844 0.4903888 ]
+ [5.50745126 1.96229046 0.         3.600969   2.3972855 ]
+ [2.31171825 2.67138844 3.600969   0.         2.37484206]
+ [4.68541685 0.4903888  2.3972855  2.37484206 0.        ]]
+plt.imshow(distances)
+plt.show()
+```
+
+---
+
+**Description of what you see:**
+
+The slide displays Python code, which is used to generate a heatmap visualization of distances between data points.  The code imports necessary libraries (`numpy`, `matplotlib`, and `scipy.spatial`).  It creates a set of 25 data points (`xyLocations`) with x-coordinates randomly selected between 0 and 10 and y-coordinates drawn from a Gaussian distribution centered at 5 with a standard deviation of 3.  These points are then stored in a Pandas DataFrame (`xyLocs`).  The code calculates the distance matrix (`distances`) using `distance_matrix` from `scipy.spatial`, showing the Euclidean distance between each pair of points.  A snippet of the calculated distance matrix is printed, showing the distances between the first five data points.  Finally, the code uses `plt.imshow` to display the entire distance matrix as a heatmap, where colors represent the distances.  The `plt.show()` command displays the generated heatmap.
+
+The heatmap itself is a square grid of colored cells.  The colors range from dark blue (representing small distances) to yellow and orange (representing larger distances).  The heatmap's arrangement visually represents the distances between the data points, with darker blue cells indicating closer proximity and warmer colors indicating greater distances.  The code and heatmap are designed to illustrate how distance matrices can be used to visualize the relationships between data points in a clustering context.  The code example is a practical demonstration of how to calculate and display distance matrices using Python libraries.
+
+
+# 19
+
+**Distance between discrete data**
+
+Hamming distance
+* Used for bit/binary vectors: counts number of bits that differ
+* Can be used more generally for discrete data, to count matches
+Matching coefficient
+* Hamming distance normalized by number of attributes/bits
+
+A	1	0	1	1	0	0	1	0	0	1
+B	1	0	0	1	0	0	0	0	1	1
+
+Hamming Distance: 3
+Matching coefficient: 7/10
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, discusses Hamming distance and matching coefficients as methods for measuring the dissimilarity between discrete data points, specifically bit/binary vectors.  The slide presents a table-like structure with two rows labeled "A" and "B," each representing a data point.  Each row contains a sequence of 10 bits (0s and 1s).  The slide also shows the calculated Hamming distance (3) and matching coefficient (7/10).  The text explains that Hamming distance counts the number of differing bits, and the matching coefficient normalizes this by the total number of bits.  The slide is designed to illustrate how to calculate these distance measures for discrete data.
+
+
+
+
+# 20
+
+**Clustering**
+
+---
+
+**Description of what you see:**
+
+This slide, likely part of a lecture on AI Basics, has a plain, light gray background.  The only text on the slide is the heading "Clustering" in a dark gray, sans-serif font.  The text is centered on the slide.  The font size is large, making it easily visible.  The overall design is simple and clean, focusing on the heading to indicate the topic of the upcoming content.
+
+
+**Detailed Description:**
+
+The slide is a simple title slide, likely introducing the topic of clustering in the context of the lecture.  It's a straightforward transition to the next section of the lecture, which will likely discuss different clustering algorithms, methods, or applications.  The absence of any other content suggests that this is a preparatory slide, setting the stage for the subsequent discussion of clustering.
+
+
+# 21
+
+**K-means clustering**
+
+One of the most commonly-used clustering algorithms, because it is easy to implement and quick to run
+
+The goal is to partition the objects into K disjoint subsets
+
+Assumes the objects (instances) to be clustered are p-dimensional vectors
+
+Uses a distance measure between the objects (typically Euclidean distance)
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a concise explanation of the K-means clustering algorithm.  The text is formatted in a clear, bulleted list format, making it easy to read and understand the key characteristics of the algorithm.  There are no images or figures on the slide.  The slide is likely part of a larger presentation on clustering algorithms, introducing the K-means algorithm as a common and practical approach to grouping data points.  The content is straightforward and directly explains the algorithm's purpose, assumptions, and methodology.
+
+
+# 22
+
+**The K-means Algorithm**
+
+Input: Dataset D, number of clusters k
+Output: Set of cluster representatives C, cluster membership vector m
+
+# Initialize cluster representatives C
+Randomly assign k data points from D into each cluster
+Initialize C such that c<sub>i</sub> is mean of points in i<sup>th</sup> cluster
+
+while not converged
+# Data Assignment
+Reassign points in D to closest cluster mean
+Update m such that m<sub>i</sub> is cluster ID of the i<sup>th</sup> point in D
+
+# Relocation of means
+Update C such that c<sub>i</sub> is mean of points in i<sup>th</sup> cluster
+
+
+---
+
+**Description of what you see:**
+
+The slide presents a list of steps for the K-means algorithm.  The text is formatted in a clear, numbered list format, making it easy to read and understand the algorithm's steps.  There are no images or figures on the slide.  The slide is likely part of a larger presentation on clustering algorithms, introducing the K-means algorithm as a common and practical approach to grouping data points.  The content is straightforward and directly explains the algorithm's steps, from initialization to relocation of means.  The use of numbered steps and clear variable names (D, k, C, m) enhances the clarity and understanding of the algorithm.
+
+
+# 23
+
+**Example: Acquire Data**
+
+---
+
+A scatter plot is displayed, showing a large number of small, black dots scattered across a two-dimensional space.  The dots are densely clustered in some areas and more sparsely distributed in others.  There are no labels or axes on the plot.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+The slide shows a scatter plot of data points.  The plot is a visual representation of a dataset, where each dot represents a data instance.  The density of the dots in certain areas suggests that there might be clusters of similar data points in the dataset.  The absence of labels or axes indicates that the specific values of the data points are not being shown.  The purpose of this slide is to illustrate the concept of acquiring data and visualizing it in a scatter plot format.  The slide is likely part of a lecture on clustering, where the data points are examples of data that could be clustered using algorithms like K-means.  The title "Example: Acquire Data" indicates that the scatter plot is an example of a dataset that has been acquired.
+
+
+# 24
+
+**Example: Assign Randomly**
+
+---
+
+A scatter plot is displayed, showing a large number of small data points (dots) scattered across a two-dimensional space.  The data points are colored in three different colors (red, dark gray, and light blue).  The points are not neatly clustered; they are dispersed across the plot area.  No labels or axes are present on the plot.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide shows a scatter plot, likely part of a lecture on K-means clustering.  The plot visualizes a dataset where each point represents a data instance, and the color of the point indicates the cluster it has been assigned to (randomly) in the first step of the K-means algorithm.  The lack of clear clusters in the plot visually demonstrates the random assignment of data points to initial clusters.  The purpose of this slide is to illustrate the initial random assignment step in the K-means clustering algorithm.  The three colors represent the three initial clusters.  The slide is a visual aid to help the audience understand the concept of random initialization in the K-means algorithm.  The title "Example: Assign Randomly" clearly indicates the purpose of the plot.
+
+
+# 25
+
+**Example: Compute Centroids**
+
+---
+
+A scatter plot is displayed, showing a two-dimensional space populated with numerous small, colored data points.  The data points are clustered into three distinct groups, represented by different colors (red, dark gray, and light blue).  Within each cluster, the data points are relatively close to each other.  Superimposed on the scatter plot are three larger, star-shaped markers (one red, one dark gray, and one light blue).  These star-shaped markers are positioned near the center of their respective clusters.  The star-shaped markers represent the centroids (or means) of the clusters.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide, part of a lecture on K-means clustering, illustrates the computation of centroids in the K-means algorithm.  The scatter plot shows a dataset with three distinct clusters.  Each cluster is visually separated by color (red, dark gray, and light blue).  The star-shaped markers represent the calculated centroids for each cluster.  The centroids are positioned near the center of mass of the data points within each cluster.  The purpose of this slide is to demonstrate how the algorithm calculates the centroids after the initial random assignment of data points to clusters.  The slide visually shows the result of the relocation of means step in the K-means algorithm.  The title "Example: Compute Centroids" clearly indicates the purpose of the plot.  The plot shows the data points and the calculated centroids, which are the means of the data points in each cluster.
+
+
+# 26
+
+**Example: Reassign Clusters**
+
+---
+
+A scatter plot is displayed, showing a two-dimensional space populated with numerous small, colored data points.  The data points are now reassigned to three distinct clusters, represented by different colors (red, dark gray, and light blue).  The clusters are more clearly defined compared to the previous "Assign Randomly" example.  The data points within each cluster are now closer to each other, and the clusters are more compact.  Superimposed on the scatter plot are three larger, star-shaped markers (one red, one dark gray, and one light blue).  These star-shaped markers represent the centroids (or means) of the clusters.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide, part of a lecture on K-means clustering, illustrates the reassignment step in the K-means algorithm.  The scatter plot shows a dataset with three distinct clusters, more clearly defined than in the previous example.  Each cluster is visually separated by color (red, dark gray, and light blue).  The data points within each cluster are now closer to each other, indicating that the algorithm has iteratively refined the cluster assignments.  The star-shaped markers represent the centroids of the clusters, which have likely shifted from their initial positions in the previous example.  The purpose of this slide is to demonstrate the iterative nature of the K-means algorithm, where data points are reassigned to the nearest centroid in each iteration until convergence.  The title "Example: Reassign Clusters" clearly indicates the purpose of the plot.  The plot shows the data points and the updated centroids, which are the means of the data points in each cluster after the reassignment step.  The reassignment of points to clusters is based on the distance to the centroids.  The colors and positions of the points now reflect a more refined clustering compared to the previous random assignment.
+
+
+# 27
+
+**Example: Re-compute Centroids**
+
+---
+
+A scatter plot is displayed, showing a two-dimensional space.  Numerous small, colored data points are scattered across the plot.  The data points are clustered into three distinct groups, represented by different colors: red, light blue, and dark gray.  Within each cluster, the data points are relatively close to each other.  Three larger, star-shaped markers are superimposed on the scatter plot.  These star-shaped markers represent the centroids (or means) of the clusters.  The red star is positioned near the center of the red cluster, the light blue star near the center of the light blue cluster, and the dark gray star near the center of the dark gray cluster.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide, part of a lecture on K-means clustering, illustrates the re-computation of centroids in the K-means algorithm after the reassignment of data points to clusters.  The scatter plot shows a dataset with three distinct clusters, each visually separated by color.  The data points within each cluster are now closer to each other than in the previous iteration, indicating that the algorithm has refined the cluster assignments.  The star-shaped markers represent the updated centroids for each cluster.  The purpose of this slide is to demonstrate the iterative nature of the K-means algorithm, where the centroids are recalculated in each iteration until convergence.  The title "Example: Re-compute Centroids" clearly indicates the purpose of the plot.  The plot shows the data points and the updated centroids, which are the means of the data points in each cluster after the reassignment step.  The updated positions of the centroids reflect the movement of the data points to new clusters.  The colors and positions of the points now reflect a more refined clustering compared to the previous iteration.
+
+
+# 28
+
+**Example: Reassign Clusters**
+
+---
+
+A scatter plot is displayed, showing a two-dimensional space.  Numerous small data points are scattered across the plot, colored in three distinct groups: red, light blue, and dark gray.  The clusters are more clearly defined than in previous examples.  Data points within each cluster are closer to each other, indicating that the algorithm has refined the cluster assignments.  Three larger, star-shaped markers are superimposed on the plot.  These markers represent the centroids (or means) of the clusters.  The red star is positioned near the center of the red cluster, the light blue star near the center of the light blue cluster, and the dark gray star near the center of the dark gray cluster.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide, part of a lecture on K-means clustering, illustrates the reassignment step in the K-means algorithm.  The scatter plot shows a dataset with three distinct clusters, more clearly defined than in previous examples.  Each cluster is visually separated by color (red, light blue, and dark gray).  The data points within each cluster are now closer to each other, indicating that the algorithm has iteratively refined the cluster assignments.  The star-shaped markers represent the centroids of the clusters, which have likely shifted from their initial positions in previous examples.  The purpose of this slide is to demonstrate the iterative nature of the K-means algorithm, where data points are reassigned to the nearest centroid in each iteration until convergence.  The title "Example: Reassign Clusters" clearly indicates the purpose of the plot.  The plot shows the data points and the updated centroids, which are the means of the data points in each cluster after the reassignment step.  The reassignment of points to clusters is based on the distance to the centroids.  The colors and positions of the points now reflect a more refined clustering compared to the previous iteration.  The slide is a visual aid to help the audience understand the iterative process of the K-means algorithm.
+
+
+# 29
+
+**Example: Re-compute Centroids**
+
+---
+
+Three clusters of data points are shown in a two-dimensional scatter plot.  The data points are small circles, colored in light blue, dark gray, and red.  The clusters are distinct, with points within each cluster relatively close to each other.  Three larger star-shaped markers are superimposed on the plot.  These markers represent the centroids of the respective clusters.  The red star is positioned near the center of the red cluster, the light blue star near the center of the light blue cluster, and the dark gray star near the center of the dark gray cluster.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide, part of a lecture on K-means clustering, illustrates the re-computation of centroids in the K-means algorithm.  The scatter plot shows a dataset with three distinct clusters, each visually separated by color.  The data points within each cluster are now closer to each other than in the previous iteration, indicating that the algorithm has refined the cluster assignments.  The star-shaped markers represent the updated centroids for each cluster.  The purpose of this slide is to demonstrate the iterative nature of the K-means algorithm, where the centroids are recalculated in each iteration until convergence.  The title "Example: Re-compute Centroids" clearly indicates the purpose of the plot.  The plot shows the data points and the updated centroids, which are the means of the data points in each cluster after the reassignment step.  The updated positions of the centroids reflect the movement of the data points to new clusters.  The colors and positions of the points now reflect a more refined clustering compared to the previous iteration.  The slide is a visual aid to help the audience understand the iterative process of the K-means algorithm.  The slide is likely part of a series demonstrating the steps of the K-means algorithm, showing how the centroids move and the clusters become more defined with each iteration.
+
+
+# 30
+
+**Python Example**
+
+---
+
+No content is visible on this slide.  It's a blank slide, likely a placeholder for a Python code example or a demonstration of the K-means algorithm in action.
+
+
+**Description of what you see:**
+
+The slide is a plain, light gray background with only the title "Python Example" in a dark gray, sans-serif font.  There are no figures or other content on the slide.  This suggests that the next slide will contain the actual Python code for a K-means clustering example.
+
+
+# 31
+
+**Clustering in Python**
+
+```python
+import matplotlib.pyplot as plt
+plt.style.use('seaborn')
+from sklearn.datasets.samples_generator import make_blobs
+X, y_true = make_blobs(n_samples=300, centers=4,
+    cluster_std = 0.60, random_state=0)
+plt.scatter(X[:, 0], X[:, 1], s=50)
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=4)
+kmeans.fit(X)
+y_kmeans = kmeans.predict(X)
+# returns array of predictions of cluster for each item
+plt.scatter(X[:, 0], X[:, 1], c=y_kmeans, s=50, cmap='viridis')
+centers = kmeans.cluster_centers_
+plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
+```
+
+---
+
+**Description of what you see:**
+
+This slide presents Python code for performing K-means clustering on a dataset.  The code utilizes the `matplotlib` library for plotting and `sklearn.datasets.make_blobs` to generate sample data with four clusters.  The `random_state` parameter ensures reproducibility.  The code then uses `sklearn.cluster.KMeans` to perform the clustering, fitting the model to the data (`X`).  The `predict` method is used to assign each data point to a cluster, and the results are stored in `y_kmeans`.  Finally, the code plots the data points colored by their assigned cluster (`c=y_kmeans`) and plots the cluster centroids (`centers`) as larger black points (`c='black'`, `s=200`).  The `cmap='viridis'` parameter in the `scatter` function controls the colormap used for the clusters.
+
+The slide displays two scatter plots. The first scatter plot shows the original data points, which are randomly distributed in the two-dimensional space. The second scatter plot shows the same data points, but now colored according to the cluster they were assigned to by the K-means algorithm.  Superimposed on both plots are larger black points representing the calculated centroids of each cluster.  The code and plots are designed to demonstrate the K-means clustering algorithm in action, showing how the algorithm groups similar data points and identifies the central points of each cluster.  The `plt.style.use('seaborn')` line sets the plotting style to a visually appealing default.  The `random_state` parameter ensures that the data points are generated in the same way each time the code is run, making the results reproducible.
+
+
+# 32
+
+**How to evaluate Clusters**
+
+---
+
+**Description of what you see:**
+
+This slide, likely part of a lecture on AI Basics, has a plain, light gray background.  The only text on the slide is the heading "How to evaluate Clusters" in a dark gray, sans-serif font.  The text is centered on the slide.  The font size is large, making it easily visible.  The overall design is simple and clean, focusing on the heading to indicate the topic of the upcoming content.  This slide is a title slide, introducing the topic of evaluating the quality of clusters produced by clustering algorithms.  It's a straightforward transition to the next section of the lecture, which will likely discuss various metrics or methods for evaluating the quality of clusters.
+
+
+# 33
+
+**How to choose k in kmeans?**
+
+How many clusters do we need?
+K-means optimization
+* Minimize the sum of squared distances from each point to its cluster centroid
+(this is called the inertia score in sklearn)
+Naive approach to choose k:
+* Try different values of k, pick one that minimizes inertia
+* What is wrong with this? As k increases the inertia
+score cannot increase, thus will pick k=n
+Better approach:
+* Pick k at the "elbow" of the plot
+* Balances accuracy (low value of inertia) and complexity (small value of k)
+
+
+---
+
+A line graph is displayed.  The x-axis is labeled "Number of Centers" and ranges from 1 to 9.  The y-axis is labeled "Inertia" and ranges from 10,000 to 26,000.  The graph shows a curve of decreasing inertia values as the number of centers (k) increases.  The curve starts with a steep decrease, then gradually levels off.  A point on the curve, corresponding to a number of centers around 3, is circled in red.  This circled point visually represents the "elbow" of the curve.  The graph is positioned centrally on the slide.
+
+**Description of what you see:**
+
+Slide 33 of a presentation on AI Basics.  The slide discusses how to choose the optimal number of clusters (k) in the K-means algorithm.  It explains that K-means aims to minimize the inertia (sum of squared distances from each point to its cluster centroid).  A naive approach would be to try different values of k and pick the one that minimizes inertia, but this can lead to choosing too many clusters.  A better approach is to look for the "elbow" in a plot of inertia versus the number of clusters.  The graph shown is a plot of inertia versus the number of clusters, illustrating the concept of the "elbow" method for selecting the optimal k value.  The red circle highlights the point on the graph that represents the "elbow," suggesting that a good choice for k might be around 3 in this example.  The slide is designed to illustrate the "elbow method" for determining the optimal number of clusters in K-means clustering.
+
+
+# 34
+
+**Clustering will return results, no matter the data**
+
+---
+
+Four scatter plots are displayed, each showing a two-dimensional dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left:**  A scatter plot of randomly distributed points, colored red.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 1, and the y-axis ranges from 0 to 1.
+
+* **Top Right:** A scatter plot of data points, colored in blue, dark gray, and green.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 1, and the y-axis ranges from 0 to 1.  The title of this plot is "DBSCAN".
+
+* **Bottom Left:** A scatter plot of data points, colored in red, dark gray, and green.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 0.8, and the y-axis ranges from 0 to 1.  The title of this plot is "K-means".
+
+* **Bottom Right:** A scatter plot of data points, colored in red, dark gray, and green.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 1, and the y-axis ranges from 0 to 1.  The title of this plot is "Complete Link".
+
+**Description of what you see:**
+
+This slide, part of a lecture on clustering algorithms, demonstrates the results of applying different clustering methods to the same dataset.  The four plots show the output of four different clustering algorithms (random assignment, DBSCAN, K-means, and Complete Link) on a dataset.  The purpose of this slide is to illustrate that clustering algorithms, even with different approaches, will produce some form of clustering result, regardless of the inherent structure of the data.  The different colors in each plot represent the different clusters identified by each algorithm.  The slide is designed to highlight the variability in clustering results and the importance of choosing the appropriate algorithm for a given dataset.  The random assignment plot shows a random distribution of points, while the other plots show different clustering patterns.  The different clustering algorithms produce different results, highlighting the fact that the choice of algorithm can significantly affect the outcome of the clustering process.
+
+
+# 35
+
+**Unintuitive k-means results**
+
+---
+
+Four scatter plots are displayed, each showing a two-dimensional dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left:**  A scatter plot of data points, colored in dark purple and yellow.  The x-axis ranges from approximately -10 to 5, and the y-axis ranges from approximately -8 to 3.  The title of this plot is "Incorrect Number of Blobs".  The data points appear to be clustered into two groups, but the K-means algorithm, with a k value of 4, has not captured this structure well.
+
+* **Top Right:** A scatter plot of data points, colored in teal, yellow, and dark purple.  The x-axis ranges from approximately -6 to 4, and the y-axis ranges from approximately -2 to 3.  The title of this plot is "Anisotropicly Distributed Blobs".  The data points are elongated in a diagonal direction, and the K-means algorithm struggles to capture this non-spherical shape of the clusters.
+
+* **Bottom Left:** A scatter plot of data points, colored in yellow, teal, and dark purple.  The x-axis ranges from approximately -12.5 to 0, and the y-axis ranges from approximately -8 to 3.  The title of this plot is "Unequal Variance".  The clusters have different variances along the x and y axes, and the K-means algorithm struggles to capture the different spread of the clusters.
+
+* **Bottom Right:** A scatter plot of data points, colored in teal, yellow, and dark purple.  The x-axis ranges from approximately -10 to 50, and the y-axis ranges from approximately -8 to 3.  The title of this plot is "Unevenly Sized Blobs".  The clusters have different sizes, and the K-means algorithm struggles to capture the varying sizes of the clusters.
+
+
+---
+
+**Description of what you see:**
+
+This slide presents four scatter plots, each illustrating how the K-means algorithm can produce unintuitive results when the data doesn't conform to its assumptions.  The plots demonstrate the limitations of K-means when dealing with non-spherical clusters, clusters with unequal variances, and clusters of different sizes.  The title "Unintuitive k-means results" highlights the potential for the algorithm to misinterpret the underlying structure of the data, leading to inaccurate or unexpected cluster assignments.  The different shapes and sizes of the clusters in the plots visually demonstrate the algorithm's challenges in these scenarios.  The slide is a visual aid to help the audience understand the importance of considering the characteristics of the data when choosing and applying clustering algorithms.  The plots are intended to show that K-means works best with spherical, isotropic, and evenly sized clusters.
+
+
+# 36
+
+**Interpreting results**
+
+---
+
+**Description of what you see:**
+
+This slide is a title slide, likely part of a lecture on clustering algorithms.  It's a plain, light gray background with the single, centered heading "Interpreting results" in a dark gray, sans-serif font.  The large font size makes the title prominent.  There are no figures or other content on the slide.  This slide is a simple title slide, introducing the topic of interpreting the results of clustering algorithms.  It's a straightforward transition to the next section of the lecture, which will likely discuss methods for interpreting and understanding the clusters produced by clustering algorithms.
+
+
+
+
+# 37
+
+**Quantitative evaluation**
+
+For prediction tasks there are a variety of quantitative evaluation metrics
+* Accuracy, squared loss, area under ROC, etc.
+For cluster analysis there is typically no ground truth
+* Evaluation aims measure the "goodness" of the resulting clusters
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, discusses quantitative evaluation methods for clustering.  The text is presented in a clear, bulleted list format, making it easy to read and understand the key characteristics of the evaluation process.  There are no images or figures on the slide.  The slide is likely part of a larger presentation on clustering algorithms, introducing the concept of evaluating the quality of clusters produced by clustering algorithms.  The content is straightforward and directly explains the difference in evaluation methods for prediction tasks versus cluster analysis.  The slide highlights that for prediction tasks, various metrics exist, but for cluster analysis, the evaluation focuses on assessing the "goodness" of the resulting clusters.
+
+
+
+
+# 38
+
+**Evaluation Approach: Subjective**
+
+Evaluate how well the clusters "fit" the data
+
+* Order the proximity matrix with respect to cluster labels
+* Inspect visually
+
+Good clusterings exhibit clear block pattern
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a method for subjectively evaluating the quality of clusters produced by a clustering algorithm.  The text is formatted in a clear, bulleted list format, making it easy to read and understand the key characteristics of the evaluation process.  There are no images or figures on the slide.  The slide is likely part of a larger presentation on clustering algorithms, introducing a subjective approach to evaluating the quality of clusters.  The content is straightforward and directly explains the two main methods for subjective evaluation: ordering the proximity matrix and visual inspection.  The slide emphasizes the importance of visual inspection in assessing the quality of clusters, suggesting that a clear block pattern in the proximity matrix or visualization indicates well-formed clusters.
+
+
+# 39
+
+**Example 1: Good Clustering**
+
+---
+
+A scatter plot is displayed on the left side of the slide, showing three distinct clusters of data points.  The clusters are visually separated by color (red, blue, and green).  The x-axis ranges from approximately 0 to 1, and the y-axis ranges from approximately 0 to 1.  Each cluster appears to be roughly spherical and well-separated from the others.  The data points within each cluster are relatively close to each other.
+
+On the right side of the slide, a large square heatmap is displayed.  The heatmap shows a strong block pattern, with distinct blocks of similar colors corresponding to the clusters in the scatter plot.  The colors in the heatmap range from dark blue (low similarity/high distance) to red (high similarity/low distance).  The darker shades of blue and red are concentrated in the diagonal blocks, indicating high similarity within each cluster.  The heatmap is a reordered proximity matrix, where the rows and columns are arranged to reflect the cluster assignments.  The strong block pattern in the heatmap visually confirms the quality of the clustering, as it clearly shows the separation of the clusters.
+
+**Description of what you see:**
+
+Slide 39 of a presentation on clustering algorithms.  The slide provides an example of a "good clustering" by showing both a scatter plot and a reordered proximity matrix (heatmap).  The scatter plot on the left visually demonstrates three distinct clusters, which are well-separated and spherical.  The heatmap on the right, representing the reordered proximity matrix, visually confirms the quality of the clustering.  The strong block pattern in the heatmap corresponds to the clusters in the scatter plot, with high similarity values within each cluster and low similarity values between different clusters.  The slide is designed to illustrate how a well-formed clustering will exhibit a clear block pattern in the proximity matrix visualization.  The example is intended to help the audience understand how to visually assess the quality of a clustering result.
+
+
+# 40
+
+**Example II: Poor Clustering**
+
+---
+
+**Left Panel:** A scatter plot displays data points in three colors (red, blue, and green).  The x-axis ranges from approximately 0 to 1, and the y-axis ranges from approximately 0 to 1.  The data points are not clearly separated into distinct, well-defined clusters.  There are overlaps between the clusters, and the points within each cluster are not tightly grouped.  This visual representation suggests a poor clustering outcome.
+
+**Right Panel:** A large square heatmap is displayed.  The heatmap shows a reordered proximity matrix.  The colors range from dark blue (low similarity/high distance) to red (high similarity/low distance).  Crucially, the block pattern in the heatmap is not as clear or distinct as in the previous example of good clustering.  The lack of strong, diagonal blocks suggests that the clusters are not well-separated and that the clustering algorithm may not have effectively grouped similar data points.  The lack of clear separation in both the scatter plot and the heatmap indicates a poor clustering result.
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on clustering algorithms, provides an example of a "poor clustering" result.  It contrasts with the previous slide's "good clustering" example.  The left panel shows a scatter plot of data points that are not clearly separated into distinct clusters.  The right panel displays a heatmap (reordered proximity matrix) that visually confirms this poor clustering.  The lack of clear block patterns in the heatmap corresponds to the overlapping and indistinct clusters in the scatter plot.  This example is intended to illustrate how a poorly formed clustering will not exhibit a clear block pattern in the proximity matrix visualization.  The slide is designed to help the audience understand the visual cues for identifying poor clustering results.  The data points are not well-separated into distinct clusters, and the heatmap reflects this lack of clear separation.
+
+
+# 41
+
+**Evaluation Approach: Subjective**
+
+Visualize clusters:
+* Use PCA to reduce dimensionality
+Show only 2 or 3 dimensions
+* Color points by cluster membership
+* Inspect results
+
+---
+
+**Description of what you see:**
+
+The slide displays a large scatter plot.  The plot shows a large number of data points, each represented by a small circle.  The points are colored in a variety of colors, which are likely assigned based on cluster membership.  The colors appear to be distributed across the plot, suggesting the presence of multiple clusters.  The x-axis and y-axis are labeled, but the specific values are not visible.  The plot is oriented horizontally.  The purpose of this scatter plot is to visually represent the clusters resulting from a clustering algorithm.  The colors of the points are crucial for identifying the different clusters.  The fact that the points are colored differently indicates that a clustering algorithm has been applied to the data, and the colors represent the different groups or clusters that the algorithm has identified.  The use of PCA to reduce dimensionality to two dimensions allows for a visual representation of the clusters in a 2D space.  The slide is likely part of a section on evaluating clustering results, where visual inspection of the clusters is a key aspect of the evaluation process.  The title "Evaluation Approach: Subjective" indicates that the slide is part of a discussion on how to subjectively assess the quality of the clustering.
+
+
+# 41
+
+**Evaluation Approach: Subjective**
+
+Visualize clusters:
+* Use PCA to reduce dimensionality
+Show only 2 or 3 dimensions
+* Color points by cluster membership
+* Inspect results
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on clustering, describes a subjective approach to evaluating clustering results.  It suggests visualizing the clusters by reducing the dimensionality of the data using Principal Component Analysis (PCA) to two or three dimensions.  The visualization would involve coloring the data points according to their assigned cluster membership.  The resulting scatter plot would then be inspected to assess the quality of the clustering.  No specific plot is shown on this slide; it's a description of the process.  The slide is likely part of a larger section on evaluating clustering results, where visual inspection is a key aspect of the subjective evaluation process.  The title "Evaluation Approach: Subjective" indicates that the slide is part of a discussion on how to subjectively assess the quality of the clustering.  The text implies that the visual inspection will help determine if the clusters are well-defined and separated.
+
+
+# 43
+
+**Evaluation Approach: Objective**
+
+Evaluate the clusters using known class labels
+
+If you have class labels why cluster?
+* The labeled dataset is usually hand-labeled specifically for evaluation
+* Cluster the larger dataset automatically
+* Assess the clustering of the hand labeled dataset in the automatic clustering
+
+
+---
+
+**Description of what you see:**
+
+This slide, likely part of a lecture on clustering algorithms, discusses an objective approach to evaluating clustering results.  The text describes how to evaluate clusters when you already have known class labels for the data.  The content explains that if you have pre-labeled data, why would you cluster it?  The answer is that you would cluster a larger dataset automatically and then assess the clustering of the hand-labeled dataset in the automatic clustering.  The slide is likely part of a larger section on evaluating clustering results, where objective evaluation methods are discussed.  The title "Evaluation Approach: Objective" indicates that the slide is part of a discussion on how to objectively assess the quality of the clustering.  The text implies that the objective evaluation will use the known class labels to compare with the clusters produced by the algorithm.
+
+
+
+
+# 44
+
+**Evaluation via Class Labels: Purity**
+
+Purity: a measure of the extent to which cluster/groups (G) contain objects of a particular class (C)
+
+* Each cluster is assigned the class according to the most numerous class of its elements
+* The purity of each cluster  i in G is determined by the number of examples of class j (N<sub>j</sub>) inside each cluster:
+
+purity(C, G) =  1/N * Σ<sub>i=1</sub><sup>K</sup> max<sub>j</sub> N<sub>j</sub> ∈ G<sub>i</sub>
+
+High purity is easy to achieve when the number of clusters is large
+
+```
+X   X
+X   O
+X   X
+O
+```
+```
+X   X
+O   O
+O   O
+```
+```
+X   O   O
+O   X   O
+O   O   X
+```
+
+1 / 17 * (5 + 4 + 3) = 0.71...
+
+
+---
+
+**Description of what you see:**
+
+Slide 44 of a presentation on clustering algorithms.  The slide defines and illustrates the concept of purity as an objective evaluation metric for clustering.  The text defines purity as a measure of how well clusters contain objects of a particular class.  It explains that each cluster is assigned the class that has the most members within that cluster.  The purity of a clustering is calculated as the average of the maximum number of elements of any class within each cluster.  The formula for purity is shown:  purity(C, G) =  1/N * Σ<sub>i=1</sub><sup>K</sup> max<sub>j</sub> N<sub>j</sub> ∈ G<sub>i</sub>.  The slide also includes three small circular diagrams, each representing a cluster.  The circles are divided into sections, with 'X' and 'O' symbols representing different classes.  The symbols within each circle indicate the distribution of classes within each cluster.  The calculation at the bottom of the slide (1 / 17 * (5 + 4 + 3) = 0.71...) demonstrates how purity is calculated from the example clusters.  The example illustrates how purity is calculated from the distribution of classes within each cluster.  The slide is part of a section on evaluating clustering results using objective metrics.
+
+
+
+
+# 45
+
+**Evaluation via Class Labels: Similarity**
+
+Based on premise that any pair of objects in the same
+cluster should have the same class and vice versa
+
+Construct the "observed" similarity matrix
+* Based on cluster membership
+* Entry i,j is 1 if i and j are in the same cluster, 0 otherwise
+
+Construct the "ideal" similarity matrix
+* Based on class values
+* Entry i,j is 1 if i and j are in the same class, 0 otherwise
+
+Measure correlation between these two matrices
+
+---
+
+**Observed**
+|       | Point 1 | Point 2 | Point 3 |
+|-------|---------|---------|---------|
+| Point 1 | 1       | 0       | 1       |
+| Point 2 | 0       | 1       | 0       |
+| Point 3 | 1       | 0       | 1       |
+
+**Ideal**
+|       | Point 1 | Point 2 | Point 3 |
+|-------|---------|---------|---------|
+| Point 1 | 1       | 1       | 0       |
+| Point 2 | 1       | 1       | 0       |
+| Point 3 | 0       | 0       | 1       |
+
+
+---
+
+**Description of what you see:**
+
+This slide describes a method for evaluating clustering results using similarity matrices, specifically when class labels are available.  It outlines the steps to construct both an "observed" similarity matrix and an "ideal" similarity matrix based on cluster membership and class values, respectively.  The "observed" matrix (table) shows the similarity between data points based on their assigned clusters.  The "ideal" matrix (table) shows the similarity between data points based on their true class labels.  The correlation between these two matrices is then used as an objective measure of the quality of the clustering.  The example matrices show a 3x3 similarity matrix for three data points.  The slide is part of a section on evaluating clustering results using objective metrics.  The tables are crucial for understanding how the similarity between data points is defined in each case.  The premise is that if data points are in the same cluster, they should also be in the same class.  The correlation between the two matrices will quantify how well the clustering algorithm matched these expectations.

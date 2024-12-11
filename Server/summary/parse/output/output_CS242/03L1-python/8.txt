@@ -1,0 +1,20 @@
+# Slide 8
+
+# Dynamic typing
+
+Java: statically typed
+* Variables are declared to refer to objects of a given type
+* Methods use type signatures to enforce contracts
+
+Python
+* Variables come into existence when first assigned to
+* A variable can refer to an object of any type
+* All types are (almost) treated the same way
+* Main drawback: type errors are only caught at runtime
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, discusses the concept of dynamic typing in programming languages, contrasting Java's static typing with Python's dynamic typing.  The title "Dynamic typing" is prominently displayed at the top.  The content is presented in a bulleted list format, comparing and contrasting the two approaches.  The bullet points under "Java" describe how variables are explicitly declared with a specific type, and methods use type signatures to enforce type correctness at compile time.  In contrast, the bullet points under "Python" explain how variables are created when assigned a value, can hold objects of any type, and treat all types similarly.  The final bullet point under "Python" highlights the potential drawback of dynamic typing: type errors are only detected during runtime, rather than at compile time.  The slide's last line, "Slides adapted from UPenn CIS530 python tutorial," indicates the source of the information.  There are no images or figures on this slide.  The slide's purpose is to explain the difference between static and dynamic typing, emphasizing Python's dynamic approach and its implications for data science.

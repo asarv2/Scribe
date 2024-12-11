@@ -1,0 +1,24 @@
+# Slide 9
+
+```
+Anscombe Plot
+plt.scatter(data.x1, data.y1)
+plt.scatter(data.x2, data.y2)
+plt.scatter(data.x3, data.y3)
+plt.scatter(data.x4, data.y4)
+```
+
+---
+
+**Description:**
+
+This slide displays four `plt.scatter` commands, each plotting a different dataset from Anscombe's Quartet.  The commands are arranged vertically, each on a separate line.  Each command plots a scatter plot of the x and y values from a specific dataset (x1, y1; x2, y2; x3, y3; x4, y4).  The `data` variable is assumed to be a Pandas DataFrame containing the Anscombe's Quartet data, as established in the previous slide.
+
+**Figures:**
+
+Below the code blocks, there are four scatter plots.  These plots are the visual output of the `plt.scatter` commands.  Each plot shows the relationship between the x and y values for one of the four datasets in Anscombe's Quartet.  The plots are arranged in a grid-like fashion, with each plot corresponding to the `plt.scatter` command above it.  The plots are crucial for visualizing the data and observing the different patterns and relationships within each dataset.  The plots are essential to understanding the core concept of Anscombe's Quartet, which demonstrates that identical summary statistics can hide vastly different underlying data distributions.
+
+
+**What you see:**
+
+The slide shows code snippets and their corresponding output.  The code uses the `matplotlib.pyplot` library to create scatter plots.  The output is four scatter plots, each representing a different dataset from Anscombe's Quartet.  The plots are displayed side-by-side, allowing for a direct comparison of the data distributions.  The code and plots are designed to illustrate the importance of data visualization in understanding the characteristics of a dataset, as opposed to relying solely on summary statistics.

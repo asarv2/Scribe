@@ -1,0 +1,38 @@
+# 4
+
+**Example 1.1:**
+
+In 2015, a study was done to answer the following question: On average, do male STAT 301 students drive faster than female STAT 301 students? To gather data for this study, a faculty member randomly selected 242 Purdue STAT 301 students (out of 1000+) to be subjects in the study. The researcher decided that the measure of speed she would use was the fastest speed ever driven.
+
+In an online survey, each subject was asked their gender and the fastest speed ever driven. From this data, it was determined that for the subjects in the sample, the average male fastest driving speed was 105 mph and the average female fastest driving speed was 90 mph.
+
+Using statistical techniques you’ll learn in this course, we can infer with reasonable confidence that for all Purdue students who took STAT 301 around 2015, the average male’s fastest driving speed is somewhere between 101 and 109 mph and the average female’s driving speed is between 88 and 92 mph. Consequently, we have statistical evidence that male STAT 301 students, on average, have driven faster than female students taking STAT 301.
+
+Below describes the 4 phases of the statistical analysis used in this study.
+
+1.  Research question: For STAT 301 students, do males, on average, drive faster than females?
+
+2.  Study design: Randomly select 242 Purdue STAT 301 students and survey them about their gender and the fastest speed they’ve ever driven.
+
+3.  Statistics: 105 mph = average fastest driving speed of the males in the sample and 90 mph was the average fastest driving speed of the females in the sample.
+
+4.  Inferences: There are two inferences made above. One inference gives a range of values believed to contain the parameter of interest and the other answers the question.
+
+    *   Inference = range of plausible values for the parameters of interest: for all Purdue STAT 301 students, the average male’s fastest driving speed is somewhere between 101 and 109 mph and the average female’s fastest driving speed is between 88 and 92 mph.
+
+    *   Inference = answer to the question: we have statistical evidence that male STAT 301 students, on average, have driven faster than female students taking STAT 301.
+
+First, we need to describe the following in the context of this study:
+
+*   Population of interest:
+*   Sample:
+*   Variables of interest:
+*   Statistics:
+*   Parameters:
+
+
+---
+
+**Slide Description:**
+
+This is slide 4 of a 5-slide presentation on Statistical Methods.  The slide continues the discussion from previous slides, focusing on a specific example (Example 1.1) of a study conducted in 2015 to determine if male STAT 301 students drive faster than female STAT 301 students.  The slide details the study's methodology, including the research question, study design (random selection of 242 students), data collection (asking about fastest speed ever driven), and the resulting statistics (average male speed of 105 mph and average female speed of 90 mph).  Importantly, the slide then uses statistical techniques (not yet explained in detail) to infer a range of plausible values for the average fastest speeds for all STAT 301 students (males between 101 and 109 mph, females between 88 and 92 mph).  The slide concludes by highlighting the statistical inference that male students, on average, drove faster.  The slide also includes a list of items to be described in the context of the study, which are likely to be discussed in the following slides.  The slide number (4) is clearly visible at the bottom right.

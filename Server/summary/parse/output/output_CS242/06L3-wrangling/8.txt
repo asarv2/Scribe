@@ -1,0 +1,22 @@
+# Slide 8
+
+**Summary Statistics**
+
+If you have your data in a DataFrame you also have access to a number of summary methods
+
+`sum()`
+`mean()`
+`median()`
+`std()`
+`max()`
+`min()`
+`describe()`
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, lists various summary statistics functions available when working with data stored in a pandas DataFrame.  The slide is entirely text-based, presenting a bulleted list of functions.  The functions are all common statistical operations, such as calculating the sum, mean, median, standard deviation, maximum, and minimum values of a column, and a `describe()` function that likely provides a comprehensive summary of the data.  The purpose of this slide is to inform the audience about the tools available for summarizing data within a DataFrame.  There are no figures or images on this slide.
+
+

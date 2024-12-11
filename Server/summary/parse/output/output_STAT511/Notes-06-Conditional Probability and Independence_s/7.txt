@@ -1,0 +1,46 @@
+# Slide 7
+
+**Example 6.10 Solar photovoltaic system.**
+
+Consider a particular lifetime value 𝑡₀, and suppose we want to determine the probability that the system lifetime exceeds 𝑡₀.
+
+Let 𝐴ᵢ denote the event that the lifetime of cell i exceeds 𝑡₀ (𝑖= 1, 2, . . . , 6).
+
+We assume that 𝐴ᵢ are independent events (whether any particular cell lasts more than 𝑡₀ hours have no bearing on whether or not any other cell does) and that 𝑃(𝐴ᵢ) = 0.9 for every i since the cells are identical.
+
+𝑃(𝒔𝒚𝒔𝒕𝒆𝒎 𝑰 𝒍𝒊𝒇𝒆𝒕𝒊𝒎𝒆 𝒆𝒙𝒄𝒆𝒆𝒅𝒔 𝒕₀)
+= 𝑃( [𝐴₁ ∩𝐴₂ ∩𝐴₃] ∪ [𝐴₄ ∩𝐴₅ ∩𝐴₆] )
+=
+
+**Alternatively,**
+
+𝑃(𝒔𝒚𝒔𝒕𝒆𝒎 𝑰 𝒍𝒊𝒇𝒆𝒕𝒊𝒎𝒆 𝒆𝒙𝒄𝒆𝒆𝒅𝒔 𝒕₀)
+= 1 −𝑃(𝒃𝒐𝒕𝒉 𝒔𝒖𝒃𝒔𝒚𝒔𝒕𝒆𝒎 𝒍𝒊𝒗𝒆𝒔 𝒂𝒓𝒆 ≤𝒕₀)
+= 1 −𝑃({𝟏_𝟐_𝟑 𝒔𝒖𝒃𝒔𝒚𝒔𝒕𝒆𝒎 𝒍𝒊𝒗𝒆𝒔 𝒊𝒔≤𝒕₀} ∩{𝟒_𝟓_𝟔 𝒔𝒖𝒃𝒔𝒚𝒔𝒕𝒆𝒎 𝒍𝒊𝒗𝒆𝒔 𝒊𝒔≤𝒕₀})
+=
+
+𝑃(𝒔𝒚𝒔𝒕𝒆𝒎 𝑰𝑰 𝒍𝒊𝒇𝒆𝒕𝒊𝒎𝒆 𝒊𝒔 𝒂𝒕 𝒍𝒆𝒂𝒔𝒕 𝒕₀)
+= 𝑃({𝟏_𝟒 𝒄𝒐𝒍𝒖𝒎𝒏 𝒍𝒊𝒇𝒆𝒕𝒊𝒎𝒆 𝒆𝒙𝒄𝒆𝒆𝒅𝒔 𝒕₀} ∩{𝟐_𝟓 𝒄𝒐𝒍𝒖𝒎𝒏 𝒆𝒙𝒄𝒆𝒆𝒅𝒔 𝒕₀} ∩{𝟑_𝟔 𝒄𝒐𝒍𝒖𝒎𝒏 𝒆𝒙𝒄𝒆𝒆𝒅𝒔 𝒕₀})
+= [ 𝑃(𝟏_𝟒 𝒄𝒐𝒍𝒖𝒎𝒏 𝒍𝒊𝒇𝒆𝒕𝒊𝒎𝒆 𝒆𝒙𝒄𝒆𝒆𝒅𝒔 𝒕₀) ]³      independence
+= [ 𝑃(𝐴₁∪𝐴₄) ]³
+=
+
+**or**
+
+[ 𝑃(𝟏_𝟒 𝒄𝒐𝒍𝒖𝒎𝒏 𝒍𝒊𝒇𝒆𝒕𝒊𝒎𝒆 𝒆𝒙𝒄𝒆𝒆𝒅𝒔 𝒕₀) ]³
+= [ 1 −𝑃(𝟏_𝟒 𝒄𝒐𝒍𝒖𝒎𝒏 𝒍𝒊𝒇𝒆𝒕𝒊𝒎𝒆 𝒊𝒔 ≤ 𝒕₀) ]³
+=
+
+**Example 6.11:** If we toss 6 dices,
+
+a) what is probability that the largest value is smaller than 4?
+
+𝑃(𝑡ℎ𝑒 𝑙𝑎𝑟𝑔𝑒𝑠𝑡 𝑣𝑎𝑙𝑢𝑒< 4)
+= 𝑃( {#1 < 4} ∩{#2 < 4} ∩… … ∩{#6 < 4})
+= [ 𝑃(  {#1 < 4} ) ]⁶
+= ⋯
+
+
+**Figure Description:**
+
+There is a simple diagram on the slide, visually representing a system with 6 cells (or components) arranged in a 2x3 grid.  The diagram shows two branches, one for the first three cells (1, 2, 3) and another for the last three cells (4, 5, 6).  Each branch is connected to the next, representing a system where the cells are connected in series.  The diagram is used to illustrate the concept of independence in the context of a system's lifetime.  The diagram is positioned in the middle of the slide, below the text explaining the example.  Its purpose is to visually represent the system's structure and how the independence of the cells' lifetimes affects the overall system lifetime.

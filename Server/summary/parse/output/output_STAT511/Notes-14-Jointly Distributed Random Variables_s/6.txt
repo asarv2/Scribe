@@ -1,0 +1,35 @@
+# Slide 6
+
+**Example 14.1 revisit**
+
+The deductible amount of automobile (X) and homeowner (Y) insurance policies:
+
+|       | y = 0 | y = 100 | y = 200 | p<sub>X</sub>(x) |
+|-------|--------|-----------|-----------|------------|
+| x = 100 | 0.20  | 0.10     | 0.20     | 0.50      |
+| x = 250 | 0.05  | 0.15     | 0.30     | 0.50      |
+| p<sub>Y</sub>(y) | 0.25  | 0.25     | 0.50     |          |
+
+P(X = 100, Y = 200) = 0.20 ≠ (0.5)(0.5) = p<sub>X</sub>(100) × p<sub>Y</sub>(200), so X and Y are not independent.
+
+**Note:** In fact, independence of X and Y requires that every entry (the joint probability) be the product of the corresponding row and column marginal probabilities.
+
+**Example 14.6**
+
+1) Suppose that the lifetimes of two components are independent. The first lifetime, X₁, has an exponential distribution with λ₁, whereas the second lifetime, X₂, has an exponential distribution with λ₂. The probability that both component lifetimes are at least t₀ is,
+
+The cdf of an exponential distribution,
+
+F(x; λ) = {
+0, x < 0
+1 − e<sup>−λx</sup>, x ≥ 0 (Note 13-Page 3).
+
+
+**Figure Description:**
+
+The slide contains a table.  The table is a 3x4 table, with the first column labeled "x" and the first row labeled "y". The table shows the joint probabilities p(x, y) for different combinations of x and y values.  The table also includes marginal probabilities p<sub>X</sub>(x) and p<sub>Y</sub>(y). The table is positioned in the middle of the slide, and it is used to illustrate the concept of independence of random variables. The table is crucial for understanding the example problem (Example 14.1 revisit) that follows. The table is formatted in a standard tabular format, with rows representing different values of X and columns representing different values of Y. The values in the table represent the joint probabilities of X and Y taking on specific values. The table is essential for the example problem (Example 14.1 revisit) that follows. The slide's layout is clear and organized, making it easy to follow the concepts being presented.
+
+
+**Slide Description:**
+
+This slide in a Statistical Methods course continues the discussion of multiple random variables, specifically focusing on the concept of independence.  It revisits Example 14.1, demonstrating how to check for independence of two discrete random variables (X and Y) using their joint probability mass function (pmf) and marginal pmfs.  The slide also introduces Example 14.6, which deals with the lifetimes of two components and their independence.  The slide includes a table that is crucial for understanding how to calculate probabilities involving these variables. The table is formatted in a standard tabular format, with rows representing different values of X and columns representing different values of Y. The values in the table represent the joint probabilities of X and Y taking on specific values. The table is essential for the example problem (Example 14.1 revisit) that follows. The slide's layout is clear and organized, making it easy to follow the concepts being presented.

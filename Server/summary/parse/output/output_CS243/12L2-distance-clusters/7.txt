@@ -1,0 +1,24 @@
+# 7
+
+# Example: Images
+
+---
+
+**STATIONARY VEGETATION**
+**MOVING CAR**
+**STATIONARY ROAD**
+**STATIONARY CAR**
+**STATIONARY FENCE**
+**STATIONARY BUILDING**
+**STATIONARY PAVEMENT**
+
+
+---
+
+**Description of the slide:**
+
+The slide displays two images side-by-side.  The image on the left is a full-color photograph of a street scene, showing a road, cars, buildings, and vegetation.  The image on the right is a segmented version of the same scene.  The segmented image shows the same elements as the photograph, but each element is colored differently.  For example, the road is colored purple, the cars are colored teal and light green, the buildings are colored red-brown, and the vegetation is colored yellow-green.  Labels are placed next to the colored areas, identifying what each color represents (e.g., "STATIONARY VEGETATION," "MOVING CAR," "STATIONARY ROAD").
+
+**Detailed Description:**
+
+The slide shows a split-screen layout.  The top half of the slide displays a full-color photograph of a street scene.  The bottom half of the slide shows a segmented version of the same scene.  The segmentation is a visual representation of clustering.  The colors in the segmented image correspond to different categories or clusters of objects in the scene.  The labels next to the colored areas provide a key to the segmentation.  The purpose of this slide is to illustrate how clustering can be used to segment an image into different categories of objects.  The presence of the segmented image and the labels is crucial to understanding the concept of clustering in the context of image analysis.  The slide is likely part of a larger presentation on clustering, specifically focusing on image segmentation as an application of clustering techniques.

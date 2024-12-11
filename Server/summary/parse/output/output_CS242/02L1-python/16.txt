@@ -1,0 +1,28 @@
+# Slide 16
+
+**Assignment**
+
+Binding a variable in Python means setting a name to hold a reference to some object.
+
+* Assignment creates references, not copies
+Names in Python do not have an intrinsic type. Objects have types.
+* Python determines the type of the reference automatically based on what data is assigned to it.
+
+You create a name the first time it appears on the left side of an assignment expression:
+
+```
+x = 3
+```
+
+A reference is deleted via garbage collection after any names bound to it have passed out of scope.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide explains the concept of variable assignment in Python.  It emphasizes that assignment in Python creates references to objects, not copies of them.  The slide also highlights that variables themselves don't have inherent types; rather, the objects they reference have types. Python automatically determines the type of the reference based on the assigned data.  The example `x = 3` demonstrates how a variable is created when assigned a value.  Finally, the slide notes that references are removed from memory through garbage collection when no longer in use.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The text is presented in a clear and concise manner, explaining a fundamental concept in Python programming.
+
+

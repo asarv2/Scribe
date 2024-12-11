@@ -1,0 +1,31 @@
+# Slide 4
+
+**The Standard Normal Distribution**
+
+Suppose the variable of interest has a normal distribution.  X = variable value of a subject (or experimental unit) selected at random from the population. We know that X ~ N(μ, σ²).
+
+* We can use the z-score formula to standardize all variable values to standard deviations that don't depend on units.
+* If X is normally distributed, then the z-scores are also normally distributed. The probability distribution of the z-score has a mean of 0 and a standard deviation of 1.
+* This distribution is known as the standard Normal distribution and is represented by Z ~ N(0,1).
+
+**Key point:** the z-score is calculated as  z = (x - μ) / σ. The z-scores of a population have a standard normal distribution.
+
+**Definition**
+
+A random variable having a standard normal distribution is called a standard normal random variable and will be denoted by Z. The pdf of Z is
+
+f(z; 0, 1) = (1 / √(2π)) * e^(-z²/2)     -∞ < z < ∞
+
+The cdf P(Z ≤ z) is denoted as Φ(z).
+
+Appendix Table A.3 gives Φ(z), the area under the standard normal density curve to the left of z. From this table, various other probabilities involving Z can be calculated.
+
+
+**Figure Description:**
+
+* **Figure 1 (Embedded):**  A bell-shaped curve is shown, representing a standard normal distribution (Z ~ N(0, 1)). The curve is centered around 0 on the x-axis.  The x-axis is labeled with values ranging from approximately -3 to +3.  A shaded area is highlighted under the curve, extending from a point on the x-axis to the right of 0.  An arrow points to the shaded area, labeled "Shaded area = Φ(z)".  Another arrow points to the curve itself, labeled "Standard normal (z) curve".  The figure is embedded within the text, illustrating the concept of the standard normal distribution and the area under the curve.  The figure is crucial for understanding the relationship between z-scores and probabilities in the standard normal distribution.  The shaded area visually represents the cumulative probability up to a specific z-score.
+
+
+**Contextual Details:**
+
+This slide introduces the standard normal distribution, a crucial concept in statistical methods.  It explains how to standardize data using z-scores and how the standard normal distribution is related to other normal distributions. The figure visually reinforces the concept of the standard normal distribution and the area under the curve, which is essential for calculating probabilities using the z-score.  The slide builds upon the previous slides' discussion of normal distributions and z-scores, providing a more specific focus on the standard normal distribution.  The table of z-scores is also included, which is used to find probabilities associated with different z-scores.

@@ -1,0 +1,21 @@
+# Slide 12
+
+```python
+x = 34 - 23  # A comment.
+y = 'Hello'  # Another one.
+z = 3.45
+if z == 3.45 or y == 'Hello':
+    x = x + 1
+    y = y + ' World'  # String concat.
+    print(x)
+    print(y)
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide presents a Python code example.  The code defines variables `x`, `y`, and `z` with integer, string, and float values, respectively.  It then uses an `if` statement to check if `z` is equal to 3.45 or if `y` is equal to 'Hello'.  If the condition is true, it increments `x` by 1 and concatenates ' World' to `y`. Finally, it prints the updated values of `x` and `y`.  The code demonstrates basic Python syntax, including variable assignment, conditional statements, arithmetic operations, string concatenation, and printing output.  The comments within the code explain the purpose of each line.  The slide is part of a larger presentation on Python programming, likely within an Introduction to Data Science course.  The source of the code example is explicitly noted.
+
+

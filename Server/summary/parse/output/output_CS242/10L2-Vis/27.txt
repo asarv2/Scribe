@@ -1,0 +1,30 @@
+# Slide 27
+
+**Example Iris Data**
+
+```
+iris = pd.read_csv('iris.dat',sep=',')
+iris.sample(10)
+```
+
+| Sepal Length | Sepal Width | Petal Length | Petal Width | Category |
+|---|---|---|---|---|
+| 5.7 | 2.8 | 4.5 | 1.3 | Iris-versicolor |
+| 5.0 | 3.5 | 1.3 | 0.3 | Iris-setosa |
+| 6.2 | 2.2 | 4.5 | 1.5 | Iris-versicolor |
+| 6.3 | 3.3 | 4.7 | 1.6 | Iris-versicolor |
+| 6.3 | 3.3 | 6.0 | 2.5 | Iris-virginica |
+| 4.4 | 3.0 | 1.3 | 0.2 | Iris-setosa |
+| 7.2 | 3.0 | 5.8 | 1.6 | Iris-virginica |
+| 4.8 | 3.0 | 1.4 | 0.1 | Iris-setosa |
+| 5.7 | 2.8 | 4.1 | 1.3 | Iris-versicolor |
+| 6.5 | 2.8 | 4.6 | 1.5 | Iris-versicolor |
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a table of data, likely from the Iris dataset, commonly used in introductory data science courses.  The table is formatted with columns for "Sepal Length," "Sepal Width," "Petal Length," "Petal Width," and "Category."  Each row represents a sample from the dataset, and the values in the table are numerical measurements of the iris flower characteristics.  The "Category" column indicates the species of iris (Iris-versicolor, Iris-setosa, or Iris-virginica).  The table is likely a sample of the data, as indicated by the `iris.sample(10)` line of code above the table.  The table is centrally located on the slide and is the primary visual element.  The title "Example Iris Data" above the table indicates the content of the slide.  The code snippet above the table shows how the data was likely extracted and prepared for display.  The data is presented in a tabular format, making it easy to read and understand the values for each sample.  The table is a crucial part of the presentation, providing a concrete example of the data used in the course.
+
+

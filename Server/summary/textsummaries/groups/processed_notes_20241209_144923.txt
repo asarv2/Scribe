@@ -1,0 +1,15 @@
+
+--- Key Terms ---
+artifical intelligence basics
+foundational ai concepts
+search algorithms
+machine learning paradigms
+ai development resources
+--- Problem Types ---
+artifical intelligence basics
+foundational ai concepts
+ai system design & development
+ai safety & ethics
+--- Algorithm Solutions ---
+artifical intelligence basics
+game playing ai

@@ -1,0 +1,11 @@
+# 3
+
+**Overfitting**
+
+A line graph is shown, with the x-axis ranging from 0 to 20 and the y-axis ranging from -15 to 30.  The graph displays a continuous, somewhat wavy, light-blue line.  Scattered, small, light-blue circles are plotted along the line graph.  These circles represent data points. The line graph appears to closely follow the data points, but it also shows significant fluctuations.
+
+To the right of the graph, a cartoon drawing of a light-gray robot is displayed. The robot is depicted in a slightly angled, upright position. It has a boxy shape, two small green eyes, and a light-gray/silver color scheme.  A small antenna-like structure extends from the top of the robot's head.  A light-orange/yellow burst effect is above the robot's head. The robot's expression appears somewhat stressed or concerned.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, focuses on the concept of overfitting. The line graph visually represents a model that has been overfitted to the training data. The line follows the data points very closely, exhibiting significant fluctuations. The scattered data points are the training data, and the line represents the model's prediction. The robot image, positioned to the right of the graph, is a visual aid to illustrate the concept of overfitting. The stressed expression of the robot is meant to convey the potential problems associated with overfitting, such as poor generalization to unseen data. The slide is likely to be followed by a discussion of how to avoid overfitting in machine learning models.

@@ -1,0 +1,19 @@
+# Slide 19
+
+**Logistics**
+
+Lectures: Monday and Wednesday, noonish
+Labs: At your assigned time
+Office Hours:
+• TBD
+Attendance Policy: Don't show up if you are ill, don't risk it - it's all available online.
+Webpage: purdue.brightspace.com
+Ed Discussion: https://edstem.org/us/courses/42859/discussion/
+Prerequisites: CS18000, CS18200, CS38003 (grade of C or better)
+
+**(Figure):** A table is shown, likely a schedule for the Intro to Data Science course.  The table is organized by day (Mon, Tue, Wed, Thu, Fri) and time slots (9:30, 10:30, 11:30, 12:30, 1:30, 2:30, 3:30, 4:30).  Each cell in the table contains a description of the activity scheduled for that time and day.  For example, the cell in the "Mon" column and "10:30" row contains the word "Lecture".  Other cells contain the word "Lab" followed by a number (e.g., "Lab 04", "Lab 07").  The table is a visual representation of the course schedule, showing when lectures and labs are held.  The table is centrally located on the slide, taking up a significant portion of the space.  The table's purpose is to provide a clear overview of the course schedule, allowing students to easily see when lectures and labs are scheduled.
+
+
+**Slide Description:**
+
+This slide provides logistical information for the Intro to Data Science course.  The slide lists the lecture schedule (Mondays and Wednesdays, noonish), lab schedule (at assigned times), office hours (TBD), attendance policy (don't attend if ill), the course webpage (purdue.brightspace.com), and the Ed Discussion forum (https://edstem.org/us/courses/42859/discussion/).  The slide also lists the prerequisites for the course (CS18000, CS18200, CS38003, with a grade of C or better).  The key element of this slide is the table, which visually displays the schedule of lectures and labs for the course.  The table is a crucial part of the slide, as it provides a clear and concise overview of the course schedule.  The table is likely used to help students plan their schedules and know when to attend lectures and labs.

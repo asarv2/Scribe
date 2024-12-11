@@ -1,0 +1,49 @@
+# Slide 9
+
+**STAT 511 Course Notes – set 29 (W15)**
+
+**Yuan Qu**
+
+**Model diagnose: residual plot**
+
+There are four underlying assumptions of linear regression model.
+1.  Independency
+2.  Linearity
+3.  Normality
+4.  Equal variances
+
+In practice, we need to make sure these assumptions are appropriate for our data.
+
+**Residuals plot:**
+
+*   A data point's residual tells us how much a subject's response value differs from the average response value.
+*   A plot of the residuals (residuals vs predicted values) tells us about the variation of the data values about the predicted regression line.
+
+
+**Figure 1:**
+
+*   **Orientation:** Horizontal.
+*   **Location:** Lower portion of the slide.
+*   **Description:** A scatter plot with points plotted on a graph. The x-axis is labeled "Nights out" and the y-axis is labeled "Resid". The points appear to be randomly scattered around a horizontal line near zero, indicating a possible random pattern in the residuals. This plot is used to assess the assumption of constant variance (homoscedasticity) in the linear regression model.  The plot shows the residuals against the fitted values.  A random pattern suggests that the variance of the residuals is constant across the range of fitted values.
+
+
+**R code:** plot(lm(y~x))
+
+**How to check model assumptions**
+
+*   Checking the assumption of independence of 𝑦𝑖′s.
+    *   Look at residual plot and make sure that the pattern of the points looks like a shotgun (random) pattern.
+*   Checking the assumption of a linear relationship between 𝜇𝑌|𝑥 and the value of 𝑥.
+    *   Look at the scatter plot and make sure that the pattern of the points looks linear.
+
+
+**Figure 2:**
+
+*   **Orientation:** Horizontal.
+*   **Location:** Lower right portion of the slide.
+*   **Description:** A scatter plot with points plotted on a graph. The x-axis is labeled "Fit" and the y-axis is labeled "Residual". The points appear to be randomly scattered around a horizontal line near zero, indicating a possible random pattern in the residuals. This plot is used to assess the assumption of constant variance (homoscedasticity) in the linear regression model.  The plot shows the residuals against the fitted values.  A random pattern suggests that the variance of the residuals is constant across the range of fitted values.
+
+
+**Description of the Slide:**
+
+This slide (slide 9) in a Statistical Methods lecture discusses model diagnostics, specifically focusing on residual plots.  It explains the concept of residuals and how residual plots can be used to assess the assumptions of a linear regression model.  Two scatter plots are included to visually demonstrate the concept of residual plots and how to interpret them.  The R code provided shows how to generate these plots using statistical software.  The slide is designed to help students understand how to check the assumptions of a linear regression model using residual plots.

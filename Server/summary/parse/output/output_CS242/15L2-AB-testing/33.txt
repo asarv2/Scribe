@@ -1,0 +1,33 @@
+## Slide 33
+
+**p-value as often interpreted**
+
+```
+P-VALUE	INTERPRETATION
+0.001	HIGHLY SIGNIFICANT
+0.01	
+0.02	
+0.03	
+0.04	
+0.049	SIGNIFICANT
+0.050	OH CRAP REDO CALCULATIONS, ON THE EDGE OF SIGNIFICANCE
+0.051	
+0.06	
+0.07	HIGHLY SUGGESTIVE, SIGNIFICANT AT THE P<0.10 LEVEL
+0.08	
+0.09	
+0.099	
+≥0.1	HEY, LOOK AT THIS INTERESTING SUBGROUP ANALYSIS
+```
+
+"If all else fails, use 'significant at p > 0.05 level', and hope no one notices."
+
+
+**Figure Description:**
+
+A table-like structure, not a true table, is presented on the slide.  It visually represents a guide for interpreting p-values.  The left column lists different p-value ranges (e.g., 0.001, 0.01, 0.02, etc.).  The right column provides corresponding interpretations of the p-value, ranging from "HIGHLY SIGNIFICANT" to "HEY, LOOK AT THIS INTERESTING SUBGROUP ANALYSIS."  The structure is not a formal table, but rather a visual aid to illustrate how p-values are often interpreted, with a focus on the common practice of using the 0.05 threshold as a cutoff for significance.  The structure is positioned centrally on the slide.
+
+
+**Slide Description:**
+
+This slide, part of a presentation on data science, illustrates how p-values are often interpreted, highlighting the common practice of using a p-value of 0.05 as a threshold for significance.  The table-like structure visually guides the interpretation of p-values, ranging from highly significant to less significant results.  The final statement, "If all else fails, use 'significant at p > 0.05 level', and hope no one notices," is a critical commentary on the potential misuse or misinterpretation of p-values.  The slide is likely part of a discussion about the limitations and proper interpretation of p-values in statistical analysis.

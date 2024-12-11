@@ -1,0 +1,364 @@
+
+--- Key Terms ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning
+turing test
+game tree
+perceptron
+reinforcement learning
+matrix
+linear transform
+matrix multiplication
+matrix inverse
+matrix transposition
+derivative
+partial derivative
+sigmoid function
+inductive reasoning
+linear regression
+model
+overfitting
+loss function
+decision boundary
+stochastic gradient descent
+logistic regression
+empirical risk minimizer
+gradient descent
+perceptron loss
+hinge loss
+logistic loss
+multiple linear regression
+binary classification
+image classification
+semantic gap
+viewpoint variation
+illumination
+deformation
+occlusion
+background clutter
+invariant features
+bag of features
+visual words
+textons
+nearest neighbor  classifier
+noise
+salt and pepper noise
+impulse noise
+gaussian noise
+mean filtering
+moving average
+weighted moving average
+image filtering
+identity filter
+sharpening
+category models
+codewords
+edge detection
+edges
+feature vector
+finite difference
+gaussian pyramid
+image gradient
+intensity function
+intensity profile
+model space
+perceptual organization
+vision pyramid
+convolutional neural network 
+imagenet
+alexnet
+convnet
+artificial neuron
+convolution layer
+pooling layer
+convolution filter
+multidimensional convolution
+local receptive field
+sparse connectivity
+parameter sharing
+rectified linear unit 
+max pooling
+average pooling
+back-propagation
+fully connected layer 
+mnist
+cifar-10
+lenet-5
+training data
+held out data
+test data
+evaluation function
+model complexity
+bias
+variance
+hyperparameters
+regularization
+regularization coefficient 
+learning curves
+s-fold cross validation
+data analysis pipeline
+matrix factorization
+singular value decomposition 
+principal component analysis 
+dimensionality reduction
+low rank matrix approximations
+embeddings
+collaborative filtering
+recommender systems
+eigensnps
+single nucleotide polymorphisms 
+bias-variance tradeoff
+root mean square error 
+netflix prize
+clustering
+supervised learning
+unsupervised learning
+k-means clustering
+hamming distance
+matching coefficient
+euclidean distance
+inertia
+purity
+personas
+intelligent agent
+logic reasoning
+propositional logic
+satisfying assignment
+boolean satisfiability problem 
+literal
+clause
+conjunctive normal form 
+valid sentence
+satisfiable sentence
+unsatisfiable sentence
+3-satisfiability 
+equisatisfiable
+model checking
+bounded model checking 
+classical planning
+combinatorial design
+recursion
+base case
+recursive case
+breadth first
+depth first
+binary search tree
+search tree
+state
+action
+search algorithm
+successor function
+world state
+search state
+rational agent
+sat solving
+general automated reasoning
+exponential complexity growth
+sat encoding
+dimacs cnf
+partial assignment
+simplification of a formula by an evaluated literal
+davis-putnam-logemann-loveland  algorithm
+pure literal rule
+unit propagation 
+resolution rule
+clause learning
+heavy-tailed behavior
+hamiltonian path problem
+graph coloring
+cook's theorem
+disparate treatment
+disparate impact
+bias in data models
+proxies for discrimination
+anonymized data
+privacy
+security
+fairness through blindness
+group fairness
+individual fairness
+interpretable results
+--- Problem Types ---
+artifical intelligence basics
+understanding the nature of intelligence
+evaluating intelligent behavior
+overcoming the limits of search
+addressing ai safety and ethical concerns
+bridging the gap between different ai domains
+understanding the challenges of real-world ai applications
+representing linear transformations with matrices
+matrix arithmetic
+solving systems of linear equations
+matrix transposition
+understanding perceptrons
+parallelizing matrix multiplication
+calculus in ai
+calculating the derivative of the sigmoid function
+linear regression
+multiple linear regression
+curve fitting
+overfitting
+binary classification
+choosing a loss function
+gradient descent
+stochastic gradient descent
+image classification
+addressing the semantic gap
+handling viewpoint variation
+addressing illumination challenges
+overcoming deformation issues
+managing occlusion problems
+reducing background clutter
+finding invariant features
+object classification with bag of words
+document retrieval
+noise reduction
+image filtering
+blurring
+sharpening
+bag of features object categorization
+edge detection
+corner detection
+vision pyramids
+object detection and recognition using cnns
+improving imagenet classification accuracy
+comparing dense and convolutional neural networks
+understanding artificial neurons
+convolution and pooling operations in cnns
+explaining sparse connectivity in convolutional layers
+understanding the relu activation function
+understanding pooling layers
+backpropagation for neural network training
+understanding a simple cnn structure
+visualizing learned convolution filters
+biological inspiration for artificial neural networks
+using the mnist dataset for handwritten digit recognition
+using the cifar-10 dataset for image classification
+diagnosing overfitting
+hyperparameter tuning
+controlling model complexity
+underfitting
+the data analysis pipeline
+s-fold cross validation
+matrix factorization
+dimensionality reduction
+low rank matrix approximations
+singular value decomposition 
+principal component analysis 
+recommender system algorithms
+collaborative filtering
+modeling systematic biases
+bias-variance tradeoff
+clustering data
+supervised vs. unsupervised learning
+choosing the number of clusters  in k-means
+evaluating clustering results subjectively
+evaluating clustering results objectively
+k-means algorithm
+measuring distance between data points
+solving the satisfiability problem 
+converting logical expressions to conjunctive normal form 
+determining validity and satisfiability of logical sentences
+applying sat to model checking
+applying sat to classical planning
+applying sat to combinatorial design
+applying sat to diverse domains
+reducing sat to 3-sat
+representing recursion
+problem solving as search
+optimizing search algorithms
+representing problems as graphs
+defining state spaces
+designing rational agents
+general automated reasoning
+overcoming exponential complexity growth
+evaluating progress in sat solving
+understanding bounded model checking 
+sat encoding
+understanding sat solvers as search engines
+analyzing sat solver progress
+defining satisfiability of cnf formulas
+utilizing partial assignments in sat solving
+simplifying cnf formulas
+understanding principles of sat solving algorithms
+implementing a naïve sat solver
+applying the pure literal rule
+implementing unit propagation
+implementing the dpll algorithm
+visualizing dpll search
+applying the resolution rule
+applying clause learning
+understanding key advances in sat reasoning
+applying sat to real-world problems
+applying cook's theorem to sat
+encoding the hamiltonian path problem into sat
+encoding graph coloring into sat
+bias and fairness in data
+why data analysis methods are helpful
+data privacy and anonymization
+algorithmic bias and discrimination
+interpretability and trustworthiness of ai models
+addressing bias in ai models
+the legal and ethical implications of ai
+limitations of ai in high-stakes applications
+--- Algorithm Solutions ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning
+matrix addition
+matrix scalar multiplication
+matrix multiplication
+matrix transposition
+solving linear equations with invertible matrices
+derivative of sigmoid function
+linear regression
+multiple linear regression
+perceptron algorithm
+logistic regression
+bag of features
+nearest neighbor classifier
+moving average filter
+weighted moving average filter
+image sharpening
+finite difference
+image gradient magnitude
+image gradient direction
+sum of squared differences 
+anisotropic gaussian
+isotropic gaussian
+convolution
+max pooling
+average pooling
+relu activation function
+backpropagation
+regularized linear regression
+s-fold cross validation
+singular value decomposition 
+principal component analysis 
+collaborative filtering
+matrix factorization for recommender systems
+modeling systematic biases in recommender systems
+k-means clustering
+euclidean distance
+hamming distance
+matching coefficient
+purity
+conversion to cnf
+satisfiability problem 
+3-satisfiability 
+recursion
+recursive problem solving
+breadth first search
+depth first search
+searching a binary search tree
+dynamic programming 
+naïve solver
+dpll algorithm
+bcp 
+resolution rule
+clause learning
+fairness through blindness
+group fairness
+individual fairness
+detecting and removing bias from models

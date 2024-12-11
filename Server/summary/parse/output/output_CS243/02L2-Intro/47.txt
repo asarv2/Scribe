@@ -1,0 +1,12 @@
+# 47
+
+**AI Success: Game Playing**
+
+How do basic Game Playing systems work?
+
+
+**Description of what you see:**
+
+Slide 47 displays a single heading, "AI Success: Game Playing," in a large, bold, dark font.  Below that, in a smaller, slightly less bold font, is the question "How do basic Game Playing systems work?".  The slide is entirely text-based, with no images or figures.  The question is likely intended to introduce a discussion about the fundamental mechanisms behind AI systems designed to play games.  The slide is likely part of a larger presentation on AI Basics, and the question is intended to set the stage for the following slides, which will likely delve into the specifics of game-playing algorithms.  The overall design is simple and straightforward, focusing on conveying the topic in a clear and concise manner.
+
+

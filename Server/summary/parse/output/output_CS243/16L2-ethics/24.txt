@@ -1,0 +1,15 @@
+# Slide 24
+
+**Potential Solutions: constrain the algorithm**
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, presents a single heading: "Potential Solutions: constrain the algorithm."  The text is centered on a light gray background.  There are no other elements on the slide.  The heading likely introduces a new section of the lecture, focusing on potential solutions to the problems of bias in algorithms, possibly building on the previous discussion of examples of bias in AI systems.  The overall design is simple and professional, suitable for a lecture presentation.
+
+
+**Description:**
+
+The slide is a light gray background with the title "Potential Solutions: constrain the algorithm" in a dark gray, sans-serif font.  The title is centered on the slide.  There are no other elements, such as images, bullet points, or graphs.  The simple design and single heading indicate that this is likely an introductory slide to the topic of potential solutions to algorithmic bias, which will be explored further in the subsequent slides.

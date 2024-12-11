@@ -1,0 +1,35 @@
+# 1
+
+**Hypothesis Testing**
+
+The framework of hypothesis testing consists of the following:
+
+* **Step 1.** A pair of hypotheses, H<sub>0</sub> versus H<sub>a</sub>, on a parameter of interest (population level)
+* **Step 2.** A test statistic (based on sample data)
+* **Step 3.** A decision rule (whether to reject H<sub>0</sub> or not). If p-value is small, H<sub>0</sub> is rejected. Otherwise, for p-value is large, H<sub>0</sub> is not rejected.
+* **Step 4.** Conclusions
+
+**Review the examples:**
+
+* 21.5 (one-sided small sample Z test)
+* 21.6 (one-sided large sample Z test)
+* 21.7 (two-sided small sample Z test)
+
+**Two errors that can be committed in a testing procedure:**
+
+* If we reject H<sub>0</sub> when in fact H<sub>0</sub> is true or make a false discovery, this is called a Type I error.
+* If we fail to reject H<sub>0</sub> when in fact H<sub>1</sub> is true or miss an opportunity to make a discovery, this is called a Type II error.
+
+
+|  | H<sub>0</sub> true | H<sub>1</sub> true |
+|---|---|---|
+| **Do not reject H<sub>0</sub>** | Correct (Probability = 1 - α) | Type II error (Probability = β) |
+| **Reject H<sub>0</sub>** | Type I error (Probability = α) | Correct (Probability = Power) |
+
+
+A good testing procedure commits less errors, or more precisely, has a low chance to commit either error.
+
+
+**Description of the Slide:**
+
+This slide introduces the framework for hypothesis testing in a statistical methods course.  It outlines the four key steps involved: defining hypotheses, calculating a test statistic, establishing a decision rule based on the p-value, and drawing conclusions.  The slide also reviews specific examples of hypothesis tests (21.5, 21.6, and 21.7), likely referring to sections or exercises within the course material.  Crucially, it defines and explains Type I and Type II errors, illustrating them with images of a pregnancy test result.  A table summarizes the possible outcomes of a hypothesis test, showing the probabilities of correct decisions and errors.  The slide emphasizes the importance of minimizing both types of errors in a good testing procedure. The table is clearly laid out to show the relationship between the decision made and the truth about the population. The images of pregnancy tests are used to illustrate the concept of false positives (Type I error) and false negatives (Type II error). The slide number (1) is present at the bottom right corner.

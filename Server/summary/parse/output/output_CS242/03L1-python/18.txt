@@ -1,0 +1,26 @@
+# Slide 18
+
+**Sequence Types**
+
+Tuples are defined using parentheses (and commas).
+```
+>>> tu = (23, 'abc', 4.56, (2, 3), 'def')
+```
+Lists are defined using square brackets (and commas).
+```
+>>> li = ["abc", 34, 4.34, 23]
+```
+Strings are defined using quotes ("", ', or """).
+```
+>>> st = "Hello World"
+>>> st = 'Hello World'
+>>> st = """This is a multi-line
+string that uses triple quotes."""
+```
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, demonstrates how to create tuples, lists, and strings in Python.  It shows examples of each data type using the appropriate syntax.  The examples are presented in a way that resembles an interactive Python interpreter session, with the `>>>` prompt indicating user input and the subsequent output.  The slide provides concrete examples of how to define these sequence types, including tuples using parentheses, lists using square brackets, and strings using single or double quotes (or triple quotes for multiline strings).  The examples show that these data types can contain various data types (integers, strings, floats, and even other tuples or lists).  The slide is designed to illustrate the syntax for creating these fundamental data structures in Python.  There are no figures on this slide.
+
+

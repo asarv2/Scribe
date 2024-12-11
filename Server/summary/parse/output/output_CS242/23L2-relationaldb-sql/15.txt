@@ -1,0 +1,35 @@
+# Slide 15
+
+# Structured Query Language (SQL)
+
+SQL: domain-specific language designed for expressing management, manipulation and
+querying of relational databases
+
+<div align="center">
+<img src="https://i.imgur.com/a777777.png" alt="Diagram">
+</div>
+
+Payroll officer needs
+access to staff details
+
+Customer service advisor
+needs access to
+customer accounts
+
+Sales manager needs
+access to stock levels
+
+DBMS
+
+Central database
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces Structured Query Language (SQL) in the context of an Introduction to Data Science course.  The title "Structured Query Language (SQL)" is displayed prominently.  The text below defines SQL as a domain-specific language designed for managing, manipulating, and querying relational databases.  The slide also includes a diagram illustrating how different users (payroll officer, customer service advisor, sales manager) access a central database through a DBMS (Database Management System).
+
+**Description of the Figure:**
+
+The figure is a flowchart-style diagram.  It shows three users (represented by stylized figures sitting at desks) connected to a central database.  Each user has a specific need (payroll officer needs staff details, customer service advisor needs customer accounts, sales manager needs stock levels).  Arrows connect each user to a central database, which is represented by a large, dark gray server rack.  A light-blue, circular object labeled "DBMS" is positioned between the users and the central database.  This object represents the Database Management System, which acts as an intermediary for the users to access the central database.  The arrows visually represent the flow of data requests from the users to the DBMS and then to the central database.  The diagram is placed in the center of the slide and is crucial for illustrating how SQL is used to access and manage data in a relational database system.  The diagram is a key visual aid for understanding the role of SQL in a database management system.  The diagram is well-suited to the context of the lecture, as it visually demonstrates how different users interact with a central database through a DBMS.

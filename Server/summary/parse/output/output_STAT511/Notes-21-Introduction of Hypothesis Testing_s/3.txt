@@ -1,0 +1,52 @@
+# Slide 3
+
+**STAT 511 Course Notes – set 21 (W11)**
+
+* If the evidence isn't strong enough to disprove the null hypothesis, this doesn't mean H<sub>0</sub> has been proven true. Rather, when we fail to disprove H<sub>0</sub>, we are stuck in limbo. We can't say which hypothesis is true when we fail to reject H<sub>0</sub>.
+
+
+Can not "prove truth", only "disprove truth".
+
+
+NOTE: Only rejection is significant, that is, if reject H<sub>0</sub>, we have significant conclusion that H<sub>1</sub> is untrue.
+
+
+Example 21.3 why "fail to reject H<sub>0</sub>" ≠ "accept H<sub>1</sub>"?
+H<sub>0</sub> Hypothesis: There are NO racoons in the backyard.
+• Observation 1: I randomly go out and do not see racoons.
+Conclusion: H<sub>0</sub> hypothesis "seems" to be correct now.
+
+
+• Observation 2: at a later time, I see racoons in the yard.
+Conclusion: H<sub>0</sub> hypothesis is actually incorrect!!! Disprove H<sub>0</sub>.
+
+
+The framework of hypothesis testing consists of the following:
+Step 1. A pair of hypotheses, H<sub>0</sub> versus H<sub>1</sub>, on a parameter of interest (population level)
+Step 2. A test statistic (based on sample data)
+Step 3. A decision rule (whether to reject H<sub>0</sub> or not).
+• If p-value is small, H<sub>0</sub> is rejected. Otherwise, for p-value is large, H<sub>0</sub> is not rejected.
+Step 4. A statistical conclusion
+
+
+Testing procedure:
+Consider (S1) a pair of null and alternative hypotheses, H<sub>0</sub> versus H<sub>1</sub>. A test procedure is a rule, based
+on sample data, for deciding whether to reject H<sub>0</sub>.
+
+
+Example 21.4 A test of H<sub>0</sub>: p = 0.10 versus H<sub>1</sub>: p < 0.10 might be based on examining a random
+sample of n = 200. Let X denote the number of successes in the sample, a binomial random variable; x
+represents the observed value of X. If H<sub>0</sub> is true, E(X) = np = 200(0.10) = 20, whereas we can expect
+fewer than 20 successes if H<sub>1</sub> is true.
+A value x just a bit below 20 does not strongly contradict H<sub>0</sub>, so it is reasonable to reject H<sub>0</sub> only if x is
+substantially less than 20.
+
+
+3
+
+
+---
+
+**Slide Description:**
+
+This is slide 3 of a 7-slide lecture on Hypothesis Testing within a Statistical Methods course.  The slide continues the discussion from previous slides, emphasizing the crucial distinction between failing to reject the null hypothesis (H<sub>0</sub>) and accepting it as true.  It uses an example (Example 21.3) of observing no raccoons in a backyard to illustrate that a lack of evidence against H<sub>0</sub> doesn't prove H<sub>0</sub>.  The example then shows how observing raccoons later disproves the initial conclusion.  The slide also outlines the four steps of a hypothesis testing procedure, which are crucial for understanding the process.  The slide also introduces Example 21.4, which provides a specific example of a hypothesis test involving a binomial proportion.  The slide's structure is logical and progressive, building upon the concepts introduced in the previous slides.  The number "3" at the bottom of the slide indicates its position within the sequence of slides.

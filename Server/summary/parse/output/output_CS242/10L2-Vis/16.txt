@@ -1,0 +1,19 @@
+# Slide 16
+
+**Using Figures, Subplots, and Axes**
+
+Figures are the top-level containers for visualizations
+
+*   If you are not using Jupyter notebooks you must call `plt.figure()`.
+*   If you are plotting multiple graphics from one cell, you may also call `plt.figure()`.
+
+Subplots create a grid of one or more independent graphics within a single figure
+
+Axes hold parameters of a subplot to define each graphic.
+
+
+---
+
+**Description of what you see:**
+
+This slide provides a conceptual overview of figures, subplots, and axes in the context of data visualization, likely within a Python environment (like Matplotlib).  The text is presented in a clear, bulleted format, explaining the roles of these elements.  There are no figures on this slide.  The slide is likely part of a larger presentation on data visualization techniques, building upon previous slides that have discussed different types of plots and their uses.  The slide introduces the higher-level organizational structures for creating and managing multiple plots within a single figure.  The information is crucial for understanding how to create complex visualizations with multiple components.

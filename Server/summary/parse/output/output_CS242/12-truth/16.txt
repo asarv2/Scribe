@@ -1,0 +1,17 @@
+# Slide 16
+
+**Example: Storytelling**
+
+```
+Total
+traffic
+```
+
+**(Figure Description):**
+
+The slide displays a stacked area chart.  The x-axis is labeled with years, ranging from 1990 to 2010, with individual years marked. The y-axis is labeled "Total traffic" and ranges from 0 to 7.  The chart shows multiple stacked areas, each representing a different type of internet traffic.  The areas are colored differently (various shades of purple, pink, and red). The height of each stacked area at a given year represents the percentage of total internet traffic that type of traffic accounted for in that year.  The chart visually displays the changing proportions of different internet traffic types over time.  The chart is positioned centrally on the slide.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, demonstrates the concept of the "storytelling bug" in data interpretation.  The stacked area chart shows the proportion of different types of internet traffic from 1990 to 2010.  The chart visually illustrates how the proportion of different types of internet traffic has changed over time.  The slide is designed to illustrate how a visualization can be interpreted in a way that supports a particular narrative or story, even if the data doesn't necessarily support that narrative.  The slide is likely part of a discussion on data visualization techniques and how to avoid misinterpretations due to the storytelling bug.  The specific types of internet traffic represented by the different colored areas are not labeled on the chart, but the overall trend of increasing total internet traffic is clear.

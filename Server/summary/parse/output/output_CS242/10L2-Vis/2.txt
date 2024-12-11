@@ -1,0 +1,12 @@
+# Slide 2
+
+# The Basics of Visualization in Python
+
+---
+
+**Description of the slide:**
+
+This is a title slide for a section of the Intro to Data Science course.  The background is a light gray.  The title, "The Basics of Visualization in Python," is centered and in a dark gray font.  There are no images or figures on this slide.  The overall design is simple and clean, suitable for a heading within a larger presentation.
+
+
+**What you see:** A plain, light gray background with the title "The Basics of Visualization in Python" in a dark gray, sans-serif font.  The title is centered on the slide.  There are no other elements on the slide.

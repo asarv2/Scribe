@@ -1,0 +1,18 @@
+# Slide 20
+
+**Collecting Training Data**
+
+* **Diagram:** The slide presents a diagram illustrating the process of collecting training data for a machine learning model.  The diagram shows two distinct pathways, each representing a different approach to training a predictor.
+
+    * **Top Pathway:** A light gray box labeled "Machine Learning" is connected to a light pinkish-red hexagon labeled "Predictor."  A light gray oval labeled "Population Samples" is connected to the "Machine Learning" box.  A text box below the "Predictor" box states, "Built to make accurate predictions on the Population samples."
+
+    * **Bottom Pathway:** A light gray box labeled "Machine Learning" is connected to a light pinkish-red hexagon labeled "Predictor."  A light teal oval labeled "Population Samples" is inside a larger light teal oval labeled "True Population."  A text box below the "Predictor" box states, "Built to make accurate predictions on the Population samples..." followed by a separate line, "But not predictive of the True Population."
+
+* **Text:** The diagram is accompanied by text that explains the difference between the two pathways.  The top pathway represents a model trained on a sample of the population, while the bottom pathway represents a model trained on a sample of the population, but not representative of the entire population.
+
+* **Source:** The source, "Richard Johansson, University of Gothenburg," is located at the bottom of the slide.
+
+
+**Description of what you see:**
+
+The slide visually depicts the concept of training data and its limitations.  The two pathways illustrate the difference between training a model on a sample of a population and training a model on a sample that is not representative of the entire population.  The diagram uses shapes and colors to clearly distinguish the different components of the process.  The text boxes provide additional context and explanation, highlighting the potential for a model trained on a sample to not accurately reflect the true population.  The slide is designed to help the audience understand the importance of representative training data in machine learning.

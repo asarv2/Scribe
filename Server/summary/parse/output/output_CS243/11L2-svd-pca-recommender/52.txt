@@ -1,0 +1,35 @@
+# 52
+
+```markdown
+Rating by movie age
+```
+
+```
+Rating by movie age
+3.9
+3.8
+3.7
+3.6
+3.5
+3.4
+3.3
+3.2
+0
+500
+1000
+movie age (days)
+1500
+2000
+2500
+```
+
+**Figure Description:**
+
+A scatter plot is presented, showing a large number of small, red circles (data points) scattered across the graph. The x-axis is labeled "movie age (days)" and ranges from approximately 0 to 2500. The y-axis is labeled "mean score" and ranges from approximately 3.2 to 3.9. The data points appear to show a general upward trend, with some clustering and variability. The plot is densely populated, indicating a large dataset. The x-axis values likely represent the age of movies in days, and the y-axis values represent the average rating for movies at that age.  A text label "Movies improve with age...?" is positioned above the middle of the graph. The plot is centrally located on the slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, presents a scatter plot visualizing the relationship between movie age (in days) and the average rating.  The x-axis represents the age of the movie, and the y-axis represents the average rating.  The plot shows a large number of data points, each representing a movie and its average rating at a specific age.  The data points appear to cluster around a slightly upward trend, suggesting that, on average, movies tend to receive higher ratings as they get older.  The text "Movies improve with age...?" above the plot indicates a potential question or observation about this trend.  The plot is centrally located on the slide, making it the primary focus of the slide.  The x-axis values are likely in a numerical format representing time, and the y-axis values are likely the average rating for movies at that time.  The red color of the points is consistent with the color scheme used in previous slides.  The slide is likely part of a discussion about the characteristics of the movie rating data, specifically how ratings might change over time.
+
+

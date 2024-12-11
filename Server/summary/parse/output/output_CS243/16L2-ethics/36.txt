@@ -1,0 +1,21 @@
+# Slide 36
+
+**Follow-up**
+
+NYC's Anti-Bias AI Hiring Law Has Largely Failed So Far
+
+Although other jurisdictions have shown interest in passing laws in a similar vein to LLL 144, lawmakers have been hesitant to move forward with them after seeing NYC's efforts in this area largely flopped.
+
+Last year, New York City became the first U.S. jurisdiction to regulate automated and artificial intelligence (AI) tools in the hiring process. So far, however, employers have paid little attention. The law (Local Law 144) is designed to prevent potential race and gender bias in hiring algorithms by requiring employers to regularly audit these tools. However, as employers have the freedom to decide whether or not to audit the systems covered by LLL 144, the law and overall lax enforcement, it's largely gone ignored. Yet, despite the failure of LLL 144, lawmakers should still anticipate new and more comprehensive regulation surrounding AI and employment into play in the near future.
+
+
+---
+
+**Description:**
+
+This slide presents a news article excerpt about the effectiveness of New York City's anti-bias AI hiring law.  The title, "Follow-up," suggests this slide is a follow-up to previous discussions about algorithmic bias.  The text summarizes a news article reporting that New York City's law requiring audits of AI hiring tools has largely been ineffective.  The article highlights that despite similar laws being considered in other jurisdictions, lawmakers have been hesitant to proceed due to the lack of enforcement and compliance in New York City.  The overall tone is critical of the current state of enforcement and suggests a need for more comprehensive regulations in the future.
+
+
+**Description:**
+
+The slide is a light-gray background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The text summarizes a news article about the effectiveness of New York City's anti-bias AI hiring law.  The article highlights the lack of compliance and enforcement of the law, leading to a lack of impact.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the practical challenges of implementing regulations to address bias in AI systems.  The slide includes links to news articles, which provide additional context and support for the information presented.

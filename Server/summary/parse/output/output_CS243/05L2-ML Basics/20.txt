@@ -1,0 +1,12 @@
+# 20
+
+# Binary Classification
+
+**Description of the Figure:**
+
+*No figure is present on this slide.*
+
+
+**Context:**
+
+This slide is a title slide for a section of the AI Basics lecture.  The title, "Binary Classification," is centered on the slide in a dark gray font against a light gray background.  It indicates the topic of the upcoming content, which will likely be about binary classification in machine learning.  The simplicity of the slide suggests it's a transition or introduction to the next section of the lecture.  The lack of any other content indicates that this is a heading slide, and the subsequent slides will contain the details of binary classification.

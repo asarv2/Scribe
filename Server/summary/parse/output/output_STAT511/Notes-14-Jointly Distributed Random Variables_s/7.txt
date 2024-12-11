@@ -1,0 +1,34 @@
+# Slide 7
+
+**STAT 511 Course Notes – set 14 (W7)**
+
+Then one component lifetime exceeds 𝑡₀:
+
+𝑃(𝑋 ≥ 𝑡₀) = 1 − 𝐹(𝑡₀; 𝜆) = 𝑒<sup>−𝜆𝑡₀</sup>.
+
+𝑃(𝑋₁ ≥ 𝑡₀, 𝑋₂ ≥ 𝑡₀) = 𝑃(𝑋₁ ≥ 𝑡₀) × 𝑃(𝑋₂ ≥ 𝑡₀) = 𝑒<sup>−(𝜆₁+𝜆₂)𝑡₀</sup>
+
+2) (parallel circuit) If 𝑋₁, … , 𝑋ₙ are mutually independent exponential variable, what is the
+distribution of min(𝑋₁, … , 𝑋ₙ).
+𝑃[ min(𝑋₁, … , 𝑋ₙ) ≥ 𝑡 ] = 𝑃(𝑋₁ ≥ 𝑡, … , 𝑋ₙ ≥ 𝑡) = ∏<sub>𝑖=1</sub><sup>𝑛</sup> (𝑒<sup>−𝜆𝑖𝑡</sup>) = 𝑒<sup>−𝑡(∑<sub>𝑖=1</sub><sup>𝑛</sup> 𝜆𝑖</sup>)
+
+Example 14.7
+1) 𝑋 and 𝑌 have joint pdf:
+𝑓(𝑥, 𝑦) = {1/4,  0 < 𝑥, 𝑦 < 2
+          0,  otherwise
+
+Are 𝑋 and 𝑌 independent?
+𝑓<sub>𝑋</sub>(𝑥) = ∫<sub>0</sub><sup>2</sup> (1/4) 𝑑𝑦 = (1/4) × (2 − 0) = 1/2
+𝑓<sub>𝑌</sub>(𝑦) = ∫<sub>0</sub><sup>2</sup> (1/4) 𝑑𝑥 = (1/4) × (2 − 0) = 1/2
+𝑓(𝑥, 𝑦) = 𝑓<sub>𝑋</sub>(𝑥) × 𝑓<sub>𝑌</sub>(𝑦) implies that 𝑋 and 𝑌 are independent.
+
+Conditional distribution
+If random variables 𝑋₁ and 𝑋₂ are discrete, the conditional mass function of 𝑌 given that 𝑋 = 𝑥 is,
+𝑝<sub>𝑌|𝑋</sub>(𝑦|𝑥) = 𝑝(𝑥, 𝑦)/ 𝑝<sub>𝑋</sub>(𝑥)
+If random variables 𝑋₁ and 𝑋₂ are continuous, the conditional density function of 𝑌 given that 𝑋 = 𝑥 is,
+𝑓<sub>𝑌|𝑋</sub>(𝑦|𝑥) = 𝑓(𝑥, 𝑦)/ 𝑓<sub>𝑋</sub>(𝑥)
+
+
+**Figure Description:**
+
+There is no figure on this slide. The slide entirely consists of mathematical expressions, definitions, and examples related to probability distributions and independence of random variables in a statistical methods course.  The content is focused on the mathematical formulations and calculations involved in these concepts, continuing the discussion from previous slides.  The slide builds upon the previous slide's discussion of independence, providing examples and definitions.

@@ -1,0 +1,25 @@
+# 9
+
+```markdown
+Low Rank Matrix Approximations
+Consider an n × d matrix X, which represents set of n examples, each with d attributes.
+What’s a good notion of dimensionality reduction for these matrices?
+Reduce the rank of the matrix (from d to k<d):
+Linear algebra—the following are equivalent definitions for the rank of a matrix X to be k:
+• The largest linearly independent subset of columns of X has size k,
+ie. all d columns of X arise as linear combinations of only k different n-vectors
+• The largest linearly independent subset of rows of X has size k,
+ie. all n rows of X arise as linear combinations of only k different d-vectors
+• X can be written as the product of a (n × k) matrix A and a (k × d) matrix B.
+```
+
+---
+
+**Figure Description:**
+
+There are no figures on this slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, introduces the concept of low-rank matrix approximations.  It begins by defining a matrix X as an n x d matrix representing n examples with d attributes each.  The slide then asks what a good notion of dimensionality reduction would be for such matrices.  The core of the slide is the explanation of how to reduce the rank of the matrix from d to k (where k < d).  This is done using linear algebra, and three equivalent definitions for the rank of a matrix X to be k are provided.  These definitions involve the largest linearly independent subsets of columns and rows, and the factorization of X into matrices A and B.  The slide is focused on the mathematical underpinnings of dimensionality reduction, specifically in the context of matrix factorization.

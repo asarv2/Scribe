@@ -1,0 +1,19 @@
+# 11
+
+**SAT Solvers as Search Engines**
+
+Systematic SAT solvers have become really efficient at searching fast
+
+E.g., on an IBM model checking instance from SAT Race 2006, with ~170k variables, 725k clauses, solvers such as MiniSat and RSat roughly:
+
+* **Make**  2000-5000 decisions/second
+* **Deduce** 600-1000 conflicts/second
+* **Learn** 600-1000 clauses/second (#clauses grows rapidly)
+* **Restart** every 1-2 seconds (aggressive restarts)
+
+
+**Description:**
+
+This slide discusses the performance of SAT solvers.  It states that systematic SAT solvers are now very efficient at searching for solutions.  The example given is an IBM model checking instance from the SAT Race 2006 competition.  This instance has approximately 170,000 variables and 725,000 clauses.  The slide then lists the performance characteristics of solvers like MiniSat and RSat for this instance, providing approximate ranges for the number of decisions, conflicts, and learned clauses per second.  The "Restart" category highlights the frequent restarts used by these solvers to improve efficiency, especially as the number of clauses increases.  There are no figures on this slide.
+
+

@@ -1,0 +1,17 @@
+# Slide 33
+
+**Robotic Assembly**
+
+State: real-valued coordinates of robot joint angles, parts of the object to be assembled
+Action: continuous motions of robot joints
+Goal: complete assembly
+Path Cost: time to execute
+
+**(Diagram):**
+
+A diagram of a robotic arm is shown.  The arm has three joints, and each joint is represented by a circle.  The arm is positioned in a way that it is reaching for a rectangular object.  The rectangular object is positioned to the right of the arm.  The diagram shows the arm in a configuration where it is in the process of assembling the rectangular object.  The diagram is positioned centrally on the slide and is oriented vertically.  The purpose of the diagram is to illustrate the state space of a robotic assembly problem.  The diagram shows the robot's joints and the object to be assembled, which are the key elements in defining the state of the system.  The arrows next to the joints indicate the possible motions of the robot.  The diagram is a visual representation of the problem domain, showing the robot's configuration and the object it is interacting with.
+
+
+**Description:**
+
+This slide introduces a robotic assembly problem as a search problem.  The slide defines the state, action, goal, and path cost for this problem.  The state is defined by the real-valued coordinates of the robot's joint angles and the parts of the object to be assembled.  The action is defined as continuous motions of the robot joints.  The goal is to complete the assembly of the object.  The path cost is defined as the time to execute the assembly.  The diagram visually represents the robotic arm and the object to be assembled, illustrating the problem domain.  The slide is likely part of a lecture on AI Basics, focusing on the representation of robotic assembly problems as search problems.  The diagram is a visual aid to help understand the problem and the elements that define the state space.  The labels "P", "R" and arrows next to the joints indicate the possible motions of the robot.

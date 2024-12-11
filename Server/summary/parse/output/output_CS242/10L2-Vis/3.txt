@@ -1,0 +1,19 @@
+# Slide 3
+
+# Exploratory Data Analysis
+
+Maximize insight into data
+Uncover underlying structure
+Identify important variables
+Detect outliers and anomalies
+Test underlying modeling assumptions
+Generate hypotheses from data
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents a bulleted list of the goals of Exploratory Data Analysis (EDA).  The title "Exploratory Data Analysis" is in a large, bold font at the top of the slide.  Below that, a list of points describes the aims of EDA.  Each point is a concise statement about what EDA seeks to achieve when analyzing data.  The text is simple and straightforward, focusing on the key objectives of this data analysis technique.  There are no images or figures on this slide.
+
+

@@ -1,0 +1,22 @@
+# Slide 50
+
+**Just to complete the story**
+
+Re-bin the grades and add a 'Final Grade' column as letter grades
+
+```
+bins = [0, 59, 69, 79, 89, 100, 110]
+letter_grades = ['F', 'D', 'C', 'B', 'A', 'A+']
+df_final['Final Grade'] = pd.cut(df_final.Grade, bins, labels=letter_grades)
+df_final
+```
+
+A table is presented, displaying the `df_final` DataFrame.  The table has columns for "Lastnam", "Firstname", "ID", "Grade", "Normalized", "Category", and "Final Grade".  Each row represents a student's record, including their name, ID, calculated grade, normalized grade, categorized grade, and the final letter grade.  The "Final Grade" column is a new categorical column, representing a letter grade (e.g., F, D, C, B, A, A+) based on the numerical grade in the "Grade" column.  The data appears to be student grades.
+
+---
+
+**Description of the Slide:**
+
+This slide completes the process of transforming student grades by re-binning them into letter grades.  The code snippet `df_final['Final Grade'] = pd.cut(df_final.Grade, bins, labels=letter_grades)` adds a new column named 'Final Grade' to the `df_final` DataFrame.  This column contains letter grades corresponding to the numerical grades in the 'Grade' column, using the predefined `bins` and `letter_grades` lists.  The output is a table showing the updated `df_final` DataFrame, which now includes the 'Final Grade' column.  The purpose of this slide is to demonstrate the final step in transforming the numerical grades into letter grades.  The table is crucial for demonstrating the final result of the data transformation. The code snippet is essential for demonstrating the data analysis process. The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on transforming numerical data into categorical data.
+
+

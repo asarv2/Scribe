@@ -1,0 +1,37 @@
+# Slide 5
+
+**Z Confidence interval for the difference in mean:**
+
+By theorem 1, under case 1,  𝑋̅ −𝑌̅ follows exactly normal distribution with mean μ1 −μ2 and variance 
+σ1<sup>2</sup>/m + σ2<sup>2</sup>/n. Therefore, the exact 100(1 –  )% level CI can be easily derived as 
+CI for (μ1 −μ2) = (𝑋̅ −𝑌̅) ± 𝑧<sub>1−α/2</sub> × √σ1<sup>2</sup>/m + σ2<sup>2</sup>/n   
+
+**Example 24.2 revisit**  Calculate a confidence interval at significance level α = 0.01. 
+100(1 –   )% = 99%, therefore 𝑧∗= 𝑧<sub>1−α/2</sub> = 2.576. The 1 −α confidence interval for μ1– μ2 is  
+(𝑋̅ −𝑌̅) ± 𝑧<sub>1−α/2</sub> √σ1<sup>2</sup>/m + σ2<sup>2</sup>/n  = (29.8 −34.7) ± 2.576√16.0/20 + 25.0/25 = −4.90 ± 2.576 × 1.34 
+= (−7.104, −2.696) 
+
+
+**Case 2: large samples** 
+By theorem 1, under case 2, when both m and n are large, X and Y are not necessarily normal. 𝑋̅ −𝑌̅ 
+follows approximately normal distribution. 
+
+**Test statistic:** under null hypothesis,  
+𝑍𝑇𝑆=
+(𝑋̅ −𝑌̅) −Δ0
+√σ1<sup>2</sup>/m + σ2<sup>2</sup>/n  
+follows approximately a standard normal distribution. 
+
+
+**Z Confidence interval for the difference in mean:** 
+By theorem 1, under case 2, 𝑋̅ −𝑌̅ follows approximately normal distribution. Therefore, the 
+approximate 1 −𝛼 level CI can be easily derived as 
+(𝑋̅ −𝑌̅) ± 𝑍<sub>1−α/2</sub> √σ1<sup>2</sup>/m + σ2<sup>2</sup>/n  
+
+
+**NOTE:** CI and two-sided testing are equivalent for the inference. 
+
+
+**Figure Description:**
+
+There is no figure on this slide. The slide is entirely text-based, continuing the discussion from previous slides on hypothesis testing and confidence intervals for comparing two population means.  It introduces "Case 2" where sample sizes are large, and the calculations for a confidence interval are shown in the example. The slide also explains the test statistic and how it relates to a standard normal distribution.  The content is a continuation of the previous slide's discussion on hypothesis testing and confidence intervals, now focusing on the comparison of two populations.  The slide lays out the assumptions and theorems necessary for conducting such a comparison, including the concept of independent data and the conditions under which the sample mean difference follows a normal distribution.  The example demonstrates how to calculate a confidence interval for the difference in means.

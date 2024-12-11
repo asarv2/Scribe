@@ -1,0 +1,13 @@
+# Slide 7
+
+**SVD and PCA**
+
+
+---
+
+**Description:**
+
+This slide, a plain gray background, displays the single, centered text "SVD and PCA" in a dark gray, sans-serif font.  The text is large enough to be easily readable.  The simplicity of the slide indicates that this is likely a title slide for a section or topic on Singular Value Decomposition (SVD) and Principal Component Analysis (PCA) within the Intro to Data Science course.  It's a straightforward, uncluttered slide, focusing solely on the topic.
+
+
+**What you see:** A plain gray slide with the title "SVD and PCA" in a dark gray font.  The slide is likely the introduction to a section of the lecture that will cover both SVD and PCA, potentially discussing their relationship or how they are used in data science.

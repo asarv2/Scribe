@@ -1,0 +1,23 @@
+# 19
+
+**The Satisfiability Problem**
+
+Let 𝑉 be a finite set of Boolean valued variables and let 𝜙 denote a CNF formula on 𝑉
+an assignment 𝑣 on 𝑉 is a satisfying assignment for 𝜙 if we have 𝑣(𝜙) = true.
+The propositional formula 𝜙 is satisfiable if there exists a satisfying assignment for 𝜙.
+Deciding whether or not a propositional formula is satisfiable is called the Boolean satisfiability problem, denoted by SAT.
+
+
+---
+
+**Description of the slide:**
+
+This slide defines the Satisfiability Problem (SAT) in the context of a lecture on AI Basics.  The title, "The Satisfiability Problem," is presented in a large, bold font.  The content below the title defines the key concepts:
+
+* **Variables:** A finite set of Boolean variables (𝑉) is defined.
+* **Formula:** A propositional formula (𝜙) in Conjunctive Normal Form (CNF) is defined on these variables.  This is important because the problem is specifically defined for CNF formulas.
+* **Satisfying Assignment:** An assignment (𝑣) of truth values (true/false) to the variables in 𝑉 is a satisfying assignment for 𝜙 if the formula evaluates to true when the assignment is applied.
+* **Satisfiable Formula:** A formula (𝜙) is satisfiable if there exists at least one satisfying assignment.
+* **Boolean Satisfiability Problem (SAT):** The problem of determining whether a given propositional formula (in CNF) is satisfiable.
+
+The slide is straightforward and uses clear definitions to introduce the core concept of SAT, specifically in the context of CNF formulas.  There are no figures on this slide.  The content is directly related to the previous slides, which discussed propositional logic, CNF, and the general concept of satisfiability.  The slide is likely part of a larger lecture explaining how to determine if a logical statement can be made true by assigning values to its variables, specifically in the context of CNF formulas.

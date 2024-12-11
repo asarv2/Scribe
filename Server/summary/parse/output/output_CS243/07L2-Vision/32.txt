@@ -1,0 +1,18 @@
+# Slide 32
+
+**Bag of Features approach for Object Recognition**
+
+How do we use BoF for object categorization?
+
+**category models**
+
+*   **Class 1:**  A series of bar graphs, each with varying heights of light-pink/magenta bars, are shown.  The x-axis is labeled with a series of unmarked intervals, and the y-axis is labeled "frequency."  These graphs represent the frequency of different visual words (codewords) in images belonging to a specific category (Class 1).
+
+*   **Class N:**  A series of bar graphs, each with varying heights of light-teal/turquoise bars, are shown.  The x-axis is labeled with a series of unmarked intervals, and the y-axis is labeled "frequency."  These graphs represent the frequency of different visual words (codewords) in images belonging to a different category (Class N).
+
+*   **Model space:** A 3D scatter plot is shown in the upper-right quadrant of the slide.  The plot shows a collection of points, some colored light teal/turquoise and others light pink.  The points are scattered in a 3D space, with the axes not labeled.  The plot represents the model space, where each point corresponds to a category model (a representation of the frequency of visual words for a particular category).
+
+
+**Description of what you see:**
+
+This slide continues the discussion of the Bag of Features (BoF) approach to image classification.  It illustrates how category models are created using the frequency of visual words (codewords) extracted from images.  The bar graphs represent the frequency distribution of visual words for different categories (Class 1 and Class N).  The 3D scatter plot in the upper-right quadrant shows how these category models are represented in a multi-dimensional space.  The different colors of the bars and points in the graph visually distinguish the different categories.  The x-axis of the bar graphs is not labeled, but the y-axis is labeled "frequency," indicating that the height of each bar represents the frequency of a particular visual word in the image.  The 3D scatter plot shows the distribution of these category models in a multi-dimensional space.  The axes of the 3D scatter plot are not labeled, but the points are colored differently to distinguish between the categories.  The overall design of the slide is to visually represent the concept of category models in the context of Bag of Features.  The question "How do we extract features?" is also present, suggesting that the slide is part of a larger discussion about the process of using BoF for object categorization.

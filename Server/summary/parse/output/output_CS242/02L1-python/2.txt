@@ -1,0 +1,12 @@
+# Slide 2
+
+# Python Basics
+
+A review of what you should know from 38003
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, has a single, centered heading: "Python Basics".  Below that, in a smaller font, is a subtitle: "A review of what you should know from 38003".  The slide is straightforward and indicates the topic of the upcoming content: a review of Python programming concepts, likely building upon material covered in a prerequisite course (38003).

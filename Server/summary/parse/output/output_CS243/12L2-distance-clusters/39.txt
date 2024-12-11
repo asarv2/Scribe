@@ -1,0 +1,13 @@
+# 39
+
+**Example 1: Good Clustering**
+
+---
+
+A scatter plot is displayed on the left side of the slide, showing three distinct clusters of data points.  The clusters are visually separated by color (red, blue, and green).  The x-axis ranges from approximately 0 to 1, and the y-axis ranges from approximately 0 to 1.  Each cluster appears to be roughly spherical and well-separated from the others.  The data points within each cluster are relatively close to each other.
+
+On the right side of the slide, a large square heatmap is displayed.  The heatmap shows a strong block pattern, with distinct blocks of similar colors corresponding to the clusters in the scatter plot.  The colors in the heatmap range from dark blue (low similarity/high distance) to red (high similarity/low distance).  The darker shades of blue and red are concentrated in the diagonal blocks, indicating high similarity within each cluster.  The heatmap is a reordered proximity matrix, where the rows and columns are arranged to reflect the cluster assignments.  The strong block pattern in the heatmap visually confirms the quality of the clustering, as it clearly shows the separation of the clusters.
+
+**Description of what you see:**
+
+Slide 39 of a presentation on clustering algorithms.  The slide provides an example of a "good clustering" by showing both a scatter plot and a reordered proximity matrix (heatmap).  The scatter plot on the left visually demonstrates three distinct clusters, which are well-separated and spherical.  The heatmap on the right, representing the reordered proximity matrix, visually confirms the quality of the clustering.  The strong block pattern in the heatmap corresponds to the clusters in the scatter plot, with high similarity values within each cluster and low similarity values between different clusters.  The slide is designed to illustrate how a well-formed clustering will exhibit a clear block pattern in the proximity matrix visualization.  The example is intended to help the audience understand how to visually assess the quality of a clustering result.

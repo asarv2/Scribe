@@ -1,0 +1,35 @@
+# Slide 15
+
+**Example: The Compass System**
+
+```
+count
+600-
+400-
+200-
+Black Defendant's Decile Scores
+Decile Score
+count
+600-
+400-
+200-
+White Defendant's Decile Scores
+Decile Score
+Source: Richard Johansson, University of Gothenburg
+```
+
+**Description of Figures:**
+
+The slide presents two bar graphs, side-by-side, illustrating the distribution of decile scores for black and white defendants.  Both graphs have a similar structure:
+
+* **X-axis:**  "Decile Score" (1-10).  This axis represents the range of scores, likely assigned by the Compass system, a risk assessment tool.
+* **Y-axis:** "Count." This axis represents the frequency or number of defendants falling into each decile score category.
+* **Bars:** Dark gray bars represent the count of defendants in each decile.  The height of each bar corresponds to the number of defendants with that decile score.
+
+**Graph 1 (Left):**  This graph displays the distribution of decile scores for black defendants.  The bars show a noticeable concentration of black defendants in lower decile scores (1-4) compared to higher decile scores (7-10).
+
+**Graph 2 (Right):** This graph displays the distribution of decile scores for white defendants.  The bars show a more even distribution across the decile scores, with a higher concentration in the middle deciles (4-7) compared to the lower deciles (1-3) and higher deciles (8-10).
+
+**Placement and Purpose:**
+
+The graphs are positioned side-by-side to directly compare the distribution of decile scores between black and white defendants.  This visual comparison is crucial for highlighting potential bias in the Compass system, as the different distributions might suggest that the system is assigning higher risk scores (lower deciles) to black defendants more frequently than white defendants. The source attribution at the bottom of the slide indicates the origin of the data and the researcher who created the visualization.  This is a common way to present data in a data science context, allowing for a quick and clear comparison of the distributions.

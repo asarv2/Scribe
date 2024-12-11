@@ -1,0 +1,37 @@
+# Slide 1
+
+The Normal Distribution
+
+The normal distribution (also called Gaussian distribution) is the most important one in all of probability and statistics. Many numerical populations have distributions that can be fit very closely by an appropriate normal curve. We use the Normal distribution when we have a continuous random variable with a density curve that is symmetric, unimodal and bell shaped. The Normal distribution can be completely described by its population mean (μ) and standard deviation (σ).
+
+What are some continuous random variables that would follow an approximately Normal distribution?
+
+Definition:
+A continuous rv X is said to have a normal distribution with parameters μ and σ (or σ<sup>2</sup>), where −∞ < μ < ∞ and 0 < σ, if the pdf of X is
+
+𝑓(𝑥; 𝜇, 𝜎) =
+1
+√2𝜋∙𝜎𝑒−(𝑥−𝜇)2/(2𝜎2)      −∞< 𝑥< ∞
+
+The statement that X is normally distributed with parameters μ and σ<sup>2</sup> is often abbreviated X~N(μ, σ<sup>2</sup>).
+
+𝑓(𝑥;  μ, σ) is a legitimate pdf:
+* Clearly 𝑓(𝑥;  μ, σ) ≥0.
+* But a somewhat complicated calculus argument must be used to verify that the integral of the density function equals 1.
+* It can be shown that 𝐸(𝑋) = μ and 𝑉𝑎𝑟(𝑋) = σ<sup>2</sup>, so the parameters are the mean and the standard deviation of X.
+
+Note: The shape of the normal distribution is determined by the population mean (μ) and standard deviation (σ).
+* The mean μ is always in the center of highest point. Each density curve is symmetric about μ and bell-shaped, so the center of the bell (point of symmetry) is both the mean of the distribution and the median.
+* σ determines how wide the plot is. The value of σ is the distance from μ to the inflection points of the curve (the points at which the curve changes from turning downward to turning upward).
+
+
+**Figure Descriptions:**
+
+* **Figure 1 (Top Right):** A bell-shaped curve, typical of a normal distribution, is shown. The x-axis is labeled with values, and the y-axis represents the probability density. This figure visually represents the concept of a normal distribution, illustrating its symmetry and bell shape. It's placed to the right of the text to provide a visual aid for understanding the description of the normal distribution.
+
+* **Figure 2 (Bottom):** Two bell-shaped curves are shown, one light teal and one dark gray. Both curves are centered around a value, but the dark gray curve is wider than the teal curve. The x-axis is labeled with values, and the y-axis represents the probability density. The teal curve is labeled with μ and μ + σ, and the dark gray curve is labeled with μ and μ + σ. This figure illustrates how the standard deviation (σ) affects the width of the normal distribution. The figure is placed below the text to illustrate the relationship between the mean and standard deviation.
+
+
+**Contextual Details:**
+
+The slide introduces the normal distribution, a fundamental concept in statistics.  The figures are used to illustrate the shape and characteristics of the normal distribution, specifically how the mean and standard deviation affect the curve's shape and width. The slide also defines the probability density function (pdf) of a normal distribution and explains its properties.  The slide sets the stage for further exploration of the normal distribution in subsequent slides.

@@ -1,0 +1,26 @@
+# Slide 11
+
+**A/B Testing and Controlled Experiments**
+
+**Advantage of controlled experiments**
+
+Controlled experiments test for causal relationships, not simply correlations
+* The gold standard in science
+* The only way to prove efficacy of drugs in FDA drug tests
+When the variants run concurrently, only two things can explain differences:
+* The "feature(s)" (A vs. B)
+* Random chance
+All other effects are the same in both the conditions
+To control for random chance, statistical tests are used to test for significance
+
+
+**Figure Description:**
+
+* **Visual:** The slide contains two laptop computer icons, light-blue outlined with a dark-blue interior, positioned side-by-side.  Each laptop icon has a small graphic of a web page with a gear icon, suggesting a website or application.  A vertical bar graph is shown inside each laptop icon.  The bar graph for laptop "A" (labeled "CONTROL") is a reddish-pink color and shows a value of 23%.  The bar graph for laptop "B" (labeled "VARIATION") is a light-green color and shows a value of 37%.  A green upward-pointing arrow is shown next to the bar graph in laptop "B", visually highlighting the increase in the metric.  Below each laptop icon, there are buttons labeled "CONTROL" and "VARIATION" in reddish-pink and light-green, respectively.
+
+* **Placement and Purpose:** The figure is placed on the slide to visually represent the concept of A/B testing, where different versions of a webpage or application are tested to see which performs better. The numbers (23% and 37%) represent metrics of interest, such as conversion rates or click-through rates.  The visual aids help to illustrate the comparison between the two versions and the observed difference in the metric.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of A/B testing and controlled experiments, focusing on the advantages of using controlled experiments.  The text emphasizes that controlled experiments are the gold standard for establishing causal relationships, not just correlations.  The example of FDA drug tests highlights the importance of this method in determining the efficacy of treatments.  The slide also explains that when comparing different versions (treatments) in a controlled experiment, only the treatment itself and random chance can explain any observed differences.  The figure is a visual aid to illustrate the concept of A/B testing, showing two versions (A and B) and the metrics being measured.

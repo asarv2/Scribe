@@ -1,0 +1,32 @@
+# Slide 53
+
+**Sharpening**
+
+What does blurring take away?
+
+-
+
+=
+
+Add it back to the original
+
++ α
+
+=
+
+
+**Description of what you see:**
+
+This slide discusses image sharpening.  It presents a visual demonstration of the concept.  Four images of Albert Einstein are arranged in a 2x2 grid.
+
+* **Top Left:** A grayscale image of Albert Einstein's head and shoulders.  This image appears somewhat blurred or soft.
+
+* **Top Right:** A grayscale image of Albert Einstein's head and shoulders.  This image is a blurred version of the image on the top left.
+
+* **Bottom Left:** A grayscale image of Albert Einstein's head and shoulders.  This image is the same as the image on the top left.
+
+* **Bottom Right:** A grayscale image of Albert Einstein's head and shoulders.  This image is the same as the image on the top right, but with the addition of a sharpening effect.
+
+The images are arranged in a way that visually illustrates the process of sharpening an image by adding back the details that were removed by blurring.  The "–" and "+" symbols between the images represent the subtraction and addition of the blurring effect.  The "α" (alpha) represents a scaling factor for the sharpening operation.  The slide is designed to visually explain the concept of sharpening by subtracting the blurring effect from the original image and then adding it back.
+
+

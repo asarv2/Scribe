@@ -1,0 +1,14 @@
+# Slide 18
+
+**Are A and B the same color?**
+
+---
+
+**Figure Description:**
+
+The slide presents a 3D rendering of a section of a checkerboard.  The checkerboard is composed of light gray and dark gray squares.  A light sage-green cylinder is positioned centrally on the checkerboard, casting shadows.  Two squares, labeled "A" and "B", are located on the checkerboard directly beneath the cylinder.  Square "A" is positioned on a light gray square, while square "B" is positioned on a dark gray square.  The perspective and shading of the checkerboard, combined with the cylinder's shadow, create an optical illusion.  The purpose of this figure is to illustrate how visual perception can lead to misinterpretations of color, a common cognitive bias in data interpretation.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, presents a classic optical illusion to demonstrate how visual perception can lead to misinterpretations of data.  The checkerboard pattern, with the cylinder casting shadows, creates a visual effect where squares "A" and "B" appear to have different shades of gray, even though they are the same color.  The question "Are A and B the same color?" is posed to highlight the potential for misinterpretations based on visual cues rather than objective measurements.  The slide is designed to illustrate the importance of critical thinking and objective analysis when interpreting data visualizations, emphasizing the potential for visual biases to affect our understanding of data.  The figure is a well-known example of how our perception can be tricked, and it's used to illustrate the concept of visual biases in data interpretation.

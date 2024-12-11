@@ -1,0 +1,14 @@
+# 21
+
+# Playing Games
+
+---
+
+**Description of the Image/Figures:**
+
+This slide contains only text.  There are no images or figures.  The title, "Playing Games," is displayed in a large, bold, dark gray font against a light gray background.  The title is likely the heading for a section of the lecture on AI Basics, introducing a topic related to game playing as a domain for AI research.
+
+
+**Description:**
+
+The slide is a simple title slide, introducing the topic of game playing in the context of AI.  It's likely the start of a new section or subsection within the lecture, and the content of the following slides will likely delve into specific aspects of game playing in AI.  The title is clear and concise, providing a preview of the content to come.

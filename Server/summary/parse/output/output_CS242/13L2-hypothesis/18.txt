@@ -1,0 +1,20 @@
+# Slide 18
+
+**Central limit theorem**
+
+The central limit theorem states that the sample mean  (for "reasonably sized" samples, e.g., m > 30) has a Gaussian distribution regardless of the distribution of X.
+
+  
+In practice, for m < 30 and when we estimate  using the sample variance, we should use a Student's t-distribution with m-1 degrees of freedom.
+
+  
+**Figure 1:**
+
+(No figure present on this slide)
+
+
+**Description of what you see:**
+
+This slide introduces the central limit theorem.  It states that the sample mean of a sufficiently large sample (typically m > 30) will be approximately normally distributed, regardless of the shape of the original population distribution.  The slide also notes that for smaller sample sizes (m < 30), a t-distribution should be used when estimating the population variance from the sample variance.  The slide is a concise explanation of a fundamental concept in statistics, relating sample means to population parameters.  There are no figures on this slide.  The slide is likely part of a lecture on statistical inference, preparing the audience for more advanced statistical concepts.
+
+

@@ -1,0 +1,12 @@
+# 15
+
+# In 1966, Seymour Papert (from the same MIT AI group as McCarthy and Minsky) told his graduate students to “solve” computer vision as a summer project unlike many other problems in AI, vision was tractable and “easy” to encode Decades later, we are still working…
+
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a historical anecdote about computer vision.  The text states that in 1966, Seymour Papert, a member of the MIT AI group, assigned computer vision as a summer project to his graduate students.  The text further notes that, in contrast to other AI problems, computer vision was perceived as relatively straightforward and easily encoded at that time.  The final sentence, "Decades later, we are still working…," implies that despite this initial optimism, significant challenges remain in the field of computer vision.  The slide's purpose is to highlight the historical context of AI research, contrasting the perceived ease of certain problems in the past with the ongoing complexity of those same problems today.  There are no figures on this slide.
+
+

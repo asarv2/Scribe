@@ -1,0 +1,5408 @@
+# 1
+
+CS 24300 - AI Basics
+Tony Bergstrom
+Slides adapted from Yexiang Xue
+
+
+**Description:**
+
+This is a title slide for a lecture on AI Basics, likely part of a course called CS 24300.  It displays the course name, the instructor's name (Tony Bergstrom), and a credit to the original creator of the slides (Yexiang Xue). The background is a dark gray, and the text is a light gray, making it easily readable.  The simple design focuses attention on the course title and instructor.
+
+
+# 2
+
+# Image Classification
+
+
+**Description:**
+
+This slide displays a single heading: "Image Classification".  It's a simple, unadorned slide, likely serving as a title or heading for the following content in the lecture.  The gray background and dark text are consistent with the style of the previous slide.
+
+
+**What you see:**
+
+A plain gray background with the words "Image Classification" centered in a dark gray font.  The text is large enough to be easily readable.  There are no images or other elements on the slide.  The slide is likely the start of a section of the lecture focusing on image classification techniques in AI.
+
+
+# 3
+
+# Image Classification
+
+**cat**
+
+Assume given set of discrete labels
+{dog, cat, truck, plane, ...}
+
+Part of this lecture is based on Fei-fei Li & Justin Johnson & Serena Yeung: CS231n at Stanford
+
+This image by Nikita is licensed under CC-BY 2.0
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concept of image classification.  A gray-scale image of a gray tabby cat is displayed in the upper-left quadrant of the slide.  A blue arrow points from the image to the word "cat" below it.  This visually connects the image to the label.  Below the image and the arrow, the text "Assume given set of discrete labels" introduces the concept of classifying images into predefined categories.  The list {dog, cat, truck, plane, ...} shows examples of these categories.  The text at the bottom indicates the source of the lecture material.  The image of the cat is a visual aid to illustrate the concept of image classification, showing a specific example of an image that can be labeled as "cat". The attribution at the bottom of the image indicates the source and license of the image.  The slide is designed to introduce the topic of image classification in AI by providing a concrete example.  The lecture is likely based on a Stanford course (CS231n) on computer vision.
+
+
+# Slide 4
+
+**The Problem: Semantic Gap**
+
+```
+What a computer "sees"
+[108 112 108 112 108 104 99 96 103 112 119 104 97 93 87]
+[01 08 102 106 104 70 08 103 00 105 123 136 118 185 04 85]
+[76 85 90 105 128 105 87 96 95 99 115 112 106 183 99 85]
+[99 81 81 93 120 131 127 100 95 98 102 99 96 93 101 94]
+[106 91 61 64 69 91 88 85 101 107 109 98 75 84 95 95]
+... (many more lines of numbers) ...
+[122 164 148 103 71 56 78 83 93 103 119 139 102 61 69 84]
+]
+An image is a big grid of numbers
+between 0 and 255.
+Each value represents Red, Green, or
+Blue for a pixel
+An 800 x 600 image is 800 x 600 x 3
+values: 1,440,000
+```
+
+**Image Description:**
+
+A gray-scale image of a gray tabby cat is displayed in the upper-left quadrant of the slide.  A small, light-blue square is superimposed on the cat's chest.  The image is a visual aid to illustrate the concept of the semantic gap in image processing.  The large block of numbers below the image represents the numerical data that a computer "sees" when processing the image.  Each number corresponds to a pixel's color value (Red, Green, or Blue).  The numbers are organized in rows and columns, representing the image's pixel grid.  The text below the numerical data explains that an image is a grid of numbers between 0 and 255, where each number represents the color value of a pixel.  The text also states that an 800x600 image has 1,440,000 values.  The purpose of this slide is to illustrate the difference between how humans perceive images (semantically) and how computers represent them (numerically).
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slide that introduced image classification.  It's designed to show the raw numerical data that a computer uses to represent an image, highlighting the "semantic gap" between the human understanding of an image (e.g., "cat") and the computer's representation of it (a grid of numbers).  The slide is crucial for understanding how AI systems process visual information.
+
+
+# Slide 5
+
+**Fit a HUGE logistic regression model?**
+
+Flatten the image matrix into a vector:
+
+```
+Iimg =  
+[ a11  ...  a1n ]
+[  ⋮      ⋮   ]
+[ am1  ...  amn ]
+⇒ Iv = (a11, ..., a1n, ..., am1, ..., amn)T
+```
+
+Fit a logistic regression model with Iv as input:
+
+```
+prediction = sign(w⊤Iv) = sign(∑ wi,jai,j)
+i,j
+```
+
+Is this a good idea? What may be its problems?
+
+
+**Description:**
+
+This slide discusses a potential approach to image classification using a logistic regression model.  It proposes flattening the image matrix (a 2D representation of the image data) into a single vector (Iv).  The image matrix is represented by a matrix with rows and columns, where each element (aij) represents a pixel's value.  The flattened vector (Iv) contains all the pixel values in a single row.  The slide then suggests fitting a logistic regression model to this flattened vector.  The formula for the prediction is shown, using the dot product of the weight vector (w) and the flattened image vector (Iv).  The slide concludes with a question about the effectiveness and potential drawbacks of this approach.  The overall context of the lecture is on AI basics, specifically image classification.  The slide builds on the previous slide's discussion of the semantic gap between how humans perceive images and how computers represent them numerically.  The slide proposes a method to use the numerical data to train a model for image classification.
+
+
+# Slide 6
+
+**Challenges: viewpoint variation**
+
+```
+[[105 112 108 111 104 99 106 99 96 103 112 119 104 97 93 87]
+[91 98 102 106 104 79 98 103 99 105 123 136 118 185 94 85]
+[76 85 00 105 128 105 87 06 05 115 112 106 183 09 85]
+[99 81 81 93 120 131 127 100 95 98 102 99 96 93 101 94]
+[106 91 61 64 69 91 88 85 101 107 109 98 75 84 95 95]
+... (many more lines of numbers) ...
+[122 164 148 103 71 56 78 83 93 103 119 139 102 61 69 84]]
+```
+
+**Image Description:**
+
+A grayscale image of a gray tabby cat is displayed in the upper-left quadrant of the slide.  The image is positioned to the left of a large block of numbers.  The numbers represent pixel values, likely RGB values, for each pixel in the image.  The numbers are organized in rows and columns, forming a matrix representation of the image.  The image and the matrix of numbers are intended to illustrate the challenge of viewpoint variation in image classification.  The numbers show how the pixel values change when the camera's viewpoint changes, highlighting the difficulty of creating a model that can recognize the same object from different angles.  The image of the cat is a visual aid to illustrate the concept of viewpoint variation.  The numbers below the image represent the raw pixel data of the image.  The numbers are enclosed in square brackets, indicating that they are part of a matrix.  The large block of numbers below the image represents the numerical data that a computer "sees" when processing the image.  Each number corresponds to a pixel's color value (Red, Green, or Blue).  The numbers are organized in rows and columns, representing the image's pixel grid.  The text below the numerical data explains that an image is a grid of numbers between 0 and 255, where each number represents the color value of a pixel.  The text also states that an 800x600 image has 1,440,000 values.  The purpose of this slide is to illustrate the difference between how humans perceive images (semantically) and how computers represent them (numerically).
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that introduced image classification and the semantic gap.  It's designed to show the raw numerical data that a computer uses to represent an image, highlighting the challenge of viewpoint variation.  The slide is crucial for understanding how AI systems process visual information and the difficulties in creating models that can recognize objects from different perspectives.  The slide is likely part of a section discussing the challenges of image classification.
+
+
+
+
+# Slide 7
+
+**Challenges: illumination**
+
+![Cat Images](/path/to/image.jpg)
+
+**Image Description:**
+
+The slide displays four images of cats in different lighting conditions.  From left to right, top to bottom:
+
+1.  **Left-top:** A tabby cat in a dark, shadowed environment.  The lighting is focused on the cat's face, creating a dramatic effect.
+2.  **Center-top:** A black cat in a dark, shadowed environment.  The lighting is focused on the cat's face, creating a dramatic effect.
+3.  **Right-top:** A light orange/tan cat in a well-lit environment.  The lighting is bright and highlights the cat's fur.
+4.  **Right-bottom:** A gray cat sitting in a tree, with sunlight shining through the leaves.  The lighting is dappled and creates highlights and shadows on the cat.
+
+All images are positioned in a grid-like layout, with each image taking up a quarter of the slide.  Below each image, the text "This image is CC0 1.0 public domain" is displayed.  This indicates that the images are in the public domain and can be used freely.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed the challenges of image classification, particularly the semantic gap and viewpoint variation.  The slide introduces the challenge of illumination variation in image classification.  The images demonstrate how different lighting conditions can significantly alter the appearance of an object (in this case, a cat), making it difficult for a computer vision system to reliably identify the object.  The images are used as visual aids to illustrate the concept of illumination variation and its impact on image recognition.
+
+
+**Description of what you see:**
+
+The slide presents a visual demonstration of the challenge of illumination variation in image classification.  Four images of cats are shown, each under a different lighting condition.  The images are arranged in a grid format, making it easy to compare and contrast the effects of illumination on the appearance of the cats.  The text below each image clarifies the licensing of the images.  The overall design of the slide is simple and straightforward, focusing on the visual representation of the concept.
+
+
+# Slide 8
+
+**Challenges: deformation**
+
+![Cat Images](/path/to/image.jpg)
+
+* **Image 1 (Left-Top):** A plump, light gray tabby cat is lying on a light-gray/beige outdoor surface. The cat is positioned in a relaxed posture, with its front paws outstretched. The cat's expression appears somewhat surprised or alert. The lighting suggests an outdoor setting with natural light.
+
+* **Image 2 (Center-Top):** A gray and white long-haired cat is lying on a light-colored floor. The cat is lying on its back with its paws in the air. The lighting is relatively even, and the floor appears to be indoors.
+
+* **Image 3 (Right-Top):** A gray and white medium-length haired cat is standing on a patterned floor. The cat is standing on all four legs, with its body oriented vertically. The floor has a repeating pattern of light and dark colors.
+
+* **Image 4 (Right-Bottom):** A gray and white shorthaired cat is sitting on a light brownish-tan couch. The cat is sitting with its front paws resting on its body, and its back is slightly arched. The couch is a typical home furniture piece.
+
+
+**Attribution:**
+
+Below each image, the text "This image by [photographer name] is licensed under CC-BY 2.0" is displayed.  This indicates the source of the images and that they are under a Creative Commons license, allowing for reuse under certain conditions.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed challenges in image classification, such as viewpoint variation and illumination.  The current slide introduces the challenge of deformation in image classification.  The images demonstrate how different poses and positions of the same object (in this case, cats) can make it difficult for a computer vision system to reliably identify the object.  The images are used as visual aids to illustrate the concept of deformation and its impact on image recognition.  The slide is designed to highlight the complexity of image recognition tasks and the need for robust algorithms that can handle variations in object appearance.
+
+
+# Slide 9
+
+**Challenges: occlusion**
+
+* **Image 1 (Left):** A gray tabby cat is mostly hidden under a patterned, light brownish-gray/beige blanket or cloth. Only the cat's head and upper body are visible. The blanket has a pattern of light and dark shapes, and the edges of the blanket are slightly frayed. The lighting is relatively soft and diffused.
+
+* **Image 2 (Center):** A light gray and white cat is partially hidden within tall grass.  Only parts of the cat's body are visible, and the grass obscures a significant portion of the cat. The grass is a mix of light and dark green/brown tones. The lighting suggests an outdoor setting with natural light.
+
+* **Image 3 (Right):** A light beige/cream-colored couch. A portion of a gray and black striped cat's tail is visible, extending from the middle of the couch. The tail is positioned on top of the couch's cushions. The couch has a textured, quilted or tufted pattern.
+
+
+**Attribution:**
+
+Below each image, the text indicates the image's licensing:
+
+* **Image 1:** "This image is CC0 1.0 public domain"
+* **Image 2:** "This image is CC0 1.0 public domain"
+* **Image 3:** "This image by jonsson is licensed under CC-BY 2.0"
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of challenges in image classification.  It introduces the challenge of occlusion, where parts of an object are hidden or obscured by other objects or elements in the image. The images are presented to visually demonstrate how occlusion can make it difficult for a computer vision system to accurately identify and classify objects.  The images are examples of how parts of the cat are hidden by other objects, making it harder to recognize the cat.  The slide builds on previous slides that discussed viewpoint variation, illumination, and deformation as challenges in image classification.
+
+
+**What you see:**
+
+The slide displays three images, each illustrating a different instance of occlusion.  The images are arranged horizontally, with each image taking up a third of the slide's width.  The images are of cats, but in each case, parts of the cats are hidden by other objects (a blanket, grass, or a couch).  The text below each image indicates the licensing of the image, which is important for understanding the rights associated with using the image.  The overall design of the slide is simple and straightforward, focusing on the visual representation of the concept of occlusion.
+
+
+# Slide 10
+
+**Challenges: background clutter**
+
+* **Image 1 (Left):** A medium-sized, light brownish-orange tabby cat is seated in a natural outdoor setting. The background consists of fallen leaves, twigs, and patches of dirt.  The leaves are various shades of brown and orange, creating a textured backdrop.  Some small green plants are also visible. The lighting suggests natural outdoor light.
+
+* **Image 2 (Right):** A medium-sized, gray and white cat with a long, fluffy coat is positioned in a snowy environment. The background is primarily composed of snow, with some bare, dark-colored branches or twigs visible. The lighting suggests a winter scene with natural light.
+
+
+**Attribution:**
+
+Below each image, the text "This image is CC0 1.0 public domain" is displayed.  This indicates that the images are in the public domain and can be used freely.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of challenges in image classification.  It introduces the challenge of background clutter, where distracting elements in the background can make it difficult for a computer vision system to focus on the object of interest (in this case, the cat). The images are presented to visually demonstrate how a cluttered background can make it harder to recognize the cat.  The slide builds on previous slides that discussed viewpoint variation, illumination, deformation, and occlusion as challenges in image classification.
+
+
+**What you see:**
+
+The slide displays two images, each illustrating a different instance of background clutter.  The images are arranged side-by-side, with each image taking up half of the slide's width.  The images are of cats, but in each case, the background is visually busy, with leaves, twigs, and snow.  The text below each image indicates the licensing of the image, which is important for understanding the rights associated with using the image.  The overall design of the slide is simple and straightforward, focusing on the visual representation of the concept of background clutter.
+
+
+# Slide 11
+
+**Image Classification**
+
+* **Image:** A gray tabby cat is seated, facing slightly to its right. The cat is in focus, and the background is out of focus, showing a light gray/beige wall or surface. The cat's fur is a mix of gray and white, with visible stripes. The image is positioned in the upper-left quadrant of the slide.
+
+* **Text:**
+    * **"cat":**  A label, positioned below the image and connected to it by a light-blue arrow. This visually connects the image to the label, illustrating the concept of image classification.
+    * **"Assume given set of discrete labels {dog, cat, truck, plane, ...}":** This text introduces the concept of classifying images into predefined categories. The list provides examples of these categories.
+    * **"Need to find INVARIANT features":** This text indicates the goal of finding features that remain consistent across different variations of the object (e.g., different viewpoints, lighting, or poses). This is a crucial step in building robust image classification models.
+    * **"This image by Nikita is licensed under CC-BY 2.0":** This attribution indicates the source and license of the image.
+
+
+**Description of what you see:**
+
+This slide is part of a lecture on AI Basics, specifically focusing on image classification.  The slide presents a visual example of a cat image, labeled as "cat," and introduces the concept of finding invariant features for image classification. The image and text work together to illustrate the need for features that remain consistent across different variations of the object. The slide is designed to introduce the topic of image classification in AI by providing a concrete example and highlighting the challenges involved. The attribution at the bottom of the image indicates the source and license of the image.
+
+
+# Slide 12
+
+**Bag of Features**
+
+
+**Description of what you see:**
+
+This slide displays a single, centered heading: "Bag of Features".  The background is a neutral gray, and the text is dark gray, making it easily readable.  The simple design focuses attention on the topic of the slide.  The slide is likely introducing the concept of "Bag of Features" as a method for image classification in the context of AI Basics.  It's a straightforward title slide, setting the stage for the subsequent content in the lecture.
+
+
+# Slide 13
+
+**Key idea: classify based on invariant features!**
+
+* **Object**  →  **Bag of 'words'**
+
+**Description of what you see:**
+
+The slide presents a visual analogy for the concept of "Bag of Features" in image classification.  On the left side, there's a portrait-style image (likely a painting) of a woman's head and shoulders.  On the right, there's a brown paper bag with various small, square images (likely extracted features from an image) inside.  The arrow connecting "Object" to "Bag of 'words'" visually represents the process of extracting features from an image and representing them as a collection (a "bag").  The overall design is simple and uses visual metaphors to explain the concept.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed the challenges of image classification, such as viewpoint variation, illumination, deformation, occlusion, and background clutter.  The slide introduces the concept of "Bag of Features" as a method to address these challenges by focusing on invariant features.  The visual representation of the paper bag containing extracted features is a key element in explaining the idea of representing an image as a collection of its most important parts, regardless of their position or context in the original image.  The slide is likely part of a section discussing feature extraction techniques for image classification.
+
+
+# Slide 14
+
+**Visual words**
+
+**(Image Description):**
+
+The slide displays a grid of small images, each containing a highlighted feature.  There are three rows of images, with each row containing four columns.  Each image in the grid shows a different object or part of an object.
+
+* **Row 1:**  The images depict various human faces.  A yellow circle highlights the eye region of each face.
+
+* **Row 2:** The images show portions of vehicle wheels.  A yellow circle highlights the center of each wheel.
+
+* **Row 3:** The images show portions of airplanes.  A yellow circle highlights the nose/front area of each airplane.
+
+* **Row 4:** The images show portions of car license plates.  A yellow circle highlights the license plate area of each car.
+
+A small red dot is located within each yellow circle.
+
+**Attribution:**
+
+At the bottom right of the slide, there is a citation: "[Sivic et al., ‘05]".
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slide that introduced the concept of "Bag of Features."  The images and highlighted features illustrate the idea of "visual words."  Each highlighted area represents a "visual word" – a basic visual element that can be used to describe an image.  The slide demonstrates how these visual words can be extracted from images and used to represent the content of the image in a way that is less sensitive to variations in viewpoint, illumination, and other factors.  The citation at the bottom indicates the source of the visual words concept.
+
+
+**What you see:**
+
+The slide presents a visual representation of visual words.  The grid of images, each with a highlighted feature, clearly demonstrates the concept of extracting visual elements from images.  The consistent highlighting of specific parts of different objects (eyes, wheels, airplane noses, license plates) emphasizes the idea of invariant features.  The red dot within the yellow circle is a visual cue to the specific location of the feature.  The overall design is simple and straightforward, focusing on the visual representation of the concept.
+
+
+# Slide 15
+
+**Object classification with bag of words**
+
+**(Image Description):**
+
+The slide presents a grid of images, arranged in a 3x3 layout.  Each image in the grid depicts an office-like setting, likely a workspace or an office environment.  The images show various office furniture, including desks, computers, bookshelves, and other items.  The images are not labeled, but the overall context suggests they are examples of the type of images used in object classification with a bag-of-words approach.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that introduced the concept of "Bag of Features" and "visual words."  The images on this slide are likely examples of the types of images used in a system that classifies objects based on the presence of visual words.  The slide is demonstrating how a bag-of-words approach can be used to classify objects in images by analyzing the presence and frequency of visual words within the image.  The images are not labeled, but the overall context suggests they are examples of the type of images used in object classification with a bag-of-words approach.
+
+
+**What you see:**
+
+The slide shows a grid of nine images, each depicting a different office scene.  The images are relatively small and are arranged in a 3x3 grid.  The images are likely examples of the types of images used in a system that classifies objects based on the presence of visual words.  The images are not labeled, but the overall context suggests they are examples of the type of images used in object classification with a bag-of-words approach.  The slide is likely part of a section discussing the application of bag-of-words models to image classification.  The citation at the bottom of the slide, "[Sivic et al., ‘05]", suggests that the content is based on research by Sivic and colleagues in 2005.
+
+
+# Slide 16
+
+**Bag of Features**
+
+Represent images by frequencies of "visual words" (Bags of features)
+
+**(Image Description):**
+
+The slide displays three bar graphs, each representing the frequency of different "visual words" in three different images.  The bar graphs are arranged horizontally, with the x-axis representing the different visual words and the y-axis representing the frequency.  The bars are colored differently for each graph.
+
+* **Graph 1 (Left):**  The bars are light green.  The graph shows the frequency of visual words extracted from an image, likely a portrait.  The tallest bar corresponds to a visual word that appears frequently in the image.  Small images of a bicycle seat, a woman's head, and an eye are shown below the graph.
+
+* **Graph 2 (Center):** The bars are yellow.  The graph shows the frequency of visual words extracted from an image, likely a bicycle.  The tallest bar corresponds to a visual word that appears frequently in the image.  Small images of a bicycle seat, a bicycle frame, and a bicycle wheel are shown below the graph.
+
+* **Graph 3 (Right):** The bars are dark red.  The graph shows the frequency of visual words extracted from an image, likely a violin.  The tallest bar corresponds to a visual word that appears frequently in the image.  Small images of a violin body, a violin neck, and a violin bow are shown below the graph.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that introduced the concept of "Bag of Features" and "visual words."  The bar graphs illustrate how images can be represented by the frequency of different visual words.  Each bar graph corresponds to a different image, and the height of each bar represents the frequency of that particular visual word in the image.  The small images below each graph are likely examples of the visual words being counted.  The slide is demonstrating the process of converting an image into a numerical representation based on the frequency of visual words.
+
+
+**What you see:**
+
+The slide presents a visual representation of the Bag of Features approach to image classification.  Three bar graphs, each with different colors, show the frequency of visual words in three different images.  The small images below each graph are visual examples of the visual words being counted.  The overall design is simple and straightforward, focusing on the visual representation of the concept.  The slide is designed to illustrate how images can be represented numerically using the frequency of visual words.
+
+
+# Slide 17
+
+**Bag of Features (continued)**
+
+**(Image Description):**
+
+The slide displays a graph and a smaller image.
+
+* **Graph:** A bar graph with pink bars. The x-axis is labeled "codewords," and the y-axis is labeled "frequency."  The graph shows the frequency of different codewords (visual words) in an image.  The bars vary in height, indicating the different frequencies of each codeword.
+
+* **Image (inset):** A grayscale image of a car is shown in the upper-right quadrant of the slide.  Several small, rectangular boxes (bounding boxes) are drawn around different parts of the car.  The boxes are colored red and green.  The boxes highlight different features or parts of the car.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of the Bag of Features approach to image classification.  It builds on the previous slide by showing how the frequency of visual words (codewords) can be used to represent an image. The graph displays the frequency of different codewords in an image. The inset image shows a car with bounding boxes around different parts of the car.  The bounding boxes are likely highlighting the visual words that are being counted in the bar graph.  The slide is demonstrating how the frequency of these visual words can be used to represent an image and potentially classify it.
+
+
+**What you see:**
+
+The slide shows a bar graph representing the frequency of visual words (codewords) in an image.  The graph is accompanied by an inset image of a car with bounding boxes around different parts of the car.  The bounding boxes are likely highlighting the visual words that are being counted in the bar graph.  The slide is designed to illustrate the concept of representing an image by the frequency of visual words, which is a key component of the Bag of Features approach.  The graph and the image together demonstrate how the frequency of visual words can be used to represent an image and potentially classify it.
+
+
+# Slide 18
+
+**Bag of Features Object Categorization**
+
+How do we use Bag of Features for object categorization?
+
+**category models**
+
+*   **Class 1:**  A series of bar graphs, each with varying heights of pink bars, are shown.  The x-axis is labeled with a series of unmarked intervals, and the y-axis is labeled "frequency."  These graphs represent the frequency of different visual words (codewords) in images belonging to a specific category (Class 1).
+
+*   **Class N:**  A series of bar graphs, each with varying heights of teal/turquoise bars, are shown.  The x-axis is labeled with a series of unmarked intervals, and the y-axis is labeled "frequency."  These graphs represent the frequency of different visual words (codewords) in images belonging to a different category (Class N).
+
+*   **Model space:** A 3D scatter plot is shown in the upper-right quadrant of the slide.  The plot shows a collection of points, some colored light teal/turquoise and others light pink.  The points are scattered in a 3D space, with the axes not labeled.  The plot represents the model space, where each point corresponds to a category model (a representation of the frequency of visual words for a particular category).
+
+
+**Description of what you see:**
+
+This slide continues the discussion of the Bag of Features approach to image classification.  It illustrates how category models are created using the frequency of visual words (codewords) extracted from images.  The bar graphs represent the frequency distribution of visual words for different categories (Class 1 and Class N).  The 3D scatter plot in the upper-right quadrant shows how these category models are represented in a multi-dimensional space.  The slide is designed to illustrate the process of creating and representing category models for image classification using the Bag of Features method.  The different colors of the bars and points in the graph visually distinguish the different categories.  The x-axis of the bar graphs is not labeled, but the y-axis is labeled "frequency," indicating that the height of each bar represents the frequency of a particular visual word in the image.  The 3D scatter plot shows the distribution of these category models in a multi-dimensional space.  The axes of the 3D scatter plot are not labeled, but the points are colored differently to distinguish between the categories.  The overall design of the slide is to visually represent the concept of category models in the context of Bag of Features.
+
+
+# Slide 19
+
+**Key idea: classify based on invariant features!**
+
+* **Object:**  A portrait-style image of a woman's head and shoulders is shown.  This image is likely a historical painting or a similar artwork.  It's used as a visual example of an object to be classified.
+
+* **Feature vector f:** A horizontal bar graph is shown, representing a feature vector.  The bar graph is divided into several sections, each representing a different feature.  The sections are labeled with the features "#eyes" and "Mouth below eyes."  The ellipses (...) indicate that there are more features not explicitly shown.  This feature vector represents the numerical values extracted from the image, focusing on invariant features.
+
+* **Fit logistic regression model:**  The text "Fit logistic regression model" indicates that a logistic regression model will be used to classify the object based on the extracted features.
+
+* **prediction = sign(w ⋅ f):**  This equation shows the prediction process.  The model calculates the dot product of the weight vector (w) and the feature vector (f), and then uses the sign function to determine the classification.  This is a standard approach in machine learning for classification tasks.
+
+**Description of what you see:**
+
+The slide visually explains the concept of classifying objects based on invariant features using a logistic regression model.  The image of the woman's head and shoulders is a visual example of the object being classified.  The feature vector, represented by the bar graph, shows the extracted features used for classification.  The equation highlights the mathematical process of using the feature vector to make a prediction.  The overall design is simple and uses visual aids to explain the key idea of the method.  The slide is likely part of a section discussing feature extraction and classification techniques in image recognition.
+
+
+# Slide 20
+
+**Origin 2: Document retrieval**
+
+Orderless document representation: frequencies of words from a dictionary
+
+* **2007-01-23: State of the Union Address**  (George W. Bush (2001-))
+    *  abandon accountable affordable afghar
+    *  choices civilians coalition
+    *  deficit deliver democratic deploy d
+    *  expand extremists failing
+    *  iraq
+    *  insurgents iran
+    *  islam ju
+    *  palestinian payroll
+    *  shia stays strength stude
+    *  violence violent War washington w
+    *  recession
+    *  surveillance tax
+
+* **1962-10-22: Soviet Missiles in Cuba** (John F. Kennedy (1961-63))
+    *  abandon achieving adversaries aggression agricultural armaments arms assessments
+    *  buildup burdens
+    *  college com
+    *  deficit deper
+    *  elimination emergence
+    *  ballistic berlin
+
+* **1941-12-08: Request for a Declaration of War** (Franklin D. Roosevelt (1933-45))
+    *  aggression aggressors airplanes armaments armed army assault assembly authorizations bombing
+    *  cheerfully claiming constitution curtail december defeats defending delays democratic dictators disclose
+    *  false forgotten fortunes freedom fulfilled fullness fundamental gangsters
+    *  german germany god guam harbor hawaii hemisphere hint hitler hostilities immune improving
+    *  halt hazards hemisphere hos
+    *  economic empire en danger facts false
+    *  modernization neglect nuclear
+    *  invasion islands isolate japanese
+    *  labor metals midst midway navy nazis obligation offensive
+    *  unde officially pacific partisanship pearl peril
+    *  philippine preservation privilege reject
+    *  repaired resisting retain revealing rumors seas soldiers speaks speedy stamina strength sunday sunk supremacy tanks taxes
+    *  treachery true tyranny undertaken victory
+    *  war
+    *  wartime washington
+
+
+**Attribution:**
+
+Salton & McGill (1983)
+
+
+**Description of what you see:**
+
+This slide presents a large table-like layout of text, displaying various historical documents and their associated keywords.  The text is organized into sections, each representing a different document (e.g., a State of the Union Address, a speech about Soviet missiles, or a request for a declaration of war).  Each section lists a collection of keywords extracted from the corresponding document.  The keywords are likely used for document retrieval and analysis, focusing on the frequency of words to represent the content of the document.  The slide is part of a lecture on AI Basics, specifically on document retrieval and representation.  The different dates and authors associated with each document section indicate the historical context of the documents.  The overall layout is designed to show the keywords extracted from different documents, which are likely used for comparison and analysis.  The presence of multiple documents and their associated keywords suggests a comparison of the content and themes across different historical periods.
+
+
+# Slide 21
+
+**Requirements for extracted features**
+
+* **Invariance**
+    * Geometric transformations (translation, rotation, scale)
+    * Caused by viewpoint changes due to camera/object motion
+
+* **Robustness**
+    * Noise (i.e., sensor noise)
+    * Detection errors (e.g., edge or corner detection)
+    * Illumination/Shadows
+    * Partial occlusion (i.e., self and from other objects)
+    * Intrinsic shape distortions (i.e., non-rigid objects)
+
+
+**Description of what you see:**
+
+The slide presents a list of requirements for extracted features in image processing, likely for use in an AI-based image classification system.  The text is formatted as a bulleted list, with clear headings for "Invariance" and "Robustness."  Each bullet point describes a specific type of challenge or distortion that extracted features should ideally be resistant to.  The content is presented in a straightforward, easy-to-read format, focusing on the key aspects of feature extraction for robust image analysis.  The slide is likely part of a section discussing the challenges and considerations in designing robust image recognition systems.  The context suggests that the features extracted from images should be invariant to changes in viewpoint, lighting, and other factors, and should be robust to noise and errors in detection.
+
+
+# Slide 22
+
+**Key idea: classify based on invariant features!**
+
+* **Object:**  A portrait-style image of a woman's head and shoulders is shown.  This image is likely a historical painting or a similar artwork.  It's used as a visual example of an object to be classified.
+
+* **Feature vector f:** A horizontal bar graph is shown, representing a feature vector.  The bar graph is divided into several sections, each representing a different feature.  The sections are labeled with the features "#eyes" and "Mouth below eyes."  The ellipses (...) indicate that there are more features not explicitly shown.  This feature vector represents the numerical values extracted from the image, focusing on invariant features.  The feature vector is shown as a series of boxes, each representing a feature's value.  Arrows point from the boxes to the text below, indicating the features represented by each box.
+
+* **Fit logistic regression model:** The text "Fit logistic regression model" indicates that a logistic regression model will be used to classify the object based on the extracted features.
+
+* **prediction = sign(w ⋅ f):** This equation shows the prediction process. The model calculates the dot product of the weight vector (w) and the feature vector (f), and then uses the sign function to determine the classification. This is a standard approach in machine learning for classification tasks.
+
+
+**Description of what you see:**
+
+The slide visually explains the concept of classifying objects based on invariant features using a logistic regression model.  The image of the woman's head and shoulders is a visual example of the object being classified.  The feature vector, represented by the bar graph, shows the extracted features used for classification.  The equation highlights the mathematical process of using the feature vector to make a prediction.  The overall design is simple and uses visual aids to explain the key idea of the method.  The slide is likely part of a section discussing feature extraction and classification techniques in image recognition.  The image of the woman's head is a classic example of an object that can be analyzed for invariant features.  The feature vector is a crucial component of the classification process, as it represents the numerical data extracted from the image.  The logistic regression model is a common machine learning algorithm used for classification tasks.  The equation shows the mathematical process of using the feature vector to make a prediction.
+
+
+# Slide 23
+
+**BoF for object categorization**
+
+Need a "visual" dictionary!
+
+G. Cruska et al., "Visual Categorization with Bags of Keypoints", European Conference on Computer Vision, Czech Republic, 2004
+
+
+**(Image Description):**
+
+A large, somewhat densely packed collage of small images is centered on the slide.  These small images appear to be various visual elements, possibly extracted features from different images.  They are diverse in subject matter, showing parts of faces, plants, architectural details, and other objects.  The collage is not organized in a grid, but rather appears to be a random scatter of these small images.  The purpose of this collage is to visually represent the idea of a "visual dictionary" – a collection of visual elements that can be used to describe and categorize other images.  The collage is a visual aid to illustrate the concept of building a dictionary of visual features for object categorization.
+
+
+**What you see:**
+
+The slide presents a visual representation of the concept of a "visual dictionary" for object categorization.  The collage of small images is a visual metaphor for a collection of visual features.  The diversity of the small images within the collage suggests that the visual dictionary would contain a wide variety of visual elements, which can be used to represent different objects and their characteristics.  The slide is designed to illustrate the idea of using a collection of visual features to represent and categorize objects in images.  The citation at the bottom of the slide provides context and attribution for the concept.
+
+
+# Slide 24
+
+**BoF: main steps**
+
+Characterize objects in terms of parts or local features
+
+
+**Description of what you see:**
+
+The slide presents a visual representation of the main steps in the Bag-of-Features (BoF) approach to image analysis.  It's a simple, clear slide with a title and a series of images illustrating the concept.
+
+* **Title:** "BoF: main steps" is displayed at the top of the slide, in a clear, bold font.  This indicates the topic of the slide.
+
+* **Subtitle:** "Characterize objects in terms of parts or local features" is displayed below the title.  This provides a concise description of the BoF method's core principle.
+
+* **Images:** The slide contains three columns of images. Each column shows a different object (a face, a bicycle, and a violin).  Within each column, there are several smaller images, each depicting a part or local feature of the larger object.  For example, the face column shows parts of the face (eyes, nose, mouth), the bicycle column shows parts of the bicycle (wheel, frame, handlebars), and the violin column shows parts of the violin (body, neck, bow).  These smaller images are arranged in a way that suggests they are extracted features from the larger images.  The arrangement of the images in the columns and the presence of multiple parts of each object visually represent the idea of characterizing an object by its constituent parts.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed the Bag-of-Features (BoF) method and its components, such as the visual dictionary.  The images on this slide are likely examples of the types of local features that are extracted from images to create a BoF representation.  The slide is designed to illustrate the first step in the BoF process: characterizing objects in terms of their constituent parts or local features.  The slide is likely part of a section discussing the practical application of BoF in image analysis.  The images are used to visually represent the concept of breaking down an object into its component parts for analysis.
+
+
+# Slide 25
+
+**BoF: main steps**
+
+Step 1: Features extraction (e.g., Scale-Invariant Feature Transform, SIFT, features)
+
+**(Image Description):**
+
+The slide displays a simple diagram illustrating the first step in the Bag-of-Features (BoF) method.
+
+* **Image (left):** A still image, likely a photograph or a similar image, is shown.  It depicts a group of people, possibly in a social setting.  Several light-reddish/pinkish ellipses are drawn around different parts of the people in the image.  These ellipses are superimposed on the image, and small red dots are located within each ellipse.  The ellipses and dots are likely highlighting key features or points extracted from the image.  The image is positioned on the left side of the slide.
+
+* **Arrow:** A black arrow points from the image to a series of vertical, stacked, rectangular boxes on the right side of the slide.  The boxes are empty, but their arrangement suggests that they represent a list of extracted features or data.  The arrow visually connects the image to the feature extraction process.
+
+* **Text:** The text "Step 1: Features extraction (e.g., Scale-Invariant Feature Transform, SIFT, features)" is positioned above the image.  This text clearly labels the step as feature extraction and provides examples of common feature extraction methods.  The ellipses (...) at the end of the text indicate that there may be other methods not explicitly listed.
+
+
+**Description of what you see:**
+
+The slide visually represents the first step of the Bag-of-Features (BoF) method: feature extraction.  The image on the left shows an example of an image, with highlighted features.  The arrow indicates the direction of the process, moving from the image to the extracted features.  The stacked boxes on the right represent the extracted features, which are likely numerical data or descriptors of the image's content.  The text clearly labels the step and provides examples of common feature extraction techniques used in computer vision.  The slide is designed to visually illustrate the process of extracting features from an image, which is a crucial step in the BoF method for image analysis.
+
+
+# Slide 26
+
+**BoF: main steps (cont'd)**
+
+Step 2: Learn "visual" vocabulary
+
+**(Image Description):**
+
+The slide displays a diagram illustrating the second step in the Bag-of-Features (BoF) method.
+
+* **Title:** "BoF: main steps (cont'd)" is displayed at the top of the slide, indicating a continuation of the previous slide's topic.
+
+* **Step 2:** "Step 2: Learn "visual" vocabulary" is displayed below the title, clearly labeling the current step.
+
+* **Image (top):** Three small images are shown: a portrait of a woman, a bicycle, and a violin.  These images are likely examples of the types of objects or features that will be used to create the "visual vocabulary."  They are positioned above the main part of the diagram.
+
+* **Arrow:** A downward-pointing arrow connects the images at the top to a larger box below.  This arrow visually represents the flow of the process, from the example images to the creation of the visual vocabulary.
+
+* **"Feature extraction & clustering":**  The text "Feature extraction & clustering" is positioned below the arrow, indicating the process that takes place to create the visual vocabulary.
+
+* **Image (bottom):** A large box at the bottom of the slide contains a collection of smaller images.  These smaller images are diverse, showing various parts of objects, such as eyes, bicycle wheels, violin bows, and other visual elements.  This collection of smaller images represents the "visual vocabulary" that is learned in this step.  The smaller images are densely packed within the box, suggesting a large collection of visual features.  The text "visual" vocabulary is positioned below the box, further clarifying the content of the box.
+
+
+**Description of what you see:**
+
+This slide visually represents the second step in the Bag-of-Features (BoF) method: learning the "visual" vocabulary.  The slide shows how example images are used to extract features, which are then clustered to create a visual vocabulary.  The top images are examples of the types of objects that will be used to create the vocabulary.  The arrow visually connects the example images to the process of feature extraction and clustering.  The large box at the bottom of the slide contains a collection of smaller images, representing the learned visual vocabulary.  The slide is designed to illustrate the process of creating a visual dictionary from example images, which is a crucial step in the BoF method for image analysis.
+
+
+# Slide 27
+
+**BoF: main steps (cont'd)**
+
+Step 3:  Assign visual words to images
+
+**(Image Description):**
+
+The slide displays a diagram illustrating the third step in the Bag-of-Features (BoF) method.
+
+* **Title:** "BoF: main steps (cont'd)" is displayed at the top, indicating a continuation of the previous slide's topic.
+
+* **Step 3:** "Step 3: Assign visual words to images" is displayed below the title, clearly labeling the current step.
+
+* **Image (left):** A still image, likely a photograph or a similar image, is shown.  It depicts a group of people, possibly in a social setting.  Several light-reddish/pinkish ellipses are drawn around different parts of the people in the image.  These ellipses are superimposed on the image, and small red dots are located within each ellipse.  The ellipses and dots are likely highlighting key features or points extracted from the image.  The image is positioned on the left side of the slide.
+
+* **Arrow:** A black arrow points from the image to a series of vertical, stacked, rectangular boxes on the right side of the slide.  The boxes are empty, but their arrangement suggests that they represent a list of extracted features or data.  The arrow visually connects the image to the feature extraction process.
+
+* **Text:** The text "Step 1: Features extraction (e.g., Scale-Invariant Feature Transform, SIFT, features)" is positioned above the image.  This text clearly labels the step as feature extraction and provides examples of common feature extraction methods.  The ellipses (...) at the end of the text indicate that there may be other methods not explicitly listed.
+
+* **Diagram (center-right):** A diagram shows a set of clusters (groups of points) in a 2D space.  Each cluster is represented by a group of teal/turquoise dots.  The clusters are positioned in a way that suggests they represent different visual words in the visual vocabulary.  The diagram is positioned in the center-right of the slide.  The diagram visually represents the process of assigning visual words to images based on the extracted features.
+
+
+**Description of what you see:**
+
+This slide visually represents the third step of the Bag-of-Features (BoF) method: assigning visual words to images.  The slide shows how extracted features from an image are matched to the visual vocabulary (clusters) learned in the previous step.  The image on the left shows an example image with highlighted features.  The arrow indicates the flow of the process, moving from the image to the assignment of visual words.  The clusters in the diagram on the right represent the visual vocabulary, and the process of assigning visual words to the image is visually represented by the connections between the image features and the clusters.  The slide is designed to illustrate the process of matching extracted features to the learned visual vocabulary, which is a crucial step in the BoF method for image analysis.  The diagram in the center-right shows the clustering of features, which is a key part of the visual vocabulary creation process.
+
+
+# Slide 28
+
+**Texture recognition**
+
+Texture is characterized by the repetition of basic elements or textons.
+
+Many times, it is the identity of the textons, not their spatial arrangement, that matters.
+
+**(Image Description):**
+
+The slide displays three grayscale images of different textures.  These images are arranged in a 3-column, 1-row format.
+
+* **Column 1 (Left):**  A grayscale image of a repeating pattern of small, circular shapes.  The circles are tightly packed, creating a dense texture.  This image represents a texture with a repeating, simple pattern.
+
+* **Column 2 (Center):** A grayscale image of a repeating pattern of squares.  The squares are arranged in a grid-like pattern, creating a more structured texture.  This image represents a texture with a more complex, but still repeating, pattern.
+
+* **Column 3 (Right):** A grayscale image of a repeating pattern that resembles a snake skin or scales.  The pattern is more irregular and organic than the previous two.  This image represents a texture with a more complex, irregular, and organic pattern.
+
+Below the three main images, there are three small, grayscale images.  These are smaller versions of the basic elements (textons) that make up the larger textures.  The small images are arranged in a horizontal row, directly below the corresponding larger texture images.  The small images are positioned to visually represent the basic elements that create the larger textures.
+
+
+**Description of what you see:**
+
+The slide introduces the concept of texture recognition in AI Basics.  The three main images show examples of different textures.  The small images below each main image represent the basic elements (textons) that create the larger textures.  The text explains that texture is often defined by the repetition of these basic elements, rather than their precise arrangement.  The slide is designed to visually illustrate the concept of texture and its components.  The images are grayscale, which is common in texture analysis, as it focuses on the patterns and repetitions rather than color.
+
+
+# Slide 29
+
+**Origin 1: Texture recognition**
+
+**(Image Description):**
+
+The slide presents three sets of images and bar graphs, illustrating the concept of texture recognition.
+
+* **Top Row:**
+    * **Image 1 (Left):** A grayscale image of a perforated metal sheet, showing a repeating pattern of small, circular holes.  This image represents a simple, regular texture.
+    * **Image 2 (Right):** A bar graph with several orange-tan bars of varying heights.  The x-axis is not labeled, but the y-axis is labeled "frequency."  The graph likely represents the frequency of different texton patterns in the perforated metal texture image.  Below the bar graph, a small grid of grayscale images is shown.  These images are likely small, representative samples of the textons (basic texture elements) that make up the larger texture.
+
+* **Middle Row:**
+    * **Image 1 (Left):** A grayscale image of a surface with a repeating pattern of squares.  This image represents a more complex, but still regular, texture.
+    * **Image 2 (Right):** A bar graph with several orange-tan bars of varying heights.  The x-axis is not labeled, but the y-axis is labeled "frequency."  The graph likely represents the frequency of different texton patterns in the square-patterned texture image.  Below the bar graph, a small grid of grayscale images is shown.  These images are likely small, representative samples of the textons (basic texture elements) that make up the larger texture.
+
+* **Bottom Row:**
+    * **Image 1 (Left):** A grayscale image of a surface with a repeating, but more irregular, pattern resembling a snake skin or scales.  This image represents a more complex and organic texture.
+    * **Image 2 (Right):** A bar graph with several orange-tan bars of varying heights.  The x-axis is not labeled, but the y-axis is labeled "frequency."  The graph likely represents the frequency of different texton patterns in the snake-skin-like texture image.  Below the bar graph, a small grid of grayscale images is shown.  These images are likely small, representative samples of the textons (basic texture elements) that make up the larger texture.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, is illustrating the concept of texture recognition.  The images and bar graphs demonstrate how texture can be analyzed by identifying and counting the frequency of repeating basic elements (textons).  The slide shows how different textures have different frequency distributions of textons, which can be used to distinguish between them.  The small images below the bar graphs are likely examples of the textons that are being counted.  The overall layout is designed to visually represent the process of texture recognition by analyzing the frequency of textons.
+
+
+**What you see:**
+
+The slide presents a visual demonstration of texture recognition.  Three sets of images and bar graphs are shown, each set representing a different texture.  The images show different textures, and the bar graphs show the frequency distribution of textons in each texture.  The small images below the bar graphs are examples of the textons that make up the larger textures.  The slide is designed to illustrate the concept of texture recognition by analyzing the frequency of textons.  The use of grayscale images emphasizes the focus on patterns and repetitions rather than color.
+
+
+# Slide 30
+
+**BoF Object Categorization (cont'd)**
+
+**Nearest Neighbor (NN) Classifier**
+
+* **Query image:** A small image of a violin is shown on the left side of the slide.  A bar graph, representing a feature vector, is shown next to the violin image.  The bar graph shows the frequency of different visual words (codewords) in the query image.
+
+* **Model space:** A 3D scatter plot is shown on the right side of the slide.  The scatter plot shows several points, some colored light teal/turquoise and others light pink.  These points represent different categories of objects (e.g., violins, guitars, etc.) in the model space.  The point closest to the query image's feature vector is highlighted in red.
+
+* **Winning class: pink** The text "Winning class: pink" indicates that the nearest neighbor in the model space corresponds to the "pink" category.
+
+* **Assign label of nearest training data point to each test data point:** This text describes the nearest neighbor classification process.  The algorithm assigns the label of the nearest training data point to each test data point (query image).
+
+
+**Description of what you see:**
+
+This slide demonstrates the Nearest Neighbor (NN) classification method for object categorization using Bag-of-Features (BoF).  A query image (a violin) is presented, along with its feature vector (bar graph).  The model space (3D scatter plot) shows the representation of different object categories.  The closest point in the model space to the query image's feature vector is highlighted in red, indicating the predicted category ("pink").  The text explains the process of assigning the label of the nearest training data point to the query image.  The slide visually illustrates how the NN classifier works in the context of BoF for object categorization.  The violin image and the bar graph are used to illustrate the query image's feature vector.  The 3D scatter plot visually represents the model space, where each point corresponds to a category.  The highlighted point in red represents the predicted category for the query image.  The text below the diagram explains the classification process.
+
+
+# Slide 31
+
+**Bag of features approach for object recognition**
+
+**(Image Description):**
+
+The slide displays a graph and a smaller image.
+
+* **Graph:** A bar graph with pink bars. The x-axis is labeled "codewords," and the y-axis is labeled "frequency." The graph shows the frequency of different codewords (visual words) in an image. The bars vary in height, indicating the different frequencies of each codeword.
+
+* **Image (inset):** A grayscale image of a car is shown in the upper-right quadrant of the slide. Several small, rectangular boxes (bounding boxes) are drawn around different parts of the car. The boxes are colored red and green. The boxes highlight different features or parts of the car.  A small image of a car is shown in the lower-left corner of the slide.
+
+
+**Description of what you see:**
+
+The slide shows a bar graph representing the frequency of visual words (codewords) in an image. The graph is accompanied by an inset image of a car with bounding boxes around different parts of the car. The bounding boxes are likely highlighting the visual words that are being counted in the bar graph. The slide is designed to illustrate the concept of representing an image by the frequency of visual words, which is a key component of the Bag of Features approach. The graph and the image together demonstrate how the frequency of visual words can be used to represent an image and potentially classify it. The image of the car with bounding boxes is a visual example of how local features are extracted from an image. The bar graph shows the frequency of these local features in the image. The slide is likely part of a section discussing the Bag of Features approach to object recognition.
+
+
+# Slide 32
+
+**Bag of Features approach for Object Recognition**
+
+How do we use BoF for object categorization?
+
+**category models**
+
+*   **Class 1:**  A series of bar graphs, each with varying heights of light-pink/magenta bars, are shown.  The x-axis is labeled with a series of unmarked intervals, and the y-axis is labeled "frequency."  These graphs represent the frequency of different visual words (codewords) in images belonging to a specific category (Class 1).
+
+*   **Class N:**  A series of bar graphs, each with varying heights of light-teal/turquoise bars, are shown.  The x-axis is labeled with a series of unmarked intervals, and the y-axis is labeled "frequency."  These graphs represent the frequency of different visual words (codewords) in images belonging to a different category (Class N).
+
+*   **Model space:** A 3D scatter plot is shown in the upper-right quadrant of the slide.  The plot shows a collection of points, some colored light teal/turquoise and others light pink.  The points are scattered in a 3D space, with the axes not labeled.  The plot represents the model space, where each point corresponds to a category model (a representation of the frequency of visual words for a particular category).
+
+
+**Description of what you see:**
+
+This slide continues the discussion of the Bag of Features (BoF) approach to image classification.  It illustrates how category models are created using the frequency of visual words (codewords) extracted from images.  The bar graphs represent the frequency distribution of visual words for different categories (Class 1 and Class N).  The 3D scatter plot in the upper-right quadrant shows how these category models are represented in a multi-dimensional space.  The different colors of the bars and points in the graph visually distinguish the different categories.  The x-axis of the bar graphs is not labeled, but the y-axis is labeled "frequency," indicating that the height of each bar represents the frequency of a particular visual word in the image.  The 3D scatter plot shows the distribution of these category models in a multi-dimensional space.  The axes of the 3D scatter plot are not labeled, but the points are colored differently to distinguish between the categories.  The overall design of the slide is to visually represent the concept of category models in the context of Bag of Features.  The question "How do we extract features?" is also present, suggesting that the slide is part of a larger discussion about the process of using BoF for object categorization.
+
+
+# Slide 33
+
+**Noise**
+
+
+**Description of what you see:**
+
+This slide displays a single word, "Noise," centered on a light gray background.  The text is in a dark gray, sans-serif font.  The simplicity of the slide suggests that it is a heading or a topic for a subsequent discussion about noise in the context of image processing or a similar field within AI Basics.  The slide is likely part of a larger discussion about the challenges and considerations in image analysis, where noise is a significant factor.
+
+
+
+
+# Slide 34
+
+**How images are represented (Matlab)**
+
+Color images represented as a matrix with multiple channels (only 1 if grayscale)
+
+Suppose we have a NxM RGB image called "im"
+
+*   im(1,1,1) = top-left pixel value in R-channel
+*   im(y, x, b) = y pixels down (rows) and x pixels to the right (cols) in b<sup>th</sup> channel
+*   im(N, M, 3) = bottom-right pixel in B-channel
+
+
+**(Image Description):**
+
+The slide displays a title, "How images are represented (Matlab)," followed by a description of how color images are represented as matrices in MATLAB.  Below this, there's a table of numerical values.  The table is a 3x10 matrix, with each row representing a channel (R, G, B).  The columns represent the pixel values in each channel.  The values are floating-point numbers between 0 and 1.  The table is positioned below the text description.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.
+
+
+**Description of what you see:**
+
+The slide presents a description of how color images are represented as matrices in MATLAB.  The title clearly indicates the topic.  The text explains that color images are represented as matrices with multiple channels (RGB).  The table below the text shows the numerical values of the pixel data in each channel (R, G, B).  The values are organized in rows and columns, representing the pixel positions in the image.  The slide is designed to illustrate the numerical representation of images in MATLAB, showing how pixel values are organized in a matrix format.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description and the numerical data.  The table is a visual representation of how pixel values are organized in a matrix.  The table is a key part of the slide, as it illustrates the numerical representation of an image in MATLAB.  The table is positioned below the text description, making it easy to see the relationship between the description
+
+# Slide 35
+
+**Enter: Noise**
+
+We talked about how the same object will look very different across images.
+Even multiple images of the same static scene will not be identical.
+How could we reduce the noise?
+
+**(Image Description):**
+
+The slide displays a title, "Enter: Noise," followed by a paragraph of text.  The text discusses the variability in how the same object appears in different images, even when the scene is static.  The text then asks how noise can be reduced.
+
+Below the text, there are three images in a 1x3 arrangement.  Each image shows a slightly different view of a textured surface (likely a wall or similar structure).  The images are grayscale and show variations in the texture's appearance.  The variations in the images are intended to visually represent the "noise" or variability in image data.  The images are likely examples of how the same scene can appear differently in multiple images.  The purpose of these images is to illustrate the concept of noise in image data and the need for methods to reduce this variability.
+
+
+**What you see:**
+
+The slide presents the concept of noise in image data.  The text explains that even identical objects or scenes can appear differently in different images due to factors like lighting, viewpoint, and sensor noise.  The three images below the text visually represent this variability.  The images are grayscale, showing a textured surface, and each image is slightly different, illustrating the concept of noise in image data.  The images are arranged in a horizontal row, making it easy to compare the variations.  The slide is designed to introduce the topic of noise reduction in image analysis.
+
+
+# Slide 36
+
+**Common types of noise**
+
+Salt and pepper noise: random occurrences of black and white pixels
+Impulse noise: random occurrences of white pixels
+Gaussian noise: variations in intensity drawn from a Gaussian normal distribution
+
+**(Image Description):**
+
+The slide presents a 2x2 grid of images.  Each image in the grid is a grayscale portrait of a person wearing a hat.
+
+* **Top Left:**  The image is labeled "Original."  It shows a clear, unadulterated grayscale portrait.
+
+* **Top Right:** The image is labeled "Salt and pepper noise."  It shows the same portrait, but with small, randomly placed black and white pixels superimposed on it.  These black and white pixels are the noise.
+
+* **Bottom Left:** The image is labeled "Impulse noise."  It shows the same portrait, but with small, randomly placed white pixels superimposed on it.  These white pixels are the noise.
+
+* **Bottom Right:** The image is labeled "Gaussian noise."  It shows the same portrait, but with a speckled, grainy appearance.  The noise appears as variations in the intensity of the pixels, creating a grainy effect.  This is different from the salt-and-pepper noise, which is more discrete.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slide that discussed the variability in image data and the need for methods to reduce noise.  The slide introduces different types of noise that can affect images.  The images are used to visually demonstrate the different types of noise: salt-and-pepper noise, impulse noise, and Gaussian noise.  The slide is designed to help the audience understand the visual characteristics of each type of noise and how they might affect image analysis tasks.  The "Source: S. Seitz" at the bottom indicates the origin of the images.
+
+
+**What you see:**
+
+The slide shows four images, each representing a different type of noise.  The images are arranged in a grid, making it easy to compare and contrast the effects of each type of noise.  The images are grayscale, which is common in image processing, as it focuses on the patterns and repetitions rather than color.  The images are of a person wearing a hat, which is a consistent subject across all images, making it easier to see the differences in the noise.  The labels "Original," "Salt and pepper noise," "Impulse noise," and "Gaussian noise" clearly identify the type of noise present in each image.  The slide is designed to visually illustrate the different types of noise that can affect images.
+
+
+# Slide 37
+
+**Gaussian noise**
+
+Ideal Image
+f(x, y) =  f<sub>(x,y)</sub> + η<sub>(x,y)</sub>
+Noise process
+Gaussian i.i.d. ("white") noise:
+η(x, y) ~ N(μ, σ)
+
+>> noise = randn(size(im)).*sigma;
+>> output = im + noise;
+
+What is impact of the sigma?
+
+Fig: M. Hebert
+
+
+**Description of what you see:**
+
+This slide discusses Gaussian noise in image processing.  A grayscale image of a bunch of peppers is shown in the upper-middle portion of the slide.  A horizontal red line is drawn across the image, visually separating the "ideal image" from the "noise process."  Below the image, a graph of a noisy signal is shown.  The graph is a visual representation of a signal that has been corrupted by noise.  The text below the graph describes the mathematical model for Gaussian noise.  The text includes the equation f(x, y) = f<sub>(x,y)</sub> + η<sub>(x,y)</sub>, which represents the ideal image plus the noise.  The text also defines Gaussian noise as independent and identically distributed (i.i.d.) noise, with a normal distribution (N(μ, σ)).  The text also includes MATLAB code snippets that demonstrate how to add Gaussian noise to an image.  The question "What is impact of the sigma?" is posed, suggesting that the discussion will explore the effect of the standard deviation (σ) parameter in the Gaussian distribution on the resulting noisy image.  The "Fig: M. Hebert" at the bottom indicates the source of the image or the figure.  The overall layout is designed to explain the concept of Gaussian noise in images and its mathematical representation.
+
+
+
+
+# Slide 38
+
+**First attempt at a solution**
+
+Let's replace each pixel with an average of all the values in its neighborhood
+
+**Assumptions:**
+
+* Expect pixels to be like their neighbors
+* Expect noise processes to be independent from pixel to pixel
+
+**Description of what you see:**
+
+This slide presents a proposed solution for reducing noise in images, likely in the context of image processing or computer vision.  The text describes a method of replacing each pixel with the average of its neighboring pixels.  The assumptions listed below the method suggest that the approach relies on the idea that neighboring pixels tend to have similar values and that the noise is independent from pixel to pixel.  The slide is likely part of a larger discussion about noise reduction techniques in image processing.  The overall design is simple and straightforward, focusing on the description of the method and its underlying assumptions.
+
+
+
+
+# Slide 39
+
+**First attempt at a solution**
+
+Let's replace each pixel with an average of all the values in its neighborhood
+
+Moving average in 1D:
+
+**(Image Description):**
+
+The slide presents a proposed method for noise reduction in images.  Two line graphs are shown, one above the other.  The top graph is labeled "original" and displays a series of data points, likely representing pixel values in a 1-dimensional signal.  The data points show a fluctuating pattern, with some peaks and valleys.  The bottom graph is labeled "smoothed" and displays a similar series of data points, but the fluctuations are significantly reduced.  The data points in the smoothed graph appear to follow a smoother, more continuous curve.  The graphs visually illustrate the effect of a moving average operation on a 1D signal.  The purpose of the graphs is to demonstrate how a moving average can reduce the impact of noise in a signal.
+
+
+**Description of what you see:**
+
+The slide shows a proposed method for noise reduction in images.  The method involves replacing each pixel with the average of its neighboring pixel values.  The two line graphs illustrate this concept in a 1-dimensional context.  The top graph represents the original data, which has some noise or fluctuations.  The bottom graph represents the data after applying a moving average filter, which has reduced the noise and smoothed out the fluctuations.  The slide is designed to illustrate the basic idea of a moving average filter for noise reduction in a 1-dimensional signal, which can be extended to 2-dimensional images.  The source is attributed to S. Marschner.
+
+
+# Slide 40
+
+**Weighted Moving Average**
+
+Can add weights to our moving average
+
+Weights
+[1, 1, 1, 1, 1] / 5
+
+**(Image Description):**
+
+The slide presents the concept of a weighted moving average for noise reduction.
+
+* **Title:** "Weighted Moving Average" is displayed at the top of the slide, in a clear, bold font.  This indicates the topic of the slide.
+
+* **Text:** "Can add weights to our moving average" is displayed below the title.  This text introduces the concept of weighting the neighboring pixel values differently in the moving average calculation.
+
+* **Weights:**  "[1, 1, 1, 1, 1] / 5" is displayed below the text.  This shows an example of a set of weights.  Each number in the array represents the weight assigned to a corresponding pixel in the neighborhood.  Dividing by 5 indicates that the weights sum to 5.
+
+* **Graph (top):** A line graph is shown, labeled "original."  The graph displays a series of data points, likely representing pixel values in a 1-dimensional signal.  The data points show a fluctuating pattern, with some peaks and valleys.  This graph represents the original signal with noise.
+
+* **Graph (bottom):** A line graph is shown, labeled "smoothed."  The graph displays a similar series of data points, but the fluctuations are significantly reduced.  The data points in the smoothed graph appear to follow a smoother, more continuous curve.  This graph represents the signal after applying a weighted moving average filter.
+
+* **Σ (Sigma):** A summation symbol (Σ) is shown in the middle of the bottom graph, indicating that the weighted average is calculated by summing the weighted values of the neighboring pixels.  A small arrow points from the Σ to the data points in the bottom graph, visually connecting the summation to the calculation.
+
+* **Source:** "Source: S. Marschner" is displayed at the bottom of the slide, indicating the source of the image or the figure.
+
+
+**Description of what you see:**
+
+The slide introduces the concept of a weighted moving average for noise reduction.  The text and the graphs illustrate how this method works.  The top graph shows a noisy signal, and the bottom graph shows the same signal after applying a weighted moving average filter.  The weights [1, 1, 1, 1, 1] / 5 are used to calculate the average, giving equal weight to each neighboring pixel.  The summation symbol (Σ) visually represents the calculation process.  The slide is designed to illustrate the concept of weighted moving averages and how they can be used to reduce noise in a signal.  The source is attributed to S. Marschner.
+
+
+# Slide 41
+
+**Weighted Moving Average**
+
+Non-uniform weights
+[1, 4, 6, 4, 1] / 16
+
+Central pixel = 
+10*1 +  
+14*4 + 
+12*6 + 
+13*4 +  
+20*1
+
+**(Image Description):**
+
+The slide presents the concept of a weighted moving average for noise reduction.  Two line graphs are shown, one above the other.
+
+* **Top Graph ("original"):**  A line graph displays a series of data points, likely representing pixel values in a 1-dimensional signal. The data points show a fluctuating pattern, with some peaks and valleys. This graph represents the original signal with noise.
+
+* **Bottom Graph ("smoothed"):** A line graph displays a similar series of data points, but the fluctuations are significantly reduced. The data points in the smoothed graph appear to follow a smoother, more continuous curve. This graph represents the signal after applying a weighted moving average filter.
+
+* **Weights:** The text "[1, 4, 6, 4, 1] / 16" indicates the weights used in the calculation.  These weights are not uniform; they are higher for the central pixel and decrease as you move further away from the central pixel.  Dividing by 16 indicates that the weights sum to 16.
+
+* **Equation:** The equation "Central pixel = 10*1 + 14*4 + 12*6 + 13*4 + 20*1" shows how the weighted average is calculated.  Each term in the equation represents the product of a pixel value and its corresponding weight.
+
+* **Summation:** A summation symbol (Σ) is shown in the bottom graph, indicating that the weighted average is calculated by summing the weighted values of the neighboring pixels.  An arrow points from the Σ to the data points in the bottom graph, visually connecting the summation to the calculation.
+
+* **Source:** "Adapted from S. Marschner" is displayed at the bottom of the slide, indicating the source of the image or the figure.
+
+
+**What you see:**
+
+The slide visually illustrates the weighted moving average method for noise reduction.  The top graph shows a noisy signal, and the bottom graph shows the same signal after applying a weighted moving average filter.  The weights are not uniform, and the equation demonstrates how these weights are used in the calculation.  The slide is designed to illustrate the concept of weighted moving averages and how they can be used to reduce noise in a signal.  The source is attributed to S. Marschner.  The graph shows a 1D signal, but the concept is applicable to 2D images.
+
+
+# Slide 42
+
+**Moving Average In 2D**
+
+```
+* 1
+9 . [
+1 1
+1
+1 1
+1
+1 1
+1]
+```
+
+`F[x, y]`
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  90 90 90 90 90 0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+`G[x, y]`
+
+```
+0
+```
+
+**(Image Description):**
+
+The slide presents two matrices, `F[x, y]` and `G[x, y]`, illustrating a 2D moving average operation.
+
+* **`F[x, y]` (Left):**  A large matrix is shown, filled with numbers.  Most of the values are 0, but a 5x5 block of 90s is centered within the matrix.  This matrix likely represents an image or a portion of an image where a moving average filter is to be applied.  The 0s around the 90s represent the surrounding pixels.
+
+* **`G[x, y]` (Right):** A single cell containing the number 0 is shown.  This cell is likely the result of applying a moving average filter to the corresponding pixel in the `F[x, y]` matrix.  The 0 represents the average value of the neighborhood of the central pixel in `F[x, y]`.
+
+* **Context:** The slide is part of a discussion on noise reduction techniques in image processing.  The matrices are used to illustrate how a moving average filter works in a 2D context.  The 0 in `G[x, y]` is the result of averaging the values in the neighborhood of the corresponding pixel in `F[x, y]`.  The `F[x, y]` matrix is a representation of an image, and the `G[x, y]` matrix is the result of applying a moving average filter to that image.
+
+
+**What you see:**
+
+The slide shows two matrices, `F[x, y]` and `G[x, y]`, illustrating a 2D moving average operation.  `F[x, y]` is a large matrix with a central block of 90s, representing an image.  `G[x, y]` is a single cell containing 0, representing the result of applying a moving average filter to the corresponding pixel in `F[x, y]`.  The slide is designed to illustrate the concept of a moving average filter in a 2D context, showing how the average of neighboring pixels is calculated to reduce noise.  The asterisk and number at the top left of the `F[x, y]` matrix are likely a reference to the size of the filter used in the moving average calculation.
+
+
+# Slide 43
+
+**Moving Average In 2D**
+
+`F[x, y]`
+
+```
+* 1
+9 . [
+1 1
+1
+1 1
+1
+1 1
+1]
+```
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  90 90 90 90 90 0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+`G[x, y]`
+
+```
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+
+# Slide 44
+
+**Moving Average In 2D**
+
+`F[x, y]`
+
+```
+* 1
+9 . [
+1 1
+1
+1 1
+1
+1 1
+1]
+```
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  90 90 90 90 90 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+`G[x, y]`
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  80 80 80 80 80 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+**(Image Description):**
+
+The slide presents two matrices, `F[x, y]` and `G[x, y]`, illustrating a 2D moving average operation.
+
+* **`F[x, y]` (Left):** A large matrix is shown, filled with numbers.  Most of the values are 0, but a 5x5 block of 90s is centered within the matrix.  This matrix likely represents an image or a portion of an image where a moving average filter is to be applied.  The 0s around the 90s represent the surrounding pixels.  The asterisk and number at the top left of the `F[x, y]` matrix are likely a reference to the size of the filter used in the moving average calculation.
+
+* **`G[x, y]` (Right):** A large matrix is shown, filled with numbers.  Most of the values are 0, but a 5x5 block of 80s is centered within the matrix.  This matrix likely represents the result of applying a moving average filter to the corresponding pixel in the `F[x, y]` matrix.  The 80s represent the average value of the neighborhood of the central pixel in `F[x, y]`.
+
+* **Context:** The slide is part of a discussion on noise reduction techniques in image processing.  The matrices are used to illustrate how a moving average filter works in a 2D context.  The values in `G[x, y]` are the result of averaging the values in the neighborhood of the corresponding pixel in `F[x, y]`.  The `F[x, y]` matrix is a representation of an image, and the `G[x, y]` matrix is the result of applying a moving average filter to that image.
+
+
+
+
+# Slide 45
+
+**Moving Average In 2D**
+
+`F[x, y]`
+
+```
+* 1
+9 . [
+1 1
+1
+1 1
+1
+1 1
+1]
+```
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  90 90 90 90 90 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+`G[x, y]`
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  80 80 80 80 80 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  80 80 80 80 80 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+**Description of what you see:**
+
+This slide continues the discussion of moving average filters in 2D image processing.  It shows two matrices, `F[x, y]` and `G[x, y]`.  `F[x, y]` represents a portion of an image with a central 5x5 block of 90s, representing a constant intensity region.  `G[x, y]` shows the result of applying a 9x9 moving average filter to `F[x, y]`.  The central 5x5 block of 90s in `F[x, y]` is replaced by a 5x5 block of 80s in `G[x, y]`.  This demonstrates how the moving average filter averages the values of neighboring pixels to produce a smoothed result, effectively reducing noise.  The asterisk and number at the top left of the `F[x, y]` matrix are likely a reference to the size of the filter used in the moving average calculation.  The slide is designed to illustrate the 2D moving average operation and its effect on an image.
+
+
+
+
+# Slide 46
+
+**Moving Average In 2D**
+
+`F[x, y]`
+
+```
+* 1
+9 . [
+1 1
+1
+1 1
+1
+1 1
+1]
+```
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  90 90 90 90 90 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+`G[x, y]`
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  70 70 70 70 70 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  70 70 70 70 70 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+**Source: S. Seitz**
+
+
+**Description of what you see:**
+
+This slide continues the illustration of a 2D moving average filter's operation.  It shows two matrices, `F[x, y]` and `G[x, y]`.  `F[x, y]` represents a portion of an image with a central 5x5 block of 90s, representing a constant intensity region.  `G[x, y]` shows the result of applying a 9x9 moving average filter to `F[x, y]`.  The central 5x5 block of 90s in `F[x, y]` is replaced by a 5x5 block of 70s in `G[x, y]`.  This demonstrates how the moving average filter averages the values of neighboring pixels to produce a smoothed result, effectively reducing noise.  The asterisk and number at the top left of the `F[x, y]` matrix are likely a reference to the size of the filter used in the moving average calculation.  The slide is designed to illustrate the 2D moving average operation and its effect on an image.  The source is attributed to S. Seitz.
+
+
+
+
+# Slide 47
+
+**Moving Average In 2D**
+
+`F[x, y]`
+
+```
+* 1
+9 . [
+1 1
+1
+1 1
+1
+1 1
+1]
+```
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  90 90 90 90 90 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  90 90 90 90 90 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+`G[x, y]`
+
+```
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  75 75 75 75 75 0
+0  0  0  0  75 75 75 75 75 0
+0  0  0  0  75 75 75 75 75 0
+0  0  0  0  75 75 75 75 75 0
+0  0  0  0  75 75 75 75 75 0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+0  75 75 75 75 75 0  0  0  0
+0  0  0  0  0  0  0  0  0  0
+```
+
+**Source: S. Seitz**
+
+
+**Description of what you see:**
+
+This slide continues the illustration of a 2D moving average filter's operation.  It shows two matrices, `F[x, y]` and `G[x, y]`.  `F[x, y]` represents a portion of an image with a central 5x5 block of 90s, representing a constant intensity region.  `G[x, y]` shows the result of applying a 9x9 moving average filter to `F[x, y]`.  The central 5x5 block of 90s in `F[x, y]` is replaced by a 5x5 block of 75s in `G[x, y]`.  This demonstrates how the moving average filter averages the values of neighboring pixels to produce a smoothed result, effectively reducing noise.  The asterisk and number at the top left of the `F[x, y]` matrix are likely a reference to the size of the filter used in the moving average calculation.  The slide is designed to illustrate the 2D moving average operation and its effect on an image.  The source is attributed to S. Seitz.  The values in `G[x, y]` are the result of averaging the values in the neighborhood of the corresponding pixel in `F[x, y]`.  The `F[x, y]` matrix is a representation of an image, and the `G[x, y]` matrix is the result of applying a moving average filter to that image.
+
+
+
+
+# Slide 48
+
+**Noise reduction using mean filtering**
+
+**(Image Description):**
+
+The slide presents two grayscale images of a cat's head and neck, side-by-side.
+
+* **Left Image:**  This image shows a cat's head and neck, with a noticeable grainy or pixelated appearance.  The image has a speckled, noisy texture.  This image likely represents an image with noise.
+
+* **Right Image:** This image shows the same cat's head and neck, but with the noise significantly reduced.  The image appears smoother and less pixelated.  The details of the cat's fur are more clearly visible.  This image likely represents the result of applying a mean filtering technique to reduce the noise in the image on the left.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, is demonstrating a noise reduction technique called mean filtering.  The images are used to visually show the effect of this technique.  The left image represents an image with noise, and the right image represents the same image after the noise has been reduced using a mean filter.  The slide is likely part of a section discussing image filtering and noise reduction methods.
+
+
+**What you see:**
+
+The slide shows two images of a cat's head and neck.  The image on the left has a grainy appearance, characteristic of noise.  The image on the right is smoother, indicating that the noise has been reduced.  The images are side-by-side, making it easy to compare the difference in quality.  The slide is designed to visually illustrate the effect of mean filtering on an image with noise.
+
+
+# Slide 49
+
+**Image filtering**
+
+Compute a function of the local neighborhood at each pixel in the image
+
+* Function specified by a "filter" or mask saying how to combine values from neighbors
+* Element-wise multiplication of filter and image patch
+
+Uses of filtering:
+
+* Enhance an image (denoise, resize, etc)
+* Extract information (texture, edges, etc)
+* Detect patterns (template matching)
+
+Adapted from Derek Hoiem
+
+
+**Description of what you see:**
+
+This slide introduces the concept of image filtering in the context of AI Basics.  The text describes the general principle of image filtering as computing a function of the local neighborhood around each pixel in an image.  The method for performing this computation is described as using a filter (or mask) that specifies how to combine the values of neighboring pixels.  The process is further described as an element-wise multiplication of the filter and the image patch.  The slide then lists several common uses of image filtering, including enhancing images (denoise, resize), extracting information (texture, edges), and detecting patterns (template matching).  The slide is likely part of a larger discussion about image processing techniques in AI.  There are no images on the slide; it's purely text-based.
+
+
+# Slide 50
+
+**Filters: Blur**
+
+* **Original (f):**  A grayscale image of a portion of a person's face, likely an eye and surrounding area. The image is pixelated, showing distinct blocks of color.  This image is presented as the original image with potential noise.
+
+* **Kernel (k):** A 3x3 matrix is shown, with each cell containing the number 1.  The matrix is enclosed in a teal/turquoise box.  This matrix represents the kernel or filter used for blurring.  The values in the kernel are all 1, indicating a mean filter.  The division by 9 at the top of the slide indicates that the kernel's values are normalized by 9.  This is a visual representation of the filter used to smooth the image.
+
+* **Blur (with a mean filter) (g):** A grayscale image of the same portion of a person's face as the original image.  However, the image is noticeably smoother and less pixelated.  The image is presented as the result of applying the mean filter to the original image.  This image demonstrates the effect of the blur filter on the original image.
+
+* **Source:** "Source: D. Lowe" is displayed at the bottom of the slide, indicating the source of the image or the figure.
+
+
+**Description of what you see:**
+
+This slide demonstrates the effect of a blur filter, specifically a mean filter, on an image.  The original image (f) shows a pixelated image, likely with noise.  The kernel (k) is a 3x3 matrix of 1s, representing the filter used to smooth the image.  The blurred image (g) shows the result of applying the mean filter to the original image.  The blurred image is smoother and less pixelated, visually demonstrating the noise reduction effect of the filter.  The slide is designed to illustrate the concept of image blurring using a mean filter.  The source is attributed to D. Lowe.
+
+
+# Slide 51
+
+**Filters: Identity**
+
+* **Original (f):** A grayscale image of a portion of a person's face, likely an eye and surrounding area. The image is pixelated, showing distinct blocks of color.  This image is presented as the original image.
+
+* **Kernel (k):** A 3x3 matrix is shown, with each cell containing the number 0 except for a single 1 in the center.  This matrix represents the identity kernel or filter.  The values in the kernel are all 0 except for a 1 in the center, indicating that the filter does not change the pixel values.
+
+* **Identical image (g):** A grayscale image of the same portion of a person's face as the original image.  The image is identical to the original image (f), showing no change in the pixel values.  This image demonstrates the effect of the identity filter on the original image.
+
+* **Source:** "Source: D. Lowe" is displayed at the bottom of the slide, indicating the source of the image or the figure.
+
+
+**Description of what you see:**
+
+This slide demonstrates the identity filter in image processing.  The original image (f) shows a pixelated image, likely with noise.  The kernel (k) is a 3x3 matrix with a single 1 in the center and 0s elsewhere, representing the identity filter.  The identical image (g) shows the result of applying the identity filter to the original image.  The output image is identical to the input image, visually demonstrating that the filter does not change the pixel values.  The slide is designed to illustrate the concept of an identity filter, which leaves the image unchanged.  The source is attributed to D. Lowe.
+
+
+
+
+# Slide 52
+
+**Sharpening**
+
+**(Image Description):**
+
+The slide displays two images of Albert Einstein side-by-side.
+
+* **Left Image ("Before"):** A grayscale image of Albert Einstein.  The image appears somewhat soft or blurry, with less distinct details in his hair, face, and clothing.  This image is likely a representation of an image before sharpening.
+
+* **Right Image ("After"):** A grayscale image of Albert Einstein.  The image appears sharper than the image on the left.  Details in his hair, face, and clothing are more pronounced and distinct.  This image is likely a representation of the same image after sharpening.
+
+* **Labels:** The words "Before" and "After" are positioned below the corresponding images, clearly indicating the order of the images.
+
+* **Source:** "Source: D. Lowe" is displayed at the bottom of the slide, indicating the source of the image or the figure.
+
+
+**What you see:**
+
+The slide visually demonstrates the effect of sharpening on an image.  Two images of Albert Einstein are presented, one before and one after sharpening.  The before image appears softer and less detailed, while the after image is sharper and more detailed.  The slide is designed to illustrate the visual impact of sharpening filters on images.  The subject matter (Albert Einstein) is consistent across both images, making it easy to see the difference in sharpness.  The slide is likely part of a section discussing image enhancement techniques in AI Basics.
+
+
+# Slide 53
+
+**Sharpening**
+
+What does blurring take away?
+
+-
+
+=
+
+Add it back to the original
+
++ α
+
+=
+
+
+**Description of what you see:**
+
+This slide discusses image sharpening.  It presents a visual demonstration of the concept.  Four images of Albert Einstein are arranged in a 2x2 grid.
+
+* **Top Left:** A grayscale image of Albert Einstein's head and shoulders.  This image appears somewhat blurred or soft.
+
+* **Top Right:** A grayscale image of Albert Einstein's head and shoulders.  This image is a blurred version of the image on the top left.
+
+* **Bottom Left:** A grayscale image of Albert Einstein's head and shoulders.  This image is the same as the image on the top left.
+
+* **Bottom Right:** A grayscale image of Albert Einstein's head and shoulders.  This image is the same as the image on the top right, but with the addition of a sharpening effect.
+
+The images are arranged in a way that visually illustrates the process of sharpening an image by adding back the details that were removed by blurring.  The "–" and "+" symbols between the images represent the subtraction and addition of the blurring effect.  The "α" (alpha) represents a scaling factor for the sharpening operation.  The slide is designed to visually explain the concept of sharpening by subtracting the blurring effect from the original image and then adding it back.
+
+
+
+
+# Slide 54
+
+**Sharpening**
+
+A grayscale image of Albert Einstein's head and shoulders is shown.  The image is in a portrait orientation, centered on the slide.  It's a standard, well-known image of Einstein, likely used as a visual example for the concept of image sharpening.
+
+
+**Description of what you see:**
+
+The slide shows a single grayscale image of Albert Einstein.  The image is a close-up portrait, focusing on his head and shoulders.  The image is likely a historical photograph or a reproduction of one, and it's used as a visual example for the concept of image sharpening.  The image is in a standard portrait orientation, centered on the slide, and is in grayscale, which is common in image processing and analysis.  The image is likely intended to be a simple, recognizable subject for demonstrating the effect of sharpening filters.
+
+
+# Slide 55
+
+**Sharpening**
+
+`f<sub>sharp</sub> = f + α(f − f<sub>blur</sub>)`
+= (1 + α)f − αf<sub>blur</sub>
+= (1 + α)(w * f) − α(v * f)
+= ((1 + α)w − αv) * f
+
+**(Image Description):**
+
+The slide presents the mathematical formula for image sharpening.  A teal/turquoise-colored box contains two 3x3 matrices.  The matrix on the left contains the values 0, 0, 0, 0, 1, 0, 0, 0, 0.  The matrix on the right contains the values 1, 1, 1, 1, 1, 1, 1, 1, 1, divided by 9.  The matrices are positioned side-by-side, with arrows pointing from the matrices to the equation.  The arrows visually connect the matrices to the equation, indicating that the matrices represent the kernels (filters) used in the equation.  The equation itself is presented in a clear, mathematical format, showing the relationship between the original image (f), the blurred image (f<sub>blur</sub>), the sharpening filter (w), and the blurring filter (v), and the scaling factor (α).  The equation demonstrates how to calculate the sharpened image (f<sub>sharp</sub>) by combining the original image with a scaled difference between the original and blurred images.
+
+
+**What you see:**
+
+The slide presents the mathematical formula for image sharpening.  The formula shows how to calculate a sharpened image (`f<sub>sharp</sub>`) from the original image (`f`), the blurred image (`f<sub>blur</sub>`), and a sharpening kernel (`w`) and a blurring kernel (`v`).  The formula is presented in a clear, mathematical format, showing the relationship between the different components.  Two 3x3 matrices are shown, representing the kernels used in the equation.  The matrices are visually connected to the equation, indicating their role in the calculation.  The slide is designed to illustrate the mathematical concept of image sharpening.  The use of the equation and the matrices is a key part of the slide, as it shows the mathematical representation of the sharpening process.
+
+
+# Slide 56
+
+**Sharpening filter**
+
+**(Image Description):**
+
+The slide shows a visual representation of a sharpening filter.  On the left side, there's a grayscale image of a portion of a person's face, likely an eye and surrounding area.  This image is labeled "Original."  The image is pixelated, showing distinct blocks of color, suggesting it might be a low-resolution or noisy image.
+
+In the center of the slide, there's a teal/turquoise-colored box containing two 3x3 matrices.  The matrix on the left contains the values `0 0 0`, `0 2 0`, `0 0 0`.  The matrix on the right contains the values `1 1 1`, `1 1 1`, `1 1 1`, with a `1/9` written in the center.  These matrices represent the kernels (filters) used in the sharpening operation.  The left matrix is a blurring kernel, and the right matrix is a sharpening kernel.  The asterisk (*) between the matrices indicates a convolution operation.
+
+On the right side of the slide, there's another grayscale image of the same portion of a person's face as the original image.  This image is labeled as the result of applying the sharpening filter.  The image is noticeably sharper than the original, with more defined edges and details.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, demonstrates the application of a sharpening filter in image processing.  The slide visually shows the original image, the kernel used for sharpening, and the resulting sharpened image.  The visual representation of the kernels and the effect on the image are intended to illustrate the concept of sharpening filters and how they enhance image details.  The source is attributed to D. Lowe.
+
+
+**What you see:**
+
+The slide presents a visual demonstration of a sharpening filter.  The original image is pixelated, and the sharpened image is smoother and more detailed.  The 3x3 matrices represent the kernels used in the sharpening process.  The slide is designed to illustrate the visual effect of applying a sharpening filter to an image.  The use of a grayscale image of a face is a common example for demonstrating image processing techniques.

@@ -1,0 +1,17 @@
+# 3
+
+# Image Classification
+
+**cat**
+
+Assume given set of discrete labels
+{dog, cat, truck, plane, ...}
+
+Part of this lecture is based on Fei-fei Li & Justin Johnson & Serena Yeung: CS231n at Stanford
+
+This image by Nikita is licensed under CC-BY 2.0
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concept of image classification.  A gray-scale image of a gray tabby cat is displayed in the upper-left quadrant of the slide.  A blue arrow points from the image to the word "cat" below it.  This visually connects the image to the label.  Below the image and the arrow, the text "Assume given set of discrete labels" introduces the concept of classifying images into predefined categories.  The list {dog, cat, truck, plane, ...} shows examples of these categories.  The text at the bottom indicates the source of the lecture material.  The image of the cat is a visual aid to illustrate the concept of image classification, showing a specific example of an image that can be labeled as "cat". The attribution at the bottom of the image indicates the source and license of the image.  The slide is designed to introduce the topic of image classification in AI by providing a concrete example.  The lecture is likely based on a Stanford course (CS231n) on computer vision.

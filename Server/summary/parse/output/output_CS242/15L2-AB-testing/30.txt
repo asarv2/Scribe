@@ -1,0 +1,21 @@
+# Slide 30
+
+**Bonferonni Correction**
+
+Very simple method for ensuring that the overall Type I error rate
+* α is maintained over m independent hypothesis tests
+* Rejects any hypothesis with p-value ≤ α/m
+
+For example, to ensure an experiment-wide Type I error rate of 0.05
+* If 10,000 hypothesis tests are performed using the Bonferonni Correction
+* Each test uses a p-value of 0.05/10000 = 5 x 10<sup>-6</sup> to declare significance
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide describes the Bonferroni correction, a method used to adjust p-values when performing multiple hypothesis tests.  It explains that the Bonferroni correction maintains the overall Type I error rate (false positive rate) by adjusting the individual p-value thresholds.  The example given shows how a p-value of 0.05 for an experiment-wide error rate is adjusted to a much lower value (5 x 10<sup>-6</sup>) when 10,000 individual tests are performed.  The slide is part of a presentation on statistical methods, specifically addressing the issue of multiple comparisons and how to adjust for them.

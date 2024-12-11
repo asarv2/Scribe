@@ -1,0 +1,15 @@
+# Slide 26
+
+**Recommender Systems**
+
+Primarily sourced from Padhraic Smyth, UC Irvine
+
+
+---
+
+**Description:**
+
+This slide is a title slide for a section on Recommender Systems.  It's a simple, single-line title slide, with the text "Recommender Systems" in a large, bold, dark gray font against a light gray background.  Below the title, in a smaller, light gray font, is the credit line: "Primarily sourced from Padhraic Smyth, UC Irvine".  The overall design is clean and uncluttered, focusing solely on the topic title and the source of the material.  There are no figures.
+
+
+**What you see:** A plain, light gray background with the title "Recommender Systems" in a large, bold, dark gray font.  Below the title, in a smaller, light gray font, is a credit line indicating the source of the material.  The slide is likely the introduction to a section of the lecture that will cover recommender systems, potentially discussing different types of recommender systems, their applications, or algorithms used in them.

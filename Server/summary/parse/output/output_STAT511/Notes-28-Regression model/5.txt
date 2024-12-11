@@ -1,0 +1,55 @@
+# Slide 5
+
+**STAT 511 Course Notes – set 28 (W15)**
+
+**Yuan Qu**
+
+**5**
+
+𝑠<sup>2</sup> = 7.968 / (20 - 2) = 0.4427
+
+and the estimated standard deviation is 0.665.
+
+**Example 28.2** Consider a data set on 𝑥 = iodine value (g) and 𝑦 = cetane number for a sample of 14 biofuels.
+
+Some summary statistics are
+
+∑𝑥𝑖 = 1307.5
+∑𝑦𝑖 = 779.2
+
+∑𝑥𝑖<sup>2</sup> = 128,913.93
+∑𝑦𝑖<sup>2</sup> = 43,745.22
+∑𝑥𝑖𝑦𝑖 = 71,347.30
+
+from which
+
+𝑆𝑥𝑥 = 128,913.93 – (1307.5)<sup>2</sup>/14 = 6802.7693
+𝑆𝑥𝑦 = 71,347.30 – (1307.5)(779.2)/14 = –1424.41429
+
+The estimated slope of the true regression line (i.e., the slope of the least squares line) is
+
+𝑏<sub>1</sub> = 𝛽̂<sub>1</sub> = 𝑆𝑥𝑦/𝑆𝑥𝑥 = –1424.41429/6802.7693 = –0.20938742
+
+which is interpreted as the expected change in true average cetane number associated with a 1g increase in iodine value — i.e., a decrease of 0.209.
+
+Since 𝑥̅ = 93.392857 and 𝑦̅ = 55.657143, the estimated intercept of the true regression line (i.e., the intercept of the least squares line) is
+
+𝑏<sub>0</sub> = 𝛽̂<sub>0</sub> = 55.657143 – (–0.20938742)(93.392857) = 75.212432.
+
+The equation of the estimated regression line (least squares line) is
+
+𝑦̂ = 75.212 – 0.2094𝑥
+
+Substituting 𝑥<sub>1</sub>, … , 𝑥<sub>𝑛</sub> into the equation of the estimated regression line we obtained the fitted or predicted values 𝑦̂<sub>1</sub>, 𝑦̂<sub>2</sub>, … , 𝑦̂<sub>𝑛</sub>, where 𝑦̂𝑖= 𝛽̂<sub>0</sub> + 𝛽̂<sub>1</sub>𝑥<sub>𝑖</sub>.
+
+The residuals are the differences 𝑦<sub>1</sub> −𝑦̂<sub>1</sub>, 𝑦<sub>2</sub> −𝑦̂<sub>2</sub>, … , 𝑦<sub>𝑛</sub>−𝑦̂<sub>𝑛</sub>.
+
+
+**Figure Description:**
+
+A scatter plot is positioned below the text. The x-axis is labeled "Iodine value (g)", and the y-axis is labeled "Cetane number".  The plot displays a set of 14 data points, each represented by a small circle.  The points roughly follow a downward trend, suggesting a negative correlation between iodine value and cetane number.  A fitted regression line, represented by a thin gray line, is drawn through the data points. The line is positioned to minimize the sum of squared vertical distances between the data points and the line. The figure is placed below the text to visually illustrate the data and the fitted regression line, which is crucial for understanding the example of simple linear regression. The plot is oriented with the x-axis horizontal and the y-axis vertical.
+
+
+**Description of the Slide:**
+
+This slide continues the example of simple linear regression, presenting the calculation of the regression line parameters (slope and intercept) using the least squares method. It shows the relevant summary statistics (calculated from the data) and the resulting equation of the least squares line. The slide also includes a scatter plot of the data, which visually represents the relationship between the variables and the fit of the regression line. The slide is part of a lecture on statistical methods, specifically focusing on simple linear regression. The example continues from the previous slides, and the figure is crucial for understanding the concepts being discussed.

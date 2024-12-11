@@ -1,0 +1,23 @@
+# 46
+
+**Encode Hamiltonian Path Problem into SAT**
+
+* Encode Hamiltonian Path Problem into SAT
+* Enforcing that the path consists of real edges
+    * ¬(h<sub>iu</sub> ∧ h<sub>(i+1)v</sub>) if there is not an edge between u and v
+* Simple do a "∧" (logical OR) between all pairs of formulas.
+This completes our formulation of the Hamiltonian path instance in SAT!
+
+h<sub>ij</sub>: The i<sup>th</sup> vertex visited in the path is vertex j
+
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph shows node 1 connected to nodes 2 and 3, node 2 connected to nodes 3 and 4, node 3 connected to nodes 4 and 5, node 4 connected to node 5, and node 5 connected to no other nodes.  The graph is positioned centrally on the slide.
+
+
+**Description:**
+
+This slide continues the discussion of encoding the Hamiltonian Path Problem into a Satisfiability (SAT) problem.  It details the specific steps for creating the SAT encoding.  The slide describes how to enforce that the path consists of real edges in the graph.  It also explains how to combine the formulas using a logical OR operation.  The graph is a visual representation of the problem instance, illustrating the vertices and the possible paths.  The slide is designed to provide a complete encoding of the Hamiltonian Path Problem into a SAT formula.  The graph shows a directed graph with 5 nodes (1, 2, 3, 4, 5) and several directed edges connecting them.  The edges are not weighted, but the presence of the edges indicates possible paths between the nodes.  The graph is positioned centrally on the slide.  The slide explains how to create a SAT formula from the graph, ensuring that the path only uses existing edges.
+
+

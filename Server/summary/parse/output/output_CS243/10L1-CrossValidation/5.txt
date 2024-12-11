@@ -1,0 +1,16 @@
+# 5
+
+**Training and Testing**
+
+Three cartoon robots are shown in a classroom-like setting.
+
+*   **Left Robot:**  A humanoid robot figure, dressed in a maroon robe, is standing behind a podium.  It is pointing to a whiteboard with diagrams of a chemical structure labeled "Apple" and a simple drawing of a car labeled "Car". The robot is positioned on the left side of the slide.
+
+*   **Center Robot:** A similar robot figure is seated at a desk, with a whiteboard displaying "Practice Exam" in red text. The robot is in the middle of the slide.  It appears to be working on some papers.
+
+*   **Right Robot:** Another similar robot figure is seated at a desk, with a whiteboard displaying "Final Exam!" in green text. The robot is on the right side of the slide.  It appears to be stressed or anxious, with a worried expression.  Small, light-blue bubbles are emanating from its head.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, uses cartoon robots to illustrate the concept of training and testing. The left robot represents the training phase, where the model learns from examples (the diagrams on the whiteboard). The center robot represents the practice exam phase, where the model is tested on a set of examples similar to the training data. The right robot represents the final exam phase, where the model is tested on a set of examples that are completely new and different from the training data. The different expressions of the robots are meant to visually represent the different stages of the process and the increasing difficulty of the testing phase. The slide is likely to be followed by a discussion of the importance of testing models on unseen data to evaluate their generalization ability.  The diagrams on the whiteboard are simple representations of data used to train the model. The different exams represent different levels of testing.

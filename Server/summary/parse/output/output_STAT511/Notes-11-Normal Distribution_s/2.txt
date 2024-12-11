@@ -1,0 +1,34 @@
+# Slide 2
+
+**Relating probabilities to σ (68-95-99.7 rule)**
+
+* **68% of the observations fall within 1 standard deviation of the mean.**
+    * P(μ-σ < X < μ+σ) = 68%
+    * P(X < μ-σ) = P(X > μ+σ) = (1 - 68%) / 2 = 16%
+* **95% of the observations fall within 2 standard deviations of the mean.**
+    * P(μ-2σ < X < μ+2σ) = 95%
+    * P(X < μ-2σ) = P(X > μ+2σ) = (1 - 95%) / 2 = 2.5%
+* **99.7% of the observations fall within 3 standard deviations of the mean.**
+    * P(μ-3σ < X < μ+3σ) = 99.7%
+    * P(X < μ-3σ) = P(X > μ+3σ) = (1 - 99.7%) / 2 = 0.15%
+
+**z-scores:** The z-score for X = x is z = (x-μ)/σ.
+
+* The z-score is the number of standard deviations an observed value x is from μ.
+* Observations larger than the mean have a positive z-score.
+* Observations smaller than the mean have a negative z-score.
+* Because the z-score is the number of standard deviations, it doesn't have any units. In a sense it standardizes data values.
+
+
+**Figure Descriptions:**
+
+* **Figure 1 (Top Right):** A bell-shaped curve, representing a normal distribution, is shown. The curve is centered around a value labeled as μ.  Vertical lines extend from the curve to the x-axis, indicating the points μ-σ and μ+σ.  The area under the curve between μ-σ and μ+σ is shaded, labeled as 68% of the data.  The area outside this range is labeled as 16% of the data on each tail. The figure is placed to the right of the text describing the 68% rule, illustrating the concept visually.
+
+* **Figure 2 (Middle Right):** Another bell-shaped curve, similar to the first, is shown.  The curve is centered around μ. Vertical lines extend from the curve to the x-axis, indicating the points μ-2σ and μ+2σ. The area under the curve between μ-2σ and μ+2σ is shaded, labeled as 95% of the data. The area outside this range is labeled as 2.5% of the data on each tail. The figure is placed below the text describing the 95% rule, illustrating the concept visually.
+
+* **Figure 3 (Bottom Right):** A third bell-shaped curve, similar to the previous two, is shown. The curve is centered around μ. Vertical lines extend from the curve to the x-axis, indicating the points μ-3σ and μ+3σ. The area under the curve between μ-3σ and μ+3σ is shaded, labeled as 99.7% of the data. The area outside this range is labeled as 0.15% of the data on each tail. The figure is placed below the text describing the 99.7% rule, illustrating the concept visually.
+
+
+**Contextual Details:**
+
+This slide builds upon the previous slide's introduction to the normal distribution by explaining the 68-95-99.7 rule.  The rule states the percentage of data that falls within a certain number of standard deviations from the mean in a normal distribution. The figures visually demonstrate how the area under the curve corresponds to the probabilities described by the rule.  The slide is crucial for understanding how to interpret and use the normal distribution in statistical analysis.  The z-score definition is also introduced, which is a key concept for standardizing data and using the normal distribution table.

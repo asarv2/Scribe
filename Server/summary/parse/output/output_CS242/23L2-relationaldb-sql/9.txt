@@ -1,0 +1,20 @@
+# Slide 9
+
+# Entity Relationships
+
+There are several types of inter-table relationships:
+
+* One-to-one (or one-to-zero/one)
+* One-to-many (and many-to-one)
+* Many-to-many
+
+These relate one (or more) rows in a table with one (or more) rows in another table, via a foreign key
+
+Note that these relationships are really between the "entities" that the tables represent
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, introduces the concept of entity relationships in relational databases.  The title "Entity Relationships" is displayed at the top.  The body of the slide lists different types of inter-table relationships: one-to-one, one-to-many, and many-to-many.  The text explains that these relationships connect rows in one table to rows in another table using foreign keys.  The final sentence emphasizes that these relationships are fundamentally about the entities (objects or concepts) represented by the tables.  The slide is formatted with a bulleted list, making the different relationship types easy to identify.  There are no figures on this slide.  The content is purely textual, providing a conceptual overview of the topic.

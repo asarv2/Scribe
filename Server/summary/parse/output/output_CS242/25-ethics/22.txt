@@ -1,0 +1,12 @@
+# Slide 22
+
+**Potential Solutions: constrain the algorithm**
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, has the title "Potential Solutions: constrain the algorithm" centered in a dark gray font.  It's a simple, straightforward title slide for a section of the Intro to Data Science lecture.  There are no figures or images.  The text is large enough to be easily readable. The slide is likely introducing a topic that will be discussed in the following slides, focusing on potential solutions to address bias in algorithms.
+
+

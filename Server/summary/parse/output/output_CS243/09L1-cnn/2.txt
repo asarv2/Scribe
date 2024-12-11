@@ -1,0 +1,18 @@
+# 2
+
+**Convolutional Neural Network for Image/Video Recognition**
+
+* **Top Left:** A 3/4 view of a human head.  Numerous small, light-blue dots are placed on the head, marking specific facial features.  These dots are labeled with text, indicating the location of features like eyes, nose, mouth, and other facial landmarks.  This image demonstrates how a CNN can identify and locate key points on a face.
+
+* **Top Middle:** A highway scene with a car.  Transparent boxes are drawn around the cars on the road.  This image illustrates how a CNN can detect and identify objects (cars) in a video or image.
+
+* **Bottom Left:** An image of a room with a TV and a cat.  Red, blue, and green boxes are drawn around the TV and the cat.  This image demonstrates object detection and recognition, identifying the TV and the cat in the scene.
+
+* **Bottom Middle:** An image of a bowl of fruit (bananas and oranges).  Red boxes are drawn around the bananas and oranges.  This image demonstrates object detection and recognition, identifying the different types of fruit in the image.
+
+* **Bottom Right:** A grid of handwritten numbers.  The numbers are handwritten and appear to be randomly arranged.  This image is likely a demonstration of a CNN's ability to recognize handwritten digits.
+
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, focuses on Convolutional Neural Networks (CNNs) and their application in image and video recognition.  It visually demonstrates how CNNs can identify and locate objects (faces, cars, fruits, numbers) within images and videos.  The different sections of the slide show various examples of object detection and recognition tasks.  The use of bounding boxes around objects highlights the CNN's ability to pinpoint the location of objects within an image.  The handwritten numbers in the bottom right corner are likely used to illustrate the CNN's ability to recognize patterns in different forms of data.  The overall purpose of the slide is to illustrate the practical applications of CNNs in image and video analysis.

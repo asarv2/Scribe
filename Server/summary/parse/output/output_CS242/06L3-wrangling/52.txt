@@ -1,0 +1,41 @@
+# Slide 52
+
+**The idea of Split/Apply/Combine**
+
+```
+Split
+Key Data
+A	0
+B	5
+C	10
+A	5
+B	10
+C	15
+A	10
+B	15
+C	20
+```
+
+```
+Apply / Combine
+Sum
+A	0
+A	5
+A	10
+A	15
+B	5
+B	10
+B	15
+B	30
+C	10
+C	15
+C	20
+C	45
+```
+
+A diagram is presented, illustrating the Split/Apply/Combine paradigm.  The diagram shows three stages: Split, Apply, and Combine.  The Split stage involves dividing the data into groups based on a key.  The Apply stage involves applying a function (in this case, Sum) to each group.  The Combine stage involves combining the results from the Apply stage.  The diagram visually represents how data is divided, processed, and then aggregated.  The key data (A, B, C) are shown in the left column, and the sums are shown in the right column.  Arrows connect the key data to the corresponding sums, visually representing the application of the function.  The diagram is centrally located on the slide and is oriented horizontally.  The purpose of the diagram is to illustrate the concept of the Split/Apply/Combine paradigm, a common approach in data analysis for processing data in groups.
+
+
+**Description of the Slide:**
+
+This slide presents a visual representation of the Split-Apply-Combine paradigm, a common approach in data analysis.  The diagram shows how data is split into groups based on a key, then a function (in this case, "Sum") is applied to each group, and finally the results are combined.  The diagram uses arrows to visually connect the key data to the corresponding sums, making the process clear.  The slide is part of a lecture on data analysis techniques, specifically focusing on aggregation and data manipulation.  The diagram is the central element of the slide, and its purpose is to illustrate the concept of the Split-Apply-Combine paradigm.

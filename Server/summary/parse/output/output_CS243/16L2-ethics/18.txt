@@ -1,0 +1,18 @@
+# Slide 18
+
+Can Predictive Systems Discriminate Unfairly
+When predictive systems are more widely applied in situations where they affect people’s lives, they may run into troubles concerning anti-discrimination laws
+There is no consensus about how to define and even less how to deal with the problem
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description:**
+
+This slide, part of the AI Basics lecture, discusses the potential for predictive systems to discriminate unfairly.  The text highlights that as these systems become more prevalent in areas impacting people's lives, they may face legal challenges related to anti-discrimination laws.  The final sentence emphasizes the lack of a clear consensus on how to define and address this issue.  The slide is likely part of a larger discussion on the ethical implications of predictive systems and the need for careful consideration of potential biases.  The source is clearly attributed, which is a standard practice in academic presentations.
+
+
+**Description:**
+
+The slide is a plain, light-colored background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The text discusses the potential for predictive systems to discriminate unfairly, highlighting the lack of consensus on how to define and address this issue.  The source is credited at the bottom, which is a standard practice in academic presentations.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on the potential for bias in predictive systems.

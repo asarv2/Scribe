@@ -1,0 +1,24 @@
+# Slide 37
+
+**Python and Types**
+
+Python determines the data types of variable bindings in a program automatically: "Dynamic Typing"
+But Python's not casual about types, it enforces the types of objects: "Strong Typing"
+You can't just append an integer to a string. You must first convert the integer to a string itself.
+
+x = "the answer is "  # Decides x is bound to a string.
+y = 23                # Decides y is bound to an integer.
+# print x + y         # Python will complain about this.
+print(x + str(y))     
+the answer is 23
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide discusses the concept of dynamic and strong typing in Python.  It explains that Python automatically determines variable types (dynamic typing), but it enforces the types of objects (strong typing).  The example demonstrates that you cannot directly concatenate a string and an integer; you must convert the integer to a string using `str()` before concatenation.  The code `print(x + str(y))` shows the correct way to combine the string "the answer is " and the integer 23.  The output "the answer is 23" is shown below the code, demonstrating the result of the correct operation.  The comments within the code explain the type binding decisions made by Python.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The examples are presented in a clear, concise manner, illustrating the importance of data type awareness in Python.
+
+

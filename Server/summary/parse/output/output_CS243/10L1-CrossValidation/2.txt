@@ -1,0 +1,14 @@
+# 2
+
+**Generalization and Overfitting**
+
+*(Three cartoon robots are shown.)*
+
+* **Left Robot:**  A light purple/gray boxy robot with green eyes, a small antenna, and a light orange/yellow burst effect above its head.  It appears calm and collected.
+* **Center Robot:** A similar light purple/gray boxy robot with green eyes, a light orange/yellow burst effect above its head, and a raised hand as if saluting. It appears proud or happy.
+* **Right Robot:** A light purple/gray boxy robot with green eyes, a dark gray/black cap, and a distressed expression.  It has a light blue/aqua burst effect above its head.  It appears stressed or confused.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concepts of generalization and overfitting. The three cartoon robots are likely visual aids to illustrate these concepts.  The calm robot represents a model that generalizes well, the proud robot represents a model that is well-fitted to the training data, and the stressed robot represents a model that is overfitted to the training data.  The different expressions and poses of the robots are meant to convey the different states of a model's performance.  The burst effects above the robots' heads are likely meant to represent the model's confidence or the amount of data it has processed. The slide is likely to be followed by a discussion of how these concepts relate to the performance of machine learning models.

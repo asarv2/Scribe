@@ -1,0 +1,39 @@
+# 3
+
+**STAT 511 Course Notes – set 19 (W10)**
+
+**Yuan Qu**
+
+2. Probabilistic statement: With probability 1 − α, random interval (𝑋̅ − 𝑧(1−𝐶)/2 ∙σ √𝑛
+⁄
+, 𝑋̅ + 𝑧(1−𝐶)/2 ∙σ √𝑛
+⁄
+) contains the true parameter 𝜇.
+
+Here, the probability is with respect to the randomness of the n-size sample. Given different random samples, one can calculate different intervals. Some of them can cover the true parameter, some of them cannot. And the probability you will randomly select a sample whose confidence interval captures the true value of 𝜇 is 95%.
+
+R code for simulation of the coverage:
+x <- matrix(rnorm(100000),ncol=10000)
+mn <- apply(x,2,mean); v <- apply(x,2,var)
+hwd <- 1.96/sqrt(10); lcl <- mn-hwd; ucl <- mn+hwd
+mean((lcl<0)&(ucl>0))   ## z-interval
+
+hwd<-qt(.975,9)*sqrt(v/10); lcl<-mn-hwd; ucl<-mn+hwd
+mean((lcl<0)&(ucl>0)) ## t-interval
+
+x <- matrix(runif(100000),ncol=10000)
+mn <- apply(x,2,mean); v <- apply(x,2,var)
+hwd<-1.96*sqrt(1/120); lcl<-mn-hwd; ucl<-mn+hwd
+mean((lcl<.5)&(ucl>.5)) ## z-interval
+hwd<-qt(.975,9)*sqrt(v/10); lcl<-mn-hwd; ucl<-mn+hwd
+mean((lcl<.5)&(ucl>.5)) ## t-interval
+
+
+**Figure Description:**
+
+The figure is a graph of a probability distribution, likely a normal distribution, centered around a value labeled μ.  The x-axis is labeled "Values of 𝑋̅".  The y-axis is not explicitly labeled, but it represents probability density.  Numerous horizontal lines are drawn across the graph, each representing a different confidence interval.  Some of these lines intersect the vertical line representing the true parameter μ, while others do not.  The horizontal lines are positioned at different heights on the y-axis, indicating different values of 𝑋̅.  The figure is positioned below the text and is oriented horizontally.  The figure visually illustrates the concept of confidence intervals and how different samples can lead to different intervals, some of which contain the true parameter μ and some of which do not.  The figure is crucial for understanding the probabilistic nature of confidence intervals.
+
+
+**Slide Description:**
+
+This slide continues the discussion of confidence intervals, focusing on the probabilistic nature of the intervals.  It emphasizes that the probability of capturing the true parameter (μ) within the interval is 1-α.  The slide includes R code for simulating the coverage of confidence intervals, demonstrating how different samples lead to different intervals.  The accompanying figure visually represents the sampling distribution of the sample mean (𝑋̅) and how different confidence intervals relate to the true parameter μ.  The figure is essential for understanding the concept of coverage probability and the variability in confidence intervals.  The slide number (3) and the course name (STAT 511) are clearly visible at the top. The author's name (Yuan Qu) is also present. The use of mathematical notation (e.g., 𝑋̅, 𝜇, 𝜎, 𝑛) and formulas indicates a statistical context.  The R code demonstrates how to simulate the coverage of confidence intervals.

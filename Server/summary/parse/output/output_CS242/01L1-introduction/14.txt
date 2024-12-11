@@ -1,0 +1,14 @@
+# Slide 14
+
+**Textbook Readings**
+
+Cairo, A. (2016). The truthful art : Data, charts, and maps for communication. New Riders.
+
+McKinney, W. (2017). Python for data analysis : Data wrangling with Pandas, NumPy, and IPython (Second ed.). O'Reilly Media.
+
+Provost, F. and Fawcett, T. (2013). Data Science for Business. O'Reilly Media.
+
+
+**Slide Description:**
+
+This slide lists three recommended textbooks for the Intro to Data Science course.  Each book title, author, publication year, and publisher are displayed in a clear and organized format.  Three small images of the book covers are shown, one for each book.  The images are positioned to the right of the corresponding book information.  The images are likely book covers, and their purpose is to visually represent the books and help students identify them.  The slide is designed to provide students with a list of recommended readings for further learning and study.  The books are likely used as supplementary material for the course, providing additional information and examples related to the topics covered in the lectures.  The layout is clear and concise, making it easy to read the book information and see the book covers.  The books are likely used as supplementary material for the course, providing additional information and examples related to the topics covered in the lectures.  The books are likely used as supplementary material for the course, providing additional information and examples related to the topics covered in the lectures.

@@ -1,0 +1,19 @@
+# Slide 34
+
+**for Loops and Dictionaries**
+
+```
+>>> ages = { "Sam" :4, "Mary" :3, "Bill" :2 }
+>>> ages
+{'Bill': 2, 'Mary': 3, 'Sam': 4}
+>>> for name in ages.keys():
+	 print(name, ages[name])
+Bill 2
+Mary 3
+Sam 4
+>>>
+```
+
+**Description:**
+
+This slide demonstrates how to iterate through a dictionary using a `for` loop.  The code defines a dictionary `ages` containing names as keys and ages as values.  The `for` loop iterates over the keys of the dictionary using `ages.keys()`.  Inside the loop, `ages[name]` accesses the value associated with each key, and the code prints the key-value pair.  The output shows the names and corresponding ages printed in a formatted way.  The `>>>` symbols indicate interactive Python code execution.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The example demonstrates how to use a `for` loop to efficiently access and process data from a dictionary.  The output shows the expected result of the loop, printing each name and its corresponding age.  The code is clear and concise, illustrating a common task in data processing.

@@ -1,0 +1,50 @@
+# 1
+
+**STAT 511 Course Notes – set 19 (W10)**
+
+**Yuan Qu**
+
+Different statistical methods are developed to estimate a parameter of interest, e.g., , in general. Two popular methods are:
+
+* Method of moment
+* Maximum likelihood estimate (MLE)
+
+**Interval Estimate: Confidence intervals**
+
+A point estimate provides no information about the precision of the estimation. Besides, in many cases,
+𝑃( point estimator = parameter ) = 0, and the point estimate says nothing about how close it might be to the true parameter.
+
+An interval estimate or confidence interval (CI) reports an entire interval of plausible values around the true parameter instead of a single point estimate. We now introduce the idea of confidence interval.
+
+
+**A Motivating example**
+
+Suppose that the parameter of interest is a population mean  and that
+
+1. The population distribution is normal.
+2. The value of the population standard deviation  is known.
+
+Note: this simple, albeit somewhat unrealistic, situation is used to introduce the idea of confidence intervals (CIs).
+
+The best point estimator of population mean is 𝑋̅. Now we want to incorporate the precision of 𝑋̅ (that is information of sampling distribution) into the point estimator. Based on the sampling distribution of 𝑋̅ learned in Ch5, the sample mean 𝑋̅ ∼𝑁(μ, σ<sup>2</sup>/𝑛). We have
+
+𝜙(1.96) −𝜙(−1.96) = 0.95,   𝑃(−1.96 <
+𝑋̅−𝜇
+𝜎/√𝑛< 1.96) = 0.95
+
+𝑃( |𝑋̅ −𝜇| < 1.96 𝜎
+√𝑛 ) = 0.95
+
+Now, in practice we obtain a sample and calculate a single sample mean 𝑋̅
+
+𝑃( |𝜇−𝑋̅| < 1.96 𝜎
+√𝑛 ) = 0.95
+
+𝑃(𝜇∈[𝑋̅ −1.96 𝜎
+√𝑛, 𝑋̅ + 1.96 𝜎
+√𝑛]) = 0.95
+
+
+**Slide Description:**
+
+This is the first slide of a five-slide lecture on Statistical Methods, specifically focusing on interval estimation using confidence intervals. The slide introduces the concept of interval estimation as a way to quantify the precision of an estimate, contrasting it with point estimation.  A motivating example is presented where the population distribution is assumed normal and the population standard deviation is known.  The slide derives the formula for a 95% confidence interval for the population mean, highlighting the relationship between the sample mean, the population mean, the standard deviation, and the sample size.  The slide also references previous lecture material (Ch5) for the sampling distribution of the sample mean.  The slide number (1) and the course name (STAT 511) are clearly visible at the top. The author's name (Yuan Qu) is also present. The use of mathematical notation (e.g., 𝑋̅, 𝜇, 𝜎) and formulas indicates a statistical context.

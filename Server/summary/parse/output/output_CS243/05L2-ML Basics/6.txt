@@ -1,0 +1,15 @@
+# 6
+
+# The very first ML problem – linear regression
+
+House prices vs. square footage
+
+![Scatter Plot](/path/to/image.jpg)
+
+**Description:**
+
+The slide presents a scatter plot.  The x-axis is labeled "Square footage" and the y-axis is labeled "Sale Price".  The y-axis is scaled logarithmically (2.5 x 10<sup>6</sup>).  The plot displays numerous data points, each represented by a colored dot.  The colors of the dots vary, suggesting different data sets or categories.  A black line is drawn through the data points, representing a linear regression model.  The line is a best-fit approximation of the relationship between house prices and square footage.  The text "Why?" is positioned above the plot, near the middle-right of the graph.  The text "But why this line?" is positioned below the plot, near the bottom-left of the graph.  A yellow star is positioned near the upper-right of the plot.
+
+**Context:**
+
+This slide introduces the concept of linear regression as the first machine learning problem.  The scatter plot visually represents the relationship between house prices and square footage.  The black line is the model that the machine learning algorithm has generated.  The questions "Why?" and "But why this line?" are designed to prompt the viewer to consider the reasoning behind the model and the factors that influence the relationship between house prices and square footage.  The yellow star is likely a visual cue or a marker for a specific data point or a point of interest in the data.  The slide is designed to introduce the concept of linear regression as a fundamental machine learning problem, using a real-world example of house prices and square footage.

@@ -1,0 +1,26 @@
+# Slide 37
+
+```markdown
+# Dealing with Missing Values
+
+This slide presents weather data from West Lafayette, spanning from March 6th to March 17th, 2020.  The data is loaded into a Pandas DataFrame called `df_weather`.
+
+```
+df_weather = pd.read_csv('weather_march2020.csv')
+df_weather
+```
+
+A table follows, displaying the weather data.  The table has columns for "Date", "Highest Temperature (Deg F)", "Lowest Temperature (Deg F)", and "Weather".  Each row represents a day's weather record.  The data includes numerical values for temperature and categorical values for weather conditions.  Noticeable in the table are several instances of `NaN` values, indicating missing data points for temperature.
+
+```
+# ... (code to handle missing values)
+```
+
+The text below the table suggests that the slide will discuss strategies for handling these missing values.  The context implies that the following content will address methods for replacing or imputing the missing temperature data.
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces a weather dataset, `weather_march2020.csv`, and displays the data loaded into a Pandas DataFrame.  The table shows the weather data for each day, including the date, highest temperature, lowest temperature, and weather condition.  The presence of NaN values in the temperature columns highlights the need for data cleaning and handling missing values.  The slide is part of a larger lecture on data cleaning and manipulation techniques, specifically addressing the handling of missing data in a weather dataset.  The table is crucial for demonstrating the data and the presence of missing values. The code snippets are essential for demonstrating the data analysis process.

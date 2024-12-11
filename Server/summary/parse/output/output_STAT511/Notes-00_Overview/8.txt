@@ -1,0 +1,21 @@
+# 8
+
+**Syllabus**
+
+* Prerequisite & Learning Outcomes
+* Required Materials
+* Performance Evaluation (course total grade)
+    * (Extra) WebAssign Homework 0  1%
+    * WebAssign Homework 1-12  35%
+    * Worksheets (1-14)  10%
+    * Midterm(TBA)  25%
+    * Final Exam(TBA)  30%
+    * (Extra) Course Evaluation  1%
+* Help, Other Resources, Emergency Briefing
+
+
+---
+
+**Description:**
+
+This slide, titled "Syllabus," details the components of the STAT 511: Statistical Methods course.  It lists the course's prerequisites and learning outcomes, required materials, and the breakdown of the course's evaluation.  The evaluation section is presented in a bulleted list, clearly showing the different components (WebAssign Homework, Worksheets, Midterm, Final Exam, and an extra Course Evaluation) and their corresponding percentages of the final grade.  The slide is organized to provide a clear overview of the course's structure and grading system.  The footer indicates this is slide 8 of 22 and includes the course title, instructor's name, and a page number.

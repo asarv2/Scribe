@@ -1,0 +1,20 @@
+# Slide 35
+
+**Unintuitive k-means results**
+
+Four scatter plots are displayed, each showing a different clustering result applied to the same dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left (Incorrect Number of Blobs):**  A scatter plot of points colored in dark purple and yellow.  The points appear to be clustered into two groups, but the clustering is not ideal, with some points in the yellow cluster appearing closer to the purple cluster.  The x-axis ranges from approximately -10 to 5, and the y-axis ranges from approximately -8 to 2.
+
+* **Top Right (Anisotropicly Distributed Blobs):** A scatter plot of points colored in teal and yellow.  The points are clustered, but the clusters are elongated and not perfectly spherical.  The x-axis ranges from approximately -5 to 4, and the y-axis ranges from approximately -2 to 4.
+
+* **Bottom Left (Unequal Variance):** A scatter plot of points colored in teal, yellow, and dark purple.  The points are clustered, but the clusters have different variances, with some clusters being more spread out than others.  The x-axis ranges from approximately -12.5 to 25, and the y-axis ranges from approximately -8 to 4.
+
+* **Bottom Right (Unevenly Sized Blobs):** A scatter plot of points colored in teal, yellow, and dark purple.  The points are clustered, but the clusters have different sizes, with some clusters containing significantly more points than others.  The x-axis ranges from approximately -10 to 50, and the y-axis ranges from approximately -4 to 3.
+
+
+**Description:**
+
+This slide demonstrates how the K-means algorithm can produce unintuitive or unexpected results when the data does not conform to its assumptions.  The four scatter plots show examples of datasets with different characteristics (non-spherical clusters, unequal variances, and uneven sizes) and how the K-means algorithm struggles to accurately cluster these datasets.  The slide is part of a lecture on clustering algorithms, specifically highlighting the limitations of K-means and the importance of considering the characteristics of the data when choosing a clustering algorithm.  The title "Unintuitive k-means results" emphasizes the point that the algorithm's output may not always align with the expected or desired clusters.  The plots are intended to visually illustrate these limitations.
+
+

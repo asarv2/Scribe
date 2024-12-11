@@ -1,0 +1,49 @@
+# Slide 47
+
+# Aggregation and Grouping
+
+Aggregation can be applied to summarize multiple groups
+
+```sql
+SELECT BillingCountry, SUM(Total) AS Total, COUNT(*) AS Invoices
+FROM Invoice
+WHERE Total > 10
+GROUP BY BillingCountry
+```
+
+This SQL query calculates the sum of `Total` and the count of invoices for each `BillingCountry` where the `Total` is greater than 10.  The results are grouped by `BillingCountry`.  The output table shows the `BillingCountry`, the sum of `Total` for invoices in that country, and the count of invoices for that country.
+
+
+| BillingCountry | Total | Invoices |
+|---|---|---|
+| Argentina | 13.86 | 1 |
+| Australia | 13.86 | 1 |
+| Austria | 18.86 | 1 |
+| Belgium | 13.86 | 1 |
+| Brazil | 69.30 | 5 |
+| Canada | 110.88 | 8 |
+| Chile | 31.77 | 2 |
+| Czech Republic | 42.72 | 2 |
+| Denmark | 13.86 | 1 |
+| Finland | 13.86 | 1 |
+| France | 72.30 | 5 |
+| Germany | 70.35 | 5 |
+| Hungary | 21.86 | 1 |
+| India | 27.72 | 2 |
+| Ireland | 21.86 | 1 |
+| Italy | 13.86 | 1 |
+| Netherlands | 13.86 | 1 |
+| Norway | 15.86 | 1 |
+| Poland | 13.86 | 1 |
+| Portugal | 38.63 | 3 |
+| Spain | 13.86 | 1 |
+| Sweden | 13.86 | 1 |
+| USA | 220.03 | 15 |
+| United Kingdom | 41.58 | 3 |
+
+
+---
+
+**Description:**
+
+This slide demonstrates aggregation and grouping in SQL.  The query calculates the sum of `Total` and the count of `Invoices` for each `BillingCountry` where the `Total` is greater than 10.  The results are grouped by `BillingCountry`, providing a summary of invoice totals and counts for each country.  The output table clearly shows the results of the aggregation, with each row representing a different country and its corresponding invoice totals and counts.  The context suggests this is part of a data analysis or data science lesson, where the goal is to summarize data from a database table.  The query is designed to calculate summary statistics for each group (country) based on the invoice data.  The table is formatted to present the results in a clear and organized manner.

@@ -1,0 +1,12 @@
+# Slide 2
+
+# Data Organization
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, has the single, bold, centered title "Data Organization" in a dark gray font.  It's a simple slide, likely serving as a heading for the next section of the lecture, which will cover different methods of organizing data in a data science context.  There are no figures or other elements on the slide.
+
+

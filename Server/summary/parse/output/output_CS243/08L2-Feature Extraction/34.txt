@@ -1,0 +1,36 @@
+# Slide 34
+
+**Image gradient**
+
+The gradient points in the direction of most rapid increase in intensity
+
+The gradient of an image:  ∇f = [ ∂f/∂x ,  ∂f/∂y ]
+
+The edge strength is given by the gradient magnitude:
+
+∇f = | ∂f/∂x |<sub>0,</sub> ∇f = | 0, ∂f/∂y |  ∇f = | ∂f/∂x, ∂f/∂y |
+
+The gradient direction is given by:
+
+||∇f|| = √( (∂f/∂x)² + (∂f/∂y)² )
+
+The direction of the edge?
+
+θ = tan<sup>-1</sup>( ∂f/∂x / ∂f/∂y )
+
+**Figure Description:**
+
+The slide includes several small, simple diagrams illustrating the concept of a gradient vector.  There are three small arrows, each with a small circle at its base.
+
+* **First arrow (left):** The arrow points to the right, and is labeled with the expression  ∇f = | ∂f/∂x |<sub>0,</sub>. This arrow represents the gradient in the x-direction.
+
+
+* **Second arrow (middle):** The arrow points upward, and is labeled with the expression ∇f = | 0, ∂f/∂y |. This arrow represents the gradient in the y-direction.
+
+
+* **Third arrow (right):** The arrow points diagonally upward and to the right, and is labeled with the expression ∇f = | ∂f/∂x, ∂f/∂y |. This arrow represents the combined gradient in both the x and y directions.  A small square is drawn below the arrow, with an arrow pointing out of the square. This square is likely meant to represent a 2D plane, and the arrow pointing out of the square represents the magnitude of the gradient.
+
+
+**Description of what you see:**
+
+This slide defines the image gradient, a crucial concept in image processing.  It explains that the gradient points in the direction of the steepest increase in intensity.  The mathematical expressions define the gradient vector (∇f), its magnitude (||∇f||), and its direction (θ).  The diagrams visually represent the gradient vector components in the x and y directions, and the combined gradient vector.  The slide is likely part of a lecture on image processing techniques, specifically on edge detection and gradient calculations.  The source is credited at the bottom.

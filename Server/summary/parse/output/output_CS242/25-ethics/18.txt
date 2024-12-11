@@ -1,0 +1,35 @@
+# Slide 18
+
+**Example: The Compass System**
+
+Prediction Fails Differently for Black Defendants
+
+|  | WHITE | AFRICAN AMERICAN |
+|---|---|---|
+| Labeled Higher Risk, But Didn't Re-Offend | 23.5% | 44.9% |
+| Labeled Lower Risk, Yet Did Re-Offend | 47.7% | 28.0% |
+
+Non-offending blacks get higher scores.
+
+* NB: race is not a feature in the model
+
+So the recall for the "positive" case isn't equal for the groups.
+
+Source: Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a table comparing the recidivism rates of white and African American defendants, as predicted by the COMPAS (Correctional Offender Management Profiling for Alternative Sanctions) system.  The table shows the percentage of defendants in each group who were labeled as higher risk but did not re-offend, and the percentage who were labeled as lower risk but did re-offend.
+
+* **Table:** The table is clearly formatted, with columns for "WHITE" and "AFRICAN AMERICAN" defendants, and rows for "Labeled Higher Risk, But Didn't Re-Offend" and "Labeled Lower Risk, Yet Did Re-Offend."  The percentages in each cell represent the proportion of defendants in each category.
+
+* **Visual Comparison:** The table allows for a direct visual comparison of the recidivism rates between the two groups.  The percentages show that a higher proportion of African American defendants were labeled as higher risk, even when they did not re-offend.
+
+* **Context:** The slide is part of a discussion on bias in predictive systems, specifically highlighting how the COMPAS system, despite not explicitly using race as a factor, still produces different results for different racial groups.  The "NB" note emphasizes that race is not a direct input to the model, but the results still show a disparity.  The conclusion ("So the recall for the 'positive' case isn't equal for the groups") points out that the system's ability to correctly identify high-risk individuals is not equally accurate for both groups.
+
+* **Source:** The source is credited at the bottom, indicating the origin of the data and the researcher who presented the information.
+
+

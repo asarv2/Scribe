@@ -1,0 +1,37 @@
+# Slide 2
+
+**Example 24.1 revisit**
+
+**Design 2 - Matched Pairs Design:**
+
+* Break students into pairs with similar characteristics.
+* Randomly give one student in pair practice exam, other student no practice exam.
+* Give students exam and compare outcomes within pairs.
+
+**Design 3 - Matched Pairs Design:**
+
+* Randomly assign students to
+    * Either: first take one exam without practice exam, and then to take a second exam with practice exam.
+    * Or: first take one exam with practice exam, and then to take a second exam without practice exam.
+* Compare 2 outcomes of each student (within pair).
+
+
+**(Figure Description):**
+
+A flowchart is presented, illustrating the process of a matched pairs design for comparing the effectiveness of a practice exam. The flowchart is positioned below the example description and oriented horizontally.  It visually depicts the steps involved in the experiment.  Rectangular boxes, in various pastel colors, represent different stages of the process.  The boxes are connected by arrows, showing the flow of the experiment.
+
+* **Top Section:** The top section of the flowchart shows students being paired (sample of students).  Then, one student in each pair takes the practice exam, and the other does not.  The results are then compared within each pair.
+
+* **Bottom Section:** The bottom section of the flowchart shows a more detailed view of the process.  It shows how each student in a pair takes the exam, first without the practice exam, then with the practice exam, or vice versa.  The results are then compared for each student within the pair.
+
+The flowchart is crucial to understanding the matched pairs design, as it visually represents how the data is collected and compared, highlighting the key aspect of comparing outcomes within each pair of students.
+
+
+**Definition: paired data**
+
+The data consists of *n* independently selected pairs (𝑋<sub>1</sub>, 𝑌<sub>1</sub>), (𝑋<sub>2</sub>, 𝑌<sub>2</sub>), … , (𝑋<sub>𝑛</sub>, 𝑌<sub>𝑛</sub>). Let 𝐷<sub>𝑖</sub> = 𝑋<sub>𝑖</sub> − 𝑌<sub>𝑖</sub>, so the 𝐷<sub>𝑖</sub>’s are the differences within pairs. Then the 𝐷<sub>𝑖</sub>’s are assumed to have the same distribution with mean value μ<sub>𝐷</sub> and variance σ<sub>𝐷</sub><sup>2</sup>.
+
+
+**Description of the slide:**
+
+This slide continues the discussion of matched pairs design from the previous slide. It provides a more detailed explanation of how to design a matched pairs study, using a flowchart to illustrate the process.  The example is still focused on comparing the effectiveness of a practice exam for a particular type of learner. The slide also defines paired data, which is a key concept in understanding the analysis of matched pairs data.

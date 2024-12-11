@@ -1,0 +1,29 @@
+# Slide 39
+
+**Associative property of convolution**
+
+Differentiation is a convolution
+Convolution is associative
+This saves us one operation:
+d
+\_\_(f * h) = f * \_\_\_h
+dx          dx
+
+**(Figure):**
+
+The slide displays three graphs, each with an x-axis ranging from approximately 0 to 2000 and a y-axis representing intensity or a similar value.  The graphs are labeled as follows:
+
+1.  **Signal (top graph):** This graph shows a signal with a sharp transition or step change.  The signal is noisy, with small fluctuations around a baseline.  The y-axis values are likely intensity values.  The graph is labeled "Sigma = 50" and shows a noisy signal with a step change.
+
+
+2.  **Kernel (middle graph):** This graph shows a Gaussian function.  It's a bell-shaped curve centered around a value, with the highest intensity at the center and gradually decreasing intensity as you move away from the center.  The y-axis values are likely weights or coefficients.  This graph represents the kernel used for smoothing.
+
+
+3.  **Convolution (bottom graph):** This graph shows the result of convolving the signal with the kernel.  The sharp transition in the original signal is now smoothed out.  The noise in the original signal is also reduced.  The y-axis values are likely the result of the convolution operation.  This graph shows the smoothed signal after convolution.
+
+
+**Description of what you see:**
+
+This slide demonstrates the associative property of convolution in the context of image processing.  The graphs illustrate how convolution with a Gaussian kernel (smoothing) can be used to reduce noise before applying a derivative operation.  The top graph shows a noisy signal, the middle graph shows the Gaussian kernel, and the bottom graph shows the smoothed signal after convolution.  The slide is likely part of a lecture on image processing techniques, specifically on how to reduce noise in images before applying operations like differentiation.  The source is credited at the bottom.
+
+

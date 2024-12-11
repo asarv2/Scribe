@@ -1,0 +1,45 @@
+# Slide 2
+
+**Example 15.2** In Example 14.1, the joint and marginal pmf's  
+X = automobile policy deductible amount  
+Y = homeowner policy deductible amount 
+
+|   | y=0 | y=100 | y=200 | p<sub>X</sub>(x) |
+|---|---|---|---|---|
+| x=100 | 0.20 | 0.10 | 0.20 |  |
+| x=250 | 0.05 | 0.15 | 0.30 |  |
+|   |   |   |   |  |
+| p<sub>Y</sub>(y) | 0.25 | 0.25 | 0.5 |
+
+From which 𝑢<sub>X</sub>= ∑<sub>x</sub> x∙p<sub>X</sub>(x) = 175 and 𝜇<sub>Y</sub>= 125.  
+𝐶𝑜𝑣(𝑋, 𝑌) = ∑∑(𝑥−175) ∙(𝑦−125) ∙𝑝(𝑥, 𝑦) 
+
+    = (100 −175)(0 −125)(0.20) + ⋯+ (250 −175)(200 −125)(0.30) 
+     = 1875  
+
+Alternatively, 
+𝐶𝑜𝑣(𝑋, 𝑌) = ∑∑(𝑥𝑦) ∙𝑝(𝑥, 𝑦) −𝜇<sub>X</sub>∙𝜇<sub>Y</sub> 
+
+    = (100)(0)(0.20) + ⋯+ (250)(200)(0.30) −175 ∙125 = 1875  
+
+It is easily verified that in the insurance scenario of Example 14.1, 𝐸(𝑋<sup>2</sup>) = 36,250, 𝐸(𝑌<sup>2</sup>) = 22,500. 
+𝑉𝑎𝑟(𝑋) = 𝐸(𝑋<sup>2</sup>) −[𝐸(𝑋)]<sup>2</sup> = 36,250 – (175)<sup>2</sup> = 5625,  𝜎<sub>X</sub>= 75. 
+𝑉𝑎𝑟(𝑌) = 22,500 – (125)<sup>2</sup> = 6875,
+𝜎<sub>Y</sub>= 82.92. 
+This gives, 
+𝜌<sub>X,Y</sub>=
+1875
+(75)(82.92) = 0.301 
+
+**Proposition:** 
+• −𝜎<sub>X</sub>∙𝜎<sub>Y</sub>≤𝐶𝑜𝑣(𝑋, 𝑌) ≤𝜎<sub>X</sub>∙𝜎<sub>Y</sub>,   −1 ≤𝜌<sub>X,Y</sub>≤1. 
+• 𝐶𝑜𝑣(𝑋, 𝑋) = 𝜎<sub>X</sub><sup>2</sup> 
+• 𝐶𝑜𝑣(𝑋, Constant) = 0 
+• 𝐶𝑜𝑣(𝑎𝑋+ 𝑐, 𝑏𝑌+ 𝑑) = 𝑎∙𝑏∙𝐶𝑜𝑣(𝑋, 𝑌) and 𝐶𝑜𝑟𝑟(𝑎𝑋+ 𝑐, 𝑏𝑌+ 𝑑) = 𝐶𝑜𝑟𝑟(𝑋, 𝑌) 
+• 𝐶𝑜𝑣(𝑋, 𝑌) = 𝜌<sub>X,Y</sub>= 0 if X and Y are independent. 
+• Covariance and correlation describe the linear dependence between X and Y. 
+
+
+**Description of Slide 2:**
+
+This slide, part of a lecture on Statistical Methods, continues the discussion of multiple random variables, specifically focusing on covariance and correlation.  It presents Example 15.2, building upon Example 14.1.  The example involves automobile and homeowner policy deductible amounts (X and Y), represented by a joint probability mass function (pmf) table.  The table shows the probabilities of different combinations of X and Y values.  The slide then calculates the covariance between X and Y using two different methods, demonstrating the relationship between the two approaches.  Crucially, it calculates the correlation coefficient (ρ<sub>XY</sub>) using the formula, providing a measure of the linear relationship between the two variables.  The slide also includes a proposition summarizing key properties of covariance and correlation, including their relationship to variance and independence.  The table and calculations are essential for understanding the concept of covariance and correlation in the context of the insurance example.

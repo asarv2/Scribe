@@ -1,0 +1,25 @@
+# Slide 7
+
+# Typical Hadoop Cluster
+
+1000-4000 nodes in cluster, 40 nodes/rack
+1 Gbps bandwidth in rack, 8 Gbps out of rack
+
+Node specs (Facebook):
+8-16 cores, 32 GB RAM, 8×1.5 TB disks, no RAID
+
+
+**(Image Description):**
+
+The image is a diagram of a Hadoop cluster.  It shows a large number of computer servers (nodes) arranged in racks.  A top-down view of a server room is shown in the background, with many racks of servers.  The foreground shows a simplified diagram of the network connections within the cluster.
+
+* **Rack Switch:** A horizontal bar represents a rack switch, connecting multiple nodes within a rack.  The rack switch is connected to an aggregation switch.
+* **Aggregation Switch:** A horizontal bar represents an aggregation switch, connecting multiple racks.  The aggregation switch is connected to the rack switches.
+* **Nodes:**  Several boxes represent individual nodes (servers) in the cluster.  Each node has a box labeled "Node Disks" below it, indicating the storage capacity of the node.
+* **Connections:** Red arrows indicate 8 Gigabit connections, and green arrows indicate 1 Gigabit connections.  These arrows show the network bandwidth between the rack switch, aggregation switch, and nodes.
+* **Placement:** The image is placed to illustrate the structure of a Hadoop cluster, showing the connections between nodes, racks, and the aggregation switch.  The background image of the server room provides context for the scale of the cluster.
+
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, provides a visual representation of a Hadoop cluster.  It shows the typical architecture of a Hadoop cluster, including the number of nodes, the bandwidth between nodes, and the specifications of the nodes themselves.  The image is meant to illustrate the scale and complexity of a Hadoop cluster, which is a distributed system used for processing large datasets.  The background image of the server room is meant to emphasize the large-scale nature of the cluster.

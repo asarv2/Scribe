@@ -1,0 +1,16 @@
+# 3
+
+# What is machine learning?
+
+Machine learning (ML) is basically automated inductive reasoning.
+
+What is inductive reasoning?
+
+**(Image):**
+
+A series of simple black and white line drawings of trains are displayed.  The trains are depicted in a stacked format, with several rows of trains.  Some trains have a box-like structure, while others have various shapes and symbols.  Pink boxes/highlights are placed around some of the trains in the top row.  Blue circles are placed around some of the trains in the bottom row.  The trains in the top row are labeled "These trains carry toxic chemicals," and the trains in the bottom row are labeled "These trains do not carry toxic chemicals."  A final train, highlighted in a pink box, is positioned at the bottom of the image, with the question "Does this train carry toxic chemicals?" below it.
+
+
+**Description:**
+
+This slide introduces the concept of machine learning (ML) by defining it as automated inductive reasoning.  The accompanying image is a visual aid to illustrate the concept of inductive reasoning.  The trains represent examples, and the labels indicate the classification (toxic or non-toxic).  The highlighted trains and the question at the bottom suggest an exercise or example to demonstrate how inductive reasoning works in the context of machine learning.  The slide is designed to help the learner understand the basic principle of machine learning by using a simple, relatable example.  The image is crucial to the explanation, as it provides a concrete representation of the concept being discussed.

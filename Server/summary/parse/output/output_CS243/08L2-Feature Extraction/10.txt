@@ -1,0 +1,12 @@
+# Slide 10
+
+**Closeup of edges**
+
+**(Figure):**
+
+A full-frame photograph of a section of a building, likely in Monaco, is shown.  The image is centered on the slide.  The building features a large arched doorway, with decorative stonework and architectural details.  The building's facade is light beige/cream-colored stone.  Several smaller, light-colored structures (likely guard booths or similar) are situated in front of the building, on a paved area.  The paving stones are a mix of light and dark gray/brown colors, with a patterned design.  The paving stones are arranged in a way that suggests a walkway or courtyard.  A street lamp is visible in the image, positioned near the guard booths.  The image is a close-up view, focusing on the details of the architecture and the edges of the structures.  The image is likely used to illustrate the concept of edge detection in image processing, highlighting the sharp transitions in color and texture that define the edges of the architectural elements.  A small, light-blue box is drawn around a small structure in the foreground of the image.  A few light-blue arrows extend from a cropped portion of the image on the right side of the slide to the structure in the foreground.
+
+
+**Description of what you see:**
+
+This slide, titled "Closeup of edges," presents a photograph of a section of a building.  The image is a close-up view, focusing on the details of the architecture and the edges of the structures.  The building's facade is light beige/cream-colored stone, and the paving stones are a mix of light and dark gray/brown colors.  The image is likely used to illustrate the concept of edge detection in image processing, highlighting the sharp transitions in color and texture that define the edges of the architectural elements.  The small blue box around a structure in the foreground, and the arrows pointing from a cropped portion of the image on the right, suggest that the slide is illustrating how to isolate a specific part of the image for further analysis, potentially for edge detection.  The image is a real-world example, contrasting with the more abstract or simplified figures used in previous slides.  The source is credited at the bottom of the slide.

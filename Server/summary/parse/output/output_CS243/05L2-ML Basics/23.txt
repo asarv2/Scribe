@@ -1,0 +1,15 @@
+# 23
+
+# Binary Classification
+
+What do you think, is a Linear Model still ok?
+
+
+**Description of the Figure:**
+
+There is no figure on this slide.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, poses a question about the suitability of linear models for binary classification tasks.  The question "What do you think, is a Linear Model still ok?" suggests that the previous slides have discussed linear models and binary classification, and this slide is likely a transition to a discussion about the limitations or appropriateness of linear models in this context.  The slide is designed to prompt the audience to consider whether linear models are still a suitable approach for binary classification problems, given the potential complexities of the data.  The lack of a figure indicates that this slide is focused on the conceptual question rather than a visual representation of data.

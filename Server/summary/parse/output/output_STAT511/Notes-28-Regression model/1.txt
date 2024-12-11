@@ -1,0 +1,34 @@
+# 1
+
+**Regression**
+
+Goal 2: We now want to know if the value of one variable can tell us something about the value of the other variable if there is a linear relationship.
+
+The questions of interest (and are required) for this note include:
+
+* Estimate the regression line;
+* Draw the regression line;
+* Interpret the regression line;
+* How strong is the linear relationship?
+
+**Simple regression model**
+
+For any fixed value of the independent variable x, the dependent variable Y is a random variable related to x through the model equation.
+
+Yᵢ = β₀ + β₁xᵢ + εᵢ, εᵢ ~ N(0, σ²)
+
+Where the quantities εᵢ’s in the model equation are independent normal random variables, εᵢ ~ N(0, σ²).
+
+The variable εᵢ is usually referred to as the random deviation or random error term in the model.
+Without εᵢ, any observed pair (x, y) would correspond to a point falling exactly on the line y = β₀ + β₁x, called the true (or population) regression line.
+
+The inclusion of the random error term allows (x, y) to fall either above the true regression line (when εᵢ > 0) or below the line (when εᵢ < 0).
+
+There are totally three parameters in this model: β₀, β₁ and σ².
+
+
+**(Figure Description):**
+
+A scatter plot is shown, with a line overlaid. The scatter plot shows a set of points (x, y) that appear to roughly follow a linear trend. The line represents the estimated regression line. The line is positioned such that the sum of the squared vertical distances between the data points and the line is minimized.  The line is labeled "True regression line: y = β₀ + β₁x".  The figure is positioned below the text describing the simple regression model.  Its purpose is to visually illustrate the concept of a regression line and the random error term (εᵢ).  The points are not perfectly aligned with the line, demonstrating the presence of the random error term. The figure helps to visualize how the observed data points deviate from the true regression line due to the random error.
+
+

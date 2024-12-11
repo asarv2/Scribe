@@ -1,0 +1,38 @@
+# 28
+
+# PANDAS: Renaming row indexes
+
+```python
+import pandas as pd
+data = {'Asia': ['$43567', '$28945', '$36900', '$67890'],
+        'Africa': ['$13459', '$12005', '$14589', '$57894'],
+        'Americas': ['$40045', '$44589', '$52398', '$107890'],
+        'Australia/Oceania': ['$27890', '$34569', '$45690', '$78930'],
+        'Europe': ['$33569', '$45700', '$56890', '$66003']}
+data_sales = pd.DataFrame(data)
+data_sales_new = data_sales.rename(index={0:'Q1', 1:'Q2', 2:'Q3', 3:'Q4'})
+data_sales_new
+```
+
+```
+        Asia     Africa    Americas  Australia/Oceania     Europe
+Q1  $43567  $13459    $40045          $27890          $33569
+Q2  $28945  $12005    $44589          $34569          $45700
+Q3  $36900  $14589    $52398          $45690          $56890
+Q4  $67890  $57894  $107890          $78930          $66003
+```
+
+---
+
+**Description:**
+
+This slide demonstrates how to rename row indexes in a Pandas DataFrame.
+
+* **Code Snippet:** The slide presents a complete Python code block.  It first defines a dictionary `data` containing sales figures for different regions (Asia, Africa, etc.) and quarters (Q1, Q2, Q3, Q4).  It then creates a Pandas DataFrame `data_sales` from this dictionary.  The crucial part is the line `data_sales_new = data_sales.rename(index={0:'Q1', 1:'Q2', 2:'Q3', 3:'Q4'})`. This line renames the row indexes (0, 1, 2, 3) to 'Q1', 'Q2', 'Q3', and 'Q4', respectively, creating a new DataFrame `data_sales_new`.  Finally, it displays the `data_sales_new` DataFrame.
+
+* **Output:** The output shows the DataFrame `data_sales_new` with the row indexes renamed to the quarters.  The columns represent the regions, and the rows represent the sales figures for each quarter.  The values are dollar amounts, formatted with a dollar sign ($) and commas as thousands separators.  The output is a table, clearly showing the renamed row indexes.
+
+* **Purpose:** The slide demonstrates a common data manipulation task in Pandas: renaming row indexes to improve readability and context.  The code snippet is a complete example, showing how to perform this operation.
+
+
+**Overall:** The slide is part of a data analysis session, demonstrating how to rename row indexes in a Pandas DataFrame using the `rename()` method.  The code example is a complete Python script, which is a common way to present code examples in a data science lecture.  The output is a visual representation of the DataFrame with the modified row indexes.

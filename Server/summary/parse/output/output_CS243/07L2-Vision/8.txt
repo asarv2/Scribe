@@ -1,0 +1,23 @@
+# Slide 8
+
+**Challenges: deformation**
+
+![Cat Images](/path/to/image.jpg)
+
+* **Image 1 (Left-Top):** A plump, light gray tabby cat is lying on a light-gray/beige outdoor surface. The cat is positioned in a relaxed posture, with its front paws outstretched. The cat's expression appears somewhat surprised or alert. The lighting suggests an outdoor setting with natural light.
+
+* **Image 2 (Center-Top):** A gray and white long-haired cat is lying on a light-colored floor. The cat is lying on its back with its paws in the air. The lighting is relatively even, and the floor appears to be indoors.
+
+* **Image 3 (Right-Top):** A gray and white medium-length haired cat is standing on a patterned floor. The cat is standing on all four legs, with its body oriented vertically. The floor has a repeating pattern of light and dark colors.
+
+* **Image 4 (Right-Bottom):** A gray and white shorthaired cat is sitting on a light brownish-tan couch. The cat is sitting with its front paws resting on its body, and its back is slightly arched. The couch is a typical home furniture piece.
+
+
+**Attribution:**
+
+Below each image, the text "This image by [photographer name] is licensed under CC-BY 2.0" is displayed.  This indicates the source of the images and that they are under a Creative Commons license, allowing for reuse under certain conditions.
+
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed challenges in image classification, such as viewpoint variation and illumination.  The current slide introduces the challenge of deformation in image classification.  The images demonstrate how different poses and positions of the same object (in this case, cats) can make it difficult for a computer vision system to reliably identify the object.  The images are used as visual aids to illustrate the concept of deformation and its impact on image recognition.  The slide is designed to highlight the complexity of image recognition tasks and the need for robust algorithms that can handle variations in object appearance.

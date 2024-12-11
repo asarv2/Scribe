@@ -1,0 +1,22 @@
+# 23
+
+# CIFAR10 dataset and state of the art
+
+The CIFAR-10 dataset consists of 60000 32x32 color images in 10 classes,
+with 6000 images per class. There are 50000 training images and 10000 test images.
+
+**(Figure Description):**
+
+A large grid of images is shown.  Each image in the grid is a sample image from the CIFAR-10 dataset.  The images are arranged in rows and columns, forming a matrix.  The images represent different classes within the dataset, including airplanes, automobiles, birds, cats, deer, dogs, frogs, horses, ships, and trucks.  The images are small (32x32 pixels) and are color images.  The purpose of this figure is to visually represent the diversity of the data in the CIFAR-10 dataset.  The images are presented in a grid format to allow for easy visual inspection of the data.  The images are likely pre-processed to have consistent size and centering.
+
+
+**(Table Description):**
+
+A table is shown below the image grid.  The table lists different models and their corresponding accuracy values on the CIFAR-10 dataset.  The columns are "Model" and "Acc."  The "Model" column lists various deep learning models, such as VGG16, ResNet18, ResNet50, etc.  The "Acc." column lists the accuracy percentage achieved by each model on the CIFAR-10 test set.  The table provides a comparison of the performance of different models on the same dataset.  The table is positioned below the image grid.
+
+
+**Description:**
+
+This slide introduces the CIFAR-10 dataset and presents a table showing the state-of-the-art accuracy achieved by various deep learning models on this dataset.  The slide visually displays examples of the images in the dataset and a table summarizing the accuracy of different models.  The purpose of the slide is to introduce the dataset and provide a benchmark for evaluating the performance of different models.
+
+

@@ -1,0 +1,31 @@
+# Slide 38
+
+**Python and Types**
+
+The syntax for a function call is:
+
+```python
+>>> def myfun(x, y):
+        return x * y
+>>> myfun(3, 4)
+12
+```
+
+Parameters in Python are "Call by Assignment."
+Sometimes acts like "call by reference" (for mutable datatypes) and sometimes like "call by value" (for immutable datatypes).
+All assignment in Python, including binding function parameters, uses reference semantics.
+All functions in Python have a return value... even if no return line inside the code.
+Functions without a return return the special value None.
+None is a special constant in the language.
+None is used like NULL, void, or nil in other languages.
+None is also logically equivalent to False.
+The interpreter doesn’t print None
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+**Description:**
+
+This slide discusses function calls and parameter passing in Python.  It explains that Python uses "call by assignment" for parameters, which can sometimes behave like call by reference (for mutable objects) or call by value (for immutable objects).  The example `def myfun(x, y): return x * y` defines a simple function that multiplies two values.  The call `myfun(3, 4)` demonstrates how to execute the function.  The slide also explains that all functions in Python have a return value, even if no explicit `return` statement is present.  If no return statement is present, the function implicitly returns `None`.  The slide further explains the concept of `None` as a special constant in Python, analogous to `NULL`, `void`, or `nil` in other languages.  The final line notes that the Python interpreter does not print the value `None` if it's the result of a function call.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The examples are presented in a clear, concise manner, illustrating the behavior of function calls and parameter passing in Python.
+
+

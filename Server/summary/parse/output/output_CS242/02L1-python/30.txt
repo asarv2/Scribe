@@ -1,0 +1,22 @@
+# Slide 30
+
+**Boolean Logic Expressions**
+
+You can also combine Boolean expressions.
+
+* **a and b**  True if a is True and b is True
+* **a or b**  True if a is True or b is True
+* **not a**  True if a is False
+
+Use parentheses as needed to disambiguate complex Boolean expressions.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide explains how to combine Boolean expressions in Python using the `and`, `or`, and `not` operators.  It provides the truth tables for these operators, showing when the combined expression evaluates to `True` or `False`.  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The examples are presented in a clear, concise manner, providing a basic understanding of Boolean logic in Python.  There are no figures on this slide.
+
+

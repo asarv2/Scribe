@@ -1,0 +1,22 @@
+# 4
+
+# The beginnings of AI Research
+
+1956 Dartmouth summer research project
+
+"We propose that a 2 month, 10 man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College in Hanover, New Hampshire.
+
+The study is to proceed on the basis of the conjecture that every aspect of learning or any other feature of intelligence can in principle be so precisely described that a machine can be made to simulate it. An attempt will be made to find how to make machines use language, form abstractions and concepts, solve kinds of problems now reserved for humans, and improve themselves."
+
+John McCarthy
+
+Marvin Minsky
+
+Claude Shannon
+
+
+---
+
+**Description:**
+
+This slide, titled "The beginnings of AI Research," details the 1956 Dartmouth Workshop, a pivotal moment in the history of AI.  The text describes the workshop's goals and the core principles behind the nascent field.  The slide includes three images of prominent figures associated with the workshop: John McCarthy, Marvin Minsky, and Claude Shannon.  These images are positioned below the text, in a grid-like arrangement.  Each image is a portrait-style photograph of the respective individual.  The images are likely included to provide context and recognition of the key figures who shaped the early development of AI.  Below the images, there is a small caption that provides the source of the images.  Finally, there is a large image of Dartmouth College in the background, providing a visual representation of the location of the workshop.  The image is positioned at the bottom right of the slide, and it is an aerial view of the campus, likely to emphasize the historical significance of the location.  The overall design of the slide is to highlight the historical context and key figures involved in the early days of AI research.

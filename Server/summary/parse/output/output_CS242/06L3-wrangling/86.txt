@@ -1,0 +1,30 @@
+# Slide 86
+
+**`sed` Examples**
+
+```
+sed 's/test/another test/' filename
+sed 's/test//g' filename        # g=global (every occurrence on the line)
+sed '/regexp/d' filename        # d=delete lines
+sed '/^$/d' filename
+sed -n '/Jones/p' filename      # p=print
+sed G filename                  # double space a file
+http://www.grymoire.com/Unix/Sed.html
+```
+
+---
+
+**Description of the Slide:**
+
+This slide provides examples of using the `sed` command-line utility.  It shows various `sed` commands, each demonstrating different text transformations.  The examples include:
+
+*   `sed 's/test/another test/' filename`: Substitutes the string "test" with "another test" in each line of the file `filename`.
+*   `sed 's/test//g' filename`: Globally substitutes the string "test" with nothing (removes all occurrences of "test") in each line of the file `filename`.
+*   `sed '/regexp/d' filename`: Deletes lines containing the regular expression `regexp` in the file `filename`.
+*   `sed '/^$/d' filename`: Deletes empty lines from the file `filename`.  The `^$` is a regular expression matching an empty line.
+*   `sed -n '/Jones/p' filename`: Prints only the lines containing the string "Jones" in the file `filename`. The `-n` option suppresses the default printing of all lines.
+*   `sed G filename`: Appends a newline and a blank line to each line of the file `filename`.
+
+The slide also includes a URL (`http://www.grymoire.com/Unix/Sed.html`) which is a helpful resource for learning more about the `sed` command.  The slide is entirely text-based, with no figures or tables.  The purpose is to provide examples of how to use `sed` for text transformations.
+
+

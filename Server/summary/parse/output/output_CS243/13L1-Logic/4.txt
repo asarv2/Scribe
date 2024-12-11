@@ -1,0 +1,26 @@
+# 4
+
+**The Quest for Machine Reasoning**
+
+Logic reasoning: a cornerstone of Artificial Intelligence
+
+Objective: Develop foundations and technology to enable effective, practical, large-scale automated reasoning
+
+H. Simon (1956): ... within ten years, computers would beat the world chess champion, compose "aesthetically satisfying" original music, and prove new mathematical theorems...
+
+Achieved in 40 Years (not 10)
+
+* 1997 the music composed by David Cope's programs cannot be distinguished from that composed by Mozart, Beethoven, and Bach.
+* 1976 (simplified and accepted 1997), a computer was used in the proof of the long-unsolved "four color problem.
+* 1996, deep blue beat Garry Kasparov
+
+Herbert Simon Portrait: [https://en.m.wikipedia.org/wiki/File:Herbert_simon_red_complete.jpg](https://en.m.wikipedia.org/wiki/File:Herbert_simon_red_complete.jpg)
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, presents a historical overview of the quest for machine reasoning.  The title, "The Quest for Machine Reasoning," is displayed in a large, bold font at the top of the slide.  Below the title, the text describes logic reasoning as a cornerstone of Artificial Intelligence and outlines the objective of developing foundations and technology for effective, practical, and large-scale automated reasoning.  The slide then lists accomplishments in machine reasoning, achieved over a longer period than initially predicted, including specific milestones like the 1997 music composition by David Cope's programs and the 1976/1997 proof of the four-color theorem.  The slide also includes a 1996 achievement of Deep Blue beating Garry Kasparov.  At the bottom of the slide, there is a URL to a portrait of Herbert Simon.
+
+The figure at the bottom of the slide is a portrait of Herbert Simon.  It is positioned in the lower-left corner of the slide.  The reason for its inclusion is to likely provide context and credit to a key figure in the field of AI and automated reasoning.  The portrait is a visual aid to connect the historical context of the achievements discussed on the slide with a prominent figure in the field.  The URL provides a link to the source of the image, which is likely a Wikipedia page or similar online resource.

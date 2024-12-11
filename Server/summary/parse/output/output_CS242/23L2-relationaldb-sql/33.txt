@@ -1,0 +1,27 @@
+# Slide 33
+
+# SQL Joins
+
+```
+Join examples
+SQL JOINS
+A
+B
+SELECT <select_list>
+FROM TableA A
+INNER JOIN TableB B
+ON A.Key = B.Key
+```
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on Introduction to Data Science, introduces the concept of SQL joins.  The title "SQL Joins" is displayed prominently.  Below the title, a Venn diagram is shown.  The diagram depicts two overlapping circles labeled "A" and "B".  The overlapping region is colored red.  Below the diagram, a SQL query is presented, illustrating the syntax for an inner join.  The query shows how to select data from two tables (`TableA` and `TableB`) and combine them based on a common key (`A.Key = B.Key`).  The purpose of this slide is to visually and conceptually introduce the idea of SQL joins, specifically inner joins, and their syntax.
+
+
+**Description of the Figure:**
+
+The figure is a Venn diagram, showing two overlapping circles labeled "A" and "B".  The overlapping region is colored red.  The diagram is positioned centrally on the slide.  The purpose of the Venn diagram is to visually represent the intersection of data from two tables, which is the core concept of an inner join.  The diagram is a visual aid to help the viewer understand how data from two tables is combined when using an inner join in SQL.  The diagram is well-suited to the context of the lecture, as it visually demonstrates the concept of an inner join, which is a fundamental SQL operation.  The diagram is a key visual aid for understanding the concept of SQL joins.
+
+

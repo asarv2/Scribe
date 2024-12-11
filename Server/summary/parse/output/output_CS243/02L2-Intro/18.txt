@@ -1,0 +1,42 @@
+# 18
+
+# Neural Net Achieves Super Human Performance
+
+ImageNet Dataset: sample images from ILSVRC 2012
+
+![Image Grid](https://i.imgur.com/your_image_url.png)
+
+**Description of the Image:**
+
+The image is a large grid of many small images.  These small images are examples from the ImageNet dataset, a large database of images used for training computer vision models.  The grid shows a wide variety of objects and scenes, demonstrating the diversity of the dataset.  The image is positioned at the top left of the slide, above the graph and the diagram of the convolutional neural network.  Its purpose is to visually represent the vastness and variety of the ImageNet dataset, which is crucial for understanding the context of the performance graph and the neural network diagram.
+
+
+**Graph:**
+
+Top-5 error on ImageNet
+
+* **X-axis:**  Years (2010-[23], 2011-[24], 2012-[5], 2013-[2], 2014-[7], 2015-[26])
+* **Y-axis:**  Top-5 error percentage (0-30)
+* **Data Points:**  A bar graph showing the top-5 error rate for image classification over the years.  The bars show a clear downward trend, indicating improved performance over time.
+* **Dashed Line:** A horizontal dashed line represents the top-5 error rate of human performance (5.1%).
+* **Legend:**  A legend shows "top-5" as the label for the bar graph.
+
+The graph is positioned on the right side of the slide, below the image grid.  Its purpose is to visually demonstrate the progress of image classification performance over time, showing how neural networks have surpassed human performance in this task.
+
+
+**Diagram:**
+
+Convolutional neural net example
+
+* **Structure:**  A diagram of a convolutional neural network (CNN).  It shows multiple layers of convolutional and pooling layers, followed by fully connected layers.  The diagram shows the flow of data through the network, from the input image to the final output.
+* **Components:**  The diagram labels different layers (Conv1, Pool1, Conv2, Pool2, FC1, Loss).  The diagram also shows the connections between the layers, indicating the flow of data and operations performed at each stage.
+* **Placement:**  The diagram is positioned below the image grid and to the left of the graph.  Its purpose is to visually illustrate the architecture of the neural network used for image classification, providing context for the performance data shown in the graph.
+
+**Overall:**
+
+The slide combines a visual representation of the ImageNet dataset, a graph showing the improvement in image classification performance over time, and a diagram of the neural network architecture.  This combination provides a comprehensive view of the progress in image recognition using neural networks.
+
+
+**Description of what you see:**
+
+This slide presents a combination of visual aids to illustrate the progress of neural networks in image classification.  The image grid shows examples of the data used to train the networks.  The graph shows the improvement in performance over time, and the diagram shows the architecture of the neural networks used to achieve this performance.  The slide is designed to be informative and visually engaging, providing a clear picture of the progress in image recognition using neural networks.  The source is also given at the bottom of the slide.

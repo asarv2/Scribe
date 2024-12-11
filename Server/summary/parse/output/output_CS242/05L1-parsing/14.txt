@@ -1,0 +1,17 @@
+# Slide 14
+
+**Using Regex**
+
+Regex search patterns get complicated and hard to debug
+
+*   Sometimes it may be better to use multiple patterns rather than a complicated one
+*   Document anything that gets complicated
+
+Use sites to help debug them: https://regex101.com/
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, discusses strategies for dealing with complex regular expression (regex) search patterns.  The slide advises that when regex patterns become overly complex, it might be more efficient and easier to maintain to use multiple, simpler patterns instead.  It also emphasizes the importance of documenting complex regex patterns to aid in understanding and debugging.  Finally, a URL (https://regex101.com/) is provided as a helpful resource for testing and debugging regex patterns.  The overall tone is practical, suggesting strategies for managing the complexity of regex patterns in data analysis tasks.  The slide is likely part of a larger discussion on data manipulation and text processing techniques within the Intro to Data Science course.

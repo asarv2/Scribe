@@ -1,0 +1,42 @@
+# Slide 1
+
+**Random Variables**
+
+In set 4-7 of the notes, we study the basic probability theory, where the outcome of an experiment can be anything. In order to make analytical analysis, one needs to transform the outcome of an experiment to numerical values.
+
+**NOTE:** Categorical variables can also be represented by binary values.
+
+**Random variable:**
+
+* For a given sample space S of some experiment, a random variable (r.v.) is any rule that associates a number with each outcome in S. In mathematical language, a random variable is a function whose domain is the sample space and whose range is the set of real numbers.
+* We usually let X, Y or Z stand for the random variables, lowercase letters x, y, or z denote the particular values of the corresponding random variables.
+
+**Example 8.1** Consider the experiment of tossing a fair coin three times independently. Define the random variable X to be the number of heads obtained in the three tosses. A complete enumeration of the value of X for each point s in the sample space S is:
+
+| s | HHH | HHT | HTH | THH | TTH | THT | HTT | TTT |
+|---|---|---|---|---|---|---|---|---|
+| X(s) | 3 | 2 | 2 | 2 | 1 | 1 | 1 | 0 |
+
+
+**Example 8.2** Consider the experiment that we toss coin until first head shows up. Define the random variable to be the number of Tails before the first Head shows up.
+
+| s | H | TH | TTH | TTTH | TTTTH | ... |
+|---|---|---|---|---|---|---|
+| X(s) | 0 | 1 | 2 | 3 | 4 | ... |
+
+
+**Example 8.3** Consider the experiment of tossing a fair dice two times independently. Define the random variable X to be the summation of the two values.
+
+**Example 8.4** Consider the experiment where we measure the chemical reaction time. We can define a random variable by an identity function.
+
+**Two basic types of Random variable:**
+
+* **Discrete** is a r.v. whose possible values are countable.
+* **Continuous** is a r.v. whose possible values consists either of all numbers in a single interval on the number line or all numbers in a disjoint union of such intervals, and no possible value of the variable has positive probability, that is, P(X = c) = 0 for all possible c.
+
+
+---
+
+**Description of the Slide:**
+
+This is the first slide of a lecture on Statistical Methods, specifically focusing on the concept of Random Variables.  The slide introduces the definition of a random variable, explaining it as a function that maps outcomes of an experiment to numerical values.  It provides examples (8.1, 8.2, 8.3, and 8.4) illustrating different scenarios where random variables are defined and calculated.  Crucially, it distinguishes between discrete and continuous random variables, highlighting the key difference in their possible values.  The table in Example 8.1 shows a complete enumeration of the possible outcomes of tossing a coin three times and the corresponding values of the random variable X (number of heads).  The table in Example 8.2 shows the outcomes of tossing a coin until the first head appears, and the number of tails before the first head.  The examples are presented in a clear and organized manner, with each example clearly labeled.  The slide also includes a note about categorical variables being representable by binary values, which is a useful context for understanding the need for numerical representation in statistical analysis.

@@ -1,0 +1,50 @@
+# 2
+
+**The Language of Statistics:**
+
+Like every field of study, statistics has its own language. Let's begin by defining a few words that will be used throughout the course.
+
+* **Population:** WHO WE ARE INTERESTED IN - A population is a group of individuals we are interested in and about whom inferences are to be made.
+
+* **Sample:** The sample is the subset of the population whose members were chosen to be in the study.
+
+* **Simple random sample (abbreviated SRS):** I use random sample and SRS interchangeably. A random sample is a sample which is selected by any method equivalent to drawing names out of a hat.
+
+
+**Example:**
+
+Population: all current Purdue students
+
+Sample: 100 randomly chosen students currently taking STAT 511
+
+
+* **Subjects:** WHO WE MEASURE - Subjects are the individual members of the population that are in the study. The set of subjects makes up the sample.
+
+* **Variable(s):** WHAT WE MEASURE - We are usually interested only in certain characteristics of the objects in a population. A variable describes a characteristic of an individual that is measured on each subject in the sample.
+
+* **Values or measurements:** Variable values are the quantities or qualities taken by a variable. Each subject has a variable value.
+
+
+**Notation:**
+
+Use upper case letters X, Y, Z to denote variables,
+
+Use lower case letters x, y, z to show values that variables take.
+
+
+**Example:**
+
+Variable | Values
+------- | --------
+X: regular smoker | x: yes, no
+Y: Age | y: 16, 17, 18, 19 ...
+
+
+* **Data:** The set of variables values measured on the subjects in the sample.
+
+
+---
+
+**Slide Description:**
+
+This slide, titled "The Language of Statistics," introduces key statistical terminology.  It defines population and sample, emphasizing the concept of a simple random sample (SRS).  A visual aid, a Venn diagram, depicts the relationship between a population and a sample, showing the sample as a subset of the population.  The diagram is positioned centrally on the slide, illustrating the concept of sampling.  The slide also provides an example of a population (all current Purdue students) and a sample (100 randomly chosen students taking STAT 511).  The slide then introduces the concept of subjects and variables, explaining how variables are used to measure characteristics of subjects within a sample.  Finally, it introduces the notation used for variables and their values, providing an example of a variable (X: regular smoker) and its possible values (x: yes, no).  The slide concludes by defining data as the set of variable values measured on the subjects in the sample.  The slide number (2) is clearly visible at the bottom right.

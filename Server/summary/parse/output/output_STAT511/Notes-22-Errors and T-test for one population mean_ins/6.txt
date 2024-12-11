@@ -1,0 +1,75 @@
+# 6
+
+**Hypothesis tests about the one-sample population mean 8.2-8.3**
+
+Let X<sub>1</sub>, ..., X<sub>n</sub> represent a random sample of size n from some population.
+
+* Null hypothesis H<sub>0</sub>: μ = μ<sub>0</sub>, where μ<sub>0</sub> is called null value.
+* Three possible alternative hypotheses
+    1. H<sub>a</sub>: μ > μ<sub>0</sub>, the population mean is greater than μ<sub>0</sub>
+    2. H<sub>a</sub>: μ < μ<sub>0</sub>, the population mean is less than μ<sub>0</sub>
+    3. H<sub>a</sub>: μ ≠ μ<sub>0</sub>, the population mean is not μ<sub>0</sub>
+
+**Case 1: Normal distribution with known variance σ<sup>2</sup>**
+
+The Test statistic is:
+
+TS =  (X̄ - μ<sub>0</sub>) / (σ/√n)  ~ N(0,1)
+
+One reason we choose this test statistic is that if we want to control the type I error, then the test statistic should have a tractable sampling distribution under null hypothesis.
+
+
+Type I error:
+
+α = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∈ Reject Region | μ = μ<sub>0</sub>) = P(Z ∈ Reject Region)
+
+As for type II error:
+
+β(μ) = P((X̄ - μ<sub>0</sub>) / (σ/√n) ∉ Reject Region) = P(N(√n(μ - μ<sub>0</sub>)/σ, 1) ∉ Reject Region)
+
+
+Rejection region and p-value:
+
+1. {Z > z<sub>1-α</sub>}, p-value = P(Z > z<sub>TS</sub>) if H<sub>a</sub>: μ > μ<sub>0</sub>
+2. {Z < z<sub>α</sub>}, p-value = P(Z < z<sub>TS</sub>) if H<sub>a</sub>: μ < μ<sub>0</sub>
+3. {|Z| > z<sub>1-α/2</sub>}, p-value = 2 × P(Z > |z<sub>TS</sub>|), if H<sub>a</sub>: μ ≠ μ<sub>0</sub>
+
+This choice of rejection region is intuitively appealing to the alternative hypotheses setting, also tries to minimize the type II error subject to α.
+
+
+**Example 21.5 & 21.7**
+
+Example 22.4: A town's main source of income is tourists interested in fishing along the river that runs through town. Sewage and industrial pollutants from a large metropolitan area are dumped into the river upstream from this town. Fish are starting to die and a biologist is hired by the town to see if she can determine the cause of the die off. She suspects that the oxygen is too low in the water for fish to survive. Current research asserts that the mean dissolved oxygen level in water must be at least 5.0 ppm for fish to survive. She randomly selects 8 days in a two-month period and collects water samples each of those 8 days. Her sample mean is 4.81. Assume the standard deviation is known and σ = 0.165 ppm.
+
+She wants to use this data to test the claim that the average oxygen content is below 5.0 ppm.
+
+1. Hypotheses: H<sub>0</sub>: μ = 5.0 vs H<sub>1</sub>: μ < 5.0, where μ is the mean oxygen level.
+
+2. Diagnose normality assumption. Test statistic calculation: Z = (X̄ - μ<sub>0</sub>) / (σ/√n) = (4.81 - 5.0) / (0.165/√8) = −3.257
+
+3. We choose α = 0.05, and rejection region is {Z < −1.645}.
+
+4. Conclusion: (1) Since Z<sub>TS</sub> = −3.257 ∈ R.R., we reject the null hypothesis. (2) There is strong statistical (significant) evidence that the mean oxygen level is lower than 5.0 ppm at 5% significance level.
+
+
+**Sample size determination (optional):**
+
+Figure out the minimum value of n such that β(μ′) < certain threshold value β.
+
+Consider one-side test H<sub>a</sub>: μ > μ<sub>0</sub>, then
+
+β(μ′) = P(X̄ - μ<sub>0</sub> / (σ/√n) < z<sub>α</sub>) = P(N(√n(μ′ - μ<sub>0</sub>)/σ, 1) < z<sub>α</sub>) = P(N(0,1) < z<sub>α</sub> + √n(μ<sub>0</sub> - μ′)/σ)
+
+= Φ(z<sub>α</sub> + √n(μ<sub>0</sub> - μ′)/σ)
+
+For any μ′ > μ.
+
+
+**How is type II error affected by type I error, true mean and sample size?**
+
+In order to ensure that β(μ′) ≤ β, one must have
+
+
+**Description of the Slide:**
+
+Slide 6 continues the discussion of hypothesis testing for a single population mean, focusing on the case where the population variance is known.  It introduces a specific example (Example 22.4) involving dissolved oxygen levels in a river.  The example walks through the steps of a hypothesis test, including defining the hypotheses, calculating the test statistic, determining the rejection region, and drawing a conclusion.  A key part of the slide is the calculation of the test statistic, which is a Z-score.  A histogram is present, but it's not clear what data it represents without more context.  The slide also includes a discussion of sample size determination, which is optional.  The slide number (6) is present at the bottom right corner.  The overall presentation is consistent with the previous slides in the lecture, focusing on the statistical methods for hypothesis testing.

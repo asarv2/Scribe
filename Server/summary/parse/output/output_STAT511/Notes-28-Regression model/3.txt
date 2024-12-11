@@ -1,0 +1,53 @@
+# Slide 3
+
+**STAT 511 Course Notes – set 28 (W15)**
+
+**Yuan Qu**
+
+**3**
+
+**Note:** be sure that the scatter plot shows a linear pattern with relatively homogenous variation before fitting the simple linear regression model.
+
+**Example 28.1**
+
+**Relevant summary quantities (summary statistics) are**
+
+∑𝑥𝑖= 2817.9
+∑𝑦𝑖= 1574.8
+
+∑𝑥𝑖<sup>2</sup> = 415,949.85
+∑𝑦𝑖<sup>2</sup> = 124,039.58
+∑𝑥𝑖𝑦𝑖= 222,657.88
+
+**from which**
+
+𝑥̅ = 140.895,
+𝑦̅ = 78.74
+
+𝑆𝑥𝑥= 18,921.8295
+𝑆𝑥𝑦= 776.434
+
+𝑏1 = 𝛽̂1 = 𝑆𝑥𝑦
+𝑆𝑥𝑥
+=
+776.434
+18,921.8295 = 0.04103377 ≈0.041
+
+𝑏0 = 𝛽̂0 = 78.74 – (0.04103377)(140.895) =  72.958547 ≈72.96.
+
+**from which the equation of least squares line is  𝒚̂ =  𝟕𝟐. 𝟗𝟔 +  𝟎. 𝟎𝟒𝟏𝒙.**
+
+
+**Fitted or predicted value:** Substituting 𝑥<sub>1</sub>, … , 𝑥<sub>𝑛</sub> into the equation of the estimated regression line we obtained the fitted or predicted values 𝑦̂<sub>1</sub>, 𝑦̂<sub>2</sub>, … , 𝑦̂<sub>𝑛</sub>,
+
+𝑦̂𝑖= 𝛽̂0 + 𝛽̂1𝑥𝑖= 𝑏0 + 𝑏1𝑥𝑖
+
+
+**Figure Description:**
+
+There is no figure on this slide.  However, the text refers to a scatter plot that should be present *before* this slide, to visually confirm the linearity and homogeneity of variance of the data.  The absence of the scatter plot here is important because the example is calculating the regression line parameters based on the summary statistics, which are derived from the data points in the scatter plot.  The example assumes the data is suitable for linear regression.  The example is a step-by-step calculation of the regression line parameters, given the summary statistics.  The slide is part of a lecture on statistical methods, specifically focusing on simple linear regression.
+
+
+**Description of the Slide:**
+
+This slide continues the example of simple linear regression, presenting the calculation of the regression line parameters (slope and intercept) using the least squares method.  It shows the relevant summary statistics (calculated from the data) and the resulting equation of the least squares line.  The slide is crucial for understanding how to estimate the regression line from a dataset.  The slide assumes the data is suitable for linear regression, as indicated by the note on the previous slide.

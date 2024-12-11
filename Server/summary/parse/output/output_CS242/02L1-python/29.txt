@@ -1,0 +1,23 @@
+# Slide 29
+
+**Booleans**
+
+True and False are constants in Python
+Other values equivalent to True and False:
+* False: zero, None, empty container or object
+* True: non-zero numbers, non-empty objects
+Comparison operators: ==, !=, <, <=, etc.
+* X and Y have same value: X == Y
+* Compare with: X is Y
+* X and Y are two variables that refer to the identical object
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+---
+
+**Description:**
+
+This slide discusses Boolean values in Python.  It defines what values are considered `True` and `False` in Python, including zero, `None`, and empty containers.  It also explains the difference between comparing values (`X == Y`) and comparing object identity (`X is Y`).  The slide is part of a larger set of lecture notes on Python programming, likely within the context of an Intro to Data Science course.  The text is presented in a clear and concise manner, providing a summary of Boolean values and comparison operators in Python.  There are no figures on this slide.
+
+

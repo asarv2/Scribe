@@ -1,0 +1,26 @@
+# Slide 19
+
+**Visual Issues**
+
+---
+
+**Figure Description:**
+
+The slide presents several visual examples, likely to illustrate visual perception issues that can affect data interpretation.
+
+* **Left-Top:** A radiating line pattern.  A set of radiating lines converge towards a central point, with a pair of red lines bisecting the pattern.  This is a common visual illusion used to demonstrate how our perception of depth and perspective can be affected by the arrangement of lines.
+
+* **Left-Middle:** A grid of black squares.  This is a simple visual representation of a grid pattern, likely used as a comparison or contrast to other visual elements on the slide.
+
+* **Left-Bottom:** A set of connected lines.  Two lines are connected by a Y-shaped junction, and two lines are connected by a simple horizontal line.  These are simple geometric shapes, likely used as a comparison or contrast to other visual elements on the slide.
+
+* **Center:** A series of geometric shapes.  A triangle with three black circles inside it, and two circles with a gap in between.  These are geometric shapes, likely used to demonstrate visual patterns and how our perception of these patterns can be affected.
+
+* **Right:** A cluster of circles.  A cluster of black circles with a central cluster of purple circles.  This is a visual representation of a cluster or grouping of data points, likely used to demonstrate visual patterns and how our perception of these patterns can be affected.
+
+* **Bottom:** A series of circles connected by lines.  Three circles are connected by a line, and three circles are connected by a line.  These are simple geometric shapes, likely used as a comparison or contrast to other visual elements on the slide.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, presents various visual examples designed to highlight potential issues in visual perception that can affect data interpretation.  The different shapes and patterns are likely intended to demonstrate how our visual system can be tricked or misled, leading to misinterpretations of data.  The slide is likely part of a section on data visualization and the importance of understanding how visual perception can influence our interpretation of data.  The examples are meant to illustrate the concept of visual biases in data interpretation.

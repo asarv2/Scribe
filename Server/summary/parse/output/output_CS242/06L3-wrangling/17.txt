@@ -1,0 +1,26 @@
+# Slide 17
+
+**Augmenting: UNaugmenting (deleting)**
+
+Be careful about deleting data. It can cause incompatibilities between data sources.
+Rather than deleting, consider duplicating a filtered portion of the data frame.
+
+But if you must:
+
+```
+del data_zillow['INDEX']
+```
+
+```
+LIVING SPACE (SQ FT)	BEDS	BATHS	ZIP	YEAR	LIST PRICE ($)	SOLD	PRICE/SQ FT ($)	AGE
+0	2222	3	3.5	32312	1981	250000	NO	112	39
+…	…	…	…	…	…	…	…	…
+```
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a data science lecture, discusses the importance of avoiding deleting data and instead suggests duplicating filtered portions of a DataFrame.  It emphasizes that deleting data can lead to inconsistencies between different data sources.  The slide then shows an example of deleting a column named 'INDEX' from a DataFrame called `data_zillow`.  The code `del data_zillow['INDEX']` is shown, indicating the deletion of the 'INDEX' column.  The slide also includes a table showing a portion of the DataFrame after the deletion.  The table shows the `LIVING SPACE (SQ FT)`, `BEDS`, `BATHS`, `ZIP`, `YEAR`, `LIST PRICE ($)`, `SOLD`, `PRICE/SQ FT ($)`, and `AGE` columns.  The `...` indicates that the table continues beyond the displayed rows.  The purpose of this slide is to highlight the potential issues with deleting data and to demonstrate how to delete a column from a DataFrame.  The table is a key part of the slide, showing the data after the column deletion.  The code snippet is crucial for demonstrating the deletion process.
+
+

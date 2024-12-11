@@ -1,0 +1,13 @@
+# Slide 12
+
+**Graduate Teaching Assistants**
+
+* **Manav Kulshrestha:**  mkulshre@purdue.edu
+* **Arvind Ramaswami:** ramaswa4@purdue.edu
+* **Shahab Rahimirad:** srahimir@purdue.edu
+* **Xingpeng Sun:** sun1223@purdue.edu
+
+
+**Slide Description:**
+
+This slide lists the names and email addresses of the graduate teaching assistants (TAs) for the Intro to Data Science course.  Four portrait-style images of the TAs are displayed, one for each TA.  The images are arranged in a grid pattern, with each image positioned above the corresponding TA's name and email address.  The images are likely professional headshots, and their purpose is to allow students to visually identify the TAs.  The slide is designed to help students connect with the TAs if they have questions or need assistance during the course.  The layout is clear and concise, making it easy to read the names and email addresses of the TAs.

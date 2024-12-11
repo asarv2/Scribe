@@ -1,0 +1,24 @@
+# 33
+
+**How to choose k in kmeans?**
+
+How many clusters do we need?
+K-means optimization
+* Minimize the sum of squared distances from each point to its cluster centroid
+(this is called the inertia score in sklearn)
+Naive approach to choose k:
+* Try different values of k, pick one that minimizes inertia
+* What is wrong with this? As k increases the inertia
+score cannot increase, thus will pick k=n
+Better approach:
+* Pick k at the "elbow" of the plot
+* Balances accuracy (low value of inertia) and complexity (small value of k)
+
+
+---
+
+A line graph is displayed.  The x-axis is labeled "Number of Centers" and ranges from 1 to 9.  The y-axis is labeled "Inertia" and ranges from 10,000 to 26,000.  The graph shows a curve of decreasing inertia values as the number of centers (k) increases.  The curve starts with a steep decrease, then gradually levels off.  A point on the curve, corresponding to a number of centers around 3, is circled in red.  This circled point visually represents the "elbow" of the curve.  The graph is positioned centrally on the slide.
+
+**Description of what you see:**
+
+Slide 33 of a presentation on AI Basics.  The slide discusses how to choose the optimal number of clusters (k) in the K-means algorithm.  It explains that K-means aims to minimize the inertia (sum of squared distances from each point to its cluster centroid).  A naive approach would be to try different values of k and pick the one that minimizes inertia, but this can lead to choosing too many clusters.  A better approach is to look for the "elbow" in a plot of inertia versus the number of clusters.  The graph shown is a plot of inertia versus the number of clusters, illustrating the concept of the "elbow" method for selecting the optimal k value.  The red circle highlights the point on the graph that represents the "elbow," suggesting that a good choice for k might be around 3 in this example.  The slide is designed to illustrate the "elbow method" for determining the optimal number of clusters in K-means clustering.

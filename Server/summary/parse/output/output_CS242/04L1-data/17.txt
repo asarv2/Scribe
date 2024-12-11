@@ -1,0 +1,16 @@
+# 17
+
+# The three structures in pandas
+
+Series: A one dimensional data structure, similar to an array
+DataFrame: A two dimensional data structure, like a table
+Panel: A three dimensional multi-indexed structure
+
+
+---
+
+**Description:**
+
+This slide describes the three fundamental data structures in the Pandas library.  It's a simple, bulleted list, likely intended as a summary of the different ways data can be organized and manipulated within Pandas.  There are no figures on this slide.  The context from the previous slides suggests that this is part of a larger lecture on Introduction to Data Science, specifically focusing on the Pandas library and its data structures.  The slide is likely a transition to a discussion of how these structures are used in data analysis tasks.
+
+

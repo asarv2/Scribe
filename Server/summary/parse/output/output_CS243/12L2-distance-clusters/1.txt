@@ -1,0 +1,15 @@
+# 1
+
+# AI Basics
+
+Purdue CS24300
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the slide:**
+
+This is a title slide for a lecture on AI Basics.  The title "AI Basics" is displayed prominently in a large, bold, light gray font.  Below that, in a smaller, light gray font, are the course information (Purdue CS24300) and the instructor's name (Tony Bergstrom).  At the very bottom, in a very small, light gray font, is a credit line indicating the source of the slides (Slides adapted from Jen Neville, CS 24200). The background color is a dark gray.  The overall design is simple and clean, focusing on the title and course information.

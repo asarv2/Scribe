@@ -1,0 +1,1000 @@
+# 1
+
+# Introduction to Data Science
+
+Purdue CS24200
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Introduction to Data Science.  The background is a dark gray.  The title "Introduction to Data Science" is large and prominent, centered at the top of the slide.  Below that, in a slightly smaller font, are the course information: "Purdue CS24200" and "Tony Bergstrom" (presumably the instructor).  Finally, at the very bottom of the slide, in a very small font, is a credit line: "Slides adapted from Jen Neville, CS 24200".  This indicates that the lecture materials are based on a previous version of the course.  There are no figures on this slide.
+
+
+# 2
+
+**Announcements**
+
+Office Hours: Starting next week
+
+| Day | Start | End | G/U TA | Location |
+|---|---|---|---|---|
+| Monday | 2:30 | 3:30 pm | Younghun | Online |
+| Tuesday | 4:00 | 6:00 pm | Amy | Online |
+| Wednesday | 2:00 | 3:00 pm | Sanjeev | Online |
+| Thursday | 1:30 | 2:30 pm | Chun-Wei | Haas G50 |
+|  |  |  | Wenbo |  |
+
+No Discussion task this week
+Homework 1 to be released today
+
+
+---
+
+**Description of the Slide:**
+
+This slide, titled "Announcements," provides important information for the Intro to Data Science course.  It's formatted as a table, listing office hours for the teaching assistants (TAs).  The table clearly shows the day, start time, end time, the TA's name, and the location (either online or a specific room, Haas G50).  The table is organized neatly, making it easy to find the relevant information.  Below the table, there are two additional announcements:  "No Discussion task this week" and "Homework 1 to be released today."  These announcements are in a slightly smaller font size than the table entries.  There are also two light-blue exclamation marks and circles at the top right corner of the slide.  These are likely visual cues to draw attention to the announcements.  The overall color scheme is light and easy to read.
+
+
+# 3
+
+# Data
+
+---
+
+**Description:**
+
+This slide, titled "Data," is a single word slide.  The word "Data" is centered on the slide in a dark gray font against a light gray background.  There are no figures or other content on the slide.  The slide likely introduces the topic of data as the subject of the next few slides in the lecture.  The context from the previous slide suggests that this is part of a larger lecture on Introduction to Data Science.
+
+
+
+
+# 4
+
+# The Data Mining Process
+
+Obtain Data → Scrub → Target Data → Explore → Preprocessed Data → Model → Patterns → Interpret → Knowledge
+
+---
+
+**Description:**
+
+This slide presents a visual representation of the data mining process.  It's a flowchart-style diagram showing a series of steps, each with a corresponding icon and text label.
+
+* **Top:** The title "The Data Mining Process" is displayed in a bold, dark teal font.
+
+* **Flowchart:**  A series of connected teal-colored icons and gray arrows depict the process.
+    * **Obtain Data:** A stack of teal cylinders (representing database files) is shown.
+    * **Scrub:** A single teal cylinder is shown.
+    * **Target Data:** A single teal cylinder is shown.
+    * **Explore:** A teal grid is shown.
+    * **Preprocessed Data:** A teal grid is shown.
+    * **Model:** A teal bar graph is shown.
+    * **Patterns:** A teal bar graph is shown.
+    * **Interpret:** A teal open book is shown.
+    * **Knowledge:** A teal open book is shown.
+
+* **Arrows:** Gray arrows connect the icons, indicating the sequential steps in the process.  The arrows curve slightly, creating a visual flow.
+
+* **Text Labels:** Text labels (Obtain Data, Scrub, Explore, Model, Interpret) are positioned next to the corresponding icons, providing context for each step.  The text labels are also in a dark teal color.
+
+* **Data Flow:** The diagram visually represents the flow of data from the initial "Obtain Data" stage to the final "Knowledge" stage.  The process involves transforming and refining the data at each step.
+
+**Overall:** The slide effectively illustrates the steps involved in data mining, from acquiring raw data to extracting meaningful knowledge. The use of icons and arrows makes the process easy to understand at a glance.  The teal and gray color scheme is consistent with the overall theme of the presentation.
+
+
+# 5
+
+# The first step in the data science process is to Obtain data
+
+---
+
+**Description:**
+
+This slide, titled "The first step in the data science process is to Obtain data," visually depicts the importance of data acquisition in the data science process.  The slide is dominated by a complex network of interconnected lines and icons, representing various data sources and connections.  These lines and icons are in various colors (teal, orange, green, blue, etc.).  The icons represent different forms of data, such as social media platforms (Facebook, Twitter), email, SMS, and general data sources.  The icons are arranged in a complex, interconnected network, suggesting the vast and varied nature of data sources.  The lines and icons are not arranged in a linear fashion, but rather in a complex, interconnected network, suggesting the interconnectedness of data sources.  The overall impression is one of a complex web of data connections.  The text "The first step in the data science process is to Obtain data" is positioned at the bottom right of the slide, in a large, bold font, drawing attention to the central message of the slide.  The text is in a contrasting color to the background, making it easily readable.  The background is white, allowing the colorful icons and lines to stand out.  The slide is designed to visually represent the concept of data acquisition in a data science project.
+
+
+
+
+# 6
+
+# What is data?
+
+Collection of entities and their attributes
+
+**Attribute:** property or characteristic of an entity (e.g., eye color, temperature)
+
+**Entity:** collection of attributes
+
+Aka: record, point, case, sample, object, or instance
+
+|       | Thread pitch (mm) | Minor diameter tolerance | Nominal diameter (mm) | Head shape | Price for 50 screws | Available at factory outlet? | Number in stock | Flat or Phillips head? |
+|-------|--------------------|---------------------------|------------------------|-------------|-----------------------|---------------------------|-----------------|--------------------|
+| **M4** | 0.7                 | 4g                        | 4                      | Pan         | $10.08                 | Yes                      | 276              | Flat               |
+| **M5** | 0.8                 | 4g                        | 5                      | Round       | $13.89                 | Yes                      | 183              | Both               |
+| **M6** | 1                   | 5g                        | 6                      | Button       | $10.42                 | Yes                      | 1043             | Flat               |
+| **M8** | 1.25                | 5g                        | 8                      | Pan         | $11.98                 | No                       | 298              | Phillips           |
+| **M10**| 1.5                 | 6g                        | 10                     | Round       | $16.74                 | Yes                      | 488              | Phillips           |
+| **M12**| 1.75                | 7g                        | 12                     | Pan         | $18.26                 | No                       | 998              | Flat               |
+| **M14**| 2                   | 7g                        | 14                     | Round       | $21.19                 | No                       | 235              | Phillips           |
+| **M16**| 2                   | 8g                        | 16                     | Button       | $23.57                 | Yes                      | 292              | Both               |
+| **M18**| 2.1                 | 8g                        | 18                     | Button       | $25.87                 | No                       | 664              | Both               |
+| **M20**| 2.4                 | 8g                        | 20                     | Pan         | $29.09                 | Yes                      | 486              | Both               |
+| **M24**| 2.55                | 9g                        | 24                     | Round       | $33.01                 | Yes                      | 982              | Phillips           |
+| **M28**| 2.7                 | 10g                       | 28                     | Button       | $35.66                 | No                       | 1067             | Phillips           |
+| **M36**| 3.2                 | 12g                       | 36                     | Pan         | $41.32                 | No                       | 434              | Both               |
+| **M50**| 4.5                 | 15g                       | 50                     | Pan         | $44.72                 | No                       | 740              | Flat               |
+
+
+---
+
+**Description:**
+
+This slide defines data in the context of data science.  It introduces the concepts of attributes and entities.  The slide is structured as a definition and example table.
+
+* **Definitions:** The top portion of the slide defines attributes and entities.  Attributes are properties or characteristics of an entity (e.g., eye color, temperature).  Entities are collections of attributes (e.g., a record, point, case, sample, object, or instance).
+
+* **Table:** A table is presented, showing various attributes of entities.  The table is organized with columns for Thread pitch (mm), Minor diameter tolerance, Nominal diameter (mm), Head shape, Price for 50 screws, Available at factory outlet?, Number in stock, and Flat or Phillips head?.  The rows represent different entities (e.g., M4, M5, M6, etc.).  The table provides a concrete example of how attributes are used to describe entities.
+
+* **Layout:** The table is positioned below the definitions, visually separating the theoretical concepts from the practical example.  The table is well-organized, with clear column headers and row labels.  The table is formatted to be easily readable.
+
+**Overall:** The slide effectively introduces the concepts of data, attributes, and entities in a clear and concise manner. The table provides a practical example of how these concepts are applied in a real-world scenario.  The table is likely a dataset used in the course to illustrate data characteristics.
+
+
+# 7
+
+# Tabular data (Simple structured data)
+
+| position # | Time [UTC] | Time [LMT] | Longitude [deg] | Latitude [deg] | Altitude [m] | Status | Main [V] | Beacon [V] | Temperature [°C] |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 2014-01-01 00:00:44 | 2014-01-01 02:00:44 | 32.24420 | -27.88087 | 119 | val. GPS-3D | 3.36 | 2.08 | 25 |
+| 2 | 2014-01-01 01:00:44 | 2014-01-01 03:00:44 | 32.24422 | -27.88077 | 119 | val. GPS-3D | 3.36 | 2 | 24 |
+| 3 | 2014-01-01 02:00:44 | 2014-01-01 04:00:44 | 32.24427 | -27.88084 | 113 | val. GPS-3D | 3.36 | 2 | 24 |
+| 4 | 2014-01-01 03:00:21 | 2014-01-01 05:00:21 | 32.24487 | -27.88001 | 166 | val. GPS-3D | 3.36 | 1.84 | 23 |
+| 5 | 2014-01-01 04:01:27 | 2014-01-01 06:01:27 | 32.23733 | -27.87960 | 121 | GPS-3D | 3.36 | 1.92 | 23 |
+| 6 | 2014-01-01 05:00:54 | 2014-01-01 07:00:54 | 32.23727 | -27.87759 | 121 | GPS-2D | 3.36 | 2.24 | 26 |
+| 7 | 2014-01-01 06:01:55 | 2014-01-01 08:01:55 | 32.23747 | -27.87759 | 122 | GPS-2D | 3.36 | 2.32 | 26 |
+| 8 | 2014-01-01 07:01:20 | 2014-01-01 09:01:20 | 32.23740 | -27.87715 | 124 | GPS-2D | 3.36 | 2.64 | 28 |
+| 9 | 2014-01-01 08:01:17 | 2014-01-01 10:01:17 | 32.23752 | -27.87692 | 92 | GPS-3D | 3.36 | 2.72 | 29 |
+| 10 | 2014-01-01 09:01:14 | 2014-01-01 11:01:14 | 32.24147 | -27.87377 | 83 | val. GPS-3D | 3.36 | 2.72 | 29 |
+| 11 | 2014-01-01 10:01:28 | 2014-01-01 12:01:28 | 32.24537 | -27.87179 | 84 | GPS-2D | 3.36 | 2.4 | 27 |
+| 12 | 2014-01-01 11:01:01 | 2014-01-01 13:01:01 | 32.24490 | -27.87202 | 83 | GPS-2D | 3.36 | 2.24 | 26 |
+| 13 | 2014-01-01 12:01:36 | 2014-01-01 14:01:36 |  |  |  | No Fix | 3.36 | 2.32 | 26 |
+| 14 | 2014-01-01 13:02:34 | 2014-01-01 15:02:34 | 32.24191 | -27.87205 | 80 | val. GPS-3D | 3.36 | 2.64 | 29 |
+| 15 | 2014-01-01 14:01:08 | 2014-01-01 16:01:08 | 32.24068 | -27.87272 | 81 | val. GPS-3D | 3.36 | 2.24 | 26 |
+| 16 | 2014-01-01 15:01:02 | 2014-01-01 17:01:02 | 32.23830 | -27.87547 | 91 | GPS-3D | 3.36 | 2.64 | 29 |
+| 17 | 2014-01-01 16:01:13 | 2014-01-01 18:01:13 | 32.23815 | -27.87829 | 104 | val. GPS-3D | 3.36 | 2.64 | 29 |
+| 18 | 2014-01-01 17:00:16 | 2014-01-01 19:00:16 | 32.23720 | -27.87853 | 100 | val. GPS-3D | 3.36 | 2.32 | 26 |
+| 19 | 2014-01-01 18:01:38 | 2014-01-01 20:01:38 | 32.23572 | -27.87838 | 115 | val. GPS-3D | 3.36 | 2.16 | 25 |
+| 20 | 2014-01-01 19:01:02 | 2014-01-01 21:01:02 | 32.23452 | -27.87658 | 136 | val. GPS-3D | 3.36 | 2 | 24 |
+| 21 | 2014-01-01 20:01:58 | 2014-01-01 22:01:58 | 32.23413 | -27.87617 | 133 | val. GPS-3D | 3.36 | 1.92 | 23 |
+
+
+---
+
+**Description:**
+
+This slide presents a table of tabular data, likely representing GPS data.  The table shows various attributes (position number, time, longitude, latitude, altitude, status, etc.) for different data points.  The data appears to be from a GPS tracking device, as indicated by the "GPS-3D" and "GPS-2D" status values.  The data includes timestamps, coordinates, and other relevant information.  The table is formatted in a standard tabular format, with rows and columns clearly defined.  The data is likely part of a larger dataset, and the table is presented to illustrate the structure of the data.  The context from the previous slides suggests that this is part of a lecture on data science, specifically focusing on the concept of tabular data.
+
+
+# 8
+
+# Structured Data (Relational)
+
+Collection of data items, with varying numbers of properties and relationships among them
+(organization of information is specified by data schema/model), e.g., relational databases,
+graph data
+
+---
+
+**Description:**
+
+This slide, titled "Structured Data (Relational)," introduces the concept of structured data, specifically relational data.  The slide contains a large, complex diagram.
+
+* **Diagram:** The diagram is a visual representation of a relational database schema.  It shows interconnected boxes and lines, representing tables and relationships between them.  The boxes are labeled with names (e.g., "P4_Data_pending," "P4_Data_pending_types").  The lines indicate relationships between the tables.  The boxes and lines are colored and shaded in various shades of light blue, light green, and light pink, making the diagram visually complex but also somewhat organized.  The diagram is large and takes up most of the slide, filling the space from the top to the bottom and from the left to the right.  The diagram is not a simple flowchart, but rather a complex network of interconnected tables and relationships.  The diagram is likely intended to illustrate the structure and relationships within a relational database.  The complexity of the diagram is meant to show the interconnectedness and variety of data within a relational database.
+
+**Overall:** The slide is designed to visually represent the concept of structured data, specifically relational data, by showing a complex diagram of a relational database schema.  The diagram is a key element in illustrating the concept of structured data in the context of a data science course.
+
+
+
+
+# 9
+
+# Semi-Structured Data
+
+Collection of data items with less formal structure than relational data, but with some tags or markers to delineate semantic elements of items (i.e., properties), e.g., XML or JSON
+
+```xml
+<user-agents>
+<user-agent>
+<ID>id a f 3</ID>
+<String>!Susie (http://www.sync2it.com/susie)</String>
+<Description>Sync2It bookmark management & clustering engine</Description>
+<Type>C R</Type>
+<Comment/>
+<Link>http://www.sync2it.com</Link1>
+<Link2/>
+</user-agent>
+</user-agents>
+```
+
+```json
+{
+"business_id": "PK6aSizckHFWk8i0oxt5DA",
+"full_address": "400 Waterfront Dr E\nHomestead\nHomestead, PA 15120",
+"hours": {},
+"open": true,
+"categories":[
+"Burgers",
+"Fast Food",
+"Restaurants"
+],
+"city": "Homestead",
+"review_count": 5,
+"name": "McDonald's",
+"neighborhoods": [
+"Homestead"
+],
+"longitude": -79.910032,
+"state": "PA",
+"stars": 2,
+"latitude": 40.412086,
+"attributes": {
+"Take-out": true,
+"Wi-Fi": "free",
+"Drive-Thru": true,
+"Good For": {
+"dessert": false,
+"latenight": false,
+"lunch": false,
+}
+}
+}
+```
+
+
+---
+
+**Description:**
+
+This slide, titled "Semi-Structured Data," introduces the concept of semi-structured data.  It contrasts it with relational data, highlighting that semi-structured data has less formal structure but uses tags or markers to define semantic elements (properties).  Examples of semi-structured data formats are XML and JSON.
+
+* **Definition:** The slide clearly defines semi-structured data as a collection of data items with less formal structure than relational data, but with tags or markers to delineate semantic elements.
+
+* **Examples:** The slide provides examples of semi-structured data in XML and JSON formats.  The XML example shows nested tags (`<user-agents>`, `<user-agent>`, etc.) that structure the data.  The JSON example shows key-value pairs, which are also used to structure the data.  These examples are not just random code snippets; they are examples of how data might be structured in a semi-structured format.  The examples are likely taken from a real-world dataset or a hypothetical example to illustrate the concept.
+
+* **Layout:** The slide is formatted to present the definition and examples side-by-side, making it easy to compare and contrast the different data types.  The XML and JSON examples are formatted to be easily readable, with proper indentation and structure.  The examples are presented in a way that highlights the tags and markers used to structure the data.
+
+**Overall:** The slide effectively introduces the concept of semi-structured data by contrasting it with relational data and providing concrete examples in XML and JSON formats.  The examples are likely intended to illustrate the use of tags and markers to structure data in a semi-structured format.  The slide is part of a larger lecture on data science, specifically focusing on different types of data.
+
+
+# 10
+
+# UnStructured Data
+
+Data that is not organized according to a predefined structure — i.e., everything else
+(e.g., free text, videos, photos, music, messages, etc.)
+Lack of structure makes
+it more difficult to search
+and analyze for patterns
+
+80%
+20%
+Unstructured
+Vs
+Structured
+目
+MySQL
+Database
+A
+M
+ORACLE
+DATABASE
+</>
+HTML
+Tables
+P W
+
+
+---
+
+**Description:**
+
+This slide, titled "UnStructured Data," discusses unstructured data in the context of data science.
+
+* **Definition:** The slide defines unstructured data as data that is not organized according to a predefined structure, encompassing various types like free text, videos, photos, music, and messages.
+
+* **Challenge:** The slide highlights the challenge of unstructured data: its lack of structure makes searching and analyzing for patterns more difficult compared to structured data.
+
+* **Visual Representation:** The slide uses a visual representation to contrast structured and unstructured data.  A large, light-green box on the left side of the slide is labeled "80% Unstructured."  A smaller, light-green box on the right side of the slide is labeled "20% Structured."  The boxes are separated by a vertical line labeled "Vs."  The left box contains icons representing various types of unstructured data: a document, a film reel, a phone, a camera, HTML code, and headphones.  The right box contains icons representing structured data: a database icon, a spreadsheet icon, and icons for various database management systems (MySQL, Oracle).  The icons are arranged in a way that visually represents the difference in structure between the two types of data.  The percentages (80% and 20%) are likely meant to illustrate the relative prevalence of unstructured data in the world.
+
+**Overall:** The slide is designed to introduce the concept of unstructured data and its characteristics in the context of a data science course.  The visual representation is used to highlight the difference between structured and unstructured data and the relative prevalence of unstructured data.  The icons are used to represent different types of unstructured data, such as text, images, and audio.  The icons on the right side represent structured data, such as databases and spreadsheets.  The percentages are likely meant to illustrate the relative prevalence of unstructured data in the world.
+
+
+# 11
+
+# Common Data Formats
+
+CSV (comma separate value)
+JSON (Javascript object notation)
+HTML/XML (hypertext markup language / extensible markup language)
+SQL and NoSQL databases (more on this later)
+
+
+---
+
+**Description:**
+
+This slide lists common data formats used in data science.  It's a simple, bulleted list, likely intended as a summary of different ways data can be structured and stored.  There are no figures on this slide.  The context from the previous slides suggests that this is part of a larger lecture on Introduction to Data Science, specifically focusing on the different types of data and how they are represented.  The slide is likely a transition to a discussion of specific data formats and their uses in data science projects.
+
+
+# 12
+
+# CSV Files
+
+Typically refers to any delimited text file (e.g., comma, tab, space)
+Values containing commas can be enclosed in quotes to delineate
+Python has built in methods to parse csv files. We will use Pandas— a Python library for data analysis.
+
+---
+
+**Description:**
+
+This slide, titled "CSV Files," discusses the CSV (Comma Separated Values) file format.
+
+* **Definition:** The slide defines CSV files as delimited text files, where data is separated by commas, tabs, or spaces.  It also notes that values containing commas can be enclosed in quotes to avoid issues.
+
+* **Python Library:** The slide mentions that Python has built-in methods to parse CSV files, and that the course will use the Pandas library for data analysis.
+
+* **Figure:** The slide contains a large figure of a text file.  The figure is a long list of text, appearing as a long column of data.  The text appears to be a CSV file, with values separated by commas.  The figure is positioned in the lower portion of the slide, taking up a significant portion of the space.  The figure is there to illustrate the raw data format of a CSV file.  The data itself is not easily readable, but the presence of many lines of text, separated by commas, is clear.  The figure is a visual representation of the data format being discussed.  The figure is not a simple graphic; it's a large block of text, which is the actual content of a CSV file.  The reason for this figure is to show the raw data format of a CSV file, which is a common data format in data science.
+
+
+
+
+# 13
+
+# JSON Files
+
+JSON originated as a way of encapsulating Javascript objects
+JSON data looks much like a dictionary in Python, with keys and values stored
+Python has built in methods to parse JSON, but
+Pandas can also be used to read and parse JSON files
+
+```json
+{
+"business_id": "PK6aSizckHFWk8i0oxt5DA",
+"full_address": "400 Waterfront Dr E\nHomestead\nHomestead, PA 15120",
+"hours": {},
+"open": true,
+"categories":[
+"Burgers",
+"Fast Food",
+"Restaurants"
+],
+"city": "Homestead",
+"review_count": 5,
+"name": "McDonald's",
+"neighborhoods": [
+"Homestead"
+],
+"longitude": -79.910032,
+"state": "PA",
+"stars": 2,
+"latitude": 40.412086,
+"attributes": {
+"Take-out": true,
+"Wi-Fi": "free",
+"Drive-Thru": true,
+"Good For": {
+"dessert": false,
+"latenight": false,
+"lunch": false,
+}
+}
+}
+```
+
+
+---
+
+**Description:**
+
+This slide, titled "JSON Files," discusses the JSON (JavaScript Object Notation) data format.
+
+* **Definition:** The slide defines JSON as a way to encapsulate JavaScript objects.  It also notes that JSON data is similar to Python dictionaries, using keys and values.
+
+* **Python and Pandas:** The slide mentions that Python has built-in methods for parsing JSON, and that the Pandas library can also be used for this purpose.
+
+* **Example:** The slide includes a JSON example.  This is a complete JSON object, formatted as a code block.  The example shows a nested structure, with key-value pairs and lists.  The example is a restaurant review, with attributes like business ID, address, categories, and attributes.  The example is a typical JSON structure, with nested objects and arrays.  The example is likely intended to illustrate the structure and format of JSON data.  The example is placed below the text description, visually separating the explanation from the practical example.  The example is formatted as a code block, using indentation and proper syntax to highlight the structure of the JSON object.  The example is a complete JSON object, which is a common data format in data science.
+
+
+
+
+# 14
+
+# XML/HTML Files
+
+The main format for the web
+XML files contain hierarchical content delineated
+by tags
+HTML is syntactically like XML, but sometimes
+tags are not closed and tags are primarily used to
+describe appearance of page
+There are a number of Python parsers for XML/
+HTML. We will use the BeautifulSoup library
+
+```xml
+<user-agents>
+<user-agent>
+<ID>id a f 3</ID>
+<String>!Susie (http://www.sync2it.com/susie)</String>
+<Description>Sync2It bookmark management & clustering engine</Description>
+<Type>C R</Type>
+<Comment/>
+<Link>http://www.sync2it.com</Link>
+<Link2/>
+</user-agent>
+</user-agents>
+```
+
+```xml
+<user-agent>
+<ID>id a f 6</ID>
+<String>
+<a href='http://www.unchaos.com/'> UnChaos </a> From Chaos To Order Hybrid
+</String>
+<Description>UnCHAOS search robot</Description>
+<Type>R</Type>
+<Comment>Site is dead</Comment>
+<Link>http://www.unchaos.com/</Link>
+<Link2/>
+</user-agent>
+```
+
+
+---
+
+**Description:**
+
+This slide, titled "XML/HTML Files," discusses XML and HTML, two common data formats used on the web.
+
+* **Definition:** The slide defines XML as a format for hierarchical content delineated by tags, and HTML as syntactically similar to XML but primarily used to describe the appearance of a web page.  It notes that HTML tags are sometimes not closed.
+
+* **Python Library:** The slide mentions that there are Python parsers for XML and HTML, and that the course will use the BeautifulSoup library.
+
+* **Examples:** The slide includes two XML code blocks.  These are examples of XML code, showing nested tags and attributes.  The first example (`<user-agents>`) is a container for user agents, and the second example (`<user-agent>`) is a specific user agent.  The examples are formatted as code blocks, with proper indentation and syntax highlighting (though the formatting is not perfect).  The examples are likely intended to illustrate the structure and format of XML data.  The examples are placed below the text description, visually separating the explanation from the practical examples.  The examples are formatted as code blocks, using indentation and proper syntax to highlight the structure of the XML elements.  The examples are complete XML elements, which are common data formats in data science.  The examples are likely intended to illustrate the structure and format of XML data.
+
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on different types of data formats.  The slide introduces XML and HTML, their characteristics, and the Python library used to parse them.  The examples are crucial for understanding the structure and syntax of XML and HTML.
+
+
+# 15
+
+# Data I/O and Parsing
+
+---
+
+**Description:**
+
+This slide, titled "Data I/O and Parsing," is a title slide.  It's a single-line slide with the title "Data I/O and Parsing" centered on a light gray background.  There are no figures or other content on the slide.  The slide likely introduces the topic of data input/output (I/O) and parsing as the subject of the next few slides in the lecture.  The context from the previous slides suggests that this is part of a larger lecture on Introduction to Data Science, specifically focusing on how to work with different data formats.
+
+
+**What you see:**
+
+A plain, light gray background with the title "Data I/O and Parsing" in a dark gray, sans-serif font, centered on the slide.  There are no other elements on the slide.
+
+
+# 16
+
+# Intro to pandas
+
+Pandas is a third party Python module for data analysis
+* Assists in the analysis of PANal DATA (tables, data frames)
+* Available in Jupyter, along with NumPy and matplotlib
+Pandas is a great tool for working with tabular data
+* CSV, excel, and JSON easily, XML is a little more difficult
+* Allows you to manipulate data by columns, rows, filtering, grouping, etc
+Everything you do in pandas, you can do in python... though it would be more difficult
+
+
+---
+
+**Description:**
+
+This slide introduces the Pandas library for data analysis in the context of an Intro to Data Science course.
+
+* **Title:** The title "Intro to pandas" is displayed prominently at the top of the slide, indicating the topic of the slide.
+
+* **Definition:** The slide defines Pandas as a third-party Python module for data analysis, specifically mentioning its assistance in analyzing tabular data (tables and data frames).
+
+* **Availability:** It notes that Pandas is available in Jupyter notebooks, along with other libraries like NumPy and matplotlib, which are commonly used for data analysis and visualization.
+
+* **Ease of Use:** The slide highlights that Pandas makes working with CSV, Excel, and JSON data easy, contrasting this with XML, which is described as being slightly more difficult to work with.
+
+* **Functionality:** The slide emphasizes Pandas' capabilities for manipulating data by columns, rows, filtering, and grouping, which are common data analysis tasks.
+
+* **Comparison to Python:** The slide points out that most operations possible with Pandas can also be done in standard Python, but Pandas provides a more streamlined and efficient approach.
+
+* **Visual Elements:** The slide includes three panda emojis (black and white panda bear images) at the top of the slide, likely to visually represent the Pandas library.  The emojis are positioned above the title, and they are small in size.  The emojis are likely there to visually represent the Pandas library, which is the topic of the slide.  The emojis are a visual cue to the topic of the slide.  The emojis are likely there to visually represent the Pandas library, which is the topic of the slide.  The emojis are a visual cue to the topic of the slide.
+
+
+
+
+# 17
+
+# The three structures in pandas
+
+Series: A one dimensional data structure, similar to an array
+DataFrame: A two dimensional data structure, like a table
+Panel: A three dimensional multi-indexed structure
+
+
+---
+
+**Description:**
+
+This slide describes the three fundamental data structures in the Pandas library.  It's a simple, bulleted list, likely intended as a summary of the different ways data can be organized and manipulated within Pandas.  There are no figures on this slide.  The context from the previous slides suggests that this is part of a larger lecture on Introduction to Data Science, specifically focusing on the Pandas library and its data structures.  The slide is likely a transition to a discussion of how these structures are used in data analysis tasks.
+
+
+
+
+# 18
+
+# Getting Started
+
+Import pandas, commonly aliased as pd
+```python
+import pandas as pd
+```
+First, lets construct a data frame from an existing data structure
+```python
+data = {'Asia': ['$43567', '$28945', '$36900', '$67890'],
+        'Africa': ['$13459', '$12005', '$14589', '$57894'],
+        'Americas': ['$40045', '$44589', '$52398', '$107890'],
+        'Australia/Oceania': ['$27890', '$34569', '$45690', '$78930'],
+        'Europe': ['$33569', '$45700', '$56890', '$66003']}
+data_sales = pd.DataFrame(data)
+```
+
+---
+
+**Description:**
+
+This slide, titled "Getting Started," demonstrates how to create a Pandas DataFrame from a dictionary.
+
+* **Import Statement:** The slide shows the Python code to import the Pandas library, aliased as `pd`.
+
+* **Data Structure:** The slide presents a Python dictionary (`data`) containing key-value pairs.  The keys represent different regions ('Asia', 'Africa', etc.), and the values are lists of sales figures (represented as strings).  The values are enclosed in square brackets, indicating they are lists.  Each list contains four sales figures.
+
+* **DataFrame Creation:** The slide shows the Python code to create a Pandas DataFrame (`data_sales`) from the `data` dictionary.  The `pd.DataFrame(data)` part creates the DataFrame.
+
+* **Code Formatting:** The Python code is presented within code blocks, using backticks (````python`) to indicate code.  The code is formatted to be easily readable, with proper indentation and variable names.  The code is a complete Python script, which is a common way to present code examples in a data science lecture.
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on the Pandas library.  The slide demonstrates how to create a Pandas DataFrame from a dictionary, which is a fundamental operation in data analysis using Pandas.  The code example is a complete Python script, which is a common way to present code examples in a data science lecture.  The code is likely intended to illustrate the creation of a DataFrame from a dictionary, which is a fundamental operation in data analysis using Pandas.
+
+
+
+
+# 19
+
+# Displaying the data frame
+
+# `print(data_sales)` will print in text
+# `display(data_sales)` will prettify it
+# or just have the variable be the last item in the box
+`data_sales`
+`len(data_sales)`
+4
+
+|       | Asia      | Africa     | Americas   | Australia/Oceania | Europe     |
+|-------|------------|------------|------------|--------------------|------------|
+| **0** | $43567    | $13459    | $40045    | $27890            | $33569    |
+| **1** | $28945    | $12005    | $44589    | $34569            | $45700    |
+| **2** | $36900    | $14589    | $52398    | $45690            | $56890    |
+| **3** | $67890    | $57894    | $107890   | $78930            | $66003    |
+
+
+---
+
+**Description:**
+
+This slide displays the contents of a Pandas DataFrame named `data_sales`.  The slide shows the output of the `data_sales` variable, which is a table of sales figures for different regions (Asia, Africa, Americas, Australia/Oceania, Europe).  The table is presented in a tabular format, with rows representing different data points (0, 1, 2, 3) and columns representing the different regions.  The values in the table are dollar amounts, formatted with a dollar sign ($) and commas as thousands separators.  The slide also includes the Python code `len(data_sales)`, which returns the number of rows in the DataFrame, which is 4.  The slide is likely part of a lecture demonstrating how to display and work with data in a Pandas DataFrame.  The table is a visual representation of the data contained within the `data_sales` DataFrame.  The table is formatted to be easily readable, with clear row and column headers.  The table is positioned below the Python code examples, visually separating the code from the output.  The table is a key element in illustrating the contents of the DataFrame.  The table is likely intended to show the data in a structured format, making it easier to understand the values and relationships between them.  The table is a visual representation of the data contained within the `data_sales` DataFrame.  The table is formatted to be easily readable, with clear row and column headers.  The table is positioned below the Python code examples, visually separating the code from the output.  The table is a key element in illustrating the contents of the DataFrame.  The table is likely intended to show the data in a structured format, making it easier to understand the values and relationships between them.
+
+
+
+
+# 20
+
+# Getting data from a file
+
+```python
+import pandas as pd
+# read in data in csv format (sep=',' is default)
+data_oscar = pd.read_csv("oscar_age_female.csv")
+# print data
+data_oscar
+```
+
+```
+   Index  Year  Age                  Name                                         Movie
+0      1  1928   22            Janet Gaynor  Seventh Heaven,Street Angel and Sunrise: A Son...
+1      2  1929   37            Mary Pickford                                    Coquette
+2      3  1930   28          Norma Shearer                                  The Divorcee
+3      4  1931   63          Marie Dressler                                       Min and Bill
+4      5  1932   32             Helen Hayes                         The Sin of Madelon Claudet
+5      6  1933   26      Katharine Hepburn                                Morning Glory
+6      7  1934   31       Claudette Colbert                               It Happened One Night
+```
+
+```python
+# length and columns
+print(len(data_oscar))
+print(data_oscar.columns)
+```
+
+```
+89
+Index(['Index', 'Year', 'Age', 'Name', 'Movie'], dtype='object')
+```
+
+
+---
+
+**Description:**
+
+This slide demonstrates how to read data from a CSV file into a Pandas DataFrame and then display the DataFrame's contents.
+
+* **Import Statement:** The slide shows the Python code to import the Pandas library, aliased as `pd`.
+
+* **Reading CSV:** The slide shows the Python code to read data from a CSV file named "oscar_age_female.csv" into a Pandas DataFrame named `data_oscar`.  The `pd.read_csv()` function is used for this purpose.  The file likely contains data about female Oscar winners, including their year of winning, age, name, and the movie they won for.
+
+* **Printing DataFrame:** The slide shows the output of the `data_oscar` variable, which is a Pandas DataFrame.  The output is a formatted table, showing the contents of the DataFrame.  The table has columns for 'Index', 'Year', 'Age', 'Name', and 'Movie'.  The values in the table are the data read from the CSV file.
+
+* **Length and Columns:** The slide shows the Python code to print the length (number of rows) of the DataFrame and the column names of the DataFrame.  The output shows that the DataFrame has 7 rows and 5 columns.
+
+* **Code Formatting:** The Python code is presented within code blocks, using backticks (````python`) to indicate code.  The code is formatted to be easily readable, with proper indentation and variable names.  The code is a complete Python script, which is a common way to present code examples in a data science lecture.
+
+* **Data Display:** The slide displays the DataFrame in a tabular format, which is a common way to present data in a data science context.  The table is formatted to be easily readable, with clear row and column headers.  The table is positioned below the Python code examples, visually separating the code from the output.  The table is a key element in illustrating the contents of the DataFrame.  The table is likely intended to show the data in a structured format, making it easier to understand the values and relationships between them.
+
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on the Pandas library.  The slide demonstrates how to read data from a CSV file into a Pandas DataFrame and then display the DataFrame's contents.  The code example is a complete Python script, which is a common way to present code examples in a data science lecture.  The code is likely intended to illustrate the reading of a CSV file into a Pandas DataFrame, which is a fundamental operation in data analysis using Pandas.
+
+
+# 21
+
+# Data Frames
+
+Each row corresponds to an example, an entity
+Each column contains data for a specific variable, attribute, feature
+You can access a row, column, cell, or subset
+
+
+---
+
+**Description:**
+
+This slide, titled "Data Frames," defines the structure of a DataFrame.  It's a simple, bulleted list, likely intended as a summary of the key characteristics of a DataFrame in the context of data analysis.  There are no figures on this slide.  The context from the previous slides suggests that this is part of a larger lecture on Introduction to Data Science, specifically focusing on the Pandas library and its data structures.  The slide is likely a transition to a discussion of how to access and manipulate data within a DataFrame.  The slide is a concise explanation of the fundamental structure of a DataFrame.  The bullet points are clear and easy to read.  The slide is likely intended to be a quick review of the concept of a DataFrame.
+
+
+
+
+# 22
+
+# Accessing Data
+
+```python
+import pandas as pd
+data_oscar = pd.read_csv("oscar_age_female.csv")
+```
+
+# Accessing columns by name
+
+```python
+data_oscar['Age']  # Similar to dictionary references
+data_oscar.Age    # Similar to an object field
+```
+
+```
+0     22
+1     37
+2     28
+3     63
+4     32
+...
+```
+
+# Accessing multiple columns
+
+```python
+data_oscar[['Year', 'Name']]
+```
+
+```
+   Year                  Name
+0  1928          Janet Gaynor
+1  1929         Mary Pickford
+2  1930        Norma Shearer
+3  1931       Marie Dressler
+4  1932          Helen Hayes
+...
+```
+
+
+---
+
+**Description:**
+
+This slide demonstrates how to access data from a Pandas DataFrame, specifically accessing columns by name and multiple columns.
+
+* **Import Statement:** The slide shows the Python code to import the Pandas library, aliased as `pd`, and read data from a CSV file named "oscar_age_female.csv" into a DataFrame named `data_oscar`.
+
+* **Accessing Columns by Name:** The slide shows two ways to access a single column ('Age') by name:
+    * `data_oscar['Age']`:  This uses bracket notation, similar to accessing a dictionary key.
+    * `data_oscar.Age`: This uses dot notation, similar to accessing an attribute of an object.
+    Both methods return a Pandas Series containing the values in the 'Age' column.  The output shows the first few values of the 'Age' column.
+
+* **Accessing Multiple Columns:** The slide shows how to access multiple columns ('Year' and 'Name') using a list of column names within double brackets: `data_oscar[['Year', 'Name']]`.  This returns a DataFrame containing only the specified columns.  The output shows the first few rows of the 'Year' and 'Name' columns.
+
+* **Code Formatting:** The Python code is presented within code blocks, using backticks (````python`) to indicate code.  The code is formatted to be easily readable, with proper indentation and variable names.  The code is a complete Python script, which is a common way to present code examples in a data science lecture.
+
+* **Output:** The slide shows the output of the Python code, which are Pandas Series and DataFrames.  The output is formatted to show the data in a tabular format, making it easy to see the values in the specified columns.  The output is a visual representation of the data accessed from the DataFrame.
+
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on the Pandas library.  The slide demonstrates how to access data from a Pandas DataFrame, specifically accessing columns by name and multiple columns.  The code examples are complete Python scripts, which are a common way to present code examples in a data science lecture.  The code is likely intended to illustrate the accessing of data from a DataFrame, which is a fundamental operation in data analysis using Pandas.
+
+
+# 23
+
+# Accessing Data (continued)
+
+```python
+import pandas as pd
+data_oscar = pd.read_csv("oscar_age_female.csv")
+```
+
+# Accessing rows by index
+
+```python
+data_oscar.iloc[0]  # first row
+```
+
+```
+Index     1
+Year     1928
+Age        22
+Name    Janet Gaynor
+Movie    Seventh Heaven,Street Angel and Sunrise: A Son...
+Name: 0, dtype: object
+```
+
+# Accessing multiple rows
+
+```python
+data_oscar.iloc[[0, 2, 4]]  # rows 0, 2, and 4
+```
+
+```
+    Index  Year  Age            Name               Movie
+0       1  1928   22      Janet Gaynor  Seventh Heaven,Street Angel and Sunrise: A Son...
+2       3  1930   28     Norma Shearer           The Divorcee
+4       5  1932   32        Helen Hayes  The Sin of Madelon Claudet
+```
+
+
+---
+
+**Description:**
+
+This slide continues the demonstration of accessing data from a Pandas DataFrame, focusing on accessing rows by index.
+
+* **Import Statement:** The slide starts with the Python code to import the Pandas library (`pd`) and read data from a CSV file ("oscar_age_female.csv") into a DataFrame (`data_oscar`).
+
+* **Accessing a Single Row by Index:** The slide shows how to access the first row (`data_oscar.iloc[0]`).  The `iloc` method is used for integer-based indexing.  The output is a Pandas Series containing the values from the first row of the DataFrame.
+
+* **Accessing Multiple Rows by Index:** The slide shows how to access multiple rows (rows 0, 2, and 4) using a list of indices (`data_oscar.iloc[[0, 2, 4]]`).  The output is a Pandas DataFrame containing only the specified rows.
+
+* **Code Formatting:** The Python code is presented within code blocks, using backticks (````python`) to indicate code.  The code is formatted to be easily readable, with proper indentation and variable names.  The code is a complete Python script, which is a common way to present code examples in a data science lecture.
+
+* **Output:** The slide shows the output of the Python code, which are Pandas Series and DataFrames.  The output is formatted to show the data in a tabular format, making it easy to see the values in the specified rows.  The output is a visual representation of the data accessed from the DataFrame.  The output shows the data from the specified rows, including the index, year, age, name, and movie.
+
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on the Pandas library.  The slide demonstrates how to access data from a Pandas DataFrame, specifically accessing rows by index using the `iloc` method.  The code examples are complete Python scripts, which are a common way to present code examples in a data science lecture.  The code is likely intended to illustrate the accessing of data from a DataFrame, which is a fundamental operation in data analysis using Pandas.  The output is a visual representation of the data accessed from the DataFrame.
+
+
+# 24
+
+# loc and iloc the same thing in different ways
+
+```
+data.loc[<row indexes>, <column names>]
+• Can use a number, slice, or list for row indexes
+• Can only use a list of names for column names
+• Includes the last element of a slice (e.g. 3:5 is 3, 4, and 5)
+data.iloc[<row indexes>,<column indexes>]
+• Can use a number, slice, or list for row indexes
+• Can use a number, slice, or list for column indexes
+• Slicing works like strings (e.g 3:5 is 3 and 4)
+```
+
+---
+
+**Description:**
+
+This slide, titled "loc and iloc the same thing in different ways," explains the differences between the `loc` and `iloc` methods for accessing data in a Pandas DataFrame.
+
+* **`loc` Method:**  The slide describes how to use the `loc` method to access data.  It explains that `loc` uses *labels* (names) to select rows and columns.  Crucially, it states that row indexes can be numbers, slices, or lists, but column selection *must* use a list of column names.  The slide also highlights that `loc` includes the *last* element in a slice (e.g., 3:5 includes 3, 4, and 5).
+
+* **`iloc` Method:** The slide describes how to use the `iloc` method to access data.  It explains that `iloc` uses *integer positions* to select rows and columns.  Importantly, it states that both row and column selection can use numbers, slices, or lists of integer positions.  The slide also notes that slicing with `iloc` works like string slicing (e.g., 3:5 selects elements 3 and 4).
+
+* **Purpose:** The slide is designed to help users understand the difference between label-based indexing (`loc`) and integer-position-based indexing (`iloc`) in Pandas DataFrames.  This is a crucial distinction for correctly selecting data from a DataFrame.
+
+* **Visual Elements:** There are no figures on this slide.  The content is entirely text-based, explaining the different methods for accessing data in a Pandas DataFrame.
+
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on the Pandas library.  The slide explains the differences between `loc` and `iloc` for accessing data in a DataFrame, which is a fundamental operation in data analysis using Pandas.  The slide is designed to help users understand the differences between these two methods and how to use them correctly.
+
+
+```markdown
+# 24
+
+# loc and iloc - the same thing in different ways
+
+```python
+data.loc[<row indexes>, <column names>]
+• Can use a number, slice, or list for row indexes
+• Can only use a list of names for column names
+• Includes the last element of a slice (e.g. 3:5 is 3, 4, and 5)
+data.iloc[<row indexes>,<column indexes>]
+• Can use a number, slice, or list for row indexes
+• Can use a number, slice, or list for column indexes
+• Slicing works like strings (e.g 3:5 is 3 and 4)
+```
+
+---
+
+**Description:**
+
+This slide explains the difference between `loc` and `iloc` methods for data selection in Pandas DataFrames.  It's a table-like presentation of the two methods' syntax and how they work.
+
+* **`loc` Method:**  The `loc` method uses *labels* (names) to select rows and columns.  It's important to note that row selection can use numbers, slices, or lists, but column selection *must* use a list of column names.  Crucially, `loc` includes the *last* element in a slice (e.g., 3:5 includes 3, 4, and 5).
+
+* **`iloc` Method:** The `iloc` method uses *integer positions* to select rows and columns.  Both row and column selection can use numbers, slices, or lists of integer positions.  Slicing with `iloc` works like string slicing (e.g., 3:5 selects elements 3 and 4).
+
+* **Purpose:** The slide is designed to help users understand the difference between label-based indexing (`loc`) and integer-position-based indexing (`iloc`) in Pandas DataFrames.  This is a crucial distinction for correctly selecting data from a DataFrame.
+
+* **Visual Elements:** There are no figures in the traditional sense.  The slide is entirely text-based, presenting the syntax and characteristics of `loc` and `iloc` in a clear, organized manner.  The formatting (bullet points, code blocks) is used to highlight the key differences between the two methods.
+
+
+```
+```
+
+
+```markdown
+# 26
+
+# PANDAS: accessing data
+
+# # summarize the data
+data.describe()
+```
+
+```
+       Index        Year         Age
+count  89.000000  89.000000  89.000000
+mean   45.000000  1972.000000  36.123596
+std    25.836021   25.836021   11.745231
+min     1.000000  1928.000000   21.000000
+25%    23.000000  1950.000000   28.000000
+50%    45.000000  1972.000000   33.000000
+75%    67.000000  1994.000000   41.000000
+max    89.000000  2016.000000   80.000000
+```
+
+```
+data.Age.mean()
+36.12359550561798
+data.Year.sum()
+175508
+```
+
+---
+
+**Description:**
+
+This slide displays the output of the `data.describe()` method and the results of calculating the mean of the 'Age' column and the sum of the 'Year' column, likely from a Pandas DataFrame named `data`.
+
+* **`data.describe()` Output:** A table is presented, showing descriptive statistics for the 'Index', 'Year', and 'Age' columns of the DataFrame.  The table includes the count, mean, standard deviation (std), minimum (min), 25th percentile (25%), 50th percentile (50%), 75th percentile (75%), and maximum (max) values for each column.  The values are numerical, representing the statistical properties of the data.  The table is formatted with clear column headers and row labels, making it easy to read and understand the statistics.
+
+* **`data.Age.mean()` and `data.Year.sum()`:**  These lines of code calculate the mean of the 'Age' column and the sum of the 'Year' column, respectively, and display the results.  The results are numerical values, representing the calculated statistics.  These values are displayed below the `data.describe()` output.
+
+* **Purpose:** The slide is part of a data analysis session, likely demonstrating how to use Pandas to summarize and analyze data.  The `describe()` method provides a concise summary of the data, while the mean and sum calculations provide specific insights into the data's characteristics.
+
+
+**Overall:** The slide presents the results of data analysis using Pandas, showing descriptive statistics and calculated values for a DataFrame.  The output is formatted in a table, making it easy to read and understand the results.  The slide is likely part of a larger lecture or tutorial on data analysis techniques using Pandas.
+
+
+# 27
+
+# PANDAS: Looping over data
+
+```python
+for i in range(10):  # loop over first ten rows of data frame
+    tmpyr = data.iloc[i,1]
+    tmpage = data.iloc[i,2]
+    tmpname = data.iloc[i,3]
+    print(tmpname + ": current age (if still alive) =" + str(2018-tmpyr+tmpage))
+```
+
+```
+Janet Gaynor: current age (if still alive) = 112
+Mary Pickford: current age (if still alive) = 126
+Norma Shearer: current age (if still alive) = 116
+Marie Dressler: current age (if still alive) = 150
+Helen Hayes: current age (if still alive) = 118
+Katharine Hepburn: current age (if still alive) = 111
+Claudette Colbert: current age (if still alive) = 115
+Bette Davis: current age (if still alive) = 110
+Luise Rainer: current age (if still alive) = 109
+Luise Rainer: current age (if still alive) = 109
+```
+
+---
+
+**Description:**
+
+This slide demonstrates a Python code snippet using Pandas to loop over a portion of a DataFrame and calculate the current age of individuals, based on their year of birth and the current year (2018).
+
+* **Code Snippet:** The slide presents a `for` loop in Python, likely within a Jupyter Notebook or similar interactive environment.  The loop iterates over the first ten rows (indexed 0 to 9) of a DataFrame named `data`.  Inside the loop:
+    * `tmpyr = data.iloc[i,1]`: Extracts the year from the second column (index 1) of the current row.
+    * `tmpage = data.iloc[i,2]`: Extracts the age from the third column (index 2) of the current row.
+    * `tmpname = data.iloc[i,3]`: Extracts the name from the fourth column (index 3) of the current row.
+    * `print(...)`: Prints the name followed by the calculated current age (2018 - year + age).  The `str()` function converts the calculated age to a string for concatenation with the name.
+
+* **Output:** The slide displays the output of the code.  Each line shows the name of a person and their calculated current age (if still alive), based on the data in the DataFrame.  The output is a list of name-age pairs.  The output is formatted as a list of strings, each containing a name and a calculated age.  The output is likely intended to show the results of applying the calculation to the first ten rows of the DataFrame.
+
+
+**Overall:** This slide is part of a data analysis session, demonstrating how to iterate over a Pandas DataFrame and perform calculations on specific columns.  The code snippet is designed to calculate and display the current age of individuals based on their birth year and age at the time of the data collection.  The output is a clear demonstration of the results of the calculations.
+
+
+# 28
+
+# PANDAS: Renaming row indexes
+
+```python
+import pandas as pd
+data = {'Asia': ['$43567', '$28945', '$36900', '$67890'],
+        'Africa': ['$13459', '$12005', '$14589', '$57894'],
+        'Americas': ['$40045', '$44589', '$52398', '$107890'],
+        'Australia/Oceania': ['$27890', '$34569', '$45690', '$78930'],
+        'Europe': ['$33569', '$45700', '$56890', '$66003']}
+data_sales = pd.DataFrame(data)
+data_sales_new = data_sales.rename(index={0:'Q1', 1:'Q2', 2:'Q3', 3:'Q4'})
+data_sales_new
+```
+
+```
+        Asia     Africa    Americas  Australia/Oceania     Europe
+Q1  $43567  $13459    $40045          $27890          $33569
+Q2  $28945  $12005    $44589          $34569          $45700
+Q3  $36900  $14589    $52398          $45690          $56890
+Q4  $67890  $57894  $107890          $78930          $66003
+```
+
+---
+
+**Description:**
+
+This slide demonstrates how to rename row indexes in a Pandas DataFrame.
+
+* **Code Snippet:** The slide presents a complete Python code block.  It first defines a dictionary `data` containing sales figures for different regions (Asia, Africa, etc.) and quarters (Q1, Q2, Q3, Q4).  It then creates a Pandas DataFrame `data_sales` from this dictionary.  The crucial part is the line `data_sales_new = data_sales.rename(index={0:'Q1', 1:'Q2', 2:'Q3', 3:'Q4'})`. This line renames the row indexes (0, 1, 2, 3) to 'Q1', 'Q2', 'Q3', and 'Q4', respectively, creating a new DataFrame `data_sales_new`.  Finally, it displays the `data_sales_new` DataFrame.
+
+* **Output:** The output shows the DataFrame `data_sales_new` with the row indexes renamed to the quarters.  The columns represent the regions, and the rows represent the sales figures for each quarter.  The values are dollar amounts, formatted with a dollar sign ($) and commas as thousands separators.  The output is a table, clearly showing the renamed row indexes.
+
+* **Purpose:** The slide demonstrates a common data manipulation task in Pandas: renaming row indexes to improve readability and context.  The code snippet is a complete example, showing how to perform this operation.
+
+
+**Overall:** The slide is part of a data analysis session, demonstrating how to rename row indexes in a Pandas DataFrame using the `rename()` method.  The code example is a complete Python script, which is a common way to present code examples in a data science lecture.  The output is a visual representation of the DataFrame with the modified row indexes.

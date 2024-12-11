@@ -1,0 +1,31 @@
+# Slide 40
+
+**Weighted Moving Average**
+
+Can add weights to our moving average
+
+Weights
+[1, 1, 1, 1, 1] / 5
+
+**(Image Description):**
+
+The slide presents the concept of a weighted moving average for noise reduction.
+
+* **Title:** "Weighted Moving Average" is displayed at the top of the slide, in a clear, bold font.  This indicates the topic of the slide.
+
+* **Text:** "Can add weights to our moving average" is displayed below the title.  This text introduces the concept of weighting the neighboring pixel values differently in the moving average calculation.
+
+* **Weights:**  "[1, 1, 1, 1, 1] / 5" is displayed below the text.  This shows an example of a set of weights.  Each number in the array represents the weight assigned to a corresponding pixel in the neighborhood.  Dividing by 5 indicates that the weights sum to 5.
+
+* **Graph (top):** A line graph is shown, labeled "original."  The graph displays a series of data points, likely representing pixel values in a 1-dimensional signal.  The data points show a fluctuating pattern, with some peaks and valleys.  This graph represents the original signal with noise.
+
+* **Graph (bottom):** A line graph is shown, labeled "smoothed."  The graph displays a similar series of data points, but the fluctuations are significantly reduced.  The data points in the smoothed graph appear to follow a smoother, more continuous curve.  This graph represents the signal after applying a weighted moving average filter.
+
+* **Σ (Sigma):** A summation symbol (Σ) is shown in the middle of the bottom graph, indicating that the weighted average is calculated by summing the weighted values of the neighboring pixels.  A small arrow points from the Σ to the data points in the bottom graph, visually connecting the summation to the calculation.
+
+* **Source:** "Source: S. Marschner" is displayed at the bottom of the slide, indicating the source of the image or the figure.
+
+
+**Description of what you see:**
+
+The slide introduces the concept of a weighted moving average for noise reduction.  The text and the graphs illustrate how this method works.  The top graph shows a noisy signal, and the bottom graph shows the same signal after applying a weighted moving average filter.  The weights [1, 1, 1, 1, 1] / 5 are used to calculate the average, giving equal weight to each neighboring pixel.  The summation symbol (Σ) visually represents the calculation process.  The slide is designed to illustrate the concept of weighted moving averages and how they can be used to reduce noise in a signal.  The source is attributed to S. Marschner.

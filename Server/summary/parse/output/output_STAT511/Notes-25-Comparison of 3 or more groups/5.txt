@@ -1,0 +1,48 @@
+# 5
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**ANOVA Test** used when the response is numerical and the explanatory variable is categorical taking 3 or more values. This explanatory variable divides the population into groups. In ANOVA, we use a two-stage process to reduce the number of tests necessary.
+
+1. We begin by using an overall F test to determine whether there are any differences among the means.
+
+2. If there are, then we conduct a set of follow-up tests with the appropriate control of overall type I error that will check each pair of means for significant differences.
+
+
+**Logic behind overall F test:** What would give us an indication that the group means are significantly different?
+
+**(a)** and **(b)**:  Below the text are two boxplots, (a) and (b).  Both boxplots display three boxes, each representing a different group (labeled "Center 1," "Center 2," and "Center 3").  The boxes are positioned horizontally along a number line.  Each box represents the distribution of values for that group.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values.  Boxplot (a) shows more spread in the data than boxplot (b).  The boxplots are positioned below the text to visually compare the distributions of the data for each group in the two scenarios.
+
+
+**Look at the plots above.**
+
+* **Sample means are same for groups in both (a) and (b):**  
+    𝑥̅𝑎,1 = 2.6 = 𝑥̅𝑏,1
+    𝑥̅𝑎,2 = 3.1 = 𝑥̅𝑏,2
+    𝑥̅𝑎,3 = 2.8 = 𝑥̅𝑏,3
+    → what information? Between-group variances are same.
+
+* **Variance between observations in group (a) greater than group (b):**
+    variances in (a) > variances in (b)
+    → what information? Within-group variances are not.
+
+
+**Compare with two-sample t test:**
+
+𝑇= (𝑋̅ −𝑌̅) −(𝜇1 −𝜇2)
+√𝑆1
+2
+𝑚+ 𝑆2
+2
+𝑛  
+= 𝑑𝑖𝑓𝑓𝑒𝑟𝑒𝑛𝑐𝑒  𝑏𝑒𝑡𝑤𝑒𝑒𝑛 𝑔𝑟𝑜𝑢𝑝𝑠
+𝑣𝑎𝑟𝑖𝑎𝑡𝑖𝑜𝑛 𝑤𝑖𝑡ℎ𝑖𝑛 𝑔𝑟𝑜𝑢𝑝𝑠
+
+
+---
+
+**Description of the Slide:**
+
+This slide (number 5) continues the discussion of Analysis of Variance (ANOVA) in the context of comparing means of multiple groups.  It introduces the concept of an overall F-test as a preliminary step in ANOVA.  The slide uses boxplots to visually represent the data distributions for two different scenarios (a) and (b).  The boxplots are crucial for understanding the differences in variability between groups and within groups.  The text explains how to interpret the boxplots in terms of sample means and variances, and how these interpretations relate to the overall F-test and the subsequent two-sample t-tests.  The slide is part of a lecture series on statistical methods, specifically focusing on ANOVA techniques.

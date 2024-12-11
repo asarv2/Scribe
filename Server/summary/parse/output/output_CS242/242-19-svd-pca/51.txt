@@ -1,0 +1,36 @@
+# Slide 51
+
+**The big picture: Solution of BellKor's Pragmatic Chaos**
+
+All developed CF models:
+
+*   **SBRAMF**
+*   **BRISMF**
+*   **SVD-Time**
+*   **MF1**
+*   **NSVDD**
+*   **RBM day;E FRBM**
+*   **Split RBM**
+*   **3K43K1**
+*   **BK3 3K2**
+*   **Movie KNN V. Baseline**
+*   **DRBM SVD++**
+*   **JSVD2**
+*   **BK5-SVD++**
+*   **GTE**
+*   **MF2**
+*   **SVD-AUF Movie KNN**
+*   **Integrated M. RBM**
+*   **CTD/MTD**
+*   **SVDNN**
+*   **User KNN Classif.**
+*   **ModeKNN 1...5 Asym. 1/2/3**
+
+approx. 500 predictors → Probe Blending → 200 blends → Probe Blending → 30 blends → Linear Blend → 10.09% improvement
+
+**Figure:** A diagram showing a flow of data through various recommender system models.  The diagram is a visual representation of the different models used and how they are combined to improve prediction accuracy.  The diagram shows a central oval labeled "All developed CF models" containing many different model names.  Arrows flow from this oval to two "Probe Blending" ovals, then to a "Linear Blend" oval.  The diagram visually represents the process of combining predictions from multiple models to achieve a better overall prediction.  The diagram is a visual representation of the solution to the Netflix Prize competition, showing the various models used and how they were combined.  The context is an Intro to Data Data Science course, and the slide is likely a summary slide for a section on recommender systems.
+
+
+**Description:**
+
+This slide presents a visual overview of the solution developed by the BigChaos team for the Netflix Prize competition.  The diagram shows a complex pipeline of different collaborative filtering (CF) models, each contributing to the final prediction.  The "Probe Blending" stages suggest that the predictions from multiple models are combined using a probing mechanism.  The "Linear Blend" stage indicates that the final prediction is a weighted average of the predictions from the 30 blended models.  The 10.09% improvement figure highlights the success of this combined approach in improving prediction accuracy over the baseline Netflix system.  The slide is a summary of the solution's architecture, showing the variety of models used and the process of combining them.  The context is an Intro to Data Science course, and the slide is likely a summary slide for a section on recommender systems.

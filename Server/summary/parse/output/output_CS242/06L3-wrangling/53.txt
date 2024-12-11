@@ -1,0 +1,21 @@
+# Slide 53
+
+```markdown
+Group By
+DataFrame.groupby(by=None, axis=0, level=None, as_index=True,
+    sort=True, group_keys=True, squeeze=<>, observed=False,
+    dropna=True)
+• by: mapping, function, label, or list of labels - determines which records to group
+• as_index: For aggregated output, use the group label as the index
+• Returns: A groupby object
+Iterating over the groupbby object returns a tuple
+(<Grouped Value>, <DataFrame filtered by Grouped Value>)
+```
+
+---
+
+**Description of the Slide:**
+
+This slide presents the documentation for the `groupby()` method in Pandas.  It shows the parameters and return value of the method, which is used for grouping data in a DataFrame.  The text describes the `by` parameter as determining which records to group, and the `as_index` parameter as controlling whether the group labels become the index of the resulting object.  The `Returns` section explains that `groupby()` returns a `groupby` object, which, when iterated over, yields tuples containing the grouped value and the corresponding filtered DataFrame.  The slide is entirely text-based, containing no figures or tables.  The purpose is to provide a reference for using the `groupby()` method in data analysis.
+
+

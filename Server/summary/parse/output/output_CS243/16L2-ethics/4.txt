@@ -1,0 +1,38 @@
+# Slide 4
+
+**Automatic Prediction System use Increases**
+
+**Q2'19 sees record funding to AI startups at $7.4B**
+
+Q1'13 - Q2'19 (swipe right to see full data)
+
+Amount of funding ($M)
+
+$8,000M
+$6,000M
+$4,000M
+$2,000M
+$90M
+
+```
+(Graph 1)
+```
+
+*Line graph showing the amount of funding to AI startups in millions of dollars, from Q1 2013 to Q2 2019.  The graph shows a clear upward trend, with funding increasing over time.  The graph is on the left side of the slide.  The x-axis represents the quarters (Q1, Q2, Q3, Q4) and the years (2013-2019). The y-axis represents the amount of funding in millions of dollars.  The graph is used to illustrate the increasing trend of funding for AI startups over time.*
+
+
+```
+(Graph 2)
+```
+
+*Bar graph showing the number of M&A deals in the AI industry from 2010 to 2019.  The graph is on the right side of the slide. The x-axis represents the years (2010-2019). The y-axis represents the number of M&A deals.  The graph shows a significant increase in the number of M&A deals in the AI industry over time, with a peak in 2019.  The graph is used to illustrate the increasing trend of global activity in AI.*
+
+
+Source: CB Insights
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a presentation on AI Basics, displays two graphs illustrating the increasing trend of funding and M&A activity in the AI industry.  The first graph (left) shows the amount of funding to AI startups over time, from 2013 to 2019, with a clear upward trend. The second graph (right) shows the number of M&A deals in the AI industry from 2010 to 2019, also showing a significant increase over time.  The graphs are used to visually represent the increasing use of automatic prediction systems in the AI industry.  The slide is designed to highlight the growth of the AI market and the increasing investment in AI startups.  The source of the data is also clearly indicated.

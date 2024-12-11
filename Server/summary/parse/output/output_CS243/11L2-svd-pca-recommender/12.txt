@@ -1,0 +1,41 @@
+# 12
+
+```markdown
+SVD for matrix reconstruction
+Columns of U: latent factor affinities for entities (n)
+Rows of V<sup>T</sup>: latent factor affinities for attributes (d)
+Diagonal entries of S: eigenvalues of A
+Latent factors reconstruct matrix A
+A[i, j] = U[i, :] S V<sup>T</sup>[:, j]
+Eigenvalues in S only scale the value in U or V
+Let V<sup>T</sup> = S V<sup>T</sup>
+A[i, j] = U[i, :] V<sup>T</sup>[:, j]
+Dot product of the Entity's latent factor with the Attribute's latent factor to get the Entity i's j<sup>th</sup> attribute value
+Use only the top k factors to approximate results
+```
+
+```
+d
+n
+n
+A
+n
+d
+d
+n
+d
+U
+S
+V<sup>T</sup>
+```
+
+---
+
+**Figure Description:**
+
+The slide contains three diagrams, each representing a matrix (A, U, S, V<sup>T</sup>).  Each matrix is a rectangle with its dimensions (n x d, n x n, n x d, d x d) labeled.  The matrices are arranged in a horizontal row, with A positioned above the decomposition.  The matrix A is a rectangle with the label "A" in the center.  The matrix U is to the left of A, the matrix S is centered between A and V<sup>T</sup>, and the matrix V<sup>T</sup> is to the right of A.  The matrices are visually represented as rectangles, with vertical and horizontal lines suggesting the columns and rows.  The lines have a gradient of colors, not uniform across the matrices.  The figure is placed in the lower-right portion of the slide.  The diagrams visually represent the decomposition of matrix A into matrices U, S, and V<sup>T</sup>, which are crucial components of the SVD process.  The diagrams are used to illustrate the mathematical relationship between the original matrix A and the decomposed matrices.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, continues the discussion on Singular Value Decomposition (SVD).  It visually represents the decomposition of a matrix A into three matrices: U, S, and V<sup>T</sup>.  The slide shows the dimensions of each matrix (e.g., U is n x n).  The figure is a visual aid to help understand the relationship between the original matrix A and the decomposed matrices U, S, and V<sup>T</sup>.  The slide also includes mathematical formulas that describe how to reconstruct the original matrix A using the decomposed matrices.  The figure is essential for understanding the concept of SVD, as it visually demonstrates the decomposition process and the mathematical relationships involved.  The diagrams are placed in the lower-right portion of the slide, which is a common location for visual aids in presentations.

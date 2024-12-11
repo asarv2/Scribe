@@ -1,0 +1,10 @@
+# Slide 61
+
+**Description of the Figure:**
+
+The figure is a logo or icon of a bee with an elephant's head.  The bee's body is yellow with black stripes, and the elephant's head is also yellow.  The word "HIVE" is written in bold, dark letters below the bee/elephant image.  The image is positioned centrally on the slide, likely as a visual representation of the Hive data processing framework.
+
+
+**Description of the Slide:**
+
+The slide introduces the Hive data processing framework.  The title "Hive" is displayed prominently.  The text below the title describes Hive as a relational database built on Hadoop, developed at Facebook and used for many of Facebook's data processing tasks.  Key features of Hive are highlighted: it maintains table schemas, provides an SQL-like query language (which can also use Hadoop Streaming scripts), and supports table partitioning, complex data types, sampling, and some query optimization.  The bee/elephant image is likely a logo or mascot associated with the Hive framework, visually representing the topic of the slide.  The purpose of this slide is to introduce Hive as a higher-level data processing framework that simplifies working with large datasets on Hadoop.  The context suggests that the lecture is transitioning from relational databases and other data processing frameworks to more advanced distributed computing tools.

@@ -1,0 +1,35 @@
+# Slide 1
+
+**Sampling Distributions: measuring how statistics vary from sample to sample**
+
+* **Statistics:** a statistic is a numerical summary of the data whose value can be calculated from sample data. More specifically, any function of the sample data (X<sub>1</sub>, ..., X<sub>n</sub>) is a statistic.
+* **Example:** sample mean, sample median, sample variance, or even the sample data itself.
+* **Note:** prior to obtaining data, there is uncertainty as to what value of any particular statistic will result. Therefore, statistics are random variables as well, and it has its own distribution.
+* **Note:** as a random variable, a statistic will be denoted by an uppercase letter; a lowercase letter is used to represent the calculated or observed value of the statistic given a fixed data.
+* **The probability distribution of a statistic is sometimes referred to as its sampling distribution to emphasize that it describes how the statistic varies in value across all samples that might be selected.** The sampling distribution is completely determined by the joint distribution of X<sub>1</sub>, X<sub>2</sub>, ..., X<sub>n</sub>.
+* **Examples 16.1**
+    * **1)**
+        * **Joint pmf of (X<sub>1</sub>, X<sub>2</sub>):** A table showing the joint probability mass function (pmf) of two random variables X<sub>1</sub> and X<sub>2</sub>.  The table has rows and columns representing the possible values of X<sub>1</sub> and X<sub>2</sub>, respectively.  The entries in the table are the probabilities of the corresponding combinations of values for X<sub>1</sub> and X<sub>2</sub>.
+            * X<sub>1</sub> | 0 | 1
+               -------|-----|-----
+               X<sub>2</sub>=0 | 0.16 | 0.24
+               X<sub>2</sub>=1 | 0.24 | 0.36
+        * **pmf of K = X<sub>1</sub> + X<sub>2</sub>:** A table showing the probability mass function (pmf) of the sum of X<sub>1</sub> and X<sub>2</sub>. The table has rows representing the possible values of K, and the entries are the probabilities of K taking on those values.
+            * K | 0 | 1 | 2
+               ---|----|----|----
+               p(k)| 0.16| 0.48| 0.32
+    * **2)**
+        * **Joint pmf of (X<sub>1</sub>, X<sub>2</sub>):** A table showing the joint probability mass function (pmf) of two random variables X<sub>1</sub> and X<sub>2</sub>.  The table has rows and columns representing the possible values of X<sub>1</sub> and X<sub>2</sub>, respectively.  The entries in the table are the probabilities of the corresponding combinations of values for X<sub>1</sub> and X<sub>2</sub>.
+            * X<sub>1</sub> | 0 | 1
+               -------|-----|-----
+               X<sub>2</sub>=0 | 0.20 | 0.20
+               X<sub>2</sub>=1 | 0.20 | 0.40
+        * **pmf of K = X<sub>1</sub> + X<sub>2</sub>:** A table showing the probability mass function (pmf) of the sum of X<sub>1</sub> and X<sub>2</sub>. The table has rows representing the possible values of K, and the entries are the probabilities of K taking on those values.
+            * K | 0 | 1 | 2
+               ---|----|----|----
+               p(k)| 0.2 | 0.4 | 0.4
+
+
+**Description of the Slide:**
+
+This slide introduces the concept of sampling distributions in a statistical methods course.  It defines statistics, explains why statistics are random variables, and highlights the importance of their sampling distributions.  The examples (1 and 2) demonstrate how to calculate the joint pmf of two random variables and the pmf of their sum.  The tables show the probabilities of different combinations of values for the variables, which are crucial for understanding the sampling distribution.  The text emphasizes the difference between independent and dependent variables in the context of sampling distributions.  The slide is part of a larger lecture series on statistical methods, likely building on previous concepts and preparing for future discussions on statistical inference.

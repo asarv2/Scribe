@@ -1,0 +1,15 @@
+# Slide 13
+
+**Grouping the data**
+
+Association Analysis
+Known Separation
+Hierarchical Cluster Analysis
+
+---
+
+**Description:**
+
+The slide presents a list of data grouping methods.  The title "Grouping the data" is in a large, bold font.  Below that, in a smaller font, are three methods: "Association Analysis," "Known Separation," and "Hierarchical Cluster Analysis."  There is also a small image in the upper right corner of the slide.  The image shows a meeting room with people working on a whiteboard covered with sticky notes.  This image is likely included to illustrate the process of data analysis or brainstorming in a team setting.  The image is positioned in the upper right quadrant of the slide, and it is a full-color photograph of a meeting room.  The people in the image are engaged in a collaborative activity, likely related to data analysis or problem-solving.  The presence of the image, in the context of the lecture, suggests that the slide is discussing the practical application of these data grouping methods in a team environment.  The methods listed below the title are likely different approaches to organizing and analyzing data, which are common tasks in data science.
+
+

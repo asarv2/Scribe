@@ -1,0 +1,30 @@
+# Slide 52
+
+**Having Clause**
+
+The `HAVING` clause allows you to apply conditions on aggregates.
+
+```sql
+SELECT BillingCountry, SUM(Total) AS Total, COUNT(*) AS Invoices
+FROM Invoice
+WHERE Total > 10
+GROUP BY BillingCountry
+HAVING Invoices > 5
+```
+
+This SQL query calculates the sum of `Total` and the count of `Invoices` for each `BillingCountry` where the `Total` is greater than 10.  The results are grouped by `BillingCountry`, and then filtered further by the `HAVING` clause, which ensures that only countries with more than 5 invoices are included in the output.  The output table shows the `BillingCountry`, the sum of `Total` for invoices in that country, and the count of invoices for that country.
+
+
+| BillingCountry | Total | Invoices |
+|---|---|---|
+| Canada | 110.88 | 8 |
+| USA | 220.03 | 15 |
+
+
+---
+
+**Description:**
+
+This slide presents an SQL query and its output, focusing on the `HAVING` clause for filtering aggregated results.  The query calculates the sum of invoice totals and the count of invoices for each billing country, filtering for invoices with a total greater than 10.  The results are grouped by `BillingCountry` and further filtered by the `HAVING` clause, which ensures that only countries with more than 5 invoices are included in the output.  The output table shows the `BillingCountry`, the sum of `Total` for invoices in that country, and the count of invoices for that country.  The table only includes countries that meet the criteria set by the `HAVING` clause.  The context suggests this is part of a data analysis or data science lesson, where the goal is to summarize invoice data by country, focusing on countries with a significant number of invoices.  The query is designed to calculate summary statistics for each group (country) based on the invoice data, and the `HAVING` clause is used to filter the results based on the aggregated count of invoices.  The table is formatted to present the results in a clear and organized manner.  The table data is likely extracted from a database table, such as an invoice table.
+
+

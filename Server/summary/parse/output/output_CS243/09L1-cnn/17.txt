@@ -1,0 +1,23 @@
+# 17
+
+**A simple CNN structure**
+
+* **Image:** A diagram of a Convolutional Neural Network (CNN) is shown.  It depicts a series of layers, each labeled with the type of operation it performs.  The input is a color image (likely a photograph of a car).  The image is positioned in the lower left corner of the slide.  The image is a photograph of a white Tesla car.  The image is used to illustrate the input to the CNN.
+
+* **Layers:** The diagram shows a stack of layers.  From bottom to top, the layers are:
+    * **Input:**  A single image (a photograph of a car).
+    * **CONV:**  Several layers labeled "CONV" (Convolutional layers).  These layers are stacked vertically above the input image.  Each CONV layer is represented by a series of smaller grayscale images.  These images are the output of the convolutional operation.  These images are positioned in a grid-like arrangement above the input image.  The purpose of these layers is to extract features from the input image.
+    * **RELU:** Several layers labeled "RELU" (Rectified Linear Unit layers).  These layers are stacked vertically above the CONV layers.  Each RELU layer is represented by a series of smaller grayscale images.  These images are the output of the ReLU activation function.  These images are positioned in a grid-like arrangement above the CONV layers.  The purpose of these layers is to introduce non-linearity into the network.
+    * **POOL:** Several layers labeled "POOL" (Pooling layers).  These layers are stacked vertically above the RELU layers.  Each POOL layer is represented by a series of smaller grayscale images.  These images are the output of the pooling operation.  These images are positioned in a grid-like arrangement above the RELU layers.  The purpose of these layers is to reduce the spatial dimensions of the feature maps.
+    * **FC:** A single layer labeled "FC" (Fully Connected layer).  This layer is at the top of the diagram.  It is represented by a single, rectangular box.  The purpose of this layer is to perform a fully connected operation on the output of the previous layers.
+
+* **Output:** A list of possible classifications (car, truck, airplane, ship, horse) is shown in a vertical column on the right side of the slide.  A bar graph is shown next to the list, indicating the probability of each classification.  The purpose of this output is to classify the input image into one of the predefined categories.
+
+* **Labels:** The labels "CONV," "RELU," "POOL," and "FC" are written above the corresponding layers in the diagram.  These labels help to identify the different types of layers in the CNN.
+
+* **Text:** The text "CONV: Convolutional kernel layer," "RELU: Activation function," "POOL: Dimension reduction layer," and "FC: Fully connection layer" are written below the diagram.  These labels provide a description of the function of each layer.
+
+
+**Description of the slide:**
+
+This slide provides a visual representation of a simple CNN architecture.  It shows how the input image is processed through a series of convolutional, activation, pooling, and fully connected layers to produce a classification output.  The diagram clearly illustrates the flow of data through the network and the different operations performed at each layer.  The image of the car is used as an example of the input data, and the output labels (car, truck, etc.) show the possible classifications.  The slide is designed to provide a high-level overview of a CNN's structure and function.

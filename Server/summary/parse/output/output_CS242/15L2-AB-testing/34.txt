@@ -1,0 +1,23 @@
+## Slide 34
+
+**What a nerdy debate about p-values shows about science – and how to fix it**
+
+The case for, and against, redefining "statistical significance."
+By Brian Resnick | @B_resnick | brian@vox.com | Jul 31, 2017, 12:00pm EDT
+
+There's a huge debate going on in social science right now. The question is simple, and strikes near the heart of all research: What counts as solid evidence?
+
+The answer matters because many disciplines are currently in the midst of a "replication crisis" where even textbook studies aren't holding up against rigorous retesting. The list includes: ego depletion, the idea that willpower is a finite resource; the facial feedback hypothesis, which suggested if we activate muscles used in smiling, we become happier; and many more.
+
+Now a group of 72 prominent statisticians, psychologists, economists, sociologists, political scientists, biomedical researchers, and others want to disrupt the status quo. A forthcoming paper in the journal Nature Human Behavior argues that results should only be deemed "statistically significant" if they pass a higher threshold.
+
+"We propose a change to P< 0.005," the authors write. "This simple step would immediately improve the reproducibility of scientific research in many fields."
+
+**Figure Description:**
+
+The slide contains a graphic of an open briefcase or case, with various charts, graphs, and diagrams inside.  The briefcase is open, revealing its contents, which are meant to represent the different elements of scientific research and data analysis.  The image is positioned in the upper-left quadrant of the slide.  The purpose of the image is to visually represent the complex nature of scientific research and the debate surrounding statistical significance.  The image is a visual metaphor for the discussion of p-values and their role in scientific research.  The image is likely intended to be engaging and to help the reader visualize the topic being discussed.
+
+
+**Slide Description:**
+
+This slide introduces the topic of a debate about p-values in scientific research.  It highlights the "replication crisis" in some fields, where established findings are not consistently reproducible.  The slide introduces the idea that a group of prominent researchers are advocating for a stricter threshold for statistical significance (P < 0.005) to improve the reproducibility of scientific research.  The image of the open briefcase is a visual metaphor for the complex nature of scientific research and the debate surrounding statistical significance.

@@ -1,0 +1,25 @@
+# Slide 3
+
+A data set of real estate
+
+Pretend we are interested in doing some analysis of real estate.
+We want to get a sense of what is available.
+We find a csv dataset from zillow for some “local” houses
+
+# A new data file: Zillow Example
+data_zillow = pd.read_csv('zillow.csv')
+data_zillow
+
+Does it look ok? Is something off?
+data_zillow.columns
+Index(['Index', ' "Living Space (sq ft)”',
+       ' "Beds"', ' "Baths"', ' "Zip"',
+       ' "Year"', ' "List Price ($)"'],
+      dtype='object')
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a data set of real estate, likely from a CSV file named "zillow.csv".  The data is displayed in a table format.  The table's columns are labeled with the following headers: "Index", "Living Space (sq ft)", "Beds", "Baths", "Zip", "Year", and "List Price ($)".  The table contains numerical data for various houses, including their living space, number of bedrooms and bathrooms, zip code, year built, and list price.  The slide also includes code snippets demonstrating how to load the data into a Python data frame using the pandas library.  The code shows how to read the CSV file and then display the column names of the loaded data frame.  The purpose of this slide is to introduce a sample dataset and demonstrate how to load and inspect it using Python.  The table is a key part of the slide, showing the data itself.  The code snippets are crucial for demonstrating the data analysis process.  The question "Does it look ok? Is something off?" suggests that the slide is intended to prompt the audience to consider the quality and potential issues with the data.

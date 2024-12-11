@@ -1,0 +1,196 @@
+# 1
+
+**Probability Cont.**
+
+* Recall that events A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub> are mutually exclusive if no two have any common outcomes.
+* Exhaustive events are a set of events {A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub>} in a sample space S such that one of event compulsorily occurs while performing the study, that is, (A<sub>1</sub> ∪... ∪A<sub>k</sub>) = S and one A<sub>i</sub> must occur.
+    * Example: while tossing an unbiased coin, there are two possible outcomes - heads or tails. So, these two outcomes are exhaustive events as one of them will definitely occur while flipping the coin.
+
+**The Law of Total Probability**
+
+Let A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub> be mutually exclusive and exhaustive events. Then for any other event B,
+P(B) = P(A<sub>1</sub> ∩B) + ⋯+ P(A<sub>k</sub>∩B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) + ⋯+ P(B|A<sub>k</sub>) × P(A<sub>k</sub>)
+
+**Bayes’ Theorem**
+
+* Used when: know P(B|A) but want P(A|B). For example, diagnostic tests provide P(Test+ | disease), but we are interested in P(disease | Test +).
+* Bayes’ Theorem provides a method for finding P(A|B) from P(B|A).
+
+**Bayes’ Theorem**
+
+Let A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub> be a set of k mutually exclusive and exhaustive events with prior probabilities P(A<sub>j</sub>), j = 1, ..., k. We often know the chance of another event B under each of the events A<sub>1</sub>, A<sub>2</sub>, ..., A<sub>k</sub>, i.e. P(B|A<sub>i</sub>). Then the posterior probability of A<sub>j</sub> given that B has occurred is
+P(A<sub>i</sub>|B) = P(A<sub>i</sub>∩B) / P(B) = P(B|A<sub>i</sub>) × P(A<sub>i</sub>) / [P(B|A<sub>1</sub>) × P(A<sub>1</sub>)+...+P(B|A<sub>k</sub>) × P(A<sub>k</sub>)]
+
+**Example 7.1**
+
+An individual has 3 different email accounts. Most of her messages, in fact 70%, come into account #1, whereas 20% come into account #2 and the remaining 10% into account #3. Of the messages into account #1, only 1% are spam, whereas the corresponding percentages for accounts #2 and #3 are 2% and 5%, respectively.
+Let A<sub>i</sub> = {message is from account #i} for i = 1, 2, 3; B = {message is spam}. Then the given percentages imply that
+P(A<sub>1</sub>) = 0.70
+P(A<sub>2</sub>) = 0.20
+P(A<sub>3</sub>) = 0.10
+P(B|A<sub>1</sub>) = 0.01
+P(B|A<sub>2</sub>) = 0.02
+P(B|A<sub>3</sub>) = 0.05
+
+a) What is the probability that a randomly selected message is spam?
+Use the law of total probability,
+P(B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) + P(B|A<sub>2</sub>) × P(A<sub>2</sub>) + P(B|A<sub>3</sub>) × P(A<sub>3</sub>)
+
+
+**Slide Description:**
+
+This is the first slide of a five-slide lecture on probability, specifically focusing on the Law of Total Probability and Bayes' Theorem. The slide introduces these concepts with definitions, examples, and a worked example (Example 7.1) involving email accounts and spam detection. The example is crucial for illustrating the application of the concepts in a practical scenario. The slide also includes formulas for both the Law of Total Probability and Bayes' Theorem, which are essential for understanding the subsequent slides. The slide is well-organized, with clear headings and bullet points, making it easy to follow the lecture's progression. The example is presented in a way that allows for easy understanding of the concepts.
+
+
+# Slide 2
+
+b) Given that a message is spam, what is the probability that it is received in account #1?
+Use Bayes' theorem,
+P(A<sub>1</sub>|B) = P(A<sub>1</sub> ∩ B) / P(B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) / P(B)
+
+Example 7.2 At a certain gas station, 40% of the customers use regular gas (A<sub>1</sub>), 35% use plus gas (A<sub>2</sub>), and 25% use premium (A<sub>3</sub>). Of those customers using regular gas, only 30% fill their tanks (B). Of those customers using plus, 60% fill their tanks, whereas of those using premium, 50% fill their tanks.
+
+The given percentages imply that
+P(A<sub>1</sub>) = 0.40
+P(A<sub>2</sub>) = 0.35
+P(A<sub>3</sub>) = 0.25
+P(B|A<sub>1</sub>) = 0.30
+P(B|A<sub>2</sub>) = 0.60
+P(B|A<sub>3</sub>) = 0.50
+
+a) What is the probability that the next customer will request plus gas and fill the tank?
+P(A<sub>2</sub> ∩ B) = P(B|A<sub>2</sub>) × P(A<sub>2</sub>) =
+
+b) What is the probability that the next customer fills the tank?
+P(B) =
+
+c) If the next customer fills the tank, what is the probability that regular gas is requested? Plus? Premium?
+P(A<sub>1</sub>|B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) / P(B)
+P(A<sub>2</sub>|B) = P(B|A<sub>2</sub>) × P(A<sub>2</sub>) / P(B)
+P(A<sub>3</sub>|B) = P(B|A<sub>3</sub>) × P(A<sub>3</sub>) / P(B)
+
+
+The Tree Diagram
+• Bayes' formula is a mathematical representation of tree diagram method.
+• The tree diagram is helpful in identifying the specific event and applying the Bayes' rule.
+Example 7.3 Breast cancer occurs most frequently among older women. Of all age groups, women in their 60s have the highest rate of breast cancer. The National Cancer Institute (NCI) compiles U.S. epidemiology data for a number of different cancers. The NCI estimates that 3.65% of women in their 60s get breast cancer. Mammograms are X-ray images of the breast used to detect breast cancer. A mammogram can typically identify correctly 85% of cancer cases and 95% of cases without cancer.
+a) If a woman in her 60s gets a positive mammogram, what is the probability that she indeed has breast cancer?
+
+From the above we know the probabilities:
+
+
+**Figure Description:**
+
+A tree diagram is partially shown at the bottom of the slide.  It's a visual representation of the possible outcomes and probabilities in Example 7.3, concerning breast cancer detection. The branches of the tree represent different scenarios (e.g., having cancer, not having cancer, a positive mammogram, a negative mammogram). The diagram is used to illustrate the application of Bayes' theorem in a medical context.  The diagram is oriented vertically, with the root of the tree at the top, and branches extending downward.  The branches are labeled with probabilities, and the end points of the branches are labeled with the outcomes.  The figure is crucial for understanding the example, as it visually represents the different possible paths and their associated probabilities.  The partial view suggests that the full tree diagram would be more complex, showing multiple levels of branching.  The figure is placed at the bottom of the slide to illustrate the example of breast cancer detection.  The figure is a key component of the lecture, as it visually represents the probabilities and outcomes of the example.
+
+
+# Slide 3
+
+**STAT 511 Course Notes – set 7**
+
+**Yuan Qu**
+
+**3**
+
+Solve it by definition of condition probability
+P(cancer | test +) = P(cancer ∩ test +) / P(test +)
+
+Solve it by Bayes’ formula:
+P(cancer | test +) = P(test + | cancer) × P(cancer) / [P(test + | cancer) × P(cancer) + P(test + | no cancer) × P(no cancer)]
+
+**Diagnostic tests in medicine**
+
+The performance of a diagnostic test for a given disease can be defined by two properties:
+
+1) The first property is the test’s ability to appropriately give a positive result when a person tested has the disease. This is the test’s sensitivity, which is P(test+ | disease).
+
+2) The second property is the test’s ability to come up negative when a person tested doesn’t have the disease. This is the test’s specificity, which is P(test- | no disease).
+
+**Example 7.4** The prevalence of HIV in a population is 2%. A certain test for HIV has sensitivity 99.7% and specificity 98.5%. This means that if a person is HIV+, the probability is 0.997 that they will test positive. And if a person is HIV–, the probability is 0.985 that they will test negative.
+
+**a)** What is the probability that a person chosen at random from the population will test positive?
+P(test+) = P(true positive) + P(false positive) =
+
+
+**Figure Description:**
+
+A tree diagram is presented on the slide, positioned roughly in the lower half of the page.  It's oriented vertically, with the root of the tree at the top. The branches of the tree represent different scenarios related to HIV status (HIV+ or HIV-) and the test results (positive or negative).  Each branch is labeled with a probability, indicating the likelihood of that particular outcome.  The diagram shows the probabilities of true positive, false negative, false positive, and true negative results.  The diagram is used to illustrate the calculation of the probability of a positive test result in a population with a certain prevalence of HIV.  The probabilities are clearly labeled on the branches and at the end points of the branches, making it easy to follow the different paths and their associated probabilities. The diagram is crucial for understanding the example, as it visually represents the different possible paths and their associated probabilities. The diagram is a key component of the lecture, as it visually represents the probabilities and outcomes of the example.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of diagnostic tests and Bayes' theorem, focusing on a specific example (Example 7.4) involving HIV testing.  The slide introduces the concept of sensitivity and specificity of a diagnostic test.  A tree diagram is used to visually represent the different possible outcomes and their associated probabilities, making the calculation of the probability of a positive test result more intuitive.  The slide is part of a larger lecture on statistical methods, specifically focusing on the application of Bayes' theorem in medical contexts.
+
+
+# Slide 4
+
+**STAT 511 Course Notes – set 7**
+
+**Yuan Qu**
+
+**4**
+
+b) If a person tests positive, what is the probability that they are really HIV+?
+P(HIV+ | test+) =
+
+**The Law and Probability**
+
+**The Collins Case**
+
+In 1964, an elderly woman was mugged in a lane way. Shortly afterward, a witness saw a blonde girl --- her ponytail flying --- run out of the lane way and get into a yellow car driven by a bearded African American man with a moustache, and speed away together.
+
+Eventually, the police arrested Janet and Malcolm Collins, a married couple who matched the description given above and who also owned a yellow car.
+
+What are the chances that a randomly selected couple meets the description?
+
+The prosecuting lawyer invoked the laws of probability. The following probabilities were put to the jury:
+
+* P(Woman having blonde hair) = 1/3
+* P(Woman having a ponytail) = 0.1
+* P(Being an interracial couple) = 0.001
+* P(Driving a yellow car) = 0.1
+* P(Man having a moustache) = 0.25
+* P(African American man wearing a beard) = 0.1
+
+The prosecutor multiplied the numbers using the multiplication rule for independent events to produce a joint probability of
+
+1/3 x 0.1 x 0.001 x 0.1 x 0.25 x 0.1 = 0.000000833
+
+There seems little doubt that Janet and Malcolm Collins are guilty, right?
+
+The jury found them guilty beyond a reasonable doubt. Malcolm Collins received a sentence of “one year to life”; Janet Collins received a sentence of “not less than one year”.
+
+Yet, a few years later, the California Supreme Court overturned the verdict. There was no evidence, it said, that the individual probability values were even roughly accurate. Most important, they were shown to be not independent of one another, as they must be to satisfy the probability law that was applied. The court found that a African American man having a beard is not independent of his being an inter-racial marriage. Indeed, the court heard evidence that there was a 41 percent chance that at least one other couple in the area might have had the admittedly unusual characteristics listed above.
+
+
+**Figure Description:**
+
+There is no figure on this slide.  The slide is entirely text-based, presenting a legal case study (The Collins Case) to illustrate the application of probability calculations and the importance of considering independence of events in probability estimations. The text describes a 1964 mugging case, the witness account, the couple arrested, and the probabilities assigned to various characteristics of the couple. The text also highlights the legal implications of the probability calculations and the subsequent overturning of the guilty verdict by the California Supreme Court. The slide is part of a larger lecture on statistical methods, specifically focusing on the application of probability in legal contexts.
+
+
+# Slide 5
+
+**STAT 511 Course Notes – set 7**
+
+**Yuan Qu**
+
+**5**
+
+The Sally Clark Case
+Sally Clark, a lawyer in the UK, was convicted and jailed for life in November 1999 of murdering two of her three sons (her 11 week old son, Christopher, died in December 1996 while her eight week old, Harry, died in January 1998). Sally Clark spent more than three years in prison before being cleared by the Court of Appeal, at the second appeal in January 2003. Sally Clark died on March 15, 2007, aged 42.
+Professor Roy Meadow testified at the first trial that the chance of two children from the same family suffering Sudden Infant Death Syndrome (SIDS) was 1 in 73 million, which was obtained by multiplying 1/8500 (the probability of a single incidence of SIDS) by 1/8500. Professor Meadow also concluded that having two SIDS deaths in a single family is expected to happen in England about once every 100 years.
+The Clark case has been the subject of much scholarly debate. For example, the British Medical Journal published an editorial by Stephen Watkins in January 2000 entitled ‘Convicted by mathematical error?’ Watkins argues:
+“Cot deaths are not random events [i.e. independent]. There have been several studies of recurrence [i.e. two cot deaths]. At least one study did show no increase in recurrence rates, several others showed recurrence rates about five times the general rate, implying recurrence somewhere in England about once every year and a half [and not once every 100 years as claimed at the original Clark trial].”
+In July 2005, the General Medical Council struck off pediatrician Professor Sir Roy Meadow after his "misleading" evidence in the Sally Clark case. The GMC found that Sir Roy had been found guilty of serious professional misconduct. Sir Roy had stood by his evidence, but admitted his use of statistics at Mrs Clark's 1999 trial was "insensitive". The GMC found that Sir Roy's conduct had been "fundamentally unacceptable".  (Source: http://news.bbc.co.uk/2/hi/health/4685511.stm)
+
+Prosecutor’s Fallacy
+We discussed court cases which involved probability. In each case, the prosecution misused the multiplication rule to calculate the probability that the defendant matched observed characteristics, under the assumption that they were innocent. We define the events:
+* E: evidence against the defendant
+* I: defendant is innocent.
+The prosecution is both cases tried to calculate P(E| I), the probability of observing the evidence against the defendant if the defendant is innocent. In other words, if the person is innocent, what is the probability that by chance these events could have occurred. However, juries often P(I |E) = given the evidence, the probability the defendant is innocent with P(E| I).
+Confusing 𝑃(𝐸| 𝐼) and 𝑃(𝐼 |𝐸) is known as the prosecutor’s fallacy. As we have seen, reversing the direction of a conditional probability can produce a vastly different answer.
+
+
+**Figure Description:**
+
+There is no figure on this slide.  The slide is entirely text-based, continuing the discussion of the Sally Clark case and introducing the concept of the Prosecutor's Fallacy.  The text explains how the prosecution in similar cases misapplied probability calculations, focusing on the confusion between P(E|I) and P(I|E).  The slide is part of a larger lecture on statistical methods, specifically focusing on the application of probability in legal contexts, and the potential for misinterpretation of probability in legal proceedings.

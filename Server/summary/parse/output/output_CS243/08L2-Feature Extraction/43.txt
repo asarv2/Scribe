@@ -1,0 +1,14 @@
+# Slide 43
+
+**Two Dimensional Gaussian**
+
+Anisotropic: G<sub>σ<sub>x</sub>,σ<sub>y</sub></sub>(x, y) =  1 / (2πσ<sub>x</sub>σ<sub>y</sub>) ⋅ e<sup>−1/2</sup>( (x<sup>2</sup>/σ<sub>x</sub><sup>2</sup>) + (y<sup>2</sup>/σ<sub>y</sub><sup>2</sup>) )
+
+Isotropic: G<sub>σ</sub>(x, y) = 1 / (2πσ<sup>2</sup>) ⋅ e<sup>−r<sup>2</sup>/2σ<sup>2</sup></sup>
+
+
+**Description of what you see:**
+
+This slide presents the mathematical formulas for two-dimensional Gaussian functions.  The first formula, "Anisotropic," describes a Gaussian function where the standard deviation (σ) can vary along the x and y axes.  The second formula, "Isotropic," describes a Gaussian function where the standard deviation is the same in all directions.  The formulas are written in a standard mathematical notation, with variables like x, y, σ<sub>x</sub>, σ<sub>y</sub>, and σ representing spatial coordinates and standard deviations.  The slide is likely part of a lecture on image processing, specifically on Gaussian functions and their use in smoothing or filtering images.  The source is not credited.
+
+

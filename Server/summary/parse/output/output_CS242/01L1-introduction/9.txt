@@ -1,0 +1,15 @@
+# Slide 9
+
+**If you need to find me...**
+
+bgstm@purdue.edu
+calendly.com/bgstm/time
+HAAS 102
+Look for 1H01 (Hallway)
+
+**(Figure):** A floor plan of a portion of HAAS 102 is shown.  The floor plan is oriented with north at the top of the image.  It depicts various rooms and offices within the building, labeled with room numbers and descriptions (e.g., "CS TA Offices," "Faculty Office," "Student Org Room").  Different colors are used to distinguish different types of spaces.  The figure is a visual aid to help students locate the instructor's office (HAAS 102) within the building.  A highlighted path (a light-purple line) is drawn on the floor plan, indicating the approximate location of the 1H01 hallway, which is the area where the instructor's office is located.  The figure is essential for helping students navigate the building to find the instructor's office.
+
+
+**Slide Description:**
+
+This slide provides contact information and directions for finding the instructor's office.  The text "If you need to find me..." introduces the purpose of the slide.  The instructor's email address (bgstm@purdue.edu) and Calendly link (calendly.com/bgstm/time) are provided for scheduling appointments.  The building and room number (HAAS 102) and a specific hallway (1H01) are given for finding the instructor's office within the building.  The key element of this slide is the floor plan figure, which is crucial for students to locate the instructor's office within the building.  The floor plan is a visual aid to help students navigate the building.  The highlighted path on the floor plan is a key element for helping students find the instructor's office.

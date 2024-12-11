@@ -1,0 +1,18 @@
+# Slide 89
+
+**Description of the Slide:**
+
+This slide provides examples of `awk` commands for manipulating data in text files, likely CSV files.  It shows three examples:
+
+1.  **Adding a line number:** `awk '{print NR "," $0}' filename`.  This command adds a sequential line number (`NR`) to each line of the input file (`filename`), separated by a comma.  `NR` is a built-in variable in `awk` representing the record number.
+
+2.  **Counting fields:** `awk -F "," '{print NF}' filename`.  This command, using a comma (`,`) as the field separator (`-F`), counts the number of fields (`NF`) in each line of the input file.  `NF` is a built-in variable in `awk` representing the number of fields in a record.
+
+3.  **Formatting output:** `awk -F ":" '{ print "username: " $1, "uid:" $3 }' /etc/passwd`.  This command, using a colon (`:`) as the field separator (`-F`), extracts the username (`$1`) and user ID (`$3`) from the `/etc/passwd` file and formats the output as "username: username, uid: uid".  `$1` and `$3` are field variables in `awk`.
+
+The slide also includes a URL (`http://www.grymoire.com/Unix/Awk.html`) for further reference on `awk` usage.  The slide is entirely text-based, with no figures or tables.  The purpose is to provide practical examples of `awk` commands for data manipulation.
+
+
+**What you see:**
+
+The slide contains a list of `awk` commands, each with a brief explanation.  The commands demonstrate how to use `awk` to process text files, including adding line numbers, counting fields, and formatting output.  The examples are presented in a clear and concise manner, making it easy to understand the purpose and usage of each command.  The URL is provided for additional resources.  The slide is entirely text-based, with no images or tables.

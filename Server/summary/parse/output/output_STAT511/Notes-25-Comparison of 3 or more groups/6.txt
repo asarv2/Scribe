@@ -1,0 +1,69 @@
+# 6
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+**Overall F test statistic:**
+
+𝐹𝑇𝑆= 𝑣𝑎𝑟𝑖𝑎𝑡𝑖𝑜𝑛 𝑎𝑚𝑜𝑛𝑔 𝑡ℎ𝑒 𝑚𝑒𝑎𝑛𝑠 𝑜𝑓 𝑔𝑟𝑜𝑢𝑝𝑠
+𝑣𝑎𝑟𝑖𝑎𝑡𝑖𝑜𝑛 𝑤𝑖𝑡ℎ𝑖𝑛 𝑔𝑟𝑜𝑢𝑝𝑠
+
+The overall F test procedure for 𝐻0:𝜇1 = 𝜇2 = ⋯= 𝜇𝐼 is based on comparing a measure of differences among the 𝑥𝑖’s (“between-samples” variation) to a measure of variation calculated from within each of the samples.
+
+
+Notations and Assumptions (balanced design)
+
+* There are I different groups corresponding to I different treatments:
+
+𝑋11, . . . , 𝑋1𝐽∼𝑁(𝜇1,𝜎1
+2) are the 𝑛1 samples of the first group;
+𝑋21, . . . , 𝑋2𝐽∼𝑁(𝜇2, 𝜎2
+2) are the 𝑛2 samples of the second group;
+….
+𝑋𝐼1, . . . , 𝑋𝐼𝐽∼𝑁(𝜇𝐼,  𝜎𝐼
+2) are the 𝑛𝐼 samples of the 𝐼-th group.
+
+where all measurements are independent and 𝜎1
+2 = 𝜎2
+2 = ⋯= 𝜎𝐼
+2.
+
+The above statement contains three critical assumptions:
+
+1) INDEPENDENCE.
+
+2) NORMAL.
+
+3) EQUAL VARIANCE.
+
+How to diagnose violations of the above assumptions?
+
+* 𝑥𝑖,𝑗 = the 𝑗𝑡ℎ measurement taken from the 𝑖𝑡ℎ population.
+
+* Group sample mean of each group, 𝑋̅𝑖∙
+𝑋̅ 𝑖∙= 1
+𝑛𝑖
+∑𝑋𝑖𝑗
+𝐽
+𝑗=1
+
+* The grand mean, 𝑋̅ ∙∙
+𝑋̅ ∙∙= 1
+𝑁∑∑𝑋𝑖𝑗
+𝐽
+𝑗=1
+𝐼
+𝑖=1
+
+where 𝑁= 𝐼𝐽 is the total sample size.
+
+
+Note: Graphical approach, such as side-by-side boxplot can visually display the comparison. But usually, side-by-side boxplot can only detect practical significance, but not statistical significance.
+
+
+**Figure Description:**
+
+Below the text, there are two side-by-side boxplots, labeled (a) and (b).  Both boxplots display three boxes, each representing a different group (labeled "Center 1," "Center 2," and "Center 3").  The boxes are positioned horizontally along a number line.  Each box represents the distribution of values for that group.  The box itself shows the interquartile range (IQR), with a line inside representing the median.  Whiskers extend from the box to show the range of the data, excluding outliers.  The horizontal axis is labeled with values.  Boxplot (a) shows more spread in the data than boxplot (b).  The boxplots are positioned below the text to visually compare the distributions of the data for each group in the two scenarios.  The presence of these boxplots is crucial for understanding the concept of comparing means of multiple groups in the context of ANOVA.  The comparison of the spread in the boxplots (a) and (b) is used to illustrate the concept of between-group and within-group variation, which is central to the F-test in ANOVA.
+
+

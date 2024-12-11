@@ -1,0 +1,34 @@
+# Slide 4
+
+**STAT 511 Course Notes – set 20 (W10)**
+
+**Yuan Qu**
+
+**Example 20.3:** The FFQ is a food frequency questionnaire, which uses a carefully designed series of questions to determine the dietary intakes of participants in the study.
+
+In the Nurses' Health Study, a random sample of 166 female nurses each completed the FFQ. The variable being measured is the % fat in the diet.  𝑥̅ = 36.50 and s = 6.75.
+
+Q1: find the approximated confidence intervals for μ = average% fat in the diet of all women similar to the female nurses in this study during the time period that this study was conducted.
+
+90% CI for μ:  
+𝑥̅ ± 1.645 ∙  6.75 / √166 = 36.5 ± 0.86
+
+Q2: what happens to the margin of error as the confidence level increases?
+
+Q3: what is the correct interpretation of the 90% confidence interval we calculated?
+
+
+**Figure Descriptions:**
+
+1. **Histogram:**  A histogram, positioned on the left side of the slide, displays a distribution of data.  The x-axis likely represents the % fat in the diet, and the y-axis represents frequency.  The histogram visually shows the distribution of the fat percentage in the diet of the 166 female nurses.  This figure is included to illustrate the data distribution and to provide context for the confidence interval calculation.
+
+
+2. **Scatter Plot:** A scatter plot, positioned above the histogram, shows a relationship between two variables.  The x-axis and y-axis are labeled "x-axis" and "y-axis" respectively.  The plot shows a positive correlation between the two variables.  This figure is likely included to assess the linearity of the data and to check for any outliers.
+
+
+3. **Box Plot:** A box plot, positioned on the right side of the slide, displays the distribution of a single variable.  The box plot shows the median, quartiles, and potential outliers of the data.  This figure is likely included to provide a summary of the data distribution and to compare it to the histogram.
+
+
+**Overall Context:**
+
+This slide continues the discussion of confidence intervals, specifically focusing on calculating confidence intervals for a population mean (μ) when the population standard deviation (σ) is unknown.  The example uses data from a study (the Nurses' Health Study) to illustrate the calculation and interpretation of a 90% confidence interval for the average percentage of fat in the diet.  The figures (histogram, scatter plot, and box plot) provide visual representations of the data, which are helpful for understanding the distribution and potential outliers.  The questions posed (Q1, Q2, and Q3) guide the reader to analyze the confidence interval and its implications.

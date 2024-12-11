@@ -1,0 +1,17 @@
+# 3
+
+**We're not teaching Linear Algebra**
+
+Linear Algebra is a necessary topic to understand how much of this computation works.
+You should and will take a Linear Algebra course if you haven't already, but...
+
+... many of you haven't yet.
+
+So I will go over some basics to help with some context.
+
+It's not enough - so look forward to more depth when you take Linear Algebra.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, is a straightforward explanation.  The title, "We're not teaching Linear Algebra," is presented in a bold, slightly larger font, immediately setting the stage for the content.  The following text elaborates on the importance of Linear Algebra for understanding AI computations.  The slide emphasizes that while Linear Algebra is crucial, the current lecture will only cover the basics.  The instructor explicitly states that a dedicated Linear Algebra course is necessary for a deeper understanding.  The overall tone is informative and proactive, guiding the students to the appropriate resources for a more comprehensive learning experience.  There are no figures on this slide.

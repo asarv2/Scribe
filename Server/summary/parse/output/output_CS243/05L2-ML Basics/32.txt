@@ -1,0 +1,28 @@
+# 32
+
+**Sigmoid function**
+
+Given 
+, what is 
+?
+
+* It is 
+* Define sigmoid function: σ(z) = 
+
+Because 
+ 
+
+Again, using stochastic gradient descent
+
+* Pick a data point x<sub>n</sub>, uniformly at random
+* Update w according to  w ← w + α(σ(−y<sub>n</sub>w<sup>T</sup>x<sub>n</sub>)y<sub>n</sub>x<sub>n</sub>)
+
+
+**(Figure):**
+
+A graph is positioned in the right-hand portion of the slide.  The x-axis ranges from approximately -6 to 6, and the y-axis ranges from approximately -0.1 to 1.  A smooth, S-shaped curve is plotted, rising from a value near 0 at x = -6 to a value near 1 at x = 6.  This curve is the sigmoid function.  The curve is a key element of the slide, as it visually represents the sigmoid function, which is central to logistic regression.
+
+
+**Description:**
+
+This slide introduces the sigmoid function, a crucial component of logistic regression.  The slide shows the mathematical definition of the sigmoid function, σ(z) = 1 / (1 + e<sup>-z</sup>), and its derivative, which is essential for gradient-based optimization.  The graph visually represents the sigmoid function, illustrating its characteristic S-shape and its behavior as z varies.  The slide is likely part of a larger lecture on AI Basics, focusing on the mathematical details of logistic regression and its underlying components.  The graph is essential for understanding the sigmoid function's properties and how it maps input values to output values between 0 and 1.  The slide also mentions stochastic gradient descent, indicating that the subsequent steps will likely involve using this optimization technique to train a logistic regression model.

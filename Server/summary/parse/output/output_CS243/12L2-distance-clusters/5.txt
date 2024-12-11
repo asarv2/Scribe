@@ -1,0 +1,14 @@
+# 5
+
+# Examples
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, is a simple slide with the word "Examples" in a dark gray font.  The background is a light gray.  There are no other elements on the slide.  This slide is likely a placeholder for the next slide, which will contain examples related to the topic being discussed.  The slide is designed to signal a transition to the examples section of the lecture.
+
+
+**What you see:**
+
+The slide is a plain, light gray background.  The only text on the slide is the word "Examples" in a dark gray, sans-serif font.  The word "Examples" is centered on the slide.  The font size is medium-large, making it easily visible.  The overall design is simple and clean, focusing on the word "Examples" to indicate the upcoming content.

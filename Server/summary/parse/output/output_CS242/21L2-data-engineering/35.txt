@@ -1,0 +1,52 @@
+# Slide 35
+
+**map+reduce vs. MapReduce**
+
+```
+map + reduce
+mapper()
+Item 1
+Item 2
+Value 1
+Value 2
+reducer()
+Output
+```
+
+```
+MapReduce
+mapper()
+Item 1
+Item 2
+Key
+Key
+Value 1
+Value 2
+Group by key
+reducer()
+Key
+Value 1
+Value 4
+Key
+Value 2
+Value 3
+Key
+Value 3
+Key
+Value 4
+Output
+```
+
+---
+
+**Description:**
+
+This slide visually compares the `map + reduce` approach with the MapReduce approach.  It uses diagrams to illustrate the differences in data flow and processing.
+
+* **map + reduce Diagram:** This diagram shows a simple, sequential flow.  "Item 1" and "Item 2" are input elements.  The `mapper()` function processes each item, producing "Value 1" and "Value 2" respectively.  These values are then passed to the `reducer()` function, which combines them to produce the "Output."  The arrows show the unidirectional flow of data.
+
+* **MapReduce Diagram:** This diagram shows a more complex, distributed flow.  "Item 1" and "Item 2" are input elements.  The `mapper()` function processes each item, producing key-value pairs.  The "Group by key" step is crucial; it shows that the output of the mapper is grouped by the key.  The grouped data is then passed to the `reducer()` function, which processes each group of values associated with a key to produce the final "Output."  The arrows and the grouping by key visually represent the distributed nature of the MapReduce process.
+
+* **Purpose:** The slide is designed to highlight the key difference between the simple `map + reduce` approach and the more sophisticated MapReduce approach.  The visual representation emphasizes the grouping by key in MapReduce, which is a fundamental aspect of its distributed processing capabilities.  The diagrams are meant to illustrate the sequential nature of `map + reduce` versus the distributed, grouped nature of MapReduce.
+
+

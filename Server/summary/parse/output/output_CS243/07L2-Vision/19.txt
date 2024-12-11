@@ -1,0 +1,15 @@
+# Slide 19
+
+**Key idea: classify based on invariant features!**
+
+* **Object:**  A portrait-style image of a woman's head and shoulders is shown.  This image is likely a historical painting or a similar artwork.  It's used as a visual example of an object to be classified.
+
+* **Feature vector f:** A horizontal bar graph is shown, representing a feature vector.  The bar graph is divided into several sections, each representing a different feature.  The sections are labeled with the features "#eyes" and "Mouth below eyes."  The ellipses (...) indicate that there are more features not explicitly shown.  This feature vector represents the numerical values extracted from the image, focusing on invariant features.
+
+* **Fit logistic regression model:**  The text "Fit logistic regression model" indicates that a logistic regression model will be used to classify the object based on the extracted features.
+
+* **prediction = sign(w ⋅ f):**  This equation shows the prediction process.  The model calculates the dot product of the weight vector (w) and the feature vector (f), and then uses the sign function to determine the classification.  This is a standard approach in machine learning for classification tasks.
+
+**Description of what you see:**
+
+The slide visually explains the concept of classifying objects based on invariant features using a logistic regression model.  The image of the woman's head and shoulders is a visual example of the object being classified.  The feature vector, represented by the bar graph, shows the extracted features used for classification.  The equation highlights the mathematical process of using the feature vector to make a prediction.  The overall design is simple and uses visual aids to explain the key idea of the method.  The slide is likely part of a section discussing feature extraction and classification techniques in image recognition.

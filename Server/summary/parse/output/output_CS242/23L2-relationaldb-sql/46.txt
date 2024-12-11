@@ -1,0 +1,42 @@
+# Slide 46
+
+# Aggregation
+
+Count will count all records, including duplicates, unless you specify it
+
+```sql
+SELECT COUNT(BillingCountry)
+FROM Invoice
+WHERE Total > 10
+```
+
+```
+COUNT(BillingCountry)
+64
+```
+
+In this example, we probably want
+
+```sql
+SELECT COUNT(DISTINCT BillingCountry)
+FROM Invoice
+WHERE Total > 10
+```
+
+```
+COUNT(DISTINCT BillingCountry)
+24
+```
+
+---
+
+**Description:**
+
+This slide demonstrates the use of the `COUNT` aggregate function in SQL, with and without the `DISTINCT` keyword.  The slide shows two SQL queries. The first query, `SELECT COUNT(BillingCountry) FROM Invoice WHERE Total > 10`, counts all the rows in the `Invoice` table where the `Total` is greater than 10. The result, `64`, is displayed below the query.  The second query, `SELECT COUNT(DISTINCT BillingCountry) FROM Invoice WHERE Total > 10`, counts the unique values in the `BillingCountry` column for the same filtered rows. The result, `24`, is displayed below the second query.  The context suggests this is part of a data analysis or data science lesson, where the difference between counting all records and counting unique values is important.  The slide is purely textual, containing SQL queries and their results.  The output values are presented directly below the corresponding queries.  The slide is formatted to clearly separate the queries and their results.
+
+
+**Description of the Figure:**
+
+There is no figure on this slide.  The slide is entirely text-based, containing SQL queries and their results.  The output values are presented directly below the corresponding queries.  The slide is formatted to clearly separate the queries and their results.  The context suggests that the output is a result of a query against a database table, likely the `Invoice` table, to extract counts of billing countries and invoice totals.  The formatting is designed to highlight the difference between counting all records and counting unique values.
+
+

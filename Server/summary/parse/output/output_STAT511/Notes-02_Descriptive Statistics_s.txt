@@ -1,0 +1,278 @@
+# Slide 1
+
+**Descriptive Statistics**
+
+**Exploring Data with Graphs and Numerical Summaries**
+
+Data sets contain information about some group of individuals or experimental units. This information is organized into variables.
+
+* A variable describes a characteristic measured on a subject or experimental unit in the study.
+
+**Example 2.1:** A nutritionist collected information on 20 popular brands of cereals. The right table is her data set.
+
+The variables are: sodium, sugar and CODE.
+
+* Sodium = number of mg in one serving of cereal
+* Sugar = number of grams of sugar in one serving of cereal
+* CODE = whether the cereal is considered an Adult cereal (A) or a Children's cereal (C)
+
+What are the subjects of this study?
+
+
+**Main types of variables**
+
+Numerical (Quantitative) Variables: A variable is called numerical if each variable value is a number. Two Sub-types of Numerical variables:
+
+* **Discrete:** Numerical variables that can only take certain fixed values, with no intermediate values possible.
+* **Continuous:** Continuous variables can take on any real numerical value over an interval.
+
+Categorical (Qualitative) Variables: A variable is called categorical if the variable values represent some quality (as opposed to quantity) of the subject. Sub-types:
+
+* **Nominal:** variables are purely qualitative and unordered (i.e. eye color).
+* **Ordinal:** variables can be ranked (i.e. stage of cancer).
+
+**Example:** In example 2.1, are any of the variables numerical? What variable in example 2.1 is categorical? Is it nominal or ordinal?
+
+
+**Table:**
+
+| CEREAL | SODIUM(mg) | SUGAR(g) | CODE |
+|---|---|---|---|
+| Frosted Mini Wheats | 0 | 7 | A |
+| Apple Bran | 260 | 5 | A |
+| Apple Jacks | 125 | 14 | C |
+| Capt Crunch | 220 | 12 | C |
+| Cheerios | 290 | 1 | C |
+| Cinnamon Toast | 210 | 13 | C |
+| Corn Flakes | 290 | 2 | A |
+| Raisin Bran | 210 | 12 | A |
+| Crackling Oat Bran | 140 | 10 | A |
+| Crispix | 220 | 3 | A |
+| Frosted Flakes | 200 | 11 | C |
+| Fruit Loops | 125 | 13 | C |
+| Grape Nuts | 170 | 3 | A |
+| Honey Nut Cheerios | 250 | 10 | C |
+| Honeycomb | 180 | 11 | C |
+| Life | 150 | 6 | A |
+| Oatmeal Raisin Crisp | 170 | 10 | A |
+| Sugar Smacks | 70 | 15 | C |
+| Special K | 230 | 3 | A |
+| Wheaties | 205 | 3 | A |
+
+
+**Description of the Slide:**
+
+This is the first slide of a six-slide lecture on Statistical Methods, specifically focusing on Descriptive Statistics. The slide introduces the concept of variables in data sets and provides an example (Example 2.1) of a nutritionist's data collection on cereal brands.  A table displays the data collected, including the cereal name, sodium content (in mg), sugar content (in grams), and a code indicating whether the cereal is for adults (A) or children (C). The slide then defines numerical (quantitative) and categorical (qualitative) variables, further breaking down numerical variables into discrete and continuous types, and categorical variables into nominal and ordinal types.  The slide concludes with a question prompting the students to identify the numerical and categorical variables in the example and determine if the categorical variable is nominal or ordinal. The table is central to the slide, providing the data set for the example. The text surrounding the table explains the variables and their meaning. The slide's structure is designed to introduce the key concepts of variables and data types in the context of a real-world example.
+
+
+# Slide 2
+
+**Describing a Single Numerical Variable**
+
+Example 2.1 revisited: the data on 20 popular brands of cereals. We are now interested in summarizing the sugar variable values and understanding the distribution of these values.
+
+The Distribution of numerical data: The distribution of a variable tells us
+(1) what values the variable takes
+(2) how often it takes these values.
+
+**Graphical Descriptions**
+
+**Stem-and-Leaf Displays:** (usually for rounded values with at least two digits)
+
+Given data set (0, 10, 12, 23, 45, 13, 54, 5, 15, 34, 63, 24, 64, 23),
+the stem-and-leaf plot is:
+
+Stem (leading digit(s)) | Leaf (trailing digit(s))
+------- | --------
+0 | 5
+1 | 0 2 3 5
+2 | 3 3 4
+3 | 4
+4 | 5
+5 | 4 5
+6 | 3 4
+
+**R code:**
+```R
+x <- c(0, 10, 12, 23, 45, 13, 54, 5, 15, 34, 63, 24, 64, 23)
+stem(x, scale = 2)
+```
+
+**Stacked Dot Plot:** the stacked dot plot can be considered as a rotated stem-and-leaf plot.
+
+Given the same data set,
+the stacked dot plot is:
+
+[Image of a stacked dot plot]
+
+**R code:**
+```R
+foo <- function(x) {
+  round(x + 5, -1)
+}
+
+x <- c(0, 10, 12, 23, 45, 13, 54, 5, 15, 34, 63, 24, 64, 23)
+stripchart(foo(x), method = "stack", offset = .5, at = 0, pch = 19, col = "steelblue")
+```
+
+
+**Description of the Slide:**
+
+This slide, part of a Statistical Methods lecture, continues the discussion from the previous slide by focusing on describing a single numerical variable (sugar content in the cereal example). It explains that understanding the distribution of a numerical variable involves identifying the values it takes and how frequently each value occurs.  The slide introduces two graphical methods for visualizing this distribution: stem-and-leaf displays and stacked dot plots.  A stem-and-leaf display is shown for a sample data set, and the corresponding R code is provided.  A stacked dot plot is also shown, along with its corresponding R code.  The R code demonstrates how to create these plots using the R programming language, which is often used in statistical analysis. The plots help to visualize the distribution of the sugar content in the cereal data, showing the frequency of different sugar values.
+
+
+# Slide 3
+
+**Histograms: The most common graph used to describe the distribution of a numerical variable is the histogram.**
+
+
+**Reading Histograms:**
+
+* Variable values are plotted on the horizontal axis. The range of values for the left bar is 0 up to 2 but not including 2, etc.
+* The height of each bar is its frequency or the proportion of subjects taking values in that range.
+
+
+**NOTE:** The shape of a histogram of the same data set can vary depending on how wide the bars are. Here, the bars are 2 wide but the other histogram of sugar has bars of width 2.5. The 2 histograms of sugar look different. Same data set but the range of values for each box is slightly different.
+
+
+**R code:**
+```R
+x <- c(7, 5, 14, 12, 1, 13, 2, 12, 10, 3, 11, 13, 3, 10, 11, 6, 10, 15, 3, 3)
+hist(x); hist(x, breaks = c(0, 4, 8, 12, 16))
+```
+
+**Histogram of SUGAR (grams)**
+
+[Image of a histogram]
+
+**Next:** what does this histogram tell us about the distribution?
+
+**Example 2.2** How unusual is a no-hitter or a one-hitter in a major league baseball game, and how frequently does a team get more than 10, 15, or even 20 hits?
+
+The right table is a frequency distribution for the number of hits per team per game for all nine-inning games that were played between 1989 and 1993.
+
+Proportion of games with at most two hits =
+
+Proportion of games with between 5 and 10 hits (inclusive) =
+
+Other proportions can be obtained similarly.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of descriptive statistics, focusing on histograms.  It explains how to read a histogram, emphasizing that the horizontal axis represents the variable values and the height of each bar corresponds to the frequency or proportion of data points within that range.  The slide highlights that the shape of a histogram can change depending on the width of the bars used.  The slide also introduces a new example (Example 2.2) about the frequency of hits in baseball games, providing a table of frequency distribution data.  The slide includes R code for creating histograms with different break points, demonstrating the flexibility of the R programming language in data visualization.  The histogram itself visually displays the distribution of the sugar content data.  The table provides data on the number of hits per game in baseball. The slide is designed to help students understand how to interpret histograms and apply them to real-world data analysis.
+
+
+# Slide 4
+
+**Describing the Shape of the distribution of numerical data**
+
+**Modality:** number of modes
+
+* **Unimodal**
+* **Bimodal**
+* **Uniform**
+
+**Skewness of unimodal distributions**
+
+* **Symmetric**
+* **Skewed Right**
+* **Skewed Left**
+
+
+**Example 2.3:** How would you describe the shape of the distribution of these data sets? Identify both the modality and skewness (for data that are unimodal).
+
+[Images of various histograms]
+
+
+**Description of the Slide:**
+
+This slide, part of a Statistical Methods lecture, focuses on describing the shape of numerical data distributions.  It introduces the concepts of modality (the number of peaks or modes in a distribution) and skewness (the asymmetry of a distribution).  The slide presents examples of unimodal, bimodal, and uniform distributions, along with examples of symmetric, skewed right, and skewed left distributions.  Each type of distribution is illustrated with a corresponding histogram.  The slide also includes a question (Example 2.3) prompting the students to analyze the shape of different data sets, identifying both the modality and skewness.  The various histograms are crucial for visually demonstrating the different shapes and characteristics of data distributions.  The examples are designed to help students develop their ability to recognize and describe the shape of a distribution.
+
+
+# Slide 5
+
+**We use four different properties to describe numerical variables:**
+
+1) Shape
+2) Center
+3) Variability
+4) Unusual observations (data points whose value differs noticeably from the other values)
+
+**Three statistics used to measure the center of a data set**
+
+**Mode** (the least important statistic)
+* The value taken most frequently by the subjects.
+
+**Mean**
+* The "average" value of a variable.
+* The population mean is denoted as μ. The average value if we know the values of all objects in a census.
+* The sample mean of a data set is defined as
+  x̄ = (x<sub>1</sub> + x<sub>2</sub> + ... + x<sub>n</sub>) / n = 1/n Σ<sub>i=1</sub><sup>n</sup> x<sub>i</sub>
+
+**Median**
+* The middle value of an ordered data set.
+* The population median is defined as M.
+* The sample median of a data set is calculated as
+  M̂ = {
+    The single middle value if n is odd = (n+1)/2<sup>th</sup> ordered value.
+    The avg. of the two middle values if n is even = avg. of (n/2)<sup>th</sup> and (n/2 + 1)<sup>th</sup> ordered values.
+
+
+**Example 2.4:** A sample of 12 recordings of Beethoven's Symphony #9 with the random variable durations (min)
+
+x<sub>1</sub> = 62.3,  x<sub>2</sub> = 62.8,  x<sub>3</sub> = 63.6,  x<sub>4</sub> = 65.2,  x<sub>5</sub> = 65.7,  x<sub>6</sub> = 66.4,
+x<sub>7</sub> = 67.4, x<sub>8</sub> = 68.4,  x<sub>9</sub> = 68.8,  x<sub>10</sub> = 70.8,  x<sub>11</sub> = 75.7,  x<sub>12</sub> = 79.0.
+
+Sample Median = (x<sub>6</sub> + x<sub>7</sub>)/2 = (66.4 + 67.4)/2 = 66.90
+
+The sample mean is x̄ = 1/12 Σx<sub>i</sub> = 816.1/12 = 68.01, a bit more than a full minute larger than the median. The mean is pulled out a bit relative to the median because the sample "stretches out" somewhat more on the upper end than on the lower end.
+
+
+**Mean** | **Median**
+------- | --------
+μ | M
+x̄ | M̂
+
+
+**Description of the Slide:**
+
+This slide continues the Statistical Methods lecture by introducing measures of the center of a data set.  It defines the mode, mean, and median, explaining how to calculate each.  The slide provides a concrete example (Example 2.4) using Beethoven's Symphony #9 durations to illustrate the calculation of the sample mean and median.  The example shows how the mean can be influenced by extreme values (outliers) in a data set, pulling it away from the median.  The slide also introduces the distinction between population parameters (μ, M) and sample statistics (x̄, M̂).  The visual aids, including the table summarizing the mean and median, help to clarify the concepts.
+
+
+# Slide 6
+
+**Comparing the Mean & Median**
+
+In general, if the shape of the distribution is:
+
+Symmetric | Skewed Right | Skewed Left
+
+**Outliers:** outliers are extreme observations taking values far away from the bulk of the data values.
+o EX: height of a professional basketball player.
+
+**Example 2.5** The data set A: {0,1,2,2,3,3,4,4,5,6}
+
+x̄<sub>A</sub> = 
+M̂<sub>A</sub> = 
+
+If the number 60 is substituted for 6, that is, data set B: {0,1,2,2,3,3,4,4,5,60}
+
+x̄<sub>B</sub> = 
+M̂<sub>B</sub> = 
+
+**Resistant statistic:** A statistic is called robust or resistant if it is not strongly influenced by extreme values like outliers.
+o The sample  **mean** is robust to outliers.
+o The sample  **median** is not robust to outliers.
+
+**Influential Point:** A data value is called influential if it noticeably shifts the value of the sample mean towards it.
+
+
+**Outlier**
+
+[Image of a histogram]
+
+
+**Description of the Slide:**
+
+This slide continues the Statistical Methods lecture by discussing the impact of outliers on the mean and median.  It explains that the mean is sensitive to outliers, while the median is more resistant.  Example 2.5 demonstrates this by comparing the mean and median of two data sets, one with an outlier (60) and one without.  The slide also introduces the concept of a resistant statistic, which is not significantly affected by outliers.  The histogram is included to visually represent the data distribution and the potential impact of outliers.  The slide is designed to help students understand the importance of considering outliers when analyzing data and choosing appropriate measures of central tendency.

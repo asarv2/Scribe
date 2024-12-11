@@ -1,0 +1,46 @@
+# 5
+
+**STAT 511 Course Notes – set 19 (W10)**
+
+**Yuan Qu**
+
+Key Question: Why can't we interpret our 95% confidence interval as: There is a 95% probability that the average drop in HBE is between 5.3 and 20.7 (pg/mLi)?
+
+Key point: A confidence interval is an inference about the population based on a calculation using data from a sample. A confidence interval only makes an inference about a population parameter. CI's don't tell us anything about individuals in the population. A confidence interval uses the sample mean in the calculation, but it is not an inference about the sample mean. We know all about the sample because we have data from the data. There is no reason to make inferences about the sample – either the subjects in the sample or statistics calculated from the sample.
+
+
+Sample size, confidence level and precision
+
+Proposition:
+
+• The larger the confidence level is, the larger the C.V. is, and the wider the interval is.
+
+Confidence level C  90%  95%  99%
+Critical value z*  1.645  1.960  2.576
+
+• The larger the sample size is, the narrower the interval is.
+
+• If we want to control the width to be smaller than a fixed value w, (that is margin of error is smaller than w/2), the necessary sample size is at least (2z*σ/w)<sup>2</sup>
+
+
+A formal, general definition of confidence interval:
+
+A confidence interval consists of two statistics L(X<sub>1</sub>, ..., X<sub>n</sub>) and U(X<sub>1</sub>, ..., X<sub>n</sub>), such that
+
+P(L(X<sub>1</sub>, ..., X<sub>n</sub>) < θ < U(X<sub>1</sub>, ..., X<sub>n</sub>)) = C.
+
+Note that one of L and U can be infinite, this lead to Confidence Bounds: for example, for normal mean problem,
+
+Pr(μ ∈ (−∞, X̄ + z(1-C)σ/√n)) = C.
+
+We can derive a confidence interval, starting for a point estimator and its associated sampling distribution. Refer to Example 7.5 in textbook.
+
+
+**Figure Description:**
+
+There is no figure on this slide.  The slide entirely consists of text, summarizing the key concepts of confidence intervals, including the relationship between sample size, confidence level, and precision.  The text also provides a formal definition of a confidence interval and an example of how to calculate a confidence interval for a normal mean problem. The slide is structured to provide a concise summary of the concepts discussed in the previous slides.
+
+
+**Slide Description:**
+
+This is the final slide of a lecture on confidence intervals. It reviews the key concepts, emphasizing the distinction between confidence intervals and probabilities related to individual observations or the sample itself.  The slide summarizes the relationship between sample size, confidence level, and the width of the confidence interval.  It also provides a formal definition of a confidence interval and an example of how to calculate a confidence interval for a normal mean problem.  The slide concludes the lecture by referencing a textbook example for further details.  The slide number (5) and the course name (STAT 511) are clearly visible at the top. The author's name (Yuan Qu) is also present. The use of mathematical notation (e.g., X̄, μ, σ, n) and formulas indicates a statistical context.

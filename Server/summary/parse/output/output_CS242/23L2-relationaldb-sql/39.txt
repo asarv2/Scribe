@@ -1,0 +1,16 @@
+# Slide 39
+
+# More SQL
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on Introduction to Data Science, presents the heading "More SQL".  The text is centered on the slide, in a dark gray font against a light gray background.  This slide likely introduces additional SQL commands or concepts beyond the basic ones covered in previous slides.  There are no figures on this slide.  The content is purely textual, indicating the topic of the upcoming discussion.
+
+
+**Description of the Figure:**
+
+There is no figure on this slide.  The slide is entirely text-based.
+
+

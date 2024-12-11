@@ -1,0 +1,11 @@
+# Slide 16
+
+**Web page parsing with Beautiful Soup**
+Data Science from Scratch, Ch 9
+
+
+---
+
+**Description:**
+
+This slide is a title slide for a section of the Intro to Data Science course.  The title, "Web page parsing with Beautiful Soup," is presented in a clear, sans-serif font, likely indicating the topic of the upcoming lecture.  The subtitle "Data Science from Scratch, Ch 9" suggests that this is part of a larger chapter or module within a textbook or course material called "Data Science from Scratch."  The background color is a light gray, making the text stand out.  The overall design is clean and professional, typical of a slide used to introduce a new topic.  The slide is likely to be followed by content explaining how to use the Beautiful Soup library for web scraping or parsing HTML/XML documents.

@@ -1,0 +1,26 @@
+# 9
+
+**Adding, subtracting, and scalar multiplication**
+
+Addition and Subtraction are element-wise operations
+the matrices should be the same dimensions
+
+**A + B = C** where  c<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub>
+
+```
+( 1  2 )   ( 5  6 )   ( 1+5  2+6 )   ( 6  8 )
+( 3  4 ) + ( 7  8 ) = ( 3+7  4+8 ) = (10 12)
+```
+
+Scalar multiplication multiplies each element
+
+**k ⋅ A = B** where b<sub>ij</sub> = k ⋅ a<sub>ij</sub>
+
+```
+2 ⋅ ( 1  2 ) = ( 2⋅1  2⋅2 ) = ( 2  4 )
+    ( 3  4 )   ( 2⋅3  2⋅4 )   ( 6  8 )
+```
+
+**Description:**
+
+This slide in the AI Basics course demonstrates matrix addition and scalar multiplication.  It shows how to add and multiply matrices element-wise.  The slide uses a standard mathematical notation for matrices and matrix operations.  The examples provided are straightforward, showing the addition of two 2x2 matrices and the scalar multiplication of a 2x2 matrix by a scalar (2).  The purpose of the slide is to illustrate the basic arithmetic operations on matrices, which are fundamental to many AI algorithms.  There are no figures in the traditional sense, but the formatted matrix equations are visually distinct and serve as the figures for this slide.  The presentation is clear and concise, focusing on the mechanics of the operations.

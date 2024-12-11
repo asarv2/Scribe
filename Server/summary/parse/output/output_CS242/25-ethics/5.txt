@@ -1,0 +1,20 @@
+# Slide 5
+
+**Examples in Society**
+
+* **Web advertising:**  A colorful, complex image, likely a collage or a distorted image, is shown.  It appears to be a jumbled collection of various images and text elements.  This image is likely used to illustrate the complexity and potential for bias in web advertising, where algorithms can be influenced by various factors.  It's placed in the top left quadrant of the slide.
+
+* **Lending:** A graphic depicting a process or system related to lending.  It shows various elements, including icons representing people, financial instruments, and a brain-like structure.  The graphic is likely intended to illustrate how machine learning can be used to improve lending decisions.  It's placed in the top right quadrant of the slide.
+
+* **Ridesharing:** A map image, likely from a rideshare app, is shown.  It displays streets, locations, and markers.  This image is used to illustrate the use of data science in rideshare services, such as determining routes, pricing, and matching drivers and passengers.  It's placed in the bottom left quadrant of the slide.
+
+* **Public policy:** An image of a robot figure holding a scale of justice is shown.  This image is likely used to illustrate the use of data science in public policy, such as predicting crime rates, allocating resources, or evaluating the effectiveness of policies.  It's placed in the bottom right quadrant of the slide.
+
+**Source:** Richard Johansson, University of Gothenburg
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents examples of how data science is used in various aspects of society.  Each quadrant of the slide features a different application.  The images are used to visually represent the different areas where data science is applied.  The slide is likely intended to illustrate the breadth of data science applications and the potential impact of data science on various societal sectors.  The source indicates the origin of the examples.

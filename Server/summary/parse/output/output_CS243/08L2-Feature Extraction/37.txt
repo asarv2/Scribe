@@ -1,0 +1,16 @@
+# Slide 37
+
+**Effects of noise**
+
+Noise is high frequency
+Differentiation accentuates noise
+d
+sin(wx) = w ⋅ cos(wx)
+dx
+
+
+**Description of what you see:**
+
+This slide discusses the effects of noise in image processing.  The text states that noise is typically high-frequency, and that differentiation operations amplify this noise.  A mathematical example is given, showing the derivative of sin(wx) with respect to x.  There are no figures on this slide.  The slide is likely part of a lecture on image processing, specifically on how noise affects image quality and how noise reduction techniques can be applied.  The source is not credited.
+
+

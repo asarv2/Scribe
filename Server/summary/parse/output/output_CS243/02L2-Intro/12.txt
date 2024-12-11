@@ -1,0 +1,34 @@
+# 12
+
+# Search Tree Sizes
+
+Tic-tac-toe: 10<sup>5</sup>
+Checkers: 10<sup>31</sup>
+Chess: 10<sup>123</sup>
+Backgammon: 10<sup>144</sup>
+Go: 10<sup>360</sup>
+
+Atoms in your body ~ 10<sup>28</sup>
+Atoms in the universe ~ 10<sup>80</sup>
+
+Assume that a computer evaluates 1 million board configurations per second.
+
+It would take 0.1 seconds to search the entire tic-tac-toe game tree but it would still take 10<sup>18</sup> years to search the full checkers tree.
+
+Search alone is impossible, we need machine learning.
+
+By Goban1 (Own work) [Public domain], via Wikimedia Commons
+
+![Image of a Go board](https://i.imgur.com/your_image_url.png)
+
+
+---
+
+**Description:**
+
+This slide, titled "Search Tree Sizes," presents a table of the estimated number of possible game configurations for various board games.  The table lists the games (Tic-tac-toe, Checkers, Chess, Backgammon, Go) and the corresponding number of possible configurations, expressed in scientific notation (e.g., 10<sup>5</sup>).  Below the table, the slide provides the approximate number of atoms in the human body and the universe, also in scientific notation.  The slide then presents a hypothetical scenario, assuming a computer can evaluate 1 million board configurations per second.  It calculates the time it would take to search the entire tic-tac-toe game tree (0.1 seconds) and contrasts this with the astronomical time it would take to search the full checkers game tree (10<sup>18</sup> years).  The final sentence emphasizes the limitations of pure search algorithms and the necessity of machine learning techniques.
+
+The central figure on the slide is an image of a Go board.  The board is filled with black and white stones, representing a typical Go game configuration.  The image is positioned on the right side of the slide, likely to visually represent the complexity of the Go game and the vastness of its search space.  The image is oriented horizontally, and its size is medium, complementing the text on the slide.  The image is a visual aid to illustrate the concept of search tree sizes and the computational challenges associated with games like Go.  The source of the image is clearly indicated, which is important for academic integrity.
+
+
+**Note:**  I've replaced `your_image_url.png` with a placeholder.  You need to provide the actual image URL to display the image correctly.  The description above is a detailed explanation of the slide's content, including the image.  The image is a photograph of a Go board, likely taken during a Go game.  The board is filled with black and white stones, representing a typical Go game configuration.  The image is likely included to illustrate the complexity of the Go game and the vastness of its search space.

@@ -1,0 +1,18 @@
+# Slide 19
+
+# SQLite
+
+An actual relational database management system (RDBMS)
+Unlike most systems, it is a serverless model, applications directly connect to a file
+Allows for simultaneous connections from many applications to the same database file
+(but not quite as much concurrency as client-server systems)
+All operations in SQLite will use SQL command issued to the database object
+
+
+---
+
+**Description of the Slide:**
+
+This slide describes the SQLite database system.  It's part of a larger discussion about database systems and their characteristics.  The slide explains that SQLite is a relational database management system (RDBMS) that differs from other systems in its serverless architecture.  Applications directly interact with a file, allowing for simultaneous connections from multiple applications.  However, the concurrency capabilities are not as extensive as in client-server systems.  The slide also states that all operations within SQLite use SQL commands directed to the database object itself.  There are no figures on this slide.  The content is purely textual, providing a concise overview of SQLite's architecture and functionality.
+
+

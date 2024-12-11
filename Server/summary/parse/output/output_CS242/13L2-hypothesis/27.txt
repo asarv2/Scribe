@@ -1,0 +1,19 @@
+# Slide 27
+
+**Example in Python**
+
+```python
+import scipy.stats as st
+d1 = ...  # observed data
+h0mean = 30  # mean under null hypothesis
+# t-test with scipy
+t, p = st.ttest_1samp(d1, h0mean)
+# t: 24.04  returned t-statistic value
+# p: 2.2e-16 calculated p-value
+```
+
+---
+
+**Description of what you see:**
+
+This slide presents Python code for performing a one-sample t-test.  The code snippet shows how to import the necessary statistical functions from the `scipy.stats` module, define the observed data (`d1`), the hypothesized mean (`h0mean`), and then use the `st.ttest_1samp()` function to calculate the t-statistic and p-value.  The output of the calculation, the t-statistic (24.04) and the p-value (2.2e-16), are also displayed.  The slide is part of a lecture on Intro to Data Science, demonstrating how to perform statistical tests using Python.  The code is presented in a way that is clear and easy to understand, showing the steps involved in a one-sample t-test.  The code is likely an example of how to implement the concepts discussed in previous slides.

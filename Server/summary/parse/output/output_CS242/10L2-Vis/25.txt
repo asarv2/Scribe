@@ -1,0 +1,12 @@
+# Slide 25
+
+**More Visualizations**
+
+Using Iris Data
+
+
+---
+
+**Description of what you see:**
+
+This slide has a plain, light gray background.  The title, "More Visualizations," is displayed in a large, bold, dark gray font.  Below the title, in a smaller, dark gray font, the text "Using Iris Data" is visible.  The overall design is clean and simple, suitable for introducing a new section of the presentation focused on data visualization using the Iris dataset.  There are no figures or other elements on this slide.  The slide is likely the introduction to a new set of visualizations using the Iris dataset, which is a common dataset in introductory data science courses.

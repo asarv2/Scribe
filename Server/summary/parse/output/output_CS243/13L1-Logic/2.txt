@@ -1,0 +1,10 @@
+# 2
+
+**Logic and the Satisfiability Problem**
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, simply displays the title "Logic and the Satisfiability Problem" in a dark gray font against a light gray background.  The title is centered on the slide.  There are no figures or other elements on the slide.  The title indicates the topic of the upcoming lecture content.

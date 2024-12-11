@@ -1,0 +1,20 @@
+# 30
+
+# The Perceptron Algorithm
+
+Repeat:
+Pick a data point x<sub>n</sub> uniformly at random
+If sign(w<sup>T</sup>x<sub>n</sub>) ≠ y<sub>n</sub>, then
+w ← w + y<sub>n</sub>x<sub>n</sub>
+
+If the data is linearly separable, this algorithm will find the separating hyperplane!
+
+
+**Description of the Figure:**
+
+There is no figure on this slide.
+
+
+**Context:**
+
+This slide describes the Perceptron algorithm, a fundamental algorithm in machine learning for binary classification.  The algorithm iteratively updates the weight vector `w` based on misclassified data points.  The algorithm repeats the following steps until convergence: (1) randomly select a data point (x<sub>n</sub>, y<sub>n</sub>); (2) if the prediction (sign(w<sup>T</sup>x<sub>n</sub>)) is incorrect, update the weight vector `w` by adding the product of the true label (y<sub>n</sub>) and the feature vector (x<sub>n</sub>).  The slide emphasizes that if the data is linearly separable, the algorithm will find the separating hyperplane.  This slide is likely part of a larger lecture on AI Basics, focusing on the Perceptron algorithm as a specific example of a binary classification algorithm.

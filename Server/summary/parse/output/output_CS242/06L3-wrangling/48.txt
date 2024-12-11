@@ -1,0 +1,50 @@
+# Slide 48
+
+**Binning Data**
+
+Binning data cuts an otherwise continuous numerical feature into a discrete category
+First set cut boundaries, then cut your data
+```
+bins = [-1, 59, 69, 89, 110]
+cats = pd.cut(df_final.Grade, bins)
+print(cats)
+print(pd.value_counts(cats))
+```
+Now we have categorical data, but the names could use work
+
+```
+0      (89, 110]
+1      (89, 110]
+2       (69, 89]
+3       (-1, 59]
+4       (69, 89]
+5       (69, 89]
+6       (-1, 59]
+7       (-1, 59]
+8       (69, 89]
+9       (69, 89]
+10      (59, 69]
+11      (-1, 59]
+12      (69, 89]
+13     (89, 110]
+14      (-1, 59]
+15      (-1, 59]
+Name: Grade, dtype: category
+Categories (4, interval[int64]): [(-1, 59] < (59, 69] < (69, 89] < (89, 110]]
+```
+
+```
+(89, 110]    7
+(-1, 59]     5
+(69, 89]     3
+(59, 69]     1
+Name: Grade, dtype: int64
+```
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates binning data, a technique used to transform a continuous numerical feature (like a student's grade) into a categorical feature.  The code `bins = [-1, 59, 69, 89, 110]` defines the boundaries for the bins.  `cats = pd.cut(df_final.Grade, bins)` applies the binning to the 'Grade' column of the `df_final` DataFrame.  The output shows the resulting categorical data (`cats`) and the counts of values in each bin (`pd.value_counts(cats)`).  The output includes a Series of categories and a Series of counts for each category.  The purpose of this slide is to show how to bin a continuous variable into discrete categories using Pandas.  The code snippets are essential for demonstrating the binning process. The output is crucial for understanding the distribution of the data after binning. The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on transforming data.
+
+

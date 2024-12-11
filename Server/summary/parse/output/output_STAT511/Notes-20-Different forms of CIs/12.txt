@@ -1,0 +1,38 @@
+# Slide 12
+
+**STAT 511 Course Notes – set 20 (W10)**
+
+**Yuan Qu**
+
+Confidence intervals that we learned so far:
+
+* When the sample is from a normal distribution and σ is known, the (1 − α) confidence interval for μ is
+
+(𝑥̅ − 𝑧<sub>𝛼/2</sub> ∙ 𝜎/√𝑛, 𝑥̅ + 𝑧<sub>𝛼/2</sub> ∙ 𝜎/√𝑛)
+
+
+* When the sample is from a normal distribution but σ is unknown, the (1 − α) confidence interval for μ is
+
+(𝑥̅ − 𝑡<sub>𝛼/2,𝑛−1</sub> ∙ 𝑠/√𝑛, 𝑥̅ + 𝑡<sub>𝛼/2,𝑛−1</sub> ∙ 𝑠/√𝑛)
+
+
+* When the sample size n is very large,
+
+(𝑥̅ − 𝑧<sub>𝛼/2</sub> ∙ 𝑠/√𝑛, 𝑥̅ + 𝑧<sub>𝛼/2</sub> ∙ 𝑠/√𝑛)
+
+
+* Confidence interval for population proportion p, when np ≥ 10 and n(1 − p) ≥ 10
+
+(𝑝̂ − 𝑧<sub>𝛼/2</sub> ∙√𝑝̂ (1 − 𝑝̂) / 𝑛, 𝑝̂ + 𝑧<sub>𝛼/2</sub> ∙√𝑝̂ (1 − 𝑝̂) / 𝑛)
+
+
+---
+
+**Figure Description:**
+
+There are no figures on this slide.  This slide summarizes the various confidence interval formulas learned in the lecture.  It lists the formulas for confidence intervals for a population mean (μ) when the population standard deviation (σ) is known, unknown, and when the sample size is large.  It also includes the formula for a confidence interval for a population proportion (p).  The slide is a concise review of the key concepts and formulas covered in the lecture.
+
+
+**Overall Context:**
+
+This is the final slide of a lecture on statistical methods, specifically focusing on confidence intervals.  It serves as a summary of the different types of confidence intervals that have been discussed throughout the lecture, providing a concise review of the formulas and conditions under which each type of interval is applicable.  The slide is designed to help students recall and understand the different confidence interval calculations presented in the lecture.

@@ -1,0 +1,34 @@
+# Slide 55
+
+**Applying Summary Functions**
+
+Once you have grouped your data, summary functions produce an aggregated DataFrame.  Using `max`, you get the max in each column, with the `Symbol` as the index.  `grouped_stock.max()`
+
+```
+Symbol
+Close      Volume
+AAPL  455.61  50000000
+GOOG  1500.10 1995400
+MSFT  216.35 32656800
+```
+
+Whereas using `mean`, you only get the columns where a mean makes sense. `grouped_stock.mean()`
+
+```
+Symbol
+Close      Volume
+AAPL  446.770000  4.316667e+07
+GOOG  1489.400000  1.850500e+06
+MSFT  213.923333  2.976833e+07
+```
+
+These all return new DataFrames, and can be accessed as you can with any other DataFrame.
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates how to apply summary functions (like `max` and `mean`) to grouped data in a Pandas DataFrame.  The example uses a stock data set (`df_stock`) grouped by `Symbol`.  The `grouped_stock.max()` function returns a new DataFrame containing the maximum values for each column within each group (stock symbol).  Similarly, `grouped_stock.mean()` returns a new DataFrame with the mean values for numeric columns within each group.  The output shows the resulting DataFrames, clearly displaying the maximum and mean values for the 'Close' and 'Volume' columns for each stock symbol.  The slide emphasizes that these summary functions return new DataFrames, which can be further manipulated or analyzed.  The code snippets are essential for demonstrating the aggregation process. The tables are crucial for showing the results of the summary functions applied to the grouped data. The context suggests that this slide is part of a larger lecture on data manipulation and analysis, specifically focusing on grouping and aggregating data.
+
+

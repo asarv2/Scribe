@@ -1,0 +1,17 @@
+# Slide 87
+
+**`awk`**
+
+`awk` provides a more traditional programming language for text processing than `sed`.
+The major difference between `awk` and `sed` is that `awk` is record-oriented rather than line-oriented.
+Each line of the input to `awk` is treated like a delimited record. The command line parameter `-F` sets the field delimiter.
+The essential organization of an `awk` program has the form:
+
+`pattern { action }`
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the `awk` command-line utility, highlighting its record-oriented approach to text processing, contrasting it with the line-oriented nature of `sed`.  It explains that `awk` treats each input line as a delimited record, and the `-F` parameter sets the field delimiter.  The general structure of an `awk` program is presented as `pattern { action }`.  The slide is entirely text-based, with no figures or tables.  The purpose is to introduce the `awk` command and its fundamental structure.

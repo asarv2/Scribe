@@ -1,0 +1,25 @@
+# 23
+
+# Alpha-Beta Pruning
+
+**Text Content:**
+
+* **Headline:** Alpha-Beta Pruning
+
+* **Description:**
+    * **Motivation:**  Reduce the search space in Minimax search.
+    * **Idea:**  Avoid evaluating branches that cannot affect the optimal decision.
+    * **Alpha:**  The best value found so far for the maximizing player.
+    * **Beta:** The best value found so far for the minimizing player.
+    * **Pruning:** If a branch's value is guaranteed to be worse than the current best value for the opponent, it's not explored.
+    * **Example:**  Illustrate the pruning process with a simple game tree.
+
+
+**Description of the Image/Figures:**
+
+There are no images or figures on this slide.  The slide is purely text-based, outlining the Alpha-Beta pruning algorithm.
+
+
+**Description:**
+
+This slide provides a concise overview of the Alpha-Beta pruning algorithm.  It explains the motivation for using Alpha-Beta pruning (reducing the search space in Minimax), the core idea (avoiding unnecessary evaluations), and the key concepts of alpha and beta values.  The slide also mentions the pruning process and provides an example of how it works.  The slide is likely part of a lecture on AI Basics, introducing a crucial optimization technique for game playing AI that uses the Minimax algorithm.  The slide's design is simple and straightforward, focusing on conveying the core concepts of Alpha-Beta pruning.

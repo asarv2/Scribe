@@ -1,0 +1,14 @@
+# Slide 2
+
+# Data quality
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, displays the single heading "Data quality" in a dark gray, sans-serif font.  It's a simple, unadorned slide, likely serving as a heading or title for the next section of the lecture on data science.  The lack of other content suggests that this slide is a transition or a placeholder for the subsequent slide, which will contain more detailed information about data quality.
+
+
+**Description of what you see:**
+
+The slide is entirely gray, with the single word "Data quality" centered in a dark gray font.  The font size and style are consistent with the previous slide's formatting.  The slide is likely a simple heading for the next section of the lecture, which will discuss the topic of data quality in more detail.

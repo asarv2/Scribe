@@ -1,0 +1,19 @@
+# Slide 25
+
+**Fairness through Blindness**
+
+Ignore all irrelevant/protected attributes
+But you don't need to see an attribute to be able to predict it with high accuracy
+• E.g. User visits artofmaniless.com ... has 90% chance of being male
+
+
+---
+
+**Description:**
+
+This slide discusses a potential solution to algorithmic bias: ignoring irrelevant or protected attributes.  The text states that a model can be trained to predict outcomes without needing to consider sensitive attributes like gender.  The example given is a user visiting a website (artofmaniless.com) and having a 90% chance of being male.  The slide suggests that focusing on other, non-sensitive data points can lead to accurate predictions without relying on potentially biased information.  The overall tone is one of exploring a possible solution to the problem of bias in algorithms.
+
+
+**Description:**
+
+The slide is a plain, light-colored background with a title in a bold, dark font.  The text is presented in a clear, easy-to-read format, using a sans-serif font.  The text discusses the concept of "fairness through blindness," suggesting that ignoring irrelevant or protected attributes can lead to accurate predictions.  The example of a user visiting a website and being predicted as male illustrates this concept.  The overall design is simple and professional, suitable for a lecture presentation.  The slide is likely part of a larger presentation on the ethical and societal implications of AI, specifically focusing on potential solutions to bias in algorithms.

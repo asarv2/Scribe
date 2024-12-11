@@ -1,0 +1,25 @@
+# Slide 6
+
+**Breaking ties**
+
+You can sort by multiple columns, if you need to break ties systematically
+`bedsYear = data_zillow.sort_values(by=['BEDS', 'YEAR'])`
+`bedsYear`
+
+```
+INDEX	LIVING SPACE (SQ FT)	BEDS	BATHS	ZIP	YEAR	LIST PRICE ($)
+13	14	1128	2	1.0	32303	1955	89000
+0	1	2222	3	3.5	32312	1981	250000
+16	17	2533	3	2.0	32310	1991	365000
+3	4	1137	3	2.0	32309	1993	150000
+17	18	1158	3	2.0	32303	1993	155000
+9	10	1997	3	3.0	32311	2006	295000
+14	15	1381	3	2.0	32301	2006	143000
+…	…	…	…	…	…	…	…
+```
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a data science lecture, demonstrates how to sort a DataFrame (`data_zillow`) by multiple columns.  The code `bedsYear = data_zillow.sort_values(by=['BEDS', 'YEAR'])` sorts the DataFrame first by the 'BEDS' column and then by the 'YEAR' column.  This is useful for breaking ties that might occur when sorting by a single column.  The output is a table showing the sorted data.  The table's columns are `INDEX`, `LIVING SPACE (SQ FT)`, `BEDS`, `BATHS`, `ZIP`, `YEAR`, and `LIST PRICE ($)`.  The `...` indicates that the table continues beyond the displayed rows.  The slide is part of a larger lecture on data manipulation and analysis, likely using the pandas library in Python.  The purpose of this slide is to show how to sort data based on multiple columns, breaking ties systematically.  The table is a key part of the slide, showing the sorted data.  The code snippet is crucial for demonstrating the sorting process.  The `bedsYear` variable stores the sorted DataFrame.

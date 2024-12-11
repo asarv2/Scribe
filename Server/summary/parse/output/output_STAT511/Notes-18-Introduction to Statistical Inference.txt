@@ -1,0 +1,261 @@
+# Slide 1
+
+**Toward Statistical Inference**
+
+Remember: Our final aim is to estimate the value of a parameter from the entire population.
+
+We can think of the true value of the population parameter as the bull's-eye on a target and of the variable/sample statistic as an arrow fired at the target. Bias and variability describe what happens when we take many shots at the target.
+
+* Points on the target: (𝑋<sub>1</sub>, 𝑋<sub>2</sub>, … , 𝑋<sub>𝑛</sub>) or (𝑋̅<sub>1</sub>, 𝑋̅<sub>2</sub>, … , 𝑋̅<sub>𝑛</sub>)
+* What do we observe?
+
+Variability: response varies with each unit.
+
+* Observations can be erroneous compared to “true” value.
+* Observations can be imprecise.
+
+
+Definition: Bias concerns the center of the sampling distribution.
+
+A statistic used to estimate a parameter is unbiased if the mean of its sampling distribution is equal to the true value of the parameter being estimated. It is on target!
+
+
+Definition: The variability of a statistic is described by the spread of its sampling distribution.
+
+This spread is determined by the sampling design and the sample size n.
+Statistics from larger probability samples have smaller spreads.
+
+According to CLT, the variability of 𝑋̅ is proportional to 𝑛<sup>−1/2</sup>.
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the concept of statistical inference, specifically focusing on bias and variability in estimating population parameters.  The slide uses an analogy of a target and arrows to illustrate the concept.  The text explains that the true value of the parameter is the bullseye, and the sample statistic is like an arrow shot at the target.  The variability of the shots (arrows) around the bullseye represents the variability of the sample statistic.
+
+Three figures are presented, each showing a target with various dots representing sample statistics.  The figures illustrate different scenarios:
+
+* **Figure 1 (top):** Shows a cluster of dots centered around the bullseye. This represents an unbiased and precise estimate.
+* **Figure 2 (middle left):** Shows a cluster of dots significantly off-center from the bullseye. This represents a biased estimate.
+* **Figure 3 (middle right):** Shows a cluster of dots spread out around the bullseye, but centered on it. This represents an unbiased but imprecise estimate.
+
+The figures are crucial for understanding the concepts of bias (centeredness) and variability (spread) of the sampling distribution.  The figures are placed strategically to visually demonstrate the difference between unbiased/biased and precise/imprecise estimates.  The labels "Unbiased," "Biased," "Precise," and "Imprecise" are used to clearly identify the characteristics of each scenario.  The text accompanying the figures further explains the definitions of bias and variability.
+
+
+# Slide 2
+
+**Example 18.1 Which is which?**
+
+**(a)**
+![Histogram (a)](https://i.imgur.com/your_histogram_a.png)
+*Description of Histogram (a):*  A histogram showing a distribution of data. The histogram is centered somewhat to the left of the horizontal axis. The data is spread out, indicating high variability.
+
+**(b)**
+![Histogram (b)](https://i.imgur.com/your_histogram_b.png)
+*Description of Histogram (b):* A histogram showing a distribution of data. The histogram is centered significantly to the left of the horizontal axis. The data is clustered tightly together, indicating low variability.
+
+**(c)**
+![Histogram (c)](https://i.imgur.com/your_histogram_c.png)
+*Description of Histogram (c):* A histogram showing a distribution of data. The histogram is centered near the horizontal axis. The data is spread out, indicating high variability.
+
+**(d)**
+![Histogram (d)](https://i.imgur.com/your_histogram_d.png)
+*Description of Histogram (d):* A histogram showing a distribution of data. The histogram is centered near the horizontal axis. The data is clustered tightly together, indicating low variability.
+
+
+**Key:**
+
+1. High Bias, High Variability
+2. High Bias, Low Variability
+3. Low Bias, High Variability
+4. Low Bias, Low Variability
+
+
+**Description of the Slide:**
+
+This slide presents four histograms (a, b, c, and d) representing different scenarios of bias and variability in estimating a population parameter.  Each histogram is labeled with a letter (a, b, c, or d) and is accompanied by a corresponding number (1, 2, 3, or 4) that corresponds to a description of the bias and variability.  The histograms are used to visually illustrate the concepts of bias (how far the center of the distribution is from the true value) and variability (how spread out the distribution is).  The slide is designed to help students understand the relationship between the shape of a distribution and the characteristics of bias and variability.
+
+
+**Note:**  I've included placeholders for the actual histogram images (`your_histogram_a.png`, etc.).  You'll need to replace these with the actual images to get a complete and accurate representation of the slide.
+
+
+# Slide 3
+
+**Statistical inference: Point estimation and Confidence Intervals**
+
+From this chapter, we begin to learn how to make inference about unknown distribution given an observed data.
+
+**Parameter Point Estimation**
+
+In statistical analysis, we usually impose a distributional assumption on the random sample, that is, the sample’s distribution belongs to certain family of distribution, say normal or exponential. Under such assumption, the unknown distribution is equivalent to the unknown parameter(s), therefore the inference problem reduces to the problem of estimating these parameters.
+
+* The sample mean 𝑥̅ could be used to draw a conclusion about the value of 𝜇.
+* Similarly, the value of the sample variance 𝑠<sup>2</sup> can be used to estimate 𝜎<sup>2</sup>.
+
+**Definition:**
+
+* A point estimate of a parameter is a single number that can be regarded as a sensible value for θ. A point estimate is obtained by selecting a suitable statistic and computing its value from the given sample data.
+* The selected statistic is called the point estimator of , denoted by  𝜃̂.
+
+**Note:**
+
+* Point estimator is random variable, and point estimate is fixed single value.
+* Literally, any statistic can be used as a point estimator. It is just a matter of whether it is a good or bad estimator.
+
+**Example:** Sensible estimations for the population mean include:
+
+* Sample mean.
+* Sample mean of sub-sample.
+* Sample median if the distribution is known to be asymmetric.
+
+**Question:** which one is the best?
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Statistical Methods, introduces the concept of parameter point estimation within the context of statistical inference.  It explains that in statistical analysis, we often assume a specific distribution for the sample data (e.g., normal or exponential).  This allows us to estimate unknown parameters of the population from which the sample was drawn.  The slide defines a point estimate as a single value that represents a sensible estimate of a population parameter.  It also defines the point estimator as the statistic used to calculate the point estimate.  The slide provides examples of point estimators for the population mean, including the sample mean, sample mean of a sub-sample, and the sample median.  Finally, it poses the question of which of these estimators is the "best."  The slide is structured to introduce the topic and provide a foundation for further discussion.  There are no figures on this slide.
+
+
+# Slide 4
+
+**Evaluation of point estimator**
+
+The point estimate value is a sampled value from the sampling distribution of estimator θ̂. A good estimator should have a sampling distribution that closely centers around true parameter, this ensures that point estimate value based on single data set is close to the true parameter.
+
+**Definition:**
+
+* A point estimator θ̂ is said to be an unbiased estimator of θ if E(θ̂) = θ for every possible value of θ. Unbiasedness means that on average the estimate we obtained is close to the true parameter.
+* If θ̂ is not unbiased, the difference E(θ̂) – θ is called the bias of θ̂.
+
+An estimator is called unbiased if its bias is 0.
+
+**Propositions:**
+
+1. When X is a binomial rv with parameters n and p, the sample proportion 𝑝̂ =  𝑋/𝑛 is an unbiased estimator of p. No matter what the true value of p is, the distribution of the estimator 𝑝̂ will be centered at the true value.
+
+2. If X<sub>1</sub>, … , X<sub>n</sub> is a random sample from a distribution with mean μ, then X̅ is an unbiased estimator of μ.
+
+3. Let X<sub>1</sub>, … , X<sub>n</sub> be a random sample from a distribution with mean μ and variance σ<sup>2</sup>. Then the estimator
+
+   𝜎̂<sup>2</sup> = 𝑆<sup>2</sup> =  (1 / (n-1)) * Σ<sub>i</sub>(X<sub>i</sub> - X̅)<sup>2</sup>
+
+   is unbiased for estimating σ<sup>2</sup>.
+
+(Textbook P253)
+
+4. Sample standard deviation 𝜎̂ = S is NOT unbiased. Taking the square root invalidates the property of unbiasedness: the expected value of the square root is not the square root of the expected value. However, the bias of S is small unless n is quite small.
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a Statistical Methods course, discusses the evaluation of point estimators.  It introduces the concept of unbiasedness, a crucial property of estimators.  The slide defines an unbiased estimator as one whose expected value equals the true value of the parameter being estimated.  It also defines bias as the difference between the expected value of an estimator and the true value of the parameter.  The slide then presents several propositions, each illustrating a specific case where a particular estimator is unbiased.  For example, the sample proportion (𝑝̂) from a binomial distribution is unbiased for the true proportion (p).  The sample mean (X̅) is unbiased for the population mean (μ).  The sample variance (S<sup>2</sup>) is unbiased for the population variance (σ<sup>2</sup>).  Importantly, the slide highlights that the sample standard deviation (S) is *not* unbiased, but its bias is small for large sample sizes (n).  The slide uses mathematical notation and formulas to define and illustrate these concepts.  The reference to the textbook (P253) indicates that this material is likely drawn from a specific textbook used in the course.
+
+
+# Slide 5
+
+**Evaluation of Point Estimator**
+
+5. Let 𝑋<sub>1</sub>, 𝑋<sub>2</sub>, … , 𝑋<sub>𝑛</sub> be a random sample from a normal distribution, with mean 𝜇 and variance 𝜎<sup>2</sup>. The following are commonly used estimators (with good properties).
+
+𝜇̂ = 𝑋̅,
+𝜎̂<sup>2</sup> =  1/𝑛∑(𝑋<sub>𝑖</sub> − 𝑋̅)<sup>2</sup>
+
+Example 18.2 𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub> are independent random variables of 𝑈𝑛𝑖𝑓𝑜𝑟𝑚 (0, 𝜃). Denote the point estimator θ̂<sub>1</sub> = max {𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub>}. Is it unbiased?
+
+Let 𝑌 = max {𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub>}. Use the fact that 𝑌 ≤ 𝑦 iff each 𝑋<sub>𝑖</sub> ≤ 𝑦 to derive the cdf of Y:
+
+𝐹<sub>𝑌</sub>(𝑦) = {
+0     ,  𝑦 < 0
+(𝑦/𝜃)<sup>𝑛</sup>, 0 ≤ 𝑦 ≤ 𝜃
+1     ,  𝜃 < 𝑦
+
+The pdf of Y is,
+𝐹<sub>𝑌</sub>′(𝑦) = 𝑓<sub>𝑌</sub>(𝑦) = {
+𝑛𝑦<sup>𝑛−1</sup>/𝜃<sup>𝑛</sup>, 0 ≤ 𝑦 ≤ 𝜃
+0      , otherwise
+
+𝐸(𝜃̂<sub>1</sub>) = 𝐸(𝑌) = ∫<sub>0</sub><sup>𝜃</sup> 𝑦 ∙ 𝑛𝑦<sup>𝑛−1</sup>/𝜃<sup>𝑛</sup> 𝑑𝑦 = 𝑛/𝜃 ∫<sub>0</sub><sup>𝜃</sup> 𝑦<sup>𝑛</sup> 𝑑𝑦 = 𝑛/𝜃 [𝑦<sup>𝑛+1</sup>/(𝑛+1)]<sub>0</sub><sup>𝜃</sup> = 𝑛/(𝑛+1)𝜃
+
+θ̂<sub>1</sub> = max {𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub>} is biased,  𝜃̂<sub>2</sub> = (𝑛+1)/𝑛𝜃̂<sub>1</sub> is unbiased.
+
+
+**Definition:**
+
+* Variance of point estimator: 𝑉𝑎𝑟(θ̂). Given several unbiased estimators, we use variance to further compare them. Smaller variance means stabler estimation, means smaller variation between sample to sample.
+* The Minimum variance unbiased estimator (MVUE) of 𝜃 is the one that has minimum variance among all unbiased estimators of 𝜃.
+* Standard error: √𝑉𝑎𝑟(θ̂).
+
+
+**(Figures):**
+
+There are three small, circular target diagrams, each with a different distribution of dots around the bullseye.  These are located in the lower portion of the slide.
+
+* **Figure (a):** Shows a high bias, low variability scenario. The dots are clustered together, but significantly off-center from the bullseye.
+* **Figure (b):** Shows a low bias, high variability scenario. The dots are spread out, but centered around the bullseye.
+* **Figure (c):** Shows a high bias, high variability scenario. The dots are both spread out and off-center from the bullseye.
+
+These figures are used to illustrate the concepts of bias and variability in point estimators.  They visually represent how the spread and location of the estimator's sampling distribution relate to its quality as an estimator.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of point estimators, focusing on evaluating them based on their bias and variance.  It introduces the concept of the minimum variance unbiased estimator (MVUE) as the optimal unbiased estimator.  The slide also defines the standard error of an estimator.  The example of the maximum value from a uniform distribution is used to illustrate how to calculate the expected value of an estimator and to show that the maximum value is a biased estimator.  The figures are crucial for understanding the trade-off between bias and variability in estimation.  The slide builds upon the previous slide's discussion of unbiasedness and introduces the concept of variance as a measure of estimator quality.
+
+
+# Slide 6
+
+**Example 18.2 revisit**
+
+𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub> are independent random variables of 𝑈𝑛𝑖𝑓𝑜𝑟𝑚 (0, 𝜃). Denote two estimators:
+
+θ̂<sub>2</sub> =
+(𝑛+1)/𝑛 max {𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub>} and θ̂<sub>3</sub> = 2𝑋̅
+
+Compare these two estimators.
+
+Use the fact that 𝑋<sub>𝑖</sub>~𝑈𝑛𝑖𝑓𝑜𝑟𝑚 (0, 𝜃) imply 𝐸(𝑋<sub>𝑖</sub>) = 𝜃/2 and 𝑉𝑎𝑟(𝑋<sub>𝑖</sub>) = 𝜃<sup>2</sup>/12.
+
+**Biased?**
+
+𝐸(𝜃̂<sub>2</sub>) = 𝐸((𝑛+1)/𝑛 θ̂<sub>1</sub>) = ((𝑛+1)/𝑛) ∙(𝑛/(𝑛+1))𝜃 = 𝜃
+
+𝐸(𝜃̂<sub>3</sub>) = 𝐸(2𝑋̅) = 2𝐸(𝑋̅) = 2 ∙ (1/𝑛)∑𝐸(𝑋<sub>𝑖</sub>)
+𝑖
+= 2 ∙ (1/𝑛)∙𝑛∙𝜃/2 = 𝜃
+
+**Compare variance:**
+
+𝑉𝑎𝑟(𝜃̂<sub>2</sub>) = ∫<sub>0</sub><sup>𝜃</sup>((𝑛+1)/𝑛 𝑦 − 𝜃)<sup>2</sup> ∙ (𝑛𝑦<sup>𝑛−1</sup>/𝜃<sup>𝑛</sup>) 𝑑𝑦 = 𝜃<sup>2</sup>/𝑛(𝑛+2)
+
+𝑉𝑎𝑟(𝜃̂<sub>3</sub>) = 𝜃<sup>2</sup>/3𝑛
+
+**As long as 𝑛 > 1, the estimator θ̂<sub>2</sub> has smaller variance than θ̂<sub>3</sub>.**
+
+
+**Theorem:** Sample mean 𝑋̅ is the MVUE (BEST estimator) for the population mean 𝜇 if the data follows normal distribution.
+
+
+**Estimate the Variance of point estimator:** One usually needs to report the variance of the estimator as a reference for comparison.
+
+* **Example:** 𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub> are independent random variables of Normal(μ, σ<sup>2</sup>). The variance of sample mean is σ<sup>2</sup>/𝑛, but σ<sup>2</sup> is unknown.
+
+* **Estimated Standard Error:** √𝑠<sup>2</sup>/𝑛 is used to replace the unknown variance by the estimated variance.
+
+* **Generally,** if the standard error contains an unknown parameter, we can simply replace it by the estimate of this parameter.
+
+
+**Mean squared error:** Trade-off between bias and variance.
+
+𝑀𝑆𝐸(𝜃̂) = 𝐸((𝜃̂ −𝜃)<sup>2</sup>) = [𝐸(𝜃̂) −𝜃]<sup>2</sup> + 𝑉𝑎𝑟(𝜃̂).
+
+
+---
+
+**Description of the Slide:**
+
+This slide continues the discussion of point estimators, specifically comparing two estimators (θ̂<sub>2</sub> and θ̂<sub>3</sub>) for a uniform distribution.  It calculates the expected values and variances of these estimators, demonstrating that θ̂<sub>2</sub> has a smaller variance than θ̂<sub>3</sub> when 𝑛 > 1.  The slide also introduces the concept of the Minimum Variance Unbiased Estimator (MVUE) and the importance of estimating variance for comparison.  The example of a normal distribution is used to illustrate the practical application of these concepts.  The slide concludes with the definition of Mean Squared Error (MSE) as a measure that considers both bias and variance in evaluating estimators.  There are no figures on this slide.

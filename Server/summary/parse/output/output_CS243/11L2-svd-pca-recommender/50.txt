@@ -1,0 +1,25 @@
+# 50
+
+```markdown
+RMSE Baseline Scores
+1.054 - naively predict the mean user rating for each movie
+0.953 - Netflix's then current system (Cinematch) as of 2006
+0.941 - nearest neighbor method using correlation
+0.857 - this or better was the required 10% reduction to trigger the $1M
+```
+
+**Figure Description:**
+
+There are no figures on this slide.
+
+
+**Description of what you see:**
+
+This slide presents a list of RMSE (Root Mean Squared Error) baseline scores for different recommendation systems, likely from the Netflix Prize competition.  The scores represent the error rate of each system in predicting user ratings.  The values are:
+
+*   **1.054:**  A baseline score representing a simple prediction method (likely predicting the average rating for each movie).
+*   **0.953:** The RMSE score of Netflix's then-current recommendation system (Cinematch) in 2006.
+*   **0.941:** The RMSE score of a nearest-neighbor method using correlation.
+*   **0.857:** The RMSE score that was required to achieve a 10% improvement over Netflix's existing system and trigger the $1 million prize in the Netflix Prize competition.
+
+The slide is likely part of a discussion about the Netflix Prize competition and the different approaches to building recommender systems, highlighting the performance of various methods.  The values are presented in a clear, concise format, making it easy to compare the performance of different recommendation systems.

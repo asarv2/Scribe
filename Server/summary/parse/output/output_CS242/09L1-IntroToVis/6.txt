@@ -1,0 +1,87 @@
+# Slide 6
+
+```markdown
+Anscombe's Quartet
+Set 1
+Set 2
+Set 3
+Set 4
+x
+y
+x
+y
+x
+y
+x
+y
+10.0 8.04
+10.0 9.14
+10.0 7.46
+8.0 6.58
+8.0 6.95
+8.0 8.14
+8.0 6.77
+8.0 5.76
+13.0 7.58
+13.0 8.74
+13.0 12.74
+8.0 7.71
+9.0 8.81
+9.0 8.77
+9.0 7.11
+8.0 8.84
+11.0 8.33
+11.0 9.26
+11.0 7.81
+8.0 8.47
+14.0 9.96
+14.0 8.10
+14.0 8.84
+8.0 7.04
+6.0 7.24
+6.0 6.13
+6.0 6.08
+8.0 5.25
+4.0 4.26
+4.0 3.10
+4.0 5.39
+19.0 12.50
+12.0 10.84
+12.0 9.13
+12.0 8.15
+8.0 5.56
+7.0 4.82
+7.0 7.26
+7.0 6.42
+8.0 7.91
+5.0 5.68
+5.0 4.74
+5.0 5.73
+8.0 6.89
+Mean
+x
+9
+Variance
+x
+11
+Mean
+y
+7.5
+Variance
+y
+4.125 ± 0.003
+Correlation
+x and y
+0.816
+Linear Regression
+y = 3.00 + 0.500x
+Coeffficient of determination
+of linear regression
+0.67
+```
+
+---
+
+**Description of the Slide:**
+
+This slide presents a table, titled "Anscombe's Quartet."  The table displays four sets of data (labeled Set 1, Set 2, Set 3, and Set 4) each with paired x and y values.  Below the table, there are several summary statistics calculated from the data in each set. These include the mean of x, the variance of x, the mean of y, the variance of y, the correlation between x and y, a linear regression equation (y = 3.00 + 0.500x), and the coefficient of determination (0.67).  The table and summary statistics are crucial for demonstrating how different datasets can have similar summary statistics, yet exhibit vastly different visual patterns when plotted. This is a key concept in data visualization and understanding the limitations of relying solely on summary statistics.  The table is centrally located on the slide, and the summary statistics are presented below it, in a clear and organized manner.  The purpose of this slide is to illustrate the importance of visualizing data before drawing conclusions.

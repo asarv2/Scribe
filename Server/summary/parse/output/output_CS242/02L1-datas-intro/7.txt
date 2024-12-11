@@ -1,0 +1,15 @@
+# Slide 7
+
+**Data mining**
+
+The process of identifying valid, novel, potentially useful, and ultimately understandable patterns in data (Fayyad, Piatetsky-Shapiro & Smith 1996)
+
+**Machine learning:** How can we build computer systems that automatically improve with experience? (Mitchell 2006)
+
+* **Visual Elements:**
+    * **Puzzle Pieces:** Four puzzle pieces are arranged in a square.  The pieces are colored:  blue, purple, green, and red.  The text "Stats", "Viz", "AI", and "Databases" are written inside the respective puzzle pieces.  These pieces are likely used to visually represent the different components or disciplines involved in data analysis.  They are placed in the upper-left quadrant of the slide.
+
+
+**Description of the Slide:**
+
+This slide introduces two key concepts in data science: data mining and machine learning.  It defines data mining as the process of finding patterns in data, citing a relevant publication.  It then defines machine learning as the process of building computer systems that improve with experience, also citing a relevant publication.  The puzzle pieces visually represent the different components or disciplines involved in data analysis, such as statistics, visualization, artificial intelligence, and databases.  The slide is designed to provide a brief overview of these concepts, setting the stage for further discussion in the lecture.

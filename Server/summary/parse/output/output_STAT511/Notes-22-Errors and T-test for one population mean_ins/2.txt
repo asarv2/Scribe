@@ -1,0 +1,36 @@
+# 2
+
+**A general trade-off between type I and II errors:**
+
+For same sample size n and same test statistic, the choice of rejection region can not reduce α and β at the same time.
+
+Because of the suggested guidelines for specifying H<sub>0</sub> and H<sub>a</sub>, a type II error is usually more serious than a type I error.
+
+* We specify an upper bound of the probability of type I error, which is referred to as the significance level of the test, e.g., a level 0.10, 0.05, and 0.01. The corresponding test procedure is called a level α test.
+* A good test statistic yields smaller β subject to the given significance level α.
+
+
+**Alternative decision rule:** a rejection region is the set of all test statistic values for which H<sub>0</sub> will be rejected. The null hypothesis will then be rejected if and only if the observed or computed test statistic value falls in the rejection region.
+
+
+**The framework of hypothesis testing:**
+
+Step 1. A pair of hypotheses, H<sub>0</sub> versus H<sub>a</sub>, on a parameter of interest (population level)
+
+Step 2. A test statistic (based on sample data)
+
+Step 3. Alternative decision rule (whether to reject H<sub>0</sub> or not). If the computed test statistic falls in the rejection region, H<sub>0</sub> is rejected. Otherwise, for the test statistic value is out of the region, H<sub>0</sub> is not rejected.
+
+Step 4. A statistical conclusion
+
+
+**β and power**
+
+We know α denotes the type I error probability and a specified α value is used to determine the test.
+
+The type II error probability is denoted as β. Because there are multiple parameter values under H<sub>a</sub>, there is a different value of β for each value of the parameter consistent with H<sub>a</sub>. Most of the widely used statistical software packages are capable of calculating type II error probabilities. They generally work in terms of power, which is simply 1 – β. A small value of β (close to 0) is equivalent to large power (near 1). A powerful test is the one that has high enough power and therefore good ability to detect when the null hypothesis is false.
+
+
+**Description of the Slide:**
+
+This slide (number 2) continues the discussion of hypothesis testing from the previous slide. It elaborates on the trade-off between Type I and Type II errors, emphasizing that reducing one error often increases the other.  The slide introduces the concept of significance level (α) as a controlled upper bound for the probability of a Type I error.  It also explains how a good test statistic minimizes the probability of a Type II error (β) while maintaining a desired significance level.  The slide then formally outlines the four steps of a hypothesis test, providing a clear structure for conducting such tests. Finally, it introduces the concept of power (1-β) as a measure of a test's ability to detect a false null hypothesis. The slide number (2) is present at the bottom right corner. The content is presented in a clear and organized manner, using bullet points and numbered steps to highlight key concepts.

@@ -1,0 +1,41 @@
+# Slide 6
+
+**Statistical Methods**
+
+Example 10.6 Two species are competing in a region for control of a limited amount of a certain resource. Let X = the proportion of the resource controlled by species 1 and suppose X has a pdf of uniform on [0, 1].  
+Then the species that controls the majority of this resource controls the amount ℎ(𝑋) = 𝑚𝑎𝑥(𝑋, 1– 𝑋).  
+The expected amount controlled by the species having majority control is  
+𝐸[ℎ(𝑋)] = ∫<sub>0</sub><sup>1</sup>max(𝑥, 1 −𝑥) ∙𝑓(𝑥)𝑑𝑥 = ∫<sub>0</sub><sup>1/2</sup>(1 −𝑥)𝑑𝑥 + ∫<sub>1/2</sub><sup>1</sup>𝑥𝑑𝑥 = 
+ 
+**Variance** 
+ 
+Definition: The variance of a continuous random variable X with pdf 𝑓(𝑥) and mean value m is  
+𝑉𝑎𝑟(𝑋) = ∫<sub>-∞</sub><sup>∞</sup>(𝑥−𝜇)<sup>2</sup> ∙𝑓(𝑥)𝑑𝑥 = 𝐸[(𝑋– m)<sup>2</sup>] = 𝐸(𝑋<sup>2</sup>) −𝜇<sup>2</sup> 
+The standard deviation (SD) of X is s<sub>X</sub>= √𝑉𝑎𝑟(𝑋). 
+ 
+Example 10.5 revisit: X has a pdf  
+ 
+𝐸(𝑋) = 3/8, calculate the variance: 
+𝐸(𝑋<sup>2</sup>) = ∫<sub>0</sub><sup>1</sup>𝑥<sup>2</sup> ∙3/2 (1 −𝑥<sup>2</sup>)𝑑𝑥 =  
+𝑉𝑎𝑟(𝑋) =               , 𝜎= √𝑉𝑎𝑟(𝑋) = 
+ 
+**Proposition**  
+If X is a continuous rv with pdf 𝑓(𝑥) and ℎ(𝑋) is any function of X, then  
+𝑉𝑎𝑟[ℎ(𝑋)] = 𝜎<sub>ℎ(𝑋)</sub> = ∫<sub>-∞</sub><sup>∞</sup>[ℎ(𝑥) −𝜇<sub>ℎ(𝑋)</sub>]<sup>2</sup> ∙𝑓(𝑥)𝑑𝑥
+ 
+**Proposition**  
+When ℎ(𝑋) = 𝑎𝑋+ 𝑏, the expected value and variance of ℎ(𝑋) satisfy the same properties as in the 
+discrete case: 
+𝐸[ℎ(𝑋)] = 𝑎𝜇<sub>𝑋</sub>+ 𝑏    
+ 
+𝑉𝑎𝑟[ℎ(𝑋)] = 𝑎<sup>2</sup>𝜎<sub>𝑋</sub><sup>2</sup>  
+
+
+**Figure Descriptions:**
+
+There are no figures on this slide.  The slide focuses on mathematical formulas and definitions, not visual representations.
+
+
+**Context:**
+
+This slide continues the lecture on Statistical Methods, focusing on the calculation of variance and standard deviation for continuous random variables.  It introduces the concept of variance as a measure of spread, and how to calculate it using integrals.  It also presents a proposition about the variance of a linear transformation of a random variable.  The examples and formulas are directly related to the previous slides' discussion of continuous random variables and expected values.

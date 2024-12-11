@@ -1,0 +1,38 @@
+# Slide 21
+
+**The 'in' operator**
+
+Boolean test whether a value is in a collection
+
+```
+>>> t = [1, 2, 4, 5]
+>>> 3 in t
+False
+>>> 4 in t
+True
+>>> 4 not in t
+False
+```
+
+For strings, tests for substrings
+
+```
+>>> a = 'abcde'
+>>> 'c' in a
+True
+>>> 'cd' in a
+True
+>>> 'ac' in a
+False
+```
+
+Be careful: the `in` keyword is also used in the syntax of for loops and list comprehensions.
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, demonstrates the use of the `in` operator in Python.  The title "The 'in' operator" clearly indicates the topic.  The content is presented in a way that resembles an interactive Python interpreter session.  The examples show how to use `in` to check if a value exists within a list (`t`) and a string (`a`).  The first set of examples checks if the integer values 3 and 4 are present in the list `t`.  The second set of examples checks if the substrings 'c', 'cd', and 'ac' are present in the string `a`.  The output of each `in` or `not in` operation is shown (True or False).  The slide also includes a cautionary note about the `in` keyword's broader use in Python's syntax for loops and list comprehensions.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+

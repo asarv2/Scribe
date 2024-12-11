@@ -1,0 +1,53 @@
+# Slide 4
+
+**3. Then the lower fourth is the median of the smallest half.**
+
+**4. The upper fourth is the median of the largest half.**
+
+**Example 3.3: thickness of the floor plate of an aboveground tank used to store crude oil.**
+
+```
+40 52 55 60 70 75 85 85 90 90 92 94 94 95 98 100 115 125 125
+```
+
+```
+Q₁ = lower fourth =  
+Q₃ = upper fourth =  
+IQR = Q₃ - Q₁ = 
+```
+
+**Example 2.1 revisited (Class exercise): find median, Q₁, and Q₃ and the IQR of the 20 sodium variable values in the cereal data.**
+
+```
+0  70 125 125 140 150 170 170 180 200 205 210 210 220 220 230 250 260 290 290
+```
+
+
+**Five Number Summary & Outliers**
+
+* **Five Number Summary**
+    * Minimum
+    * 1st quartile (lower fourth)
+    * Median
+    * 3rd quartile (upper fourth)
+    * Maximum
+
+* **Outliers:** The formal definition of an outlier is any observation that meets one of the following criteria:
+    * Any observation farther than 1.5 × IQR from the closest fourth is an outlier/mild outlier, that is, any data value that is less than Q₁ − 1.5 × IQR or greater than Q₃ + 1.5 × IQR.
+    * An extreme outlier is any data value that is smaller than Q₁ − 3 × IQR or greater than Q₃ + 3 × IQR.
+    * Extreme outliers are frequently influential points whereas an outlier that isn’t also an extreme outlier may not be an influential point.
+
+
+**Boxplots: Graphical Versions of the Five Number Summary**
+
+* Box plots can be used to identify **outliers** in the data.
+
+
+**Figure Description:**
+
+There is a horizontal row of numbers (0, 70, 125, 125, 140, 150, 170, 170, 180, 200, 205, 210, 210, 220, 220, 230, 250, 260, 290, 290). This row of numbers is positioned below the text describing the Example 2.1 revisited (Class exercise).  It represents a data set of 20 sodium variable values in the cereal data. The numbers are listed in ascending order, and their presence is crucial for calculating the median, quartiles, and IQR, as discussed in the context of the five-number summary.
+
+
+**Slide Description:**
+
+This slide introduces the concept of the five-number summary and outliers in the context of statistical methods. It defines the five-number summary (minimum, first quartile, median, third quartile, and maximum) and provides a concrete example using a set of 20 sodium variable values. The slide also defines outliers and extreme outliers, emphasizing their potential influence on data analysis.  The row of numbers is a crucial part of the example, providing the data set for calculating the five-number summary and identifying outliers. The slide also introduces boxplots as a graphical representation of the five-number summary, highlighting their use in identifying outliers.

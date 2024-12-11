@@ -1,0 +1,16 @@
+# 23
+
+```markdown
+Example: Intel Berkeley Lab
+```
+
+---
+
+**Figure Description:**
+
+A detailed floor plan is presented, likely of the Intel Berkeley Lab.  The plan is a top-down view, showing the layout of the building's interior.  The plan is drawn with red lines outlining the walls and boundaries of different rooms and areas.  Various numbered black circles are scattered throughout the plan.  These numbers likely correspond to sensor locations within the building.  The plan also includes labels for different areas, such as "OFFICE," "STORAGE," "LAB," "SERVER," "KITCHEN," and "COMMENCE."  The plan is oriented with north at the top, and the layout of the rooms and spaces is clearly depicted.  The purpose of this figure is to provide a visual representation of the physical layout of the Intel Berkeley Lab, which is likely relevant to the context of the lecture, possibly for data collection or analysis related to the building's environment or usage patterns.
+
+
+**Description of what you see:**
+
+This slide presents a floor plan of the Intel Berkeley Lab.  The plan shows the layout of different rooms and areas within the building, including offices, storage areas, a lab, a server room, and a kitchen.  The plan is marked with numbered circles, which likely represent sensor locations.  The red lines delineate the boundaries of the rooms and spaces.  The figure is a visual representation of the physical layout of the Intel Berkeley Lab, which is likely relevant to the context of the lecture, possibly for data collection or analysis related to the building's environment or usage patterns.  The slide number (23) and the title "Example: Intel Berkeley Lab" suggest that this is a visual example related to the lecture's topic, but the specific connection to the previous slides' content on PCA or other AI concepts is not immediately apparent from the image alone.

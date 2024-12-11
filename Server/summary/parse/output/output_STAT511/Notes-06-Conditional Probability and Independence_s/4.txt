@@ -1,0 +1,47 @@
+# Slide 4
+
+**Example 6.5:** Suppose that of all individuals buying a certain digital camera, 60% include an optional memory card in their purchase, 40% include an extra battery, and 30% include both a card and battery. Consider randomly selecting a buyer and let
+
+A = {memory card purchased}
+B = {battery purchased}.
+
+Then P(A) = 0.60, P(B) = 0.40, P(both purchased) = P(A ∩ B) = 0.30.
+
+Given that the selected individual purchased an extra battery, the probability that an optional card was also purchased is
+
+P(memory card | battery) = P(A|B) =
+
+That is, of all those purchasing an extra battery, 75% purchased an optional memory card. Similarly,
+
+P(battery | memory card) = P(B|A) =
+
+NOTICE: P(A|B) ≠ P(A) and P(B|A) ≠ P(B).
+
+All the probability axioms hold for the conditional probability.
+
+**Example 6.6:** A news magazine publishes three columns entitled “Art” (A), “Books” (B), and “Cinema” (C). Reading habits of a randomly selected reader with respect to these columns are
+
+| Read regularly | A | B | C | A∩B | A∩C | B∩C | A∩B∩C | Probability |
+|---|---|---|---|---|---|---|---|---|
+|  | .14 | .23 | .37 | .08 | .09 | .13 | .05 |  |
+
+P(A|B) = P(A∩B)/P(B) =
+
+P(A|B∩C) = P[ A∩(B∩C) ]/P(B∩C) = P(A∩B∩C)/P(B∩C) =
+
+P(A|B∪C) = P[ A∩(B∪C) ]/P(B∪C) =
+
+Venn Diagram
+P(B) + P(C) −P(B∩C) = ?
+
+P(A|reads at least one) = P(A|A∪B∪C) = P[ A∩(A∪B∪C) ]/P(A∪B∪C) =
+
+P(A∪B∪C) =?
+
+P(A∪B|C) =
+P[(A∪B)∩C]/P(C) =
+
+
+**Slide Description:**
+
+This slide (slide 4) continues the discussion of probability, focusing on conditional probability and its application to examples.  It presents Example 6.5, which involves the purchase of digital camera accessories (memory card and battery).  The example calculates the conditional probability of purchasing a memory card given a battery was purchased.  Example 6.6 introduces a more complex scenario involving reading habits of a magazine reader, categorized by interest in three columns (Art, Books, Cinema).  The example provides a table of probabilities for various combinations of reading habits.  The slide then asks for several conditional probabilities related to these reading habits, using the provided table data.  The slide is part of a lecture on Statistical Methods (STAT 511).  The table is crucial for calculating the probabilities in Example 6.6.  The examples are designed to illustrate the application of conditional probability to real-world scenarios.  The slide also includes a Venn diagram, which is likely used to visualize the relationships between the events in Example 6.6.  The Venn diagram is not explicitly drawn, but the notation suggests its use in the calculations.

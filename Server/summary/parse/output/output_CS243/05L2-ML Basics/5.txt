@@ -1,0 +1,12 @@
+# 5
+
+# Building a model from past examples
+
+Most machine learning builds a model from numerous data examples.
+New examples are labeled/evaluated based on what has been seen before.
+Data should be representative of the problems space one means to tackle.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, discusses the fundamental process of machine learning.  The text explains that machine learning models are constructed from numerous examples.  Crucially, it emphasizes that new examples are evaluated based on previously seen data.  The slide also highlights the importance of representative data, meaning the data used to train the model should accurately reflect the problem domain being addressed.  The slide's content is straightforward and directly relates to the previous slides' discussion of inductive reasoning and machine learning examples.  The lack of images or diagrams indicates that this slide is focused on the conceptual explanation of the process, rather than visual representation.

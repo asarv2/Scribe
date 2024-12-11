@@ -1,0 +1,21 @@
+# 20
+
+**Unit Propagation**
+
+Unit propagation (a.k.a Boolean constraint propagation or BCP) is a key component to fast SAT solving.
+
+* Whenever all the literals in a clause are false except one, the remaining literal must be true in any satisfying assignment; such a clause is called a unit clause.
+* Therefore, the algorithm can assign it to true immediately.
+* After assigning a variable, there are often many unit clauses.
+* Setting a literal in a unit clause often creates other unit clauses, leading to a cascade.
+
+Based on those observations, we define a sub-algorithm BCP as follows.
+
+BCP(φ, υ)
+* Repeatedly search for unit clauses, and set unassigned literal to required value.
+* If a literal is assigned to a conflicting value, then return false else return true.
+
+
+**Description:**
+
+This slide describes the concept of Unit Propagation (a.k.a. Boolean Constraint Propagation, or BCP), a key technique in SAT solving algorithms.  It explains that when all literals in a clause are false except one, the remaining literal must be true.  This allows the algorithm to immediately assign the remaining literal to true.  The slide also notes that assigning a variable often creates more unit clauses, leading to a cascading effect.  The slide then defines a sub-algorithm, BCP(φ, υ), that repeatedly searches for unit clauses and assigns the unassigned literals to their required values.  If a literal is assigned to a conflicting value, the algorithm returns false; otherwise, it returns true.  There are no figures on this slide.  The context suggests that this is part of a lecture on SAT solving algorithms, building upon the previous discussion of partial assignments and simplification rules.

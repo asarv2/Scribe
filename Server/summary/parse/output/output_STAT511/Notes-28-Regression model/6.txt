@@ -1,0 +1,57 @@
+# Slide 6
+
+**STAT 511 Course Notes – set 28 (W15)**
+
+**Yuan Qu**
+
+**6**
+
+**A computer output (Minitab)**
+
+The regression equation is
+cet num = 75.2 – 0.209 iod val
+
+| Predictor | Coef | SE Coef | T | P |
+|---|---|---|---|---|
+| Constant | 75.212 | 2.984 | 25.21 | 0.000 |
+| iod val | -0.20939 | 0.03109 | -6.73 | 0.000 |
+
+s = 2.56450  R-sq = 79.18%  R-sq(adj) = 77.3%
+
+**Analysis of Variance**
+
+| SOURCE | DF | SS | MS | F | P |
+|---|---|---|---|---|---|
+| Regression | 1 | 298.25 | 298.25 | 45.35 | 0.000 |
+| Error | 12 | 78.92 | 6.58 |  |  |
+| Total | 13 | 377.17 |  |  |  |
+
+
+**ANOVA table:** The decomposition of the total sum of squares 𝑆𝑆𝑇= ∑(𝑦𝑖−𝑦̅)2 into a part 𝑆𝑆𝐸, which measures unexplained variation, and a part 𝑆𝑆𝑅, which measures variation explained by the linear relationship, is strongly reminiscent of one-way ANOVA.
+
+| Source of Variation | df | Sum of Squares | Mean Square |
+|---|---|---|---|
+| Regression | 1 | SSR | SSR |
+| Error | n – 2 | SSE | SSE/(n – 2) |
+| Total | n – 1 | SST |  |
+
+
+A quantitative measure of the total amount of variation in observed 𝑦 values is given by the total sum of squares
+
+𝑆𝑆𝑇= 𝑆𝑦𝑦= ∑(𝑦𝑖−𝑦̅)<sup>2</sup> = ∑𝑦𝑖<sup>2</sup> −(∑𝑦𝑖)<sup>2</sup>/𝑛
+
+On the other hand, 𝑆𝑆𝐸 is the sum of squared deviations about the least squares line which measures unexplained variation,
+
+𝑆𝑆𝐸= ∑𝜖̂𝑖<sup>2</sup> = ∑(𝑦𝑖−𝑦̂𝑖)<sup>2</sup>
+
+A third sum of squares - regression sum of squares, 𝑆𝑆𝑅, which measures variation explained by the linear relationship, given by
+
+
+**Figure Description:**
+
+There is no figure on this slide.  However, the text refers to a table (Analysis of Variance) and a table (Source of Variation).  These tables are crucial for understanding the ANOVA decomposition of the total sum of squares in the context of simple linear regression.  The ANOVA table, in particular, shows the breakdown of the total variation in the data into variation explained by the regression model and variation that remains unexplained.  The table (Source of Variation) provides a more general framework for understanding the decomposition of the total sum of squares.  The absence of a figure is compensated for by the presence of the tables, which are essential for understanding the statistical analysis presented in the lecture.
+
+
+**Description of the Slide:**
+
+This slide presents a computer output (likely from statistical software like Minitab) of a simple linear regression analysis.  It shows the regression equation, the ANOVA table, and the formulas for calculating the total sum of squares (SST), the error sum of squares (SSE), and the regression sum of squares (SSR).  The slide is part of a lecture on statistical methods, specifically focusing on simple linear regression and the analysis of variance (ANOVA).  The output from the statistical software is used to illustrate the concepts of the ANOVA decomposition of the total sum of squares.

@@ -1,0 +1,19 @@
+# 34
+
+**Clustering will return results, no matter the data**
+
+---
+
+Four scatter plots are displayed, each showing a two-dimensional dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left:**  A scatter plot of randomly distributed points, colored red.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 1, and the y-axis ranges from 0 to 1.
+
+* **Top Right:** A scatter plot of data points, colored in blue, dark gray, and green.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 1, and the y-axis ranges from 0 to 1.  The title of this plot is "DBSCAN".
+
+* **Bottom Left:** A scatter plot of data points, colored in red, dark gray, and green.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 0.8, and the y-axis ranges from 0 to 1.  The title of this plot is "K-means".
+
+* **Bottom Right:** A scatter plot of data points, colored in red, dark gray, and green.  The x-axis is labeled "x" and the y-axis is labeled "y".  The x-axis ranges from 0 to 1, and the y-axis ranges from 0 to 1.  The title of this plot is "Complete Link".
+
+**Description of what you see:**
+
+This slide, part of a lecture on clustering algorithms, demonstrates the results of applying different clustering methods to the same dataset.  The four plots show the output of four different clustering algorithms (random assignment, DBSCAN, K-means, and Complete Link) on a dataset.  The purpose of this slide is to illustrate that clustering algorithms, even with different approaches, will produce some form of clustering result, regardless of the inherent structure of the data.  The different colors in each plot represent the different clusters identified by each algorithm.  The slide is designed to highlight the variability in clustering results and the importance of choosing the appropriate algorithm for a given dataset.  The random assignment plot shows a random distribution of points, while the other plots show different clustering patterns.  The different clustering algorithms produce different results, highlighting the fact that the choice of algorithm can significantly affect the outcome of the clustering process.

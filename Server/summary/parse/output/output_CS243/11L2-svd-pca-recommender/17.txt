@@ -1,0 +1,22 @@
+# 17
+
+```markdown
+PCA: High level approach
+Given data matrix X with p dimensions (attributes)
+* Mean center each column of X (ie. subtract from each attribute value the mean of that attribute)
+* Compute the p x p covariance matrix: Σ = X<sup>T</sup>X
+* Find eigenvectors and eigenvalues of the symmetric covariance matrix Σ
+The eigenvectors correspond to the principle components of X
+* Select the m eigenvectors with largest eigenvalues to reduce dimensionality
+```
+
+---
+
+**Figure Description:**
+
+There are no figures on this slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, outlines the high-level approach to Principal Component Analysis (PCA).  It describes the steps involved in performing PCA on a data matrix X, which has p attributes.  The steps are: 1) mean centering each column of X; 2) computing the p x p covariance matrix Σ; 3) finding the eigenvectors and eigenvalues of the symmetric covariance matrix Σ; and 4) selecting the m eigenvectors with the largest eigenvalues to reduce dimensionality.  The slide is focused on the procedural steps of PCA, providing a summary of the algorithm.  The slide is presented in a clear and concise manner, using bullet points to highlight each step.

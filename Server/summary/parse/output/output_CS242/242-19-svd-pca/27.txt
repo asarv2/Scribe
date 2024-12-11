@@ -1,0 +1,18 @@
+# Slide 27
+
+**Recommender System Algorithms**
+
+*Input*
+* (user, item, rating) tuples for items that the user has explicitly rated
+* Typically represented as a user-item matrix
+
+*Output*
+* (user, item, rating) tuples for items that the user has not rated
+* Can be thought of as filling in the missing entries of the user-item matrix
+
+Most algorithms infer missing ratings based on the ratings of similar users
+
+
+**Description:**
+
+This slide introduces the concept of recommender system algorithms.  It describes the input data as tuples of (user, item, rating) for items that a user has explicitly rated.  This input is typically organized as a user-item matrix.  The output is defined as tuples of (user, item, rating) for items that a user has *not* yet rated.  The slide explains that recommender systems can be viewed as a process of filling in the missing entries in the user-item matrix.  Finally, it notes that most recommender algorithms predict missing ratings based on the ratings of similar users.  The slide is a high-level overview, setting the stage for a discussion of specific recommender system algorithms.  There are no figures.

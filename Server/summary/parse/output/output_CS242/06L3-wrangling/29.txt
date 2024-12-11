@@ -1,0 +1,30 @@
+# Slide 29
+
+**Replacing Values**
+
+We could edit the data frame for each location and replace values specifically
+… that’s tedious, particularly if we have a large dataset.
+Python and Pandas offer some useful tools to do this systematically
+# NumPy is the package for scientific computing with Python.
+```python
+import numpy as np
+df_weather.replace(-999, np.NaN)
+```
+Date	Highest Temperature (Deg F)	Lowest Temperature	Weather
+0	3/6/20	38	24	Cloudy
+1	3/7/20	50	19	Sunny
+2	3/8/20	NaN	NaN	None
+3	3/9/20	NaN	50	Rain
+4	3/10/20	57	NaN	Cloudy
+5	3/11/20	45	37	Cloudy
+6	3/12/20	-1111	41	None
+7	3/13/20	54	NaN	Sunny
+8	3/14/20	NaN	34	Snow
+9	3/17/20	53	40	Cloudy
+
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates how to replace specific values in a DataFrame, `df_weather`, likely containing weather data.  The code `df_weather.replace(-999, np.NaN)` is shown, replacing all occurrences of -999 with NaN (Not a Number), which is often used to represent missing or invalid data.  The slide includes a table displaying the `df_weather` DataFrame *after* the replacement.  The table shows the "Date", "Highest Temperature (Deg F)", "Lowest Temperature", and "Weather" columns.  The presence of NaN values in the temperature columns indicates that the code successfully replaced the -999 values.  The purpose of this slide is to show how to systematically replace values in a DataFrame using the `replace()` method, which is a common data cleaning technique.  The table is crucial for demonstrating the effect of the replacement operation on the data.  The code snippet is essential for demonstrating the replacement process.  The context suggests that this slide follows a discussion on data cleaning and the need to handle unusual values in datasets.

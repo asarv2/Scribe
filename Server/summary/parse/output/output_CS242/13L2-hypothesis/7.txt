@@ -1,0 +1,18 @@
+# Slide 7
+
+**Claims**
+
+Claim: Men are nearly twice as likely to survive in the United States (82%) as in England (44%), based on a five-year survival rate after detection.
+
+**Data**
+
+Data: In a 2000 study, 49 British men per 100,000 were diagnosed with prostate cancer, of which 28 died within five years. Thus 21/49 survived, about 43%.
+
+But screening for prostate cancer is different in England than in the United States. The US country relies heavily on a PSA test, which can sometimes detect cancer earlier. But the test is not widely used in England. Thus, the detection, and the five-year survival rate, spans a different time in the lives of patients in the two countries.
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on Intro to Data Science, presents a claim about prostate cancer survival rates in the US and England.  The slide is formatted with a clear title ("Claims") and then presents the claim and supporting data.  The claim states that men are nearly twice as likely to survive prostate cancer in the US (82%) compared to England (44%), based on a five-year survival rate.  The data presented supports this claim by referencing a 2000 study of 49 British men per 100,000 diagnosed with prostate cancer, where 21 survived and 28 died within five years.  The slide also explains that the difference in survival rates might be due to different screening methods.  The US relies heavily on a PSA test, which can detect cancer earlier, while the test is not widely used in England.  This difference in screening methods affects the time of detection and, consequently, the five-year survival rate.  The slide is designed to illustrate how different screening methods can impact survival rates and how data can be used to support claims.  There are no figures on this slide.

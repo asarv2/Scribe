@@ -1,0 +1,32 @@
+# Slide 23
+
+**contingency table - Expected Values**
+
+|       | **Exercise Observed** |
+|-------|-----------------------|
+|       | **None** | **Some** | **Totals** | **Pct** | **Exercise Expected** |
+|       |            |            |            |            | **None** | **Some** |
+| **Smoking** | **Freq** | **Freq** | **Totals** | **Pct** | **Freq** | **Freq** |
+| Heavy | 7 | 1 | 11 | 5% | 5.8 | 1.2 | 4.9 |
+| Never | 87 | 18 | 189 | 80% | 92 | 18 | 78 |
+| Occas | 12 | 3 | 19 | 8% | 9.2 | 1.8 | 7.8 |
+| Regul | 9 | 1 | 7 | 7% | 8.0 | 1.6 | 6.9 |
+| **Totals** | **115** | **23** | **236** | **100%** |  |  |  |
+
+χ<sup>2</sup> = Σ<sub>i,j</sub>  (O<sub>ij</sub> − E<sub>ij</sub>)<sup>2</sup> / E<sub>ij</sub>
+
+**Degrees of Freedom:**
+
+(r − 1) ⋅ (c − 1) = 3 ⋅ 2 = 6
+
+
+---
+
+**Figure Description:**
+
+The slide displays a contingency table.  The table is structured with rows representing different categories of "Smoking" (Heavy, Never, Occas, Regul) and columns representing different categories of "Exercise" (None, Some).  Each cell in the table contains a numerical value, representing the count of observations that fall into the corresponding row and column categories.  For example, the cell in the first row and first column (Heavy, None) contains the value "7," indicating that 7 observations were categorized as both "Heavy" smokers and "None" exercisers.  The table also includes additional columns for totals and percentages, and a separate section for "Exercise Expected" values.  The table is presented in a clear and organized manner, making it easy to understand the frequency distribution of the paired categorical variables.  The table is positioned centrally on the slide, and its purpose is to show the counts of observations categorized by both smoking and exercise habits, along with expected values for each cell.  The formula for calculating the chi-square statistic (χ<sup>2</sup>) is also shown at the bottom of the table, and the degrees of freedom are calculated.  The table is crucial for performing a chi-square test to determine if there's a significant association between smoking and exercise habits.
+
+
+**Slide Description:**
+
+This slide presents a contingency table, which is a crucial component for performing a chi-square test.  The table shows the observed frequencies of different combinations of smoking habits (Heavy, Never, Occasional, Regular) and exercise habits (None, Some).  Crucially, it also includes the expected frequencies for each cell, which are calculated under the assumption of independence between the two variables.  The table is used to calculate the chi-square statistic, a measure of the difference between observed and expected frequencies, to determine if there's a statistically significant association between smoking and exercise habits.  The degrees of freedom are also calculated, which is a parameter needed for the chi-square test.

@@ -1,0 +1,30 @@
+# 10
+
+# The very first ML problem – linear regression
+
+This only shows (w*, l*) is a stationary point, can you prove it is actually the minima?
+We ask, which w, l minimizes this distance?
+r = (ws<sub>1</sub> + l - p<sub>1</sub>)<sup>2</sup> + ... + (ws<sub>N</sub> + l - p<sub>N</sub>)<sup>2</sup>
+Minimizing a quadratic function... Calculus!
+
+∂r/∂w = 2s<sub>1</sub>(s<sub>1</sub>w + l - p<sub>1</sub>) + ... + 2s<sub>N</sub>(s<sub>N</sub>w + l - p<sub>N</sub>) = 0
+∂r/∂l = 2(s<sub>1</sub>w + l - p<sub>1</sub>) + ... + 2(s<sub>N</sub>w + l - p<sub>N</sub>) = 0
+Gives
+w* = σ<sup>2</sup><sub>SP</sub> / σ<sup>2</sup><sub>SS</sub>,  l* = ¯P - w*¯S
+
+Where Averages, Variance, and Covariance
+¯P = 1/N Σ<sub>i=1</sub><sup>N</sup> p<sub>i</sub> and ¯S = 1/N Σ<sub>i=1</sub><sup>N</sup> s<sub>i</sub>
+σ<sup>2</sup><sub>SP</sub> = 1/N Σ<sub>i=1</sub><sup>N</sup> (s<sub>i</sub> - ¯S)(p<sub>i</sub> - ¯P)
+σ<sup>2</sup><sub>SS</sub> = 1/N Σ<sub>i=1</sub><sup>N</sup> (s<sub>i</sub> - ¯S)<sup>2</sup>
+
+![Scatter Plot](/path/to/image.jpg)
+
+
+**Description of the Figure:**
+
+The figure is a scatter plot, centrally located on the slide.  The x-axis is labeled "Square footage" and the y-axis is labeled "Sale Price".  The y-axis uses a logarithmic scale, as indicated by "2.5 x 10<sup>6</sup>".  Numerous data points are plotted, each represented by a small colored dot with varying shades of color.  A prominent black line is drawn through the data points, representing a linear regression model.  This line is a best-fit approximation of the relationship between house prices and square footage.  Several vertical lines extend from various data points to the regression line, visually representing the distances between the data points and the line.  The plot is crucial to the explanation, as it visually demonstrates the data points and the line that is being fitted to them.  The vertical lines from the data points to the line visually represent the distances being minimized.  The overall impression is that the plot is illustrating the concept of linear regression and the process of finding the best-fitting line to the data.
+
+
+**Context:**
+
+This slide continues the discussion of linear regression as the first machine learning problem.  The text provides the mathematical derivation for finding the optimal values of w and l that minimize the sum of squared distances between the data points and the regression line.  The equations are derived from the partial derivatives of the error function.  The scatter plot visually represents the data points and the line that is being fitted to them.  The vertical lines from the data points to the line visually represent the distances being minimized.  The slide is designed to introduce the mathematical formulation of the linear regression problem, using a visual representation of the data and the model.  The slide is a crucial part of the lecture, as it helps to illustrate the mathematical formulation of the linear regression problem and the derivation of the optimal parameters.

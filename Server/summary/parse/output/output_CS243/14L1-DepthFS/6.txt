@@ -1,0 +1,24 @@
+# Slide 6
+
+**Method Recursion: a Fibonacci Example**
+
+Fibonacci is a classic recursive example
+
+* `fib(0) = 1`
+* `fib(1) = 1`
+* `fib(n) = fib(n-1) + fib(n-2)`
+
+The resulting call structure resembles a tree
+
+**(Diagram):**
+
+A tree-like diagram is presented, illustrating the recursive calls in a Fibonacci sequence calculation.  The root node is `fib(4)`.  From `fib(4)`, two branches extend downward, one to `fib(3)` and the other to `fib(2)`.  `fib(3)` further branches to `fib(2)` and `fib(1)`.  `fib(2)` branches to `fib(1)` and `fib(0)`.  `fib(1)` branches to `fib(0)` and `fib(0)`.  Each node represents a recursive call to the `fib` function.  The nodes are rectangular boxes, filled with a light-blue color, and contain the function call, e.g., `fib(4)`, `fib(3)`, etc.  Arrows connect the nodes, indicating the order of the recursive calls.  The diagram visually represents how the `fib(4)` calculation depends on the results of `fib(3)` and `fib(2)`, and how those, in turn, depend on lower-level calls.  The diagram is positioned centrally on the slide and is oriented vertically, with the root node at the top and the leaf nodes at the bottom.  The diagram is crucial for understanding the recursive nature of the Fibonacci sequence calculation, as it visually demonstrates the hierarchical structure of the function calls.
+
+**Additional Text:**
+
+Note the order in which the nodes finish execution, more on this later.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concept of method recursion using the Fibonacci sequence as an example.  The slide shows the recursive calls involved in calculating `fib(4)`.  The diagram visually represents the hierarchical structure of the function calls, making it easier to understand how the calculation unfolds recursively.  The text emphasizes the tree-like structure of the recursive calls and hints at the importance of understanding the order of execution, which will be discussed later in the lecture.  The slide is designed to illustrate the concept of recursion in a concrete, visual way.

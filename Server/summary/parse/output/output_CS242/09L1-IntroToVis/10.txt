@@ -1,0 +1,24 @@
+# Slide 10
+
+**Figure 1.1 Examples of charts.**  Not all charts have an X-axis and a Y-axis. Pie charts, for instance, aren't based on a Cartesian coordinate system.
+
+**(Image Description):**
+
+This slide presents a collection of various chart types, each illustrating a different way to visualize data.  The charts are arranged in a grid-like format, with each chart type positioned in a separate section of the slide.
+
+* **Top Left:** A bar chart.  The horizontal axis lists "Spain," "U.S.," "France," and "U.K."  The vertical axis represents values.  The bars are different shades of gray, and their heights correspond to the values for each country.  This chart is likely used to compare the values across the different countries.
+
+* **Top Middle:** A lollipop chart.  The horizontal axis lists "Spain," "U.S.," "France," and "U.K."  The vertical axis represents values.  Each country has a vertical line (the "stick") extending from the horizontal axis to a point on the vertical axis, representing the value.  The "lollipop" part is a circle at the top of the line.  This chart is similar to a bar chart but emphasizes the individual values.
+
+* **Top Right:** A dot chart (or dot plot).  The horizontal axis lists "Spain," "U.S.," "France," and "U.K."  The vertical axis represents values.  Dots are plotted at various heights for each country, representing the values.  This chart is useful for showing the distribution of values across different categories.
+
+* **Bottom Left:** A scatter chart (or scatter plot).  The horizontal and vertical axes represent values.  Points are plotted on the graph, with each point representing a data pair.  The chart shows the relationship between two variables.
+
+* **Bottom Middle:** A time-series chart.  The horizontal axis represents time (years 1995-1998).  The vertical axis represents values.  Lines connect data points for each country, showing how the values change over time.  This chart is used to track trends over time.
+
+* **Bottom Right:** A slope chart.  The horizontal axis represents time (years 2000-2010).  The vertical axis represents values.  Lines connect data points for each country, showing how the values change over time.  This chart is similar to a time-series chart but emphasizes the change in values over time.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, introduces various types of charts and graphs used for data visualization.  The different chart types demonstrate how data can be represented visually to convey different kinds of information.  The slide is likely part of a section on data visualization techniques, highlighting the variety of ways to present data and the importance of choosing the right chart type for the data being visualized.

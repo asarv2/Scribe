@@ -1,0 +1,45 @@
+# Slide 3
+
+**Statistical Methods**
+
+**SST = Σ Σ (x<sub>ij</sub> - x̄<sub>..</sub>)<sup>2</sup> = Σ Σ x<sub>ij</sub><sup>2</sup> - (1/N) x̄<sub>..</sub><sup>2</sup>**
+
+**SSTr = Σ Σ (x̄<sub>i</sub>. - x̄<sub>..</sub>)<sup>2</sup> = Σ (1/n<sub>i</sub>) x̄<sub>i</sub>.<sup>2</sup> - (1/N) x̄<sub>..</sub><sup>2</sup>**
+
+**SSE = Σ Σ (x<sub>ij</sub> - x̄<sub>i</sub>.)<sup>2</sup> = Σ (n<sub>i</sub> - 1) s<sub>i</sub><sup>2</sup>**
+
+**SST = SSTr + SSE**
+
+**MSTr = SSTr / DFT<sub>r</sub>**
+
+**MSE = SSE / DFE**
+
+**F = MSTr / MSE**
+
+**Example 26.2** Data on elastic modulus (GPa) obtained by a new ultrasonic method for specimens of a certain alloy produced using three different casting processes.
+
+**Let μ<sub>1</sub>, μ<sub>2</sub>, μ<sub>3</sub>** denote the true average elastic moduli for the three different processes under the given circumstances.
+
+1. **The relevant hypotheses are**
+
+   H<sub>0</sub>: μ<sub>1</sub> = μ<sub>2</sub> = μ<sub>3</sub>
+   versus
+   H<sub>a</sub>: at least two of the μ<sub>i</sub>'s are different.
+
+2. **The grand mean x̄<sub>..</sub> is 983.7/22 = 44.71.**
+
+   The variances are 0.39, 0.25, 0.30 for each group.
+
+   SSE = 0.39 × (8 - 1) + 0.25 × (8 - 1) + 0.30 × (6 - 1) = 6.00
+
+   SSTr = (44.71 - 44.71)<sup>2</sup> × 8 + (44.06 - 44.71)<sup>2</sup> × 8 + (45.58 - 44.71)<sup>2</sup> × 6 = 7.93
+
+
+**Figure Description:**
+
+There is no figure on this slide.  The slide primarily presents formulas and an example related to the Analysis of Variance (ANOVA) method in the context of comparing means of multiple groups. The example, Example 26.2, is a data set on elastic modulus, and the formulas are used to calculate the necessary components for the ANOVA test. The slide is part of a lecture on Statistical Methods, specifically focusing on ANOVA.
+
+
+**Description of the slide content:**
+
+This slide continues the discussion of ANOVA, specifically focusing on the calculations involved in the analysis.  It provides the formulas for calculating the total sum of squares (SST), the sum of squares due to treatments (SSTr), and the sum of squares due to error (SSE).  It also defines the mean squares for treatments (MSTr) and error (MSE), and the F-statistic.  Crucially, it presents an example (Example 26.2) of calculating these values for a data set on elastic modulus from different casting processes.  The example demonstrates how to apply the formulas to real data.  The slide is structured to show the steps involved in an ANOVA calculation, which is a key part of the Statistical Methods course.

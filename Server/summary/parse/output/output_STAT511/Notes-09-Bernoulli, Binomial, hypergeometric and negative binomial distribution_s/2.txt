@@ -1,0 +1,56 @@
+# Slide 2
+
+If X has a Binomial distribution, it's denoted as X~Bin(n, p).
+
+Example 9.1: Suppose that n = 3. Then there are 8 possible outcomes for the Binomial experiment:
+S = {SSS, SSF, SFS, SFF, FSS, FSF, FFS, FFF}
+From the definition of X,  X({SSF}) = , X({SFF}) = , x∈{ }.
+Possible values for X in an n-trial experiment are x∈{ }.
+
+pmf of Binomial distribution Bin(n, p):
+p(x; n, p) = (n
+x) p<sup>x</sup>(1-p)<sup>n-x</sup>, if x = 0, 1, ..., n.
+cdf of Binomial distribution Bin(n, p):
+F(x; n, p) = Σ
+p(x; n, p)
+⌊x⌋
+y=0
+= Σ
+(n
+x) p<sup>y</sup>(1-p)<sup>n-y</sup>
+⌊x⌋
+y=0
+.
+
+Note: There is no simple formula for the above cdf.
+
+Example 9.2: Each of six randomly selected cola drinkers is given a glass containing cola S and one
+containing cola F. The glasses are identical in appearance except for a code on the bottom to identify
+the cola. Suppose there is actually no tendency among cola drinkers to prefer one cola to the other.
+Then, p = P(a selected individual prefers S) = 0.5,
+so with X = the number among the six who prefer S, X~Bin(n = 6, p = 0.5).
+Thus, P(X = 3) =.
+The probability that at most 3.5 prefer S is
+P(X ≤ 3.5) = Σ
+⌊3.5⌋
+y=0
+
+
+Mean, variance and standard deviation of Binomial distribution Bin(n,p):
+• E(X) = np,
+• Var(X) = np(1-p) = npq,  
+σ<sub>X</sub>= √npq.
+
+Example 9.3 If 75% of all purchases at a certain store are made with a credit card and X is the number
+among ten randomly selected purchases made with a credit card.
+X~Bin(10, 0.75). Thus,
+E(X) =
+Var(X) =
+σ<sub>X</sub>=
+? The probability that X is within 1 standard deviation of its mean value is
+P(μ-1σ ≤ X ≤ μ+ 1σ) =
+
+
+**Description of Slide 2:**
+
+This is slide 2 of a 5-slide lecture on Statistical Methods, continuing the discussion of discrete distributions, specifically the binomial distribution.  The slide builds upon the previous slide's introduction to the binomial distribution by providing examples and formulas.  It defines the probability mass function (pmf) and cumulative distribution function (cdf) for the binomial distribution.  The slide also introduces a key concept: the lack of a simple formula for the cdf.  Example 9.2 illustrates a practical application of the binomial distribution, involving cola preferences.  Example 9.3 provides another example, this time relating to credit card purchases.  The slide also presents the mean, variance, and standard deviation formulas for the binomial distribution.  The slide is well-structured, using clear notation and examples to explain the concepts.  The use of mathematical symbols and formulas is appropriate for a statistical methods course.  The slide is formatted with clear headings and bullet points for easy readability.  The example problems are relevant to the topic and help illustrate the application of the binomial distribution.

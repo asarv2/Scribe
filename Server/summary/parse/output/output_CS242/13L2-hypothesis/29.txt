@@ -1,0 +1,17 @@
+# Slide 29
+
+**Two-sided vs. one-sided tests**
+
+The previous code considered deviation from the null hypothesis in both directions (two-sides test is default)
+This corresponds to H₀ = 30, H₁ ≠ 30
+We actually wanted to compute a one-sided test: H₀ = 30, H₁ > 30
+In this case, the probability corresponds to the area under the *left* side of the curve.
+
+**Figure 1:**
+
+A bell-shaped curve, likely a normal distribution, is plotted in the upper-right quadrant of the slide. The x-axis is labeled "x̄" and ranges from approximately -3 to 3. The y-axis is labeled "p(x̄ | H₀)" and ranges from 0 to 0.4.  The curve is centered around 0 on the x-axis.  A shaded area is visible under the left tail of the curve, extending from approximately -3 to a value slightly to the left of -2.  This shaded area represents the probability of observing the data (or more extreme data) if the null hypothesis is true.  The figure is used to illustrate the difference between a two-sided and one-sided test.  The shaded area under the left tail of the curve is the p-value for a one-sided test, whereas the area under both tails would be the p-value for a two-sided test.
+
+
+**Description of what you see:**
+
+This slide discusses the difference between two-sided and one-sided hypothesis tests.  It explains that the previous code performed a two-sided test, but the intended test was one-sided (specifically, testing if the mean is greater than 30).  The slide visually illustrates this difference using a probability density function (PDF) plot.  The plot shows a normal distribution centered around 0, with a shaded area under the left tail.  This shaded area represents the probability of observing the data (or more extreme data) if the null hypothesis is true for a one-sided test.  The slide is part of a lecture on hypothesis testing, specifically illustrating the concept of one-sided versus two-sided tests and how the p-value calculation differs in these cases.  The figure is crucial for understanding the difference in the calculation of the p-value between one-sided and two-sided tests.

@@ -1,0 +1,362 @@
+
+--- Key Terms ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning
+turing test
+game tree
+perceptron
+reinforcement learning
+matrix
+linear transform
+matrix multiplication
+matrix inverse
+matrix transposition
+derivative
+partial derivative
+sigmoid function
+inductive reasoning
+linear regression
+model
+overfitting
+loss function
+decision boundary
+stochastic gradient descent
+logistic regression
+perceptron algorithm
+empirical risk minimizer
+binary classification
+gradient descent
+\textbf{image classification}
+\textbf{semantic gap}
+\textbf{viewpoint variation}
+\textbf{illumination}
+\textbf{deformation}
+\textbf{occlusion}
+\textbf{background clutter}
+\textbf{invariant features}
+\textbf{bag of features}
+\textbf{visual words}
+\textbf{category models}
+\textbf{feature vector $f$}
+\textbf{orderless document representation}
+\textbf{robustness}
+\textbf{invariance}
+\textbf{visual dictionary}
+\textbf{textons}
+\textbf{nearest neighbor  classifier}
+\textbf{noise}
+\textbf{salt and pepper noise}
+\textbf{impulse noise}
+\textbf{gaussian noise}
+\textbf{moving average}
+\textbf{weighted moving average}
+\textbf{image filtering}
+\textbf{filter/mask}
+\textbf{blur filter}
+\textbf{identity filter}
+\textbf{sharpening filter}
+\textbf{codewords}
+\textbf{edge detection}
+\textbf{edges}
+\textbf{intensity profile}
+\textbf{corner detection}
+\textbf{corners/junctions}
+\textbf{harris detector}
+\textbf{vision pyramids}
+\textbf{gaussian pyramids}
+\textbf{image derivatives}
+\textbf{canny edge detector}
+\textbf{gaussian filter}
+\textbf{derivative of gaussian filter}
+\textbf{anisotropic gaussian}
+\textbf{isotropic gaussian}
+\textbf{convolutional neural network  for image/video recognition}
+\textbf{imagenet top-5 classification accuracy}
+\textbf{alexnet}
+\textbf{dense neural network}
+\textbf{convolutional neural network }
+\textbf{activation function}
+\textbf{convolution layer}
+\textbf{pooling layer}
+\textbf{convolution filter}
+\textbf{input map}
+\textbf{output map}
+\textbf{zero padding}
+\textbf{multidimensional convolution}
+\textbf{local receptive field}
+\textbf{sparse connectivity}
+\textbf{parameter sharing}
+\textbf{rectified linear unit }
+\textbf{max pooling}
+\textbf{average pooling}
+\textbf{backpropagation}
+\textbf{convolutional kernel layer}
+\textbf{dimension reduction layer}
+\textbf{fully connection layer}
+\textbf{learned convolution filters}
+\textbf{mnist dataset}
+\textbf{cifar-10 dataset}
+\textbf{lenet-5}
+held out data
+test data
+training data
+hyperparameters
+regularization
+regularization coefficient 
+lasso
+learning curves
+s-fold cross validation
+data analysis pipeline
+matrix factorization
+singular value decomposition 
+principal component analysis 
+dimensionality reduction
+low rank matrix approximations
+embeddings
+collaborative filtering
+recommender systems
+eigensnps
+single nucleotide polymorphisms 
+baseline predictor
+bias-variance tradeoff
+root mean square error 
+netflix prize
+\textbf{clustering}
+\textbf{supervised learning}
+\textbf{unsupervised learning}
+\textbf{euclidean distance}
+\textbf{proximity}
+\textbf{distance}
+\textbf{hamming distance}
+\textbf{matching coefficient}
+\textbf{k-means clustering}
+\textbf{inertia}
+\textbf{elbow method}
+\textbf{purity}
+\textbf{personas}
+\textbf{principal component analysis }
+\textbf{intelligent agent}
+\textbf{logic reasoning}
+\textbf{propositional logic}
+\textbf{model }
+\textbf{logical connectives}
+\textbf{tautology}
+\textbf{satisfiable sentence}
+\textbf{unsatisfiable sentence}
+\textbf{literal}
+\textbf{clause}
+\textbf{conjunctive normal form }
+\textbf{boolean satisfiability problem }
+\textbf{3-satisfiability }
+\textbf{equisatisfiable}
+\textbf{model checking}
+\textbf{bounded model checking }
+\textbf{safety property}
+\textbf{liveness property}
+\textbf{classical planning}
+\textbf{combinatorial design}
+recursion
+base case
+recursive case
+breadth first
+depth first
+binary search tree
+search tree
+problem solving as search
+states
+actions
+search algorithm
+successor function
+world state
+search state
+rational agent
+rational behavior
+satisfiability  problem
+conjunctive normal form 
+literal
+clause
+bounded model checking 
+safety property
+liveness property
+partial assignment
+unit clause
+unit propagation 
+davis-putnam-logemann-loveland  algorithm
+implication graph
+resolution rule
+clause learning
+hamiltonian path problem
+graph coloring problem
+cook's theorem
+bias
+fairness
+disparate treatment
+disparate impact
+proxies
+anonymized data
+interpretable results
+group fairness
+individual fairness
+automatic prediction system
+--- Problem Types ---
+artifical intelligence basics
+\textbf{understanding the nature of intelligence
+\textbf{overcoming the limitations of search algorithms
+\textbf{addressing the challenges of computer vision
+\textbf{mitigating bias and ensuring ethical ai development
+\textbf{developing robust and safe ai systems
+\textbf{designing effective game-playing algorithms
+\textbf{bridging the gap between different ai domains
+\textbf{understanding the components of the ai stack
+\textbf{developing autonomous systems for real-world applications
+\textbf{building effective conversational agents
+\textbf{applying ai to real-world problems
+representing linear transformations with matrices
+matrix arithmetic
+solving systems of linear equations using matrices
+matrix transposition
+understanding perceptrons
+parallelizing matrix multiplication
+calculus in ai
+calculating the derivative of the sigmoid function
+\textbf{understanding inductive reasoning in machine learning}
+\textbf{image recognition and classification}
+\textbf{building a predictive model from data examples}
+\textbf{linear regression as a machine learning problem}
+\textbf{multiple linear regression with multiple independent variables}
+\textbf{curve fitting and overfitting}
+\textbf{binary classification using linear models}
+image classification challenges
+representing images numerically
+finding invariant features
+bag of features approach
+noise reduction in images
+image sharpening
+document representation for retrieval
+\textbf{object categorization using bag of features}
+\textbf{edge detection in images}
+\textbf{corner detection in images}
+\textbf{noise reduction in images}
+\textbf{multi-scale image representation using vision pyramids}
+\textbf{object detection and recognition using convolutional neural networks 
+\textbf{improving imagenet classification accuracy over time
+\textbf{comparing dense and convolutional neural networks
+\textbf{understanding the function of an artificial neuron
+\textbf{illustrating convolution and pooling operations in cnns
+\textbf{explaining the advantages of convolution over fully connected networks
+\textbf{introducing the rectified linear unit  activation function
+\textbf{explaining pooling layers in cnns
+\textbf{illustrating the backpropagation algorithm for training neural networks
+\textbf{presenting a simple cnn architecture
+\textbf{visualizing learned convolution filters
+\textbf{illustrating multidimensional convolution
+\textbf{showing biological inspiration for artificial neural networks
+\textbf{introducing the mnist dataset of handwritten digits
+\textbf{presenting the lenet-5 architecture for mnist
+\textbf{introducing the cifar-10 dataset and state-of-the-art results
+overfitting
+underfitting
+diagnosing overfitting
+hyperparameter tuning
+controlling model complexity
+training/test cycle
+s-fold cross validation
+data analysis pipeline
+learning curves
+bias-variance tradeoff
+matrix factorization
+dimensionality reduction
+low rank matrix approximations
+singular value decomposition 
+principal component analysis 
+recommender system algorithms
+collaborative filtering
+modeling systematic biases
+dealing with missing data in recommender systems
+clustering data
+defining and applying k-means clustering
+evaluating clustering results
+choosing the optimal number of clusters 
+understanding distance measures
+\textbf{solving the satisfiability problem }
+\textbf{converting logical expressions to conjunctive normal form }
+\textbf{applying sat to model checking}
+\textbf{applying sat to classical planning}
+\textbf{applying sat to combinatorial design}
+\textbf{reducing sat to 3-sat}
+representing recursion
+problem solving as search
+optimizing recursive algorithms
+representing problems as graphs
+defining state spaces
+\textbf{overcoming exponential complexity growth in automated reasoning}
+\textbf{encoding real-world problems into sat}
+\textbf{applying sat solvers to real-world problems}
+identifying and mitigating bias in data and algorithms
+ensuring data privacy and security
+balancing accuracy and interpretability in ai models
+defining and achieving fairness in ai
+--- Algorithm Solutions ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning
+matrix addition
+matrix scalar multiplication
+matrix multiplication
+matrix inverse
+solving linear equations using matrix inverses
+derivative of sigmoid function
+linear regression
+multiple linear regression
+binary classification using linear models
+perceptron algorithm
+logistic regression
+bag of features
+nearest neighbor classifier
+moving average filter
+weighted moving average filter
+image sharpening
+finite difference method
+image gradient magnitude
+image gradient direction
+sum of squared differences  error
+anisotropic gaussian
+isotropic gaussian
+convolutional neural network 
+relu activation function
+backpropagation algorithm
+max pooling
+average pooling
+lenet-5 architecture
+regularized linear regression
+s-fold cross validation
+singular value decomposition 
+principal component analysis 
+collaborative filtering
+matrix factorization for recommender systems
+modeling systematic biases in recommender systems
+root mean square error 
+k-means clustering
+euclidean distance
+hamming distance
+matching coefficient
+purity
+dpll algorithm
+conversion to cnf
+recursive fibonacci
+recursive binary search tree search
+breadth-first search
+depth-first search
+optimized fibonacci 
+naïve\_sat
+dpll
+bcp
+resolution rule
+clause learning
+hamiltonian path encoding
+graph coloring encoding
+fairness through blindness
+group fairness
+individual fairness
+detecting and removing bias from models

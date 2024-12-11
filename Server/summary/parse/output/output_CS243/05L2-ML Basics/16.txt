@@ -1,0 +1,59 @@
+# 16
+
+# What if multiple independent variables?
+
+Formal mathematical form:
+
+yᵢ = β₀ + β₁xᵢ₁ + ... + βₚxᵢₚ + ϵᵢ = xᵢᵀβ + ϵᵢ, for i = 1,...,n
+
+Or using matrix notation:
+
+y = Xβ + ϵ
+
+Where:
+
+```
+y =  [ y₁ ]
+     [ y₂ ]
+     [  ⋮ ]
+     [ yₙ ]
+
+X =  [ x₁ᵀ ]
+     [ x₂ᵀ ]
+     [  ⋮  ]
+     [ xₙᵀ ]
+     = [ 1  x₁₁  x₁₂  ...  x₁ₚ ]
+       [ 1  x₂₁  x₂₂  ...  x₂ₚ ]
+       [  ⋮  ⋮  ⋮  ⋱  ⋮  ]
+       [ 1  xₙ₁  xₙ₂  ...  xₙₚ ]
+
+β = [ β₀ ]
+     [ β₁ ]
+     [ β₂ ]
+     [  ⋮ ]
+     [ βₚ ]
+
+ϵ = [ ϵ₁ ]
+     [ ϵ₂ ]
+     [  ⋮ ]
+     [ ϵₙ ]
+```
+
+Can prove the optimal β* which minimizes the distances is: β* = (XᵀX)⁻¹Xᵀy
+
+| Car | Model | Volume | Weight | CO₂ |
+|---|---|---|---|---|
+| Toyota | Aygo | 1000 | 790 | 99 |
+| Mitsubishi | Space Star | 1200 | 1160 | 95 |
+| Skoda | Citigo | 1000 | 929 | 95 |
+| Fiat |  | 500 | 900 | 90 |
+
+
+**Description of the Figure:**
+
+This slide discusses the extension of linear regression to include multiple independent variables.  The top portion of the slide presents the mathematical formulation of multiple linear regression.  The equations define the relationship between a dependent variable (y) and multiple independent variables (xᵢ₁ to xᵢₚ).  The equations are presented in both a scalar form and a matrix form, which is a standard way to represent multiple linear regression.  The matrix notation is crucial for understanding the computational aspects of the model.  The matrix notation clearly defines the variables involved in the model, including the dependent variable vector y, the independent variable matrix X, the coefficient vector β, and the error vector ϵ.  The equations are followed by a table.  The table displays data for different car models, including their volume, weight, and CO₂ emissions.  The table is positioned below the mathematical equations, suggesting a connection between the theoretical framework and the practical application of the model.  The table is formatted as a standard table, with rows representing different car models and columns representing the car's characteristics.  The table is aligned with the mathematical equations, suggesting a relationship between the theoretical framework and the practical application of the model.  The table is a key part of the slide, as it provides a concrete example of the type of data that might be used in a multiple linear regression model.
+
+
+**Context:**
+
+This slide builds upon the previous discussion of linear regression, expanding the model to include multiple independent variables.  The table provides a practical example of the type of data that might be used in a multiple linear regression model.  The mathematical equations and the table are designed to illustrate the transition from a simple linear regression model to a more complex model that can account for multiple factors influencing the dependent variable.  The slide is a crucial part of the lecture, as it helps to illustrate the mathematical formulation of the multiple linear regression problem and the derivation of the optimal parameters.

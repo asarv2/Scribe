@@ -1,0 +1,12 @@
+# Slide 2
+
+# Matrix factorization
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, displays the single, centered text "Matrix factorization" in a dark gray, sans-serif font.  The text is large enough to be easily readable.  The simplicity of the slide indicates that this is likely a title slide for a section or topic on matrix factorization within the Intro to Data Science course.  It's a straightforward, uncluttered slide, focusing solely on the topic.
+
+

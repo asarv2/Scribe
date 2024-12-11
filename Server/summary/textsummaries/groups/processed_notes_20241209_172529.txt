@@ -1,0 +1,16 @@
+
+--- Key Terms ---
+artifical intelligence basics
+artificial intelligence foundations
+search algorithms
+machine learning paradigms
+--- Problem Types ---
+artifical intelligence basics
+ai foundations
+game ai
+ai safety and ethics
+advanced ai architectures
+ai challenges and limitations
+--- Algorithm Solutions ---
+artifical intelligence basics
+game playing ai

@@ -1,0 +1,31 @@
+# Slide 30
+
+**MapReduce Goals**
+
+**Scalability to large data volumes:**
+
+* Scan 100 TB on 1 node @ 50 MB/s = 24 days
+* Scan on 1000-node cluster = 35 minutes
+
+**Cost-efficiency:**
+
+* Commodity nodes (cheap, but unreliable)
+* Commodity network (low bandwidth)
+* Automatic fault-tolerance (fewer admins)
+* Easy to use (fewer programmers)
+
+
+---
+
+**Description of the slide:**
+
+This slide lists the goals of the MapReduce framework.  It highlights the benefits of MapReduce in terms of scalability and cost-efficiency.
+
+* **Scalability:** The slide emphasizes MapReduce's ability to handle massive datasets.  The example of scanning 100 TB of data, taking 24 days on a single node but only 35 minutes on a 1000-node cluster, demonstrates the significant performance improvement achieved through distribution.
+* **Cost-efficiency:** The slide points out that MapReduce leverages commodity hardware (cheap but potentially unreliable nodes) and networks (low bandwidth).  This cost-effectiveness is further enhanced by automatic fault tolerance, reducing the need for extensive administration.  The ease of use, requiring fewer programmers, also contributes to the overall cost-effectiveness.
+
+**Visual Representation:**
+
+The slide uses a simple bulleted list format, making the information easy to read and understand.  The text is clear and concise, highlighting the key benefits of MapReduce.  The numerical examples (24 days vs. 35 minutes) are used to quantify the scalability advantage of MapReduce.  The slide is designed to present the key advantages of MapReduce in a straightforward manner.
+
+

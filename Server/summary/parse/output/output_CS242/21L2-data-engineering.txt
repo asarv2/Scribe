@@ -1,0 +1,1568 @@
+# Slide 1
+
+Introduction to Data Science
+Purdue CS24200
+Tony Bergstrom
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the slide:**
+
+This is the title slide for a lecture on Introduction to Data Science.  The background is a dark gray.  The title "Introduction to Data Science" is large and prominent, followed by the course information (Purdue CS24200 and the instructor's name, Tony Bergstrom).  At the very bottom, a credit line indicates that the slides were adapted from another source (Jen Neville, CS 24200).  The text is a light gray color, making it easily readable against the dark background.  There are no images or figures on this slide.  The purpose of the slide is to clearly identify the course, instructor, and source of the lecture materials.
+
+
+# Slide 2
+
+# Big Data Processing
+
+
+---
+
+**Description of the slide:**
+
+This is a very simple slide, likely a heading or title slide for a section of the Intro to Data Science lecture.  It's a plain gray background with the single, bold title "Big Data Processing" centered on the slide.  The text is a dark gray, contrasting well with the background.  The lack of any other content suggests this is a slide to introduce the topic of big data processing in the context of the course.
+
+
+# Slide 3
+
+# The FOUR V's of Big Data
+
+**Volume**
+* 40 Zettabytes (43 Trillion Gigabytes) of data will be created by 2020, a 300x increase from 2005.
+* 2.5 Quintillion Bytes (2.3 Trillion Gigabytes) of data are created each day.
+* 6 Billion people have cell phones.
+* World Population: 7 Billion
+* The New York Stock Exchange captures 1 Terabyte of trade information during each trading session.
+* Most companies in the U.S. have at least 100 Terabytes of data stored.
+* Modern cars have close to 100 sensors that monitor items such as fuel level and tire pressure.
+
+**Velocity**
+* Analysis of streaming data.
+* By 2016, it is projected there will be 18.9 Billion network connections - almost 2.5 connections per person on earth.
+* By 2015, 4.4 Million IT jobs will be created globally to support big data, with 1.9 million in the United States.
+
+**Variety**
+* Different forms of data.
+* 30 Billion pieces of content are shared on Facebook every month.
+* By 2014, it's anticipated there will be 420 Million wearable, wireless health monitors.
+* 4 Billion+ hours of video are watched on YouTube each month.
+* 400 Million Tweets are sent per day by about 200 million monthly active users.
+
+**Veracity**
+* Uncertainty of data.
+* 27% of respondents in one survey were unsure of how much of their data was inaccurate.
+* Poor data quality costs the US economy around $3.1 Trillion a year.
+
+
+**Description of the slide:**
+
+This slide visually presents the four key characteristics of big data: Volume, Velocity, Variety, and Veracity.  It's a large infographic-style layout, with each characteristic represented in a distinct section.  Each section contains various data points and visualizations to illustrate the scale and complexity of big data.
+
+* **Visualizations:**  The slide uses various icons, charts, and diagrams to represent the data.  For example, stacked cylinders represent the growth of data over time, and a world map shows global population.  There are also icons representing social media platforms (Facebook, YouTube), cell phones, and wearable health monitors.  These visual aids help to convey the vastness and diverse nature of big data.
+* **Data Points:**  The slide provides specific numerical data points, such as the projected number of data bytes created each day, the number of people with cell phones, and the amount of data captured by the New York Stock Exchange.  These figures are meant to highlight the sheer volume of data being generated and processed.
+* **Context:** The slide is designed to introduce the concept of big data and its characteristics in the context of the Intro to Data Science course.  The information presented is meant to be a high-level overview of the topic, providing a general understanding of the scale and complexity of big data.  The slide also includes a source list at the bottom, which is a common practice in academic presentations to give credit to the original sources of the data.
+
+
+# Slide 4
+
+# Volume
+
+40 ZETTABYTES
+[43 TRILLION GIGABYTES]
+of data will be created by
+2020, an increase of 300
+times from 2005
+
+2020
+2005
+
+6 BILLION
+PEOPLE
+have cell
+phones
+
+**Volume**
+SCALE OF DATA
+
+It's estimated that
+2.5 QUINTILLION BYTES
+[2.3 TRILLION GIGABYTES]
+of data are created each day
+
+WORLD POPULATION: 7 BILLION
+
+Most companies in the
+U.S. have at least
+100 TERABYTES
+[100,000 GIGABYTES]
+of data stored
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, focuses on the "Volume" aspect of big data.  It uses a visual representation to illustrate the massive scale of data creation and storage.
+
+* **Visual Elements:**
+    * **2020 and 2005:**  Two stylized computer memory chip icons, one labeled 2020 and the other 2005, are positioned above the text about the increase in data.  They are meant to represent the time period and the growth of data storage capacity.
+    * **Globe:** A stylized, 3D globe, colored orange and blue, is positioned in the lower left quadrant.  The text "WORLD POPULATION: 7 BILLION" is below the globe.  This visual element is used to contextualize the sheer number of people generating data.
+    * **Smartphone:** A stylized smartphone icon is positioned above the globe.  The text "6 BILLION PEOPLE have cell phones" is next to it.  This icon and text highlight the widespread use of cell phones and the resulting data generation.
+    * **Data Bars:**  A series of stacked, 3D data bars are positioned in the middle of the slide.  These bars are colored and represent the growth of data over time.  The bars are meant to visually represent the increasing volume of data.
+    * **Data Cloud:** A stylized cloud of data blocks (different colors) is positioned in the upper right quadrant.  This visual element is meant to represent the sheer volume of data being created.
+    * **Building:** A stylized building is positioned in the lower middle quadrant.  The text "Most companies in the U.S. have at least 100 TERABYTES [100,000 GIGABYTES] of data stored" is next to it.  This visual element is used to illustrate the amount of data stored by companies.
+
+* **Purpose:** The slide aims to convey the massive increase in data creation and storage over time, highlighting the volume aspect of big data.  The various visual elements are used to make the information more engaging and easier to understand.  The use of different colors and 3D shapes adds visual interest and helps to distinguish the different data points.
+
+
+# Slide 5
+
+# What is Big?
+
+Your data fits in RAM (e.g., 64GB) on a single machine?
+Your data fits on disk (e.g., 8TB) on a single machine?
+* Movielens 100K ratings = 3.1MB; 26M ratings = 1GB
+* Total size of Wikipedia (English article text, compressed) is 16.1 GB
+Your data fits in RAM/disk on a small cluster of machines? (i.e., don't need to worry about machines dying)
+Your data fits in RAM/disk on a large cluster of machines? (i.e., do need to worry about machines dying)
+* Facebook's Data warehouse generates 4 petabytes of data per day Facebook
+* Walmart collects 2.5 petabytes unstructured data (from 1 million customers every hour)
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, explores the concept of "big data" by posing questions about the size of datasets and their implications for storage and processing.
+
+* **Content:** The slide presents a series of questions and statements designed to illustrate the different scales of data.  It asks if the data fits in a single machine's RAM or disk, and then provides examples of data sizes (e.g., Movielens ratings, Wikipedia data).  It also introduces the concept of data clusters and the potential for machine failure in larger systems.  Finally, it gives examples of massive data generation rates from companies like Facebook and Walmart.
+* **Purpose:** The slide's purpose is to help students understand the difference between manageable and unmanageable data sizes in the context of data science.  The examples are meant to illustrate the scale of data that can be encountered in real-world applications.  The questions about machine failure highlight the importance of distributed systems for handling large datasets.
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the textual description of data sizes and the implications of data volume.
+
+
+
+
+# Slide 6
+
+# How to improve efficiency for big data
+
+If your data fits on a single machine (even on disk)
+
+* Think about how you can design an efficient single-machine solution
+* Unless you have exceptional circumstances, it is rarely faster to use multiple machines
+
+Speed(cache) > Speed(RAM) > Speed(disk) > Speed(network)
+
+![Diagram of CPU, Cache, RAM, and Disk](https://i.imgur.com/a700000.png)
+
+![Diagram of a network of computers](https://i.imgur.com/b700000.png)
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, discusses strategies for optimizing big data processing efficiency.
+
+* **Content:** The slide presents a two-pronged approach to improving efficiency.  First, it advises that if the data fits on a single machine, the focus should be on designing an efficient single-machine solution.  Second, it emphasizes that using multiple machines is generally not faster unless there are specific, unusual circumstances.  The slide also highlights the relative speeds of different data storage mechanisms (cache, RAM, disk, network).
+* **Visuals:**
+    * **Diagram 1 (Left):** This diagram depicts a simplified computer architecture.  A CPU (Central Processing Unit) is shown with a connection to a cache memory, and then to RAM (Random Access Memory).  A hard drive (disk) is also shown.  The diagram is meant to illustrate the hierarchy of data access speeds, with cache being the fastest and network being the slowest.  The relative sizes of the components are not to scale, but the connections are meant to show the flow of data.
+    * **Diagram 2 (Right):** This diagram shows a network of computers connected to a central server.  The computers are represented as individual desktop-style computers, and the server is a rack of servers.  The diagram is meant to illustrate the concept of using multiple machines for processing data, but also the added complexity and potential overhead of network communication.  The diagram is not meant to be a precise representation of a specific network architecture, but rather a general illustration of the concept.
+
+* **Purpose:** The slide's purpose is to guide students toward understanding the trade-offs between single-machine and multi-machine solutions for big data processing.  The diagrams are meant to visually reinforce the concept of data access speed and the potential overhead of using multiple machines.  The relative speeds of the different components are meant to emphasize the importance of choosing the most efficient method for the given data size.
+
+
+# Slide 7
+
+# Typical Hadoop Cluster
+
+1000-4000 nodes in cluster, 40 nodes/rack
+1 Gbps bandwidth in rack, 8 Gbps out of rack
+
+Node specs (Facebook):
+8-16 cores, 32 GB RAM, 8×1.5 TB disks, no RAID
+
+
+**(Image Description):**
+
+The image is a diagram of a Hadoop cluster.  It shows a large number of computer servers (nodes) arranged in racks.  A top-down view of a server room is shown in the background, with many racks of servers.  The foreground shows a simplified diagram of the network connections within the cluster.
+
+* **Rack Switch:** A horizontal bar represents a rack switch, connecting multiple nodes within a rack.  The rack switch is connected to an aggregation switch.
+* **Aggregation Switch:** A horizontal bar represents an aggregation switch, connecting multiple racks.  The aggregation switch is connected to the rack switches.
+* **Nodes:**  Several boxes represent individual nodes (servers) in the cluster.  Each node has a box labeled "Node Disks" below it, indicating the storage capacity of the node.
+* **Connections:** Red arrows indicate 8 Gigabit connections, and green arrows indicate 1 Gigabit connections.  These arrows show the network bandwidth between the rack switch, aggregation switch, and nodes.
+* **Placement:** The image is placed to illustrate the structure of a Hadoop cluster, showing the connections between nodes, racks, and the aggregation switch.  The background image of the server room provides context for the scale of the cluster.
+
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, provides a visual representation of a Hadoop cluster.  It shows the typical architecture of a Hadoop cluster, including the number of nodes, the bandwidth between nodes, and the specifications of the nodes themselves.  The image is meant to illustrate the scale and complexity of a Hadoop cluster, which is a distributed system used for processing large datasets.  The background image of the server room is meant to emphasize the large-scale nature of the cluster.
+
+
+# Slide 8
+
+# New data processing paradigm
+
+When Google was building their first data centers
+* Used clusters of off-the-shelf commodity hardware
+* Machines had different speeds and failures were common given cluster sizes
+Data itself was distributed (redundantly) over many machines
+* faster to do computation on the machine where the data is stored
+Led to the development of the MapReduce framework at Google
+* Google processes 20 PB of data per day
+Later made popular through the Apache Hadoop open source implementation
+* Used by Yahoo!, Facebook, Amazon, ...
+
+
+---
+
+**Description of the slide:**
+
+This slide discusses the evolution of data processing, focusing on the paradigm shift that occurred when Google developed the MapReduce framework.  The slide is a bulleted list, explaining how Google's approach to data centers and processing differed from previous methods.
+
+* **Context:** The slide builds upon the previous discussion of big data and the challenges of processing large volumes of data.  It explains how the distributed nature of data and the use of commodity hardware led to the development of MapReduce, a key technology in big data processing.
+* **Content:** The slide highlights the following key points:
+    * **Commodity Hardware:** Google used clusters of readily available, inexpensive hardware (off-the-shelf commodity hardware).
+    * **Variable Machine Speeds:** The machines in these clusters had varying processing speeds, and failures were common.
+    * **Distributed Data:**  Data was distributed across multiple machines, which allowed for faster computation.
+    * **MapReduce Framework:** This distributed processing approach led to the development of the MapReduce framework at Google.
+    * **Large Data Volumes:** Google processes massive amounts of data (20 PB per day).
+    * **Open Source Implementation:** The MapReduce framework was later popularized through the Apache Hadoop open-source implementation.
+    * **Wide Adoption:** The technology is used by major companies like Yahoo!, Facebook, and Amazon.
+
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the description of the new data processing paradigm.
+
+
+# Slide 9
+
+# Cluster Computing Challenges
+
+Cheap nodes fail, especially when you have many
+* Mean time between failures (MTBF) for 1 node = 3 years
+* MTBF for 1000 nodes = 1 day
+* Solution: Build fault tolerance into system
+
+Commodity network = low bandwidth
+* Solution: Push computation to the data
+
+Programming distributed systems is hard
+* Solution: Restricted programming model
+users write data-parallel "map" and "reduce" functions
+system handles work distribution and failures
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, discusses the challenges of cluster computing.  It's a bulleted list format, highlighting the difficulties and potential solutions.
+
+* **Content:** The slide focuses on three main challenges:
+    * **Node Failures:**  The high failure rate of individual nodes in a large cluster is a significant problem, especially when dealing with thousands of nodes.  The example of a 1000-node cluster having a 1-day MTBF (Mean Time Between Failures) highlights the frequency of failures.
+    * **Network Bandwidth:**  Commodity networks often have limited bandwidth, which can be a bottleneck in cluster computing.
+    * **Distributed Programming:**  Writing programs that can efficiently distribute tasks across a large cluster of machines can be complex.
+
+* **Purpose:** The slide is designed to introduce the concepts of fault tolerance, pushing computation to the data, and restricted programming models as solutions to these challenges.  It's meant to prepare students for the complexities of working with large-scale distributed systems.
+
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the description of the challenges and potential solutions.
+
+
+# Slide 10
+
+# MapReduce
+
+Programming model for data-intensive computing on commodity clusters
+A simple paradigm for distributed computation where users write just two functions:
+
+* **mapper:** An applied function to generate intermediate data
+* **reducer:** A function that combines and simplifies the intermediate date appropriately
+
+Work can be automatically farmed out to a large collection of machines
+* As much as possible, computation is done on the machine where the data lives
+* Node failures or "stragglers" (nodes that are slow for any reason) are automatically handled
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, describes the MapReduce programming model.  It's a bulleted list format, explaining the core concepts of the model.
+
+* **Content:** The slide explains that MapReduce is a programming model for data-intensive computing on clusters of commodity hardware.  It's a simple way to perform distributed computations.  The key components are the `mapper` and `reducer` functions.  The `mapper` function processes data to generate intermediate results, and the `reducer` function combines these intermediate results to produce the final output.  The slide also highlights the automatic handling of tasks across machines, including fault tolerance for failed or slow nodes.
+
+* **Purpose:** The slide introduces the MapReduce model as a solution to the challenges of processing large datasets in a distributed environment.  It explains the core principles of the model in a concise and understandable way.
+
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the description of the MapReduce model.
+
+
+# Slide 11
+
+# Example
+
+Given a large text file that contains data about credit card transactions
+* Each line of the file contains a credit card number and an amount of money
+* Determine the sum of all charges for each unique credit card number
+
+# Approaches
+
+* Could use hash table but memory is a problem for large files
+* Counting is simple if file is sorted by card number
+In this case, sorting and placement are crucial
+* Similar with distributed approaches
+
+
+---
+
+**Description of the slide:**
+
+This slide presents an example problem in the context of Intro to Data Science.  It describes a scenario involving a large text file containing credit card transaction data.  The task is to calculate the total charges for each unique credit card number.  The slide then outlines potential approaches to solving this problem, including using a hash table (but noting the memory limitations for large files) and the importance of sorting the data for efficient counting.  The final point highlights the similarity of this problem to distributed approaches, which are likely to be necessary for very large datasets.  There are no figures on this slide.
+
+
+
+
+# Slide 12
+
+# Example
+
+**Example:** sum charges for each credit card
+
+```
+procedure MAPCREDITCARDS(input)
+  while not input.done() do
+    record ← input.next()
+    card ← record.card
+    amount ← record.amount
+    Emit(card, amount)
+  end while
+end procedure
+
+procedure REDUCE CREDITCARDS(key, values)
+  total ← 0
+  card ← key
+  while not values.done() do
+    amount ← values.next()
+    total ← total + amount
+  end while
+  Emit(card, total)
+end procedure
+```
+
+**Key:** Card number
+**Value:** Charge on card
+**Key:** Card number
+**Output:** Sum of charges
+
+
+---
+
+**Description of the slide:**
+
+This slide provides a concrete example of how MapReduce works, using the task of summing credit card charges.  The example is presented as pseudocode, showing the `MAPCREDITCARDS` and `REDUCECREDITCARDS` procedures.  The pseudocode clearly defines the input (credit card transactions), the intermediate steps (mapping each transaction to a card number and amount), and the final output (the sum of charges for each card).  The slide also explicitly labels the keys and values in the MapReduce process, and the final output.  There are no figures on this slide.  The example is presented in a way that is easy to understand and follow, highlighting the core concepts of the MapReduce model.
+
+
+# Slide 13
+
+# Abstracting map+reduce
+
+Process can be decomposed into to the mapper function, the reducer function and the
+execution engine (the supporting code that actually calls the map and reduce functions)
+
+To use this framework, the programmer only needs to implement the mapper and the
+reducer function—the execution engine can use whatever method it wants to actually
+compute the result
+
+The mapper function is inherently parallel, allowing execution in separate threads/machines
+
+In many cases, the reduce step can also be carried out incrementally
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, discusses the abstraction level of the MapReduce framework.  It explains that the MapReduce process can be broken down into three components: the mapper function, the reducer function, and the execution engine.  The programmer only needs to implement the mapper and reducer functions; the execution engine handles the details of distributing the work and combining the results.  The slide emphasizes the inherent parallelism of the mapper function, which allows for efficient execution across multiple threads or machines.  It also notes that the reducer step can often be performed incrementally, further improving efficiency.  There are no figures on this slide.  The content is entirely text-based, focusing on the conceptual description of the MapReduce abstraction.
+
+
+# Slide 14
+
+# MapReduce
+
+**Basic process**
+
+* **Map:** transforms data records into pairs, each with a key and a value
+* **Shuffle:** uses a hash function so that all pairs with the same key end up next to each other and on the same machine
+* **Reduce:** processes records in batches, where all pairs with the same key are processed at the same time
+
+Idempotence of Mapper and Reducer provides fault tolerance
+* multiple operations on same input gives same output
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, describes the basic MapReduce process.  It outlines the three key steps: Map, Shuffle, and Reduce.  The slide explains how the Map step transforms data into key-value pairs, the Shuffle step groups these pairs by key, and the Reduce step processes the grouped data.  The slide also mentions the importance of idempotence in MapReduce for fault tolerance, meaning that multiple operations on the same input will produce the same output.  There are no figures on this slide.  The content is entirely text-based, focusing on the description of the MapReduce process.
+
+
+# Slide 15
+
+# MapReduce
+
+**Key:** Card number
+**Value:** Charge on card
+
+```
+Map
+Input
+```
+
+```
+Shuffle
+All instances of same
+key go to single
+machine
+```
+
+```
+Reduce
+Output
+```
+
+**Key:** Card number
+**Output:** Sum of charges
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, visually depicts the MapReduce process.  It's a diagram showing the flow of data through the different stages of MapReduce.
+
+* **Visual Elements:**
+    * **Boxes:**  Several gray rectangular boxes are arranged in a vertical column.  These boxes represent different processing units or machines.  The boxes are labeled "Map," "Shuffle," and "Reduce."  The boxes are connected by arrows, indicating the flow of data.
+    * **Arrows:**  Numerous arrows connect the boxes.  These arrows represent the movement of data between the different stages.  Some arrows are thicker than others, suggesting a higher volume of data transfer.  The arrows connecting the "Map" boxes to the "Shuffle" box are particularly numerous, indicating the distribution of data based on keys.  The arrows connecting the "Shuffle" box to the "Reduce" box are also numerous, but they are grouped by key, indicating that data with the same key is sent to the same "Reduce" box.
+    * **Input/Output:**  The topmost box is labeled "Input," and the bottommost box is labeled "Output."  These boxes represent the source and destination of the data.
+    * **Key-Value Pairs:**  Text labels ("Key: Card number," "Value: Charge on card," "Key: Card number," "Output: Sum of charges") are placed next to the boxes and arrows to indicate the type of data being processed at each stage.  These labels are in a reddish-brown color.
+    * **Shuffle Stage:** The "Shuffle" stage is highlighted as a crucial step in the process, where data with the same key is grouped together.  The numerous arrows connecting the "Map" boxes to the "Reduce" boxes, which are grouped by key, visually represent this grouping.
+
+* **Purpose:** The diagram visually illustrates the key steps of the MapReduce process, showing how data is mapped, shuffled, and reduced.  The diagram is designed to help students understand the flow of data and the grouping of data by key in the MapReduce framework.  The labels clearly indicate the type of data being processed at each stage, making the diagram easy to understand.
+
+
+# Slide 16
+
+# Example: How to count words in a textfile
+
+the wheels on the bus
+go round and round
+round and round
+round and round
+the wheels on the bus
+go round and round
+all through the town
+
+mapper() Key: ?
+Value: ?
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, presents an example of using MapReduce to count words in a text file.  It shows a short text snippet and then asks for the key and value that would be used in the mapper function.
+
+* **Content:** The slide displays a short text snippet, likely a sample text file.  The text is a simple children's rhyme about the wheels on a bus.  Below the text, the slide shows the function `mapper()`, with placeholders for the key and value.  This indicates that the mapper function needs to be defined to extract the words from the text and assign them to a key and a value.
+
+* **Purpose:** The slide is an example to illustrate how MapReduce can be used for tasks like word counting.  It's designed to show the input data and the expected output format (key-value pairs) in the context of the MapReduce model.  The placeholders for the key and value emphasize the need to define these elements within the mapper function.
+
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the example text and the mapper function's placeholders.  The text is formatted to clearly show the input text and the mapper function's expected input parameters.
+
+
+# Slide 17
+
+# Example: How to count words in a textfile
+
+the wheels on the bus
+go round and round
+round and round
+round and round
+the wheels on the bus
+go round and round
+all through the town
+
+mapper()
+[(the, 1), (wheels, 1), (on, 1), (the, 1), (bus, 1)]
+[(go, 1), (round, 1), (and, 1), (round, 1)]
+[(round, 1), (and, 1), (round, 1)]
+[(round, 1), (and, 1), (round, 1)]
+[(the, 1), (wheels, 1), (on, 1), (the, 1), (bus, 1)]
+[(go, 1), (round, 1), (and, 1), (round, 1)]
+[(all, 1), (through, 1), (the, 1), (town, 1)]
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, provides an example of how MapReduce can be used to count words in a text file.  It shows a short text snippet (a children's rhyme) and then displays the output of a mapper function applied to that text.
+
+* **Content:** The slide presents a simple text file containing a children's rhyme.  Below the text, the slide shows the output of a mapper function.  This output is a list of key-value pairs.  Each pair consists of a word (the key) and a count of 1 (the value).  This output demonstrates how the mapper function would process the input text, extracting each word and assigning a count of 1 to it.  The output is formatted as a list of lists, where each inner list represents a key-value pair.
+
+* **Purpose:** The slide is an example to illustrate the MapReduce process in the context of word counting.  It shows how the mapper function transforms the input text into key-value pairs, which are then processed by the reducer function to produce the final word counts.
+
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the example text and the mapper function's output.  The output is formatted to clearly show the key-value pairs generated by the mapper function.  The example is designed to be simple and easy to understand, illustrating the basic concept of MapReduce.
+
+
+# Slide 18
+
+# Example: How to count words in a textfile
+
+```
+lines = ["the wheels on the bus",
+         "go round and round",
+         "round and round",
+         "round and round",
+         "the wheels on the bus",
+         "go round and round",
+         "all through the town"]
+def mapper_word(line):
+    return [(word, 1) for word in line.split(" ")]
+mapper_word(lines[0])
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+map(mapper_word,lines)  # apply to all lines
+```
+
+---
+
+**Description of the slide:**
+
+This slide provides Python code demonstrating a MapReduce-like word-counting operation.
+
+* **Code:** The slide presents a Python code snippet.  It defines a list of strings (`lines`) containing a simple text.  A function `mapper_word` is defined to take a line of text and return a list of tuples. Each tuple contains a word (string) and the integer 1.  The `mapper_word` function splits each line into words using spaces as delimiters.  The code then applies the `mapper_word` function to the first element of the `lines` list, demonstrating the output of the mapper function for a single line. Finally, the code shows how to apply the `mapper_word` function to the entire `lines` list using the `map` function.
+
+* **Purpose:** The slide illustrates how a mapper function in a MapReduce framework would process a line of text, extracting words and assigning a count of 1 to each.  The example is designed to be simple and easy to understand, showing the basic concept of transforming input text into key-value pairs.
+
+
+
+
+# Slide 19
+
+# Example: How to count words in a textfile
+
+```
+the wheels on the bus
+go round and round
+round and round
+round and round
+the wheels on the bus
+go round and round
+all through the town
+```
+
+```
+mapper()
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('all', 1), ('through', 1), ('the', 1), ('town', 1)]
+```
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, continues the example of using MapReduce to count words in a text file.  It shows the input text (a children's rhyme) and the output of the mapper function.
+
+* **Content:** The slide displays a short text snippet, a children's rhyme about the wheels on a bus.  Below the text, the slide shows the output of a mapper function applied to that text.  This output is a list of key-value pairs, where each pair consists of a word (the key) and a count of 1 (the value).  This output demonstrates how the mapper function would process the input text, extracting each word and assigning a count of 1 to it.  The output is formatted as a list of lists, where each inner list represents a key-value pair.
+
+* **Purpose:** The slide continues the example from the previous slide, illustrating the mapper function's output in more detail.  It shows how the mapper function transforms the input text into key-value pairs, which are then processed by the reducer function to produce the final word counts.
+
+* **Visuals:** There are no figures or images on this slide.  The content is entirely text-based, focusing on the example text and the mapper function's output.  The output is formatted to clearly show the key-value pairs generated by the mapper function.  The example is designed to be simple and easy to understand, illustrating the basic concept of MapReduce.  The output is a list of lists, where each inner list represents the output of the mapper function for a single line of the input text.
+
+
+# Slide 20
+
+```
+Mapreduce in python
+def mapreduce_execute(data, mapper, reducer):
+# apply mapper function to data
+values = map(mapper, data)
+=
+# group by key values
+groups = {}
+for items in values:
+for k,v in items:
+if k not in groups:
+groups[k] = [v]
+else:
+groups[k].append(v)
+# now what?
+```
+
+---
+
+**Description of the slide:**
+
+This slide presents Python code for a MapReduce-like function, `mapreduce_execute`.  It takes three arguments: `data` (the input data), `mapper` (a function to map input data to key-value pairs), and `reducer` (a function to reduce the grouped data).
+
+* **Function Definition:** The code defines a function named `mapreduce_execute`.  This function appears to be designed to implement a simplified MapReduce algorithm in Python.
+* **Mapper Application:** The line `values = map(mapper, data)` applies the `mapper` function to each element in the `data` input.  This is the "map" phase of MapReduce, transforming the input data into key-value pairs.
+* **Grouping by Key:** The code initializes an empty dictionary `groups`.  The `for` loops iterate through the `values` (the output of the `map` phase).  For each key-value pair (`k, v`), it checks if the key `k` already exists as a key in the `groups` dictionary.  If not, it creates a new entry in `groups` with `k` as the key and a list containing `v` as the value.  If the key already exists, it appends the value `v` to the existing list associated with that key. This is the "shuffle" and partial "reduce" phase, grouping values by key.
+* **Placeholder:** The line `# now what?` indicates that the function is incomplete.  It suggests that the next step would be to apply a `reducer` function to the `groups` dictionary to perform the final reduction step.
+
+**Overall:** The slide shows a Python implementation of the MapReduce paradigm, focusing on the grouping of data by key.  The code is designed to be a simplified version of a full MapReduce implementation, highlighting the core logic of the process.
+
+
+# Slide 21
+
+# Example: How to count words in a textfile
+
+```
+the wheels on the bus
+go round and round
+round and round
+round and round
+the wheels on the bus
+go round and round
+all through the town
+```
+
+```
+mapper()
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('all', 1), ('through', 1), ('the', 1), ('town', 1)]
+```
+
+```
+group by key
+(and, [1, 1, 1, 1])
+(on, [1, 1])
+(all, [1])
+(bus, [1, 1])
+(town, [1])
+(round, [1, 1, 1, 1, 1, 1, 1, 1])
+(through, [1])
+(go, [1, 1])
+(the, [1, 1, 1, 1, 1])
+(wheels, [1, 1])
+```
+
+```
+reducer()
+Key: ?
+Output: ?
+```
+
+---
+
+**Description of the slide:**
+
+This slide continues the example of using MapReduce to count words in a text file.  It shows the input text (a children's rhyme), the output of the mapper function (a list of key-value pairs), and the intermediate step of grouping those pairs by key.  The output of the mapper function is a list of lists, where each inner list represents the words and their counts from a single line of the input text.  The next step, "group by key," shows the intermediate result of grouping these words together.  The final part of the slide shows the `reducer()` function, which is not yet implemented, and asks for the key and output.
+
+**Visuals:**
+
+The slide uses a clear layout to present the example.  The input text is presented first, followed by the mapper output, and then the grouping by key.  The formatting of the key-value pairs (e.g., `(and, [1, 1, 1, 1])`) clearly shows the grouping of values associated with each unique key.  The final section, `reducer()`, is a placeholder, indicating that the next step in the MapReduce process is to combine the grouped values.  The question marks for "Key: ?" and "Output: ?" emphasize that the reducer function is not yet defined, and the final output is not yet known.  The overall structure of the slide is designed to illustrate the intermediate steps of the MapReduce process, specifically the grouping of data by key.
+
+
+# Slide 22
+
+```
+Mapreduce in python
+def reducer_sum(key, val):
+  return (key, sum(val))
+testkey = 'round'
+testvals = [1, 1, 1, 1, 1, 1, 1, 1]
+reducer_sum(testkey, testvals)
+('round', 8)
+```
+
+**Description:**
+
+This slide presents Python code demonstrating a reducer function within a MapReduce framework.  The code defines a function `reducer_sum` that takes a key and a list of values.  The function calculates the sum of the values and returns a tuple containing the key and the sum.  The example then shows how to call the `reducer_sum` function with a sample key ('round') and a list of values ([1, 1, 1, 1, 1, 1, 1, 1]). The output of the function call is the tuple ('round', 8).  This demonstrates how the reducer function aggregates values associated with a specific key.  The code is in the context of a larger MapReduce example, where the `mapper` function would have previously produced the key-value pairs, and the `reducer` function would then combine them.  The code is presented in a way that is easy to understand and follow, highlighting the core logic of the reducer function.
+
+
+
+
+# Slide 23
+
+Example: How to count words in a textfile
+
+```
+the wheels on the bus
+go round and round
+round and round
+round and round
+the wheels on the bus
+go round and round
+all through the town
+```
+
+```
+mapper()
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('round', 1), ('and', 1), ('round', 1)]
+[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]
+[('go', 1), ('round', 1), ('and', 1), ('round', 1)]
+[('all', 1), ('through', 1), ('the', 1), ('town', 1)]
+```
+
+```
+group by key
+(and, [1, 1, 1, 1])
+(on, [1, 1])
+(all, [1])
+(bus, [1, 1])
+(town, [1])
+(round, [1, 1, 1, 1, 1, 1, 1, 1])
+(through, [1])
+(go, [1, 1])
+(the, [1, 1, 1, 1, 1])
+(wheels, [1, 1])
+```
+
+```
+reducer()
+Key: ?
+Output: ?
+```
+
+---
+
+**Description of the slide:**
+
+This slide continues the example of using MapReduce to count words in a text file.  It visually represents the process, showing the input text, the output of the mapper function, and the intermediate step of grouping the key-value pairs.
+
+* **Input Text:** The slide displays a short text snippet, a children's rhyme, which is the input data for the MapReduce process.
+* **Mapper Output:** Below the input text, the slide shows the output of the mapper function.  This output is a list of lists, where each inner list represents the words and their counts from a single line of the input text.  For example, `[('the', 1), ('wheels', 1), ('on', 1), ('the', 1), ('bus', 1)]` shows the words and their counts from the first line of the input.
+* **Grouping by Key:** The slide then shows the result of grouping the key-value pairs from the mapper output.  This is the "shuffle" phase of MapReduce, where all values associated with the same key are grouped together.  For example, `(and, [1, 1, 1, 1])` shows that the word "and" appears four times in the input text.
+* **Reducer Placeholder:** The final part of the slide shows the `reducer()` function, which is not yet implemented, and asks for the key and output.  This indicates that the next step in the MapReduce process is to combine the grouped values to produce the final word counts.
+
+**Visual Representation:**
+
+The slide uses a diagram to visually represent the flow of data through the MapReduce process.  The diagram shows the input text, the mapper output, the grouping by key, and the reducer function.  The arrows and boxes visually represent the different stages of the process and the flow of data between them.  The diagram is designed to help students understand the intermediate steps of the MapReduce process, specifically the grouping of data by key.
+
+
+
+
+# Slide 24
+
+```python
+def mapreduce_execute(data, mapper, reducer):
+    values = map(mapper, data)
+    groups = {}
+    for items in values:
+        for k, v in items:
+            if k not in groups:
+                groups[k] = [v]
+            else:
+                groups[k].append(v)
+    output = [reducer(k, v) for k, v in groups.items()]
+    return output
+# putting it all together
+mapreduce_execute(lines, mapper_word, reducer_sum)
+```
+
+```
+[('the', 5), ('wheels', 2), ('on', 2), ('bus', 2), ('go', 2), ('round', 8), ('and', 4), ('all', 1), ('through', 1), ('town', 1)]
+```
+
+---
+
+**Description of the slide:**
+
+This slide presents Python code implementing a `mapreduce_execute` function, which performs a MapReduce-like operation.  The code takes input data, a mapper function, and a reducer function.  It applies the mapper to the input data, groups the results by key, and then applies the reducer to each group.  The final output is a list of key-value pairs, representing the result of the MapReduce operation.
+
+* **Function Definition:** The code defines a function `mapreduce_execute` that takes three arguments: `data` (the input data), `mapper` (a function to map input data to key-value pairs), and `reducer` (a function to reduce the grouped data).
+* **Mapper Application:** The line `values = map(mapper, data)` applies the `mapper` function to each element in the `data` input.  This is the "map" phase of MapReduce, transforming the input data into key-value pairs.
+* **Grouping by Key:** The code initializes an empty dictionary `groups`.  The nested `for` loops iterate through the `values` (the output of the `map` phase).  For each key-value pair (`k, v`), it checks if the key `k` already exists as a key in the `groups` dictionary.  If not, it creates a new entry in `groups` with `k` as the key and a list containing `v` as the value.  If the key already exists, it appends the value `v` to the existing list associated with that key. This is the "shuffle" and partial "reduce" phase, grouping values by key.
+* **Reducer Application:** The line `output = [reducer(k, v) for k, v in groups.items()]` applies the `reducer` function to each key-value pair in the `groups` dictionary.  This is the "reduce" phase, combining the grouped values.
+* **Return Value:** The function returns the `output`, which is a list of key-value pairs representing the final result of the MapReduce operation.
+* **Example Usage:** The commented-out line `mapreduce_execute(lines, mapper_word, reducer_sum)` shows how to use the `mapreduce_execute` function with the `lines`, `mapper_word`, and `reducer_sum` functions (which are assumed to be defined elsewhere).  The output of this function is a list of tuples, where each tuple represents a word and its count.
+
+**Overall:** The slide shows a complete Python implementation of the MapReduce paradigm, including the map, shuffle, and reduce steps.  The code is designed to be a functional implementation of the MapReduce algorithm, highlighting the core logic of the process.  The example usage demonstrates how to use the function with sample data.
+
+
+
+
+# Slide 25
+
+More on MapReduce
+
+
+---
+
+**Description of the slide:**
+
+This slide is a single heading, likely a title slide for a section of the Intro to Data Science lecture.  It's a plain gray background with the single, bold title "More on MapReduce" centered on the slide.  The text is a dark gray, contrasting well with the background.  The lack of any other content suggests this is a slide to introduce the topic of MapReduce in more detail in the context of the course.
+
+
+
+
+# Slide 26
+
+Distributed Computing: Background
+Distributed computing rose to prominence in the 70s/80s, often built around 
+“supercomputing,” for scientific computing applications 
+In mid-90s, researchers built a common interface for distributed computing called the 
+message passing interface (MPI) 
+MPI provides a set of tools to run multiple processes (on a single machine or across many 
+machines), allows communication, sending data, and synchronizing execution 
+Still used in scientific computing applications and high performance computing (HPC)
+
+
+---
+
+**Description of the slide:**
+
+This slide provides a brief overview of the background of distributed computing, specifically highlighting the Message Passing Interface (MPI).
+
+* **Historical Context:** The slide notes that distributed computing gained importance in the 1970s and 1980s, often associated with "supercomputing" for scientific applications.
+* **Message Passing Interface (MPI):**  The slide mentions that in the mid-1990s, a common interface called MPI was developed for distributed computing.
+* **Functionality:** MPI provides tools for running multiple processes, enabling communication and synchronization between these processes, even across multiple machines.  This is crucial for distributing tasks and coordinating the flow of data in a distributed system.
+* **Applications:** The slide emphasizes that MPI is still used in scientific computing and high-performance computing (HPC) applications.
+
+
+
+
+# Slide 27
+
+MPI weaknesses
+MPI is extremely powerful but has some notable limitations
+* It's complicated: programs need to explicitly manage data, synchronize threads, etc
+* It's brittle: if machines die suddenly, can be difficult to recover (unless explicitly handled by the program, making them more complicated)
+
+
+**Description of the slide:**
+
+This slide, part of a lecture on Intro to Data Science, discusses the limitations of the Message Passing Interface (MPI).  It highlights two key weaknesses: complexity and brittleness.
+
+* **Complexity:** The first point states that MPI programs are complex because they require explicit management of data and synchronization of threads.  This contrasts with higher-level abstractions like MapReduce, which handle these details automatically.
+* **Brittleness:** The second point emphasizes that MPI programs are brittle.  If a machine in the distributed system fails unexpectedly, recovering from the failure can be difficult without explicit handling within the program.  This is in contrast to MapReduce, which often has built-in fault tolerance mechanisms.
+
+**Overall:** The slide is designed to contrast the power of MPI with its inherent complexities and potential for failure in a distributed environment.  It sets the stage for discussing alternative, potentially simpler, distributed computing paradigms.
+
+
+# Slide 28
+
+When is distributed processing needed?
+
+
+---
+
+**Description of the slide:**
+
+This slide, likely part of a lecture on Intro to Data Science, presents a table comparing the performance of different distributed computing systems (e.g., GraphChi, Stratosphere, X-Stream, Spark, Giraph, GraphLab, GraphX) with single-threaded implementations.  The table shows the elapsed times for processing two datasets (Twitter and uk-2007-05) using various numbers of cores.
+
+* **Table Structure:** The table is organized with columns for "scalable system," "cores," "twitter," and "uk-2007-05."  The "scalable system" column lists different distributed computing frameworks.  The "cores" column indicates the number of processing cores used.  The "twitter" and "uk-2007-05" columns show the elapsed times (in seconds or milliseconds) for processing the respective datasets.
+* **Data Representation:** The table provides numerical data, showing how the elapsed time changes with the number of cores used in each system.  The values in the table represent the time taken to complete a specific task (likely a graph processing or similar operation) on the respective datasets.
+* **Purpose:** The table is designed to illustrate when distributed processing becomes necessary.  The comparison between single-threaded and multi-core/distributed systems shows the performance gains (or lack thereof) that can be achieved by distributing the workload.  The different elapsed times for different systems and core counts highlight the varying efficiencies of different distributed computing frameworks.  The data suggests that for very large datasets or complex computations, distributed processing is often necessary to achieve reasonable performance.
+
+
+**Visual Representation:**
+
+The slide contains a table with rows representing different distributed computing systems (e.g., GraphChi, Stratosphere) and columns representing the number of cores used and the corresponding processing times for two datasets (Twitter and uk-2007-05).  The table is formatted to clearly show the relationship between the number of cores, the system used, and the processing time.  The table is designed to be easily readable and to quickly convey the performance characteristics of the different systems.  The table is a key visual element, providing quantitative data to support the discussion of when distributed processing is necessary.
+
+
+
+
+# Slide 29
+
+What is MapReduce used for?
+
+**Google:**
+* Index building for Google Search
+* Article clustering for Google News
+* Statistical machine translation
+
+**Facebook:**
+* Data mining
+* Ad optimization
+* Spam detection
+
+**Yahoo!:**
+* Index building for Yahoo! Search
+* Spam detection for Yahoo! Mail
+
+**Research:**
+* Analyzing Wikipedia conflicts (PARC)
+* Natural language processing (CMU)
+* Climate simulation (Washington)
+* Bioinformatics (Maryland)
+* Particle physics (Nebraska)
+
+
+---
+
+**Description of the slide:**
+
+This slide lists various applications of the MapReduce programming model.  It's a bulleted list, organized by organization (Google, Facebook, Yahoo!, and Research).  Each organization is associated with a list of tasks for which MapReduce is used.
+
+* **Visual Elements:** The slide uses a simple bulleted list format, with no images or figures.  The text is organized to clearly show the different organizations and the specific tasks they use MapReduce for.
+
+* **Purpose:** The slide is designed to illustrate the broad range of applications for MapReduce.  It demonstrates that MapReduce is not limited to a single domain or task but is applicable to diverse problems in various industries and research areas.  The list of applications provides concrete examples of how MapReduce is used in practice.
+
+
+
+
+# Slide 30
+
+**MapReduce Goals**
+
+**Scalability to large data volumes:**
+
+* Scan 100 TB on 1 node @ 50 MB/s = 24 days
+* Scan on 1000-node cluster = 35 minutes
+
+**Cost-efficiency:**
+
+* Commodity nodes (cheap, but unreliable)
+* Commodity network (low bandwidth)
+* Automatic fault-tolerance (fewer admins)
+* Easy to use (fewer programmers)
+
+
+---
+
+**Description of the slide:**
+
+This slide lists the goals of the MapReduce framework.  It highlights the benefits of MapReduce in terms of scalability and cost-efficiency.
+
+* **Scalability:** The slide emphasizes MapReduce's ability to handle massive datasets.  The example of scanning 100 TB of data, taking 24 days on a single node but only 35 minutes on a 1000-node cluster, demonstrates the significant performance improvement achieved through distribution.
+* **Cost-efficiency:** The slide points out that MapReduce leverages commodity hardware (cheap but potentially unreliable nodes) and networks (low bandwidth).  This cost-effectiveness is further enhanced by automatic fault tolerance, reducing the need for extensive administration.  The ease of use, requiring fewer programmers, also contributes to the overall cost-effectiveness.
+
+**Visual Representation:**
+
+The slide uses a simple bulleted list format, making the information easy to read and understand.  The text is clear and concise, highlighting the key benefits of MapReduce.  The numerical examples (24 days vs. 35 minutes) are used to quantify the scalability advantage of MapReduce.  The slide is designed to present the key advantages of MapReduce in a straightforward manner.
+
+
+
+
+# Slide 31
+
+**Python: Map and Reduce Functions**
+
+We can get some intuition on MapReduce by examining the map and reduce functions in Python (note: MapReduce ≠ map + reduce)
+
+The map method takes a function and a list (iterable) and applies the function to each element:
+map(f, [a, b, c, ...]) -> [f(a), f(b), f(c), ...]
+
+The reduce method takes a function and a list (iterable) and iteratively applies the function to two elements (next item in the list and result of previous function)
+reduce(g, [a, b, c, ...]) -> g(g(g(a,b),c), ...)
+
+
+---
+
+**Description of the slide:**
+
+This slide introduces the concepts of the `map` and `reduce` functions in Python, which are used to illustrate the core ideas behind the MapReduce programming model.
+
+* **Title:** The title clearly states the topic of the slide: Python Map and Reduce Functions.
+* **Introduction:** The first line explains that the slide aims to provide intuition about MapReduce by comparing it to Python's built-in `map` and `reduce` functions.  The note "MapReduce ≠ map + reduce" is important because it highlights that while conceptually similar, MapReduce is a more complex and distributed system.
+* **Map Function:** The slide defines the `map` function.  It takes a function (`f`) and an iterable (like a list) as input.  The `map` function applies the function `f` to each element of the iterable and returns a new iterable containing the results.
+* **Reduce Function:** The slide defines the `reduce` function.  It takes a function (`g`) and an iterable as input.  The `reduce` function iteratively applies the function `g` to the first two elements of the iterable, then to the result and the next element, and so on, until a single result is obtained.
+
+**Overall:** The slide provides a conceptual introduction to the `map` and `reduce` functions in Python, which are fundamental to understanding the MapReduce paradigm.  The note about MapReduce not being simply `map` plus `reduce` is crucial for understanding the distributed nature of the MapReduce framework.
+
+
+# Slide 32
+
+```python
+import functors
+data = [1, 2, 3, 4]
+values = list(map(lambda x: x*x, data))  # map() returns an iterator
+# values = [1, 4, 9, 16]
+output = functools.reduce(lambda x,y: x+y, values)
+# output = 30
+```
+
+**Description:**
+
+This slide presents Python code demonstrating a simple example of applying the `map` and `reduce` functions.  The code calculates the sum of squares of a list of numbers.
+
+* **Import Statement:** `import functors` imports the `functors` module, which is used for functional programming in Python.  Note that `functors` is not a standard Python module, and its use in this context might be specific to the course's examples or a custom library.
+* **Data Initialization:** `data = [1, 2, 3, 4]` initializes a list named `data` containing the numbers 1 through 4.
+* **Map Operation:** `values = list(map(lambda x: x*x, data))` applies a lambda function to each element in the `data` list. The lambda function `lambda x: x*x` squares each element. The `list()` function converts the iterator returned by `map` into a list.
+* **Reduce Operation:** `output = functools.reduce(lambda x,y: x+y, values)` applies a lambda function to the `values` list using the `functools.reduce` function. The lambda function `lambda x,y: x+y` adds two elements together.  This effectively sums up all the squared values.
+* **Output:** `# output = 30` shows the result of the calculation, which is 30.
+
+**Overall:** The slide demonstrates a simple application of `map` and `reduce` functions in Python, illustrating how they can be used to transform and aggregate data.  The example is designed to be straightforward and easy to understand, showing the basic concepts of these functions in the context of the MapReduce paradigm.  The use of `functools.reduce` is a more robust way to perform the reduction compared to a simple loop.
+
+
+# Slide 33
+
+```python
+import functools
+data = [1, 2, 3, 4]
+values = list(map(lambda x: x*x, data))  # map() returns an iterator
+# values = [1, 4, 9, 16]
+output = functools.reduce(lambda x,y: x+y, values)
+# output = 30
+```
+
+**Description:**
+
+This slide presents Python code demonstrating the `map` and `reduce` functions in the context of a MapReduce-like operation.  The code calculates the sum of squares of a list of numbers.
+
+* **Import Statement:** `import functools` imports the `functools` module, which provides the `reduce` function.
+* **Data Initialization:** `data = [1, 2, 3, 4]` initializes a list named `data` containing the numbers 1 through 4.
+* **Map Operation:** `values = list(map(lambda x: x*x, data))` applies a lambda function to each element in the `data` list. The lambda function `lambda x: x*x` squares each element.  Crucially, `list()` is used to convert the iterator returned by `map` into a list, which is necessary for the subsequent `reduce` operation.
+* **Reduce Operation:** `output = functools.reduce(lambda x,y: x+y, values)` applies a lambda function to the `values` list using the `functools.reduce` function. The lambda function `lambda x,y: x+y` adds two elements together.  This effectively sums up all the squared values.
+* **Output:** `# output = 30` shows the result of the calculation, which is 30.
+
+**Overall:** The slide demonstrates a simple application of `map` and `reduce` functions in Python, illustrating how they can be used to transform and aggregate data.  The example is designed to be straightforward and easy to understand, showing the basic concepts of these functions in the context of the MapReduce paradigm.  The use of `functools.reduce` is a more robust way to perform the reduction compared to a simple loop.  The slide's focus is on the Python implementation details, not the distributed aspects of MapReduce.
+
+
+# Slide 34
+
+From Python map+reduce to MapReduce
+You can think of MapReduce as map + reduce "by key"
+The mapper function doesn't just return a single value, but a list of key-value pairs possibly including multiple instances of the same key with different values.
+Before calling the reducer, the execution engine groups all results by key
+
+
+---
+
+**Description:**
+
+This slide explains the relationship between Python's `map` and `reduce` functions and the MapReduce programming model.
+
+* **Conceptual Relationship:** The slide states that MapReduce can be understood as an extension of the `map` and `reduce` functions, but with a crucial difference:  MapReduce operates "by key."  This means the mapper function produces key-value pairs, and the reducer function operates on groups of values associated with the same key.
+* **Mapper Function Behavior:** The slide emphasizes that the mapper function in MapReduce doesn't just return a single value for each input element. Instead, it returns a list of key-value pairs.  This is a key distinction from the simple `map` function in Python, which applies a function to each element and returns a new list of the same length.  The mapper function in MapReduce can produce multiple key-value pairs for a single input, and these pairs might have the same key but different values.
+* **Grouping by Key:** The slide highlights that before the reducer function is called, the execution engine groups all the results by key.  This grouping is essential for the reducer function to operate on related data.
+
+**Overall:** The slide provides a conceptual bridge between the familiar Python `map` and `reduce` functions and the more complex MapReduce model.  It emphasizes the key difference in how the mapper function behaves in MapReduce, producing key-value pairs, and the crucial grouping step performed by the execution engine before the reducer function is applied.
+
+
+# Slide 35
+
+**map+reduce vs. MapReduce**
+
+```
+map + reduce
+mapper()
+Item 1
+Item 2
+Value 1
+Value 2
+reducer()
+Output
+```
+
+```
+MapReduce
+mapper()
+Item 1
+Item 2
+Key
+Key
+Value 1
+Value 2
+Group by key
+reducer()
+Key
+Value 1
+Value 4
+Key
+Value 2
+Value 3
+Key
+Value 3
+Key
+Value 4
+Output
+```
+
+---
+
+**Description:**
+
+This slide visually compares the `map + reduce` approach with the MapReduce approach.  It uses diagrams to illustrate the differences in data flow and processing.
+
+* **map + reduce Diagram:** This diagram shows a simple, sequential flow.  "Item 1" and "Item 2" are input elements.  The `mapper()` function processes each item, producing "Value 1" and "Value 2" respectively.  These values are then passed to the `reducer()` function, which combines them to produce the "Output."  The arrows show the unidirectional flow of data.
+
+* **MapReduce Diagram:** This diagram shows a more complex, distributed flow.  "Item 1" and "Item 2" are input elements.  The `mapper()` function processes each item, producing key-value pairs.  The "Group by key" step is crucial; it shows that the output of the mapper is grouped by the key.  The grouped data is then passed to the `reducer()` function, which processes each group of values associated with a key to produce the final "Output."  The arrows and the grouping by key visually represent the distributed nature of the MapReduce process.
+
+* **Purpose:** The slide is designed to highlight the key difference between the simple `map + reduce` approach and the more sophisticated MapReduce approach.  The visual representation emphasizes the grouping by key in MapReduce, which is a fundamental aspect of its distributed processing capabilities.  The diagrams are meant to illustrate the sequential nature of `map + reduce` versus the distributed, grouped nature of MapReduce.
+
+
+
+
+# Slide 36
+
+**Abstracting map+reduce**
+
+To use this framework, the programmer only needs to implement the mapper and the 
+reducer function—the execution engine can use whatever method it wants to actually 
+compute the result 
+The application of the mapper functions is inherently parallel and can be carried out in 
+separate threads/machines 
+In many cases, the reduce step can also be carried out incrementally
+
+
+**Description:**
+
+This slide discusses the abstraction level of the MapReduce framework.  It emphasizes that the programmer only needs to define the `mapper` and `reducer` functions.  The framework's execution engine handles the details of distributing the work and combining the results.  The slide also highlights the inherent parallelism of the mapper functions and the potential for incremental reduction in the reducer function.  The slide is entirely text-based, with no figures or images.  The content is focused on the conceptual description of the MapReduce abstraction, emphasizing the programmer's role and the framework's role in handling the distributed computation.
+
+
+# Slide 37
+
+**Other MapReduce Examples**
+
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture on Intro to Data Science, is a title slide for a section on additional examples of MapReduce applications.  It's a plain gray background with the single, bold title "Other MapReduce Examples" centered on the slide.  The text is a dark gray, contrasting well with the background.  The lack of any other content suggests this is a slide to introduce the topic of additional MapReduce examples in the context of the course.  The slide is likely a transition to a new section of the lecture, where more specific examples of MapReduce applications will be discussed.
+
+
+# Slide 38
+
+**Search in MapReduce**
+
+**Input:** (lineNumber, line) records
+
+**Output:** lines matching a given pattern
+
+**Map:**
+
+if (line matches pattern):
+  output(line)
+
+**Reduce:** identity function
+
+**Alternative:** no reducer (map-only job)
+
+
+**Description:**
+
+This slide describes a MapReduce application for searching for lines in a dataset that match a specific pattern.  The input is a set of records, each containing a line number and the line itself.  The output is intended to be the lines that match a predefined pattern.  The `Map` function filters the input, emitting only the lines that match the pattern.  The `Reduce` function is an identity function, meaning it simply passes the output from the `Map` function through unchanged.  An alternative approach is a "map-only job," which skips the `Reduce` step entirely, making it suitable for scenarios where only the matching lines are needed and no further aggregation is required.  The slide is entirely text-based, focusing on the description of the MapReduce process for a search operation.
+
+
+# Slide 39
+
+**Inverted Index as MapReduce**
+
+**Input:** (filename, text) records
+
+**Output:** list of files containing each word
+
+**Map:**
+
+```
+foreach word in text.split():
+    output(word, filename)
+```
+
+**Combine:** output unique filenames for each word
+
+**Reduce:**
+
+```
+def reduce(word, filenames):
+    output(word, sort(filenames))
+```
+
+**Description:**
+
+This slide describes how to implement an inverted index using the MapReduce paradigm.  It outlines the input, output, map, combine, and reduce steps.
+
+* **Input:** The input data consists of records containing a filename and the text content of that file.
+* **Output:** The desired output is a list of files that contain each word.  This is an inverted index, where each word is associated with a list of files in which it appears.
+* **Map:** The `Map` function iterates through the words in the text of each file. For each word, it outputs a key-value pair: (word, filename).  This step essentially creates the initial key-value pairs for the MapReduce process.
+* **Combine:** The `Combine` step is a crucial optimization.  It's not explicitly part of the standard MapReduce model but is often used to reduce the amount of data shuffled between the mapper and reducer.  In this case, it would group the filenames associated with each word, eliminating duplicate filenames.
+* **Reduce:** The `Reduce` function takes a word and a list of filenames as input.  It outputs the word along with a sorted list of filenames.  This step aggregates the results from the `Map` and `Combine` steps, producing the final inverted index entry for each word.
+
+**Overall:** The slide provides a clear description of the MapReduce implementation for creating an inverted index.  The steps are well-defined, and the pseudocode for the `Map` and `Reduce` functions is provided, making it easy to understand the logic of the process.  The `Combine` step is mentioned as an optimization, but not fully detailed.
+
+
+# Slide 40
+
+**Matrix multiplication**
+
+How to compute matrix multiplication P = MN via mapreduce?
+
+```
+P[i, k] = Σ M[i, j] • N[j, k]
+j=1
+```
+
+**Matrices:**
+
+* **M:**  A matrix with dimensions i x j.  The slide shows a light teal-colored, rectangular block representing the matrix M.  It's depicted as a stack of horizontal rows, with each row representing a different value of 'i'.  The rows are shaded in a light teal color, with progressively lighter shades as you move down the matrix.  The rows are labeled with the index 'i' on the left side.  The columns are labeled with the index 'j' on the bottom.
+
+* **N:** A matrix with dimensions j x k.  The slide shows a pinkish-red rectangular block representing the matrix N.  It's depicted as a stack of vertical columns, with each column representing a different value of 'j'.  The columns are shaded in a pinkish-red color, with progressively lighter shades as you move across the matrix.  The columns are labeled with the index 'j' on the bottom.  The rows are labeled with the index 'k' on the right side.
+
+* **P:** A matrix with dimensions i x k.  The slide shows a matrix P, which is the result of multiplying M and N.  It's a square grid of cells, with the cells shaded in a variety of pinkish-red and light gray colors.  The cells are shaded in a way that suggests the values of the matrix.  The rows are labeled with the index 'i' on the left side.  The columns are labeled with the index 'k' on the right side.
+
+**Description:**
+
+This slide introduces the problem of matrix multiplication using the MapReduce paradigm.  It shows how to compute the product of two matrices (M and N) to produce a resulting matrix (P).  The slide visually represents the matrices M, N, and P, highlighting their dimensions (i x j, j x k, and i x k, respectively).  The equation `P[i, k] = Σ M[i, j] • N[j, k]` is shown, which defines the mathematical operation for calculating an element in the resulting matrix P.  The visual representation of the matrices is crucial for understanding the dimensions and the relationship between the elements of the matrices involved in the matrix multiplication.  The slide is designed to introduce the problem and the mathematical formula for matrix multiplication, preparing the audience for the MapReduce implementation of this operation.
+
+
+
+
+# Slide 41
+
+**Matrix multiplication**
+
+First issue: How to represent data in matrices M and N?
+
+```
+M
+j
+```
+
+```
+10.0  0  9.0  9.0  0  0  0  ...
+1.0  3.0 18.0 25.3 0  0  0  ...
+...  ...  ...  ...  ...  ...  ...  ...
+i
+j
+```
+
+```
+N
+k
+```
+
+```
+N,0,0,1.0
+N,0,2,3.0
+N,0,4,2.0
+N,1,0,2.0
+N,3,2,-1.0
+N,3,6,4.0
+N,4,6,5.0
+N,4,0,-1.0
+...
+j
+```
+
+```
+P
+k
+```
+
+```
+M,0,0,10.0
+M,0,2,9.0
+M,0,3,9.0
+M,1,0,1.0
+M,1,1,3.0
+M,1,2,18.0
+M,1,3,25.2
+...
+N,0,0,1.0
+N,0,2,3.0
+N,0,4,2.0
+N,1,0,2.0
+N,3,2,-1.0
+N,3,6,4.0
+N,4,6,5.0
+N,4,0,-1.0
+...
+i
+k
+```
+
+**Description:**
+
+This slide presents the problem of representing data in matrices M and N for matrix multiplication.  It shows three matrices: M, N, and P.  Each matrix is represented as a table with rows and columns.
+
+* **Matrix M:**  A matrix with dimensions i x j.  The slide shows a table with rows labeled 'i' and columns labeled 'j'.  The table cells contain numerical values, such as 10.0, 0, 9.0, 9.0, 0, 0, 0, and so on.  The ellipses (...) indicate that the matrix continues beyond the shown portion.  The values are likely numerical data points.
+
+* **Matrix N:** A matrix with dimensions j x k.  The slide shows a table with rows labeled 'j' and columns labeled 'k'.  The table cells contain numerical values, such as N,0,0,1.0, N,0,2,3.0, and so on.  The ellipses (...) indicate that the matrix continues beyond the shown portion.  The values are likely numerical data points.
+
+* **Matrix P:** A matrix with dimensions i x k.  The slide shows a table with rows labeled 'i' and columns labeled 'k'.  The table cells are empty, indicating that the values of the matrix P are not yet defined.  The ellipses (...) indicate that the matrix continues beyond the shown portion.
+
+* **Equation:** The equation `P[i, k] = Σ M[i, j] • N[j, k]` is shown, defining the mathematical operation for calculating an element in the resulting matrix P.
+
+**Overall:** The slide introduces the problem of matrix multiplication in the context of MapReduce.  It focuses on the representation of data in matrices M and N, which are the input matrices for the multiplication.  The empty matrix P represents the output matrix, which will be calculated using the MapReduce algorithm.  The slide is designed to prepare the audience for the discussion of how to implement matrix multiplication using MapReduce.  The values in the matrices are likely data points, but the exact meaning of the data is not specified.
+
+
+
+
+# Slide 42
+
+**Matrix multiplication**
+
+Mapper: Key? Value?
+
+```
+M
+j
+```
+
+```
+10.0  0  9.0  9.0  0  0  0  ...
+1.0  3.0 18.0 25.3 0  0  0  ...
+...  ...  ...  ...  ...  ...  ...  ...
+i
+j
+```
+
+```
+N
+k
+```
+
+```
+N,0,0,1.0
+N,0,2,3.0
+N,0,4,2.0
+N,1,0,2.0
+N,3,2,-1.0
+N,3,6,4.0
+N,4,6,5.0
+N,4,0,-1.0
+...
+j
+```
+
+```
+P
+k
+```
+
+```
+M,0,0,10.0
+M,0,2,9.0
+M,0,3,9.0
+M,1,0,1.0
+M,1,1,3.0
+M,1,2,18.0
+M,1,3,25.2
+...
+N,0,0,1.0
+N,0,2,3.0
+N,0,4,2.0
+N,1,0,2.0
+N,3,2,-1.0
+N,3,6,4.0
+N,4,6,5.0
+N,4,0,-1.0
+...
+i
+k
+```
+
+**Data:**
+
+M,0,0,10.0
+
+**Output:**
+
+(0,0) (M,0,0,10.0)
+(0,1) (M,0,0,10.0)
+(0,2) (M,0,0,10.0)
+...
+
+**Data:**
+
+N,3,2,-1.0
+
+**Output:**
+
+(0,2) (N,3,2,-1.0)
+(1,2) (N,3,2,-1.0)
+(2,2) (N,3,2,-1.0)
+...
+
+
+---
+
+**Description:**
+
+This slide discusses matrix multiplication in the context of MapReduce.  It shows three matrices (M, N, and P) visually represented as tables.  The matrices are labeled with their dimensions (i x j, j x k, and i x k, respectively).  The slide also includes the mathematical formula for matrix multiplication: `P[i, k] = Σ M[i, j] • N[j, k]`.  Crucially, the slide presents example data and output formats, showing how elements from matrices M and N are paired and outputted as key-value pairs.  The example data and output demonstrate how the elements of the matrices are used as keys and values in the MapReduce process.  The slide is preparing the audience for the discussion of how to implement matrix multiplication using MapReduce.  The values in the matrices are likely data points, but the exact meaning of the data is not specified.  The visual representation of the matrices is crucial for understanding the dimensions and the relationship between the elements of the matrices involved in the matrix multiplication.
+
+
+
+
+# Slide 43
+
+**Matrix multiplication**
+
+Reduce: Key? Output?
+
+```
+P[i, k] = Σ M[i, j] • N[j, k]
+j=1
+```
+
+**Matrices:**
+
+* **M:**  A light teal-colored rectangular block, representing a matrix with dimensions i x j.  It's shown as a stack of horizontal rows, each row representing a different value of 'i'.  The rows are shaded in progressively lighter shades of teal as you move down the matrix.  The rows are labeled with the index 'i' on the left side.  The columns are labeled with the index 'j' on the bottom.
+
+* **N:** A pinkish-red rectangular block, representing a matrix with dimensions j x k.  It's shown as a stack of vertical columns, each column representing a different value of 'k'.  The columns are shaded in progressively lighter shades of pink as you move across the matrix.  The columns are labeled with the index 'k' on the right side.  The rows are labeled with the index 'j' on the bottom.
+
+* **P:** A grid of small squares, representing a matrix with dimensions i x k.  The grid is mostly light gray, with some cells shaded in a darker gray.  The rows are labeled with the index 'i' on the left side.  The columns are labeled with the index 'k' on the right side.  The grid is shown as the result of multiplying M and N.
+
+**Data:**
+
+* The slide shows arrows pointing to specific elements in matrices M and N.  These arrows are colored and labeled, indicating the specific elements being considered.  For example, an arrow points to the element (M, 0, 0, 10.0) in matrix M, and another arrow points to the element (N, 0, 2, 3.0) in matrix N.  These arrows are used to illustrate the data being used in the calculation.
+
+**Output:**
+
+* The slide shows the output of the reduction step, which is the calculation of P[0, 2].  The output is shown as a sum of products: `[10*3] + [9*-1] + ... = 21`.  The numbers in the output represent the result of multiplying corresponding elements from M and N and summing them up.
+
+**Description:**
+
+This slide continues the discussion of matrix multiplication in the context of MapReduce.  It visually represents the matrices M, N, and P, highlighting their dimensions and the relationship between their elements.  The slide shows example data from matrices M and N, and the output of the reduction step, which is the calculation of a specific element in the resulting matrix P.  The arrows and labels are used to illustrate the data being used in the calculation.  The slide is designed to illustrate the process of matrix multiplication and how it can be broken down into smaller, manageable parts for a distributed computing framework like MapReduce.  The example calculation of P[0, 2] is a specific instance of the general matrix multiplication formula.
+
+
+# Slide 44
+
+**Description:**
+
+This slide, likely part of a lecture on Intro to Data Science, is a title slide for a section on MapReduce at scale.  It's a plain gray background with the single, bold title "MapReduce at Scale" centered on the slide.  The text is a dark gray, contrasting well with the background.  The slide is likely a transition to a new section of the lecture, where the scalability aspects of the MapReduce framework will be discussed.  It suggests that the previous slides have covered the basic concepts of MapReduce, and this slide will delve into how MapReduce handles large-scale data processing.
+
+
+**Visual Representation:**
+
+The slide contains only text, with no figures or images.  The text is simple and straightforward, focusing on the title of the section.  The overall appearance is clean and uncluttered, making it suitable for a title slide.
+
+
+# Slide 45
+
+```
+hadoop components
+hadoop
+The goal of Hadoop is to use commonly available servers in a very large cluster, where each server has a set of inexpensive
+internal disk drives.
+Initially, Hadoop consisted of two main components: a Hadoop Distributed File System (HDFS) and a distributed computing
+engine that lets you implement and run programs as MapReduce jobs.
+Distributed file system (HDFS)
+• Data is divided into blocks, and copies of these blocks are stored on other servers in the Hadoop cluster. That is, an
+individual file is actually stored as smaller blocks that are replicated across multiple servers in the entire cluster.
+• Single namespace for entire cluster; Replicates data 3x for fault-tolerance
+MapReduce framework
+• For higher performance, MapReduce assigns workloads to those servers where the data is to be processed and stored.
+This is known as data locality.
+• Manages work distribution & fault-tolerance; Colocated with file system
+```
+
+**Description:**
+
+This slide describes the components of the Hadoop framework.  It's a bulleted list explaining the Hadoop Distributed File System (HDFS) and the MapReduce framework.
+
+* **Overall Goal:** The slide begins by stating that Hadoop uses a large cluster of inexpensive servers with local disk drives.
+* **HDFS (Hadoop Distributed File System):**  HDFS is described as a distributed file system.  Key aspects of HDFS are:
+    * **Data Division:** Data is divided into blocks, and copies of these blocks are stored on multiple servers within the Hadoop cluster.  This is a key aspect of fault tolerance.
+    * **Single Namespace:**  HDFS provides a single namespace for the entire cluster, making it easier to manage files across the distributed system.
+    * **Replication:** Data is replicated three times (3x) for fault tolerance.  This means that if one server fails, the data is still available on other servers.
+* **MapReduce Framework:** The MapReduce framework is described as a distributed computing engine.  Key aspects of the MapReduce framework are:
+    * **Data Locality:** MapReduce assigns workloads to servers where the data is located, improving performance.  This is called "data locality."
+    * **Work Distribution and Fault Tolerance:** MapReduce manages the distribution of work and provides fault tolerance, reducing the need for manual intervention.  It's colocated with the file system.
+
+The slide is formatted as a bulleted list, making the information easy to read and understand.  The overall purpose is to provide a high-level overview of the Hadoop framework's components and their roles in large-scale data processing.  The image of the yellow elephant logo is a visual representation of the Hadoop project.
+
+
+# Slide 46
+
+**Hadoop distributed file system**
+
+Files split into 128MB blocks
+Blocks replicated across datanodes (often 3)
+Namenode stores metadata
+(e.g. file names, locations, etc)
+Optimized for large files, sequential reads
+Files are append-only
+
+**Visual Representation:**
+
+The slide contains a diagram illustrating the Hadoop Distributed File System (HDFS).  A central box labeled "Namenode" is positioned at the top of the slide, slightly left of center.  From the Namenode, several dashed lines extend downward to five rectangular boxes labeled "Datanodes."  These Datanodes are arranged horizontally, slightly below and to the right of the Namenode.
+
+* **Namenode:** The Namenode box is a gray, rectangular server icon.  It represents the central server that manages the metadata of the file system.  The metadata includes file names, locations of data blocks, and other important information.
+
+* **Datanodes:** The Datanodes are also gray, rectangular server icons.  They represent the storage nodes in the Hadoop cluster.  Each Datanode is connected to the Namenode by a dashed line, indicating a communication link.  Each Datanode has a small, light green box inside it.  These boxes contain numbers (e.g., 1, 2, 3, 4).  These numbers likely represent the block numbers of the file that are stored on that particular Datanode.  The numbers are repeated across multiple Datanodes, indicating that the blocks of a file are replicated across multiple servers for fault tolerance.  A light gray cloud-like shape is above the Namenode, with the word "File1" and numbers (1, 2, 3, 4) inside.  This cloud represents the file being stored, and the numbers inside indicate the blocks of the file.
+
+* **Purpose:** The diagram visually represents the distributed nature of HDFS.  The Namenode acts as the central authority, while the Datanodes store the actual data.  The replication of data across multiple Datanodes is crucial for fault tolerance and high availability.  The numbers within the Datanodes and the cloud above the Namenode visually represent the file blocks and their replication.  The overall structure of the diagram is designed to illustrate the architecture of HDFS, showing the relationship between the Namenode and the Datanodes.
+
+
+
+
+# Slide 47
+
+```
+Python Generators
+Amazon's Elastic MapReduce allows you to easily run the MapReduce algorithm on an AWS cluster.
+• Web interface and command-line tools for running Hadoop jobs on Amazon compute cloud (EC2)
+• Data stored in Amazon simple storage service (S3)
+• Monitors job and shuts machines after use
+The Python package mrjob further simplifies this process. To understand how mrjob works, you will
+need to know how to use generators and iterators in Python.
+• An iterator object is any object that can be iterated through in a linear fashion.
+• A generator is another name for an iterator that was created similar to how we define functions,
+inserting the yield keyword.
+```
+
+**Description:**
+
+This slide discusses Python generators in the context of the MapReduce framework, specifically how the `mrjob` Python package simplifies the process.
+
+* **Amazon's Elastic MapReduce:** The slide mentions Amazon's Elastic MapReduce service, which allows users to run MapReduce jobs on Amazon Web Services (AWS).  This is relevant to the overall topic of large-scale data processing and distributed computing.
+* **Web Interface and Command-Line Tools:** The slide notes that the service provides web and command-line tools for running Hadoop jobs on AWS EC2 instances.  This highlights the practical aspects of using MapReduce in a cloud environment.
+* **Data Storage:** Data is stored in Amazon S3 (Simple Storage Service).  This is a common cloud storage solution for large datasets.
+* **Resource Management:** The service monitors jobs and automatically shuts down machines after use, which is important for resource management and cost optimization.
+* **Python Package `mrjob`:** The slide introduces the `mrjob` Python package, which simplifies the process of running MapReduce jobs in Python.
+* **Iterators and Generators:** The slide explains that understanding iterators and generators is crucial for using `mrjob`.  An iterator is an object that can be iterated through linearly, and a generator is a type of iterator defined similarly to functions but using the `yield` keyword.  This is a key concept in Python for handling potentially large datasets efficiently.
+
+**Overall:** The slide connects the concepts of MapReduce, cloud computing (AWS), and Python programming.  It emphasizes the practical use of generators and iterators in Python for handling large datasets, which is a key aspect of the MapReduce paradigm.  The slide is likely a transition to a section on Python-based MapReduce implementations.
+
+
+# Slide 48
+
+```python
+import sys
+!{sys.executable} -m pip install mrjob
+from mrjob.job import MRJob
+
+class MRWordCount(MRJob):
+    def mapper(self, _, line):
+        for word in line.split(" "):
+            yield word, 1
+
+    def combiner(self, key, values):
+        yield key, sum(values)
+
+    def reducer(self, key, values):
+        yield key, sum(values)
+
+if __name__ == '__main__':
+    MRWordCount.run()
+```
+
+**Combiner:**
+
+Local reduce function for repeated keys produced by the same map.  For associative operations like sum, count, max. Decreases amount of intermediate data.
+
+
+**Description:**
+
+This slide presents Python code for a MapReduce job, specifically designed for counting words in a text file.  The code defines a class `MRWordCount` that inherits from `MRJob`.  This class implements the `mapper`, `combiner`, and `reducer` functions necessary for the MapReduce process.
+
+* **Import Statements:** The code imports the `sys` module and the `mrjob` library, along with the `MRJob` class.
+* **Class Definition (`MRWordCount`):** This class defines the structure for the MapReduce job.
+* **`mapper` Function:** This function takes a line of text as input and yields key-value pairs.  For each word in the line, it yields the word as the key and 1 as the value.
+* **`combiner` Function:** This function is used to perform a local reduction step.  It takes a key and a list of values, calculates the sum of the values, and yields the key and the sum.  This is an optimization to reduce the amount of data that needs to be shuffled and reduced.
+* **`reducer` Function:** This function is similar to the `combiner`, taking a key and a list of values, calculating the sum, and yielding the key and the sum.  This is the final reduction step, producing the final word counts.
+* **`if __name__ == '__main__':` block:** This block ensures that the `MRWordCount.run()` method is called only when the script is executed directly, not when it's imported as a module.
+
+**Combiner Explanation:**
+
+The `Combiner` is a local reduction function that operates on intermediate results produced by the mapper.  It's used to reduce the amount of data that needs to be shuffled and reduced by the reducer.  This is an optimization technique that can significantly improve performance, especially for large datasets.  The `Combiner` is optional in MapReduce, but it can be very helpful in reducing the amount of data that needs to be processed by the reducer.
+
+
+**Overall:** The slide provides a complete example of a MapReduce job in Python, demonstrating the structure and functionality of the `mapper`, `combiner`, and `reducer` functions.  The example is focused on word counting, but the principles are applicable to other MapReduce tasks.  The `Combiner` is highlighted as an optimization technique.

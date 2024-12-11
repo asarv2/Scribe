@@ -1,0 +1,32 @@
+# 21
+
+**Applications of SAT (2)**
+
+Classical Planning
+* Parallel step optimal plans
+* E.g., SATPLAN-06 fastest in this category at IPC-06 planning competition
+Main idea:
+* Create planning graph, unfolded up to T steps
+* Encode legal transitions as CNF
+* Variables: action vars, fact vars for each time step t
+* Clauses encode action preconditions, effects, mutual exclusion, etc.
+e.g., (actionA_(t+1) ⇒ preA1_t AND preA2_t AND preA3_t),
+(NOT actionA_t OR NOT actionB_t), …
+
+
+---
+
+**Description of the slide:**
+
+This slide continues the discussion of SAT applications, focusing on classical planning.  The title, "Applications of SAT (2)," indicates this is a continuation of the previous slide's topic.
+
+The slide presents a bulleted list, continuing the discussion from the previous slide.  The content focuses on how SAT is used in classical planning.  The first bullet point, "Parallel step optimal plans," describes the type of planning problems addressed.  The second bullet point provides a specific example, mentioning the SATPLAN-06 program's success in a planning competition.  The "Main idea" section outlines the key steps in using SAT for planning:
+
+* **Create planning graph, unfolded up to T steps:** This describes the process of constructing a graph representing the possible states and actions in a planning problem.  The "unfolded up to T steps" part indicates that the graph considers a limited number of future steps.
+* **Encode legal transitions as CNF:** This step is crucial; it translates the rules and constraints of the planning problem into a CNF formula, which can then be solved using SAT solvers.
+* **Variables:** The variables used in the CNF formula are described as action variables and fact variables for each time step.
+* **Clauses:** The clauses in the CNF formula encode various aspects of the planning problem, including action preconditions, effects, and mutual exclusion constraints.  The example (actionA_(t+1) ⇒ preA1_t AND preA2_t AND preA3_t), (NOT actionA_t OR NOT actionB_t), ... illustrates how these constraints are represented.
+
+The slide includes two images.  The image on the right side of the slide shows a robotic rover-like vehicle on a sandy surface, likely a representation of a planning problem involving a robot in a specific environment.  The image on the left side of the slide shows a satellite in space.  The images are likely included to provide visual context for the discussion of planning problems, which could involve robots or other agents in various environments.  The images are oriented horizontally and are positioned in the right and left quadrants of the slide, respectively.  Their inclusion is likely to provide visual aids to the discussion of planning problems, which could involve robots or other agents in various environments.
+
+

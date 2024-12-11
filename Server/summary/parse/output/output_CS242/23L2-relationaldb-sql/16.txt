@@ -1,0 +1,27 @@
+# Slide 16
+
+# Aspects of SQL
+
+Data Manipulation Language
+* management of DB
+* manipulations: adding/removing/updating tuples
+* queries to interrogate DB
+Data Definition Language
+* notation for expressing DB structure (databases, tables, domains etc.) and so on
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, details the aspects of SQL.  The title "Aspects of SQL" is displayed at the top.  The content is presented in a bulleted list format, outlining the two main categories of SQL functionalities: Data Manipulation Language (DML) and Data Definition Language (DDL).
+
+* **Data Manipulation Language (DML):**  This section describes the functionalities related to managing and manipulating data within a database.  The bullet points specify:
+    * **management of DB:**  General management tasks related to the database.
+    * **manipulations: adding/removing/updating tuples:**  Specific actions for modifying data within the database, such as inserting, deleting, and updating rows (tuples).
+    * **queries to interrogate DB:**  The ability to retrieve specific information from the database using queries.
+
+* **Data Definition Language (DDL):** This section describes the functionalities related to defining the structure of the database.
+    * **notation for expressing DB structure (databases, tables, domains etc.):**  The language used to define the structure of the database, including creating databases, tables, and specifying data types for columns (domains).
+
+The slide is purely textual, with no figures.  The content is concise and clearly outlines the different functionalities of SQL, providing a high-level overview of the language's capabilities.  The purpose of this slide is to summarize the key aspects of SQL, building upon the previous slides' discussion of relational databases and their components.

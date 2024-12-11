@@ -1,0 +1,18 @@
+# Slide 7
+
+**Data Science and Computer Science At Purdue**
+
+**Assistant Professor of Practice**
+
+**Focused on Introductory classes**
+
+* Problem Solving and Object Oriented Programming : CS 18000
+* Introduction to Data Science : CS 24200
+* Data Engineering in Python : CS 17600
+
+**Various other related courses as necessary.**
+
+
+**Slide Description:**
+
+This slide introduces the instructor's role and the courses they teach at Purdue University.  The title, "Data Science and Computer Science At Purdue," is displayed prominently at the top, indicating the department and location.  Below that, the title "Assistant Professor of Practice" clarifies the instructor's position.  The text then focuses on the introductory courses taught by the instructor, specifically mentioning "Problem Solving and Object Oriented Programming (CS 18000)," "Introduction to Data Science (CS 24200)," and "Data Engineering in Python (CS 17600)."  The final line, "Various other related courses as necessary," suggests that the instructor teaches other courses related to data science and computer science, but these are not explicitly listed.  A Purdue University logo (the letter "P") is present in the lower right quadrant of the slide.  The logo is a stylized, light beige/tan "P" with a dark outline, and is a visual representation of the university.  The overall design is straightforward and informative, providing context about the instructor's role and the courses they teach.

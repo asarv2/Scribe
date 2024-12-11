@@ -1,0 +1,21 @@
+# Slide 21
+
+**Grading**
+
+| Category          | Percentage |
+|-------------------|------------|
+| Discussion        | 5%         |
+| Lab/Homework      | 25%        |
+| Projects          | 20%        |
+| Midterm Exam      | 20%        |
+| Final Exam        | 30%        |
+
+
+**Figure Description:**
+
+A vertical bar graph is shown, with different shades of blue/dark blue/navy blue representing the different categories of grading.  The bars are stacked vertically, with the largest bar representing the Final Exam (30%).  The bars are progressively smaller, representing the percentages for the other categories: Midterm Exam (20%), Projects (20%), Lab/Homework (25%), and Discussion (5%).  The percentages are clearly labeled next to each bar.  The graph is positioned centrally on the slide, taking up a significant portion of the space.  The graph's purpose is to visually represent the weighting of each category in the course's grading scheme.  The colors and percentages are clearly labeled, making it easy for students to understand the relative importance of each component of the course grade.
+
+
+**Slide Description:**
+
+This slide displays the grading breakdown for the Intro to Data Science course.  A bar graph visually represents the percentage weight assigned to each category: Discussion (5%), Lab/Homework (25%), Projects (20%), Midterm Exam (20%), and Final Exam (30%).  The graph is a clear and concise way to show the relative importance of each component of the course grade.  The percentages are clearly labeled next to each bar, making it easy for students to understand the grading scheme.

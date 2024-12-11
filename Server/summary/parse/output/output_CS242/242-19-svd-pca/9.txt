@@ -1,0 +1,20 @@
+# Slide 9
+
+**Low Rank Matrix Approximations**
+
+Consider an n × d matrix X, which represents a set of n examples, each with d attributes.  
+What's a good notion of dimensionality reduction for these matrices?  
+Reduce the rank of the matrix (from d to k < d):  
+Linear algebra—the following are equivalent definitions for the rank of a matrix X to be k: 
+* The largest linearly independent subset of columns of X has size k,  
+ie. all d columns of X arise as linear combinations of only k different n-vectors 
+* The largest linearly independent subset of rows of X has size k,  
+ie. all n rows of X arise as linear combinations of only k different d-vectors 
+* X can be written as the product of a (n × k) matrix A and a (k × d) matrix B.
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on dimensionality reduction within an Intro to Data Science course, introduces the concept of low-rank matrix approximations.  The title, "Low Rank Matrix Approximations," is presented in a large, bold font at the top of the slide.  The text below defines a matrix X as an n x d matrix representing n examples with d attributes.  The question posed is how to perform dimensionality reduction on this matrix.  The solution is to reduce the rank of the matrix from d to k, where k < d.  The slide then presents three equivalent linear algebra definitions for a matrix X to have rank k.  These definitions are presented in bullet points, making them easy to read and understand.  The overall design is straightforward and supports the explanation of the topic.  The context of the lecture is Intro to Data Science, and the slide is likely a transition to the discussion of SVD and PCA.

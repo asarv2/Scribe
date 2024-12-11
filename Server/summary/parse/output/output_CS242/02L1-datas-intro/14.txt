@@ -1,0 +1,23 @@
+# Slide 14
+
+**Recommender Systems**
+
+*(Bell et al 2007)*
+
+**Netflix Prize:** Competition to improve predictions of users' movie ratings
+
+* **100 million ratings** from 500,000 users/18,000 movies
+* **$1 million prize** for algorithm that reduces prediction error on hold out set by 10%
+* **Winning approach** consisted of ensemble of 100+ models
+
+
+---
+
+**Visual Elements:**
+
+* **Image:** A digital image of a mailbox with a red Netflix-branded envelope/flyer protruding from the slot.  The image is oriented horizontally.  The image is likely included to visually represent the Netflix Prize competition, which was a significant event in the field of recommender systems.  The image is placed in the upper portion of the slide, and the text is placed below it.  The image is a visual representation of the competition, which involved predicting user movie ratings.
+
+
+**Description:**
+
+This slide describes the Netflix Prize competition, a significant event in the field of recommender systems.  The slide details the competition's goals, the data involved (100 million ratings from a large number of users and movies), and the prize offered for achieving a specific improvement in prediction accuracy.  The slide also highlights the winning approach, which involved a complex ensemble of multiple models.  The image of the mailbox with the Netflix flyer is a visual representation of the competition and its context.  The slide is likely part of a lecture on recommender systems, machine learning, or data science, highlighting a real-world example of a large-scale data analysis challenge.

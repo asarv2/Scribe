@@ -1,0 +1,33 @@
+# 25
+
+# Following the recipe: loss function
+
+Step 2: define loss function L(y, y')
+
+What does it mean that we have an error?
+
+*   True label +1, predicted -1:
+    y = 1, y' = sign(w<sup>T</sup>x) = -1
+
+*   True label -1, predicted +1:
+    y = -1, y' = sign(w<sup>T</sup>x) = 1
+
+Concisely represented as 0-1 loss:
+
+L(y, y') = 1[y ≠ y']
+
+Or more explicitly as:
+
+l<sub>01</sub>(z) = 1[z ≤ 0] where z = y(w<sup>T</sup>x)
+
+
+**(Figure):**
+
+A scatter plot is positioned in the lower-left portion of the slide.  The x and y axes are not labeled, but the plot shows a roughly equal distribution of red and blue points.  A diagonal line separates the two clusters of points.  The red and blue points are clearly distinguishable, and the diagonal line is a visual representation of a possible decision boundary.  The points are densely clustered around the line, and the line appears to be a good fit for separating the two classes.  A horizontal line is plotted on a separate, smaller graph in the upper-right portion of the slide.  The horizontal line is a constant value, likely representing a threshold or a value for the loss function.  The x-axis of this smaller graph is labeled, but the y-axis is not.  The horizontal line is positioned near the middle of the y-axis.
+
+
+**Description:**
+
+This slide introduces the concept of a loss function for binary classification, specifically the 0-1 loss function.  The slide builds upon the previous discussion of using a linear model for binary classification.  The loss function is defined as 1 if the predicted label (y') does not match the true label (y), and 0 otherwise.  The slide also provides a more explicit mathematical representation of the loss function, using the variable z = y(w<sup>T</sup>x).  The scatter plot visually represents the data points and the decision boundary, illustrating the concept of separating two classes.  The horizontal line graph in the upper-right corner of the slide is a visual representation of the 0-1 loss function, showing how the loss is 1 when the value of z is less than or equal to 0, and 0 otherwise.  The slide is designed to introduce the concept of a loss function in the context of binary classification and to illustrate the 0-1 loss function.
+
+

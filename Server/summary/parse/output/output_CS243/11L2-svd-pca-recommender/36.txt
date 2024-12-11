@@ -1,0 +1,46 @@
+# 36
+
+```markdown
+Matrix Factorization of Ratings Data
+The vector u<sub>u</sub> represents the affinity of user u for each of the latent factors.
+Similarly, the vector v<sub>j</sub> represents the affinity of the movie j for the latent factors.
+
+r<sub>i,j</sub> ≈ u<sub>i</sub> ⋅ v<sub>j</sub>
+
+Example with 3 factors for k
+* Factor 1 ~ action
+* Factor 2 ~ comedy
+* Factor 3 ~ romance
+
+u<sub>alice</sub> = [0.2, 0.5, 0.3]
+v<sub>MiB</sub> = [1.1, 0.4, 0.01]
+r<sub>alice,MiB</sub> = 0.2 * 1.1 + 0.5 * 0.4 + 0.3 * 0.01 = 0.423
+```
+
+```
+Alice
+n users
+d movies
+Men in Black (MiB)
+```
+
+```
+n users
+k
+x
+d movies
+k
+U<sub>alice</sub>
+V<sub>MiB</sub>
+```
+
+**Figure Description:**
+
+A diagram is presented, illustrating matrix factorization for rating data.  It shows a matrix, visually represented as a grid, with rows labeled "n users" and columns labeled "d movies."  The matrix is mostly gray, but a single cell corresponding to "Alice" and "Men in Black (MiB)" is highlighted in light blue.  Two smaller matrices, U<sub>alice</sub> and V<sub>MiB</sub>, are shown to the right and below the main matrix, respectively.  These smaller matrices are also represented as grids, with the columns of U<sub>alice</sub> and the rows of V<sub>MiB</sub> labeled with "k" (latent factors).  The matrices are arranged in a way that visually represents the factorization of a larger matrix into two smaller matrices, U and V, which capture latent factors.  The diagram is positioned centrally on the slide.  The purpose of the diagram is to illustrate the concept of matrix factorization, where a user-item rating matrix is decomposed into two matrices that represent user and item latent factors.  The equation r<sub>i,j</sub> ≈ u<sub>i</sub> ⋅ v<sub>j</sub> is shown, indicating that the rating of user i for item j is approximated by the dot product of their corresponding latent factor vectors.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, introduces matrix factorization for recommender systems.  The title "Matrix Factorization of Ratings Data" indicates the topic.  The slide explains that the vector u<sub>u</sub> represents the affinity of user u for each latent factor, and similarly, v<sub>j</sub> represents the affinity of movie j for the latent factors.  The equation r<sub>i,j</sub> ≈ u<sub>i</sub> ⋅ v<sub>j</sub> shows how the rating of user i for movie j is approximated by the dot product of their latent factor vectors.  An example is provided with three latent factors (k = 3).  The example shows the latent factor vectors for Alice and Men in Black (MiB), and calculates the predicted rating (r<sub>alice,MiB</sub>) as 0.423.  The slide visually represents the factorization process using a diagram of matrices, making the concept more concrete.  The diagram shows the user-item matrix and the two smaller matrices representing user and item latent factors.  The slide is designed to introduce the concept of matrix factorization and how it can be used to predict user ratings for items they haven't interacted with.
+
+

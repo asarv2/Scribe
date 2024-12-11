@@ -1,0 +1,42 @@
+# Slide 3
+
+**Two sample Z test/CI for mean comparison**
+
+The inferences discussed in this section concern a difference 𝜇<sub>1</sub> – 𝜇<sub>2</sub> between the means of two population distributions.
+
+* One such null hypothesis 𝐻<sub>0</sub> would state that
+
+𝐻<sub>0</sub>: 𝜇<sub>1</sub> – 𝜇<sub>2</sub> = Δ<sub>0</sub> or 𝜇<sub>1</sub> = 𝜇<sub>2</sub> + Δ<sub>0</sub>
+
+Three possible alternative hypotheses:
+
+𝐻<sub>1</sub>: 𝜇<sub>1</sub> −𝜇<sub>2</sub> > 𝛥<sub>0</sub>
+𝐻<sub>1</sub>: 𝜇<sub>1</sub> −𝜇<sub>2</sub> < 𝛥<sub>0</sub>
+𝐻<sub>1</sub>: 𝜇<sub>1</sub> −𝜇<sub>2</sub> ≠𝛥<sub>0</sub>
+
+* Alternatively, it may be appropriate to estimate 𝜇<sub>1</sub> – 𝜇<sub>2</sub> by computing a C level CI.
+
+
+Basic Assumptions: independent data
+
+1. 𝑋<sub>1</sub>, … , 𝑋<sub>𝑚</sub> is a random sample from a normal distribution with mean μ<sub>1</sub> and variance σ<sub>1</sub><sup>2</sup>
+2. 𝑌<sub>1</sub>, … , 𝑌<sub>𝑛</sub> is a random sample from another normal distribution with mean μ<sub>2</sub> and variance σ<sub>2</sub><sup>2</sup>
+3. The X and Y samples are independent of one another.
+
+
+Theorem 1:
+
+* 𝑋̅ −𝑌̅ is a point estimator for 𝜇<sub>1</sub> – 𝜇<sub>2</sub>.
+* 𝐸(𝑋̅ −𝑌̅) = μ<sub>1</sub> −μ<sub>2</sub>, 𝑋̅ −𝑌̅ is unbiased.
+* 𝑉𝑎𝑟(𝑋̅ −𝑌̅) =  σ<sub>1</sub><sup>2</sup>/𝑚 + σ<sub>2</sub><sup>2</sup>/𝑛.
+
+* Furthermore,
+
+o Case 1, if both X and Y have normal distributions, 𝑋̅ −𝑌̅ follows exactly normal distribution.
+
+o Case 2, if X and Y are not normal, but both m and n are large enough, then 𝑋̅ −𝑌̅ follows approximately normal distribution.
+
+
+**Figure Description:**
+
+There is no figure on this slide.  The slide is entirely text-based, presenting the theoretical framework for comparing two sample means in a statistical context.  The content is a continuation of the previous slide's discussion on hypothesis testing and confidence intervals, now focusing on the comparison of two populations.  The slide lays out the assumptions and theorems necessary for conducting such a comparison, including the concept of independent data and the conditions under which the sample mean difference follows a normal distribution.

@@ -1,0 +1,25 @@
+# Slide 38
+
+**Components of a rating predictor**
+
+**Baseline predictor**
+
+* Separates users and movies
+* Often overlooked
+* Benefits from insights into users' behavior
+
+**User-movie interaction**
+
+* Characterizes the matching between users and movies
+* Attracts most research in the field
+* Benefits from algorithmic and mathematical innovations
+
+
+**(Figure 1):**  Two small images are positioned on the right side of the slide.  The image on the left shows a cartoon character (likely a video game character) sitting in a movie theater seat, holding a soda and popcorn. The image on the right shows a stylized representation of film reels or movie frames.  These images are likely used to visually represent the concepts of "User Bias" and "Movie Bias" respectively.  The images are simple and cartoonish, and their purpose is to provide a visual aid for the concepts being discussed.
+
+**(Figure 2):** A third image, positioned below the two images on the right, shows a cartoon character (likely the same as in the left image) sitting in a movie theater seat, holding a soda and popcorn.  Below this image, there are three horizontal arrows pointing to the right, with a stylized representation of film reels or movie frames behind them.  This image is likely used to visually represent the concept of "User-Movie Interaction".  The images are simple and cartoonish, and their purpose is to provide a visual aid for the concepts being discussed.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, discusses the components of a rating predictor, likely in the context of recommender systems.  The slide breaks down the components into "Baseline predictor" and "User-movie interaction," each with supporting bullet points.  The images are simple cartoon representations of these concepts, likely to aid in understanding the different aspects of a rating prediction model.  The slide is likely part of a section on recommender systems, specifically introducing the different components that contribute to a rating prediction model.  The context is an Intro to Data Science course.

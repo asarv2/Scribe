@@ -1,0 +1,12 @@
+# Slide 15
+
+**Online Textbook**
+
+Adhikari, A. DeNero, J. And Wagner, D. Computational and Inferential Thinking: The Foundations of Data Science. 2nd Edition 2021.
+
+https://inferentialthinking.com/chapters/intro.html
+
+
+**Slide Description:**
+
+This slide lists the online textbook for the Intro to Data Science course.  The title "Online Textbook" is displayed in a large, bold font.  Below that, the full title of the textbook, "Computational and Inferential Thinking: The Foundations of Data Science," along with the authors (Adhikari, A. DeNero, J. And Wagner, D.) and the edition (2nd Edition 2021) is presented.  Finally, a URL is provided, which is a link to the online textbook.  The slide is straightforward and provides the necessary information for students to access the online textbook for the course.  There are no figures on this slide.

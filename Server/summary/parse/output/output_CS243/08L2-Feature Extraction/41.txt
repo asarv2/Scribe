@@ -1,0 +1,30 @@
+# Slide 41
+
+**Derivative of Gaussian filter**
+
+x-direction
+y-direction
+
+**(Figure):**
+
+The slide presents two pairs of images, each pair showing a 3D wireframe plot and a corresponding 2D grayscale image.  The plots and images are arranged side-by-side.
+
+* **Left Pair:**
+    * **3D Plot (Left):** A 3D wireframe plot of a Gaussian function.  The surface is smooth and bell-shaped, centered, and symmetrical.  The colors vary smoothly from dark to light, indicating the intensity values of the Gaussian function.  The x and y axes are visible, and the z-axis represents the function's height.
+
+
+    * **2D Image (Right):** A grayscale image, likely a portion of a larger image, showing a smooth transition of intensity values.  The image is a representation of the Gaussian function projected onto a 2D plane.  The grayscale values correspond to the intensity values of the 3D Gaussian plot.
+
+
+* **Right Pair:**
+    * **3D Plot (Left):** A 3D wireframe plot of the derivative of a Gaussian function with respect to x.  The surface is characterized by peaks and valleys, aligned along the x-axis.  The colors vary, indicating the intensity values of the derivative.  The x and y axes are visible, and the z-axis represents the function's height.
+
+
+    * **2D Image (Right):** A grayscale image, likely a portion of a larger image, showing a transition of intensity values.  The image is a representation of the derivative of the Gaussian function projected onto a 2D plane.  The grayscale values correspond to the intensity values of the 3D derivative plot.
+
+
+**Description of what you see:**
+
+This slide illustrates the concept of a derivative of a Gaussian filter in image processing.  The 3D plots visually represent the Gaussian function and its derivative.  The corresponding 2D grayscale images show how these functions would be applied to an image.  The Gaussian function is used for smoothing, while its derivative is used for edge detection.  The slide is designed to visually demonstrate the relationship between the Gaussian function, its derivative, and their application in image processing.  The source is credited at the bottom.
+
+

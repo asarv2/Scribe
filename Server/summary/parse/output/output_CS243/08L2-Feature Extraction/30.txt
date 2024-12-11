@@ -1,0 +1,34 @@
+# Slide 30
+
+**Putting it together: Vision pyramids**
+
+Every pixel of a small image may be a good feature descriptor.
+They summarize a local region of the image.
+
+**(Figure):**
+
+The slide displays a complex arrangement of images and text, illustrating the concept of a vision pyramid.  Several images of a portrait painting (likely a Van Gogh self-portrait) are shown at different resolutions and stages of processing.
+
+* **Top Left:** A full-resolution image of the painting is shown.  This is labeled F<sub>0</sub>.
+
+
+* **Top Right, second from the left:** A blurred version of the same painting is shown.  This is labeled F<sub>0</sub> * H, where H likely represents a blurring filter.
+
+
+* **Top Right, third from the left:** A subsampled version of the original image (F<sub>0</sub>) is shown.  This is labeled F<sub>1</sub>.
+
+
+* **Top Right, fourth from the left:** A blurred version of the subsampled image (F<sub>1</sub>) is shown.  This is labeled F<sub>1</sub> * H.
+
+
+* **Top Right, fifth from the left:** A subsampled version of the blurred image (F<sub>1</sub> * H) is shown.  This is labeled F<sub>2</sub>.
+
+
+* **Top Right, and subsequent columns:**  Further subsampled and blurred versions of the image are shown, continuing the pattern.  These images are progressively smaller and more blurred, representing lower-resolution levels in the vision pyramid.
+
+
+**Description of what you see:**
+
+This slide explains the concept of a vision pyramid in image processing.  The figure shows a series of images derived from a single high-resolution image.  The images are progressively blurred and subsampled, creating a hierarchy of representations.  The blurring (F * H) operation is likely used to reduce noise and extract high-level features.  The subsampling operation reduces the resolution of the image, allowing for faster processing and feature extraction at different scales.  The overall structure of the images is a visual representation of a vision pyramid, where each level summarizes a larger region of the original image.  The slide is designed to illustrate how a vision pyramid can be used to extract features from an image at different levels of detail and resolution.
+
+

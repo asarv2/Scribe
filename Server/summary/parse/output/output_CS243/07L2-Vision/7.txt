@@ -1,0 +1,25 @@
+# Slide 7
+
+**Challenges: illumination**
+
+![Cat Images](/path/to/image.jpg)
+
+**Image Description:**
+
+The slide displays four images of cats in different lighting conditions.  From left to right, top to bottom:
+
+1.  **Left-top:** A tabby cat in a dark, shadowed environment.  The lighting is focused on the cat's face, creating a dramatic effect.
+2.  **Center-top:** A black cat in a dark, shadowed environment.  The lighting is focused on the cat's face, creating a dramatic effect.
+3.  **Right-top:** A light orange/tan cat in a well-lit environment.  The lighting is bright and highlights the cat's fur.
+4.  **Right-bottom:** A gray cat sitting in a tree, with sunlight shining through the leaves.  The lighting is dappled and creates highlights and shadows on the cat.
+
+All images are positioned in a grid-like layout, with each image taking up a quarter of the slide.  Below each image, the text "This image is CC0 1.0 public domain" is displayed.  This indicates that the images are in the public domain and can be used freely.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed the challenges of image classification, particularly the semantic gap and viewpoint variation.  The slide introduces the challenge of illumination variation in image classification.  The images demonstrate how different lighting conditions can significantly alter the appearance of an object (in this case, a cat), making it difficult for a computer vision system to reliably identify the object.  The images are used as visual aids to illustrate the concept of illumination variation and its impact on image recognition.
+
+
+**Description of what you see:**
+
+The slide presents a visual demonstration of the challenge of illumination variation in image classification.  Four images of cats are shown, each under a different lighting condition.  The images are arranged in a grid format, making it easy to compare and contrast the effects of illumination on the appearance of the cats.  The text below each image clarifies the licensing of the images.  The overall design of the slide is simple and straightforward, focusing on the visual representation of the concept.

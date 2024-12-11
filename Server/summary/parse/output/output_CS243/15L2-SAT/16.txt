@@ -1,0 +1,22 @@
+# 16
+
+**Simplification of a formula by an evaluated literal**
+
+**Proposition**
+
+For φ and p as in the above definition, we have:
+
+* if φ|<sub>p</sub> is satisfiable, then φ is satisfiable too,
+* if φ|<sub>¬p</sub> is satisfiable, then φ is satisfiable too.
+* if φ is satisfiable then either φ|<sub>p</sub> or φ|<sub>¬p</sub> is satisfiable.
+
+**Remarks**
+
+The above proposition is a key argument in the SAT solving algorithms to be presented hereafter.
+
+The proof of this proposition is easy and left as an exercise.
+
+
+**Description:**
+
+This slide presents a proposition related to simplifying a CNF formula (φ) based on the truth value of a variable (p).  It states conditions under which the satisfiability of the original formula φ is related to the satisfiability of simplified versions of the formula where p is assigned true (φ|<sub>p</sub>) or false (φ|<sub>¬p</sub>).  The slide is focused on the logical relationships between the original formula and its simplified versions.  There are no figures on this slide.  The context suggests that this is part of a lecture on SAT solving algorithms, building upon the previous slide's discussion of partial assignments.

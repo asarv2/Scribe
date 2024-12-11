@@ -1,0 +1,24 @@
+# Slide 16
+
+**Truthful: What is wrong with this chart?**
+
+Less regulation = More industry investment
+
+$56 billion After
+regulations
+were relaxed
+
+Following
+1992 Cable
+Regulations
+
+$14 billion
+
+1993-1996  1999-2003
+
+Start to read visualizations, don't just see or look at them
+
+
+**Description:**
+
+This slide presents a bar graph, likely part of a discussion on evaluating data visualizations.  The graph compares investment figures ($14 billion and $56 billion) for two time periods (1993-1996 and 1999-2003).  The text above the graph suggests a correlation between less regulation and increased investment.  The text below the graph emphasizes the importance of actively interpreting visualizations rather than passively observing them.  The purpose of the slide is to prompt critical thinking about the accuracy and potential biases within the presented data visualization.  The bar graph is centered on the slide, with the labels and values clearly visible.  The text is arranged in a way that guides the viewer's attention to the potential issues with the chart's presentation of data.

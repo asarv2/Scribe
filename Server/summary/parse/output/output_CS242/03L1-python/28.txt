@@ -1,0 +1,33 @@
+# Slide 28
+
+**Updating dictionaries**
+
+```python
+>>> d = {'user': 'bozo', 'p': 1234, 'i': 34}
+>>> del d['user']  # Remove one.
+>>> d
+{'p': 1234, 'i': 34}
+>>> d.clear()  # Remove all.
+>>> d
+{}
+>>> a = [1, 2]
+>>> del a[1]  # (del also works on lists)
+>>> a
+[1]
+>>> d = {'user': 'bozo', 'p': 1234, 'i': 34}
+>>> d.keys()  # List of current keys, Python 3 returns iterable object
+dict_keys(['user', 'p', 'i'])
+>>> d.values()  # List of current values.
+dict_values(['bozo', 1234, 34])
+>>> d.items()  # List of item tuples.
+dict_items([('user', 'bozo'), ('p', 1234), ('i', 34)])
+```
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates various ways to update dictionaries in Python.  The examples are presented in a way that resembles an interactive Python interpreter session.  The `>>>` prompts indicate user input, and the subsequent lines show the output of the commands.  The code shows how to remove a key-value pair using `del`, clear all key-value pairs using `clear()`, and access the keys, values, and items of a dictionary using the `keys()`, `values()`, and `items()` methods, respectively.  The examples use a dictionary named `d` containing various key-value pairs.  The output shows the dictionary after each operation, demonstrating the changes made to the dictionary.  The slide also shows that the `del` keyword can be used to remove elements from lists.  The source of the examples is explicitly noted.  There are no figures on this slide.  The context from previous slides suggests that this is part of a larger presentation on data structures in Python, likely within an Introduction to Data Science course.
+
+

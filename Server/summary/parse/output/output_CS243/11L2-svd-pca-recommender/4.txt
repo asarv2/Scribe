@@ -1,0 +1,21 @@
+# 4
+
+# Matrix Factorization Motivation
+
+```markdown
+Matrix Factorization Motivation
+Usually, the data vary more strongly in some dimensions than others
+Fitting a linear (simplifying assumption) model to the (k) strongest directions gives a
+good approximation to the data
+```
+
+---
+
+**Figure Description:**
+
+A scatter plot is shown in the lower-right quadrant of the slide.  The x and y axes are not labeled, but the plot shows a roughly linear relationship between the variables.  There are approximately 20-25 small, red circles (data points) scattered around a diagonal line.  A very light reddish-pink line is drawn through the data points, representing a linear fit.  The line is not a perfect fit, but it generally follows the trend of the data points.  The figure is used to illustrate the concept of fitting a linear model to the data, which is a simplifying assumption that can be used to approximate the data in a lower-dimensional space.  The figure is relevant to the topic of matrix factorization because it visually demonstrates how data can be approximated by a linear model, which is a key idea in matrix factorization techniques.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, continues the discussion on matrix factorization.  The title "Matrix Factorization Motivation" is displayed at the top of the slide in a large, bold font.  Below the title, the text explains that data often varies more strongly in some dimensions than others.  The text then states that fitting a linear model to the strongest directions (k) provides a good approximation to the data.  The slide includes a scatter plot to visually illustrate this concept.  The plot shows a set of data points that roughly follow a linear trend, with a fitted line overlaid on the plot.  The purpose of the slide is to motivate the use of matrix factorization by showing how high-dimensional data can be approximated by a lower-dimensional linear model.

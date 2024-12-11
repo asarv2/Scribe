@@ -1,0 +1,36 @@
+# Slide 36
+
+**Box Plots**
+
+Display relationship between discrete and continuous variables
+
+For each discrete value X, calculate quartiles and range of associated Y values
+
+`plt.boxplot(dataGrps)`
+
+takes list of lists of data values, split into groups according to the grouping variable
+
+
+**(Figure Description):**
+
+A box plot is displayed, specifically a boxplot of Petal Width.  The x-axis shows three categories: "Iris-setosa", "Iris-versicolor", and "Iris-virginica".  The y-axis represents the values of petal width, ranging from approximately 0 to 2.5.  The box plot for each category visually displays the following information:
+
+* **Box:** The box spans the interquartile range (IQR), representing the middle 50% of the data.
+
+* **Line within the box:** The line inside the box represents the median value.
+
+* **Whiskers:** The lines extending from the box are called whiskers.  They extend to the minimum and maximum values within 1.5 times the IQR from the box.
+
+* **Points beyond whiskers:** Points outside the whiskers are considered outliers and are plotted individually.
+
+The box plot for each category shows the distribution of petal width values for that specific iris species.  The plot is positioned centrally on the slide.  The title "Boxplot of Petal Width" is above the plot.  The labels for the categories ("Iris-setosa", "Iris-versicolor", and "Iris-virginica") are clearly visible on the x-axis.  The y-axis is labeled with the values of petal width.  The plot is designed to compare the distribution of petal width across the different iris species.
+
+
+**Context:**
+
+This slide is part of a lecture on data visualization techniques, specifically focusing on box plots.  The slide shows how box plots can be used to compare the distribution of a continuous variable (petal width) across different categories (iris species).  The box plot provides a summary of the central tendency, spread, and potential outliers for each category.  The code snippet `plt.boxplot(dataGrps)` suggests that the data is grouped by category, and the box plot is generated using this grouping.  The slide is likely part of a larger discussion on exploratory data analysis (EDA) techniques.
+
+
+**Description of what you see:**
+
+The slide shows a box plot and the associated text describing the plot.  The plot displays three box plots, one for each iris species.  The box plots show the distribution of petal width for each species, including the median, quartiles, and outliers.  The code snippet above the plot indicates how the box plot was generated, likely using Python's Matplotlib library.  The slide is designed to illustrate the use of box plots for comparing distributions across different categories.  The title "Box Plots" indicates the general topic of the slide.  The plot is positioned centrally on the slide, with the title and description above it.

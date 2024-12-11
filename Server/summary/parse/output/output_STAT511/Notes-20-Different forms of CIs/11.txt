@@ -1,0 +1,56 @@
+# Slide 11
+
+**STAT 511 Course Notes – set 20 (W10)**
+
+**Yuan Qu**
+
+Comparison between Z and T CIs
+
+Intuitively, narrower CI means more precise interval estimation. For normal means estimation, if population standard deviation is known, then both z- and t- confidence interval are statistically valid CI.
+
+Question: Can we compute both of them and pick the narrow one?
+
+Comparison between Z and t confidence intervals: the same interval center, the different interval width.
+
+On average:
+
+[(margin of error for Z CI)²] =  z<sub>α/2</sub><sup>2</sup> ∙ σ<sup>2</sup> / n
+
+[(margin of error for t CI)²] = E(t<sub>α/2</sub><sup>2</sup> ∙ S<sup>2</sup> / n) = t<sub>α/2</sub><sup>2</sup> ∙ σ<sup>2</sup> / n  > the above.
+
+R code for simulation:
+
+coverage.count<-0;
+for(iter in 1:10000)
+{  x<-rnorm(12);
+me1<-qnorm(0.975)/sqrt(12);
+me2←qt(0.975,11)*sd(x)/sqrt(12);
+me<- min(me1,me2);
+if(abs(mean(x))<=me) coverage.count<-coverage.count+1;
+}
+coverage.count/10000
+
+CI vs. PI
+
+Prediction Interval for a new observation from this normal distribution: Let X<sub>n+1</sub> be a new independent observation. We can show that
+
+T = (X<sub>n+1</sub> − X̄) / (S√(1 + 1/n))  ∼ t<sub>n−1</sub>
+
+Therefore, Pr( X<sub>n+1</sub> ∈ X̄ ± t<sub>α/2, n−1</sub> ∙ S√(1 + 1/n) ) = 1 − α. PI for X<sub>n+1</sub> is
+
+(X̄ − t<sub>α/2, n−1</sub> ∙ S√(1 + 1/n), X̄ + t<sub>α/2, n−1</sub> ∙ S√(1 + 1/n))
+
+Comparison between CI and PI:
+
+* CI is the interval estimation of E(X) = μ, PI is the interval estimation of X = [E(X) + randomness].
+* PI is always larger than CI, since PI also takes account of the variability of X.
+
+
+**Figure Description:**
+
+A normal probability plot is present, positioned above the text of Example 20.5.  The x-axis is labeled "Theoretical Quantiles," and the y-axis is labeled "Sample Quantiles."  The plot displays a series of points, roughly following a straight diagonal line.  This plot is used to assess whether the data is approximately normally distributed.  The straightness of the line indicates that the data is likely normally distributed.  The plot is located above the text of Example 20.5, providing visual support for the assumption of normality used in the confidence interval calculation.  The plot is relevant to the statistical methods discussion because it helps determine if the assumptions for the t-test are met.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of confidence intervals, comparing Z-intervals (using the standard normal distribution) and t-intervals (using the t-distribution).  It explains the theoretical differences in their widths and provides R code for a simulation to demonstrate this difference in practice.  The slide also introduces the concept of prediction intervals (PI), which are wider than confidence intervals (CI) because they account for both the variability of the sample mean and the variability of a new observation.  The normal probability plot is included to visually assess the normality assumption, which is crucial for using the t-distribution.  The slide is part of a lecture on statistical methods, specifically focusing on confidence intervals and prediction intervals for a population mean.

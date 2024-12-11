@@ -1,0 +1,12 @@
+# 7
+
+**Training/test cycle**
+
+*   **Sample Data**
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concept of the training/test cycle.  A large, light gray rectangular box, filling most of the left side of the slide, is labeled "Sample Data."  This visual representation signifies the dataset used for training and testing machine learning models.  The title "Training/test cycle" is prominently displayed at the top of the slide, indicating the focus on the process of using data for model development and evaluation.  The slide is likely to be followed by a discussion of the steps involved in this cycle, such as data preparation, model training, and model evaluation.  The simple design and lack of further details on the slide suggest that this is an introductory slide to the topic, setting the stage for more detailed explanations in subsequent slides.
+
+

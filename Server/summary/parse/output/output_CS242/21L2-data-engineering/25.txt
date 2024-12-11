@@ -1,0 +1,12 @@
+# Slide 25
+
+More on MapReduce
+
+
+---
+
+**Description of the slide:**
+
+This slide is a single heading, likely a title slide for a section of the Intro to Data Science lecture.  It's a plain gray background with the single, bold title "More on MapReduce" centered on the slide.  The text is a dark gray, contrasting well with the background.  The lack of any other content suggests this is a slide to introduce the topic of MapReduce in more detail in the context of the course.
+
+

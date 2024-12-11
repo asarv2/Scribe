@@ -1,0 +1,41 @@
+# 22
+
+**Applications of SAT (3)**
+
+**Combinatorial Design**
+
+Complex mathematical structures with desirable properties
+
+*   Latin squares
+*   Quasi groups
+*   Ramsey numbers
+*   Steiner systems
+
+Highly useful for
+
+*   design of experiments
+*   coding theory, cryptography
+*   drug design and testing
+*   crop rotation schedules
+
+And more...
+
+
+---
+
+**Image Descriptions:**
+
+*   **Top Left:** A gray-scale image of a network of interconnected circles with numbers.  The numbers are likely part of a graph or network structure.  The image is positioned in the top left quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a graceful graph.
+
+*   **Top Middle:** A gray-scale image of a grid of small squares, each containing a representation of a die.  The dice are colored in various shades of color.  The image is positioned in the top middle quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a magic square.
+
+*   **Bottom Left:** A gray-scale image of a baseball bat and a baseball.  The image is positioned in the bottom left quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a round-robin tournament.
+
+*   **Bottom Right:** A gray-scale image of a grid of numbers.  The numbers are arranged in a square pattern.  The image is positioned in the bottom right quadrant of the slide.  It is oriented horizontally.  The image is likely included to visually represent a combinatorial design problem, specifically a magic square.
+
+
+**Overall Description:**
+
+This slide, part of a lecture on AI Basics, continues the discussion of SAT applications by focusing on combinatorial design problems.  It lists various types of combinatorial designs (Latin squares, quasi groups, Ramsey numbers, Steiner systems) and their practical applications.  The images are likely included to provide visual representations of the types of problems that fall under combinatorial design.  The slide is structured to show the breadth of applications for SAT solvers in different areas of mathematics and computer science.
+
+

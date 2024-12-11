@@ -1,0 +1,14 @@
+# 2
+
+# Matrix Factorization
+
+---
+
+**Description of the slide:**
+
+This is a very simple slide.  It has a plain, light gray background.  The title "Matrix Factorization" is centered on the slide in a dark gray, sans-serif font.  There are no figures or other elements on the slide.  The purpose of the slide is to introduce the topic of matrix factorization as a topic in the lecture.
+
+
+**Description of what you see:**
+
+The slide is a single, unadorned title slide.  The title, "Matrix Factorization," is in a large, bold, dark gray font, centered on a light gray background.  There are no images, graphs, or other elements on the slide.  The slide's purpose is to clearly and concisely announce the topic of the current section of the lecture.

@@ -1,0 +1,42 @@
+# Slide 4
+
+**Example 8.7** Let X = the number of days of sick leave taken by a randomly selected employee of a large company during a particular year. If the maximum number of allowable sick days per year is 14, possible values of X are 0, 1, ..., 14. With 𝐹(0) = 0.58, 𝐹(1) = 0.72, 𝐹(2) = 0.76, 𝐹(3) = 0.81, 𝐹(4) = 0.88, 𝐹(5) = 0.94, 
+𝑃(2 ≤ 𝑋 ≤ 5) =  
+𝑃(𝑋 = 3) = 
+
+**Example 8.1 revisit:** Consider also the experiment of tossing a fair coin three times independently. Define the random variable X to be the number of heads obtained in the three tosses.
+
+| s | HHH | HHT | HTH | THH | TTH | THT | HTT | TTT |
+|---|---|---|---|---|---|---|---|---|
+| X(s) | 3 | 2 | 2 | 2 | 1 | 1 | 1 | 0 |
+
+The pmf is:
+
+| x | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| p(x) | 1/8 | 3/8 | 3/8 | 1/8 |
+
+The cdf of this r.v. is
+
+| x | [−∞,0) | [0,1) | [1,2) | [2,3) | [3,+∞) |
+|---|---|---|---|---|---|
+| F(x) | 0 | 1/8 | 4/8 | 7/8 | 8/8 |
+
+The plot of this function is a step function:
+
+**Expected Values (Population Mean)**
+
+Consider a census data, recall the formula for population mean:
+
+mean = average of all data points =  ∑𝑥ᵢ ∙ 𝑤ᵢ / ∑𝑤ᵢ
+
+which is the weighted average based on frequency.
+
+Definition of the expected value of a discrete r.v.: Let X be a discrete r.v. with set of possible values D and pmf 𝑝(𝑥). The expected value or mean value of X, denoted by 𝐸(𝑋) or 𝜇 or just 𝜇, is
+
+𝐸(𝑋) = 𝜇 = ∑<sub>𝑥∈𝐷</sub> 𝑥 ∙ 𝑝(𝑥).
+
+
+**Description of the Slide:**
+
+This slide continues the lecture on Statistical Methods, focusing on random variables and their distributions.  It presents Example 8.7, which introduces a new random variable representing the number of sick days taken by an employee.  It then revisits Example 8.1, this time explicitly calculating the probability mass function (pmf) and cumulative distribution function (cdf) for the number of heads obtained in three coin tosses.  The pmf and cdf are presented in tabular form, making it easy to understand the probabilities associated with different outcomes.  A key concept is introduced: the expected value (or mean) of a discrete random variable, defined as the weighted average of the possible values, weighted by their probabilities.  The formula for calculating the expected value is given, along with a description of how it relates to the weighted average of data points in a dataset.  The slide's structure is consistent with the previous slides, maintaining a clear and organized presentation of the concepts.  The tables are crucial for understanding the probability distributions.  The step function graph, though not fully visible, is implied by the cdf table and is a visual representation of the discrete nature of the cdf.

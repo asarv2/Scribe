@@ -1,0 +1,11 @@
+# 25
+
+**Example: Compute Centroids**
+
+---
+
+A scatter plot is displayed, showing a two-dimensional space populated with numerous small, colored data points.  The data points are clustered into three distinct groups, represented by different colors (red, dark gray, and light blue).  Within each cluster, the data points are relatively close to each other.  Superimposed on the scatter plot are three larger, star-shaped markers (one red, one dark gray, and one light blue).  These star-shaped markers are positioned near the center of their respective clusters.  The star-shaped markers represent the centroids (or means) of the clusters.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide, part of a lecture on K-means clustering, illustrates the computation of centroids in the K-means algorithm.  The scatter plot shows a dataset with three distinct clusters.  Each cluster is visually separated by color (red, dark gray, and light blue).  The star-shaped markers represent the calculated centroids for each cluster.  The centroids are positioned near the center of mass of the data points within each cluster.  The purpose of this slide is to demonstrate how the algorithm calculates the centroids after the initial random assignment of data points to clusters.  The slide visually shows the result of the relocation of means step in the K-means algorithm.  The title "Example: Compute Centroids" clearly indicates the purpose of the plot.  The plot shows the data points and the calculated centroids, which are the means of the data points in each cluster.

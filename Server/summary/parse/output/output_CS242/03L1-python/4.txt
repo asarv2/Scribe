@@ -1,0 +1,16 @@
+# Slide 4
+
+# Anaconda
+
+Download Anaconda: https://www.anaconda.com/download/
+Install by following the instructions on the download page.
+Run Anaconda Navigator
+Install Jupyter Notebook by clicking “Launch Jupyter Notebook 5.0.0” from anaconda GUI.
+To run the notebook, start the notebook server from the command line:
+jupyter notebook
+You should see the notebook open in your browser
+
+
+## Description of the Slide
+
+This slide, part of a lecture on Introduction to Data Science, provides instructions on setting up the Anaconda environment for the course.  The title "Anaconda" is prominent at the top.  The content is a bulleted list, providing step-by-step instructions for downloading, installing, and running Jupyter Notebooks using Anaconda.  The URL for downloading Anaconda is included, and the slide also mentions using the Anaconda Navigator and the command line.  The inclusion of the Anaconda logo (a stylized green circle with a network pattern inside) reinforces the importance of this software for the course.  The slide is designed to guide students through the initial setup process.  The context from previous slides indicates that this is a continuation of the discussion on Python environments and the tools needed for the course.

@@ -1,0 +1,27 @@
+# Slide 47
+
+**Normalizing a feature**
+
+So lets normalize those scores
+
+```
+df_final['Normalized'] = df_final.Grade.map(lambda x: (x - avgGrade)/stdGrade)
+df_final.sort_values(['Normalized'])
+```
+
+First, lets make the average 77
+
+```
+df_final.Grade += 10
+```
+
+The deviation looks ok. Lets set some boundaries
+
+
+---
+
+**Description of the Slide:**
+
+This slide describes the process of normalizing a feature, specifically the 'Grade' column in a DataFrame (`df_final`).  The code snippet `df_final['Normalized'] = df_final.Grade.map(lambda x: (x - avgGrade)/stdGrade)` normalizes the 'Grade' column by subtracting the average grade (`avgGrade`) from each value and then dividing by the standard deviation (`stdGrade`).  The result is stored in a new column named 'Normalized'.  The subsequent line `df_final.sort_values(['Normalized'])` sorts the DataFrame by the 'Normalized' column.  The line `df_final.Grade += 10` adds 10 to each value in the 'Grade' column.  The final sentence, "The deviation looks ok. Lets set some boundaries", suggests that the slide is part of a larger discussion about data analysis and preparing data for further analysis or modeling.  The slide is entirely text-based, with no figures or tables.  The purpose is to explain the normalization process and the steps involved.
+
+

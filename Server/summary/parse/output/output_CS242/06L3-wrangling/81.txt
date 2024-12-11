@@ -1,0 +1,36 @@
+# Slide 81
+
+**Useful commands**
+
+```
+wc -l file1.dat          # counts number of lines in a file
+wc -w file1.dat          # counts number of words in a file
+head -100 file1.dat      # output first 100 lines of file
+tail file1.dat           # output last ten lines of file
+sort file1.dat           # sort the contents of a file (default is alphabetical)
+cat file1.dat file2.dat >newfile.dat     # concatenates input into new file
+sort file1.dat | uniq       # sort the file and remove any duplicate lines  
+sort file1.dat | uniq -c    # remove duplicates, output counts for each occur. 
+```
+
+Piping redirects output of previous command to input of next command
+
+
+---
+
+**Description of the Slide:**
+
+This slide provides a list of useful command-line commands, likely for working with text files.  The commands are presented in a list format, with each command followed by a brief description (in comments).  The commands include:
+
+*   `wc -l file1.dat`: Counts the number of lines in the file `file1.dat`.
+*   `wc -w file1.dat`: Counts the number of words in the file `file1.dat`.
+*   `head -100 file1.dat`: Outputs the first 100 lines of the file `file1.dat`.
+*   `tail file1.dat`: Outputs the last ten lines of the file `file1.dat`.
+*   `sort file1.dat`: Sorts the contents of the file `file1.dat` (alphabetically by default).
+*   `cat file1.dat file2.dat >newfile.dat`: Concatenates the contents of `file1.dat` and `file2.dat` into a new file named `newfile.dat`.
+*   `sort file1.dat | uniq`: Sorts `file1.dat` and then removes any duplicate lines.
+*   `sort file1.dat | uniq -c`: Sorts `file1.dat`, removes duplicate lines, and outputs the count of each unique line.
+
+The slide also explains the concept of "piping," where the output of one command is used as the input for another.  The purpose of this slide is to provide a reference for common command-line utilities that can be used for data manipulation tasks.  The slide is entirely text-based, with no figures or tables.
+
+

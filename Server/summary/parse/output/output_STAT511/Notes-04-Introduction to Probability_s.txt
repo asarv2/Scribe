@@ -1,0 +1,246 @@
+# Slide 1
+
+**Basic Probability**
+
+* **Practical Statistics:**
+    * Data is available; we make inference on the properties of the unknown population.
+* **Mathematical Probability:**
+    * We are now dealing with mathematical theory. In this scenario, we have complete information about a population in the form of a census and so know the values of all population parameters. Or we know all about all possible experimental outcomes. We use this information and probability theory (subject of this set of notes) to calculate the chance a random experiment has a particular outcome.
+    * Population is completely known; we study how the data would be like.
+
+**Sample Space and Random Events**
+
+* **Random experiment:** any activity or process whose results are subject to uncertainty. These results are called outcomes. Examples of a random experiment: Selecting at random, one individual from the population (a SRS of size 1).
+* **Practical definition of Probability:**
+    * P(A) = probability that A occurs = number of experiments that A occurs / total number of repeated experiments.
+    * Therefore, in reality, probability can be interpreted as long-run frequency of repeated experiments.
+
+**Probability triplet:** sample space, events, and probability measurement
+
+* **Sample space (S):** A set that contains all possible outcome of an experiment.
+    * **Examples:**
+        * If the experiment consists of tossing a die, the sample space contains  _outcomes_, S = {  }.
+        * If the experiment consists of tossing a coin, the sample space contains _outcomes_, S = { }.
+        * If the experiment consists of tossing THREE coins, the sample space contains all possible combinations of heads and tails, S = { }.
+        * If the experiment is to toss coins INDEFINITE times until a Head appears, then the sample space is S = { }.
+        * Consider an experiment where the observation is reaction time to a certain stimulus. Here, the sample space would consist of _reaction time_ to a certain stimulus, that is, S = _reaction time_.
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces the concept of basic probability in the context of statistical methods.  It begins by contrasting practical statistics (where data is incomplete) with mathematical probability (where data is complete).  The slide then defines a random experiment and its outcomes, and introduces the concept of sample space.  Crucially, it provides examples of sample spaces for various experiments, including tossing a die, a coin, and multiple coins.  The final example, tossing a coin until a head appears, highlights the concept of an infinite sample space.  The slide also defines probability using a practical definition and explains how probability can be interpreted as a long-run frequency.  The slide is structured to introduce key concepts and provide examples for better understanding.  The blank spaces for the examples are meant to be filled in with the appropriate outcomes.
+
+
+# Slide 2
+
+**STAT 511 Course Notes – set 4**
+
+**Yuan Qu**
+
+* The sample space can be classified into two types:
+    * Countable - If the elements of a sample space can be put into 1-to-1 correspondence with a subset of integers, the sample space is countable.
+    * Uncountable - Otherwise, it is uncountable.
+
+* Event – Any subset of outcomes contained in S, including S itself and empty set.
+    * Simple event – An event that consists of one and only one outcome of S.
+    * Compound event – An event that consists of more than one outcome of S.
+    * Example: if the experiment consists of tossing THREE coins, the sample space contains all possible combinations of heads and tails, S ={ HHH, HHT, HTH, HTT, THH, THT, TTH, TTT }.
+    * Event A={ HHH } means exactly three Heads occur. Simple or compound?
+    * Event B={ HHH, HHT } means HHH or HHT occurs, in other words, the first two are both Heads. Simple or compound?
+
+**Set operations on events**
+
+* The complement of event A,
+    * Denoted Ac or A’. Ac = S \ A.
+    * The event consists of all outcomes that are NOT included in the outcomes of event A.
+
+* The intersection of two events A and B,
+    * Denoted 𝐴∩𝐵.
+    * The event that both A AND B occur.
+
+* The union of two events A and B
+    * Denoted 𝐴∪𝐵.
+    * The event that either event A OR B occurs.
+
+**Example 4.1** Let S={ 0,1,2,3,4,5,6 }, A={ 0,1,2,3,4 }, B={ 3,4,5,6 }, C={ 1,3,5 }. Then
+    * A’ = {  }
+    * 𝐴∪𝐵 = {  }
+    * 𝐴∪𝐶 = {  }
+    * 𝐴∩𝐵 = {  }
+    * 𝐴∩𝐶 = {  }
+    * (𝐴∩𝐶)′ = {  }
+
+* Null event
+    * Denoted ∅.
+    * The event that consists of no outcomes whatsoever. (Analogous to 0 in the context of plus and minus operations on numbers.)
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Statistical Methods, continues the discussion of probability concepts.  It builds on the previous slide by defining and illustrating different types of events (simple and compound) and introducing set operations on events (complement, intersection, and union).  The example (Example 4.1) demonstrates how to apply these operations to specific sets.  The slide uses the notation S to represent the sample space, and the empty sets are left blank for the student to fill in the results of the set operations.  The example of tossing three coins is used to illustrate the concept of sample space and events.  The slide is organized logically, progressing from definitions to examples, and is designed to help students understand the fundamental concepts of probability.
+
+
+# Slide 3
+
+**STAT 511 Course Notes – set 4**
+
+**Yuan Qu**
+
+* **Mutually exclusive events** – Also called disjoint events.
+    * 𝐴∩𝐵= ∅.
+    * Given events 𝐴1, 𝐴2, 𝐴3, … …, these events are said to be mutually exclusive (or pairwise disjoint) if no two events have any outcomes in common.
+
+* **Venn diagrams**
+
+**(a) Venn diagram of events A and B**  (A circle overlapping with a circle B)
+**(b) Shaded region 𝐴∩𝐵** (The overlapping region of the circles)
+**(c) Shaded region 𝐴∪𝐵** (The entire area of both circles)
+**(d) Shaded region is A** (A circle completely shaded)
+**(e) Mutually exclusive events** (Two separate circles, no overlap)
+
+* **Example 4.2:** Paulos (1988) tells the story of a weather forecaster on American TV who reported that there was a 50% chance of rain on Saturday and a 50% chance of rain on Sunday, from which he concluded that there was a 100% chance of rain on the weekend.
+    * What is wrong with the weather forecaster’s reasoning?
+
+* **Basic Probability Rules**
+
+* **Interpretation of probability**
+    * P(A) can be interpreted as a long-term frequency of occurrence of the event A, when the experiment is replicated many times.
+    * P(A) = # of times A occurs / # of times chance operation is repeated.
+
+* **Equally likely outcomes** - A classic probability definition with equally likely outcomes.
+    * P(A) = # of elements in A / # of elements in the whole sample space.
+
+* **Example 4.3** You have six unread mysteries on your bookshelf and six unread science fiction books. The first three of each type are hardcover, and the last three are paperback. Consider randomly selecting one of the six mysteries and then randomly selecting one of the six science fiction books.
+    * What is the probability of the event A that both selected books are paperbacks?
+    * 𝑆 = {(𝑚1, 𝑓1), (𝑚1, 𝑓2), … … , (𝑚1, 𝑓6)
+    
+       (𝑚2, 𝑓1), (𝑚2, 𝑓2), … … , (𝑚2, 𝑓6)
+    
+       … …
+    
+       (𝑚6, 𝑓1), (𝑚6, 𝑓2), … … , (𝑚6, 𝑓6)}.
+    * 𝐴= {(𝑚4, 𝑓4), (𝑚4, 𝑓5), (𝑚4, 𝑓6), (𝑚5, 𝑓4), (𝑚5, 𝑓5), (𝑚5, 𝑓6), (𝑚6, 𝑓4), (𝑚6, 𝑓5), (𝑚6, 𝑓6)}
+    * 𝑃(𝐴) =
+
+
+---
+
+**Description of the Slide:**
+
+This slide continues the lecture on probability, focusing on mutually exclusive events, Venn diagrams, and basic probability rules.  The slide introduces the concept of mutually exclusive events, illustrating them with Venn diagrams.  The diagrams visually represent the intersection and union of events, and the mutually exclusive case where events don't overlap.  Example 4.2 presents a classic reasoning error in probability, highlighting the importance of understanding the concepts.  Example 4.3 introduces a problem involving selecting books from a bookshelf, requiring the calculation of a probability based on equally likely outcomes.  The slide is structured to build on previous concepts and introduce new examples for better understanding.  The slide also includes a sample space (S) and an event (A) for the example problem, which are crucial for calculating the probability.  The final part of the slide leaves the calculation of P(A) blank, indicating that this is a problem for the students to solve.
+
+
+# Slide 4
+
+**STAT 511 Course Notes – set 4**
+
+**Yuan Qu**
+
+* **Probability Axiom**
+    * Probability calculation is based on some rules,
+        * For any event A, 0 ≤ P(A) ≤ 1.
+        * P(S) = 1.
+        * If A<sub>1</sub>, A<sub>2</sub>, A<sub>3</sub>, … is an infinite collection of disjoint events i.e., A<sub>i</sub> ∩ A<sub>j</sub> = ∅, then
+          P(A<sub>1</sub> ∪ A<sub>2</sub> ∪ A<sub>3</sub> ∪… … ) = Σ P(A<sub>i</sub>)
+          <sub>i=1</sub><sup>∞</sup>
+* The third axiom formalizes the idea that if we wish the probability that at least one of a number
+of events will occur and no two of the events can occur simultaneously, then the chance of at
+least one occurring is the sum of the chances of the individual events.
+
+* **Probability propositions**
+    * P(A) + P(A') = 1, or P(A') = 1 – P(A).
+    * P(∅) = 0.
+    * For any event A, P(A) ≤ 1.
+    * For any two events A and B, P(A∪B) = P(A) + P(B) – P(A∩B)
+    * For any three events A, B and C,
+      P(A∪B∪C) = P(A) + P(B) + P(C) – P(A∩B) – P(A∩C) – P(B∩C) + P(A∩B∩C).
+    * If the events A and B are mutually exclusive then
+      P(A or B) = P(A∪B) = P(A) + P(B).
+
+* **A classic probability definition with equally likely outcomes**
+    * P(A) = number of elements in A / number of elements in the whole sample space
+
+* **Example of finding probabilities 4.4 Question #27 on Page 64.**
+    * An academic department with five faculty members—Anderson, Box, Cox, Cramer, and Fisher—must
+      select two of its members to serve on a personnel review committee. Because the work will be time-
+      consuming, no one is anxious to serve, so it is decided that the representative will be selected by
+      putting the names on identical pieces of paper and then randomly selecting two.
+    * S = {(Anderson, Box), (Anderson, Cox), (Anderson, Cramer), (Anderson, Fisher),
+           (Box, Cox), (Box, Cramer), (Box, Fisher), (Cox, Cramer), (Cox, Fisher), (Cramer, Fisher)}
+    * a) What is the probability that both Anderson and Box will be selected?
+      P((Anderson, Box)) =
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a Statistical Methods lecture, continues the development of probability concepts.  It introduces the "Probability Axiom," which lays out the fundamental rules for calculating probabilities.  The slide defines the axioms in terms of any event A, the sample space S, and a collection of disjoint events.  It then presents probability propositions, including the rules for calculating probabilities of unions of events (two and three events).  The slide also introduces the concept of mutually exclusive events and how to calculate their probabilities.  A classic definition of probability with equally likely outcomes is presented.  Finally, the slide presents a practical example (Example 4.4, Question #27) involving selecting two faculty members from a department, requiring the calculation of a specific probability.  The example includes a sample space (S) listing all possible pairs of selections.  The problem is posed to find the probability of selecting both Anderson and Box.  The slide is designed to build on previous concepts and provide a practical application of the probability rules.
+
+
+# Slide 5
+
+**STAT 511 Course Notes – set 4**
+
+**Yuan Qu**
+
+b) What is the probability that at least one of the two members whose name begins with C is selected?
+P(at least one of the two members whose name begins with C is selected)
+= 1 − P(no members whose name begins with C is selected) =
+
+c) If the five faculty members have taught for 3, 6, 7, 10, and 14 years, respectively, at the university, what is the probability that the two chosen representatives have a total of at least 15 years’ teaching experience there?
+P(a total of at least 15 years’ teaching experience)
+= 1 − P(a total of < 15) = 1 −  # of elements in {(3,6), (3,7), (3,10), (6,7)} / 10 =
+
+
+• Constructing probability while S is countable:
+o Denote S = {𝑠<sub>1</sub>, 𝑠<sub>2</sub>, 𝑠<sub>3</sub>, … … }, find any sequence of 𝑝<sub>1</sub>, 𝑝<sub>2</sub>, 𝑝<sub>3</sub>, … …, such that ∑𝑝<sub>𝑖</sub> = 1. Then define
+P(A) = ∑ 𝑝<sub>𝑖</sub> {𝑖: 𝑠<sub>𝑖</sub> ∈ 𝐴}.
+
+
+Example of finding probabilities 4.5:
+Booth et al (2003, Journal of the American
+Medical Association, 289, 2801-9) report
+the results of a study conducted in 2003,
+involving 144 adult patients admitted to
+one of 10 hospitals in the greater Toronto
+area. The patients had a diagnosis of
+suspected or probable severe acute
+respiratory syndrome (SARS). The earliest
+symptoms of SARS are shown in the table
+below. Suppose that a patient is selected
+at random from the 144 patients in the
+study.
+
+NOTE: P(randomly chosen patient falls into a category) = proportion of patients in that category.
+
+• The probability that the patient reported a cough.
+P(cough)
+= P(fever with just cough) + P(fever with both prodrome and cough) + P(cough alone)
++ P(Prodrome with just cough) =
+
+• The probability that the patient reported none of the three symptoms.
+P(none of the three symptoms)
+= 1 − P(at least one of the three symptoms) =
+
+
+| Symptom | % of patients |
+|---|---|
+| Fever without prodrome or cough | 29% |
+| Fever with just prodrome | 23% |
+| Fever with just cough | 11% |
+| Fever with both prodrome and cough | 11% |
+| Cough alone | 9% |
+| Prodrome with just cough | 4% |
+| Prodrome alone | 13% |
+
+
+---
+
+**Description of the Slide:**
+
+This slide continues the Statistical Methods lecture, focusing on applying probability concepts to a real-world example.  The top portion of the slide presents two probability problems (b and c) related to selecting faculty members based on their names and teaching experience.  These problems require calculating probabilities based on given data.  The problems are set up to be solved using the principles of probability, including the concept of mutually exclusive events and calculating probabilities from a sample space.  The slide then introduces a general method for constructing probabilities when the sample space is countable.  The example (Example 4.5) uses a medical study (Booth et al, 2003) to illustrate the application of probability to a dataset.  A table is included, showing the proportion of patients with different symptoms of SARS.  The problems on the slide are designed to be solved using the information provided in the table.  The slide is structured to provide a practical application of the concepts introduced in previous slides.

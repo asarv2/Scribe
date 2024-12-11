@@ -1,0 +1,35 @@
+# Slide 27
+
+**Creating and accessing dictionaries**
+
+```python
+>>> d = {'user': 'bozo', 'pswd': 1234}
+>>> d['user']
+'bozo'
+>>> d['pswd']
+1234
+>>> d['bozo']
+KeyError: bozo
+>>> d['user'] = 'clown'
+>>> d
+{'user': 'clown', 'pswd': 1234}
+```
+
+Keys must be unique. Assigning to an existing key replaces its value.
+
+```python
+>>> d['id'] = 45
+>>> d
+{'user': 'clown', 'id': 45, 'pswd': 1234}
+```
+
+Dictionaries are unordered; New entry might appear anywhere in the output. (Dictionaries work by hashing)
+
+Slides adapted from UPenn CIS530 python tutorial
+
+
+## Description of the Slide
+
+This slide demonstrates how to create and access dictionaries in Python.  The examples are presented in a way that resembles an interactive Python interpreter session.  The `>>>` prompts indicate user input, and the subsequent lines show the output of the commands.  The code creates a dictionary `d` with key-value pairs for 'user' and 'pswd'.  It then demonstrates accessing values using their keys.  An attempt to access a non-existent key ('bozo') raises a `KeyError`.  The code shows how to modify an existing key-value pair and add a new key-value pair ('id').  The output shows the updated dictionary after each operation.  The slide emphasizes that dictionaries are unordered and that the order of entries in the output might vary.  The source of the examples is explicitly noted.  There are no figures on this slide.
+
+

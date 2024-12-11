@@ -1,0 +1,39 @@
+# Slide 3
+
+**Example 8.5** Consider a group of five potential blood donors—a, b, c, d, and e—of whom only a and b have type O+ blood. Five blood samples, one from each individual, will be typed in random order until an O+ individual is identified. Let the r.v. be the number of tapings necessary to identify an O+ individual.  
+Then the pmf of Y is
+
+| x | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| p(x) |  |  |  |  |
+
+**NOTE:** the pmf completely determines the randomness of the discrete random variable. Or we can claim that we know everything about this r.v. once we have knowledge of its pmf.
+
+
+**Definition:**
+Cumulative distribution function (cdf): F(x) of a discrete rv variable X with pmf p(x) is defined for every number x by
+
+𝐹(𝑥) = 𝑃(𝑋⩽𝑥) = ∑<sub>𝑦≤𝑥</sub> 𝑝(𝑦)
+
+the probability that X will be at most x.
+**NOTE:** the cdf is not only defined on the possible values of X, but any value on R.
+**NOTE:** cdf is an exactly equivalent representation of pmf. Given the cdf, we can also retrieve the pmf using 𝑝(𝑥) = 𝐹(𝑥) −𝐹(𝑥−) = the jump at x in the cdf plot.
+
+
+**Example 8.6** A store carries flash drives with either 1 GB, 2 GB, 4 GB, 8 GB, or 16 GB of memory. The accompanying table gives the distribution of Y = the amount of memory in a purchased drive:
+
+| y | 1 | 2 | 4 | 8 | 16 |
+|---|---|---|---|---|---|
+| p(y) | 0.05 | 0.10 | 0.35 | 0.40 | 0.10 |
+
+If y is less than 1, 𝐹(𝑦) = 0, [e. g.  𝐹(0.58) = 0].
+If y is at least 16, 𝐹 (𝑦) = 1, [e. g.  𝐹(25) = 1].
+The cdf is:
+
+𝑃(2 𝑋 5) = 𝐹(5) −𝐹(2 −) = 𝑃( 𝑋= 2, 3, 4, or 5 ) = 𝐹(5) −𝐹(1) = 
+𝑃(5 𝑋  10) = 𝐹(10) −𝐹(5−) = 𝐹(10) −𝐹(4) = 
+
+
+**Description of the Slide:**
+
+This slide, part of a Statistical Methods lecture, continues the discussion of random variables, specifically focusing on the cumulative distribution function (CDF) and its relationship to the probability mass function (PMF).  It introduces the definition of the CDF for a discrete random variable, showing how it's calculated from the PMF.  The slide also provides a table (Example 8.6) illustrating a discrete random variable (Y) representing the memory capacity of flash drives.  The table shows the probability of each memory capacity.  The slide also includes a note about how the CDF is defined for any real number, not just the possible values of the random variable.  The slide's layout is clear and organized, with examples and definitions presented in a tabular format for easy comprehension.  The examples are designed to illustrate the concepts of PMF and CDF in a practical context.  The slide's structure is consistent with the previous slides, maintaining a clear and organized presentation of the concepts.

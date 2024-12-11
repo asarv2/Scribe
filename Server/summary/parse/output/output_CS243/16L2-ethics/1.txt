@@ -1,0 +1,15 @@
+# Slide 1
+
+# Introduction to Data Science
+
+Purdue CS24200
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Data Science, likely part of a course called AI Basics.  The title, "Introduction to Data Science," is prominently displayed in a large, clear font.  Below that, the course name, "Purdue CS24200," and the instructor's name, "Tony Bergstrom," are listed.  Finally, a credit line indicates that the slides were adapted from another source, "Jen Neville, CS 24200." The background is a uniform dark gray, making the text stand out.  The overall design is simple and professional, suitable for a presentation introduction.  The slide is likely the first of a series of slides that will cover the topic of data science.

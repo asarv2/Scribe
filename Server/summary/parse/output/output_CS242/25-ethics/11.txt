@@ -1,0 +1,22 @@
+# Slide 11
+
+**Proxies for discrimination**
+
+Illegal, and generally perceived as wrong to make choices based on race, gender, religion, national origin, etc.
+
+However, proxies for these are everywhere:
+
+* Zip codes
+* Names (gender, race, national origin)
+* Purchase histories (including movies or tv shows)
+
+Machine learning that uses biased historical record + any proxy is likely to re-inscribe bias
+
+Source: Lawrence Hunter, Colorado School of Mines
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Intro to Data Science, discusses the concept of proxies for discrimination.  The title, "Proxies for discrimination," is presented in a large, bold font.  The text explains that while making choices based on race, gender, religion, or national origin is illegal and generally considered wrong, there are often indirect indicators (proxies) that can be used to make similar discriminatory decisions.  The slide lists examples of these proxies: zip codes, names (which can reveal gender, race, or national origin), and purchase histories (including movies or TV shows).  The final sentence emphasizes that machine learning models using biased historical data combined with these proxies are likely to perpetuate those biases.  The source, "Lawrence Hunter, Colorado School of Mines," is at the bottom, indicating the origin of the information.  There are no figures or images on this slide. The text is clear and concise, outlining the concept of proxies and their potential for bias in data science.  The slide likely follows the previous discussion of bias in algorithms, expanding on how biases can be hidden within data.

@@ -1,0 +1,21 @@
+# 4
+
+# Dense neural network and Convolutional neural network
+
+**Left:** A regular 3-layer Neural Network.
+
+![Diagram of a 3-layer neural network](https://i.imgur.com/a700000.png)
+
+**Right:** A ConvNet arranges its neurons in three dimensions (width, height, depth), as visualized in one of the layers. Every layer of a ConvNet transforms the 3D input volume to a 3D output volume of neuron activations. In this example, the red input layer holds the image, so its width and height would be the dimensions of the image, and the depth would be 3 (Red, Green, Blue channels).
+
+![Diagram of a convolutional neural network](https://i.imgur.com/b700000.png)
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, compares a standard 3-layer neural network (left) with a convolutional neural network (CNN or ConvNet, right).  The diagrams illustrate the fundamental difference in how these networks process data.
+
+* **Left (Standard Neural Network):**  A simple, 3-layer network is shown.  The input layer, hidden layer 1, and hidden layer 2, and output layer are depicted as circles (nodes) connected by lines (weights).  The circles are colored in a way to distinguish the layers.  This diagram visually represents the sequential, fully connected nature of a standard neural network.
+
+* **Right (Convolutional Neural Network):** A diagram of a ConvNet layer is shown.  The input layer is depicted as a 3-dimensional block (a cube).  The dimensions of this block are labeled as "width," "height," and "depth."  The depth is specifically labeled as 3, indicating the three color channels (Red, Green, Blue) of an image.  The output layer is also shown as a 3-dimensional block, implying that the ConvNet also processes data in three dimensions.  The arrows between the input and output layers visually represent the transformation process.  This diagram highlights the hierarchical and spatial processing capabilities of a ConvNet.
+
+The text below the diagrams explains the difference in how the networks arrange their neurons and process data.  The text emphasizes that a ConvNet processes data in three dimensions (width, height, and depth), unlike a standard neural network, which processes data in a more linear fashion.  The text also explains that the input layer in the ConvNet example represents an image, and the depth of 3 corresponds to the RGB color channels.  The overall purpose of the slide is to introduce the concept of convolutional neural networks and contrast them with standard neural networks.

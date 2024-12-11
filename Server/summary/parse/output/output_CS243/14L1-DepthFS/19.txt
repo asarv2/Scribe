@@ -1,0 +1,18 @@
+# Slide 19
+
+**Mazes – A first problem**
+
+How do we represent a maze in terms of search?
+
+* What is a "State"?
+* What "Actions" can we take
+* How will we search the states?
+
+**(Diagram):**
+
+A 4x4 grid-based maze is depicted.  The maze is represented by a grid with rows and columns labeled 0-3.  Solid black lines delineate the walls of the maze.  A starting point (0,0) is clearly marked within the maze.  A potential exit point (2,3) is also visible within the maze.  The diagram is positioned centrally on the slide and is oriented vertically.  The maze is a visual representation of a problem that can be solved using search algorithms.  The grid structure and the walls of the maze illustrate the constraints of the problem.  The starting and potential exit points define the initial and goal states, respectively.  The grid itself is a visual representation of the possible states in the maze.
+
+
+**Description:**
+
+This slide continues the discussion of mazes as a problem-solving example in AI.  It reiterates the questions from the previous slide about representing a maze for search: defining states, possible actions, and the search strategy.  The diagram of the maze is a visual aid to help understand the problem.  The maze is a 4x4 grid, with walls represented by solid black lines.  The grid is labeled with row and column numbers (0-3).  The maze has a clear start (0,0) and a possible exit (2,3).  The diagram is positioned centrally on the slide and is oriented vertically.  The purpose of the diagram is to illustrate a simple maze problem, which will be used as an example to discuss the representation of states, actions, and search strategies in the context of AI problem-solving.  The slide is likely part of a lecture section on search algorithms in AI, where mazes are used as a simplified example to illustrate the fundamental concepts of state representation, actions, and search strategies.  The slide also includes text describing how to approach solving the maze, including starting at (0,0) and searching for (2,3) by expanding possible moves (L, R, U, D).  The text also mentions the importance of identifying redundant states to avoid loops and improve efficiency.

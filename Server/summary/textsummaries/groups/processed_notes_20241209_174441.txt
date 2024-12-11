@@ -1,0 +1,45 @@
+
+--- Key Terms ---
+artifical intelligence basics
+artificial neural networks
+machine learning fundamentals
+image processing and computer vision
+linear algebra
+data mining and clustering
+logic and reasoning
+search and optimization
+fairness and bias in ai
+--- Problem Types ---
+artifical intelligence basics
+fundamental ai concepts
+ai search & optimization
+game playing ai
+machine learning fundamentals
+neural networks
+computer vision
+linear algebra for ai
+regression & classification
+clustering
+dimensionality reduction
+recommender systems
+sat solvers & reasoning
+autonomous vehicles
+data handling & ethics
+datasets
+s-fold cross validation
+control model complexity
+when to get more data
+--- Algorithm Solutions ---
+artifical intelligence basics
+linear algebra
+calculus
+machine learning algorithms
+recommender systems
+image processing
+artificial intelligence search
+sat solvers
+data structures and algorithms
+model evaluation and bias
+distance metrics
+neural networks
+dimensionality reduction

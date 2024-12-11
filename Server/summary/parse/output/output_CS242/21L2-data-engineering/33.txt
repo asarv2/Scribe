@@ -1,0 +1,22 @@
+# Slide 33
+
+```python
+import functools
+data = [1, 2, 3, 4]
+values = list(map(lambda x: x*x, data))  # map() returns an iterator
+# values = [1, 4, 9, 16]
+output = functools.reduce(lambda x,y: x+y, values)
+# output = 30
+```
+
+**Description:**
+
+This slide presents Python code demonstrating the `map` and `reduce` functions in the context of a MapReduce-like operation.  The code calculates the sum of squares of a list of numbers.
+
+* **Import Statement:** `import functools` imports the `functools` module, which provides the `reduce` function.
+* **Data Initialization:** `data = [1, 2, 3, 4]` initializes a list named `data` containing the numbers 1 through 4.
+* **Map Operation:** `values = list(map(lambda x: x*x, data))` applies a lambda function to each element in the `data` list. The lambda function `lambda x: x*x` squares each element.  Crucially, `list()` is used to convert the iterator returned by `map` into a list, which is necessary for the subsequent `reduce` operation.
+* **Reduce Operation:** `output = functools.reduce(lambda x,y: x+y, values)` applies a lambda function to the `values` list using the `functools.reduce` function. The lambda function `lambda x,y: x+y` adds two elements together.  This effectively sums up all the squared values.
+* **Output:** `# output = 30` shows the result of the calculation, which is 30.
+
+**Overall:** The slide demonstrates a simple application of `map` and `reduce` functions in Python, illustrating how they can be used to transform and aggregate data.  The example is designed to be straightforward and easy to understand, showing the basic concepts of these functions in the context of the MapReduce paradigm.  The use of `functools.reduce` is a more robust way to perform the reduction compared to a simple loop.  The slide's focus is on the Python implementation details, not the distributed aspects of MapReduce.

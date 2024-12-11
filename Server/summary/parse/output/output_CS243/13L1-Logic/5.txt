@@ -1,0 +1,22 @@
+# 5
+
+**The Quest for Machine Reasoning**
+
+Machine Reasoning (1960-90s)
+Computational complexity of reasoning appeared to severely limit real-world applications
+
+Current reasoning technology
+Revisiting the challenge: Significant progress with new ideas / tools for dealing with complexity (scale-up), uncertainty, and multi-agent reasoning
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, discusses the evolution of machine reasoning.  The title, "The Quest for Machine Reasoning," is displayed prominently at the top.  The slide is structured to contrast the challenges of machine reasoning in the 1960s-1990s with the current state of the field.
+
+The first section, "Machine Reasoning (1960-90s)," highlights the computational complexity of reasoning during that period, which was seen as a significant limitation for real-world applications.
+
+The second section, "Current reasoning technology," indicates a shift in perspective.  It suggests that current approaches are revisiting the challenges of machine reasoning with new ideas and tools.  The phrase "Significant progress with new ideas / tools for dealing with complexity (scale-up), uncertainty, and multi-agent reasoning" implies that researchers are addressing the limitations of the past.
+
+The slide's layout is straightforward, using clear headings and concise text to present the contrast between the historical context and the current state of machine reasoning.  There are no figures on this slide.

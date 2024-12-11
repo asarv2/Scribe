@@ -1,0 +1,49 @@
+# Slide 5
+
+**Evaluation of Point Estimator**
+
+5. Let 𝑋<sub>1</sub>, 𝑋<sub>2</sub>, … , 𝑋<sub>𝑛</sub> be a random sample from a normal distribution, with mean 𝜇 and variance 𝜎<sup>2</sup>. The following are commonly used estimators (with good properties).
+
+𝜇̂ = 𝑋̅,
+𝜎̂<sup>2</sup> =  1/𝑛∑(𝑋<sub>𝑖</sub> − 𝑋̅)<sup>2</sup>
+
+Example 18.2 𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub> are independent random variables of 𝑈𝑛𝑖𝑓𝑜𝑟𝑚 (0, 𝜃). Denote the point estimator θ̂<sub>1</sub> = max {𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub>}. Is it unbiased?
+
+Let 𝑌 = max {𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub>}. Use the fact that 𝑌 ≤ 𝑦 iff each 𝑋<sub>𝑖</sub> ≤ 𝑦 to derive the cdf of Y:
+
+𝐹<sub>𝑌</sub>(𝑦) = {
+0     ,  𝑦 < 0
+(𝑦/𝜃)<sup>𝑛</sup>, 0 ≤ 𝑦 ≤ 𝜃
+1     ,  𝜃 < 𝑦
+
+The pdf of Y is,
+𝐹<sub>𝑌</sub>′(𝑦) = 𝑓<sub>𝑌</sub>(𝑦) = {
+𝑛𝑦<sup>𝑛−1</sup>/𝜃<sup>𝑛</sup>, 0 ≤ 𝑦 ≤ 𝜃
+0      , otherwise
+
+𝐸(𝜃̂<sub>1</sub>) = 𝐸(𝑌) = ∫<sub>0</sub><sup>𝜃</sup> 𝑦 ∙ 𝑛𝑦<sup>𝑛−1</sup>/𝜃<sup>𝑛</sup> 𝑑𝑦 = 𝑛/𝜃 ∫<sub>0</sub><sup>𝜃</sup> 𝑦<sup>𝑛</sup> 𝑑𝑦 = 𝑛/𝜃 [𝑦<sup>𝑛+1</sup>/(𝑛+1)]<sub>0</sub><sup>𝜃</sup> = 𝑛/(𝑛+1)𝜃
+
+θ̂<sub>1</sub> = max {𝑋<sub>1</sub>, … , 𝑋<sub>𝑛</sub>} is biased,  𝜃̂<sub>2</sub> = (𝑛+1)/𝑛𝜃̂<sub>1</sub> is unbiased.
+
+
+**Definition:**
+
+* Variance of point estimator: 𝑉𝑎𝑟(θ̂). Given several unbiased estimators, we use variance to further compare them. Smaller variance means stabler estimation, means smaller variation between sample to sample.
+* The Minimum variance unbiased estimator (MVUE) of 𝜃 is the one that has minimum variance among all unbiased estimators of 𝜃.
+* Standard error: √𝑉𝑎𝑟(θ̂).
+
+
+**(Figures):**
+
+There are three small, circular target diagrams, each with a different distribution of dots around the bullseye.  These are located in the lower portion of the slide.
+
+* **Figure (a):** Shows a high bias, low variability scenario. The dots are clustered together, but significantly off-center from the bullseye.
+* **Figure (b):** Shows a low bias, high variability scenario. The dots are spread out, but centered around the bullseye.
+* **Figure (c):** Shows a high bias, high variability scenario. The dots are both spread out and off-center from the bullseye.
+
+These figures are used to illustrate the concepts of bias and variability in point estimators.  They visually represent how the spread and location of the estimator's sampling distribution relate to its quality as an estimator.
+
+
+**Description of the Slide:**
+
+This slide continues the discussion of point estimators, focusing on evaluating them based on their bias and variance.  It introduces the concept of the minimum variance unbiased estimator (MVUE) as the optimal unbiased estimator.  The slide also defines the standard error of an estimator.  The example of the maximum value from a uniform distribution is used to illustrate how to calculate the expected value of an estimator and to show that the maximum value is a biased estimator.  The figures are crucial for understanding the trade-off between bias and variability in estimation.  The slide builds upon the previous slide's discussion of unbiasedness and introduces the concept of variance as a measure of estimator quality.

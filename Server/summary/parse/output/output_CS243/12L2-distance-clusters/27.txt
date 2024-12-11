@@ -1,0 +1,11 @@
+# 27
+
+**Example: Re-compute Centroids**
+
+---
+
+A scatter plot is displayed, showing a two-dimensional space.  Numerous small, colored data points are scattered across the plot.  The data points are clustered into three distinct groups, represented by different colors: red, light blue, and dark gray.  Within each cluster, the data points are relatively close to each other.  Three larger, star-shaped markers are superimposed on the scatter plot.  These star-shaped markers represent the centroids (or means) of the clusters.  The red star is positioned near the center of the red cluster, the light blue star near the center of the light blue cluster, and the dark gray star near the center of the dark gray cluster.  The plot is oriented horizontally.
+
+**Description of what you see:**
+
+This slide, part of a lecture on K-means clustering, illustrates the re-computation of centroids in the K-means algorithm after the reassignment of data points to clusters.  The scatter plot shows a dataset with three distinct clusters, each visually separated by color.  The data points within each cluster are now closer to each other than in the previous iteration, indicating that the algorithm has refined the cluster assignments.  The star-shaped markers represent the updated centroids for each cluster.  The purpose of this slide is to demonstrate the iterative nature of the K-means algorithm, where the centroids are recalculated in each iteration until convergence.  The title "Example: Re-compute Centroids" clearly indicates the purpose of the plot.  The plot shows the data points and the updated centroids, which are the means of the data points in each cluster after the reassignment step.  The updated positions of the centroids reflect the movement of the data points to new clusters.  The colors and positions of the points now reflect a more refined clustering compared to the previous iteration.

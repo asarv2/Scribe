@@ -1,0 +1,20 @@
+# 4
+
+# What is Clustering?
+
+Clustering: the process of grouping a set of objects into classes of similar objects
+
+* Objects within a cluster should be similar
+* Objects from different clusters should be dissimilar
+
+Clustering is the most common form of unsupervised learning
+
+* Learning from unlabeled raw data
+* A frequent and important task that finds many applications in data science
+
+
+---
+
+**Description of the slide:**
+
+This slide, part of a lecture on AI Basics, defines clustering and its characteristics.  The slide is formatted with a clear title ("What is Clustering?") followed by a definition of clustering and bullet points that describe the key characteristics of a good clustering algorithm.  The text is presented in a clear, easy-to-read font.  There are no images or figures on the slide. The slide is likely part of a larger presentation explaining the different types of machine learning tasks, specifically focusing on unsupervised learning and the clustering technique.  The slide is designed to introduce the concept of clustering to the audience.

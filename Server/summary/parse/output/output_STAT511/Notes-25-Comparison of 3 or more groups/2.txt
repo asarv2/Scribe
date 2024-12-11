@@ -1,0 +1,62 @@
+# 2
+
+**STAT 511 Course Notes – set 25 (W13)**
+
+**Yuan Qu**
+
+Let 𝑇𝑋= ∑𝑋𝑖, 𝑇𝑌= ∑𝑌𝑖, then 𝑇𝑋~𝐵𝑖𝑛(𝑚, 𝑝1) and 𝑇𝑌~𝐵𝑖𝑛(𝑛, 𝑝2).
+
+**Proposition:**
+
+* 𝑝̂1 −𝑝̂2 = 𝑇𝑋/𝑚−𝑇𝑌/𝑛 is a natural estimator for 𝑝1 −𝑝2.
+* 𝑝̂1 −𝑝̂2 is unbiased,
+    * 𝐸(𝑝̂1 −𝑝̂2) = 𝐸(𝑇𝑋/𝑚−𝑇𝑌/𝑛) = 𝐸(𝑇𝑋/𝑚)−𝐸(𝑇𝑌/𝑛) = 𝑝1 −𝑝2
+* 𝑉𝑎𝑟(𝑝̂1 −𝑝̂2) = 𝑝1(1 −𝑝1)/𝑚+ 𝑝2(1 −𝑝2)/𝑛
+* When the counts of “successes” and “failures” in each sample or group, 𝑚𝑝̂1, 𝑚(1 −𝑝̂1), 𝑛𝑝̂2, 𝑛(1 −𝑝̂2) are all at least 10, the standardized variable of 𝑝̂1 −𝑝̂2 has a Z distribution.
+
+
+**Z Confidence interval for the difference in population proportion:**
+The approximate 1 −𝛼 level CI can be easily derived as
+(𝑝̂1 −𝑝̂2) ± 𝑍1−α 2
+⁄ √𝑝̂1(1 −𝑝̂1)
+𝑚
++ 𝑝̂2(1 −𝑝̂2)
+𝑛
+
+
+**Proposition:**
+
+* Under the null hypothesis 𝐻0: 𝑝1 = 𝑝2, we view both samples as coming from a single population with proportion 𝑝1 = 𝑝2 = 𝑝.
+* 𝑉𝑎𝑟(𝑝̂1 −𝑝̂2) = 𝑝(1 −𝑝)
+𝑚
++ 𝑝(1 −𝑝)
+𝑛
+= 𝑝(1 −𝑝)(1
+𝑚+ 1
+𝑛)
+
+To estimate 𝑝, we use:
+𝑝̂ = 𝑇𝑋+ 𝑇𝑌
+𝑚+ 𝑛=
+𝑚
+𝑚+ 𝑛𝑝̂1 +
+𝑛
+𝑚+ 𝑛𝑝̂2
+
+
+**Test statistic:**
+𝑍𝑇𝑆=
+(𝑝̂1 −𝑝̂2) −0
+√𝑝̂(1 −𝑝̂)(1
+𝑚+ 1
+𝑛)
+
+
+**Example 9.11 on page 393.**
+
+
+---
+
+**Description of the Slide:**
+
+This slide (number 2) continues the discussion from the previous slide about statistical inference, specifically focusing on comparing two populations' proportions.  It provides formulas and calculations for estimating the difference between two population proportions (𝑝̂1 −𝑝̂2).  The slide introduces the concept of a Z confidence interval for this difference, along with the necessary assumptions and conditions for its validity.  Crucially, it details how to calculate the variance of the difference in proportions under the null hypothesis (that the proportions are equal).  The slide also defines the test statistic (𝑍𝑇𝑆) used to test the null hypothesis.  The example reference (Example 9.11 on page 393) suggests this is part of a larger statistical methods textbook or course material.  The overall structure and content align with the previous slide's focus on hypothesis testing and confidence intervals for comparing two populations.

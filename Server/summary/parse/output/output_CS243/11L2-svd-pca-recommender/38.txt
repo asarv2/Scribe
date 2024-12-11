@@ -1,0 +1,17 @@
+# 38
+
+```markdown
+Computation of Matrix Factors
+Problem 1:
+Most of the entries in the Ratings (R) matrix are missing
+i.e., only 100 x 10<sup>6</sup> / (480k x 17k) ~1% are present
+```
+
+**Figure Description:**
+
+There are no figures on this slide.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, discusses a problem in computing matrix factors, specifically related to recommender systems.  The slide states that most entries in the ratings matrix (R) are missing.  The example given shows that only approximately 1% of the entries in a large user-item matrix are present.  The dimensions of the matrix are given as 480,000 users and 17,700 movies, and the calculation shows the sparsity of the data.  The slide is focused on the problem of missing data in the context of recommender systems, which is a significant challenge for algorithms that need to predict missing ratings.

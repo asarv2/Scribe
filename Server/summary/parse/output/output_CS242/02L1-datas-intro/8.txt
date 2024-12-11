@@ -1,0 +1,17 @@
+# Slide 8
+
+**Data Science**
+
+A Venn diagram is presented, illustrating the overlapping areas of different skills and knowledge areas related to data science.
+
+* **Data Science:** The central, overlapping area of the three circles.
+* **Math & Statistics:** A light-green colored circle, overlapping with the Data Science and Machine Learning circles.
+* **Machine Learning:** A light-pink colored circle, overlapping with the Data Science and Math & Statistics circles.
+* **Traditional Research:** A light-purple colored circle, overlapping with the Data Science and Math & Statistics circles.
+* **Hacking Skills:** A light-pink colored circle, located on the bottom left of the diagram, overlapping with the Data Science circle.
+* **Substantive Expertise:** A light-purple colored circle, located on the bottom right of the diagram, overlapping with the Data Science circle.
+* **Danger Zone:** A light-purple colored area, located in the center of the diagram, where the three circles overlap.
+
+**Description:**
+
+The slide uses a Venn diagram to visually represent the interrelationship between different skills and knowledge areas crucial for data science.  The overlapping areas highlight the interconnectedness of these components.  The different colored circles represent distinct areas, such as math and statistics, machine learning, traditional research, hacking skills, and substantive expertise.  The "Danger Zone" area, located in the center, likely represents a space where these skills need to be carefully balanced and integrated to avoid pitfalls or challenges.  The overall design is intended to visually communicate the multifaceted nature of data science and the diverse skill sets required for success in this field.  The slide is likely part of a lecture introducing the concept of data science and its various components.

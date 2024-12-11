@@ -1,0 +1,16 @@
+# Slide 40
+
+**Example II: Poor Clustering**
+
+Two visualizations are presented on the slide:
+
+* **Left Panel (Scatter Plot):** A scatter plot displays data points.  There are three distinct clusters of data points, each colored differently (red, green, and blue).  The x-axis ranges from approximately 0 to 1, and the y-axis ranges from approximately 0 to 1.  However, the clusters are not well-separated, and some points appear to be misclassified or located in areas where the clusters overlap.  The data points are small circles.
+
+* **Right Panel (Proximity Matrix):** A heatmap-like proximity matrix is shown.  The matrix is a square grid of colored squares, where the colors vary from a light blue to a bright orange/red.  The colors represent the proximity (or distance) between data points.  The pattern of colors in the matrix does *not* clearly reflect a block-like structure corresponding to the clusters.  Instead, there are areas of mixed colors, indicating that the distances between data points in different clusters are not consistently higher than the distances between points within the same cluster.  This lack of a clear block pattern visually confirms that the clustering is not optimal.  The proximity matrix is reordered to reflect the cluster assignments, but the reordering does not result in a clear separation of clusters in the matrix.
+
+
+**Description:**
+
+This slide provides an example of a "poor" clustering result.  The scatter plot on the left visually demonstrates the overlapping or poorly separated clusters.  The proximity matrix on the right confirms this poor clustering by showing a lack of a clear block pattern in the reordered matrix.  This example contrasts with the previous slide's "good" clustering example, highlighting the visual cues for identifying a poor clustering result.  The slide is part of a lecture on clustering, illustrating how a poorly structured clustering will appear in both a scatter plot and a proximity matrix.
+
+

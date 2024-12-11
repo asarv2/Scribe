@@ -1,0 +1,42 @@
+# Slide 3
+
+**STAT 511 Course Notes – set 20 (W10)**
+
+**Yuan Qu**
+
+We will discuss 3 situations:
+
+I. Large sample CI for population mean μ
+II. Confidence Intervals for Proportions p
+III. Small sample CI for population mean under normal distribution and unknown σ<sup>2</sup>
+
+
+I. Large sample CI for population mean μ
+
+Our CI formula in last section requires: 1) normality, 2) known standard deviation. CI for the population mean μ is,
+
+(𝑥̅ − z∗∙σ/√n, 𝑥̅ + z∗∙σ/√n)
+
+Now we consider if these conditions don’t hold. Suppose X<sub>1</sub>, …, X<sub>n</sub> are random sample with unknown mean μ and unknown variance σ<sup>2</sup>.
+
+First of all, even they are not normal rv’s, by CLT, we still have the large sample approximation that
+
+𝑥̅ ≈ N(μ, σ<sup>2</sup>/n) and  (𝑥̅−μ)/(σ/√n) ≈ Z
+
+If furthermore, if we have a good estimation σ̂ for σ, we can plug in this estimator, then we obtain
+
+(𝑥̅−μ)/(σ̂/√n) ≈ Z
+
+One popular estimator for population standard deviation is sample standard deviation. Thus, it leads to the following large sample approximated confident interval with C confidence level:
+
+(𝑥̅ − z∗∙S/√n, 𝑥̅ + z∗∙S/√n)
+
+
+Note: Because S = √(1/(n-1) * Σ(X<sub>i</sub> − 𝑥̅)<sup>2</sup>), the margin of error here is a not fixed value, but data-dependent.
+
+
+---
+
+**Description of Slide 3:**
+
+This slide, part of a lecture series on Statistical Methods (STAT 511), continues the discussion of confidence intervals (CI).  It specifically addresses the case of large sample confidence intervals for a population mean (μ) when the population standard deviation (σ) is unknown.  The slide builds upon the previous slide's discussion of CI requirements (normality and known σ).  It introduces the Central Limit Theorem (CLT) to justify the use of the normal distribution approximation for the sample mean (𝑥̅) even when the population data isn't normally distributed.  Crucially, the slide introduces the sample standard deviation (S) as a substitute for the unknown population standard deviation (σ).  The formula for the CI is presented, showing the substitution of S for σ.  The note at the bottom explains that the margin of error in this case is not a fixed value but depends on the specific data collected in the sample.  The slide is clearly organized, using bullet points and formulas to present the concepts and calculations.  The use of mathematical notation (e.g., 𝑥̅, σ, S, n) is standard in statistical contexts.

@@ -1,0 +1,35 @@
+# 18
+
+# Getting Started
+
+Import pandas, commonly aliased as pd
+```python
+import pandas as pd
+```
+First, lets construct a data frame from an existing data structure
+```python
+data = {'Asia': ['$43567', '$28945', '$36900', '$67890'],
+        'Africa': ['$13459', '$12005', '$14589', '$57894'],
+        'Americas': ['$40045', '$44589', '$52398', '$107890'],
+        'Australia/Oceania': ['$27890', '$34569', '$45690', '$78930'],
+        'Europe': ['$33569', '$45700', '$56890', '$66003']}
+data_sales = pd.DataFrame(data)
+```
+
+---
+
+**Description:**
+
+This slide, titled "Getting Started," demonstrates how to create a Pandas DataFrame from a dictionary.
+
+* **Import Statement:** The slide shows the Python code to import the Pandas library, aliased as `pd`.
+
+* **Data Structure:** The slide presents a Python dictionary (`data`) containing key-value pairs.  The keys represent different regions ('Asia', 'Africa', etc.), and the values are lists of sales figures (represented as strings).  The values are enclosed in square brackets, indicating they are lists.  Each list contains four sales figures.
+
+* **DataFrame Creation:** The slide shows the Python code to create a Pandas DataFrame (`data_sales`) from the `data` dictionary.  The `pd.DataFrame(data)` part creates the DataFrame.
+
+* **Code Formatting:** The Python code is presented within code blocks, using backticks (````python`) to indicate code.  The code is formatted to be easily readable, with proper indentation and variable names.  The code is a complete Python script, which is a common way to present code examples in a data science lecture.
+
+**Overall:** The slide is part of a larger lecture on data science, specifically focusing on the Pandas library.  The slide demonstrates how to create a Pandas DataFrame from a dictionary, which is a fundamental operation in data analysis using Pandas.  The code example is a complete Python script, which is a common way to present code examples in a data science lecture.  The code is likely intended to illustrate the creation of a DataFrame from a dictionary, which is a fundamental operation in data analysis using Pandas.
+
+

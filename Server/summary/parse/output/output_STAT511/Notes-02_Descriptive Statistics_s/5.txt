@@ -1,0 +1,48 @@
+# Slide 5
+
+**We use four different properties to describe numerical variables:**
+
+1) Shape
+2) Center
+3) Variability
+4) Unusual observations (data points whose value differs noticeably from the other values)
+
+**Three statistics used to measure the center of a data set**
+
+**Mode** (the least important statistic)
+* The value taken most frequently by the subjects.
+
+**Mean**
+* The "average" value of a variable.
+* The population mean is denoted as μ. The average value if we know the values of all objects in a census.
+* The sample mean of a data set is defined as
+  x̄ = (x<sub>1</sub> + x<sub>2</sub> + ... + x<sub>n</sub>) / n = 1/n Σ<sub>i=1</sub><sup>n</sup> x<sub>i</sub>
+
+**Median**
+* The middle value of an ordered data set.
+* The population median is defined as M.
+* The sample median of a data set is calculated as
+  M̂ = {
+    The single middle value if n is odd = (n+1)/2<sup>th</sup> ordered value.
+    The avg. of the two middle values if n is even = avg. of (n/2)<sup>th</sup> and (n/2 + 1)<sup>th</sup> ordered values.
+
+
+**Example 2.4:** A sample of 12 recordings of Beethoven's Symphony #9 with the random variable durations (min)
+
+x<sub>1</sub> = 62.3,  x<sub>2</sub> = 62.8,  x<sub>3</sub> = 63.6,  x<sub>4</sub> = 65.2,  x<sub>5</sub> = 65.7,  x<sub>6</sub> = 66.4,
+x<sub>7</sub> = 67.4, x<sub>8</sub> = 68.4,  x<sub>9</sub> = 68.8,  x<sub>10</sub> = 70.8,  x<sub>11</sub> = 75.7,  x<sub>12</sub> = 79.0.
+
+Sample Median = (x<sub>6</sub> + x<sub>7</sub>)/2 = (66.4 + 67.4)/2 = 66.90
+
+The sample mean is x̄ = 1/12 Σx<sub>i</sub> = 816.1/12 = 68.01, a bit more than a full minute larger than the median. The mean is pulled out a bit relative to the median because the sample "stretches out" somewhat more on the upper end than on the lower end.
+
+
+**Mean** | **Median**
+------- | --------
+μ | M
+x̄ | M̂
+
+
+**Description of the Slide:**
+
+This slide continues the Statistical Methods lecture by introducing measures of the center of a data set.  It defines the mode, mean, and median, explaining how to calculate each.  The slide provides a concrete example (Example 2.4) using Beethoven's Symphony #9 durations to illustrate the calculation of the sample mean and median.  The example shows how the mean can be influenced by extreme values (outliers) in a data set, pulling it away from the median.  The slide also introduces the distinction between population parameters (μ, M) and sample statistics (x̄, M̂).  The visual aids, including the table summarizing the mean and median, help to clarify the concepts.

@@ -1,0 +1,533 @@
+# Slide 1
+
+# Introduction to Data Science
+
+Purdue CS24200
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Introduction to Data Science.  The background is a dark gray.  The title "Introduction to Data Science" is displayed prominently in a larger, light gray font.  Below that, in a smaller, light gray font, are the course information: "Purdue CS24200" and "Tony Bergstrom" (presumably the instructor).  Finally, at the very bottom, in a very small, light gray font, is a credit line: "Slides adapted from Jen Neville, CS 24200".  This indicates that the lecture materials are based on a previous version of the course.  The overall design is clean and professional, focusing on conveying the course title and instructor information.
+
+
+# Slide 2
+
+# Data quality
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, displays the single heading "Data quality" in a dark gray, sans-serif font.  It's a simple, unadorned slide, likely serving as a heading or title for the next section of the lecture on data science.  The lack of other content suggests that this slide is a transition or a placeholder for the subsequent slide, which will contain more detailed information about data quality.
+
+
+**Description of what you see:**
+
+The slide is entirely gray, with the single word "Data quality" centered in a dark gray font.  The font size and style are consistent with the previous slide's formatting.  The slide is likely a simple heading for the next section of the lecture, which will discuss the topic of data quality in more detail.
+
+
+# Slide 3
+
+# Data quality
+
+Examples of data quality problems:
+* Noise
+* Outliers
+* Missing values
+* Duplicate data
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, focuses on the concept of data quality.  The title, "Data quality," is presented in a large, bold font at the top of the slide.  Below the title, a bulleted list provides examples of data quality problems.  The bullet points are clearly marked with the standard bullet symbol ("•").  The items listed—Noise, Outliers, Missing values, and Duplicate data—are all common issues encountered when working with datasets.  The slide's purpose is to introduce these problems as potential challenges in data analysis.  The simple, uncluttered design allows the reader to quickly grasp the key concepts.
+
+
+
+
+# Slide 4
+
+**Noise**
+
+Noise refers to measurement error in data values
+
+* **Random errors:** inconsistencies in measurement, e.g., different people reporting heights measured with a ruler (some may be an overestimate others may be an underestimate)
+* **Systematic (bias) errors:** methodological/personal errors that consistently deviate in one direction, e.g., heights measured with a "broken" ruler that is shorter than the numbers indicate
+
+---
+
+**Figure Description:**
+
+A line graph is presented, titled "Random Errors vs Bias Errors". The x-axis is labeled "Time", and the y-axis is labeled "Concentration".  The graph displays a fluctuating line in a light-blue color, representing a variable over time.  A horizontal gray bar spans the top portion of the graph, and is labeled "Random".  A dark-brown line is also present, running horizontally across the graph, representing a mean or average value.  The graph visually illustrates the difference between random and systematic errors.  The random error is represented by the fluctuating line, while the systematic error is represented by the gray bar.  The graph is positioned in the right half of the slide, and the text descriptions of random and systematic errors are positioned on the left side of the slide. The graph is used to illustrate the concept of noise in data, showing how random fluctuations (the blue line) can be present alongside a consistent bias (the gray bar).
+
+
+**Description of what you see:**
+
+The slide is part of a lecture on data quality within an Introduction to Data Science course.  The slide introduces the concept of noise in data, specifically distinguishing between random and systematic errors.  The graph visually represents these types of errors, making the concepts more concrete and easier to understand.  The text on the left side of the slide provides a textual explanation of the concepts, while the graph on the right side provides a visual representation.  The slide is designed to help students grasp the different types of errors that can affect data quality.
+
+
+# Slide 5
+
+**Outliers**
+
+Outliers are data objects that are:
+considerably different than most of the other
+data objects in the data set
+
+* Could indicate "interesting" cases
+(if so, highlight in output of analysis)
+* Could indicate errors in the data
+(if so, remove or correct)
+
+
+---
+
+**Figure Description:**
+
+The slide displays several clusters of small, densely packed black dots (representing data points) scattered across the slide.  These clusters are roughly spherical or elliptical in shape.  There are also several single, isolated black dots positioned outside of the main clusters.  These isolated dots are the outliers.  The placement of these clusters and outliers is meant to visually represent how outliers differ from the majority of data points in a dataset.  The presence of the clusters and outliers is intended to illustrate the concept of outliers in a data set. The orange circles are not part of the data, but are used to highlight the outliers.
+
+
+**Description of what you see:**
+
+This slide, part of a lecture on data quality within an Introduction to Data Science course, introduces the concept of outliers.  The text defines outliers as data points that are significantly different from the majority of other data points in a dataset.  The accompanying figure visually represents this concept.  The clusters of data points represent typical data points, while the isolated points outside the clusters represent outliers.  The slide is designed to help students understand the characteristics of outliers and their potential implications in data analysis.  The slide is intended to help students understand the concept of outliers and their potential implications in data analysis.
+
+
+# Slide 6
+
+**Missing values**
+
+Reasons for missing values
+* Information is not collected (e.g., people decline to give their age)
+* Attributes may not be applicable to all cases (e.g., annual income is not applicable to children)
+
+Ways to handle missing values
+* Eliminate entities with missing values
+* Ignore the missing values during analysis
+* Estimate (i.e., impute) missing values
+* Replace with all possible values (weighted by their probabilities)
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on data quality within an Introduction to Data Science course, discusses the issue of missing values in datasets.  The title, "Missing values," is presented in a large, bold font at the top of the slide.  Below the title, the slide lists reasons why data values might be missing, followed by several methods for handling these missing values.  The reasons given—information not being collected and attributes not being applicable—are common causes of missing data.  The methods for handling missing values—elimination, ignoring, imputation, and replacement—are common techniques used in data analysis to address this issue.  The slide is designed to help students understand the concept of missing values and how to deal with them in data analysis.  The format is a bulleted list, making the information easy to read and understand.
+
+
+# Slide 7
+
+**Duplicate data**
+
+Data set may include data entities that are duplicates, or almost duplicates of one another
+
+* Major issue when merging data from heterogeneous sources
+* Example: same person with multiple email addresses
+
+**Data cleaning methods**
+
+* Find and deal with duplicate entities
+* Find and correct measurement error or outliers
+* Deal with missing values
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on data quality within an Introduction to Data Science course, discusses the issue of duplicate data in datasets.  The title, "Duplicate data," is presented in a large, bold font at the top of the slide.  The slide explains that duplicate data is a common problem, especially when combining data from different sources.  The example of a single person having multiple email addresses illustrates this point.  The slide then lists several data cleaning methods to address this issue, including finding and dealing with duplicate entities, correcting measurement errors or outliers, and dealing with missing values.  The format is a bulleted list, making the information easy to read and understand.  The slide is designed to help students understand the concept of duplicate data and how to deal with it in data analysis.
+
+
+# Slide 8
+
+**The Truth Continuum**
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a single, centered heading: "The Truth Continuum".  The background is a light gray.  The text is in a dark gray, sans-serif font.  The slide is likely a title or heading for the next section of the lecture, which will discuss the concept of the truth continuum in the context of data science.  The simplicity of the slide suggests that it is a transition or a placeholder for the subsequent slide, which will contain more detailed information about the truth continuum.  The slide is designed to introduce the topic of the truth continuum in a clear and concise manner.
+
+
+# Slide 9
+
+**A visualization is a model**
+
+Visualizations simplify and summarize
+They are not perfect representations
+People do not always read them as intended
+Ideally, a very simple model (visualization) is adequate, and it is interpreted correctly.
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a concise discussion about visualizations.  The title, "A visualization is a model," is presented in a large, bold font at the top of the slide.  The subsequent bullet points explain that visualizations are simplified representations of data, not perfect reproductions, and that human interpretation can vary.  The final sentence emphasizes the ideal scenario of a simple, correctly interpreted visualization.  The slide's purpose is to establish a foundational understanding of visualizations as models, acknowledging their limitations and the importance of proper interpretation. The text is formatted as a bulleted list, making the information easy to read and understand.  The overall design is clean and uncluttered, focusing on the key concepts.
+
+
+# Slide 10
+
+**Example**
+
+Results of 2012 Ukrainian parliamentary elections
+
+---
+
+**Figure Description:**
+
+The slide displays a map of Ukraine, colored to represent the results of the 2012 Ukrainian parliamentary elections.  The map is a choropleth map, where different shades of color (primarily oranges and blues) are used to represent the proportion of votes received by different political parties.  The intensity of the color corresponds to the percentage of votes in each region.  The map is centered on the slide, and the colors are clearly visible, indicating the distribution of votes across different regions of Ukraine.  A histogram is positioned to the lower-right of the map, showing the distribution of voter turnout (likely the percentage of voters who cast ballots) across the regions.  The histogram's x-axis represents the percentage of voter turnout, and the y-axis represents the frequency or count of regions falling within each percentage range.  The histogram is used to provide a summary of the voter turnout distribution across the regions.  The legend, in Ukrainian, is positioned below the map, providing a key to the colors used to represent the different political parties.  The legend also includes the total number of polling stations (33,646) and the number of votes cast for each party.  The title "Results of 2012 Ukrainian parliamentary elections" is positioned below the map, providing context to the visualization.
+
+
+**Description of what you see:**
+
+This slide from an Introduction to Data Science course presents a visualization of the results of the 2012 Ukrainian parliamentary elections.  The visualization uses a map of Ukraine to show the distribution of votes for different political parties across various regions.  The colors on the map represent the percentage of votes received by each party in each region.  The histogram provides a summary of the voter turnout distribution across the regions.  The slide demonstrates how a choropleth map and a histogram can be used to visualize and understand election results.  The inclusion of the Ukrainian language in the legend and title suggests that the data is specifically related to the Ukrainian election.  The slide is likely part of a section on data visualization techniques, demonstrating how to use maps and histograms to represent election results.
+
+
+# Slide 11
+
+**Example**
+
+Results of 2010 Ukrainian Presidential Election
+
+---
+
+**Figure Description:**
+
+The slide presents three visualizations related to the 2010 Ukrainian Presidential Election.
+
+* **Left Panel:** A map of Ukraine, colored to represent the results of the election.  Regions colored in a light brownish-orange shade indicate areas where Tymoshenko received 51% or more of the vote. Regions colored in a dark blue shade indicate areas where Yanukovych received 51% or more of the vote.  A legend below the map identifies the colors with the corresponding candidates and their political affiliations (pro-Western or pro-Russian).
+
+* **Middle Panel:** Another map of Ukraine, colored to represent the main native language spoken in each region.  Regions colored in a light brownish-orange shade indicate areas where 20% or more of the citizens speak Ukrainian. Regions colored in a dark blue shade indicate areas where 20% or more of the citizens speak Russian.  A legend below the map identifies the colors with the corresponding languages.
+
+* **Right Panel:** A map of Ukraine, with a scatter plot of light brownish-orange circles.  These circles represent cities where protests against President Yanukovych began.  A star marks the location of Kyiv.  The legend below the map identifies the locations of the protests.
+
+**Description of what you see:**
+
+This slide from an Introduction to Data Science course demonstrates how different visualizations can be used to represent and analyze election results.  The three panels show how the election results correlate with language preference and protest locations.  The slide is designed to illustrate the use of maps and scatter plots to visualize data and identify potential relationships between different variables.  The context suggests that the course is discussing data visualization techniques and how to interpret different types of visualizations.  The focus is on the 2010 Ukrainian Presidential Election, and the visualizations are intended to show correlations between voting patterns, language, and protests.
+
+
+# Slide 12
+
+**Example**
+
+On each region of Ukraine, what percent of the population is in favor of...
+
+...strengthening trade ties with the European Union
+
+...creating a custom Union with Russia
+
+WEST
+CENTER
+SOUTH
+EAST
+
+No preference
+
+0%  50%  100%
+
+**(Figure Description):**
+
+The slide displays a map of Ukraine in the left portion.  The map is shaded gray, with the regions labeled WEST, CENTER, SOUTH, and EAST.  These labels are positioned in the upper-left quadrant of the map.  Below the map, a series of horizontal bar graphs are shown.  Each bar graph corresponds to a region of Ukraine (WEST, CENTER, SOUTH, EAST).  The bar graphs are colored in shades of orange, light gray, and dark blue.  The orange bars represent the percentage of the population in favor of strengthening trade ties with the European Union.  The light gray bars represent the percentage of the population with no preference.  The dark blue bars represent the percentage of the population in favor of creating a custom union with Russia.  The x-axis of the bar graphs is labeled with percentages (0%, 50%, 100%).  The slide also includes a text note at the bottom: "But it's not as simple as the previous plots make it appear."
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, presents a visualization of public opinion in different regions of Ukraine regarding potential political alliances.  The map visually displays the geographical breakdown of the regions.  The bar graphs provide a quantitative breakdown of the percentage of the population in each region favoring either strengthening ties with the European Union or creating a custom union with Russia, as well as those with no preference.  The inclusion of the note at the bottom suggests a potential nuance or complexity in the data that might not be immediately apparent from the visualization.  The slide is likely part of a discussion on data visualization techniques, specifically how to represent and interpret complex data related to public opinion.
+
+
+# Slide 13
+
+**Bugs in data interpretation**
+
+If visualizations are an accurate and true model of our data, why do we make mistakes interpreting patterns from our plots?
+
+* **Patternicity bug:** Eyes detect interesting patterns regardless, real or not
+* **Storytelling bug:** Coherent explanations for patterns are compelling, real or not
+* **Confirmation bug:** Evidence confirming our position is valued over that which refutes it
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, discusses common cognitive biases that can affect the interpretation of data visualizations.  The slide title, "Bugs in data interpretation," clearly indicates the topic.  The subsequent bullet points list three specific "bugs" or biases: patternicity, storytelling, and confirmation.  Each bug describes a potential pitfall in data interpretation, highlighting how our cognitive processes can lead us to misinterpret data patterns.  The slide is designed to raise awareness of these biases and encourage critical thinking when analyzing data visualizations.  The format is a simple bulleted list, making the information easy to read and understand.  The overall design is clean and uncluttered, focusing on the key concepts.
+
+
+# Slide 14
+
+**Example: Patternicity**
+
+---
+
+**Figure Description:**
+
+The slide displays a series of nine line graphs.  Each graph plots a time series, likely representing some variable over time.  The x-axis of each graph spans from approximately 2000 to 2015, representing a time period.  The y-axis of each graph ranges from approximately -10 to 10, representing the values of the variable.  Each graph shows a fluctuating line, with small circles plotted at various points along the line.  The lines and points are black.  The graphs are arranged in a grid pattern, three graphs across and three graphs down, filling most of the slide.  The graphs are visually similar, each showing a seemingly random fluctuation of the variable over time.  The purpose of these graphs is to illustrate the "patternicity bug" in data interpretation.  The visual similarity of the graphs, despite their random nature, is meant to demonstrate how the human eye can perceive patterns where none truly exist.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, demonstrates the concept of the "patternicity bug" in data interpretation.  The slide shows a series of line graphs, each representing a time series.  The graphs appear to show some patterns, but these patterns are likely random fluctuations.  The purpose of the graphs is to illustrate how the human eye can perceive patterns in data where none truly exist.  The slide is designed to highlight the importance of critical thinking and statistical analysis when interpreting data visualizations.  The lack of any clear, discernible pattern in the data is meant to emphasize the potential for misinterpretation due to the patternicity bug.
+
+
+# Slide 15
+
+**Example: Storytelling**
+
+```
+Wired 2010: The Web is dead, long live the Internet!
+```
+
+---
+
+**Figure Description:**
+
+The slide displays a stacked area chart, visually representing the proportion of different types of internet traffic over time.  The chart's x-axis spans from 1990 to 2010, representing the years. The y-axis represents the percentage of total US internet traffic.  The chart is divided into segments, each representing a different type of internet traffic (e.g., Web, Video, Peer-to-Peer, Email, FTP, NewsGroups, Telnet, DNS, Other).  The height of each segment at a given year indicates the percentage of total internet traffic that type of traffic accounted for.  The segments are stacked vertically, allowing for a comparison of the relative proportions of different traffic types over time.  The colors of the segments are distinct, making it easy to identify each type of traffic.  The chart is positioned centrally on the slide.  The labels for the different types of traffic are shown on the chart, and the percentages are shown on the y-axis.  The title "Example: Storytelling" is positioned above the chart, and the subtitle "Wired 2010: The Web is dead, long live the Internet!" is positioned below the chart.  The subtitle is a statement that is likely intended to be interpreted in the context of the data presented in the chart.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, demonstrates the concept of the "storytelling bug" in data interpretation.  The stacked area chart shows the proportion of different types of internet traffic from 1990 to 2010.  The chart visually illustrates how the proportion of different types of internet traffic has changed over time.  The subtitle "Wired 2010: The Web is dead, long live the Internet!" is a statement that is likely intended to be interpreted in the context of the data presented in the chart.  The slide is designed to illustrate how a visualization can be interpreted in a way that supports a particular narrative or story, even if the data doesn't necessarily support that narrative.  The slide is likely part of a discussion on data visualization techniques and how to avoid misinterpretations due to the storytelling bug.
+
+
+# Slide 16
+
+**Example: Storytelling**
+
+```
+Total
+traffic
+```
+
+**(Figure Description):**
+
+The slide displays a stacked area chart.  The x-axis is labeled with years, ranging from 1990 to 2010, with individual years marked. The y-axis is labeled "Total traffic" and ranges from 0 to 7.  The chart shows multiple stacked areas, each representing a different type of internet traffic.  The areas are colored differently (various shades of purple, pink, and red). The height of each stacked area at a given year represents the percentage of total internet traffic that type of traffic accounted for in that year.  The chart visually displays the changing proportions of different internet traffic types over time.  The chart is positioned centrally on the slide.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, demonstrates the concept of the "storytelling bug" in data interpretation.  The stacked area chart shows the proportion of different types of internet traffic from 1990 to 2010.  The chart visually illustrates how the proportion of different types of internet traffic has changed over time.  The slide is designed to illustrate how a visualization can be interpreted in a way that supports a particular narrative or story, even if the data doesn't necessarily support that narrative.  The slide is likely part of a discussion on data visualization techniques and how to avoid misinterpretations due to the storytelling bug.  The specific types of internet traffic represented by the different colored areas are not labeled on the chart, but the overall trend of increasing total internet traffic is clear.
+
+
+# Slide 17
+
+**How humans make mistakes interpreting data**
+
+There has been a significant amount of research showing how humans are prone to errors in human reasoning.
+
+Some is based on biases in visual perception.
+
+Some is based on cognitive heuristics that we use to reason quickly, which makes us pay attention to some types of information more than others.
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, discusses the inherent human tendency to make mistakes when interpreting data.  The title, "How humans make mistakes interpreting data," clearly states the topic.  The subsequent paragraphs explain that these errors stem from both biases in visual perception and cognitive heuristics.  The text is formatted as a series of paragraphs, making the information easy to read and understand.  The overall design is clean and uncluttered, focusing on the key concepts.  The slide is likely a transition or a placeholder for the subsequent slide, which will contain more detailed information about the specific types of errors or biases in data interpretation.
+
+
+# Slide 18
+
+**Are A and B the same color?**
+
+---
+
+**Figure Description:**
+
+The slide presents a 3D rendering of a section of a checkerboard.  The checkerboard is composed of light gray and dark gray squares.  A light sage-green cylinder is positioned centrally on the checkerboard, casting shadows.  Two squares, labeled "A" and "B", are located on the checkerboard directly beneath the cylinder.  Square "A" is positioned on a light gray square, while square "B" is positioned on a dark gray square.  The perspective and shading of the checkerboard, combined with the cylinder's shadow, create an optical illusion.  The purpose of this figure is to illustrate how visual perception can lead to misinterpretations of color, a common cognitive bias in data interpretation.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, presents a classic optical illusion to demonstrate how visual perception can lead to misinterpretations of data.  The checkerboard pattern, with the cylinder casting shadows, creates a visual effect where squares "A" and "B" appear to have different shades of gray, even though they are the same color.  The question "Are A and B the same color?" is posed to highlight the potential for misinterpretations based on visual cues rather than objective measurements.  The slide is designed to illustrate the importance of critical thinking and objective analysis when interpreting data visualizations, emphasizing the potential for visual biases to affect our understanding of data.  The figure is a well-known example of how our perception can be tricked, and it's used to illustrate the concept of visual biases in data interpretation.
+
+
+# Slide 19
+
+**The trick uses the “biases” in the human visual system**
+
+---
+
+**Figure Description:**
+
+The slide displays a 3D rendering of a section of a checkerboard.  The checkerboard is composed of light gray and dark gray squares.  A light sage-green cylinder is positioned centrally on the checkerboard, casting shadows.  Two squares, labeled "A" and "B", are located on the checkerboard directly beneath the cylinder.  Square "A" is positioned on a light gray square, while square "B" is positioned on a dark gray square.  The perspective and shading of the checkerboard, combined with the cylinder's shadow, create an optical illusion.  The figure is positioned centrally on the slide.  The labels "A" and "B" are positioned directly above the corresponding squares.  The purpose of this figure is to illustrate how visual perception can lead to misinterpretations of color, a common cognitive bias in data interpretation.  The figure is a well-known example of how our perception can be tricked, and it's used to illustrate the concept of visual biases in data interpretation.  The name "Edward H. Adelson" is positioned at the bottom of the slide, likely indicating the creator or source of the image.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, presents a classic optical illusion.  The figure is a 3D rendering of a checkerboard with a cylinder positioned on it.  The illusion is designed to demonstrate how our visual system can be tricked into perceiving different shades of gray for squares "A" and "B," even though they are the same color.  The slide is used to illustrate the concept of visual biases in data interpretation, emphasizing how our perception can be influenced by factors other than the objective data itself.  The inclusion of the creator's name, Edward H. Adelson, suggests the figure's source and its established use in demonstrating visual perception biases.
+
+
+# Slide 19
+
+**Visual Issues**
+
+---
+
+**Figure Description:**
+
+The slide presents several visual examples, likely to illustrate visual perception issues that can affect data interpretation.
+
+* **Left-Top:** A radiating line pattern.  A set of radiating lines converge towards a central point, with a pair of red lines bisecting the pattern.  This is a common visual illusion used to demonstrate how our perception of depth and perspective can be affected by the arrangement of lines.
+
+* **Left-Middle:** A grid of black squares.  This is a simple visual representation of a grid pattern, likely used as a comparison or contrast to other visual elements on the slide.
+
+* **Left-Bottom:** A set of connected lines.  Two lines are connected by a Y-shaped junction, and two lines are connected by a simple horizontal line.  These are simple geometric shapes, likely used as a comparison or contrast to other visual elements on the slide.
+
+* **Center:** A series of geometric shapes.  A triangle with three black circles inside it, and two circles with a gap in between.  These are geometric shapes, likely used to demonstrate visual patterns and how our perception of these patterns can be affected.
+
+* **Right:** A cluster of circles.  A cluster of black circles with a central cluster of purple circles.  This is a visual representation of a cluster or grouping of data points, likely used to demonstrate visual patterns and how our perception of these patterns can be affected.
+
+* **Bottom:** A series of circles connected by lines.  Three circles are connected by a line, and three circles are connected by a line.  These are simple geometric shapes, likely used as a comparison or contrast to other visual elements on the slide.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, presents various visual examples designed to highlight potential issues in visual perception that can affect data interpretation.  The different shapes and patterns are likely intended to demonstrate how our visual system can be tricked or misled, leading to misinterpretations of data.  The slide is likely part of a section on data visualization and the importance of understanding how visual perception can influence our interpretation of data.  The examples are meant to illustrate the concept of visual biases in data interpretation.
+
+
+# Slide 21
+
+**Heuristics and Biases**
+
+Tversky & Kahneman, psychologists, propose that people often do not follow rules of probability when making decisions. Instead, decision making may be based on heuristics. Lowers cognitive load but may lead to systematic errors and biases.
+
+Examples:
+
+* Confirmation bias
+* Availability heuristic
+* Representativeness heuristic
+
+
+---
+
+**Figure Description:**
+
+The slide features a book cover image. The book cover is for "Thinking, Fast and Slow" by Daniel Kahneman. The book cover is positioned in the upper-right quadrant of the slide. The cover displays the title "Thinking, Fast and Slow" in a large, bold font.  Below the title, the author's name, "Daniel Kahneman," is displayed in a slightly smaller, but still prominent, font.  The cover also includes the text "WINNER OF THE NOBEL PRIZE IN ECONOMICS" and a quote about the book. The book cover is a visual cue to the topic of the slide, which is about heuristics and biases in decision-making, as described by the psychologists Tversky and Kahneman.
+
+
+**Description of what you see:**
+
+This slide from an Introduction to Data Science course introduces the concepts of heuristics and biases in decision-making.  The slide uses the book cover of "Thinking, Fast and Slow" by Daniel Kahneman to visually represent the topic.  The book cover is a visual aid to connect the theoretical concepts of heuristics and biases with a well-known work in the field of psychology.  The slide is likely part of a section on cognitive biases and how they can affect decision-making in data analysis.  The book cover is a visual representation of the topic, and the text on the slide provides a summary of the concepts.
+
+
+# Slide 22
+
+**Arthritis study (Redelmeier & Tversky '96)**
+
+Common belief: Arthritis pain is associated with changes in weather
+
+Experiment: Followed 18 arthritis patients for 15 months; 2 x per month assessed: (1) pain and joint tenderness, and (2) weather
+
+Results: No correlation between pain/tenderness and weather
+
+Patients saw correlation that did not exist... why?
+
+* Patients noticed when bad weather and pain co-occurred, but failed to notice when they didn't.
+
+Confirmation bias: People often seek information that confirms rather than disconfirms their original hypothesis
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a case study, likely from an Introduction to Data Science course, illustrating the concept of confirmation bias.  The study, conducted by Redelmeier and Tversky, investigated the perceived relationship between arthritis pain and weather.  The text describes a common belief that arthritis pain is linked to weather changes.  The experiment followed 18 arthritis patients for 15 months, recording pain/tenderness and weather conditions twice per month.  The results, however, showed no correlation between the two.  Crucially, the slide highlights that patients were more likely to notice instances where bad weather and pain coincided, but failed to register instances where there was no such coincidence.  This observation directly demonstrates confirmation bias, where individuals tend to favor information that supports their pre-existing beliefs and overlook contradictory evidence.  The slide is designed to illustrate how cognitive biases can influence data interpretation and lead to inaccurate conclusions.
+
+
+# Slide 23
+
+**Estimating probabilities (Tversky & Kahneman '73/'74)**
+
+Question: Which causes more deaths in developed countries?
+(a) traffic accidents or (b) stomach cancer
+Typical guess: traffic accident = 4X stomach cancer
+Actual: 45,000 traffic, 95,000 stomach cancer deaths in US
+Ratio of newspaper reports on each subject: 137 (traffic fatality) to 1 (stomach cancer death)
+
+Availability heuristic: Tendency for people to make judgments of frequency on basis of how easily examples come to mind
+
+
+---
+
+**Figure Description:**
+
+No figure is present on this slide.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, presents an example illustrating the availability heuristic.  The example uses the question of which causes more deaths in developed countries: traffic accidents or stomach cancer.  The typical guess is that traffic accidents cause four times more deaths than stomach cancer.  However, the actual figures show that stomach cancer causes significantly more deaths (95,000) than traffic accidents (45,000) in the US.  The ratio of newspaper reports further highlights the bias: there are 137 times more reports about traffic fatalities than stomach cancer deaths.  The slide is designed to illustrate how readily available information (in this case, media reports) can influence our judgments of frequency and probability, even when the actual data suggests otherwise.  The example is a classic demonstration of the availability heuristic, a cognitive bias that affects our estimations of probabilities.
+
+
+# Slide 24
+
+**Gambler's fallacy**
+
+Gambler's fallacy: belief that if deviations from expected behavior are observed in repeated independent trials, then future deviations in the opposite direction are then more likely
+
+T&K: this is an example of the representativeness heuristic—where the probability of an event is judged by its similarity to the population from which sample is drawn
+
+The sequence "H T H T T H" is seen as more representative of a prototypical coin sequence. Why?
+
+* When people are asked to make up random sequences, they tend to make the proportion of H and T closer to 50% than would be expected by random chance
+* T&K interpretation: people believe that short sequences should be representative of longer ones
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, discusses the gambler's fallacy and the representativeness heuristic.  The text explains the gambler's fallacy as the belief that deviations from expected behavior in repeated trials will be followed by deviations in the opposite direction.  It connects this to the representativeness heuristic, where the probability of an event is judged by its similarity to the population from which the sample is drawn.  The example given is a sequence of coin flips ("H T H T T H").  The slide argues that people tend to believe this short sequence is more representative of a typical coin flip sequence than it actually is, as they often try to make the proportion of heads and tails closer to 50% than would be expected by random chance.  The T&K interpretation further explains that people often believe short sequences are representative of longer ones, which is a cognitive bias.  There are no figures on this slide.
+
+
+# Slide 25
+
+**Interpretation**
+
+People do not use proper statistical/probabilistic reasoning... instead people use heuristics which can bias decisions
+
+Heuristics can often be very effective (and efficient) for social inferences and decision-making
+
+...but be aware that heuristics can bias our interpretation of results from exploratory data analysis and other modeling efforts
+
+
+---
+
+**Figure Description:**
+
+The slide features an image of the book cover for "Thinking, Fast and Slow" by Daniel Kahneman. The book cover is positioned in the upper-right quadrant of the slide. The cover displays the title "Thinking, Fast and Slow" in a large, bold font.  Below the title, the author's name, "Daniel Kahneman," is displayed in a slightly smaller, but still prominent, font. The cover also includes the text "WINNER OF THE NOBEL PRIZE IN ECONOMICS" and a quote about the book. The book cover is a visual cue to the topic of the slide, which is about heuristics and biases in decision-making, as described by the psychologists Tversky and Kahneman.
+
+
+**Description of what you see:**
+
+This slide, part of an Introduction to Data Science lecture, introduces the concept of heuristics and biases in decision-making.  The slide uses the book cover of "Thinking, Fast and Slow" by Daniel Kahneman to visually represent the topic.  The book cover is a visual aid to connect the theoretical concepts of heuristics and biases with a well-known work in the field of psychology.  The slide is likely part of a section on cognitive biases and how they can affect decision-making in data analysis.  The book cover is a visual representation of the topic, and the text on the slide provides a summary of the concepts.  The slide also includes a smaller box with the title "Simple Heuristics That Make Us Smart" and the names of the authors, Gerd Gigerenzer, Peter M. Todd, and the ABC Research Group.  This suggests a connection between the concepts of heuristics and their effectiveness in decision-making.
+
+
+# Slide 26
+
+**Science Confirms: Politics Wrecks Your Ability to Do Math**
+
+Farewell, Enlightenment: New research suggests that people even solve math problems differently if their political ideology is at stake.
+-By Chris Mooney | Wed Sep. 4, 2013 12:59 PM EDT
+
+1000+ participants were asked about their political views and also asked a series of questions to gauge their mathematical reasoning ability. Participants were then asked to solve a fairly difficult problem that involved interpreting the results of a (fake) scientific study. One group was given a problem involving the effectiveness of a new skin cream. The other group was given a mathematically similar problem, but the data involved the effectiveness of a gun control measure. What was the result? Highly numerate people were more susceptible to letting politics skew their reasoning than were those with less mathematical ability.
+
+
+---
+
+**Figure Description:**
+
+The slide image shows a person with their head in their hands, in front of a chalkboard covered in mathematical equations. The image is likely intended to visually represent the idea that even complex mathematical problems can be affected by political views. The background of the image is a chalkboard with various mathematical equations written on it. The person in the image is wearing a dark-colored shirt. The image is positioned in the left portion of the slide.
+
+
+**Description of what you see:**
+
+This slide, the final one in a presentation, summarizes a study's findings. The study, by Kahan et al. (2013), investigated how political views can influence mathematical reasoning.  The slide's title, "Science Confirms: Politics Wrecks Your Ability to Do Math," highlights the central theme.  The text describes a study where participants were asked about their political views and mathematical reasoning ability.  They were then presented with a difficult math problem, either related to a skin cream or gun control.  The surprising result was that highly numerate individuals were more susceptible to letting their political views influence their reasoning than those with less mathematical ability. The image of the person with their head in their hands, in front of a chalkboard covered in mathematical equations, is likely intended to visually represent the idea that even complex mathematical problems can be affected by political views. The slide is designed to be a concluding statement about the study's findings.

@@ -1,0 +1,18 @@
+# 49
+
+**AI Success: game playing**
+
+1994: Chinook checkers program (UAlberta) declared world champion
+1995: TD-Gammon backgammon program (IBM) achieved grandmaster level,
+*learned to play opening positions differently than humans
+1997: Deep Blue chess program (IBM) beat world chess champion Gary Kasparov,
+*much of success was due to brute force search
+2016: AlphaGo Go program (Google) beat 9-dan professional player Lee Sedol,
+*move 37: no human would have played, but turned tide of game and resulted in a surprising loss for Sedol
+
+
+**Description of what you see:**
+
+This slide presents a list of significant milestones in AI game-playing success.  The title, "AI Success: game playing," is in a large, bold font.  Below that, a numbered list details specific achievements.  Each entry includes a year, a description of the AI program, and a notable accomplishment.  The use of asterisks (*) before certain phrases highlights key aspects of the achievements.  The overall design is simple and straightforward, focusing on conveying the information in a clear and concise manner.  The slide is likely part of a larger presentation on AI Basics, and the content is intended to illustrate the progress made in AI game-playing over time.
+
+

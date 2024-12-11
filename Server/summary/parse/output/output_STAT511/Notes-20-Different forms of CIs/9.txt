@@ -1,0 +1,31 @@
+# Slide 9
+
+**STAT 511 Course Notes – set 20 (W10)**
+
+**Yuan Qu**
+
+**Table of the Student's t-distribution**
+
+The table gives the values of  𝑡<sub>α,𝑣</sub>, where
+Pr(𝑡<sub>𝑣</sub> > 𝑡<sub>α,𝑣</sub>) = α, with degrees of freedom
+
+| 𝑣 | α = 0.1 | α = 0.05 | α = 0.025 | α = 0.01 | α = 0.005 | α = 0.001 | α = 0.0005 |
+|---|---|---|---|---|---|---|---|
+| 1 | 3.078 | 6.314 | 12.076 | 31.821 | 63.657 | 318.310 | 636.620 |
+| 2 | 1.886 | 2.920 | 4.303 | 6.965 | 9.925 | 22.326 | 31.598 |
+| 3 | 1.638 | 2.353 | 3.182 | 4.541 | 5.841 | 10.213 | 12.924 |
+| 4 | 1.533 | 2.132 | 2.776 | 3.747 | 4.604 | 7.173 | 8.610 |
+| 5 | 1.476 | 2.015 | 2.571 | 3.365 | 4.032 | 5.893 | 6.869 |
+| ... | ... | ... | ... | ... | ... | ... | ... |
+| 120 | 1.289 | 1.658 | 1.980 | 2.358 | 2.617 | 3.160 | 3.373 |
+| ∞ | 1.282 | 1.645 | 1.960 | 2.326 | 2.576 | 3.090 | 3.291 |
+
+
+**Figure Description:**
+
+A small, stylized graph of a t-distribution is located in the upper right corner of the slide.  The x-axis represents the measurement values, and the y-axis represents the probability density.  A portion of the curve is shaded to the right of a specific value on the x-axis (labeled 𝑡<sub>α,𝑣</sub>).  The shaded area represents the probability α.  This graph visually illustrates the concept of a critical value (𝑡<sub>α,𝑣</sub>) from a t-distribution, which is essential for calculating confidence intervals.  The graph is a visual representation of the probability associated with the t-statistic, used in the confidence interval calculation.  Its placement in the upper right corner complements the text explaining the concept of a t-critical value.
+
+
+**Overall Context:**
+
+This slide presents a table of critical values for the t-distribution, a crucial tool in statistical methods for calculating confidence intervals when the population standard deviation is unknown and the sample size is small.  The table allows for the direct lookup of t-critical values for various degrees of freedom (df) and significance levels (α).  The accompanying graph visually reinforces the concept of the t-distribution and the meaning of the critical values.  This slide follows the previous one, which introduced the t-distribution and its properties.

@@ -1,0 +1,18 @@
+# Slide 3
+
+# Data quality
+
+Examples of data quality problems:
+* Noise
+* Outliers
+* Missing values
+* Duplicate data
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, focuses on the concept of data quality.  The title, "Data quality," is presented in a large, bold font at the top of the slide.  Below the title, a bulleted list provides examples of data quality problems.  The bullet points are clearly marked with the standard bullet symbol ("•").  The items listed—Noise, Outliers, Missing values, and Duplicate data—are all common issues encountered when working with datasets.  The slide's purpose is to introduce these problems as potential challenges in data analysis.  The simple, uncluttered design allows the reader to quickly grasp the key concepts.
+
+

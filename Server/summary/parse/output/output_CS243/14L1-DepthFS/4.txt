@@ -1,0 +1,23 @@
+# Slide 4
+
+**Recursive Problem Solving**
+
+Do part of the work and reduce the rest into a similar but smaller problem.
+
+**Examples:**
+
+Need to calculate Fibonacci(n)?
+* If n is 0, the answer is 1
+* If n is 1, the answer is 1
+* Otherwise, Get Help:
+    * Alice calculates Fibonacci(n-1)
+    * Bob calculates Fibonacci(n-2)
+    * Alice and Bob can ask others for help if they need to
+    * You can add Alice and Bob's answers.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, introduces the concept of recursive problem-solving.  It uses the Fibonacci sequence as an example.  The text explains that a problem can be broken down into smaller, similar subproblems.  The example shows how calculating Fibonacci(n) can be achieved by recursively calculating Fibonacci(n-1) and Fibonacci(n-2), and combining the results.  The slide uses a bulleted list format for clarity and emphasizes the recursive nature of the process.  The overall design is simple and straightforward, focusing on the core idea of recursion.
+
+

@@ -1,0 +1,35 @@
+# Slide 2
+
+**Example 18.1 Which is which?**
+
+**(a)**
+![Histogram (a)](https://i.imgur.com/your_histogram_a.png)
+*Description of Histogram (a):*  A histogram showing a distribution of data. The histogram is centered somewhat to the left of the horizontal axis. The data is spread out, indicating high variability.
+
+**(b)**
+![Histogram (b)](https://i.imgur.com/your_histogram_b.png)
+*Description of Histogram (b):* A histogram showing a distribution of data. The histogram is centered significantly to the left of the horizontal axis. The data is clustered tightly together, indicating low variability.
+
+**(c)**
+![Histogram (c)](https://i.imgur.com/your_histogram_c.png)
+*Description of Histogram (c):* A histogram showing a distribution of data. The histogram is centered near the horizontal axis. The data is spread out, indicating high variability.
+
+**(d)**
+![Histogram (d)](https://i.imgur.com/your_histogram_d.png)
+*Description of Histogram (d):* A histogram showing a distribution of data. The histogram is centered near the horizontal axis. The data is clustered tightly together, indicating low variability.
+
+
+**Key:**
+
+1. High Bias, High Variability
+2. High Bias, Low Variability
+3. Low Bias, High Variability
+4. Low Bias, Low Variability
+
+
+**Description of the Slide:**
+
+This slide presents four histograms (a, b, c, and d) representing different scenarios of bias and variability in estimating a population parameter.  Each histogram is labeled with a letter (a, b, c, or d) and is accompanied by a corresponding number (1, 2, 3, or 4) that corresponds to a description of the bias and variability.  The histograms are used to visually illustrate the concepts of bias (how far the center of the distribution is from the true value) and variability (how spread out the distribution is).  The slide is designed to help students understand the relationship between the shape of a distribution and the characteristics of bias and variability.
+
+
+**Note:**  I've included placeholders for the actual histogram images (`your_histogram_a.png`, etc.).  You'll need to replace these with the actual images to get a complete and accurate representation of the slide.

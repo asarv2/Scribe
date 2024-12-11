@@ -1,0 +1,28 @@
+# 33
+
+**Perceptron vs. logistic regression**
+
+**Perceptron**
+
+Repeat:
+* Pick a data point x<sub>n</sub>, uniformly at random
+* If sign(w<sup>T</sup>x<sub>n</sub>) ≠ y<sub>n</sub>, then
+  w ← w + y<sub>n</sub>x<sub>n</sub>
+
+
+**Logistic Regression**
+
+Repeat:
+* Pick a data point x<sub>n</sub>, uniformly at random
+* Update w according to
+  w ← w + ασ(−y<sub>n</sub>w<sup>T</sup>x<sub>n</sub>)y<sub>n</sub>x<sub>n</sub>
+
+
+**(Figure):**
+
+A small graph is positioned in the lower-right quadrant of the slide.  The x-axis ranges from approximately -6 to 6, and the y-axis ranges from approximately 0 to 1.  A smooth, S-shaped curve is plotted, rising from a value near 0 at x = -6 to a value near 1 at x = 6.  This curve is the sigmoid function.  The curve is a key element of the slide, as it visually represents the sigmoid function, which is central to logistic regression.
+
+
+**Description:**
+
+This slide compares the Perceptron algorithm and logistic regression.  It shows the update rules for both algorithms.  The Perceptron algorithm updates the weight vector `w` by adding the product of the true label (y<sub>n</sub>) and the feature vector (x<sub>n</sub>) if the prediction is incorrect.  Logistic regression, on the other hand, updates `w` using the sigmoid function applied to the dot product of the weight vector and the feature vector.  The sigmoid function is crucial for logistic regression, as it maps the dot product to a probability between 0 and 1.  The slide is likely part of a larger lecture on AI Basics, focusing on the differences between these two algorithms for binary classification.  The graph of the sigmoid function is essential for understanding the underlying mathematical function used in logistic regression.

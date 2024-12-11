@@ -1,0 +1,17 @@
+# Slide 33
+
+**Two sample test**
+
+The previous example assumed that the null hypothesis corresponds to a known mean, but in reality we may not know the mean that we want to compare to.  In this case, we often formulate hypothesis about difference in means
+
+H<sub>0</sub> : μ<sub>0</sub> = μ<sub>1</sub>(or e.g. μ<sub>0</sub> ≥ μ<sub>1</sub>)
+H<sub>1</sub> : μ<sub>0</sub> ≠ μ<sub>1</sub>(or e.g. μ<sub>0</sub> < μ<sub>1</sub>)
+
+In this case, we can use a two-sample t-test
+
+
+---
+
+**Description of what you see:**
+
+This slide introduces the concept of a two-sample t-test in the context of hypothesis testing.  It explains that, unlike previous examples, the null hypothesis might not be a known mean, but rather a comparison between the means of two different groups (or conditions).  The slide defines the null hypothesis (H<sub>0</sub>) and the alternative hypothesis (H<sub>1</sub>) in terms of the equality or difference between two population means (μ<sub>0</sub> and μ<sub>1</sub>).  The slide also states that a two-sample t-test is the appropriate statistical test to use in this situation.  The slide is part of a lecture on hypothesis testing, specifically introducing the concept of comparing means between two groups.  The text is clear and concise, outlining the necessary hypotheses for a two-sample t-test.

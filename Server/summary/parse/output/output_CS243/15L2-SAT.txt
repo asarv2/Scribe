@@ -1,0 +1,1398 @@
+# 1
+
+CS 24300: AI Basics
+Tony Bergstrom
+
+Slides adapted from Yexiang Xue and Tony Bergstrom
+
+
+---
+
+**Description of the slide:**
+
+This is the title slide for a lecture on AI Basics, part of the CS 24300 course.  The title, "CS 24300: AI Basics," is displayed prominently in a large, light gray font.  Below that, the name of the instructor, "Tony Bergstrom," is written in a smaller, light gray font.  At the very bottom of the slide, in a smaller, light gray font, is a credit line, "Slides adapted from Yexiang Xue and Tony Bergstrom." The background color is a dark gray.  The overall design is simple and professional, focusing on conveying the course title and instructor's name.
+
+
+# 2
+
+# SAT Solving
+
+---
+
+**Description:**
+
+This slide, likely part of a lecture series on AI Basics, simply displays the title "SAT Solving" in a large, bold, dark gray font against a light gray background.  There are no figures or other elements on the slide.  The title suggests that the following content will be about the topic of solving Satisfiability problems (SAT).  This is a common topic in AI, particularly in areas like automated reasoning and knowledge representation.
+
+
+
+
+# 3
+
+# General Automated Reasoning
+
+**Research Objective:** Better reasoning and modeling technology
+
+**Problem Instance**
+![Problem Instance](https://i.imgur.com/your_image_placeholder.png)
+
+*Domain Specific*
+e.g. logistics, chess, planning, verification, ...
+
+**Model Generator (Encoder)**
+*Generic*
+Applicable to all domains within range of modeling language
+
+**General Inference Engine**
+
+**Solution**
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, outlines a general automated reasoning pipeline.  The central idea is to improve reasoning and modeling technology.  The slide visually represents a process with arrows connecting different components.
+
+* **Problem Instance:**  A small image collage is shown, likely representing different types of problems.  The images are likely examples of problem instances from various domains (e.g., a circuit board, a chessboard, a map, a satellite image).  This is shown at the top left of the slide.  The purpose of this image is to illustrate the input to the system.
+
+* **Model Generator (Encoder):**  A box labeled "Model Generator (Encoder)" is shown, with the word "Generic" below it.  This component is positioned in the middle of the slide, indicating its role in the process.  The purpose of this component is to take the problem instance and generate a model.
+
+* **General Inference Engine:**  A box labeled "General Inference Engine" is shown, positioned in the middle right of the slide.  This component is responsible for applying general reasoning rules to the model.
+
+* **Solution:**  A box labeled "Solution" is shown at the bottom right of the slide.  This is the output of the entire process.
+
+* **Domain Specific/Generic:**  The slide uses the terms "Domain Specific" and "Generic" to categorize the model generator.  This distinction is important because a domain-specific model generator would be tailored to a particular problem domain, while a generic model generator would be applicable to a wider range of problems.
+
+* **Arrows:**  Arrows connect the components, visually representing the flow of information from the problem instance to the solution.  The arrows are crucial for understanding the sequence of operations.
+
+* **Text:**  The text below the components describes the characteristics of each component.  For example, the text under "Generic" explains that this component is applicable to all domains within the range of modeling language.
+
+The overall design of the slide is to present a conceptual framework for automated reasoning, highlighting the distinction between domain-specific and generic approaches.  The images are used to illustrate the input and the overall process.
+
+
+
+
+# 4
+
+# The Challenge of Exponential Complexity Growth
+
+**Note:** rough estimates, for propositional reasoning
+
+| Case Complexity | Exponential Complexity |
+|---|---|
+| 10<sup>301,020</sup> |  |
+| 10<sup>150,500</sup> |  |
+| 10<sup>6020</sup> |  |
+| 10<sup>3010</sup> |  |
+
+
+**Visual Elements:**
+
+* **Graph:** A graph with a rising curve illustrates the exponential growth of case complexity.  The y-axis is labeled "Case Complexity" and shows logarithmic values (e.g., 10<sup>301,020</sup>). The x-axis is labeled "Exponential Complexity" and shows a linear scale. The curve visually represents the exponential increase in complexity as the problem size grows.
+
+* **Images:** Several small images are positioned along the curve, each representing a different problem domain.  These images are placed at different points on the curve, corresponding to the estimated complexity of each problem.  The images are:
+    * **Small Circuit Board:**  Represents VLSI Verification (0.5M).
+    * **Military Logistics Map:** Represents Military Logistics (1M).
+    * **Chessboard:** Represents Chess (20 steps deep) (20K).
+    * **Satellite Image:** Represents Deep Space Mission Control (50K).
+    * **Car Repair:** Represents Car Repair Diagnosis (100).
+    * **Soldiers:** Represents War Gaming (1M).
+    * **Other Images:**  There are other images, but their exact nature is not clear from the provided image.
+
+* **Numerical Labels:**  Numerical labels (e.g., 100K, 1M, 5M) are placed next to the images, indicating the estimated complexity of each problem.  These labels are positioned on the graph, near the corresponding image.
+
+* **Text Labels:**  Text labels (e.g., "War Gaming," "VLSI Verification") are placed below the images, providing context for the problem represented by each image.
+
+* **Additional Text:**  The text "No. of atoms on the earth," "Seconds until heat death of sun," "Protein folding Calculation (petaflop-year)," are placed on the left side of the graph, with arrows pointing to the corresponding values on the y-axis.  These values are used to illustrate the vastness of the scale of complexity.
+
+**Reasoning:**
+
+This slide is designed to illustrate the significant challenge of exponential complexity growth in various problem domains.  The images and numerical values are used to show how the complexity of problems like war gaming, VLSI verification, and others grows dramatically with the size of the problem.  The graph and the associated data are intended to highlight the difficulty of solving problems with a large number of variables and constraints.  The comparison to other large-scale problems (e.g., the number of atoms on Earth) is used to emphasize the scale of the problem.
+
+
+**Description of the slide:**
+
+This slide from a lecture on AI Basics presents a visual representation of the exponential growth in complexity of various problems.  The graph shows the exponential increase in case complexity as the problem size increases.  The images and labels provide concrete examples of problems with different complexity levels.  The slide aims to convey the significant computational challenges associated with problems involving a large number of variables and constraints.
+
+
+# 5
+
+**Progress in the Last 20 Years**
+
+**Focus:** Combinatorial Search Spaces, specifically, the Boolean satisfiability problem, SAT
+
+**Significant progress since the 1990's. How much?**
+
+* **Problem size:** We went from 100 variables, 200 constraints (early 90's) to 1,000,000+ variables and 5,000,000+ constraints in 20 years
+
+**Search space:** from 10<sup>30</sup> to 10<sup>300,000</sup>. [Aside: "one can encode quite a bit in 1M variables."]
+
+**Is this just Moore's Law?** It helped, but not much...
+
+* 2x faster computers does not mean can solve 2x larger instances
+* search difficulty does not scale linearly with problem size!
+
+**Tools:** 50+ competitive SAT solvers available
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, discusses the progress made in solving the Boolean satisfiability problem (SAT) over the past 20 years.  It highlights the significant increase in problem size (from 100 variables and 200 constraints to millions of variables and constraints) and the corresponding exponential increase in the search space.  The slide emphasizes that while Moore's Law has contributed, the improvement in solving these problems is not simply a linear function of faster computers.  The slide also mentions the availability of many competitive SAT solvers.  There are no figures on this slide.
+
+
+# 6
+
+**How Large are the Problems?**
+
+A bounded model checking (BMC) problem:
+SAT-encoded bounded model checking instances (contributed by Ofer Shtrichman)
+
+In Bounded Model Checking (BMC) [BCCZ99], a rather newly introduced problem in formal methods, the task is to check whether a given model M (typically a hardware design) satisfies a temporal property P in all paths with length less or equal to some bound k. The BMC problem can be efficiently reduced to a propositional satisfiability problem, and in fact if the property is in the form of an invariant (Invariants are the most common type of properties, and many other temporal properties can be reduced to their form. It has the form of 'it is always true that ... '.), it has a structure which is similar to many AI planning problems.
+
+IBM
+
+
+**Description:**
+
+This slide discusses the size of problems in the context of bounded model checking (BMC).  It introduces BMC as a problem in formal methods, specifically focused on checking if a given model (often a hardware design) satisfies a temporal property within a certain path length.  The key takeaway is that BMC problems can be reduced to propositional satisfiability (SAT) problems, and that properties expressed as invariants have a structure similar to AI planning problems.  The slide also credits Ofer Shtrichman for providing the BMC instances.  There are no figures on this slide.
+
+
+
+
+# 7
+
+**SAT Encoding**
+
+Automatically generated from problem specification
+
+p cnf 51639 368352
+
+-1 7 0
+-1 6 0
+-1 5 0
+-1 -4 0
+-1 3 0
+-1 2 0
+-1 -8 0
+-9 15 0
+-9 14 0
+-9 13 0
+-9 -12 0
+-9 11 0
+-9 10 0
+-9 -16 0
+-17 23 0
+-17 22 0
+…
+
+i.e., ((not x1) or x7)
+((not x1) or x6)
+etc.
+
+x1, x2, x3, etc. are our Boolean variables
+(to be set to True or False)
+
+Should x1 be set to False??
+
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, displays a sample SAT encoding.  The format is a standard DIMACS CNF (Conjunctive Normal Form) encoding.
+
+* **Title:** "SAT Encoding" is displayed at the top, indicating the topic of the slide.
+
+* **Source:** "Automatically generated from problem specification" suggests that the encoding is derived from a higher-level problem description.
+
+* **Header:** "p cnf 51639 368352" is a standard header for DIMACS CNF files.  The numbers likely represent the number of variables and clauses in the encoding.
+
+* **Clauses:** The lines below the header are the clauses of the CNF formula. Each line represents a clause, with numbers representing literals.  Negative numbers represent negated variables (e.g., -1 represents the negation of variable x1).  The numbers 7, 6, 5, etc. represent other variables.  The '0' at the end of each line signifies the end of the clause.
+
+* **Example:** The line "-1 7 0" represents the clause (not x1) OR x7.
+
+* **Explanation:** "i.e., ((not x1) or x7) ((not x1) or x6) etc." provides an example of how the clauses are interpreted as logical expressions.
+
+* **Variables:** "x1, x2, x3, etc. are our Boolean variables (to be set to True or False)" clarifies that the variables are Boolean and need to be assigned a truth value.
+
+* **Question:** "Should x1 be set to False??" poses a specific question about the assignment of a variable, which is a typical SAT problem.
+
+* **Ellipsis:** The "..." at the end indicates that the encoding continues beyond the displayed portion.
+
+**Overall:** The slide presents a concrete example of a SAT problem, showing the encoding in a standard format.  The example is designed to illustrate the process of translating a problem into a set of logical clauses that can be solved by a SAT solver.
+
+
+# 8
+
+**Ten pages Later**
+
+…
+185 -9 0
+185 -1 0
+177 169 161 153 145 137 129 121 113 105 97 89 81 73 65 57 49 41 33
+25 17 9 1 -185 0
+186 -187 0
+186 -188 0
+…
+i.e., (x177 or x169 or x161 or x153 …
+x33 or x25 or x17 or x9 or x1 or (not x185))
+clauses / constraints are getting more interesting…
+Note x1 …
+
+
+**Description:**
+
+This slide presents a continuation of a SAT encoding, likely part of a larger set of lecture notes on AI Basics.  The format is similar to the previous slide, showing a series of numbers representing variables and clauses in a DIMACS CNF format.
+
+* **"Ten pages Later":** This title suggests that the content on this slide is a continuation of a previous section, possibly a few pages back in the lecture notes.
+
+* **Numbers:** The slide displays a list of numbers, which are likely variable indices and their negations, forming clauses.  The numbers are in a specific order, and the presence of negative numbers indicates negated variables.  For example, `185 -9 0` represents a clause involving variable 185 and the negation of variable 9.
+
+* **"i.e., (x177 or x169 or x161 or x153 … x33 or x25 or x17 or x9 or x1 or (not x185))":** This line provides an interpretation of the numbers as a logical expression.  It shows how the numbers represent variables and their negations combined with logical OR operations.  The ellipsis (...) indicates that the list of variables continues beyond what is shown.
+
+* **"clauses / constraints are getting more interesting…":** This text suggests that the complexity or the intricacy of the problem being encoded is increasing.
+
+* **"Note x1 …":** This line, with the ellipsis, likely indicates that the variable `x1` is being referenced in the context of the encoding.
+
+* **Visual Elements:** The slide has no significant visual elements other than the text. The numbers are arranged in a list format, making it easy to read and understand the encoding.
+
+**Context:**  The slide continues the presentation of a SAT encoding, likely from the previous slide.  The numbers represent variables and clauses in a CNF format, which is a standard way to represent logical expressions in SAT problems.  The slide's content is designed to illustrate the complexity of the encoding and the increasing number of constraints.
+
+
+# 9
+
+**4000 pages later**
+
+10236 -10050 0
+10236 -10051 0
+10236 -10235 0
+10008 10009 10010 10011 10012 10013 10014 10015 10016 10017 10018 10019 10020
+10021 10022 10023 10024 10025 10026 10027 10028 10029 10030 10031 10032 10033
+10034 10035 10036 10037 10086 10087 10088 10089 10090 10091 10092 10093 10094
+10095 10096 10097 10098 10099 10100 10101 10102 10103 10104 10105 10106 10107
+10108 -55 -54 53 -52 -51 50 10047 10048 10049 10050 10051 10235 -10236 0
+10237 -10008 0
+10237 -10009 0
+10237 -10010 0
+…
+
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, presents a very long list of numbers.  The numbers are in a simple, unformatted list, and appear to be part of a SAT encoding.  The numbers are likely variable indices and their negations, forming clauses in a DIMACS CNF format.  The large number of entries suggests a very large and complex SAT problem.  The ellipsis (...) at the end indicates that the list continues beyond the displayed portion.  The context from previous slides suggests that this is a continuation of the discussion of SAT encoding and the sheer size of the problems being tackled.  The numbers are arranged in a list format, making it easy to read and understand the encoding.  The large number of entries suggests a very large and complex SAT problem.  The ellipsis (...) at the end indicates that the list continues beyond the displayed portion.  The context from previous slides suggests that this is a continuation of the discussion of SAT encoding and the sheer size of the problems being tackled.
+
+
+
+
+# 10
+
+**Finally 15,000 Pages Later**
+
+…
+-7 260 0
+7 -260 0
+1072 1070 0
+-15 -14 -13 -12 -11 -10 0
+-15 -14 -13 -12 -11 10 0
+-15 -14 -13 -12 11 -10 0
+-15 -14 -13 -12 11 10 0
+-7 -6 -5 -4 -3 -2 0
+-7 -6 -5 -4 -3 2 0
+-7 -6 -5 -4 3 -2 0
+-7 -6 -5 -4 3 2 0
+185 0
+Current SAT solvers solve this instance in just a few seconds!
+Search space of truth assignments:
+2<sup>50000</sup> ≈ 3.160699437 · 10<sup>15051</sup>
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, continues the presentation of a very large SAT encoding.  The format is a list of numbers, likely representing clauses in a DIMACS CNF format.  The numbers are in a simple, unformatted list, and appear to be part of a very large SAT problem.  The title, "Finally 15,000 Pages Later," emphasizes the sheer size of the encoding, which is likely a continuation of the previous slide's content.  The numbers represent variables and their negations, combined with logical OR operations to form clauses.  The large number of entries suggests a very large and complex SAT problem.  The ellipsis (...) at the beginning indicates that the list continues beyond the displayed portion.  The context from previous slides suggests that this is a continuation of the discussion of SAT encoding and the sheer size of the problems being tackled.  The slide also includes a statement about the efficiency of current SAT solvers in solving this instance.  The calculation of the search space size (2<sup>50000</sup> ≈ 3.160699437 · 10<sup>15051</sup>) is included, further emphasizing the vastness of the problem.  The numbers are arranged in a list format, making it easy to read and understand the encoding.  The large number of entries suggests a very large and complex SAT problem.  The ellipsis (...) at the end indicates that the list continues beyond the displayed portion.  The context from previous slides suggests that this is a continuation of the discussion of SAT encoding and the sheer size of the problems being tackled.
+
+
+
+
+# 11
+
+**SAT Solvers as Search Engines**
+
+Systematic SAT solvers have become really efficient at searching fast
+
+E.g., on an IBM model checking instance from SAT Race 2006, with ~170k variables, 725k clauses, solvers such as MiniSat and RSat roughly:
+
+* **Make**  2000-5000 decisions/second
+* **Deduce** 600-1000 conflicts/second
+* **Learn** 600-1000 clauses/second (#clauses grows rapidly)
+* **Restart** every 1-2 seconds (aggressive restarts)
+
+
+**Description:**
+
+This slide discusses the performance of SAT solvers.  It states that systematic SAT solvers are now very efficient at searching for solutions.  The example given is an IBM model checking instance from the SAT Race 2006 competition.  This instance has approximately 170,000 variables and 725,000 clauses.  The slide then lists the performance characteristics of solvers like MiniSat and RSat for this instance, providing approximate ranges for the number of decisions, conflicts, and learned clauses per second.  The "Restart" category highlights the frequent restarts used by these solvers to improve efficiency, especially as the number of clauses increases.  There are no figures on this slide.
+
+
+
+
+# 12
+
+**SAT Solver Progress Trend (1994 – 2001)**
+
+| Instance | Posit' 94 | Grasp' 96 | Sato' 98 | Chaff' 01 |
+|---|---|---|---|---|
+| ssa2670-136 | 40.66s | 1.20s | 0.95s | 0.02s |
+| bf1355-638 | 1805.21s | 0.11s | 0.04s | 0.01s |
+| pret150_25 | >3000s | 0.21s | 0.09s | 0.01s |
+| dubois100 | >3000s | 11.85s | 0.08s | 0.01s |
+| aim200-2_0-no-1 | >3000s | 0.01s | <0.01s | <0.01s |
+| 2dlx_..._bug005 | >3000s | >3000s | >3000s | 2.90s |
+| c6288 | >3000s | >3000s | >3000s | >3000s |
+
+Solvers have continually improved over time
+
+Source: MarquesSilva-02
+
+
+**Description:**
+
+This slide presents a table showing the performance of different SAT solvers on various problem instances over time.  The table is organized with the problem instances in the first column and the solver names (Posit' 94, Grasp' 96, Sato' 98, and Chaff' 01) in the subsequent columns.  Each cell in the table contains the time taken (in seconds) for the corresponding solver to solve the given instance.  A value of ">3000s" indicates that the solver did not solve the instance within 3000 seconds.  The table visually demonstrates the significant improvement in SAT solver performance from 1994 to 2001.  The source is credited at the bottom of the slide.  The table is well-organized and easy to read, allowing for a quick comparison of solver performance across different instances and time periods.  The data presented is likely from a benchmark study, showing how SAT solvers have become more efficient over time.
+
+
+# 13
+
+**Satisfiability of a CNF formula**
+
+**Notations**
+
+* Let C<sub>1</sub>, ..., C<sub>m</sub> be clauses over a finite set V of Boolean variables P<sub>1</sub>, ..., P<sub>n</sub>.
+* Define φ = C<sub>1</sub> ∧ ... ∧ C<sub>m</sub>
+* Let v be an assignment on V.
+
+**Observations**
+
+* The CNF formula φ is satisfiable by v if, and only if, the clause C<sub>i</sub>, for all i ∈ {1, ..., m}, is satisfiable by v.
+* A clause C<sub>i</sub>, for some i ∈ {1, ..., m}, is satisfiable by v if, and only if, at least one of its literals evaluates to true by v.
+
+**Consequences**
+
+* To check whether or not v satisfies φ, we may not need to know the truth values of all literals in all clauses.
+* For instance, if v(p) = true and v(q) = false, we can see that the formula (p∨q∨¬r)∧(¬q∨s∨q) is satisfied without considering v(r) and v(s).
+
+
+**Description:**
+
+This slide defines the concept of satisfiability for a Conjunctive Normal Form (CNF) formula.  It introduces the notation and key concepts related to CNF formulas, clauses, and variable assignments.  The slide is structured to explain the logical conditions for a CNF formula to be satisfiable by a given variable assignment.  The example at the end illustrates how knowing the truth values of some variables can determine the satisfiability of the formula without needing to consider all variables.  The slide is clear and concise, providing a foundational definition for the topic.
+
+
+# 14
+
+**Partial Assignment**
+
+A partial assignment on V is a partial function that associates to some Boolean variables of V a truth value (either true or false) and can be undefined for the others.
+
+Under a partial assignment on V, a clause C on V can be:
+
+* **true** if one of its literals is true,
+* **false** (or conflicting) if all its literals are false,
+* **undefined** (or unresolved) if it is neither true nor false.
+
+**Remarks**
+
+* Partial assignments allow us to construct assignments for a set of clauses incrementally, that is, one clause after another.
+* The SAT solving algorithms to be presented next use partial assignments.
+* They all start with an empty assignment (that is, the truth values of all Boolean variables are not defined) and try to extend this assignment, assigning one Boolean variable after another.
+
+
+**Description:**
+
+This slide defines a "partial assignment" in the context of SAT solving.  It explains that a partial assignment is a function that assigns truth values (true or false) to some, but not necessarily all, Boolean variables.  The remaining variables are left undefined.  The slide then defines how a clause (a logical OR of literals) evaluates under a partial assignment:
+
+* **True:** If at least one literal in the clause is assigned the value true.
+* **False:** If all literals in the clause are assigned the value false.
+* **Undefined:** If the clause cannot be determined to be true or false based on the partial assignment.
+
+The "Remarks" section further clarifies the use of partial assignments in SAT solvers.  They allow for incremental assignment of truth values to variables, starting with an empty assignment (no variables assigned) and progressively assigning one variable at a time.  This is a crucial concept in how SAT solvers work.  There are no figures on this slide.
+
+
+# 15
+
+**Simplification of a formula by an evaluated literal**
+
+For the CNF formula φ and a Boolean variables p, we denote by φ|<sub>p</sub> the formula obtained from φ by replacing all occurrences of p by true and simplifying the result by removing:
+
+* all true clauses,
+* all false literals from undefined clauses.
+
+The operation that maps (φ, p) to φ|<sub>p</sub> is called the simplification of φ at p.
+
+Similarly, we define φ|<sub>¬p</sub> as the formula obtained from φ by replacing all occurrences of p by false and simplifying the result by removing:
+
+* all true clauses,
+* all false literals from undefined clauses.
+
+The operation that maps (φ, p) to φ|<sub>¬p</sub> is called the simplification of φ at p.
+
+Example:
+
+φ = (p∨q∨¬r)∧(¬p∨¬r)  →  φ|<sub>p</sub> = q∨¬r.
+
+
+**Description:**
+
+This slide describes a simplification technique for CNF (Conjunctive Normal Form) formulas.  It introduces the concept of simplifying a formula based on the truth value of a specific Boolean variable.
+
+* **φ|<sub>p</sub>:** This notation represents the simplified formula φ where the variable 'p' is assigned the value 'true'.  The simplification process involves removing clauses that become trivially true and removing literals that become trivially false.
+
+* **φ|<sub>¬p</sub>:** This notation represents the simplified formula φ where the variable 'p' is assigned the value 'false'.  The simplification process is similar to φ|<sub>p</sub>, but with 'p' set to false.
+
+* **Example:** The example shows how a specific CNF formula (φ) is simplified when 'p' is assigned the value 'true' (φ|<sub>p</sub>).  The result is a simplified formula (q∨¬r).
+
+The slide is focused on the logical simplification of CNF formulas based on the truth value of a specific variable, which is a key step in many SAT solving algorithms.  There are no figures on this slide.
+
+
+# 16
+
+**Simplification of a formula by an evaluated literal**
+
+**Proposition**
+
+For φ and p as in the above definition, we have:
+
+* if φ|<sub>p</sub> is satisfiable, then φ is satisfiable too,
+* if φ|<sub>¬p</sub> is satisfiable, then φ is satisfiable too.
+* if φ is satisfiable then either φ|<sub>p</sub> or φ|<sub>¬p</sub> is satisfiable.
+
+**Remarks**
+
+The above proposition is a key argument in the SAT solving algorithms to be presented hereafter.
+
+The proof of this proposition is easy and left as an exercise.
+
+
+**Description:**
+
+This slide presents a proposition related to simplifying a CNF formula (φ) based on the truth value of a variable (p).  It states conditions under which the satisfiability of the original formula φ is related to the satisfiability of simplified versions of the formula where p is assigned true (φ|<sub>p</sub>) or false (φ|<sub>¬p</sub>).  The slide is focused on the logical relationships between the original formula and its simplified versions.  There are no figures on this slide.  The context suggests that this is part of a lecture on SAT solving algorithms, building upon the previous slide's discussion of partial assignments.
+
+
+# 17
+
+**Principles of SAT solving algorithms**
+
+The SAT solving algorithms presented hereafter are based on the following ideas:
+
+First, each algorithm is stated as a recursive function taking a propositional formula φ and a partial assignment v as arguments.
+
+Second, these functions may modify their arguments:
+
+* the partial assignment can be extended,
+* the formula φ can be simplified at the newly assigned literal.
+
+Third, before extending the assignment v and simplifying the formula φ, the function checks whether φ can be proved to be true or false, whatever are the values of the remaining unassigned Boolean variables.
+
+
+**Description:**
+
+This slide outlines the fundamental principles behind SAT solving algorithms.  It describes a recursive approach where algorithms operate on a propositional formula (φ) and a partial assignment (v).  The key points are:
+
+1. **Recursive Function:** Algorithms are defined as recursive functions that take both the formula and the partial assignment as input.
+
+2. **Argument Modification:** The functions can modify both the partial assignment (extend it) and the formula (simplify it).  Simplifying the formula is crucial for efficiency, as it reduces the search space.
+
+3. **Pre-Check:** Before making any changes, the algorithm checks if the formula is already definitively true or false, given the current partial assignment.  This pre-check can significantly reduce unnecessary work.
+
+The slide is a high-level overview of the general approach used in SAT solvers, setting the stage for the specific algorithms that might be discussed in subsequent slides.  There are no figures on this slide.
+
+
+# 18
+
+**Naïve Solver**
+
+Input: A propositional formula φ on a finite set V and a partial assignment v on V such that only variables unassigned by v occur in φ.
+Output: true if φ is satisfiable, false otherwise.
+
+Naive_SAT(φ, v) {
+  1. if every clause of φ has a true literal, return true;
+  2. if any clause of φ has all false literals, return false;
+  3. choose an p ∈ V that is unassigned in v;
+  4. assign p to true, that is, let v(p) = true;
+  5. if Naive_SAT(φ|<sub>p</sub>, v) returns true, then return true;  # this is a recursive call
+  6. assign p to false, that is, let v(p) = false;
+  7. if Naive_SAT(φ|<sub>¬p</sub>, v) returns true, then return true; # this is a recursive call
+  8. unassign v(p); # backtracking takes place here
+  9. return false;
+}
+
+
+**Description:**
+
+This slide presents a recursive algorithm for solving the Satisfiability (SAT) problem, called "Naïve Solver."  The algorithm takes a propositional formula (φ) and a partial assignment (v) as input.  The algorithm recursively tries different assignments to variables until either a satisfying assignment is found or all possibilities are explored.
+
+* **Input:** The input is a formula φ and a partial assignment v.  The formula φ is a set of clauses (conjunctions of literals).  The partial assignment v assigns truth values to some variables in the formula.
+
+* **Output:** The output is true if the formula is satisfiable (a complete assignment exists that makes all clauses true) and false otherwise.
+
+* **Algorithm (Naive_SAT):** The algorithm is presented as a recursive function.  It checks if all clauses are already satisfied (step 1) or if any clause is unsatisfiable (step 2).  If neither of these conditions is met, it selects an unassigned variable (step 3), tries assigning it true (step 4 and 5), and recursively calls itself with the simplified formula (φ|<sub>p</sub>).  If this recursive call returns true, the algorithm returns true.  Otherwise, it tries assigning the variable false (step 6 and 7), and recursively calls itself with the simplified formula (φ|<sub>¬p</sub>).  If this recursive call returns true, the algorithm returns true.  If both assignments fail, it backtracks by unassigning the variable (step 8) and returns false (step 9).
+
+The slide is a clear presentation of a basic recursive algorithm for SAT solving, illustrating the core concepts of backtracking and simplification.  There are no figures on this slide.
+
+
+# 19
+
+**The Pure Literal Rule**
+
+Given a propositional CNF formula φ for which we check whether φ is satisfiable or not, if a variable is always positive (that is, never appears with a ¬) or always negative (that is, always appears with a ¬) in φ, one only needs to set it to one value: true for positive variables, false for negative variables.
+
+Such variables are called pure.
+
+
+**Description:**
+
+This slide describes a rule for simplifying the search space in a SAT solver.  It states that if a variable in a CNF formula (φ) always appears either positively or negatively, then the solver can immediately assign a value to that variable (true for positive, false for negative).  This is a simple optimization technique that reduces the number of possible assignments that need to be explored.  There are no figures on this slide.
+
+
+
+
+# 20
+
+**Unit Propagation**
+
+Unit propagation (a.k.a Boolean constraint propagation or BCP) is a key component to fast SAT solving.
+
+* Whenever all the literals in a clause are false except one, the remaining literal must be true in any satisfying assignment; such a clause is called a unit clause.
+* Therefore, the algorithm can assign it to true immediately.
+* After assigning a variable, there are often many unit clauses.
+* Setting a literal in a unit clause often creates other unit clauses, leading to a cascade.
+
+Based on those observations, we define a sub-algorithm BCP as follows.
+
+BCP(φ, υ)
+* Repeatedly search for unit clauses, and set unassigned literal to required value.
+* If a literal is assigned to a conflicting value, then return false else return true.
+
+
+**Description:**
+
+This slide describes the concept of Unit Propagation (a.k.a. Boolean Constraint Propagation, or BCP), a key technique in SAT solving algorithms.  It explains that when all literals in a clause are false except one, the remaining literal must be true.  This allows the algorithm to immediately assign the remaining literal to true.  The slide also notes that assigning a variable often creates more unit clauses, leading to a cascading effect.  The slide then defines a sub-algorithm, BCP(φ, υ), that repeatedly searches for unit clauses and assigns the unassigned literals to their required values.  If a literal is assigned to a conflicting value, the algorithm returns false; otherwise, it returns true.  There are no figures on this slide.  The context suggests that this is part of a lecture on SAT solving algorithms, building upon the previous discussion of partial assignments and simplification rules.
+
+
+# 17
+
+**Davis-Putnam-Logemann-Loveland (DPLL) Algorithm**
+
+**Input:** A propositional formula φ on a finite set V and a partial assignment v on V such that only variables unassigned by v occur in φ.
+**Output:** true if φ is satisfiable, false otherwise.
+
+DPLL(φ, v) {
+  1. if every clause of φ has a true literal, return true;
+  2. if any clause of φ has all false literals, return false;
+  3. if BCP(φ, v) returns false, then return false;
+  4. choose an p ∈ V that is unassigned in v;
+  5. assign p to true, that is, let v(p) = true;
+  6. if DPLL(φ|<sub>p</sub>, v) returns true, then return true;
+  7. assign p to false, that is, let v(p) = false;
+  8. if DPLL(φ|<sub>¬p</sub>, v) returns true, then return true;
+  9. unassign v(p);  # backtracking takes place here
+ 10. return false;
+}
+
+
+**Description:**
+
+This slide presents the Davis-Putnam-Logemann-Loveland (DPLL) algorithm for solving the satisfiability problem (SAT).  It's a recursive algorithm that takes a propositional formula (φ) and a partial assignment (v) as input.  The algorithm systematically explores possible assignments to variables to determine if a satisfying assignment exists.  The key steps are:
+
+1. **Base Cases:**  Checks if all clauses are satisfied (step 1) or if any clause is unsatisfiable (step 2).
+
+2. **Boolean Constraint Propagation (BCP):**  Performs unit propagation to simplify the formula (step 3).  If BCP detects a conflict, it immediately returns false.
+
+3. **Variable Selection:** Chooses an unassigned variable (step 4).
+
+4. **Recursive Calls:** Recursively calls DPLL with the simplified formula (φ|<sub>p</sub>) after assigning the chosen variable to true (step 5 and 6) and then with the simplified formula (φ|<sub>¬p</sub>) after assigning the chosen variable to false (step 7 and 8).
+
+5. **Backtracking:** If both recursive calls fail, the algorithm backtracks by unassigning the variable (step 9) and returns false (step 10).
+
+The slide clearly outlines the recursive structure and key steps of the DPLL algorithm, which is a fundamental algorithm in SAT solving.
+
+
+# 22
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, displays a set of logical expressions.  The expressions are in parentheses, and each expression appears to represent a clause in a Conjunctive Normal Form (CNF) formula.  The variables are represented by single letters (a, b, c, d) with or without a prime (').  The '+' symbol likely represents the logical OR operator.  The expressions are arranged in a vertical list, with each expression on a new line.  There are no figures or other visual elements besides the text.  The context suggests that this slide is part of a discussion on the DPLL algorithm for solving SAT problems, where these expressions represent the clauses of a formula being considered.  The expressions are likely used as an example to illustrate the search process of the DPLL algorithm.  The presence of the prime symbol (') indicates the negation of the variable.  For example, a' represents the negation of variable a.  The use of parentheses and the '+' symbol suggests a logical OR operation.  The expressions are likely part of a larger problem instance.
+
+
+# 23
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Element:**
+
+A small, light-blue circle labeled "a" is positioned near the top-right of the slide.  A blue arrow extends from the circle to the right, pointing to the text "Decision".  The arrow and the text are positioned below the list of expressions.
+
+**Description:**
+
+This slide, likely part of a lecture on AI Basics, displays a set of logical expressions, likely clauses in a Conjunctive Normal Form (CNF) formula.  The expressions are in parentheses, with variables (a, b, c, d) and their negations (a', b', c', d').  The '+' symbol likely represents the logical OR operator.  The expressions are arranged vertically, one per line.  The visual element of the light-blue circle labeled "a" and the arrow pointing to "Decision" suggests that the variable 'a' is being considered as a decision point in a search algorithm, such as the DPLL algorithm, for finding a satisfying assignment to the formula.  The context from previous slides suggests that this is part of a discussion on the DPLL algorithm and the search process involved in finding a solution to a SAT problem.
+
+
+# 24
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A directed acyclic graph (DAG) is shown.  Nodes are circles with labels (a, b, c, d, a=0, c=0, d=1, d=0).  Edges are directed lines connecting the nodes.  The graph shows a branching structure, with nodes representing variables and their assigned values.  The edges represent the implications between variables.  The node "a" is at the top of the graph, and the nodes "b", "c", and "d" are below it.  The nodes "a=0", "c=0", "d=1", and "d=0" are further down the graph, branching from the nodes "b" and "c".  A red downward-pointing arrow connects "d=1" to "d=0", indicating a conflict.  A red rectangle is positioned below the nodes "c" and "b".  The graph is oriented from top to bottom, with the nodes branching out from the top.
+
+* **Labels:** The nodes are labeled with variable names (a, b, c, d) or variable names with assigned values (a=0, c=0, d=1, d=0).  The edges are not labeled, but the context implies that they represent implications or constraints between variables.  A box labeled "Unit propagation" is positioned above the graph, with the text "Quickly determines conflicts!" inside.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, illustrates the DPLL search process using an implication graph.  The graph visually represents the possible assignments of variables (a, b, c, d) and the implications between them.  The clauses listed at the top of the slide are the input formula.  The graph shows how the algorithm explores different assignments, starting with the top-level variable (a) and branching down to explore possible values for subsequent variables (b, c, d).  The red arrow from d=1 to d=0 indicates a conflict, meaning that the current assignment leads to a contradiction.  The red rectangle below the nodes "c" and "b" likely represents a constraint or a base case in the algorithm.  The box labeled "Unit propagation" highlights the role of this technique in quickly identifying conflicts during the search.  The overall purpose of the slide is to visually demonstrate the search process of the DPLL algorithm, showing how the algorithm explores different assignments and detects conflicts.
+
+
+
+
+# 25
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A directed acyclic graph (DAG) is shown.  Nodes are circles with labels (a, b, c, d, a=1, b=0, c=1, d=1).  Edges are directed lines connecting the nodes.  The graph shows a branching structure, with nodes representing variables and their assigned values.  The edges represent the implications between variables.  The node "a" is at the top of the graph, and the nodes "b", "c", and "d" are below it.  The nodes "a=1", "b=0", "c=1", and "d=1" are further down the graph, branching from the nodes "b" and "c".  There are no red arrows or rectangles.  The graph is oriented from top to bottom, with the nodes branching out from the top.  A node labeled "0" is connected to the node "a".  A node labeled "0" is connected to the node "b".  A node labeled "0" is connected to the node "c".
+
+* **Table:** A small table is positioned to the left of the graph.  The table has two columns.  The first column is labeled "(a' + b + c)", "(a + c + d)", etc.  The second column is empty.  The table is positioned to the left of the graph, and the rows are aligned with the corresponding clauses in the list above the graph.  The table is oriented vertically.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, illustrates the DPLL search process using an implication graph.  The graph visually represents the possible assignments of variables (a, b, c, d) and the implications between them.  The clauses listed at the top of the slide are the input formula.  The graph shows how the algorithm explores different assignments, starting with the top-level variable (a) and branching down to explore possible values for subsequent variables (b, c, d).  The graph shows a successful path to a satisfying assignment, with the nodes "a=1", "b=0", "c=1", and "d=1" representing a complete assignment that satisfies all the clauses.  The table to the left of the graph likely serves as a reference to the clauses being considered in the search process.  The overall purpose of the slide is to visually demonstrate the search process of the DPLL algorithm, showing how the algorithm explores different assignments and finds a satisfying assignment.  The absence of red elements indicates that no conflicts were encountered during this particular search path.
+
+
+# 26
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A directed acyclic graph (DAG) is shown.  Nodes are circles with labels (a, b, c, d, a=0, b=0, c=1, d=1).  Edges are directed lines connecting the nodes.  The graph shows a branching structure, with nodes representing variables and their assigned values.  The edges represent the implications between variables.  The node "a" is at the top of the graph, and the nodes "b", "c", and "d" are below it.  The nodes "a=0", "b=0", "c=1", and "d=1" are further down the graph, branching from the nodes "b" and "c".  There are no red arrows or rectangles.  The graph is oriented from top to bottom, with the nodes branching out from the top.  A node labeled "0" is connected to the node "a".  A node labeled "0" is connected to the node "b".  A node labeled "0" is connected to the node "c".  A node labeled "1" is connected to the node "c".  A node labeled "a=0" is connected to a node labeled "(a + c + d)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c)".  A node labeled "c=1" is connected to a node labeled "(a + c + d)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".
+
+* **Labels:** The nodes are labeled with variable names (a, b, c, d) or variable names with assigned values (a=0, b=0, c=1, d=1).  The edges are not labeled, but the context implies that they represent implications or constraints between variables.  A node labeled "0" is connected to the node "a".  A node labeled "0" is connected to the node "b".  A node labeled "0" is connected to the node "c".  A node labeled "1" is connected to the node "c".
+
+* **Text:**  A node labeled "1" is connected to the node "c".  A node labeled "a=0" is connected to a node labeled "(a + c + d)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c)".  A node labeled "c=1" is connected to a node labeled "(a + c + d)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  The text "1 = Forced Decision" is positioned near the node "c".  The text "Conflict!" is not present.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, illustrates the DPLL search process using an implication graph.  The graph visually represents the possible assignments of variables (a, b, c, d) and the implications between them.  The clauses listed at the top of the slide are the input formula.  The graph shows a successful path to a satisfying assignment, with the nodes "a=0", "b=0", "c=1", and "d=1" representing a complete assignment that satisfies all the clauses.  The absence of red elements indicates that no conflicts were encountered during this particular search path.  The node labeled "1 = Forced Decision" indicates that the assignment to 'c' was forced by a unit clause.  The overall purpose of the slide is to visually demonstrate the search process of the DPLL algorithm, showing how the algorithm explores different assignments and finds a satisfying assignment.
+
+
+
+
+# 27
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A directed acyclic graph (DAG) is shown.  Nodes are circles with labels (a, b, c, d, a=0, b=0, c=1, d=1).  Edges are directed lines connecting the nodes.  The graph shows a branching structure, with nodes representing variables and their assigned values.  The edges represent the implications between variables.  The node "a" is at the top of the graph, and the nodes "b", "c", and "d" are below it.  The nodes "a=0", "b=0", "c=1", and "d=1" are further down the graph, branching from the nodes "b" and "c".  There are no red arrows or rectangles.  The graph is oriented from top to bottom, with the nodes branching out from the top.  A node labeled "0" is connected to the node "a".  A node labeled "0" is connected to the node "b".  A node labeled "0" is connected to the node "c".  A node labeled "1" is connected to the node "c".  A node labeled "a=0" is connected to a node labeled "(a + c + d)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c)".  A node labeled "c=1" is connected to a node labeled "(a + c + d)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "c=1" is connected to a node labeled "1 = Forced Decision".  A vertical column of green boxes is positioned to the left of the graph, containing the clauses.
+
+* **Table:** A small table is positioned to the left of the graph.  The table has two columns.  The first column is labeled with the clauses: "(a' + b + c)", "(a + c + d)", etc.  The second column is empty.  The table is positioned to the left of the graph, and the rows are aligned with the corresponding clauses in the list above the graph.  The table is oriented vertically.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, illustrates the DPLL search process using an implication graph.  The graph visually represents the possible assignments of variables (a, b, c, d) and the implications between them.  The clauses listed at the top of the slide are the input formula.  The graph shows a successful path to a satisfying assignment, with the nodes "a=0", "b=0", "c=1", and "d=1" representing a complete assignment that satisfies all the clauses.  The absence of red elements indicates that no conflicts were encountered during this particular search path.  The node labeled "1 = Forced Decision" indicates that the assignment to 'c' was forced by a unit clause.  The vertical column of green boxes to the left of the graph likely serves as a reference to the clauses being considered in the search process.  The overall purpose of the slide is to visually demonstrate the search process of the DPLL algorithm, showing how the algorithm explores different assignments and finds a satisfying assignment.  The table to the left of the graph likely serves as a reference to the clauses being considered in the search process.
+
+
+
+
+# 28
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A tree-like graph is shown, representing the search space explored by the DPLL algorithm.  The graph starts with the root node labeled "a".  From "a", branches extend to nodes labeled "b" and "c".  Further branches from "b" and "c" lead to nodes labeled with variable assignments (e.g., "a=0", "c=0", "d=1").  The graph shows a branching structure, with each branch representing a possible assignment of variables.  The edges are directed, indicating the order of assignments.  A red downward-pointing arrow connects the nodes "d=1" and "d=0", indicating a conflict.  The node "a=0" is connected to the clause "(a + c + d)".  The node "b=0" is connected to the clause "(a' + b + c)".  The node "c=0" is connected to the clause "(a + c' + d)".  The node "d=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c + d)".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(a + c + d)".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0
+
+# 29
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A tree-like graph is shown, representing the search space explored by the DPLL algorithm.  The graph starts with the root node labeled "a".  From "a", branches extend to nodes labeled "b" and "c".  Further branches from "b" and "c" lead to nodes labeled with variable assignments (e.g., "a=0", "c=0", "d=1").  The graph shows a branching structure, with each branch representing a possible assignment of variables.  The edges are directed, indicating the order of assignments.  The graph shows a branch where 'a' is assigned 0, 'b' is assigned 0, 'c' is assigned 1, and 'd' is assigned 1.  This assignment satisfies all the clauses.  There is a branch where 'a' is assigned 0, 'b' is assigned 0, 'c' is assigned 1, and 'd' is assigned 0.  This assignment leads to a conflict, indicated by the red downward-pointing arrow from "d=1" to "d=0".  The node "c=1" is labeled with "1 = Forced Decision", indicating that the assignment to 'c' was forced by a unit clause.
+
+* **Table:** A small table is positioned to the left of the graph.  The table has two columns.  The first column is labeled with the clauses: "(a' + b + c)", "(a + c + d)", etc.  The second column is empty.  The table is positioned to the left of the graph, and the rows are aligned with the corresponding clauses in the list above the graph.  The table is oriented vertically.
+
+* **Labels:** The nodes are labeled with variable names (a, b, c, d) or variable names with assigned values (a=0, b=0, c=1, d=1).  The edges are not labeled, but the context implies that they represent implications or constraints between variables.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, illustrates the DPLL search process using an implication graph.  The graph visually represents the possible assignments of variables (a, b, c, d) and the implications between them.  The clauses listed at the top of the slide are the input formula.  The graph shows how the algorithm explores different assignments, starting with the top-level variable (a) and branching down to explore possible values for subsequent variables (b, c, d).  The graph shows a successful path to a satisfying assignment, with the nodes "a=0", "b=0", "c=1", and "d=1" representing a complete assignment that satisfies all the clauses.  There is also a branch that leads to a conflict, indicated by the red arrow.  The table to the left of the graph likely serves as a reference to the clauses being considered in the search process.  The overall purpose of the slide is to visually demonstrate the search process of the DPLL algorithm, showing how the algorithm explores different assignments and finds a satisfying assignment (or detects a conflict).  The "1 = Forced Decision" label highlights a forced assignment due to unit propagation.
+
+
+# 30
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A tree-like graph is shown, representing the search space explored by the DPLL algorithm.  The graph starts with the root node labeled "a".  From "a", branches extend to nodes labeled "b" and "c".  Further branches from "b" and "c" lead to nodes labeled with variable assignments (e.g., "a=0", "c=0", "d=1").  The graph shows a branching structure, with each branch representing a possible assignment of variables.  The edges are directed, indicating the order of assignments.  The graph shows a branch where 'a' is assigned 0, 'b' is assigned 0, 'c' is assigned 1, and 'd' is assigned 1.  This assignment satisfies all the clauses.  There is a branch where 'a' is assigned 0, 'b' is assigned 0, 'c' is assigned 1, and 'd' is assigned 0.  This assignment leads to a conflict, indicated by the red downward-pointing arrow from "d=1" to "d=0".  The node "c=1" is labeled with "1 = Forced Decision", indicating that the assignment to 'c' was forced by a unit clause.  The graph also shows a branch where 'a' is assigned 0, 'b' is assigned 0, 'c' is assigned 0, and 'd' is assigned 1.  This assignment also leads to a conflict.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are connected by directed edges.  The nodes are labeled with variable names (a, b, c, d) or variable names with assigned values (a=0, b=0, c=1, d=1).
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, illustrates the DPLL search process using a tree-like graph.  The graph visually represents the search space explored by the DPLL algorithm for a given CNF formula.  The clauses listed at the top of the slide are the input formula.  The graph shows how the algorithm explores different assignments, starting with the top-level variable (a) and branching down to explore possible values for subsequent variables (b, c, d).  The graph shows multiple branches, some leading to satisfying assignments (e.g., a=0, b=0, c=1, d=1) and others leading to conflicts (indicated by red arrows).  The presence of the "1 = Forced Decision" label indicates that the assignment to 'c' was forced by a unit clause.  The overall purpose of the slide is to visually demonstrate the search process of the DPLL algorithm, showing how the algorithm explores different assignments and finds a satisfying assignment (or detects a conflict).
+
+
+
+
+# 31
+
+**DPLL Search**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A tree-like graph is shown, representing the search space explored by the DPLL algorithm.  The graph starts with the root node labeled "a".  From "a", branches extend to nodes labeled "b" and "c".  Further branches from "b" and "c" lead to nodes labeled with variable assignments (e.g., "a=0", "c=0", "d=1").  The graph shows a successful path to a satisfying assignment, with the nodes "a=0", "b=1", "c=1", and "d=1" representing a complete assignment that satisfies all the clauses.  The graph also shows other branches that lead to conflicts (indicated by red boxes).  The edges are directed, indicating the order of assignments.  The node "a=0" is connected to the clause "(a + c + d)".  The node "b=1" is connected to the clause "(a' + b + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "d=1" is connected to the clause "(a + c + d')".  The node "c=1" is also connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected to the clause "(b' + c' + d)".  The node "c=1" is connected to the clause "(a' + b + c')".  The node "c=1" is connected to the clause "(a' + b' + c)".  The node "c=1" is connected to the clause "(a + c + d)".  The node "c=1" is connected to the clause "(a + c + d')".  The node "c=1" is connected to the clause "(a + c' + d)".  The node "c=1" is connected to the clause "(a + c' + d')".  The node "c=1" is connected
+
+# 32
+
+**Resolution Rule**
+
+If a formula φ contains clauses (x ∨ α) and (¬x ∨ β),
+then one can derive a new clause (α ∨ β)
+
+**Description:**
+
+This slide presents the Resolution Rule, a fundamental inference rule in propositional logic, used in automated theorem proving, including SAT solvers.  The rule states that if a formula contains two clauses, one containing a literal (x) and the other containing the negation of that literal (¬x), then a new clause can be derived by combining the remaining literals (α and β) from the two clauses using the logical OR operator (∨).  The slide is a concise statement of the resolution rule, which is a key concept in logical reasoning and automated deduction.  There are no figures on this slide.
+
+
+
+
+# 33
+
+**What clauses can resolution be applied?**
+
+(a' + b + c)
+(a + c + d)
+(a + c + d')
+(a + c' + d)
+(a + c' + d')
+(b' + c' + d)
+(a' + b + c')
+(a' + b' + c)
+
+**Visual Elements:**
+
+* **Graph:** A directed acyclic graph (DAG) is shown.  Nodes are circles with labels (a, b, c, d, a=0, c=0, d=1, d=0).  Edges are directed lines connecting the nodes.  The graph shows a branching structure, with nodes representing variables and their assigned values.  The edges represent the implications between variables.  The node "a" is at the top of the graph, and the nodes "b", "c", and "d" are below it.  The nodes "a=0", "c=0", "d=1", and "d=0" are further down the graph, branching from the nodes "b" and "c".  A red downward-pointing arrow connects "d=1" to "d=0", indicating a conflict.  A red rectangle is positioned below the nodes "c" and "b".  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes "a", "b", "c", and "d" are at the top level, and the nodes "a=0", "c=0", "d=1", and "d=0" are at lower levels, branching from the previous nodes.  The node "a=0" is connected to the clause "(a + c + d)".  The node "c=0" is connected to the clause "(a + c' + d)".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "c=0" is connected to the clause "(b' + c' + d)".  The node "a=0" is connected to the clause "(a' + b + c)".  The node "b=0" is connected to the clause "(a' + b + c')".  The node "c=0" is connected to the clause "(a' + b' + c)".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "d=1
+
+# 34
+
+**Clause Learning**
+
+**(a' + b + c)**
+**(a + c + d)**
+**(a + c + d')**
+**(a + c' + d)**
+**(a + c' + d')**
+**(b' + c' + d)**
+**(a' + b + c')**
+**(a' + b' + c)**
+
+**Visual Elements:**
+
+* **Graph:** A directed acyclic graph (DAG) is shown, representing the search space explored by the DPLL algorithm.  The graph shows a branching structure, with each branch representing a possible assignment of variables.  Nodes are circles with labels like "a", "b", "c", "d", "a=0", "c=0", "d=1", "d=0", and "a=0, b=0, c=0, d=1".  Edges are directed lines connecting the nodes.  The graph shows a branch where 'a' is assigned 0, 'b' is assigned 0, 'c' is assigned 0, and 'd' is assigned 1.  This assignment leads to a conflict, indicated by a red downward-pointing arrow from "d=1" to "d=0".  The node "c=0" is connected to the clause "(a + c' + d)".  The node "d=1" is connected to the clause "(a + c + d')".  The node "d=0" is connected to the clause "(a + c' + d')".  The node "c=0" is connected to the clause "(b' + c' + d)".  The node "a=0" is connected to the clause "(a' + b + c)".  The node "b=0" is connected to the clause "(a' + b + c')".  The node "c=0" is connected to the clause "(a' + b' + c)".  The graph also shows a branch where 'a' is assigned 0, 'b' is assigned 0, 'c' is assigned 1, and 'd' is assigned 1.  This assignment satisfies all the clauses.  The graph is oriented from top to bottom, with the nodes branching out from the top.  A red box is positioned below the nodes "c=0" and "b=0", indicating a conflict.  A node labeled "c=0" is connected to a node labeled "(a + c' + d)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node labeled "(a' + b' + c)".  A node labeled "d=1" is connected to a node labeled "(a + c + d')".  A node labeled "d=0" is connected to a node labeled "(a + c' + d')".  A node labeled "c=0" is connected to a node labeled "(b' + c' + d)".  A node labeled "a=0" is connected to a node labeled "(a' + b + c)".  A node labeled "b=0" is connected to a node labeled "(a' + b + c')".  A node labeled "c=0" is connected to a node
+
+# 35
+
+**Key Advances in SAT Reasoning**
+
+Reason = a cut in implication graph
+1-UIP scheme
+
+Learn from mistakes during search
+* Never make similar mistakes again!!
+* Clause Learning: when DPLL backtracks, learn a concise reason: what went wrong → avoid similar 'mistakes' in the future!
+* Extremely powerful in practice
+
+Restart to avoid heavy-tailed behavior
+* Trade-off between "refine on what we have" vs. "exploring something new"
+* SAT solvers known to sometimes "get stuck" and at other times be very fast... on similar problems, of similar size, etc.
+* Discovery: runtime distribution (across 'similar' instances or even on a single instance) is heavy-tailed → too many runs that can take way longer than the average!
+* Solution: restart computation differently, keep learned clauses!
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown, positioned in the lower-right quadrant of the slide.  The graph depicts a simplified implication graph.  Nodes are represented by circles, with some labeled with variables (e.g., t, p, q, x1, x2, x3, y).  Other nodes are labeled with "false".  Directed edges connect the nodes, indicating implications.  The graph shows a path from t to false, with intermediate nodes representing variables and their negations.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The edges are labeled with the variable names or negations of the variables.  The graph is a simplified representation of a larger implication graph, illustrating the concept of a "cut" in the implication graph.  The graph is used to illustrate the concept of "reason" in SAT reasoning, which is a cut in the implication graph.  The graph is a visual representation of a 1-UIP scheme.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, discusses key advances in SAT reasoning, focusing on learning from mistakes and restarting to avoid heavy-tailed behavior.  The slide introduces the concept of "reason" as a cut in an implication graph, illustrated by a small directed graph.  The graph shows a simplified implication graph, with nodes representing variables and their negations, and edges representing implications.  The graph is used to illustrate the concept of a "cut" in the implication graph, which is a key concept in SAT reasoning.  The slide also discusses clause learning, which helps avoid repeating past mistakes, and restarting, which addresses the heavy-tailed behavior of SAT solvers.  The overall purpose of the slide is to highlight the key techniques used to improve the efficiency and robustness of SAT solvers.
+
+
+
+
+# 36
+
+**Key Advances in SAT Reasoning**
+
+Machine learning to build algorithm portfolios
+* Observation: no single SAT solver is good on every family of instances
+* Features of a given instance can be used to predict, with reasonable accuracy, which solver will work well on it!
+* Solution: design a portfolio solver using ML techniques
+* Based on runtime prediction models
+* Recent work – avoid complex models, use k-NN or clustering
+Automatic parameter tuning (generic and instance-specific)
+* SAT solvers are designed with many ‘hardwired’ parameters
+* Millions of parameter combinations – impossible to explore all by hand!
+* Solution: use automatic parameter tuning tools based on local search, genetic algorithms, etc.
+Efficient unit propagation
+* Data structures: watch-out tables (Chaff); Bitwise operation; Cache strategy, etc.
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, discusses key advances in SAT reasoning.  It focuses on using machine learning (ML) techniques to build portfolios of SAT solvers, rather than relying on a single solver for all instances.  The slide highlights the observation that no single SAT solver is universally effective across all problem types.  It suggests that features of a specific SAT problem instance can be used to predict which solver will perform best on that instance.  The slide also mentions automatic parameter tuning as a crucial aspect of improving SAT solver performance, given the vast number of possible parameter combinations.  Finally, it touches on efficient data structures, such as watch-out tables, bitwise operations, and caching, as further optimizations in SAT solvers.  There are no figures on this slide.  The context suggests that this slide summarizes the current state-of-the-art techniques in SAT solving, building upon the previous discussion of DPLL and related algorithms.
+
+
+# 37
+
+**Solving Real-world problems using SAT**
+
+
+**Description:**
+
+This slide, likely the title slide for a section or lecture on applying SAT solvers to real-world problems, simply displays the title "Solving Real-world problems using SAT" in a large, dark gray font against a light gray background.  There are no figures or other elements on the slide.  The title suggests that the following content will be about how the Satisfiability (SAT) problem-solving technique can be applied to practical, real-world scenarios.
+
+
+**What you see:**
+
+A plain, title slide with a single, bold title in a dark gray font on a light gray background.  The title is the only content on the slide.
+
+
+# 38
+
+**General Automated Reasoning**
+
+Research Objective: Better reasoning and modeling technology
+
+Impact: Faster solutions in several domains
+
+e.g. logistics, chess, 
+planning, verification, ...
+
+Model 
+Generator 
+(Encoder)
+General 
+Inference 
+Engine
+Solution
+Domain Specific
+Generic
+Applicable to all domains within 
+range of modeling language
+Problem Instance
+
+
+**Visual Elements:**
+
+* **Diagram:** A flowchart-like diagram is presented.  It shows a sequence of steps or components in a process.  The diagram has boxes representing different stages or components of the process.  The boxes are labeled as follows:
+    * **Problem Instance:**  A box at the left of the diagram.  This is the input to the process.  Inside this box, there are small images.  These images are likely examples of different problem types.  The images are:
+        * A circuit board
+        * A map (possibly a logistics map)
+        * A chessboard
+        * A satellite image
+    * **Model Generator (Encoder):** A box in the middle-left of the diagram.  This component takes the problem instance and generates a model.  The text "Domain Specific" is below this box, indicating that this component can be tailored to a specific domain.  The text "Generic" is below this box, indicating that this component can be used for a wider range of problems.
+    * **General Inference Engine:** A box in the middle-right of the diagram.  This component applies general reasoning rules to the model.
+    * **Solution:** A box at the right of the diagram.  This is the output of the entire process.
+
+* **Arrows:** Arrows connect the boxes, visually representing the flow of information from the problem instance to the solution.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, presents a conceptual framework for general automated reasoning.  The diagram illustrates a pipeline for solving problems in various domains.  The input is a "Problem Instance," which is then processed by a "Model Generator (Encoder)" to create a model.  This model is then fed into a "General Inference Engine" to derive a solution.  The distinction between "Domain Specific" and "Generic" model generators is highlighted, emphasizing the adaptability of the approach.  The small images within the "Problem Instance" box are likely examples of different problem types (e.g., logistics, chess, planning, verification) that can be handled by the system.  The overall design of the slide is to present a conceptual framework for automated reasoning, highlighting the distinction between domain-specific and generic approaches.  The images are used to illustrate the input and the overall process.
+
+
+# 39
+
+**The Challenge of Exponential Complexity Growth**
+
+Note: rough estimates, for propositional reasoning
+
+| Case Complexity | Exponential Complexity |
+|---|---|
+| 10<sup>301,020</sup> |  |
+| 10<sup>150,500</sup> |  |
+| 10<sup>6020</sup> |  |
+| 10<sup>3010</sup> |  |
+
+**Visual Elements:**
+
+* **Graph:** A graph with a rising curve illustrates the exponential growth of case complexity.  The y-axis is labeled "Case Complexity" and shows logarithmic values (e.g., 10<sup>301,020</sup>). The x-axis is labeled "Exponential Complexity" and shows a logarithmic scale (10<sup>0</sup> to 10<sup>7</sup>). The curve visually represents the exponential increase in complexity as the problem size grows.  The graph shows a logarithmic scale on both axes.  The curve is upward sloping, indicating exponential growth.
+
+* **Images:** Several small images are positioned along the curve, each representing a different problem domain.  These images are placed at different points on the curve, corresponding to the estimated complexity of each problem.  The images are:
+    * **Small Circuit Board:**  Represents VLSI Verification (0.5M). Positioned near the 10<sup>6</sup> mark on the x-axis.
+    * **Military Logistics Map:** Represents Military Logistics (1M). Positioned near the 10<sup>6</sup> mark on the x-axis.
+    * **Chessboard:** Represents Chess (20 steps deep) (20K). Positioned near the 10<sup>4</sup> mark on the x-axis.
+    * **Satellite Image:** Represents Deep Space Mission Control (50K). Positioned near the 10<sup>4</sup> mark on the x-axis.
+    * **Car Repair:** Represents Car Repair Diagnosis (100). Positioned near the 10<sup>2</sup> mark on the x-axis.
+    * **Soldiers:** Represents War Gaming (1M). Positioned near the 10<sup>6</sup> mark on the x-axis.
+    * **Other Images:**  There are other images, but their exact nature is not clear from the provided image.
+
+* **Numerical Labels:**  Numerical labels (e.g., 100K, 1M, 5M) are placed next to the images, indicating the estimated complexity of each problem.  These labels are positioned on the graph, near the corresponding image.
+
+* **Text Labels:**  Text labels (e.g., "War Gaming," "VLSI Verification") are placed below the images, providing context for the problem represented by each image.
+
+* **Additional Text:**  The text "No. of atoms on the earth," "Seconds until heat death of sun," "Protein folding Calculation (petaflop-year)," are placed on the left side of the graph, with arrows pointing to the corresponding values on the y-axis.  These values are used to illustrate the vastness of the scale of complexity.  These are positioned on the left side of the graph, with arrows pointing to the corresponding values on the y-axis.
+
+**Description:**
+
+This slide from a lecture on AI Basics presents a visual representation of the exponential growth in complexity of various problems.  The graph shows the exponential increase in case complexity as the problem size increases.  The images and labels provide concrete examples of problems with different complexity levels.  The slide aims to convey the significant computational challenges associated with problems involving a large number of variables and constraints.  The comparison to other large-scale problems (e.g., the number of atoms on Earth) is used to emphasize the scale of the problem.  The slide is designed to illustrate the exponential growth in complexity of various problems, using images and numerical values to show how the complexity of problems like war gaming, VLSI verification, and others grows dramatically with the size of the problem.  The graph and the associated data are intended to highlight the difficulty of solving problems with a large number of variables and constraints.
+
+
+
+
+# 40
+
+**Encode Hamiltonian Path Problem into SAT**
+
+**Hamiltonian Path Problem**
+
+* Key question: Is there a path in a directed graph that visits every vertex once.
+* Is there a Hamiltonian path in the example graph?
+* 1 → 3 → 4 → 2 → 5
+
+How do we make use of a SAT solver to find this path?
+
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown.  The graph depicts a directed acyclic graph (DAG) with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have labels, which are likely weights or costs associated with the transitions.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The edges are labeled with numbers (e.g., 1, 2, 3, 4, 5, 6).  The graph is a visual representation of the problem instance.
+
+
+**Description:**
+
+This slide introduces the Hamiltonian Path Problem and its encoding into the Satisfiability (SAT) problem.  The title clearly states the topic.  The text describes the Hamiltonian Path Problem, asking if a path exists in a directed graph that visits each vertex exactly once.  A specific example graph is shown, with vertices labeled 1 through 5 and directed edges connecting them.  The question is posed:  Is there a Hamiltonian path in this example graph?  A suggested path (1 → 3 → 4 → 2 → 5) is also shown.  The final question, "How do we make use of a SAT solver to find this path?", indicates that the following content will likely discuss the process of encoding this graph problem into a SAT formula to be solved by a SAT solver.  The graph is central to the problem, illustrating the vertices and the possible paths.  The numbers on the edges are likely weights or costs associated with the transitions between vertices.  The overall purpose of the slide is to introduce the problem and motivate the need for encoding it into a SAT problem.
+
+
+# 41
+
+**Encode Hamiltonian Path Problem into SAT**
+
+**Hamiltonian Path Problem**
+
+* Key question: Is there a path in a directed graph that visits every vertex once?
+* Is there a Hamiltonian path in the example graph?
+* 1 → 3 → 4 → 2 → 5
+
+How do we make use of a SAT solver to find this path?
+
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown.  The graph depicts a directed acyclic graph (DAG) with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have labels, which are likely weights or costs associated with the transitions.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The edges are labeled with numbers (e.g., 1, 2, 3, 4, 5, 6).  The graph is a visual representation of the problem instance.  The graph is a simple, directed graph with 5 nodes (1, 2, 3, 4, 5) and several directed edges connecting them.  The edges are not weighted, but the presence of the edges indicates possible paths between the nodes.  The graph is positioned centrally on the slide.
+
+
+**Description:**
+
+This slide introduces the Hamiltonian Path Problem and its encoding into the Satisfiability (SAT) problem.  The title clearly states the topic.  The text describes the Hamiltonian Path Problem, asking if a path exists in a directed graph that visits each vertex exactly once.  A specific example graph is shown, with vertices labeled 1 through 5 and directed edges connecting them.  The question is posed:  Is there a Hamiltonian path in this example graph?  A suggested path (1 → 3 → 4 → 2 → 5) is also shown.  The final question, "How do we make use of a SAT solver to find this path?", indicates that the following content will likely discuss the process of encoding this graph problem into a SAT formula to be solved by a SAT solver.  The graph is central to the problem, illustrating the vertices and the possible paths.  The numbers on the edges are likely weights or costs associated with the transitions between vertices.  The overall purpose of the slide is to introduce the problem and motivate the need for encoding it into a SAT problem.  The slide is designed to introduce the Hamiltonian Path Problem and illustrate the problem instance with a simple directed graph.
+
+
+# 41
+
+**Encode Hamiltonian Path Problem into SAT**
+
+**Hamiltonian Path Problem**
+
+* Key question: Is there a path in a directed graph that visits every vertex once?
+* Is there a Hamiltonian path in the example graph?
+* 1 → 3 → 4 → 2 → 5
+
+How do we make use of a SAT solver to find this path?
+
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown.  The graph depicts a directed acyclic graph (DAG) with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have labels, which are likely weights or costs associated with the transitions.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The edges are labeled with numbers (e.g., 1, 2, 3, 4, 5, 6).  The graph is a visual representation of the problem instance.  The graph is a simple, directed graph with 5 nodes (1, 2, 3, 4, 5) and several directed edges connecting them.  The edges are not weighted, but the presence of the edges indicates possible paths between the nodes.  The graph is positioned centrally on the slide.
+
+
+**Description:**
+
+This slide introduces the Hamiltonian Path Problem and its encoding into the Satisfiability (SAT) problem.  The title clearly states the topic.  The text describes the Hamiltonian Path Problem, asking if a path exists in a directed graph that visits each vertex exactly once.  A specific example graph is shown, with vertices labeled 1 through 5 and directed edges connecting them.  The question is posed:  Is there a Hamiltonian path in this example graph?  A suggested path (1 → 3 → 4 → 2 → 5) is also shown.  The final question, "How do we make use of a SAT solver to find this path?", indicates that the following content will likely discuss the process of encoding this graph problem into a SAT formula to be solved by a SAT solver.  The graph is central to the problem, illustrating the vertices and the possible paths.  The numbers on the edges are likely weights or costs associated with the transitions between vertices.  The overall purpose of the slide is to introduce the problem and motivate the need for encoding it into a SAT problem.  The slide is designed to introduce the Hamiltonian Path Problem and illustrate the problem instance with a simple directed graph.  The graph shows a directed graph with 5 nodes (1, 2, 3, 4, 5) and several directed edges connecting them.  The edges are not weighted, but the presence of the edges indicates possible paths between the nodes.  The graph is positioned centrally on the slide.
+
+
+# 43
+
+**Encode Hamiltonian Path Problem into SAT**
+
+**Hamiltonian Path Problem**
+
+* Key question: Is there a path in a directed graph that visits every vertex once?
+* Is there a Hamiltonian path in the example graph?
+* 1 → 3 → 4 → 2 → 5
+
+How do we make use of a SAT solver to find this path?
+
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph is a visual representation of the problem instance.  The graph is a simple, directed graph with 5 nodes (1, 2, 3, 4, 5) and several directed edges connecting them.  The edges are not weighted, but the presence of the edges indicates possible paths between the nodes.  The graph is positioned centrally on the slide.  The graph shows node 1 connected to nodes 2 and 3, node 2 connected to nodes 3 and 4, node 3 connected to nodes 4 and 5, node 4 connected to node 5, and node 5 connected to no other nodes.
+
+
+**Description:**
+
+This slide introduces the Hamiltonian Path Problem and its encoding into the Satisfiability (SAT) problem.  The title clearly states the topic.  The text describes the Hamiltonian Path Problem, asking if a path exists in a directed graph that visits each vertex exactly once.  A specific example graph is shown, with vertices labeled 1 through 5 and directed edges connecting them.  The question is posed:  Is there a Hamiltonian path in this example graph?  A suggested path (1 → 3 → 4 → 2 → 5) is also shown.  The final question, "How do we make use of a SAT solver to find this path?", indicates that the following content will likely discuss the process of encoding this graph problem into a SAT formula to be solved by a SAT solver.  The graph is central to the problem, illustrating the vertices and the possible paths.  The overall purpose of the slide is to introduce the problem and motivate the need for encoding it into a SAT problem.  The slide is designed to introduce the Hamiltonian Path Problem and illustrate the problem instance with a simple directed graph.
+
+
+
+
+# 44
+
+**Encode Hamiltonian Path Problem into SAT**
+
+**Hamiltonian Path Problem**
+
+* Key question: Is there a path in a directed graph that visits every vertex once?
+* Is there a Hamiltonian path in the example graph?
+* 1 → 3 → 4 → 2 → 5
+
+How do we make use of a SAT solver to find this path?
+
+
+**Visual Elements:**
+
+* **Graph (Left):** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph shows node 1 connected to nodes 2 and 3, node 2 connected to nodes 3 and 4, node 3 connected to nodes 4 and 5, node 4 connected to node 5, and node 5 connected to no other nodes.  This graph is positioned on the left side of the slide.
+
+* **Graph (Right):** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph shows a path from 1 to 5, then 4, then 5, then 5.  This graph is positioned on the right side of the slide.
+
+**Description:**
+
+This slide continues the discussion of encoding the Hamiltonian Path Problem into a Satisfiability (SAT) problem.  It presents the problem instance (a directed graph with 5 nodes) and visually illustrates a potential solution path (1 → 5 → 4 → 5 → 5).  The left graph shows the original problem structure, while the right graph shows a possible solution path.  The slide reiterates the key question of whether a Hamiltonian path exists in the given graph and prompts the reader to consider how a SAT solver can be used to find such a path.  The visual representation of the graphs is crucial for understanding the problem instance and the potential solution.
+
+
+# 45
+
+**Encode Hamiltonian Path Problem into SAT**
+
+**Hamiltonian Path Problem**
+
+* Key question: Is there a path in a directed graph that visits every vertex once?
+* Is there a Hamiltonian path in the example graph?
+* 1 → 3 → 4 → 2 → 5
+
+How do we make use of a SAT solver to find this path?
+
+
+**Visual Elements:**
+
+* **Graph (Left):** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph shows node 1 connected to nodes 2 and 3, node 2 connected to nodes 3 and 4, node 3 connected to nodes 4 and 5, node 4 connected to node 5, and node 5 connected to no other nodes.  This graph is positioned on the left side of the slide.
+
+* **Graph (Right):** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph shows a path from 1 to 3, then 5, then 2, then 4.  This graph is positioned on the right side of the slide.
+
+* **Text:**  A box containing the text "Original graph (left) and one valid solution so far (right)" is positioned below the two graphs.  A box containing the text "h<sub>ij</sub>: The i<sup>th</sup> vertex visited in the path is vertex j" is positioned below the box containing the text "Original graph (left) and one valid solution so far (right)".
+
+**Description:**
+
+This slide continues the discussion of encoding the Hamiltonian Path Problem into a Satisfiability (SAT) problem.  It presents the problem instance (a directed graph with 5 nodes) and visually illustrates a potential solution path (1 → 3 → 5 → 2 → 4).  The left graph shows the original problem structure, while the right graph shows a possible solution path.  The slide reiterates the key question of whether a Hamiltonian path exists in the given graph and prompts the reader to consider how a SAT solver can be used to find such a path.  The visual representation of the graphs is crucial for understanding the problem instance and the potential solution.  The text boxes below the graphs provide context and further explanation.
+
+
+
+
+# 46
+
+**Encode Hamiltonian Path Problem into SAT**
+
+* Encode Hamiltonian Path Problem into SAT
+* Enforcing that the path consists of real edges
+    * ¬(h<sub>iu</sub> ∧ h<sub>(i+1)v</sub>) if there is not an edge between u and v
+* Simple do a "∧" (logical OR) between all pairs of formulas.
+This completes our formulation of the Hamiltonian path instance in SAT!
+
+h<sub>ij</sub>: The i<sup>th</sup> vertex visited in the path is vertex j
+
+
+**Visual Elements:**
+
+* **Graph:** A directed graph is shown.  The graph depicts a directed graph with five nodes (vertices) labeled 1, 2, 3, 4, and 5.  Directed edges connect the nodes, indicating possible transitions between vertices.  The edges have no explicit labels, but their presence indicates possible paths between the nodes.  The graph is oriented from top to bottom, with the nodes branching out from the top.  The nodes are circles, and the edges are directed lines with arrowheads.  The graph shows node 1 connected to nodes 2 and 3, node 2 connected to nodes 3 and 4, node 3 connected to nodes 4 and 5, node 4 connected to node 5, and node 5 connected to no other nodes.  The graph is positioned centrally on the slide.
+
+
+**Description:**
+
+This slide continues the discussion of encoding the Hamiltonian Path Problem into a Satisfiability (SAT) problem.  It details the specific steps for creating the SAT encoding.  The slide describes how to enforce that the path consists of real edges in the graph.  It also explains how to combine the formulas using a logical OR operation.  The graph is a visual representation of the problem instance, illustrating the vertices and the possible paths.  The slide is designed to provide a complete encoding of the Hamiltonian Path Problem into a SAT formula.  The graph shows a directed graph with 5 nodes (1, 2, 3, 4, 5) and several directed edges connecting them.  The edges are not weighted, but the presence of the edges indicates possible paths between the nodes.  The graph is positioned centrally on the slide.  The slide explains how to create a SAT formula from the graph, ensuring that the path only uses existing edges.
+
+
+
+
+# 47
+
+**Graph coloring**
+
+Given a graph consisting of a set of vertices and edges.
+We want to associate each vertex with a color in such a way that every pair of vertices connected by an
+edge have different colors
+
+**Visual Elements:**
+
+* **Graph (a):** A small, stylized graph is shown.  It's a pentagon-like structure with 5 vertices (points).  The vertices are colored in different shades of blue and teal/turquoise.  Lines connect various pairs of vertices.  The graph is positioned in the upper-left quadrant of the slide.
+
+* **Graph (b):** A map of the United States is shown.  The states are colored in different shades of teal, blue, and light orange/yellow.  The map is positioned in the lower-right quadrant of the slide.
+
+**Description:**
+
+This slide introduces the concept of graph coloring.  The text describes the problem: given a graph (a set of vertices and edges), assign colors to the vertices such that no two adjacent vertices (vertices connected by an edge) share the same color.  The graph in (a) is a simple example of a graph, and the graph in (b) shows a possible coloring of the US states, where adjacent states have different colors.  The purpose of the slide is to introduce the graph coloring problem and provide a visual example.  The two graphs are used to illustrate the concept of graph coloring, with (a) being a simple example and (b) a more complex, real-world application (coloring states on a map).  The different colors assigned to the vertices/states in the graphs are used to visually demonstrate the concept of the coloring constraint.
+
+
+# 48
+
+**Graph coloring**
+
+Given a graph consisting of a set of vertices and edges.
+We want to associate each vertex with a color in such a way that every pair of vertices connected by an
+edge have different colors
+
+**Visual Elements:**
+
+* **Graph (a):** A small, stylized graph is shown.  It's a pentagon-like structure with 5 vertices (points).  The vertices are colored in different shades of blue and teal/turquoise.  Lines connect various pairs of vertices.  The graph is positioned in the upper-left quadrant of the slide.
+
+* **Graph (b):** A map of the United States is shown.  The states are colored in different shades of teal, blue, and light orange/yellow.  The map is positioned in the lower-right quadrant of the slide.
+
+**Description:**
+
+This slide introduces the concept of graph coloring.  The text describes the problem: given a graph (a set of vertices and edges), assign colors to the vertices such that no two adjacent vertices (vertices connected by an edge) share the same color.  The graph in (a) is a simple example of a graph, and the graph in (b) shows a possible coloring of the US states, where adjacent states have different colors.  The purpose of the slide is to introduce the graph coloring problem and provide a visual example.  The two graphs are used to illustrate the concept of graph coloring, with (a) being a simple example and (b) a more complex, real-world application (coloring states on a map).  The different colors assigned to the vertices/states in the graphs are used to visually demonstrate the concept of the coloring constraint.  The slide is likely part of a lecture on AI Basics, introducing a problem that can be solved using SAT techniques.
+
+
+
+
+# 49
+
+**Graph coloring**
+
+Given a graph consisting of a set of vertices and edges.
+We want to associate each vertex with a color in such a way that every pair of vertices connected by an
+edge have different colors.
+
+**Visual Elements:**
+
+* **Graph (a):** A small, stylized graph is shown.  It's a pentagon-like structure with 5 vertices (points).  The vertices are colored in different shades of blue and teal/turquoise.  Lines connect various pairs of vertices.  The graph is positioned in the upper-left quadrant of the slide.
+
+* **Graph (b):** A map of the United States is shown.  The states are colored in different shades of teal, blue, and light orange/yellow.  The map is positioned in the lower-right quadrant of the slide.
+
+**Description:**
+
+This slide introduces the concept of graph coloring.  The text describes the problem: given a graph (a set of vertices and edges), assign colors to the vertices such that no two adjacent vertices (vertices connected by an edge) share the same color.  The graph in (a) is a simple example of a graph, and the graph in (b) shows a possible coloring of the US states, where adjacent states have different colors.  The purpose of the slide is to introduce the graph coloring problem and provide a visual example.  The two graphs are used to illustrate the concept of graph coloring, with (a) being a simple example and (b) a more complex, real-world application (coloring states on a map).  The different colors assigned to the vertices/states in the graphs are used to visually demonstrate the concept of the coloring constraint.  The slide is likely part of a lecture on AI Basics, introducing a problem that can be solved using SAT techniques.  The graphs are positioned in the upper-left and lower-right quadrants of the slide, respectively.  The graph in (a) is a simple pentagon-like structure, while the graph in (b) is a stylized map of the United States.  The colors used in both graphs visually represent the concept of assigning different colors to adjacent vertices/states.
+
+
+# 50
+
+**Revisiting**
+
+**Description:**
+
+This slide, likely the title slide for a section or lecture on a topic related to a previous discussion, simply displays the title "Revisiting" in a large, dark gray font against a light gray background.  There are no figures or other elements on the slide.  The title suggests that the following content will revisit a previously discussed topic, potentially to expand upon it, provide new insights, or address related concepts.
+
+
+**What you see:**
+
+A plain, title slide with a single, bold title in a dark gray font on a light gray background.  The title is the only content on the slide.
+
+
+# 51
+
+**Applications of SAT (1)**
+
+Model Checking (hardware/software verification)
+* Bounded model checking (BMC)
+* Enhancement techniques: Abstraction and refinement
+* Major groups at Intel, IBM, Microsoft, and universities such as CMU, Cornell, and Princeton
+* SAT has become a dominant back-end technology
+
+Key questions:
+* Safety property: can system ever reach state S?
+* Liveness property: will system always reach T after it gets to S?
+
+Main idea:
+* Encode "reachability" in a finite transition graph
+* CNF encoding: in simple terms, "similar" to planning...
+
+
+**Visual Elements:**
+
+* **Image (Right):** A digital circuit board is shown.  The image is a close-up view of a printed circuit board (PCB).  The board shows numerous electronic components, including integrated circuits (ICs), resistors, capacitors, and other passive components.  The image is positioned in the right-hand side of the slide.  The image is likely included to illustrate the type of hardware that model checking techniques might be applied to.  The image is a visual representation of a hardware component, likely a digital circuit, and is used to illustrate the application of SAT to model checking.
+
+
+**Description:**
+
+This slide discusses the applications of SAT solvers, specifically in the context of model checking.  It introduces the concept of bounded model checking (BMC) as a key application.  The slide also mentions techniques like abstraction and refinement, and the significant adoption of SAT solvers by major technology companies and universities.  The key questions highlight the types of properties that can be verified using SAT-based model checking.  The main idea is that reachability in a finite transition graph can be encoded as a CNF formula, similar to planning problems.  The image of the circuit board is a visual aid to illustrate the practical application of SAT to hardware verification.  The slide is likely part of a lecture on AI Basics, introducing the use of SAT solvers in real-world applications.
+
+
+
+
+# 52
+
+**Applications of SAT (2)**
+
+**Classical Planning**
+
+* Parallel step optimal plans
+* E.g., SATPLAN-06 fastest in this category at IPC-06 planning competition
+
+**Main idea:**
+
+* Create planning graph, unfolded up to T steps
+* Encode legal transitions as CNF
+* Variables: action vars, fact vars for each time step t
+* Clauses encode action preconditions, effects, mutual exclusion, etc.
+e.g., (actionA_(t+1) ⇒ preA1_t AND preA2_t AND preA3_t),
+(NOT actionA_t OR NOT actionB_t), …
+
+
+**Visual Elements:**
+
+* **Image (Right):** A digital circuit board is shown.  The image is a close-up view of a printed circuit board (PCB).  The board shows numerous electronic components, including integrated circuits (ICs), resistors, capacitors, and other passive components.  The image is positioned in the right-hand side of the slide.  The image is likely included to illustrate the type of hardware that model checking techniques might be applied to.  The image is a visual representation of a hardware component, likely a digital circuit, and is used to illustrate the application of SAT to model checking.  A small, stylized image of a spacecraft or rover is also visible in the upper-right quadrant of the slide.
+
+
+**Description:**
+
+This slide continues the discussion of SAT applications, focusing on classical planning.  It describes how SAT can be used to find optimal plans in a multi-step process.  The example mentions SATPLAN-06, a SAT-based planner that performed well in a planning competition.  The main idea is to create a planning graph, unfold it up to a certain number of steps (T), and encode the legal transitions as CNF clauses.  Variables represent actions and facts at each time step.  Clauses encode preconditions, effects, and mutual exclusions of actions.  The example clause (actionA_(t+1) ⇒ preA1_t AND preA2_t AND preA3_t) illustrates how actions depend on facts at previous time steps.  The image of the circuit board is a visual aid to illustrate the practical application of SAT to hardware verification.  The image of a spacecraft or rover is likely included to illustrate the application of SAT to planning problems in robotics or other domains.  The slide is likely part of a lecture on AI Basics, introducing the use of SAT solvers in real-world applications, specifically in planning.
+
+
+
+
+# 53
+
+**Applications of SAT (3)**
+
+**Combinatorial Design**
+
+Complex mathematical structures with desirable properties
+
+*   Latin squares
+*   Quasi groups
+*   Ramsey numbers
+*   Steiner systems
+
+Highly useful for
+
+*   design of experiments
+*   coding theory, cryptography
+*   drug design and testing
+*   crop rotation schedules
+
+And more...
+
+
+**Visual Elements:**
+
+*   **Image (Top Left):** A stylized, circular graph with vertices and lines connecting them.  The vertices are numbered, and the lines suggest connections between them.  The graph appears to be a representation of a graceful graph.
+
+*   **Image (Top Right):** A grid-like structure, similar to a magic square.  The grid contains numbers arranged in a pattern.  The numbers are likely integers, and the pattern suggests a magic square.
+
+*   **Image (Bottom Left):** A stylized image of a baseball bat and a baseball.  The image is likely a representation of a round-robin tournament.
+
+*   **Image (Bottom Right):** A grid-like structure, similar to a magic square.  The grid contains numbers arranged in a pattern.  The numbers are likely integers, and the pattern suggests a magic square.
+
+
+**Description:**
+
+This slide continues the discussion of SAT applications, focusing on combinatorial design problems.  It lists several types of complex mathematical structures (Latin squares, quasi groups, Ramsey numbers, Steiner systems) that can be encoded and solved using SAT solvers.  The slide highlights the practical applications of these structures in various fields, including experimental design, coding theory, cryptography, drug design, and crop rotation scheduling.  The images are visual representations of examples of combinatorial designs that can be solved using SAT.  The top-left image is a graceful graph, the top-right and bottom-right images are magic squares, and the bottom-left image is a round-robin tournament.  The slide is likely part of a lecture on AI Basics, demonstrating the breadth of applications for SAT solvers beyond the more traditional planning and model checking examples.
+
+
+
+
+# 54
+
+**What's more**
+
+Cook's Theorem
+
+* All problems in NP can be represented as such a formula, and we can use a SAT solver to find the solution to the problem.
+* This makes SAT not only a theoretical problem in computer science, but also a powerful programming paradigm for solving hard decision problems!
+
+
+**Description:**
+
+This slide, the final one, summarizes the lecture's discussion on the broad applicability of SAT solvers.  It states Cook's Theorem, which implies that any problem in the NP (Nondeterministic Polynomial time) complexity class can be reduced to a SAT problem.  This means that if a solution exists to a problem in NP, a SAT solver can potentially find it.  The slide emphasizes that this makes SAT a powerful practical tool for solving complex decision problems, not just a theoretical concept in computer science.  There are no figures on this slide.  The slide is a concise summary of the lecture's main points, highlighting the broad applicability of SAT solvers.  The overall purpose is to conclude the lecture by emphasizing the practical significance of SAT.

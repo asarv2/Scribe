@@ -1,0 +1,22 @@
+# 35
+
+**Unintuitive k-means results**
+
+---
+
+Four scatter plots are displayed, each showing a two-dimensional dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left:**  A scatter plot of data points, colored in dark purple and yellow.  The x-axis ranges from approximately -10 to 5, and the y-axis ranges from approximately -8 to 3.  The title of this plot is "Incorrect Number of Blobs".  The data points appear to be clustered into two groups, but the K-means algorithm, with a k value of 4, has not captured this structure well.
+
+* **Top Right:** A scatter plot of data points, colored in teal, yellow, and dark purple.  The x-axis ranges from approximately -6 to 4, and the y-axis ranges from approximately -2 to 3.  The title of this plot is "Anisotropicly Distributed Blobs".  The data points are elongated in a diagonal direction, and the K-means algorithm struggles to capture this non-spherical shape of the clusters.
+
+* **Bottom Left:** A scatter plot of data points, colored in yellow, teal, and dark purple.  The x-axis ranges from approximately -12.5 to 0, and the y-axis ranges from approximately -8 to 3.  The title of this plot is "Unequal Variance".  The clusters have different variances along the x and y axes, and the K-means algorithm struggles to capture the different spread of the clusters.
+
+* **Bottom Right:** A scatter plot of data points, colored in teal, yellow, and dark purple.  The x-axis ranges from approximately -10 to 50, and the y-axis ranges from approximately -8 to 3.  The title of this plot is "Unevenly Sized Blobs".  The clusters have different sizes, and the K-means algorithm struggles to capture the varying sizes of the clusters.
+
+
+---
+
+**Description of what you see:**
+
+This slide presents four scatter plots, each illustrating how the K-means algorithm can produce unintuitive results when the data doesn't conform to its assumptions.  The plots demonstrate the limitations of K-means when dealing with non-spherical clusters, clusters with unequal variances, and clusters of different sizes.  The title "Unintuitive k-means results" highlights the potential for the algorithm to misinterpret the underlying structure of the data, leading to inaccurate or unexpected cluster assignments.  The different shapes and sizes of the clusters in the plots visually demonstrate the algorithm's challenges in these scenarios.  The slide is a visual aid to help the audience understand the importance of considering the characteristics of the data when choosing and applying clustering algorithms.  The plots are intended to show that K-means works best with spherical, isotropic, and evenly sized clusters.

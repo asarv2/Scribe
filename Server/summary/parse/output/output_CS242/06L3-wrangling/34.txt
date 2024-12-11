@@ -1,0 +1,28 @@
+```markdown
+# Slide 34
+
+**Missing Grades**
+
+```
+data2 = pd.read_csv("grades.csv")
+data2
+```
+
+A table is presented, displaying data read from a CSV file named "grades.csv".  The table has columns for "Lastname", "Firstname", "ID", "Test1", "Test2", "Test3", "Test4", and "Final Grade".  Each row represents a student's record, including their name, ID, and test scores.  The data appears to be student grades.
+
+```
+NaN can be good in some cases,
+it's mostly ignored.
+Here, we want a value
+```
+
+These lines provide context.  The text "NaN can be good in some cases, it's mostly ignored" suggests that the slide is discussing how to handle missing values (NaN) in the data.  The line "Here, we want a value" implies that the subsequent content will address strategies for dealing with missing data, potentially by replacing or imputing values.
+
+
+---
+
+**Description of the Slide:**
+
+This slide introduces a dataset of student grades, likely from a CSV file.  The data is presented in a table format, showing student names, IDs, and test scores.  The presence of "NaN" values in the table suggests that some data is missing.  The text below the table indicates that the slide will discuss how to handle missing values in the dataset.  The slide is part of a larger lecture on data cleaning and manipulation techniques.
+```
+```

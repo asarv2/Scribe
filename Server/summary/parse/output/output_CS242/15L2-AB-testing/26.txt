@@ -1,0 +1,13 @@
+# Slide 26
+
+What happens when you test multiple hypotheses?
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide poses a question about the implications of testing multiple hypotheses.  It's a simple, direct question, likely setting the stage for a discussion about the challenges and considerations involved in multiple hypothesis testing, such as the increased risk of false positives.  The slide is likely part of a larger presentation on statistical methods in data science.

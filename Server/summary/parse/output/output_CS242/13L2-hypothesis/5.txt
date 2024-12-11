@@ -1,0 +1,23 @@
+# Slide 5
+
+**Claims**
+
+Planned Parenthood misappropriated its funds.
+(e.g., abortions increased while screening for cancer decreased)
+
+**Figure 1:**
+
+A line graph is positioned in the lower-right quadrant of the slide.  The x-axis represents years from 2006 to 2013, and the y-axis represents percentage change in services offered by Planned Parenthood.  Two lines are plotted on the graph: one in a purplish-red color representing abortion procedures, and the other in a light-blue color representing cancer screening/preventative services.  The graph shows the year-over-year changes in the percentage of services offered by Planned Parenthood.  The graph is used to visually represent the claim that abortion procedures increased while cancer screening decreased.  The graph is a key piece of evidence to support the claim.
+
+**Figure 2:**
+
+A second line graph is positioned in the upper-right quadrant of the slide.  The x-axis represents years from 2006 to 2013, and the y-axis represents the number of procedures performed.  Two lines are plotted on the graph: one in a red color representing abortion procedures, and the other in a light-purple color representing cancer screening/preventative services.  The graph shows the year-over-year changes in the number of procedures performed by Planned Parenthood.  The graph is used to visually represent the claim that abortion procedures increased while cancer screening decreased.  The graph is a key piece of evidence to support the claim.  The graph is a different representation of the same data, providing a different perspective on the claim.
+
+**Text:**
+
+The text below the graphs states: "Planned Parenthood changes in services, year-over-year".  The text below the graphs also states: "Given another view of the data, what part of the claim is true?".  This question is posed to the audience, prompting them to analyze the data and determine the validity of the claim.
+
+
+**Description of what you see:**
+
+This slide presents a claim that Planned Parenthood misappropriated its funds by increasing abortion procedures while decreasing cancer screening.  It uses two line graphs to visually represent the claim, showing the year-over-year changes in abortion procedures and cancer screening services.  The graphs are accompanied by a question, prompting the audience to analyze the data and determine the validity of the claim.  The slide is designed to present evidence and encourage critical thinking about the claim.  The graphs are from different sources, but both are used to support the same claim.  The slide is part of a lecture on data analysis and critical thinking, specifically in the context of evaluating claims based on data.

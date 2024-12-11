@@ -1,0 +1,34 @@
+# 16
+
+# Intro to pandas
+
+Pandas is a third party Python module for data analysis
+* Assists in the analysis of PANal DATA (tables, data frames)
+* Available in Jupyter, along with NumPy and matplotlib
+Pandas is a great tool for working with tabular data
+* CSV, excel, and JSON easily, XML is a little more difficult
+* Allows you to manipulate data by columns, rows, filtering, grouping, etc
+Everything you do in pandas, you can do in python... though it would be more difficult
+
+
+---
+
+**Description:**
+
+This slide introduces the Pandas library for data analysis in the context of an Intro to Data Science course.
+
+* **Title:** The title "Intro to pandas" is displayed prominently at the top of the slide, indicating the topic of the slide.
+
+* **Definition:** The slide defines Pandas as a third-party Python module for data analysis, specifically mentioning its assistance in analyzing tabular data (tables and data frames).
+
+* **Availability:** It notes that Pandas is available in Jupyter notebooks, along with other libraries like NumPy and matplotlib, which are commonly used for data analysis and visualization.
+
+* **Ease of Use:** The slide highlights that Pandas makes working with CSV, Excel, and JSON data easy, contrasting this with XML, which is described as being slightly more difficult to work with.
+
+* **Functionality:** The slide emphasizes Pandas' capabilities for manipulating data by columns, rows, filtering, and grouping, which are common data analysis tasks.
+
+* **Comparison to Python:** The slide points out that most operations possible with Pandas can also be done in standard Python, but Pandas provides a more streamlined and efficient approach.
+
+* **Visual Elements:** The slide includes three panda emojis (black and white panda bear images) at the top of the slide, likely to visually represent the Pandas library.  The emojis are positioned above the title, and they are small in size.  The emojis are likely there to visually represent the Pandas library, which is the topic of the slide.  The emojis are a visual cue to the topic of the slide.  The emojis are likely there to visually represent the Pandas library, which is the topic of the slide.  The emojis are a visual cue to the topic of the slide.
+
+

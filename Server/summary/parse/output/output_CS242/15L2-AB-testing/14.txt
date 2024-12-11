@@ -1,0 +1,25 @@
+# Slide 14
+
+**Experimentation at Scale**
+
+➤ I've been fortunate to work at an organization that values being data-driven
+➤ We finish about ~300 experiment treatments at Bing every week.
+(Since most experiments run for a week or two, there are a similar number of concurrent treatments running.
+These are "real" useful treatments, not 3x10x10 MVT = 300)
+➤ See Google's KDD 2010 paper on Overlapping Experiment Infrastructure and
+Our KDD 2013 paper on challenges of scaling experimentation: [http://bit.ly/ExPScale](http://bit.ly/ExPScale)
+➤ Each variant is exposed to between 100K and millions of users, sometimes tens of millions
+➤ 90% of eligible users are in experiments (10% are a global holdout changed once a year)
+➤ There is no single Bing. Since a user is exposed to 15 concurrent experiments, they get one of 5<sup>15</sup> = 30 billion variants (debugging takes a new meaning).
+➤ Until 2014, the system was limiting usage as it scaled.
+Now the limits come from engineers' ability to code new ideas
+
+
+**Figure:**
+
+A line graph, titled "Bing Experimentation Growth (2008-2015)", is positioned below the text.  The x-axis is labeled with time, spanning from approximately 2008 to 2015, broken down into weekly increments.  The y-axis, labeled "Completed Treatments," shows the number of treatments completed each week.  The graph displays a steep upward trend in the number of completed treatments, with a noticeable increase in the number of treatments from 2008 to 2014.  The trend appears to flatten out after 2014.  A dashed line is also present, representing a trendline that roughly follows the upward trend of the data points.  A legend is present, indicating that the data points represent "All Treatments" and "Mobile."  The graph is placed below the text, illustrating the exponential growth of experimentation at Bing over time.  The graph's purpose is to visually demonstrate the scale of experimentation at Bing, showing the significant increase in the number of experiments conducted over the years.
+
+
+**Slide Description:**
+
+This slide discusses the scale of experimentation at an organization (likely Bing).  It highlights the large number of experiments run weekly (~300), the significant number of users exposed to these experiments (between 100K and tens of millions), and the challenges of scaling such an operation.  The figure visually represents the growth of experimentation at Bing over time, demonstrating the exponential increase in the number of experiments conducted.  The slide is likely part of a presentation on the challenges and successes of large-scale experimentation.

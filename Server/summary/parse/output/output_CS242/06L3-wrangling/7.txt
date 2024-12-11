@@ -1,0 +1,33 @@
+# Slide 7
+
+**Sort by Index**
+
+You can sort by the row index or column index as well
+
+`data_zillow.sort_index(axis=0, ascending=False)`
+
+```
+INDEX	LIVING SPACE (SQ FT)	BEDS	BATHS	ZIP	YEAR	LIST PRICE ($)
+19	4010	5	3.0	32309	2002	549900
+18	2497	4	4.0	32309	1990	289000
+17	1158	3	2.0	32303	1993	155000
+16	2533	3	2.0	32310	1991	365000
+…	…	…	…	…	…	…
+```
+
+`data_zillow.sort_index(axis=1)`
+
+```
+BATHS	BEDS	INDEX	LIST PRICE ($)	LIVING SPACE (SQ FT)	YEAR	ZIP
+0	3.5	3	1	250000	2222	1981	32312
+1	2.0	3	2	185000	1628	2009	32308
+…	…	…	…	…	…	…	…
+```
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates how to sort a DataFrame (`data_zillow`) by its row index (axis=0) and column index (axis=1) in a data science context.  The code `data_zillow.sort_index(axis=0, ascending=False)` sorts the DataFrame by the row index in descending order.  The output shows the sorted data, with the rows ordered from the highest index to the lowest.  The columns are `INDEX`, `LIVING SPACE (SQ FT)`, `BEDS`, `BATHS`, `ZIP`, `YEAR`, and `LIST PRICE ($)`.  The `...` indicates that the table continues beyond the displayed rows.  The second code example, `data_zillow.sort_index(axis=1)`, sorts the DataFrame by the column index in ascending order.  The output shows the sorted data, with the columns ordered alphabetically.  The columns are `BATHS`, `BEDS`, `INDEX`, `LIST PRICE ($)`, `LIVING SPACE (SQ FT)`, `YEAR`, and `ZIP`.  The `...` indicates that the table continues beyond the displayed rows.  The slide is part of a larger lecture on data manipulation and analysis, likely using the pandas library in Python.  The purpose of this slide is to show how to sort data based on the index.  The tables are key parts of the slide, showing the sorted data.  The code snippets are crucial for demonstrating the sorting process.
+
+

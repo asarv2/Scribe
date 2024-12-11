@@ -1,0 +1,33 @@
+# Slide 44
+
+**ggplot flow**
+
+Plot
+(The finished product)
+
+Layers
+
+Geoms
+(Bars, lines, text, points)
+
+Aesthetics
+(Colour, shape, size, location)
+
+
+---
+
+**Description of what you see:**
+
+The slide presents a diagram illustrating the flow of creating a plot using the ggplot library.  It's a flowchart-style diagram with three main boxes:
+
+* **Plot (The finished product):** This is the top box, representing the final visualization.  It's the output of the process.
+
+* **Layers:** This box sits below the "Plot" box and represents the intermediate steps in building the plot.  It suggests that multiple layers of elements are added to create the final plot.
+
+* **Geoms:** This box sits below the "Layers" box and represents the actual graphical elements that make up the plot.  Examples include bars, lines, points, and text.
+
+* **Aesthetics:** This box sits to the right of the "Plot" box and represents the visual attributes of the plot elements.  Examples include color, shape, size, and position.
+
+The arrows connecting the boxes visually represent the flow of the process.  The diagram is designed to illustrate the layered approach to plot creation in ggplot, where individual components are combined to create the final visualization.  The diagram is clear and concise, highlighting the key components of the ggplot workflow.  The overall design is simple and easy to understand.
+
+

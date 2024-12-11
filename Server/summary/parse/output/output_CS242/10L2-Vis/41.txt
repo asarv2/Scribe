@@ -1,0 +1,15 @@
+# Slide 41
+
+**Introduction to GGplot**
+
+
+---
+
+**Figure Description:**
+
+There are no figures on this slide.  The slide is a title slide for a new section of the presentation, introducing a new data visualization library called GGplot.  The slide is likely the first in a series of slides that will explain the concepts and usage of GGplot, a data visualization library often used in R.  The title "Introduction to GGplot" is centered on the slide, in a dark gray font, on a light gray background.  This is a typical introductory slide for a new topic in a data science course.
+
+
+**Description of what you see:**
+
+The slide is a simple title slide, introducing the topic of GGplot.  The title is "Introduction to GGplot," and the background is a light gray color.  There are no figures or other elements on the slide.  The slide is likely the first in a series of slides that will explain the concepts and usage of GGplot, a data visualization library often used in R.  The title "Introduction to GGplot" is centered on the slide, in a dark gray font, on a light gray background.  This is a typical introductory slide for a new topic in a data science course.

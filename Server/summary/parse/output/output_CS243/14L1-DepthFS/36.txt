@@ -1,0 +1,16 @@
+# Slide 36
+
+**Pacman Example**
+
+**(Diagram):**
+
+The slide displays a series of small, square images, arranged in a grid-like pattern. Each square represents a state in a Pac-Man game.  These squares are arranged in two rows. The top row shows several different Pac-Man game board states.  Each state shows a dark-blue background with a maze-like layout outlined in light-blue lines.  Small white circles are scattered throughout the maze, representing pellets.  A yellow Pac-Man character is visible within the maze in each state.  Two light-blue ghosts are also visible within the maze in each state.  The score "SCORE: 18" is displayed below the game board in the top row.
+
+The bottom row shows two smaller, square images.  These images are also game board states, but they are connected by arrows.  The arrow from the left square to the right square is labeled "N', 1.0".  The arrow from the left square to the right square is labeled "E', 1.0".  The left square shows a Pac-Man game board state, and the right square shows a different Pac-Man game board state.  The purpose of these images is to illustrate the concept of successor functions in the context of Pac-Man.  The arrows represent possible transitions between states, and the numbers associated with the arrows likely represent the cost or value of making that transition.
+
+
+**Description:**
+
+This slide presents an example of the Pac-Man game, illustrating the concept of state space and successor functions.  The top row shows different game states, visually representing the possible configurations of the game board.  The bottom row shows two states connected by arrows, illustrating the successor function, which maps a state to its possible successor states.  The numbers associated with the arrows likely represent the cost or value of transitioning between states.  The slide is likely part of a lecture on AI search algorithms, where the Pac-Man game is used as a visual example to illustrate the concept of state space and successor functions in the context of a game-playing agent.
+
+

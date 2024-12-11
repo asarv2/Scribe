@@ -1,0 +1,24 @@
+# Slide 20
+
+```markdown
+# Creating a Database and Table
+
+You can create a database and connect using this boilerplate code:
+import sqlite3
+conn = sqlite3.connect("people.db")
+cursor = conn.cursor()
+# do your stuff
+conn.close()
+Create a new table:
+cursor.execute("""
+CREATE TABLE role (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+)""")
+```
+
+---
+
+**Description of the Slide:**
+
+This slide presents Python code for creating a database and table using the `sqlite3` library.  The code snippet demonstrates how to establish a connection (`conn = sqlite3.connect("people.db")`), create a cursor (`cursor = conn.cursor()`), perform operations (represented by `# do your stuff`), and close the connection (`conn.close()`).  Critically, it includes the SQL command `CREATE TABLE role (...)` to define a table named "role" with columns "id" (an integer primary key) and "name" (text).  The code is formatted to show the structure of a Python script, with comments and string literals.  The purpose of this slide is to provide a practical example of how to create a table in a SQLite database using Python.  There are no figures on this slide.  The content is purely textual, focusing on the code necessary for database creation and table definition.

@@ -1,0 +1,35 @@
+# 8
+
+**Ten pages Later**
+
+…
+185 -9 0
+185 -1 0
+177 169 161 153 145 137 129 121 113 105 97 89 81 73 65 57 49 41 33
+25 17 9 1 -185 0
+186 -187 0
+186 -188 0
+…
+i.e., (x177 or x169 or x161 or x153 …
+x33 or x25 or x17 or x9 or x1 or (not x185))
+clauses / constraints are getting more interesting…
+Note x1 …
+
+
+**Description:**
+
+This slide presents a continuation of a SAT encoding, likely part of a larger set of lecture notes on AI Basics.  The format is similar to the previous slide, showing a series of numbers representing variables and clauses in a DIMACS CNF format.
+
+* **"Ten pages Later":** This title suggests that the content on this slide is a continuation of a previous section, possibly a few pages back in the lecture notes.
+
+* **Numbers:** The slide displays a list of numbers, which are likely variable indices and their negations, forming clauses.  The numbers are in a specific order, and the presence of negative numbers indicates negated variables.  For example, `185 -9 0` represents a clause involving variable 185 and the negation of variable 9.
+
+* **"i.e., (x177 or x169 or x161 or x153 … x33 or x25 or x17 or x9 or x1 or (not x185))":** This line provides an interpretation of the numbers as a logical expression.  It shows how the numbers represent variables and their negations combined with logical OR operations.  The ellipsis (...) indicates that the list of variables continues beyond what is shown.
+
+* **"clauses / constraints are getting more interesting…":** This text suggests that the complexity or the intricacy of the problem being encoded is increasing.
+
+* **"Note x1 …":** This line, with the ellipsis, likely indicates that the variable `x1` is being referenced in the context of the encoding.
+
+* **Visual Elements:** The slide has no significant visual elements other than the text. The numbers are arranged in a list format, making it easy to read and understand the encoding.
+
+**Context:**  The slide continues the presentation of a SAT encoding, likely from the previous slide.  The numbers represent variables and clauses in a CNF format, which is a standard way to represent logical expressions in SAT problems.  The slide's content is designed to illustrate the complexity of the encoding and the increasing number of constraints.

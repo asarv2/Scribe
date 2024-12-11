@@ -1,0 +1,25 @@
+# Slide 8
+
+**Playfair**
+
+```
+Exports and Imports to and from DENMARK & NORWAY from 1700 to 1780.
+```
+
+**(Image Description):**
+
+A historical chart, likely from the 18th century, depicting the balance of trade between Denmark & Norway and England.  The chart is a line graph with two lines. One line represents imports, and the other represents exports.  The vertical axis represents the value of trade in a monetary unit (likely pounds). The horizontal axis represents the years from 1700 to 1780.  The area between the import and export lines is shaded, indicating the balance of trade.  The shading is colored in a light pinkish-tan color, and a darker reddish-brown color.  The graph is labeled with the title "BALANCE in FAVOUR of ENGLAND" in the middle of the graph.  The graph is clearly labeled with the years on the horizontal axis and the monetary value on the vertical axis.  The graph is presented in a grid format, with the grid lines providing a visual reference for the data points.  The graph is likely intended to show the trend of trade between the two countries over time.
+
+
+```
+Exports and Imports of SCOTLAND to and from different parts for one Year from Christmas 1780 to Christmas 1781.
+```
+
+**(Image Description):**
+
+A second chart, also a historical representation, shows exports and imports of Scotland to and from various locations during a specific year (1780-1781).  This chart is a bar graph, with the vertical axis representing the value of trade in a monetary unit (likely pounds). The horizontal axis lists the names of various locations.  The bars are colored in black for exports and a lighter color for imports.  The graph is presented in a grid format, with the grid lines providing a visual reference for the data points.  The graph is labeled with the title "Exports and Imports of SCOTLAND" and the specific time period.  The graph is likely intended to show the volume of trade between Scotland and different regions during that year.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, demonstrates early forms of data visualization.  The Playfair charts show how historical data was presented and analyzed.  The focus is on the visual representation of data and how different types of charts can convey information about trade balances and volumes.  The slide likely follows a discussion of the importance of visualization in data analysis, contrasting it with the limitations of relying solely on summary statistics, as seen in the previous slide about Anscombe's Quartet.  The historical context of these charts is important for understanding the evolution of data visualization techniques.

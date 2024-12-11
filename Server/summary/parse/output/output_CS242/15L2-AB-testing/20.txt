@@ -1,0 +1,22 @@
+# Slide 20
+
+**Consider Exercise and Smoking**
+
+We collect data on two categorical variables
+
+* Exercise - Frequently, None, Some
+* Smoking - Heavy, Never, Occasional, Regular
+
+Every data point should have a categorical classification for both variables
+
+Since they are categorical, a t-test will not work
+
+
+**Figure Description:**
+
+There is no figure on this slide.
+
+
+**Slide Description:**
+
+This slide discusses the use of categorical variables in a data science context.  It introduces two categorical variables, "Exercise" and "Smoking," with their possible values.  The slide emphasizes that since the variables are categorical, a t-test (a statistical test typically used for continuous data) is not appropriate.  The slide is likely part of a larger presentation on choosing the correct statistical tests based on the type of data being analyzed.

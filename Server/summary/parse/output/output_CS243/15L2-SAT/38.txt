@@ -1,0 +1,42 @@
+# 38
+
+**General Automated Reasoning**
+
+Research Objective: Better reasoning and modeling technology
+
+Impact: Faster solutions in several domains
+
+e.g. logistics, chess, 
+planning, verification, ...
+
+Model 
+Generator 
+(Encoder)
+General 
+Inference 
+Engine
+Solution
+Domain Specific
+Generic
+Applicable to all domains within 
+range of modeling language
+Problem Instance
+
+
+**Visual Elements:**
+
+* **Diagram:** A flowchart-like diagram is presented.  It shows a sequence of steps or components in a process.  The diagram has boxes representing different stages or components of the process.  The boxes are labeled as follows:
+    * **Problem Instance:**  A box at the left of the diagram.  This is the input to the process.  Inside this box, there are small images.  These images are likely examples of different problem types.  The images are:
+        * A circuit board
+        * A map (possibly a logistics map)
+        * A chessboard
+        * A satellite image
+    * **Model Generator (Encoder):** A box in the middle-left of the diagram.  This component takes the problem instance and generates a model.  The text "Domain Specific" is below this box, indicating that this component can be tailored to a specific domain.  The text "Generic" is below this box, indicating that this component can be used for a wider range of problems.
+    * **General Inference Engine:** A box in the middle-right of the diagram.  This component applies general reasoning rules to the model.
+    * **Solution:** A box at the right of the diagram.  This is the output of the entire process.
+
+* **Arrows:** Arrows connect the boxes, visually representing the flow of information from the problem instance to the solution.
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, presents a conceptual framework for general automated reasoning.  The diagram illustrates a pipeline for solving problems in various domains.  The input is a "Problem Instance," which is then processed by a "Model Generator (Encoder)" to create a model.  This model is then fed into a "General Inference Engine" to derive a solution.  The distinction between "Domain Specific" and "Generic" model generators is highlighted, emphasizing the adaptability of the approach.  The small images within the "Problem Instance" box are likely examples of different problem types (e.g., logistics, chess, planning, verification) that can be handled by the system.  The overall design of the slide is to present a conceptual framework for automated reasoning, highlighting the distinction between domain-specific and generic approaches.  The images are used to illustrate the input and the overall process.

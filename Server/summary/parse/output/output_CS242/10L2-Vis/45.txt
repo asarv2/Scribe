@@ -1,0 +1,27 @@
+# Slide 45
+
+**Example: scatterplot**
+
+```python
+from plotnine import *
+from plotnine.data import *
+# basic scatterplot
+ggplot(data=iris) +\
+geom_point(mapping=aes(y = 'petal-length', x = 'sepal-length'))
+```
+
+**(Figure Description):**
+
+A scatter plot is displayed, showing the relationship between "sepal-length" and "petal-length" for the Iris dataset.  The x-axis is labeled "sepal-length" and ranges from approximately 4 to 8.  The y-axis is labeled "petal-length" and ranges from approximately 1 to 7.  The plot area contains numerous data points, each represented by a small circle.  The points are scattered across the plot area, and the distribution of points visually represents the relationship between sepal length and petal length.  The plot is positioned centrally on the slide and is the primary visual element.  The title "Example: scatterplot" above the plot indicates the purpose of the visualization.  The plot shows a general positive correlation, where longer sepal lengths tend to be associated with longer petal lengths.  The points are densely clustered in some areas, indicating a higher frequency of data points with those specific values.
+
+
+**Context:**
+
+This slide, part of a presentation on data visualization using the ggplot library, demonstrates how to create a basic scatter plot using the `ggplot` function.  The code snippet above the plot shows the ggplot code used to generate the scatter plot.  The plot is an example of a simple visualization that can be created using the ggplot library.  The slide is likely part of a larger discussion on how to use ggplot to create different types of plots, including scatter plots.  The plot is a visual representation of the relationship between two variables in the Iris dataset.
+
+
+**Description of what you see:**
+
+The slide shows a scatter plot and the corresponding ggplot code.  The plot displays the relationship between sepal length and petal length in the Iris dataset.  The code uses the `ggplot` function from the `plotnine` library to create the scatter plot.  The `aes` mapping specifies that 'petal-length' should be on the y-axis and 'sepal-length' on the x-axis.  The plot is a visual representation of the code, showing the relationship between the two variables.  The title "Example: scatterplot" indicates the purpose of the slide.  The plot is positioned centrally on the slide.  The plot is a visual representation of the relationship between two variables in the Iris dataset.
+
+

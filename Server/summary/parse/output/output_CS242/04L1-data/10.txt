@@ -1,0 +1,41 @@
+# 10
+
+# UnStructured Data
+
+Data that is not organized according to a predefined structure — i.e., everything else
+(e.g., free text, videos, photos, music, messages, etc.)
+Lack of structure makes
+it more difficult to search
+and analyze for patterns
+
+80%
+20%
+Unstructured
+Vs
+Structured
+目
+MySQL
+Database
+A
+M
+ORACLE
+DATABASE
+</>
+HTML
+Tables
+P W
+
+
+---
+
+**Description:**
+
+This slide, titled "UnStructured Data," discusses unstructured data in the context of data science.
+
+* **Definition:** The slide defines unstructured data as data that is not organized according to a predefined structure, encompassing various types like free text, videos, photos, music, and messages.
+
+* **Challenge:** The slide highlights the challenge of unstructured data: its lack of structure makes searching and analyzing for patterns more difficult compared to structured data.
+
+* **Visual Representation:** The slide uses a visual representation to contrast structured and unstructured data.  A large, light-green box on the left side of the slide is labeled "80% Unstructured."  A smaller, light-green box on the right side of the slide is labeled "20% Structured."  The boxes are separated by a vertical line labeled "Vs."  The left box contains icons representing various types of unstructured data: a document, a film reel, a phone, a camera, HTML code, and headphones.  The right box contains icons representing structured data: a database icon, a spreadsheet icon, and icons for various database management systems (MySQL, Oracle).  The icons are arranged in a way that visually represents the difference in structure between the two types of data.  The percentages (80% and 20%) are likely meant to illustrate the relative prevalence of unstructured data in the world.
+
+**Overall:** The slide is designed to introduce the concept of unstructured data and its characteristics in the context of a data science course.  The visual representation is used to highlight the difference between structured and unstructured data and the relative prevalence of unstructured data.  The icons are used to represent different types of unstructured data, such as text, images, and audio.  The icons on the right side represent structured data, such as databases and spreadsheets.  The percentages are likely meant to illustrate the relative prevalence of unstructured data in the world.

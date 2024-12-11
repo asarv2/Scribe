@@ -1,0 +1,31 @@
+# Slide 18
+
+**Generalized: edge filters of different directions**
+
+**(Figure):**
+
+The slide displays a row of six small grayscale images, each positioned in a separate square box.  All images are oriented horizontally.  The images are arranged in a single row, and they are all roughly the same size.  Each image shows a pattern that resembles a thin, elongated, light-gray shape with a darker central line.  The shapes are oriented in different directions.  From left to right, the shapes are:
+
+1.  A horizontal, light-gray elongated shape with a dark central line.
+
+
+2.  A slightly diagonal, light-gray elongated shape with a dark central line, tilted slightly upward to the right.
+
+
+3.  A slightly diagonal, light-gray elongated shape with a dark central line, tilted slightly downward to the right.
+
+
+4.  A vertical, light-gray elongated shape with a dark central line.
+
+
+5.  A slightly diagonal, light-gray elongated shape with a dark central line, tilted slightly upward to the left.
+
+
+6.  A slightly diagonal, light-gray elongated shape with a dark central line, tilted slightly downward to the left.
+
+
+**Description of what you see:**
+
+The slide shows a set of edge filters, each designed to detect edges oriented in a different direction.  The images are grayscale, and the shapes of the filters are elongated and oriented in various directions.  The slide is likely part of a lesson on image processing, specifically on edge detection.  The filters are likely used to detect edges in an image, and the different orientations of the filters allow for the detection of edges in various directions.  The slide is designed to illustrate the concept of generalized edge filters.
+
+

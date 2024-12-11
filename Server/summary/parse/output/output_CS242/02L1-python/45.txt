@@ -1,0 +1,23 @@
+# Slide 45
+
+```markdown
+Syntax for access
+Although you must specify `self` explicitly when defining the method, you don't include it when calling the method.
+Python passes it for you automatically.
+Defining a method:
+def set_age(self, num):
+	self.age = num
+Calling a method:
+>>> x.set_age(23)
+>>> f = student("Bob Smith", 23)
+>>> f.full_name  # Access an attribute.
+"Bob Smith"
+>>> f.get_age()  # Access a method.
+23
+No public, private, protected, etc...
+Slides adapted from UPenn CIS530 python tutorial
+```
+
+**Description:**
+
+This slide demonstrates the syntax for accessing attributes and methods of a class in Python.  It shows how to define a method (`set_age`) that takes a `self` parameter, but when calling the method, `self` is not explicitly included.  The example shows how to create an instance of a `student` class (`f = student("Bob Smith", 23)`) and then access its attributes (`f.full_name`) and methods (`f.get_age()`).  The output shows the expected results of these operations.  The slide is part of a larger set of lecture notes on object-oriented programming in Python, likely within the context of an Intro to Data Science course.  The examples are presented in a clear, concise manner, illustrating the syntax for accessing class members.  The `>>>` symbols indicate interactive Python code execution.  The slide is focused on the syntax of accessing attributes and methods of a class in Python.  The example demonstrates how to call a method on an object, and how to access an attribute of an object.  The output shows the expected results of these operations.

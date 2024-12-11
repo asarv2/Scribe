@@ -1,0 +1,27 @@
+# Slide 7
+
+**Recursive Data Structures**
+
+Recursion is useful with some data structures like a LinkedList, Tree, or Graph.
+
+Consider a Tree:
+
+* Base Case: a null, or empty root node
+* Recursive Case: A node with links to 1 or more subtrees
+
+Processing the tree recursively:
+
+* If the root node is null, done
+* Otherwise, process the root node and children
+
+**Activities:**
+
+* Printing all elements
+* Summing elements
+* Finding a specific element
+* Identifying a "best" element
+
+
+**Description:**
+
+This slide, part of a lecture on AI Basics, discusses how recursion can be applied to specific data structures, particularly trees.  It explains that recursion is useful with data structures like linked lists, trees, and graphs.  The slide focuses on trees, outlining the base case (a null or empty root node) and the recursive case (a node with links to one or more subtrees).  It then describes the recursive process for traversing a tree: if the root node is null, the process is complete; otherwise, the root node and its children are processed.  The slide also lists potential activities that can be performed on a tree using recursion, such as printing all elements, summing elements, finding a specific element, and identifying a "best" element.  The overall design is straightforward and informative, providing a concise summary of the application of recursion to tree data structures.  The slide is well-suited to a lecture on AI Basics, as it provides a clear explanation of the recursive approach to tree traversal and potential operations.

@@ -1,0 +1,36 @@
+# Slide 6
+
+**Comparing the Mean & Median**
+
+In general, if the shape of the distribution is:
+
+Symmetric | Skewed Right | Skewed Left
+
+**Outliers:** outliers are extreme observations taking values far away from the bulk of the data values.
+o EX: height of a professional basketball player.
+
+**Example 2.5** The data set A: {0,1,2,2,3,3,4,4,5,6}
+
+x̄<sub>A</sub> = 
+M̂<sub>A</sub> = 
+
+If the number 60 is substituted for 6, that is, data set B: {0,1,2,2,3,3,4,4,5,60}
+
+x̄<sub>B</sub> = 
+M̂<sub>B</sub> = 
+
+**Resistant statistic:** A statistic is called robust or resistant if it is not strongly influenced by extreme values like outliers.
+o The sample  **mean** is robust to outliers.
+o The sample  **median** is not robust to outliers.
+
+**Influential Point:** A data value is called influential if it noticeably shifts the value of the sample mean towards it.
+
+
+**Outlier**
+
+[Image of a histogram]
+
+
+**Description of the Slide:**
+
+This slide continues the Statistical Methods lecture by discussing the impact of outliers on the mean and median.  It explains that the mean is sensitive to outliers, while the median is more resistant.  Example 2.5 demonstrates this by comparing the mean and median of two data sets, one with an outlier (60) and one without.  The slide also introduces the concept of a resistant statistic, which is not significantly affected by outliers.  The histogram is included to visually represent the data distribution and the potential impact of outliers.  The slide is designed to help students understand the importance of considering outliers when analyzing data and choosing appropriate measures of central tendency.

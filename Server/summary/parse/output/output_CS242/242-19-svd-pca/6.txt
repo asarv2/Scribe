@@ -1,0 +1,21 @@
+# Slide 6
+
+**Two Dimensional Embedding of Movies**
+
+```
+Factor vector 2
+-0.5
+-1.0
+-1.5
+1.5
+1.0
+0.5
+0.0
+```
+
+**(Figure):** A scatter plot is positioned in the lower portion of the slide.  The plot displays numerous data points (represented as text labels of movie titles) scattered across a two-dimensional space defined by "Factor vector 1" on the x-axis and "Factor vector 2" on the y-axis.  The plot is oriented with the x-axis horizontally and the y-axis vertically.  Each data point is labeled with the name of a movie (e.g., "Freddy Got Fingered," "Kill Bill: Vol. 1," "The Wizard of Oz").  The movies are positioned at different coordinates within the plot, indicating their relative positions in the two-dimensional embedding space.  The color of the background is a light beige/tan.  The axes are clearly labeled, and the values on the axes range from -1.5 to 1.5 for both factor vectors.  The figure is included to visually represent the latent factors of movies in a two-dimensional space.  This helps to illustrate how matrix factorization can group movies with similar characteristics together.
+
+
+**Description of the Slide:**
+
+This slide, part of a lecture on matrix factorization in an Intro to Data Science course, presents a two-dimensional visualization of movie embeddings.  The title, "Two Dimensional Embedding of Movies," is displayed at the top of the slide.  The figure is a scatter plot where each point represents a movie, and its position in the plot corresponds to its latent factor values.  The labels on the points are the names of the movies.  The axes are labeled "Factor vector 1" and "Factor vector 2," indicating the dimensions of the embedding space.  The figure is from a research paper (Koren, Bell, Volinksy, IEEE Computer, 2009), suggesting that this is a well-known example used to illustrate the concept of matrix factorization.  The slide is designed to help the audience understand how movies can be grouped based on their latent factors.

@@ -1,0 +1,722 @@
+# Slide 1
+
+# Introduction to Data Science
+
+Purdue CS24200
+Tony Bergstrom
+
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Introduction to Data Science.  The background is a dark gray.  The title "Introduction to Data Science" is displayed prominently in a larger, light gray font.  Below that, in a smaller, light gray font, are the course name (Purdue CS24200) and the instructor's name (Tony Bergstrom).  At the very bottom, also in a small, light gray font, is a credit line indicating that the slides were adapted from another source (Jen Neville, CS 24200).  The overall design is clean and professional, focusing on conveying the course title and basic information.
+
+
+# Slide 2
+
+# Introduction to Visualization
+
+---
+
+**Description:**
+
+This slide, a plain gray background, displays the single heading "Introduction to Visualization" in a dark gray, sans-serif font.  It's a simple, straightforward title slide for a section of the Intro to Data Science lecture.
+
+
+**Description of the Visuals:**
+
+There are no figures or other visual elements on this slide.  The entire slide is a single, uniform gray color, with the text "Introduction to Visualization" centered on the slide.  The purpose of this slide is to clearly indicate the topic of the upcoming content.
+
+
+# Slide 3
+
+# What is a good visualization?
+
+Visualization: any kind of visual representation of information designed to enable communication, analysis, discovery, exploration, etc.
+
+Good data visualizations communicate information by:
+
+* Providing reliable information
+* Visually encoding it so relevant patterns become noticeable
+* Organizing it in a way that enables some exploration
+* Presenting it in an attractive manner
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Visualization, defines what constitutes a "good" visualization.  The text is presented in a clear, easy-to-read format.  The bullet points under "Good data visualizations communicate information by:" outline the key characteristics of effective visualizations.  The slide's purpose is to introduce the concept of good visualization practices in the context of data science.  The content is straightforward and directly addresses the question posed in the title.
+
+
+# Slide 4
+
+# Strategic vs Candid Communication
+
+Strategic communication:
+* Begin with message and then look for information to support it
+
+Candid communication:
+* Begin with information and then you analyze it to discover messages worth spreading
+* Or you begin with a message, but collect information in a way that could lead you to refute that message
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Intro to Data Science, discusses two approaches to communication: strategic and candid.  It contrasts how each approach handles the relationship between a message and supporting information.  The bullet points clearly delineate the different procedures for each communication style.  The slide's purpose is to introduce the concept of communication strategies, particularly in the context of data analysis and presentation.  The content is straightforward and directly addresses the topic of the slide.
+
+
+# Slide 5
+
+# Types of visualizations
+
+Chart: display in which data are encoded into different shapes, colors, or proportions
+Map: depiction of a geographical area with data depicted that pertains to that area
+Infographic: multi-section visual representation to portray one or more specific messages
+
+
+---
+
+**Description:**
+
+This slide, part of a lecture on Introduction to Data Visualization, lists different types of visualizations.  It provides concise definitions for charts, maps, and infographics.  The slide's purpose is to categorize and introduce various visual representations used in data science.  The content is straightforward and directly addresses the topic of different visualization types.
+
+
+
+
+# Slide 6
+
+```markdown
+Anscombe's Quartet
+Set 1
+Set 2
+Set 3
+Set 4
+x
+y
+x
+y
+x
+y
+x
+y
+10.0 8.04
+10.0 9.14
+10.0 7.46
+8.0 6.58
+8.0 6.95
+8.0 8.14
+8.0 6.77
+8.0 5.76
+13.0 7.58
+13.0 8.74
+13.0 12.74
+8.0 7.71
+9.0 8.81
+9.0 8.77
+9.0 7.11
+8.0 8.84
+11.0 8.33
+11.0 9.26
+11.0 7.81
+8.0 8.47
+14.0 9.96
+14.0 8.10
+14.0 8.84
+8.0 7.04
+6.0 7.24
+6.0 6.13
+6.0 6.08
+8.0 5.25
+4.0 4.26
+4.0 3.10
+4.0 5.39
+19.0 12.50
+12.0 10.84
+12.0 9.13
+12.0 8.15
+8.0 5.56
+7.0 4.82
+7.0 7.26
+7.0 6.42
+8.0 7.91
+5.0 5.68
+5.0 4.74
+5.0 5.73
+8.0 6.89
+Mean
+x
+9
+Variance
+x
+11
+Mean
+y
+7.5
+Variance
+y
+4.125 ± 0.003
+Correlation
+x and y
+0.816
+Linear Regression
+y = 3.00 + 0.500x
+Coeffficient of determination
+of linear regression
+0.67
+```
+
+---
+
+**Description of the Slide:**
+
+This slide presents a table, titled "Anscombe's Quartet."  The table displays four sets of data (labeled Set 1, Set 2, Set 3, and Set 4) each with paired x and y values.  Below the table, there are several summary statistics calculated from the data in each set. These include the mean of x, the variance of x, the mean of y, the variance of y, the correlation between x and y, a linear regression equation (y = 3.00 + 0.500x), and the coefficient of determination (0.67).  The table and summary statistics are crucial for demonstrating how different datasets can have similar summary statistics, yet exhibit vastly different visual patterns when plotted. This is a key concept in data visualization and understanding the limitations of relying solely on summary statistics.  The table is centrally located on the slide, and the summary statistics are presented below it, in a clear and organized manner.  The purpose of this slide is to illustrate the importance of visualizing data before drawing conclusions.
+
+
+# Slide 7
+
+**Anscombe's Quartet**
+
+```
+Set 1
+x	y
+10.0	8.04
+8.0	6.95
+13.0	7.58
+9.0	8.81
+11.0	8.33
+14.0	9.96
+6.0	7.24
+4.0	4.26
+12.0	10.84
+7.0	4.82
+5.0	5.68
+```
+
+```
+Set 2
+x	y
+10.0	9.14
+8.0	8.14
+13.0	8.74
+9.0	8.77
+11.0	9.26
+14.0	8.10
+6.0	6.13
+4.0	3.10
+12.0	9.13
+7.0	7.26
+5.0	4.74
+```
+
+```
+Set 3
+x	y
+10.0	7.46
+8.0	6.77
+13.0	12.74
+9.0	7.11
+11.0	7.81
+14.0	8.84
+6.0	6.08
+4.0	5.39
+12.0	8.15
+7.0	6.42
+5.0	5.73
+```
+
+```
+Set 4
+x	y
+8.0	6.58
+8.0	5.76
+8.0	7.71
+8.0	8.84
+8.0	7.04
+8.0	5.25
+19.0	12.50
+8.0	5.56
+8.0	7.91
+8.0	6.89
+8.0	7.91
+```
+
+**Visualizations (Scatter Plots):**
+
+The slide displays four scatter plots, each representing a different dataset (Set 1, Set 2, Set 3, and Set 4) from Anscombe's Quartet.  These plots are arranged in a grid-like fashion, with each plot positioned below its corresponding dataset table.  The x-axis and y-axis are labeled, and the plots show the relationship between the x and y values for each data point.  The plots are crucial for visualizing the data and understanding the patterns within each dataset.  The purpose of these plots is to demonstrate how similar summary statistics can hide vastly different underlying patterns in the data.  The plots are essential for understanding the importance of data visualization in data analysis.
+
+
+**Description:**
+
+This slide, part of a lecture on Introduction to Data Science, presents Anscombe's Quartet.  It displays four sets of data, each with paired x and y values.  The data are presented in tabular format, with each set of data having the same summary statistics (mean, variance, correlation, linear regression, and coefficient of determination).  The slide's purpose is to illustrate the importance of visualizing data before drawing conclusions.  The visual representation of the data in the form of scatter plots is crucial for understanding the underlying patterns and relationships in the data.  The visual plots are essential for understanding the importance of data visualization in data analysis.  The slide is designed to highlight the fact that summary statistics alone can be misleading and that visualization is essential for understanding the true nature of the data.
+
+
+# Slide 8
+
+**Playfair**
+
+```
+Exports and Imports to and from DENMARK & NORWAY from 1700 to 1780.
+```
+
+**(Image Description):**
+
+A historical chart, likely from the 18th century, depicting the balance of trade between Denmark & Norway and England.  The chart is a line graph with two lines. One line represents imports, and the other represents exports.  The vertical axis represents the value of trade in a monetary unit (likely pounds). The horizontal axis represents the years from 1700 to 1780.  The area between the import and export lines is shaded, indicating the balance of trade.  The shading is colored in a light pinkish-tan color, and a darker reddish-brown color.  The graph is labeled with the title "BALANCE in FAVOUR of ENGLAND" in the middle of the graph.  The graph is clearly labeled with the years on the horizontal axis and the monetary value on the vertical axis.  The graph is presented in a grid format, with the grid lines providing a visual reference for the data points.  The graph is likely intended to show the trend of trade between the two countries over time.
+
+
+```
+Exports and Imports of SCOTLAND to and from different parts for one Year from Christmas 1780 to Christmas 1781.
+```
+
+**(Image Description):**
+
+A second chart, also a historical representation, shows exports and imports of Scotland to and from various locations during a specific year (1780-1781).  This chart is a bar graph, with the vertical axis representing the value of trade in a monetary unit (likely pounds). The horizontal axis lists the names of various locations.  The bars are colored in black for exports and a lighter color for imports.  The graph is presented in a grid format, with the grid lines providing a visual reference for the data points.  The graph is labeled with the title "Exports and Imports of SCOTLAND" and the specific time period.  The graph is likely intended to show the volume of trade between Scotland and different regions during that year.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, demonstrates early forms of data visualization.  The Playfair charts show how historical data was presented and analyzed.  The focus is on the visual representation of data and how different types of charts can convey information about trade balances and volumes.  The slide likely follows a discussion of the importance of visualization in data analysis, contrasting it with the limitations of relying solely on summary statistics, as seen in the previous slide about Anscombe's Quartet.  The historical context of these charts is important for understanding the evolution of data visualization techniques.
+
+
+# Slide 9
+
+**Minard**
+
+**(Image Description):**
+
+A complex visualization, likely a historical chart, depicting the movement and losses of the French army during the 1812-1813 Russian campaign.  The chart is a combination of a map and a series of line graphs.
+
+* **Map Component:**  A map of the route taken by the French army, showing the progression from the starting point (Kowno) to Moscow and back.  Different locations along the route (Wilna, Smolensk, Moscow, etc.) are marked.  The map is colored, with different shades of beige/tan representing the size of the army at various points along the route.  The color intensity and shading are directly related to the number of soldiers at that location and time.
+
+* **Line Graph Component:**  A series of lines, also colored, are superimposed on the map.  These lines represent the size of the French army at different points in time.  The thickness of the lines corresponds to the number of soldiers.  The lines are not just static; they change in thickness and direction as the army moves.  The lines are also colored, with the color intensity and shading related to the number of soldiers at that location and time.
+
+* **Temperature Graph:** A separate line graph, positioned at the bottom of the chart, shows the temperature in degrees Réaumur below zero during the campaign.  The horizontal axis represents time, and the vertical axis represents temperature.  This graph is likely included to show how the weather conditions affected the army's progress and losses.
+
+* **Numerical Data:**  The chart includes numerical data, likely in the form of labels and annotations, indicating the number of soldiers at various locations and times.  These numbers are integrated into the map and line graph components.
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, demonstrates a sophisticated historical data visualization.  It showcases how a single chart can combine multiple data types (geographic location, time, quantity, and temperature) to tell a complex story.  The visualization is designed to show the correlation between the army's size, its movement, and the environmental factors (temperature) that impacted its success.  The slide likely follows a discussion of the power of visualization in conveying complex information and the importance of combining different data types in a single visualization.  The historical context of the visualization is important for understanding the evolution of data visualization techniques.
+
+
+# Slide 10
+
+**Figure 1.1 Examples of charts.**  Not all charts have an X-axis and a Y-axis. Pie charts, for instance, aren't based on a Cartesian coordinate system.
+
+**(Image Description):**
+
+This slide presents a collection of various chart types, each illustrating a different way to visualize data.  The charts are arranged in a grid-like format, with each chart type positioned in a separate section of the slide.
+
+* **Top Left:** A bar chart.  The horizontal axis lists "Spain," "U.S.," "France," and "U.K."  The vertical axis represents values.  The bars are different shades of gray, and their heights correspond to the values for each country.  This chart is likely used to compare the values across the different countries.
+
+* **Top Middle:** A lollipop chart.  The horizontal axis lists "Spain," "U.S.," "France," and "U.K."  The vertical axis represents values.  Each country has a vertical line (the "stick") extending from the horizontal axis to a point on the vertical axis, representing the value.  The "lollipop" part is a circle at the top of the line.  This chart is similar to a bar chart but emphasizes the individual values.
+
+* **Top Right:** A dot chart (or dot plot).  The horizontal axis lists "Spain," "U.S.," "France," and "U.K."  The vertical axis represents values.  Dots are plotted at various heights for each country, representing the values.  This chart is useful for showing the distribution of values across different categories.
+
+* **Bottom Left:** A scatter chart (or scatter plot).  The horizontal and vertical axes represent values.  Points are plotted on the graph, with each point representing a data pair.  The chart shows the relationship between two variables.
+
+* **Bottom Middle:** A time-series chart.  The horizontal axis represents time (years 1995-1998).  The vertical axis represents values.  Lines connect data points for each country, showing how the values change over time.  This chart is used to track trends over time.
+
+* **Bottom Right:** A slope chart.  The horizontal axis represents time (years 2000-2010).  The vertical axis represents values.  Lines connect data points for each country, showing how the values change over time.  This chart is similar to a time-series chart but emphasizes the change in values over time.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, introduces various types of charts and graphs used for data visualization.  The different chart types demonstrate how data can be represented visually to convey different kinds of information.  The slide is likely part of a section on data visualization techniques, highlighting the variety of ways to present data and the importance of choosing the right chart type for the data being visualized.
+
+
+# Slide 11
+
+**Figure 1.2 Examples of data maps.** I was born in Galicia, that region in northwestern Spain where people seem to be so fond of eating boiled octopus (it's delicious, if properly cooked). All data here are fake, of course.
+
+**(Image Description):**
+
+The slide displays four different types of data maps, each visualizing different aspects of the same data set (likely related to the consumption of boiled octopus in Spain).  The maps are arranged in a grid pattern, with each map occupying a quarter of the slide.
+
+* **Top Left (Choropleth Map):** A map of Spain is shown, divided into regions.  Different shades of gray are used to represent the percentage of people in each region who ate at least one serving of boiled octopus last year.  The legend indicates the percentage ranges (0-25%, 26-50%, 51-75%, and 76-100%).  The purpose of this map is to show the regional variation in the consumption of boiled octopus.
+
+* **Top Right (Dot Map):** Another map of Spain is shown.  Black dots are scattered across the map.  The legend indicates that each dot represents a restaurant that served boiled octopus at least once last year.  This map visualizes the distribution of restaurants serving boiled octopus.
+
+* **Bottom Left (Proportional Symbol Map):** A map of Spain is shown.  Different-sized circles are placed within the regions.  The legend indicates that the size of the circle corresponds to the number of people who ate at least one serving of boiled octopus last year in that region.  The circles are proportional to the population who ate octopus.
+
+* **Bottom Right (Isarithmic Map):** A map of Spain is shown.  Different shades of green/gray are used to represent the most common temperature at which octopuses are boiled in each region.  The legend indicates the temperature ranges (100-105°C, 106-110°C, 111-115°C, and 116-120°C).  This map visualizes the regional variation in the temperature at which octopuses are boiled.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, demonstrates different types of thematic maps.  It shows how the same data can be visualized in various ways, each highlighting a different aspect of the data.  The maps are likely used to illustrate the concept of choropleth maps, dot maps, proportional symbol maps, and isarithmic maps, and how they can be used to represent spatial data.  The inclusion of the disclaimer ("All data here are fake, of course") suggests that the data is for illustrative purposes only and not necessarily accurate or representative of real-world conditions.
+
+
+# Slide 12
+
+**DATA SCIENCE WARS**
+
+**R VS. Python**
+
+*R and Python are waging war: while both programming languages are gaining prominence in the data analytics community, they are fighting to become data scientists' language of choice.*
+
+**Which side are you taking?**
+
+**#1 Introducing The Opponents**
+
+*Current Version:*
+
+* R: 3.1.3 (March 2015)
+* Python: 3.4.3 / 2.7.9 (February 2015/December 2014)
+
+
+**R and Python: The Numbers**
+
+**(Figure 1. Popularity Rankings):** A line graph is positioned above the text "Jobs And Salary?". The x-axis represents years (2013-2015), and the y-axis represents the percentage. Two lines are plotted, one for R and one for Python, showing the relative popularity of each language over time, based on the Tiobe Index.  The graph visually displays the fluctuating popularity of both languages.  This graph is included to show the relative popularity of R and Python over time.
+
+**(Figure 2. Jobs And Salary?):** A bar graph is positioned below the line graph. The x-axis represents the programming language (R or Python). The y-axis represents the average salary.  Two bars are shown, one for R and one for Python, indicating the average salary for high-paying skills and experience in 2014, according to the Dice Tech Salary Survey.  This graph is included to show the relative salaries for data scientists using R and Python.
+
+**#2 The Data Analysis Battlefield**
+
+*Usage:*
+
+* R: Primarily used when data analysis tasks require standalone computing or analysis on individual servers.
+* Python: Generally used when data analysis tasks need to be integrated with web apps or if statistical code needs to be incorporated into a production environment.
+
+
+**Description:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a comparison between R and Python, two popular programming languages in data science.  The slide uses visuals (line and bar graphs) to illustrate the relative popularity and salary differences between the two languages.  The text highlights the different use cases for each language, emphasizing the strengths of each in different contexts.  The slide is designed to introduce the topic of choosing a programming language for data science and the factors to consider.  The graphs are included to provide a visual representation of the data, making the comparison more accessible and understandable.
+
+
+# Slide 13
+
+**Five qualities of great visualizations**
+
+Truthful Art, Chapters 2, 5
+
+
+**Description:**
+
+This slide, a plain gray background, displays a single heading: "Five qualities of great visualizations".  Below the heading, in a smaller font, is a credit line: "Truthful Art, Chapters 2, 5".  The slide's purpose is to introduce the topic of the five qualities of great visualizations in the context of the Intro to Data Science lecture.  The content is straightforward and directly addresses the topic of the slide.  There are no figures or other visual elements on this slide.
+
+
+# Slide 14
+
+**Example of visualization success story**
+
+**(Image Description):**
+
+A line graph, titled "Figure 2.1 The hockey stick chart," is presented.  The x-axis is labeled "Year" and spans from approximately 1000 to 2000. The y-axis is labeled "Departures in temperature (°C) from the 1961-1990 average" and ranges from -1.0 to 0.5.  A thick black line represents an average temperature trend.  A band of light gray shading represents the range of temperature variation based on multiple data sources.  A thinner blue line and a thinner red line are also visible, representing different data sets used to calculate the average temperature.  A small box, positioned near the upper right of the graph, contains the text "Data from thermometers (red) and from tree rings, corals, ice cores and historical records (blue)."  The graph is titled "NORTHERN HEMISPHERE" above the graph.  The graph is positioned centrally on the slide.  Below the graph, there is a caption that reads "Figure 2.1 The hockey stick chart. Summary For Policymakers of the 2001 Third Assessment Report of the Intergovernmental Panel on Climate Change."
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a visualization of historical temperature data.  The graph, a "hockey stick" chart, displays the average temperature departures from a baseline (1961-1990 average) over time.  The graph combines data from multiple sources (thermometers, tree rings, corals, ice cores, and historical records) to show a clear upward trend in temperature in recent centuries.  The visual representation of the data is intended to illustrate a significant finding in climate science, demonstrating the impact of human activity on global temperatures.  The inclusion of the caption provides context and attribution to the source of the data.
+
+
+# Slide 15
+
+**Qualities of hockey stick chart**
+
+Truthful: based on thorough and honest research
+Functional: accurate description of data that enables meaningful operations based on it
+Beautiful: intriguing and aesthetically pleasing (for intended audience)
+Insightful: reveals evidence that we would have a hard time seeing otherwise
+Enlightening: if we accept the evidence it depicts, it will change our minds
+
+
+**Description:**
+
+This slide, part of an Introduction to Data Science lecture, lists five qualities of a "hockey stick chart" visualization.  The bullet points describe the characteristics of a well-designed visualization, focusing on its accuracy, functionality, aesthetic appeal, ability to reveal insights, and potential to enlighten the viewer.  The slide is likely part of a discussion on evaluating and understanding the effectiveness of data visualizations, particularly in the context of the previous slide's example of a hockey stick chart.  There are no figures on this slide.  The content is straightforward and directly addresses the topic of the slide.
+
+
+# Slide 16
+
+**Truthful: What is wrong with this chart?**
+
+Less regulation = More industry investment
+
+$56 billion After
+regulations
+were relaxed
+
+Following
+1992 Cable
+Regulations
+
+$14 billion
+
+1993-1996  1999-2003
+
+Start to read visualizations, don't just see or look at them
+
+
+**Description:**
+
+This slide presents a bar graph, likely part of a discussion on evaluating data visualizations.  The graph compares investment figures ($14 billion and $56 billion) for two time periods (1993-1996 and 1999-2003).  The text above the graph suggests a correlation between less regulation and increased investment.  The text below the graph emphasizes the importance of actively interpreting visualizations rather than passively observing them.  The purpose of the slide is to prompt critical thinking about the accuracy and potential biases within the presented data visualization.  The bar graph is centered on the slide, with the labels and values clearly visible.  The text is arranged in a way that guides the viewer's attention to the potential issues with the chart's presentation of data.
+
+
+# Slide 17
+
+**Conclusions can change with more information**
+
+**Cable Industry Infrastructure Expenditures**
+
+*In billions*
+
+```
+$16
+$12
+$8
+$4
+$0
+```
+
+**(Figure 1. Cable Industry Expenditures):** A line graph is presented. The x-axis represents years, ranging from 1990 to 2013. The y-axis represents the amount of expenditure in billions of dollars.  A dark-blue line traces the trend of cable industry infrastructure expenditures over time.  Several vertical gridlines are visible, providing a visual reference for the data points.  Key points on the graph are labeled with annotations:
+
+* **1990-1992:** Expenditure is relatively low.
+* **1996:** Expenditure begins to increase.
+* **1998:** Expenditure peaks.
+* **2000:** Expenditure begins to decrease.
+* **2002:**  The "Telecommunications Act is passed" annotation is positioned near the graph, indicating a significant event.
+* **2002-2013:** Expenditure fluctuates, but generally remains below the peak of 1998.
+
+Annotations are also present on the graph, indicating the years when the Cable Television Consumer Protection and Competition Act ("Regulation") and the Telecommunications Act ("Deregulation") were passed.  These annotations are positioned near the corresponding points on the graph.
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a line graph illustrating the trend of cable industry infrastructure expenditures over time.  The graph visually displays how expenditures changed in response to regulatory changes (regulation and deregulation).  The slide's purpose is to demonstrate how additional information (like the passage of regulatory acts) can alter conclusions drawn from a simpler analysis of the data.  The graph is designed to show the correlation between regulatory changes and infrastructure spending.  The annotations on the graph highlight the key events and their potential impact on the trend.
+
+
+# Slide 18
+
+**And perception is influenced by design choices**
+
+**PRODUCTION COSTS**
+
+U.S. dollars per unit
+
+```
+550
+Product 1
+450
+Product 2
+350
+```
+
+**(Figure 1. Production Costs):** A line graph is presented, positioned centrally on the slide. The x-axis represents years, ranging from 2008 to 2013. The y-axis represents production costs in U.S. dollars per unit, ranging from approximately 350 to 550. Two lines are plotted on the graph:
+
+* **Product 1 (brown):**  A line showing fluctuating production costs over time.  The line exhibits significant peaks and valleys, indicating substantial variations in costs.
+
+* **Product 2 (gray-green):** A line showing fluctuating production costs over time, similar in pattern to Product 1, but with different peaks and valleys.  The fluctuations are also substantial.
+
+The vertical gridlines provide a visual reference for the data points.  The graph's purpose is to illustrate how the visual representation of data (in this case, production costs over time) can influence the perception of the data.  The two lines, representing different products, are intended to show how the visual presentation of the data can affect the perception of the trends and patterns.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a line graph illustrating production costs for two different products over time.  The graph is designed to demonstrate how the visual representation of data can influence perception.  The fluctuating lines, representing the costs of the two products, are intended to show how the visual presentation of the data can affect the perception of the trends and patterns.  The slide is likely part of a discussion on how design choices in data visualization can affect how viewers interpret and understand the data.
+
+
+# Slide 19
+
+**Same data, now on same scale**
+
+**PRODUCTION COSTS**
+
+U.S. dollars per unit
+
+```
+600
+500
+400
+300
+200
+100
+0
+```
+
+**(Figure 1. Production Costs):** A line graph is presented, positioned centrally on the slide. The x-axis represents years, ranging from 2008 to 2013. The y-axis represents production costs in U.S. dollars per unit, ranging from 0 to 600. Two lines are plotted on the graph:
+
+* **Product 1 (brown):** A line showing fluctuating production costs over time.  The line exhibits significant peaks and valleys, indicating substantial variations in costs.
+
+* **Product 2 (dark teal/gray-green):** A line showing fluctuating production costs over time, similar in pattern to Product 1, but with different peaks and valleys.  The fluctuations are also substantial.
+
+The vertical gridlines provide a visual reference for the data points.  The graph's purpose is to illustrate how the visual representation of data (in this case, production costs over time) can influence the perception of the data.  Crucially, this graph is identical to the previous slide's graph, but the y-axis scale is now the same for both products.  This change in scale allows for a more accurate comparison of the cost trends between the two products.
+
+
+**Description:**
+
+This slide presents a revised line graph of production costs for two products (Product 1 and Product 2) over time.  The graph is identical to the previous slide's graph, but the y-axis scale is now consistent for both products.  This change in scale allows for a more accurate comparison of the cost trends between the two products.  The purpose of this slide is to demonstrate how a change in the visual representation of data (specifically, the y-axis scale) can alter the perception of the data's trends and patterns.  The previous slide's graph, with different scales, might have led to a misinterpretation of the relative cost fluctuations between the two products.  This slide's graph, with a consistent scale, allows for a more accurate and unbiased comparison.
+
+
+# Slide 20
+
+**Spurious Correlations**
+
+**(Image Description):**
+
+This slide presents a collection of three sets of line graphs, each exploring potential correlations between seemingly unrelated variables.  The graphs are arranged in a grid-like format, with each set of graphs positioned in a separate section of the slide.
+
+* **Top Left (Total revenue generated by arcades vs. Computer science doctorates awarded):**  A line graph displays the total revenue generated by arcades in the US (red line) and the number of computer science doctorates awarded in the US (black line) over time (approximately 2000-2008).  The x-axis represents the year, and the y-axis represents the revenue (in billions of dollars) and the number of doctorates.  The graph visually shows the correlation between the two variables.  The correlation is noted as 98.51% (-0.985065).  The purpose of this graph is to illustrate a potential spurious correlation between arcade revenue and computer science doctorates.
+
+* **Top Right (Worldwide non-commercial space launches vs. Sociology doctorates awarded):** A line graph displays the number of worldwide non-commercial space launches (red line) and the number of sociology doctorates awarded in the US (black line) over time (approximately 1990-2008).  The x-axis represents the year, and the y-axis represents the number of launches and the number of doctorates.  The graph visually shows the correlation between the two variables.  The correlation is noted as 78.92% (-0.78915).  The purpose of this graph is to illustrate a potential spurious correlation between space launches and sociology doctorates.
+
+* **Bottom (Per capita consumption of mozzarella cheese vs. Civil engineering doctorates awarded):** A line graph displays the per capita consumption of mozzarella cheese (red line) and the number of civil engineering doctorates awarded in the US (black line) over time (approximately 2000-2013).  The x-axis represents the year, and the y-axis represents the per capita consumption of mozzarella cheese and the number of doctorates.  The graph visually shows the correlation between the two variables.  The correlation is noted as 85.95% (r=0.958648).  The purpose of this graph is to illustrate a potential spurious correlation between mozzarella cheese consumption and civil engineering doctorates.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, demonstrates the concept of spurious correlations.  It visually presents three examples of seemingly correlated variables (arcade revenue and computer science degrees, space launches and sociology degrees, and mozzarella consumption and civil engineering degrees) that likely have no causal relationship.  The slide is intended to highlight the importance of critical thinking and caution when interpreting correlations in data analysis.  The graphs are designed to show how seemingly strong correlations can be coincidental and not indicative of a true relationship.  The inclusion of the correlation percentages emphasizes the strength of the apparent relationship, but also underscores the need for further investigation to determine if a true relationship exists.  The source is noted as https://www.tylervigen.com/spurious-correlations.
+
+
+# Slide 21
+
+**Functional: purpose should guide design decisions**
+
+**How Music Preferences Have Changed in Two Decades**
+
+Music styles preferred by University of Miami students. Survey based on interviews with 1,000 students.
+
+SOURCE: WishfulThinkingData Inc.
+
+**1994**
+
+**(Figure 1. Music Preferences 1994):** A pie chart is positioned on the left side of the slide.  The chart displays the percentage of music preferences for different genres in 1994.  The slices of the pie chart are colored and labeled with the music genre (Country, Classic, Reggae, Hip-Hop, Samba, Hard Rock).  The percentages for each genre are also displayed within the corresponding slice.  The pie chart is centered on the left side of the slide.
+
+**2014**
+
+**(Figure 2. Music Preferences 2014):** A pie chart is positioned on the right side of the slide.  The chart displays the percentage of music preferences for different genres in 2014.  The slices of the pie chart are colored and labeled with the music genre (Country, Classic, Reggae, Hip-Hop, Samba, Hard Rock).  The percentages for each genre are also displayed within the corresponding slice.  The pie chart is centered on the right side of the slide.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a comparison of music preferences between 1994 and 2014.  Two pie charts are used to visualize the data.  The pie charts show the percentage distribution of music genres preferred by University of Miami students in each year.  The charts are designed to illustrate how music preferences have changed over two decades.  The source of the data is clearly indicated.  The slide is likely part of a discussion on data visualization techniques, specifically how pie charts can be used to represent categorical data and show proportions.  The different colors and percentages within each pie chart allow for a clear comparison of the data.  The title and source information provide context for the data.
+
+
+# Slide 21
+
+**Functional: purpose should guide design decisions**
+
+**How Music Preferences Have Changed in Two Decades**
+
+Music styles preferred by University of Miami students. Survey based on interviews with 1,000 students.
+
+SOURCE: WishfulThinkingData Inc.
+
+**1994**
+
+**(Figure 1. Music Preferences 1994):** A pie chart is positioned on the left side of the slide.  The chart displays the percentage of music preferences for different genres in 1994.  The slices of the pie chart are colored and labeled with the music genre (Country, Classic, Reggae, Hip-Hop, Samba, Hard Rock).  The percentages for each genre are also displayed within the corresponding slice.  The pie chart is centered on the left side of the slide.
+
+**2014**
+
+**(Figure 2. Music Preferences 2014):** A slope graph is positioned on the right side of the slide.  The chart displays the percentage of music preferences for different genres in 2014.  The slices of the pie chart are colored and labeled with the music genre (Country, Classic, Reggae, Hip-Hop, Samba, Hard Rock).  The percentages for each genre are also displayed within the corresponding slice.  The slope graph is centered on the right side of the slide.
+
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a comparison of music preferences between 1994 and 2014.  Two charts are used to visualize the data.  The left chart is a pie chart showing the percentage distribution of music genres preferred by University of Miami students in 1994. The right chart is a slope graph showing the percentage distribution of music genres preferred by University of Miami students in 2014.  The charts are designed to illustrate how music preferences have changed over two decades.  The source of the data is clearly indicated.  The slide is likely part of a discussion on data visualization techniques, specifically how different chart types can be used to represent categorical data and show proportions.  The different colors and percentages within each chart allow for a clear comparison of the data.  The title and source information provide context for the data.  The text at the bottom of the slide states that a slope chart is better to represent change between two points in time.  This is a key point in the discussion of choosing the right visualization for the data.
+
+
+# Slide 23
+
+**Beautiful: which chart is more appealing?**
+
+**Left Panel (Line Graph):**
+
+* **Title:** Percentage of people who claim to enjoy eating Fish & Chips
+* **X-axis:** Years (2001-2014)
+* **Y-axis:** Percentage (0-30)
+* **Data Series:** Multiple lines representing the percentage of people in different countries (Brazil, United States, United Kingdom, China, Nigeria) who claim to enjoy eating fish and chips over time.  The lines are colored differently for each country.
+* **Placement:** Left side of the slide.
+* **Purpose:** To visually display the trends in fish and chips consumption preference across different countries over time.
+
+**Right Panel (Line Graph):**
+
+* **Title:** People who claim to enjoy Fish & Chips (%)
+* **X-axis:** Years (2001-2014)
+* **Y-axis:** Percentage (0-30)
+* **Data Series:** Multiple lines representing the percentage of people in different countries (U.K., U.S., Brazil, China, Nigeria) who claim to enjoy eating fish and chips over time. The lines are colored differently for each country.
+* **Placement:** Right side of the slide.
+* **Purpose:** To visually display the trends in fish and chips consumption preference across different countries over time.
+
+**Overall Context (Intro to Data Science):**
+
+This slide presents two line graphs, side-by-side, displaying the same data (percentage of people claiming to enjoy fish and chips in different countries over time).  The purpose is to illustrate the concept of *aesthetics* in data visualization.  The graphs are identical in terms of data, but the visual presentation (colors, axis scales, and titles) might differ, making one more appealing to the viewer than the other.  The question "Beautiful: which chart is more appealing?" prompts the viewer to consider the impact of design choices on the perceived effectiveness and attractiveness of a visualization.  The source is noted as "CompletelyFakeData, Inc."
+
+
+**Description of the Visuals:**
+
+The graphs are line graphs, showing trends over time.  The x-axis represents years, and the y-axis represents the percentage of people who enjoy fish and chips.  The data points are connected by lines, allowing for a clear visualization of the trends.  The graphs are clearly labeled with titles, axis labels, and data series labels.  The colors used for the different countries are distinct, making it easy to follow the trends for each country.  The graphs are positioned side-by-side, allowing for a direct comparison.  The overall design is clean and professional, focusing on conveying the data effectively.
+
+
+# Slide 24
+
+**Insightful: spontaneous eureka vs. knowledge building**
+
+**(Figure 2.1 The hockey stick chart):** A line graph is presented, positioned centrally on the slide. The x-axis represents "Year," spanning from approximately 1000 to 2000. The y-axis represents "Departures in temperature (°C) from the 1961-1990 average," ranging from approximately -1.0 to 0.5.  A thick black line represents an average temperature trend.  A band of light gray shading represents the range of temperature variation based on multiple data sources.  A thinner blue line and a thinner red line are also visible, representing different data sets used to calculate the average temperature.  A small box, positioned near the upper right of the graph, contains the text "Data from thermometers (red) and from tree rings, corals, ice cores and historical records (blue)."  The graph is titled "NORTHERN HEMISPHERE" above the graph.  Below the graph, there is a caption that reads "Figure 2.1 The hockey stick chart. Summary For Policymakers of the 2001 Third Assessment Report of the Intergovernmental Panel on Climate Change."
+
+**Description:**
+
+This slide, part of an Intro to Data Science lecture, presents a visualization of historical temperature data.  The graph, a "hockey stick" chart, displays the average temperature departures from a baseline (1961-1990 average) over time.  The graph combines data from multiple sources (thermometers, tree rings, corals, ice cores, and historical records) to show a clear upward trend in temperature in recent centuries.  The visual representation of the data is intended to illustrate a significant finding in climate science, demonstrating the impact of human activity on global temperatures.  The inclusion of the caption provides context and attribution to the source of the data.  The slide is likely part of a discussion on how insightful visualizations can reveal patterns and trends that might not be immediately apparent from raw data.
+
+
+**Description of the Visuals:**
+
+The graph is a line graph, showing a clear upward trend in temperature over time.  The x-axis shows the years, and the y-axis shows the temperature departures from the average.  The different colored lines represent different data sources, and the gray band represents the range of variation.  The title and caption provide context and attribution to the source of the data.  The overall design is clean and professional, focusing on conveying the data effectively.  The graph is central to the slide, drawing the viewer's attention to the key information.
+
+
+# Slide 25
+
+**Insightful: eureka vs. knowledge building**
+
+**(Image Description):**
+
+This slide presents two interactive visualizations, side-by-side, exploring the global gender gap in PhDs awarded.
+
+**Left Panel (Interactive Visualization 1):**
+
+* **Title:** How Nations Fare in PhDs by Sex [Interactive]
+* **Data:**  The visualization displays a scatter plot of data points, each representing a different nation.  The x-axis likely represents the percentage of female PhD recipients in a given country, and the y-axis likely represents the total number of PhDs awarded in that country.  The size of the data points might represent the total number of PhDs awarded in that country.  The data points are colored, possibly to differentiate between different categories or time periods.  There are interactive elements, allowing users to filter and explore the data.  A legend is present, likely explaining the meaning of the colors and symbols.  The visualization is interactive, allowing users to explore the data further.
+
+* **Purpose:** The visualization is designed to allow users to explore the relationship between the percentage of female PhD recipients and the total number of PhDs awarded in different countries.  The interactive nature allows for a deeper understanding of the global trends and potential exceptions.
+
+**Right Panel (Interactive Visualization 2):**
+
+* **Title:** How Nations Fare in PhDs by Sex [Interactive]
+* **Data:** The visualization displays a line graph or a similar time-series chart.  The x-axis likely represents time (years), and the y-axis likely represents the percentage of female PhD recipients.  The graph shows the trend of the percentage of female PhD recipients over time for different countries.  The data points are connected by lines, allowing for a clear visualization of the trends.  The visualization is interactive, allowing users to filter and explore the data.  A legend is present, likely explaining the meaning of the colors and symbols.
+
+* **Purpose:** The visualization is designed to allow users to explore the trend of the percentage of female PhD recipients over time for different countries.  The interactive nature allows for a deeper understanding of the global trends and potential exceptions.
+
+
+**Overall Context (Intro to Data Science):**
+
+This slide, in the context of an Intro to Data Science lecture, demonstrates the concept of insightful visualizations.  The interactive visualizations are designed to allow users to explore the global gender gap in PhDs awarded.  The visualizations are likely intended to encourage users to discover patterns, trends, and exceptions in the data.  The slide is likely part of a discussion on how interactive visualizations can facilitate knowledge building and lead to "eureka" moments.
+
+
+**Description of the Visuals:**
+
+The visualizations are interactive charts, allowing users to explore the data further.  The charts are clearly labeled with titles, axis labels, and data series labels.  The colors used for the different countries are distinct, making it easy to follow the trends for each country.  The interactive elements allow for a deeper understanding of the data.  The overall design is clean and professional, focusing on conveying the data effectively.  The visualizations are positioned side-by-side, allowing for a direct comparison.  The interactive nature of the visualizations is a key feature, allowing users to explore the data further.
+
+
+# Slide 26
+
+**Enlightening**
+
+Great visualizations change people minds for the
+better
+
+Choose topics wisely to cast light over relevant
+issues, that are critical to the well being of more
+people
+
+**(Image Description):**
+
+The slide displays two large, interactive world maps.  Both maps are centered on the slide and are positioned vertically, one above the other.  The maps are interactive, allowing users to explore data related to child mortality rates.  The maps are dark-colored, with various shades of purple/pink circles plotted over the world map.  The size of the circles corresponds to the number of under-five mortality rates in a given region.  The maps are interactive, allowing users to explore data related to child mortality rates.  The maps are likely linked to an external website, as indicated by the URL at the bottom of the slide.  The maps are designed to visually represent the global distribution of child mortality rates, allowing for a clear comparison of rates across different regions.  The interactive nature of the maps allows users to explore the data further and gain insights into the trends and patterns.  The maps are likely part of a discussion on the importance of choosing topics for data visualization that are relevant to critical issues, such as child mortality.  The maps are designed to be insightful and enlightening, potentially changing people's perspectives on global health disparities.  The maps are accompanied by additional data visualizations, such as line graphs, that provide further context and details about the under-five mortality rates in specific regions, such as the Central African Republic.  The data visualizations are likely linked to an external website, as indicated by the URL at the bottom of the slide.  The maps are designed to be insightful and enlightening, potentially changing people's perspectives on global health disparities.
+
+
+**Description:**
+
+This slide, in the context of an Intro to Data Science lecture, emphasizes the importance of choosing topics for data visualization that are relevant to critical issues, such as child mortality.  The interactive maps are designed to be insightful and enlightening, potentially changing people's perspectives on global health disparities.  The slide is likely part of a discussion on the impact of data visualization on raising awareness and promoting positive change.  The interactive nature of the maps allows users to explore the data further and gain insights into the trends and patterns.  The maps are accompanied by additional data visualizations, such as line graphs, that provide further context and details about the under-five mortality rates in specific regions, such as the Central African Republic.  The data visualizations are likely linked to an external website, as indicated by the URL at the bottom of the slide.  The maps are designed to be insightful and enlightening, potentially changing people's perspectives on global health disparities.
+
+

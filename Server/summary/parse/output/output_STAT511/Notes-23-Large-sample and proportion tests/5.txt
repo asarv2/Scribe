@@ -1,0 +1,72 @@
+# 5
+
+**STAT 511 Course Notes – set 23 (W12)**
+
+**Yuan Qu**
+
+Example 23.4 A CNN/USA Today/Gallup poll in based on phone interviews with 1,014 randomly selected adults on April 30-May 2, 1999 found that 48% of the people surveyed consider themselves pro-choice. Some groups used this data to assert the data shows that fewer than 50% of Americans are pro-choice.
+
+Can the claim that less than half of all Americans are pro-choice be verified statistically at the =0.05 significance level?
+
+1) Hypotheses: 𝐻<sub>0</sub>: 𝑝= 0.5  vs  𝐻<sub>1</sub>: 𝑝< 0.5.
+
+2) Conditions: both 𝑛𝑝<sub>0</sub> ≥10, 𝑛(1 −𝑝<sub>0</sub>) ≥10 hold. Test statistic calculation:
+
+𝑍=
+𝑝̂ −𝑝<sub>0</sub>
+√𝑝<sub>0</sub> (1 −𝑝<sub>0</sub>) 𝑛
+⁄
+= 0.48 −0.50
+√0.25 1014
+⁄
+= −1.274
+
+3) Rejection region is {𝑍≤𝑧<sub>0.05</sub> = −1.645}.
+
+4) Decision: -1.274>-1.645, we fail to reject the null hypothesis, there is no strong evidence to claim that…..
+
+
+Small sample test:
+
+A simple test statistic is the count 𝑌= ∑𝑋<sub>𝑖</sub>.
+
+Under null hypothesis 𝑌~ 𝐵𝑖(𝑛, 𝑝<sub>0</sub>), the rejection region should be a subset of {0,1, … . , 𝑛}, such that
+
+𝑃( 𝐵𝑖(𝑛, 𝑝<sub>0</sub>) ∈rejection region ) ≤𝛼
+
+* If H<sub>1</sub>: 𝑝> 𝑝<sub>0</sub>, rejection region is of form {𝑘, 𝑘+ 1, … . , 𝑛}, such that
+
+𝛼≥𝑃( 𝐵𝑖(𝑛, 𝑝<sub>0</sub>) ≥𝑘 ) = ∑
+𝐵𝑖(𝑗; 𝑛, 𝑝<sub>0</sub>)
+𝑛
+𝑗=𝑘
+
+
+* If H<sub>1</sub>: 𝑝< 𝑝<sub>0</sub>, rejection region is of form {0,1,2, … , 𝑘}, such that
+
+𝛼≥𝑃( 𝐵𝑖(𝑛, 𝑝<sub>0</sub>) ≤𝑘 ) = ∑
+𝐵𝑖(𝑗; 𝑛, 𝑝<sub>0</sub>)
+𝑘
+𝑗=0
+
+
+* If H<sub>1</sub>: 𝑝≠ 𝑝<sub>0</sub>, rejection region is of form {0,1,2, … , 𝑘<sub>1</sub> −1, 𝑘<sub>1</sub>} ∪{𝑘<sub>2</sub>, 𝑘<sub>2</sub> + 1, … , 𝑛}, such that
+
+𝛼≥𝑃( 𝐵𝑖(𝑛, 𝑝<sub>0</sub>) ≤𝑘<sub>1</sub> or 𝐵𝑖(𝑛, 𝑝<sub>0</sub>) ≥𝑘<sub>2</sub> ) = ∑
+𝐵𝑖(𝑗; 𝑛, 𝑝<sub>0</sub>)
+𝑘<sub>1</sub>
+𝑗=1
++ ∑
+𝐵𝑖(𝑗; 𝑛, 𝑝<sub>0</sub>)
+𝑛
+𝑗=𝑘<sub>2</sub>
+
+
+As for the type II error, 𝛽(𝑝′) = 𝑃( 𝐵𝑖(𝑛, 𝑝′) ∉rejection region ).
+
+
+---
+
+**Slide Description:**
+
+This slide (slide 5 of 9) continues the example from the previous slides, Example 23.4, about a Gallup poll on pro-choice views.  It presents the hypotheses, conditions for the test, the calculation of the test statistic (a Z-score), the rejection region based on the significance level (α = 0.05), and the decision rule.  The slide also introduces the concept of a small sample test, outlining the rejection region for different alternative hypotheses (H<sub>1</sub>: p > p<sub>0</sub>, H<sub>1</sub>: p < p<sub>0</sub>, and H<sub>1</sub>: p ≠ p<sub>0</sub>) in the context of a binomial distribution (Bi(n, p<sub>0</sub>)).  The slide includes formulas for calculating the probabilities under the binomial distribution, which are necessary for determining the rejection region.  The slide also introduces the concept of the type II error (β(p′)) and its calculation.  The slide is part of a lecture on statistical methods, specifically hypothesis testing for proportions.  The content is dense with statistical formulas and concepts, and the example is designed to illustrate the application of these concepts to a real-world scenario.

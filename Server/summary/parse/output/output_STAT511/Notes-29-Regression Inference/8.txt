@@ -1,0 +1,48 @@
+# Slide 8
+
+**STAT 511 Course Notes – set 29 (W15)**
+
+**Yuan Qu**
+
+**Confidence interval for 𝐸(𝑌|𝑥∗) = 𝛽0 + 𝛽1 ⋅𝑥∗**
+
+(𝛽̂0 + 𝛽̂1 ∙𝑥∗) ± 𝑡𝛼/2,𝑛−2√MSE [1/𝑛 + (𝑥∗−𝑥̅)²/𝑆𝑥𝑥]
+
+You can also derive a Hypothesis testing formula by yourself.
+
+
+**Prediction interval:** Find an interval such that
+
+𝑃(𝑌∈[𝐿, 𝑈] | 𝑥∗) = 1 −𝛼
+
+In comparison, the previous confidence interval is 𝑃{𝐸(𝑌) ∈[𝐿, 𝑈]|𝑥∗} = 1 −𝛼
+
+Note that, by independence
+
+𝑌−(𝛽̂0 + 𝛽̂1 ∙𝑥∗) = 𝑌−𝑁(𝛽0 + 𝛽1𝑥∗, 𝜎² [1/𝑛 + (𝑥∗−𝑥̅)²/𝑆𝑥𝑥])
+
+∼𝑁(0, 𝜎² [1 + 1/𝑛 + (𝑥∗−𝑥̅)²/𝑆𝑥𝑥])
+
+Therefore, the PI is
+
+(𝛽̂0 + 𝛽̂1 ∙𝑥∗) ± 𝑡𝛼/2,𝑛−2√MSE [1 + 1/𝑛 + (𝑥∗−𝑥̅)²/𝑆𝑥𝑥]
+
+
+**R code:**
+
+x<-1:10; y<- x*2+rnorm(10)+0.5
+m1<-lm(y~x);
+
+predict(m1, newdata=data.frame(x=3.5), interval="confidence", level=.95)
+
+predict(m1, newdata=data.frame(x=3.5), interval="prediction", level=.95)
+
+
+**Figure Description:**
+
+The slide includes two scatter plots, both positioned in the lower right quadrant of the slide.  The plots are oriented horizontally, with the x-axis labeled "LOGMPH" and the y-axis labeled "MPG".  The plots display a scatter of data points, suggesting a potential linear relationship between the variables.  Overlaid on each scatter plot are several lines, which likely represent different confidence or prediction intervals.  The presence of these plots is crucial for illustrating the concepts of confidence intervals and prediction intervals in the context of linear regression.  The plots visually demonstrate how the intervals change based on the chosen level of confidence or prediction.  The plots are essential for understanding the practical application of the formulas presented in the text.
+
+
+**Description of the Slide:**
+
+This slide (slide 8) continues the discussion of linear regression, focusing on the calculation of confidence intervals and prediction intervals for a new observation (𝑥∗).  The slide presents the formulas for both types of intervals, highlighting the difference in their construction.  The R code provided demonstrates how to calculate these intervals using statistical software.  The inclusion of the scatter plots is crucial for visualizing the data and the intervals in the context of the linear regression model.  The slide number (8) and the course information (STAT 511) are clearly visible at the top.  The author's name (Yuan Qu) is also present.

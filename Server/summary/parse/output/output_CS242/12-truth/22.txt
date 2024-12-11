@@ -1,0 +1,22 @@
+# Slide 22
+
+**Arthritis study (Redelmeier & Tversky '96)**
+
+Common belief: Arthritis pain is associated with changes in weather
+
+Experiment: Followed 18 arthritis patients for 15 months; 2 x per month assessed: (1) pain and joint tenderness, and (2) weather
+
+Results: No correlation between pain/tenderness and weather
+
+Patients saw correlation that did not exist... why?
+
+* Patients noticed when bad weather and pain co-occurred, but failed to notice when they didn't.
+
+Confirmation bias: People often seek information that confirms rather than disconfirms their original hypothesis
+
+
+---
+
+**Description of what you see:**
+
+This slide presents a case study, likely from an Introduction to Data Science course, illustrating the concept of confirmation bias.  The study, conducted by Redelmeier and Tversky, investigated the perceived relationship between arthritis pain and weather.  The text describes a common belief that arthritis pain is linked to weather changes.  The experiment followed 18 arthritis patients for 15 months, recording pain/tenderness and weather conditions twice per month.  The results, however, showed no correlation between the two.  Crucially, the slide highlights that patients were more likely to notice instances where bad weather and pain coincided, but failed to register instances where there was no such coincidence.  This observation directly demonstrates confirmation bias, where individuals tend to favor information that supports their pre-existing beliefs and overlook contradictory evidence.  The slide is designed to illustrate how cognitive biases can influence data interpretation and lead to inaccurate conclusions.

@@ -1,0 +1,40 @@
+# Slide 2
+
+b) Given that a message is spam, what is the probability that it is received in account #1?
+Use Bayes' theorem,
+P(A<sub>1</sub>|B) = P(A<sub>1</sub> ∩ B) / P(B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) / P(B)
+
+Example 7.2 At a certain gas station, 40% of the customers use regular gas (A<sub>1</sub>), 35% use plus gas (A<sub>2</sub>), and 25% use premium (A<sub>3</sub>). Of those customers using regular gas, only 30% fill their tanks (B). Of those customers using plus, 60% fill their tanks, whereas of those using premium, 50% fill their tanks.
+
+The given percentages imply that
+P(A<sub>1</sub>) = 0.40
+P(A<sub>2</sub>) = 0.35
+P(A<sub>3</sub>) = 0.25
+P(B|A<sub>1</sub>) = 0.30
+P(B|A<sub>2</sub>) = 0.60
+P(B|A<sub>3</sub>) = 0.50
+
+a) What is the probability that the next customer will request plus gas and fill the tank?
+P(A<sub>2</sub> ∩ B) = P(B|A<sub>2</sub>) × P(A<sub>2</sub>) =
+
+b) What is the probability that the next customer fills the tank?
+P(B) =
+
+c) If the next customer fills the tank, what is the probability that regular gas is requested? Plus? Premium?
+P(A<sub>1</sub>|B) = P(B|A<sub>1</sub>) × P(A<sub>1</sub>) / P(B)
+P(A<sub>2</sub>|B) = P(B|A<sub>2</sub>) × P(A<sub>2</sub>) / P(B)
+P(A<sub>3</sub>|B) = P(B|A<sub>3</sub>) × P(A<sub>3</sub>) / P(B)
+
+
+The Tree Diagram
+• Bayes' formula is a mathematical representation of tree diagram method.
+• The tree diagram is helpful in identifying the specific event and applying the Bayes' rule.
+Example 7.3 Breast cancer occurs most frequently among older women. Of all age groups, women in their 60s have the highest rate of breast cancer. The National Cancer Institute (NCI) compiles U.S. epidemiology data for a number of different cancers. The NCI estimates that 3.65% of women in their 60s get breast cancer. Mammograms are X-ray images of the breast used to detect breast cancer. A mammogram can typically identify correctly 85% of cancer cases and 95% of cases without cancer.
+a) If a woman in her 60s gets a positive mammogram, what is the probability that she indeed has breast cancer?
+
+From the above we know the probabilities:
+
+
+**Figure Description:**
+
+A tree diagram is partially shown at the bottom of the slide.  It's a visual representation of the possible outcomes and probabilities in Example 7.3, concerning breast cancer detection. The branches of the tree represent different scenarios (e.g., having cancer, not having cancer, a positive mammogram, a negative mammogram). The diagram is used to illustrate the application of Bayes' theorem in a medical context.  The diagram is oriented vertically, with the root of the tree at the top, and branches extending downward.  The branches are labeled with probabilities, and the end points of the branches are labeled with the outcomes.  The figure is crucial for understanding the example, as it visually represents the different possible paths and their associated probabilities.  The partial view suggests that the full tree diagram would be more complex, showing multiple levels of branching.  The figure is placed at the bottom of the slide to illustrate the example of breast cancer detection.  The figure is a key component of the lecture, as it visually represents the probabilities and outcomes of the example.

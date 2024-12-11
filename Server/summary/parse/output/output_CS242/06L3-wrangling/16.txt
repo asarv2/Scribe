@@ -1,0 +1,27 @@
+# Slide 16
+
+**Augmenting: Adding a Row**
+
+# Insert data using a Series
+newData = [22, 4500, 5, 4.5, '47906', 2010, 550000, 'NO', 122, 10]
+newEntry = pd.Series(newData, index=list(data_zillow.columns))
+# append the new entry to the dataFrame data_zillow
+data_zillow = data_zillow.append(newEntry, ignore_index=True)
+data_zillow.tail()
+
+```
+INDEX	LIVING SPACE (SQ FT)	BEDS	BATHS	ZIP	YEAR	LIST PRICE ($)	SOLD	PRICE/SQ FT ($)	AGE
+17	18	1158	3	2.0	32303	1993	155000	NO	133	27
+18	19	2497	4	4.0	32309	1990	289000	NO	115	30
+19	20	4010	5	3.0	32309	2002	549900	NO	137	18
+20	21	2800	4	3.5	32356	1988	400000	NO	142	32
+21	22	4500	5	4.5	47906	2010	550000	NO	122	10
+```
+
+---
+
+**Description of the Slide:**
+
+This slide demonstrates how to add a new row to a DataFrame (`data_zillow`) using the `.append()` method.  The code first defines a list `newData` containing the values for the new row.  This list includes the index (22), living space, beds, baths, zip code, year, list price, sold status, price per square foot, and age.  Then, it creates a pandas Series `newEntry` from this data, using the column names of the DataFrame as the index.  Finally, it appends this new row to the DataFrame using `data_zillow.append(newEntry, ignore_index=True)`.  The `ignore_index=True` argument is crucial; it resets the index of the DataFrame to sequential integers, preventing issues with duplicate indices.  The `data_zillow.tail()` command displays the last five rows of the updated DataFrame, showing the newly added row at the end.  The table shows the `INDEX`, `LIVING SPACE (SQ FT)`, `BEDS`, `BATHS`, `ZIP`, `YEAR`, `LIST PRICE ($)`, `SOLD`, `PRICE/SQ FT ($)`, and `AGE` columns.  The purpose of this slide is to show how to add a new row to a DataFrame.  The code snippets are crucial for demonstrating the row insertion process. The table is essential for showing the effect of the code on the data, specifically the addition of the new row.
+
+

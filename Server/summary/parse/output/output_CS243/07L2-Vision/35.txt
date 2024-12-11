@@ -1,0 +1,18 @@
+# Slide 35
+
+**Enter: Noise**
+
+We talked about how the same object will look very different across images.
+Even multiple images of the same static scene will not be identical.
+How could we reduce the noise?
+
+**(Image Description):**
+
+The slide displays a title, "Enter: Noise," followed by a paragraph of text.  The text discusses the variability in how the same object appears in different images, even when the scene is static.  The text then asks how noise can be reduced.
+
+Below the text, there are three images in a 1x3 arrangement.  Each image shows a slightly different view of a textured surface (likely a wall or similar structure).  The images are grayscale and show variations in the texture's appearance.  The variations in the images are intended to visually represent the "noise" or variability in image data.  The images are likely examples of how the same scene can appear differently in multiple images.  The purpose of these images is to illustrate the concept of noise in image data and the need for methods to reduce this variability.
+
+
+**What you see:**
+
+The slide presents the concept of noise in image data.  The text explains that even identical objects or scenes can appear differently in different images due to factors like lighting, viewpoint, and sensor noise.  The three images below the text visually represent this variability.  The images are grayscale, showing a textured surface, and each image is slightly different, illustrating the concept of noise in image data.  The images are arranged in a horizontal row, making it easy to compare the variations.  The slide is designed to introduce the topic of noise reduction in image analysis.

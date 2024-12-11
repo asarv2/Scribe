@@ -1,0 +1,13 @@
+# 7
+
+```markdown
+SVD and PCA
+```
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on AI Basics, presents a title.  The title "SVD and PCA" is displayed in a simple, sans-serif font, in a dark gray color, on a light gray background.  There are no figures or other elements on the slide.  The purpose of the slide is to introduce the topics of Singular Value Decomposition (SVD) and Principal Component Analysis (PCA) as a topic in the lecture.
+
+

@@ -1,0 +1,21 @@
+
+--- Key Terms ---
+artifical intelligence basics
+artificial neural networks
+machine learning algorithms
+artificial intelligence philosophy
+calculus and linear algebra
+data and evaluation
+--- Problem Types ---
+artifical intelligence basics
+foundational ai concepts
+ai game playing
+ai safety and ethics
+ai algorithms and techniques
+ai evaluation and challenges
+--- Algorithm Solutions ---
+artifical intelligence basics
+linear algebra
+machine learning fundamentals
+artificial neural networks
+game playing algorithms

@@ -1,0 +1,22 @@
+# Slide 42
+
+```markdown
+It's all objects
+
+Everything in Python is really an object.
+We've seen hints of this already...
+"hello".upper()
+list3.append('a')
+dict2.keys()
+Programming in Python is typically done in an object oriented fashion.
+Python doesn't use separate class interface definitions much. You just define the class
+and then use it.
+
+Slides adapted from UPenn CIS530 python tutorial
+```
+
+**Description:**
+
+This slide, titled "It's all objects," discusses the object-oriented nature of Python.  It states that everything in Python is an object, and provides examples of object methods (`"hello".upper()`, `list3.append('a')`, `dict2.keys()`) to illustrate this point.  The slide also notes that Python's object-oriented programming style is typically done without explicit class interface definitions; instead, classes are defined and then used directly.  The footer indicates that the content is adapted from a Python tutorial from the University of Pennsylvania's CIS530 course.  There are no figures on this slide.  The text is presented in a clear and concise manner, providing a summary of Python's object-oriented features.
+
+

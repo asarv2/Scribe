@@ -1,0 +1,24 @@
+
+--- Key Terms ---
+artifical intelligence basics
+turing test
+chinese room argument
+minimax search
+alpha-beta pruning
+perceptron
+reinforcement learning
+imagenet dataset
+ai stack
+--- Problem Types ---
+artifical intelligence basics
+understanding the nature of intelligence
+evaluating intelligent behavior
+overcoming the limits of search
+addressing ai safety and ethical concerns
+bridging the gap between different ai domains
+understanding the challenges of autonomous systems
+developing effective game-playing algorithms
+--- Algorithm Solutions ---
+artifical intelligence basics
+minimax search
+alpha-beta pruning

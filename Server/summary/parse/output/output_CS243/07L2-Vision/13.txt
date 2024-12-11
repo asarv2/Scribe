@@ -1,0 +1,13 @@
+# Slide 13
+
+**Key idea: classify based on invariant features!**
+
+* **Object**  →  **Bag of 'words'**
+
+**Description of what you see:**
+
+The slide presents a visual analogy for the concept of "Bag of Features" in image classification.  On the left side, there's a portrait-style image (likely a painting) of a woman's head and shoulders.  On the right, there's a brown paper bag with various small, square images (likely extracted features from an image) inside.  The arrow connecting "Object" to "Bag of 'words'" visually represents the process of extracting features from an image and representing them as a collection (a "bag").  The overall design is simple and uses visual metaphors to explain the concept.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that discussed the challenges of image classification, such as viewpoint variation, illumination, deformation, occlusion, and background clutter.  The slide introduces the concept of "Bag of Features" as a method to address these challenges by focusing on invariant features.  The visual representation of the paper bag containing extracted features is a key element in explaining the idea of representing an image as a collection of its most important parts, regardless of their position or context in the original image.  The slide is likely part of a section discussing feature extraction techniques for image classification.

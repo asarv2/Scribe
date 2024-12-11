@@ -1,0 +1,10 @@
+# Slide 23
+
+**Example: Intel Berkeley Lab**
+
+**(Figure):** A floor plan is shown.  The figure is a detailed architectural floor plan, likely of the Intel Berkeley Lab.  It depicts the layout of the building's interior spaces, including offices, meeting rooms, a kitchen, and other areas.  The plan is oriented with north at the top.  The layout is presented as a two-dimensional map, showing the arrangement of rooms and their relative positions.  Each room or area is represented by a shape (rectangle, square, etc.) and labeled with a number (e.g., 50, 51, 52).  The numbers likely correspond to sensor locations or other identifiers within the building.  The lines and shapes represent walls, partitions, and the boundaries of different spaces.  The purpose of this figure is to show a real-world example of a space where sensor data might be collected and analyzed.  The context of this slide is likely to introduce a new dataset or example, potentially related to sensor data analysis, in the Intro to Data Science course.  The floor plan is a visual representation of the physical space where the data is collected.
+
+
+**Description:**
+
+This slide presents a floor plan of the Intel Berkeley Lab.  The floor plan is a visual representation of the physical layout of the building.  The numbers on the floor plan likely correspond to sensor locations or other identifiers.  The purpose of this slide is to introduce a new dataset or example, potentially related to sensor data analysis, in the Intro to Data Science course.  The floor plan is a visual representation of the physical space where the data is collected.  The slide is likely part of a section on data collection or sensor data analysis.  The context of the slide is to introduce a new dataset or example, potentially related to sensor data analysis, in the Intro to Data Science course.  The floor plan is a visual representation of the physical space where the data is collected.

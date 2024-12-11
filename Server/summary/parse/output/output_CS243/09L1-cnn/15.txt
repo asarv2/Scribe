@@ -1,0 +1,30 @@
+# 15
+
+# Pooling
+
+**max pooling**
+
+|   | 20 | 30 |
+|---|---|---|
+| 112 | 37 |
+
+
+**average pooling**
+
+|   | 13 | 8 |
+|---|---|---|
+| 79 | 20 |
+
+
+**Description:**
+
+This slide demonstrates the concepts of max pooling and average pooling in a convolutional neural network (CNN).
+
+* **max pooling:** A 2x2 grid is shown, representing a portion of a feature map.  The numbers within the grid (20, 30, 112, 37) are the values from the input feature map.  Red bounding boxes are drawn around the 2x2 regions.  The output of the max pooling operation is shown in a smaller 2x2 grid (20, 37, 112, 30).  The numbers in the output grid are the maximum values from the corresponding 2x2 regions in the input grid.  The output grid is positioned to the right of the input grid.  The text "max pooling" is positioned above the output grid.
+
+* **average pooling:** A 2x2 grid is shown, representing a portion of a feature map.  The numbers within the grid (12, 20, 34, 70, 112, 100, 25, 12) are the values from the input feature map.  Blue bounding boxes are drawn around the 2x2 regions.  The output of the average pooling operation is shown in a smaller 2x2 grid (13, 8, 79, 20).  The numbers in the output grid are the average values from the corresponding 2x2 regions in the input grid.  The output grid is positioned to the right of the input grid.  The text "average pooling" is positioned above the output grid.
+
+
+**Overall:** The slide visually illustrates the difference between max pooling and average pooling, showing how each operation reduces the spatial dimensions of the input feature map by selecting either the maximum or average value within each pooling region.  The colored bounding boxes help to visually distinguish the input and output regions.
+
+

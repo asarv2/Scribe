@@ -1,0 +1,16 @@
+# Slide 15
+
+**Object classification with bag of words**
+
+**(Image Description):**
+
+The slide presents a grid of images, arranged in a 3x3 layout.  Each image in the grid depicts an office-like setting, likely a workspace or an office environment.  The images show various office furniture, including desks, computers, bookshelves, and other items.  The images are not labeled, but the overall context suggests they are examples of the type of images used in object classification with a bag-of-words approach.
+
+**Context:**
+
+This slide, part of a lecture on AI Basics, follows the previous slides that introduced the concept of "Bag of Features" and "visual words."  The images on this slide are likely examples of the types of images used in a system that classifies objects based on the presence of visual words.  The slide is demonstrating how a bag-of-words approach can be used to classify objects in images by analyzing the presence and frequency of visual words within the image.  The images are not labeled, but the overall context suggests they are examples of the type of images used in object classification with a bag-of-words approach.
+
+
+**What you see:**
+
+The slide shows a grid of nine images, each depicting a different office scene.  The images are relatively small and are arranged in a 3x3 grid.  The images are likely examples of the types of images used in a system that classifies objects based on the presence of visual words.  The images are not labeled, but the overall context suggests they are examples of the type of images used in object classification with a bag-of-words approach.  The slide is likely part of a section discussing the application of bag-of-words models to image classification.  The citation at the bottom of the slide, "[Sivic et al., ‘05]", suggests that the content is based on research by Sivic and colleagues in 2005.

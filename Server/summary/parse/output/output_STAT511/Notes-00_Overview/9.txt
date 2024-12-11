@@ -1,0 +1,17 @@
+# 9
+
+**Prerequisite & Learning Outcomes**
+
+* Prerequisite: two semesters of college calculus
+* Learning outcomes:
+    1. Have a good sense of data and know standard data analysis tools.
+    2. Understand the relationship between statistical methods and probability models.
+    3. Be able to conduct standard statistical analysis.
+    4. Be able to report and interpret statistical analysis outputs.
+
+
+---
+
+**Description:**
+
+This slide, titled "Prerequisite & Learning Outcomes," details the prerequisites and learning objectives for the Statistical Methods course (STAT 511).  It lists a prerequisite of "two semesters of college calculus."  The learning outcomes are presented in a numbered list, outlining the skills students are expected to develop in the course.  The bullet points and numbered list format make the information easy to read and understand.  The slide is part of the syllabus, providing essential information about the course's requirements and expected learning outcomes.  The footer indicates this is slide 9 of 22 and includes the course title, instructor's name, and a page number.

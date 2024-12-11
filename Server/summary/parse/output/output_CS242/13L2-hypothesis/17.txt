@@ -1,0 +1,47 @@
+# Slide 17
+
+**Example (Cont)**
+
+The sample average is an empirical average over *m* independent samples from the distribution  
+(in our example *m*=500)  
+If we sampled a different 500 users the observed  
+average may differ, e.g., (37.7, 37.8, 38.5, 37.9)  
+Thus the sample average can be considered  
+as a random variable, with mean and variance:  
+
+E[¯x] = E [
+1
+m
+m
+∑
+i=1
+xi
+] = 1
+m
+m
+∑
+i=1
+E[X] = E[X] = μ  
+Var[¯x] = Var [
+1
+m
+m
+∑
+i=1
+xi
+] = 1
+m2
+m
+∑
+i=1
+Var[X] = σ<sup>2</sup>/m
+
+
+**Figure 1:**
+
+A figure, positioned in the lower-right quadrant of the slide, displays a set of overlapping, bell-shaped curves.  These curves appear to be probability density functions (PDFs).  The x-axis is labeled "Time spent by users" and ranges from approximately 0 to 80. The y-axis is labeled "Density" and ranges from 0 to 0.05.  The curves are different colors (shades of purple, orange, green, and red) and are centered around different values on the x-axis, suggesting that these are different sample averages calculated from different sets of 500 users.  The figure visually represents the variability in the sample average when different samples are drawn from the same population.  The figure is crucial for illustrating the concept of the sample average as a random variable, showing how different samples lead to different average values.
+
+
+**Description of what you see:**
+
+This slide continues the example from the previous slide, focusing on the sample average as a random variable.  It provides the mathematical formulas for calculating the expected value (mean) and variance of the sample average.  The formulas show how the mean of the sample average is equal to the population mean, and the variance of the sample average is equal to the population variance divided by the sample size.  The key takeaway is that the sample average is a random variable with its own distribution, and this distribution is centered around the population mean and has a variance inversely proportional to the sample size.  The figure visually reinforces this concept by showing how different samples from the same population can result in different sample averages.  The figure is a key component of the slide, illustrating the variability of the sample average.

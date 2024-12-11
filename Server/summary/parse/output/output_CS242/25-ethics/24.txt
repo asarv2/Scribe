@@ -1,0 +1,21 @@
+# Slide 24
+
+**Group Fairness**
+
+Equalize two groups S, T at the level of outcomes
+
+* For example, S=minority, T=everyone else
+* P(outcome o | S) = P(outcome o | T)
+
+This is not strong enough as a notion of fairness
+
+* Sometimes desirable, but can be abused
+
+* Self-fulfilling prophecy: select smartest students in T, random students in S, then students in T will perform better
+
+
+---
+
+**Description of what you see:**
+
+This slide, part of a lecture on Intro to Data Science, discusses the concept of group fairness in machine learning algorithms.  The title, "Group Fairness," is presented in a large, bold font.  The text that follows explains the idea of equalizing outcomes for two groups (S and T), often used as a measure of fairness.  The example provided is that of a minority group (S) and a majority group (T), and the goal is to ensure that the probability of a particular outcome (o) is the same for both groups.  The text also notes that this measure of fairness might not be sufficient and can be misused.  A self-fulfilling prophecy example is given to illustrate how this type of fairness measure can be problematic.  There are no figures or images on this slide. The text is clear and concise, outlining the concept of group fairness and its potential limitations.  The slide likely follows the previous discussion of bias in data science, introducing a specific approach to fairness in algorithms.

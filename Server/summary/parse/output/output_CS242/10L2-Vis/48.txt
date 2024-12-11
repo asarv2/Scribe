@@ -1,0 +1,102 @@
+# Slide 48
+
+**Stats - An alternative way to build a layer**
+
+Some plots visualize a common transformation of the original data set.  Use a stat to choose a common transformation to visualize, e.g. a + geom_bar(stat = "bin").
+
+Each stat creates additional variables to map aesthetics to. These variables use a common `..name..` syntax.  stat functions and geom functions both combine a stat with a geom to make a layer, i.e. `stat_bin(geom="bar")` does the same as `geom_bar(stat="bin")`.
+
+| stat function | mappings | variable created by transformation |
+|---|---|---|
+| `stat_density2d(aes(fill = ..level..), geom = "polygon", n = 100)` |  |  |
+| `stat_bin(binwidth = 1, origin = 10)` | x, y, ..count.., ..ncount.., ..density.., ..ndensity.. |  |
+| `stat_bindot(binwidth = 1, binaxis = "x")` | x, y, ..count.., ..ncount.. |  |
+| `stat_density(adjust = 1, kernel = "gaussian")` | x, y, ..count.., ..density.., ..scaled.. |  |
+| `stat_bin2d(bins=30, drop=TRUE)` | x, y, fill, ..count.., ..density.. |  |
+| `stat_binhex(bins=30)` | x, y, fill, ..count.., ..density.. |  |
+| `stat_density2d(contour = TRUE, n = 100)` | x, y, color, size, level |  |
+| `stat_contour(aes(z=z))` | x, y, z, order, ..level.. |  |
+| `stat_spoke(aes(radius=z, angle = z))` | x, y, z, angle, radius |  |
+| `stat_summary_hex(aes(z=z), bins = 30, fun = mean)` | x, y, z, fill, ..value.. |  |
+| `stat_summary2d(aes(z = z), bins = 30, fun = mean)` | x, y, z, fill, ..value.. |  |
+| `stat_boxplot(coef = 1.5)` | x, y, ..lower.., ..middle.., ..upper.., ..outliers.. |  |
+| `stat_ydensity(adjust=1, kernel = "gaussian", scale = "area")` | x, y, ..density.., ..scaled.., ..count.., ..n.., ..violinwidth.., ..width.. |  |
+| `stat_ecdf(n=40)` | x, y, ..x.., ..y.. |  |
+| `stat_quantile(quantiles = c(0.25, 0.5, 0.75), formula=y~log(x), method = "rq")` | x, y, ..quantile.. |  |
+| `stat_smooth(method="auto", formula=y~x, se = TRUE, n = 80, fullrange = FALSE, level = 0.95)` | x, y, ymin, ymax |  |
+| `stat_function(aes(x=-3:3), fun=dnorm, n = 101, args = list(sd=0.5))` | x, y |  |
+| `stat_identity()` | x, y |  |
+| `stat_summary(fun.data = "mean_cl_boot")` | x, y, size, size.. |  |
+| `stat_unique()` | x, y |  |
+
+
+**Scales**
+
+Scales control how a plot maps data values to the visual values of an aesthetic.  To change the mapping, add a custom scale.
+
+*   `scale_fill_manual(...)`
+*   `scale_x_date(...)`
+*   `scale_x_datetime(...)`
+*   `scale_x_log10(...)`
+*   `scale_x_reverse(...)`
+*   `scale_x_sqrt(...)`
+*   `scale_y_continuous(...)`
+*   `scale_y_discrete(...)`
+*   `scale_y_identity(...)`
+*   `scale_*_manual(...)`
+
+
+**Coordinate Systems**
+
+*   `coord_cartesian(...)`
+*   `coord_fixed(...)`
+*   `coord_flip()`
+*   `coord_polar(...)`
+*   `coord_trans(...)`
+*   `coord_map(...)`
+
+
+**Faceting**
+
+Facets divide a plot into subplots based on the values of one or more discrete variables.
+
+*   `facet_grid(...)`
+*   `facet_wrap(...)`
+
+
+**Position Adjustments**
+
+Position adjustments determine how to arrange geoms that would otherwise occupy the same space.
+
+*   `position_dodge()`
+*   `position_fill()`
+*   `position_stack()`
+*   `position_jitter()`
+
+
+**Themes**
+
+*   `theme_bw()`
+*   `theme_grey()`
+*   `theme_classic()`
+*   `theme_minimal()`
+*   `ggthemes`
+
+
+**Legends**
+
+*   `theme(legend.position = "bottom")`
+*   `guides(color = "none")`
+*   `scale_fill_discrete(...)`
+
+
+**Zooming**
+
+*   `coord_cartesian(...)`
+*   `xlim(...)`, `ylim(...)`
+*   `scale_x_continuous(...)`, `scale_y_continuous(...)`
+
+
+**Description of what you see:**
+
+The slide provides a comprehensive reference table of various functions and concepts related to data visualization, specifically within the context of the ggplot2 library.  The table-like format makes it easy to scan and find specific functions.  The slide is designed to be a quick reference guide for users of the ggplot2 library.  The content is dense, covering a wide range of functionalities.

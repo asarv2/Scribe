@@ -1,0 +1,22 @@
+# Slide 43
+
+**Grammar of graphics**
+
+Basic idea:
+
+* Independently specify plot building blocks
+* Combine them to create almost any kind of graphical display you want
+
+Building blocks of a graph include:
+
+* Data
+* Aesthetic mapping (color, position, fill, shape of points, linetype, etc.)
+* Geometric object (points, lines boxplot, etc.)
+* Others: statistical transformations, scales, coordinate system, position adjustments, faceting
+
+
+**Description of what you see:**
+
+The slide presents a bulleted list explaining the grammar of graphics concept.  The title "Grammar of graphics" is in a large, bold, sans-serif font.  The content is a concise explanation of the core idea behind the grammar of graphics approach to data visualization.  The bullet points outline the fundamental building blocks of a graph, emphasizing the independent specification and combination of these blocks to create various visualizations.  The slide is likely part of a larger presentation introducing the ggplot2 library, which is known for its grammar-of-graphics approach to data visualization.  The text is presented in a clear and organized manner, highlighting the key components of the grammar of graphics.  There are no figures on this slide.
+
+

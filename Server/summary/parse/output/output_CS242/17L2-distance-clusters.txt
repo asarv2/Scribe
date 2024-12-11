@@ -1,0 +1,999 @@
+# Slide 1
+
+Introduction to Data Science
+Purdue CS24200
+Tony Bergstrom
+Slides adapted from Jen Neville, CS 24200
+
+
+---
+
+**Description of the Slide:**
+
+This is the title slide for a lecture on Introduction to Data Science, part of the Purdue CS24200 course.  The background is a uniform dark gray.  The title "Introduction to Data Science" is displayed prominently in a larger, light gray font.  Below that, in a smaller, light gray font, are the course information: "Purdue CS24200" and "Tony Bergstrom" (presumably the instructor).  Finally, at the very bottom, in a very small, light gray font, is a credit line: "Slides adapted from Jen Neville, CS 24200".  There are no figures or images on the slide. The slide's purpose is to introduce the course and its instructor.
+
+
+# Slide 2
+
+# Introduction to Clustering
+Data Science in Business, Chapter 6
+
+
+---
+
+**Description of the Slide:**
+
+This slide, a plain gray background, has the title "Introduction to Clustering" in a large, bold, dark gray font.  Below the title, in a smaller, dark gray font, is the subtitle "Data Science in Business, Chapter 6".  There are no figures or images on the slide. The slide is likely an introduction to a section on clustering algorithms within the broader context of data science, specifically within the framework of a course called "Data Science in Business".
+
+
+# Slide 3
+
+# Subfields of Machine learning
+
+Supervised Learning
+Given paired inputs/outputs (X, y)
+Goal is to learn f from training data, f(X) = y
+Evaluated it on "new" (test) data.
+Examples
+* Classification: y is discrete (y are class labels, X refers to attributes)
+* Regression: y is continuous
+
+Unsupervised learning
+Given examples of inputs X
+Learn a function f to simplify the data, f(X) = y
+Examples:
+* Clustering: y is discrete (y are cluster memberships)
+* Matrix factorization: y are continuous (y are embeddings)
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, presents a table-like structure outlining two major subfields of machine learning: Supervised Learning and Unsupervised Learning.  The slide is formatted with clear headings for each subfield.  Under each heading, it lists the key characteristics and examples of each type.
+
+* **Supervised Learning:**  This section defines supervised learning as a process where paired input-output data (X, y) is provided. The goal is to learn a function (f) from the training data such that f(X) = y.  The learned function is then evaluated on new, unseen data.  Examples of supervised learning are classification (where the output y is discrete, representing class labels) and regression (where the output y is continuous).
+
+* **Unsupervised Learning:** This section defines unsupervised learning as a process where only input data (X) is provided. The goal is to learn a function (f) that simplifies the data, such that f(X) = y.  Examples of unsupervised learning are clustering (where the output y is discrete, representing cluster memberships) and matrix factorization (where the output y is continuous, representing embeddings).
+
+The slide's purpose is to introduce the fundamental concepts of supervised and unsupervised learning, highlighting the differences in the types of data used and the goals of each approach.  There are no figures on this slide.
+
+
+# Slide 4
+
+# What is Clustering?
+
+Clustering: the process of grouping a set of objects into classes of similar objects
+
+* Objects within a cluster should be similar
+* Objects from different clusters should be dissimilar
+
+Clustering is the most common form of unsupervised learning
+
+* Learning from unlabeled raw data
+* A frequent and important task that finds many applications in data science
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, defines clustering.  It's a plain, light-gray background.  The title "What is Clustering?" is in a larger, bold, dark gray font.  Below that, in a smaller, dark gray font, is a definition of clustering as a process of grouping objects into classes of similar objects.  Bullet points further explain the characteristics of good clustering: objects within a cluster should be similar, and objects from different clusters should be dissimilar.  The slide also highlights that clustering is a common form of unsupervised learning, learning from unlabeled data, and a frequent task in data science.  There are no figures on this slide. The slide's purpose is to introduce the concept of clustering as a data analysis technique.
+
+
+# Slide 5
+
+# Examples
+
+
+---
+
+**Description of the Slide:**
+
+This slide, part of a lecture on Introduction to Data Science, has the heading "Examples" in a simple, dark gray font.  There are no figures or other content on the slide.  The slide is likely a placeholder for the next slide, which will contain examples of clustering.  The slide's purpose is to signal that the following slide will provide examples of clustering techniques or applications.
+
+
+
+
+# Slide 6
+
+# Example: Documents
+
+U.S.
+☆ Follow
+Share
+Glenn Youngkin, Terry McAuliffe make final pitch to Virginians in hotly
+contested governor race
+New York Post - 5 hours ago
+McAuliffe references raising 5 children in Virginia in touting public schools - 4
+went to private
+Fox News - 10 hours ago
+EDITORIAL: Pendulum is swinging back to the center in Virginia
+Fredericksburg.com - Yesterday - Opinion
+A Dirty Campaign Trick in Virginia
+The Wall Street Journal - 4 hours ago - Opinion
+Virginia governor's race could tell us a lot about Trump, Biden and NC's 2022 races
+Raleigh News & Observer - 18 hours ago - Opinion
+View Full Coverage
+Ter
+World
+☆ Follow
+Share
+Man dressed as the Joker injures 17 people on Tokyo train
+NPR - 51 minutes ago
+Man dressed as Joker injures 17 on Tokyo train
+Yahoo News - 15 hours ago
+Man dressed as Joker stabs 17 people on Tokyo train
+Fox News - 9 hours ago
+Man dressed as the Joker injures 17 on Tokyo train
+Reuters - 9 hours ago
+Man with knife injures 17 people on Tokyo train
+OregonLive - 8 hours ago
+View Full Coverage
+Southwest to investigate reports of anti-Joe Biden chant by pilot
+Business Insider - 3 hours ago
+How 'Let's Go Brandon' became code for insulting Joe Biden
+WGHP FOX8 Greensboro - 12 hours ago
+Southwest Airlines Investigating Into Report Pilot Used Anti-Biden Phrase On Flight
+WJZ - 23 minutes ago
+How 'Let's Go Brandon' became code for insulting Joe Biden
+ABC 12 News - Yesterday
+Jason Aldean concert goers break out into 'F--- Joe Biden' chant
+Fox News - 10 hours ago
+View Full Coverage
+Biden appears to use prepared list of reporters after G20 summit in
+Rome: 'I'm told we should start with AP'
+Fox News - 5 hours ago
+G20: what did world leaders agree at the summit in Rome?
+The Guardian - 3 hours ago
+The G-20's democratic leaders were upstaged by royals
+POLITICO - 6 hours ago
+Sen. Cynthia Lummis: Biden arrives at COP26 climate summit with a US energy
+crisis he created
+Fox News - 15 hours ago - Opinion
+Biden apologizes for being late to G20 press conference: 'We were playing with
+elevators
+Fox News - 7 hours ago
+View Full Coverage
+White House press secretary Jen Psaki says she has COVID-19
+CBS News - 4 hours ago
+Climate, COP26: G-20 Summit Agreement on 1.5 Degrees Limit
+Bloomberg - 5 hours ago
+
+
+---
+
+**Description of the Slide:**
+
+This slide, titled "Example: Documents," presents a collection of news articles and headlines.  It's a webpage-like layout, displaying snippets of news stories, each with a title, source, and timestamp.  The articles are categorized into two sections: "U.S." and "World."  Each article has a "View Full Coverage" link, suggesting that clicking on these links would lead to the full article on a separate webpage.
+
+The slide shows examples of news articles related to current events, including political races, social issues, and international affairs.  The presence of these examples suggests that the lecture is likely discussing the use of data from news sources or the analysis of news articles as a data source in the context of data science.  The slide is designed to illustrate the types of data that might be used in a data science project.  The images are thumbnails of news articles, and the text is formatted to look like a news feed.  The slide is likely part of a section on data sources or examples of data in the context of data science.
+
+
+# Slide 7
+
+# Example: Images
+
+---
+
+**Description of the Slide:**
+
+The slide displays an example of image clustering.  It shows a split-screen layout.
+
+* **Top Half:** A full-color photograph of a street scene.  The scene shows a road with a van, other cars, and buildings on either side.  There are trees and vegetation along the sides of the road.  The image is a typical street scene, likely taken from a camera mounted on a vehicle or a fixed position.
+
+* **Bottom Half:** A segmented image of the same street scene.  The image is in shades of color, with different areas of the image colored differently.  These colors represent different categories or clusters.  For example, the road is one color, the van is another, the buildings are another, and the vegetation is another.  Labels such as "MOVING CAR," "STATIONARY VEGETATION," "STATIONARY ROAD," "STATIONARY BUILDING," and "STATIONARY PAVEMENT" are placed next to the corresponding colored areas.  These labels indicate the cluster to which each part of the image belongs.
+
+**Reasoning:**
+
+The purpose of this slide is to illustrate how clustering can be applied to images.  The top image shows the raw data, and the bottom image shows the result of applying a clustering algorithm to the image data.  The algorithm has identified different objects and regions in the image and grouped them into distinct clusters based on their visual characteristics.  This is a common task in computer vision, where identifying and classifying objects in images is crucial for tasks like self-driving cars, object recognition, and image analysis.
+
+
+
+
+# Slide 8
+
+# Example: Genes
+
+A large network graph is displayed.  The graph shows numerous nodes (circles) connected by lines (edges).  The nodes are various colors, and some are labeled with text, such as "Astrocytoma," "Intestine," "Smooth muscle," "Cytochrome P450," "Metabolic pathways," "Steroid biosynthesis," "Drug metabolism," "Chorion, placenta, choriocarcinoma cell lines," "Epithelial cells and tissues," "Mesenchymal cells, fibroblasts," "Endothelial cells," "Lymphoma cell lines, reticulocytes," "Hepatocytes," "Cancer cell lines," "Leukaemia/lymphoma cell lines," "Lymphoid," "Mast cells," "Cardiac muscle," "Kidney," "Skeletal muscle," "Retina, melanocytes, melanoma," "Testis," "Central nervous system," and others.  The lines connecting the nodes vary in thickness and color, suggesting different strengths or types of relationships between the genes or cell types.  The nodes and lines are densely packed, creating a complex visual representation.  The graph is oriented horizontally, with the majority of the nodes and lines concentrated in the center of the slide.  The text "A promoter-level mammalian expression atlas. Nature, 26 March 2014" is located at the bottom of the slide.
+
+**Description:**
+
+This slide provides an example of clustering applied to gene expression data.  The graph visualizes the relationships between different genes and cell types based on their expression patterns.  The colors and labels on the nodes represent different cell types and genes.  The connections between the nodes represent the correlation or co-expression of these genes and cell types.  The graph is a complex visualization of gene expression patterns across various cell types, which is a common task in biological data analysis.  The citation at the bottom indicates the source of the data or the research paper that generated this visualization.  The slide is part of a lecture on clustering in data science, showing how clustering can be used to analyze complex biological data.
+
+
+# Slide 9
+
+# Example: Movies
+
+A large, dense scatter plot is displayed on a dark background.  The plot shows numerous data points (small dots) scattered across the entire area.  These points are not uniformly distributed; they cluster in various regions of the plot.  Different clusters of points are colored differently, with some clusters appearing as larger, more concentrated areas of points.  Within these clusters, there are also smaller, more localized groupings.  Several smaller images (thumbnails) of movie posters are placed at various locations within the plot.  These images are positioned near the clusters of points they are associated with.  Some of the movie posters are labeled with the movie title, such as "The Rock," "Independence Day," "Dark Water," "Equilibrium," and others.  Labels such as "Sports," "Family," "Sci-Fi," "Critically Acclaimed," "Misc Big Budget," and "Bonus Material" are also placed near the clusters of points, indicating the genre or characteristic of the movies in that cluster.  The title "Example: Movies" is displayed at the top of the slide in a larger font.  The text "17,700 Movies in the Netflix Competition" is located in the lower-left portion of the slide.  A small text string, "Todd Holloway@gmail.com 03/25/2007," is located in the lower-right portion of the slide.
+
+**Description:**
+
+This slide demonstrates a clustering technique applied to a dataset of movies.  The scatter plot visualizes the relationships between different movies based on various characteristics.  The colors and positions of the points represent the clusters of movies with similar characteristics.  The movie posters near the clusters provide visual cues for the types of movies in each cluster.  The labels further clarify the characteristics of the movies in each cluster.  The slide is part of a lecture on clustering in data science, showing how clustering can be used to analyze a large dataset of movies and group them based on their characteristics.  The large number of movies (17,700) and the date (03/25/2007) suggest that this is an example from an earlier time period, when movie data sets were likely smaller than they are today.  The presence of movie posters and labels indicates that the clustering algorithm is likely based on movie attributes, such as genre, budget, critical acclaim, etc.
+
+
+# Slide 10
+
+# Example: Dog Breeds
+
+A circular dendrogram is displayed, showing the evolutionary relationships between various dog breeds.  The dendrogram is composed of a central circle, from which numerous branches radiate outward.  Each branch represents a dog breed, and the position of the branch on the circle and its connection to other branches indicates the evolutionary relationship.  The branches are colored differently, with different shades of colors representing different groups of dog breeds.  The dog breeds are labeled along the branches, with the names of the breeds written next to the corresponding branches.  The branches that are closer together on the circle represent breeds that are more closely related evolutionarily.  The dendrogram also includes a vertical dendrogram on the right side of the slide.  This vertical dendrogram shows the hierarchical clustering of the dog breeds based on their genetic similarity.  The vertical dendrogram is a separate, but related, representation of the same data.  The vertical dendrogram is a bar chart-like structure, where each bar represents a dog breed, and the height of the bar indicates the similarity to other breeds.  The vertical dendrogram is colored in shades of red, indicating the degree of similarity.  The dendrogram is positioned in the center of the slide, with the vertical dendrogram on the right side.  The legend at the bottom of the slide shows the color-coding for the similarity scores of the dog breeds.  The legend shows three different symbols: a gold circle, a black star, and a white star.  The gold circle represents a similarity score of 90-100, the black star represents a similarity score of 70-89, and the white star represents a similarity score of 50-69.
+
+**Description:**
+
+This slide presents a circular dendrogram and a vertical dendrogram, both visualizing the evolutionary relationships and genetic similarities between various dog breeds.  The circular dendrogram shows the branching relationships, with closely related breeds clustered together.  The vertical dendrogram provides a hierarchical view of the same data, showing the similarity scores between breeds.  The colors and symbols in the legend help to interpret the similarity scores.  The slide is part of a lecture on clustering in data science, demonstrating how clustering can be used to analyze biological data, in this case, the evolutionary relationships between dog breeds.  The data likely comes from a study of dog genetics or morphology.  The presence of the legend and the labels on the branches clearly indicates that the dendrogram is a visualization of the results of a clustering algorithm applied to a dataset of dog breeds.
+
+
+
+
+# Slide 11
+
+**Personas**
+
+To provide a common understanding across all teams.
+
+---
+
+**Description:**
+
+This slide displays twelve simple, cartoon-like portraits of people.  The figures are diverse in terms of gender, ethnicity, and apparent age.  Each portrait is a basic outline drawing, with simple features like hair, eyes, and mouth.  The figures are arranged in a grid pattern, two rows of six, across the slide.  The title "Personas" is displayed above the grid of portraits.  Below the grid, a short text description, "To provide a common understanding across all teams," is written.
+
+**Reasoning:**
+
+The purpose of this slide is to introduce the concept of personas in the context of data science.  Personas are representations of the target users of a product or service.  By creating these representations, teams can better understand the needs, motivations, and behaviors of their users.  The diverse range of portraits suggests that the lecture is emphasizing the importance of considering a variety of user types when designing data science solutions.  The text below the portraits further clarifies the purpose of using personas, which is to create a shared understanding across different teams working on the project.
+
+
+# Slide 12
+
+**Gathering Data**
+
+|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+
+# Slide 13
+
+**Grouping the data**
+
+Association Analysis
+Known Separation
+Hierarchical Cluster Analysis
+
+---
+
+**Description:**
+
+The slide presents a list of data grouping methods.  The title "Grouping the data" is in a large, bold font.  Below that, in a smaller font, are three methods: "Association Analysis," "Known Separation," and "Hierarchical Cluster Analysis."  There is also a small image in the upper right corner of the slide.  The image shows a meeting room with people working on a whiteboard covered with sticky notes.  This image is likely included to illustrate the process of data analysis or brainstorming in a team setting.  The image is positioned in the upper right quadrant of the slide, and it is a full-color photograph of a meeting room.  The people in the image are engaged in a collaborative activity, likely related to data analysis or problem-solving.  The presence of the image, in the context of the lecture, suggests that the slide is discussing the practical application of these data grouping methods in a team environment.  The methods listed below the title are likely different approaches to organizing and analyzing data, which are common tasks in data science.
+
+
+
+
+# Slide 14
+
+**Building a Narrative**
+
+Higher Ed.
+Patti Caresalot
+Passionate Full-Time Instructor, Teaching Focus
+
+* **Description**
+Patti teaches English at Lake Valley College. Her priority is to foster student engagement. She enjoys seeing students connect with the course content, and finds it rewarding to play a part in a student's growth. She actively seeks out feedback from her students to make assignments and assessments better. Patti feels that learning happens when students are actively applying knowledge. Her classes focus on discussion and interaction. Patti is teaching four courses this semester. Two of the courses are fully online with about 30 students each, the other two courses are larger face-to-face lectures with about 90 students each.
+
+* **Challenges**
+
+* **Personal**
+"I'm here for the students, if something's not working, then it needs to change."
+
+* **email:** Patti.Caresalot@D2L.com
+
+* **Coursona Matches**
+(A small graphic showing colored circles with labels GEN, OLN, BND, LEC, TRD, SRD)
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a persona profile for Patti Caresalot, a passionate full-time instructor.  The slide is formatted in a way that resembles a data sheet or a profile card.
+
+* **Visual:** A cartoon-like portrait of a woman (likely Patti) is displayed in the upper left corner of the slide.  The image is simple, showing a woman with dark hair, glasses, and a reddish-orange top.  The image is likely included to represent the persona and make the slide more engaging.
+
+* **Content:** The slide provides a description of Patti's teaching style, her focus, and the challenges she faces.  The "Description" section details her teaching philosophy, her approach to student engagement, and the types of courses she teaches.  The "Challenges" section highlights her personal perspective on teaching and her commitment to student success.  The "Personal" section contains a quote from Patti, expressing her dedication to her students.  The "Coursona Matches" section shows a small graphic of colored circles with labels (GEN, OLN, BND, LEC, TRD, SRD).  These likely represent categories or matching criteria from a platform like Coursera, indicating potential course matches or areas of expertise.
+
+* **Purpose:** The slide's purpose is to introduce a persona, Patti Caresalot, to provide context and insight into the needs and perspectives of a specific instructor.  This is likely part of a larger discussion about understanding the needs of students and instructors in the context of a data science course.  The slide is designed to help the audience understand the instructor's perspective and motivations.
+
+
+# Slide 15
+
+**Clustering terminology**
+
+Hierarchical clustering
+* clusters form a hierarchy
+* computed bottom-up or top-down fashion
+
+Flat clustering
+* no inter-cluster structure
+
+Hard clustering
+* items are assigned to a single unique cluster
+
+Soft clustering
+* items are assigned to one or more clusters
+* membership often expressed as a real-valued function
+
+Kmeans is flat, hard clustering approach
+
+
+---
+
+**Description:**
+
+This slide defines different types of clustering methods.  It's a table-like presentation, with clear headings for each type of clustering.  The slide is likely part of a lecture on clustering algorithms, introducing the various ways data points can be grouped.
+
+* **Hierarchical Clustering:**  This method creates a hierarchy of clusters, often computed in a bottom-up or top-down manner.
+
+* **Flat Clustering:**  This method doesn't have an inter-cluster structure, meaning clusters are independent of each other.
+
+* **Hard Clustering:**  Data points are assigned to only one cluster.
+
+* **Soft Clustering:**  Data points can be assigned to multiple clusters, with membership expressed as a real-valued function (e.g., a probability of belonging to each cluster).
+
+* **K-means:**  A specific example of a flat, hard clustering approach.
+
+The slide's purpose is to provide a concise overview of the different clustering approaches, highlighting their key characteristics and differences.  There are no figures on this slide.
+
+
+# Slide 16
+
+**Similarity/Distance**
+
+---
+
+**Description:**
+
+This slide, a plain gray background, has the title "Similarity/Distance" in a simple, dark gray font.  There are no figures or other content on the slide.  The slide is likely a heading for a section of the lecture that will discuss how similarity and distance measures are used in clustering algorithms.  It's a placeholder for the next slide, which will likely contain details about different similarity and distance metrics.
+
+
+
+
+# Slide 17
+
+**Distance measures**
+
+If objects have the same fixed set of numeric attributes, then the
+data objects can be thought of as points in a multi-dimensional
+space, where each dimension represents a distinct attribute
+
+Euclidean distance is the most commonly used
+distance measure for continuous data:
+
+dE(x, y) = √∑<sub>i=1</sub><sup>p</sup> (x<sub>i</sub> − y<sub>i</sub>)<sup>2</sup>
+
+Here p is the number of attributes/dimensions
+
+Proximity: general term to indicate similarity
+and dissimilarity
+
+Distance: measure of dissimilarity
+
+<img src="image.png" alt="Heatmap of distances">
+
+**Heatmap of distances between 100 different elements**
+
+
+---
+
+**Description:**
+
+This slide discusses distance measures in the context of data science.  The slide defines Euclidean distance, a common method for calculating the distance between two data points in a multi-dimensional space.  The formula for Euclidean distance is presented.  The slide also introduces the terms "proximity" and "distance," which are used to describe the similarity or dissimilarity between data points.
+
+The most important element of the slide is the image.  It's a heatmap, a visual representation of distances between 100 different data points.  The heatmap is a grid-like structure, where each cell represents the distance between two data points.  The color of each cell corresponds to the distance value.  The colors likely range from a cool color (blue) for small distances to a warm color (red/yellow) for large distances.  The heatmap's purpose is to illustrate how distance measures can be used to visualize the relationships between data points.  The heatmap's arrangement (rows and columns) and the color gradient are crucial for understanding the relative distances between the data points.  The title "Heatmap of distances between 100 different elements" clearly indicates the content of the image.  The slide is part of a lecture on clustering, where understanding distances between data points is essential for grouping similar data points together.
+
+
+# Slide 18
+
+**Example with matplotlib**
+
+```python
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+from scipy.spatial import distance_matrix
+xyLocations = [[random.randrange(0,10), random.gauss(5,3)] for i in range(25)]
+xyLocs = pd.DataFrame(xyLocations)
+distances = distance_matrix(xyLocs.values,xyLocs.values)
+print(distances[:5,:5])
+[[0.         4.95848922 5.50745126 2.31171825 4.68541685]
+ [4.95848922 0.         1.96229046 2.67138844 0.4903888 ]
+ [5.50745126 1.96229046 0.         3.600969   2.3972855 ]
+ [2.31171825 2.67138844 3.600969   0.         2.37484206]
+ [4.68541685 0.4903888  2.3972855  2.37484206 0.        ]]
+plt.imshow(distances)
+```
+
+**Description of the Figure:**
+
+A heatmap is displayed, representing a distance matrix.  The heatmap is a 2D array of colored squares, where each square's color corresponds to a distance value.  The x and y axes of the heatmap correspond to the indices of the data points.  The color scale (likely a gradient from blue to yellow or red) indicates the magnitude of the distance.  Denser, warmer colors (yellow/red) represent larger distances, while cooler colors (blue) represent smaller distances.  The heatmap is positioned in the lower right quadrant of the slide.  The purpose of the heatmap is to visually represent the pairwise distances between 25 data points, likely in a multi-dimensional space.  The code snippet above the heatmap shows how the distance matrix is calculated using the `distance_matrix` function from the `scipy.spatial` library.  The `print(distances[:5,:5])` command displays the first five rows and columns of the distance matrix, providing a numerical representation of the distances.  The `plt.imshow(distances)` command creates the heatmap visualization.  The context of the slide suggests that this is an example of how to visualize distance matrices, which are crucial for clustering algorithms.
+
+
+**Description of the Slide:**
+
+This slide provides an example of visualizing a distance matrix using matplotlib.  The code snippet demonstrates how to calculate and display a distance matrix, which is a common task in data science, particularly when working with clustering algorithms.  The heatmap is a visual representation of the pairwise distances between data points, which is essential for understanding the relationships between data points and for choosing appropriate clustering methods.  The slide is part of a lecture on Introduction to Data Science, focusing on the practical application of distance measures in data analysis.
+
+
+# Slide 19
+
+**Distance between discrete data**
+
+Hamming distance
+
+* Used for bit/binary vectors: counts number of bits that differ
+* Can be used more generally for discrete data, to count matches
+
+Matching coefficient
+
+* Hamming distance normalized by number of attributes/bits
+
+Hamming Distance: 3
+Matching coefficient: 7/10
+
+A  1 0 1 1 0 0 1 0 0 1
+B  1 0 0 1 0 0 0 0 1 1
+
+
+---
+
+**Description:**
+
+This slide discusses the Hamming distance and matching coefficient, which are used to measure the dissimilarity between discrete data, particularly bit/binary vectors.  The example shows two binary vectors, A and B, each with 10 bits.  The Hamming distance is calculated by counting the number of positions where the bits in the two vectors differ.  In this case, the Hamming distance between A and B is 3.  The matching coefficient is the ratio of the number of matching bits to the total number of bits.  In this example, the matching coefficient is 7/10.  The slide is part of a lecture on clustering, where understanding different distance measures for various data types is crucial for grouping similar data points.  The table clearly shows the bit values for vectors A and B, making it easy to count the differences.  The values "Hamming Distance: 3" and "Matching coefficient: 7/10" are calculated based on the comparison of the binary vectors.
+
+
+# Slide 20
+
+**Clustering**
+
+---
+
+**Description:**
+
+This slide, a plain, light gray background, has the single word "Clustering" in a large, bold, dark gray font.  There are no figures or other content on the slide.  The slide is likely a title slide or a heading for a section of the lecture that will discuss clustering algorithms or techniques.  It's a placeholder for the next slide, which will likely contain details about clustering methods, examples, or applications.
+
+
+
+
+# Slide 21
+
+**K-means clustering**
+
+One of the most commonly-used clustering algorithms, because it is easy to implement and quick to run
+
+The goal is to partition the objects into K disjoint subsets
+
+Assumes the objects (instances) to be clustered are p-dimensional vectors
+
+Uses a distance measure between the objects (typically Euclidean distance)
+
+
+---
+
+**Description:**
+
+This slide introduces the K-means clustering algorithm.  It's a simple, bulleted list, typical of a slide in a lecture.  The slide's purpose is to provide a brief overview of the K-means algorithm, highlighting its characteristics and assumptions.  There are no figures on this slide.  The content is straightforward and directly explains the algorithm's purpose and key properties.  The context suggests that this is part of a larger lecture on clustering algorithms, and this slide specifically introduces K-means as a common and efficient method.
+
+
+# Slide 22
+
+**The K-means Algorithm**
+
+Input: Dataset D, number of clusters k
+Output: Set of cluster representatives C, cluster membership vector m
+
+# Initialize cluster representatives C
+Randomly assign k data points from D into each cluster
+Initialize C such that c<sub>i</sub> is mean of points in i<sup>th</sup> cluster
+
+while not converged
+# Data Assignment
+Reassign points in D to closest cluster mean
+Update m such that m<sub>i</sub> is cluster ID of the i<sup>th</sup> point in D
+
+# Relocation of means
+Update C such that c<sub>i</sub> is mean of points in i<sup>th</sup> cluster
+
+
+---
+
+**Description of the Slide:**
+
+This slide outlines the K-means clustering algorithm.  It's a step-by-step description of the algorithm, presented in a clear, structured format.  The slide is typical of a lecture on clustering algorithms, where the algorithm's steps are explicitly laid out.  The algorithm's steps are presented in a way that is easy to follow and understand.  The slide is designed to explain the process of K-means clustering, which involves initializing cluster representatives, assigning data points to clusters, and relocating the cluster means until convergence.  The use of numbered steps and clear variable names (D, k, C, m) makes the algorithm's logic easy to grasp.  The slide is part of a lecture on clustering algorithms, and this specific slide introduces the K-means algorithm.
+
+
+# Slide 23
+
+**Example: Acquire Data**
+
+<img src="image.png" alt="Scatter Plot">
+
+---
+
+**Description of the Figure:**
+
+A scatter plot is displayed, showing a large number of small, black dots scattered across a white background.  The dots are randomly distributed, but there are subtle hints of clustering or grouping in some areas.  The plot appears to be two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The dots are densely packed in some regions and sparsely distributed in others.  The purpose of the scatter plot is to visually represent a dataset of data points.  The random distribution of the points suggests that the data is not pre-grouped or clustered.  The slide is likely part of a lecture on data acquisition or data visualization, where the scatter plot is used to illustrate a dataset that has been acquired.  The title "Example: Acquire Data" indicates that the slide is showing an example of data that has been acquired, and the scatter plot is a visual representation of that data.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Acquire Data," displays a scatter plot.  The scatter plot shows a large number of data points, visually representing a dataset.  The random distribution of the points suggests that the data has not yet been processed or clustered.  The slide is likely part of a lecture on data acquisition, data visualization, or clustering algorithms, where the scatter plot is used to illustrate a dataset that has been acquired.  The purpose of the slide is to show an example of raw data.
+
+
+# Slide 24
+
+**Example: Assign Randomly**
+
+<img src="image.png" alt="Scatter Plot">
+
+
+---
+
+**Description of the Figure:**
+
+A scatter plot is displayed, showing a large number of data points (small circles) scattered across a white background.  The data points are colored in three different colors:  reddish-brown, light gray/dark gray, and light blue.  The points are randomly distributed across the plot area, with no discernible clusters or groupings.  The plot is two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The different colors of the points likely represent different categories or groups of data, but these categories are not explicitly defined on the slide.  The random distribution of the points, along with the different colors, suggests that this is an example of a dataset where the data points have been randomly assigned to different groups or clusters, which is a step in the K-means clustering algorithm.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Assign Randomly," displays a scatter plot.  The plot shows a large number of data points, randomly distributed and colored in three different groups.  The purpose of this slide is to illustrate a step in the K-means clustering algorithm, specifically the random assignment of data points to initial clusters.  The random distribution of the points, along with the different colors, visually represents the initial, random assignment of data points to clusters before the algorithm refines the clusters.  This is a crucial step in the K-means algorithm, as it sets the starting point for the iterative process of finding optimal cluster assignments.
+
+
+# Slide 25
+
+**Example: Compute Centroids**
+
+<img src="image.png" alt="Scatter Plot with Centroids">
+
+
+---
+
+**Description of the Figure:**
+
+A scatter plot is displayed, showing a large number of data points (small circles) scattered across a white background.  The data points are colored in three different colors:  reddish-brown, light gray/dark gray, and light blue.  These colors likely represent different clusters.  Superimposed on the scatter plot are three larger, differently colored stars.  These stars are positioned within the scatter plot, near the center of the clusters of data points.  The red star is near the cluster of reddish-brown points, the light blue star is near the cluster of light blue points, and the dark gray star is near the cluster of dark gray points.  The stars represent the centroids (or means) of the respective clusters.  The plot is two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The purpose of the scatter plot with the centroids is to illustrate a step in the K-means clustering algorithm, specifically the computation of centroids after the initial random assignment of data points to clusters.  The centroids are calculated as the mean of the data points within each cluster.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Compute Centroids," displays a scatter plot with superimposed centroids.  The scatter plot shows data points colored by cluster, and the centroids (stars) are positioned near the center of each cluster.  This visual representation illustrates a step in the K-means clustering algorithm, where the algorithm calculates the mean of the data points within each cluster to determine the cluster centroid.  The slide is part of a lecture on clustering algorithms, specifically demonstrating the K-means algorithm.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.
+
+
+# Slide 26
+
+**Example: Reassign Clusters**
+
+<img src="image.png" alt="Scatter Plot with Clusters">
+
+
+---
+
+**Description of the Figure:**
+
+A scatter plot is displayed, showing a large number of data points (small circles) scattered across a white background.  The data points are colored in three distinct colors:  reddish-brown, light gray/dark gray, and light blue.  These colors represent different clusters.  Superimposed on the scatter plot are three larger, differently colored stars.  These stars are positioned within the scatter plot, near the center of the clusters of data points.  The red star is near the cluster of reddish-brown points, the light blue star is near the cluster of light blue points, and the dark gray star is near the cluster of dark gray points.  These stars represent the centroids (or means) of the respective clusters.  The plot is two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The data points appear to have been reassigned to clusters based on their proximity to the centroids.  The reassignment is evident in the distribution of the colored points around the centroids.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Reassign Clusters," displays a scatter plot illustrating a step in the K-means clustering algorithm.  The plot shows data points colored by cluster, and the centroids are positioned near the center of each cluster.  This visual representation illustrates the reassignment of data points to clusters based on their proximity to the centroids.  The slide is part of a lecture on clustering algorithms, specifically demonstrating the K-means algorithm.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.  The reassignment of points is the key concept being illustrated.  The slide follows the previous example of computing centroids, showing the next step in the iterative process of the K-means algorithm.
+
+
+# Slide 27
+
+**Example: Re-compute Centroids**
+
+<img src="image.png" alt="Scatter Plot with Updated Centroids">
+
+
+---
+
+**Description of the Figure:**
+
+A scatter plot is displayed, showing a large number of data points (small circles) scattered across a white background.  The data points are colored in three distinct colors:  reddish-brown, light gray/dark gray, and light blue.  These colors represent different clusters.  Superimposed on the scatter plot are three larger, differently colored stars.  These stars are positioned within the scatter plot, near the center of the clusters of data points.  The red star is near the cluster of reddish-brown points, the light blue star is near the cluster of light blue points, and the dark gray star is near the cluster of dark gray points.  These stars represent the centroids (or means) of the respective clusters.  The plot is two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The data points appear to have been reassigned to clusters based on their proximity to the centroids.  The reassignment is evident in the distribution of the colored points around the centroids.  Crucially, the centroids have shifted positions compared to the previous scatter plot.  This indicates that the algorithm has recomputed the centroids based on the new cluster assignments.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Re-compute Centroids," displays a scatter plot illustrating a step in the K-means clustering algorithm.  The plot shows data points colored by cluster, and the centroids are positioned near the center of each cluster.  This visual representation illustrates the recomputation of centroids based on the new cluster assignments.  The slide is part of a lecture on clustering algorithms, specifically demonstrating the K-means algorithm.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.  The recomputation of the centroids is the key concept being illustrated.  The slide follows the previous example of reassignment, showing the next step in the iterative process of the K-means algorithm.  The updated positions of the centroids indicate that the algorithm has refined the cluster centers based on the latest data assignments.
+
+
+# Slide 28
+
+**Example: Reassign Clusters**
+
+<img src="image.png" alt="Scatter Plot with Clusters">
+
+
+---
+
+**Description of the Figure:**
+
+The slide displays a scatter plot.  Numerous small, colored circles are scattered across the plot area.  There are three distinct clusters of points, each colored differently:  light blue, dark gray, and reddish-brown.  Within each cluster, the points are relatively close to each other.  Importantly, three larger, differently colored stars are positioned near the center of each cluster.  These stars represent the centroids of the respective clusters.  The plot is two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.  The overall impression is that the data points have been reassigned to clusters based on their proximity to the centroids.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Reassign Clusters," displays a scatter plot illustrating a step in the K-means clustering algorithm.  The plot shows data points colored by cluster, and the centroids are positioned near the center of each cluster.  This visual representation illustrates the reassignment of data points to clusters based on their proximity to the centroids.  The slide is part of a lecture on clustering algorithms, specifically demonstrating the K-means algorithm.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.  The reassignment of points is the key concept being illustrated.  The slide follows the previous example of recomputing centroids, showing the next step in the iterative process of the K-means algorithm.  The updated positions of the centroids indicate that the algorithm has refined the cluster centers based on the latest data assignments.  The purpose of this slide is to visually demonstrate the iterative nature of the K-means algorithm, where points are repeatedly reassigned to clusters until the algorithm converges.
+
+
+# Slide 29
+
+**Example: Re-compute Centroids**
+
+<img src="image.png" alt="Scatter Plot with Updated Centroids">
+
+
+---
+
+**Description of the Figure:**
+
+The slide displays a scatter plot.  Numerous small, colored circles are scattered across the plot area.  There are three distinct clusters of points, each colored differently: light blue, dark gray, and reddish-brown.  Within each cluster, the points are relatively close to each other.  Importantly, three larger, differently colored stars are positioned near the center of each cluster.  These stars represent the centroids of the respective clusters.  The plot is two-dimensional, with no axes or labels visible.  The x and y axes are not labeled, and the scale is not specified.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.  The centroids have shifted positions compared to the previous scatter plot.  This indicates that the algorithm has recomputed the centroids based on the new cluster assignments.
+
+
+**Description of the Slide:**
+
+This slide, titled "Example: Re-compute Centroids," displays a scatter plot illustrating a step in the K-means clustering algorithm.  The plot shows data points colored by cluster, and the centroids are positioned near the center of each cluster.  This visual representation illustrates the recomputation of centroids based on the new cluster assignments.  The slide is part of a lecture on clustering algorithms, specifically demonstrating the K-means algorithm.  The different colors of the data points and the centroids help to visually represent the clusters and their centers.  The recomputation of the centroids is the key concept being illustrated.  The slide follows the previous example of reassignment, showing the next step in the iterative process of the K-means algorithm.  The updated positions of the centroids indicate that the algorithm has refined the cluster centers based on the latest data assignments.  The purpose of this slide is to visually demonstrate the iterative nature of the K-means algorithm, where points are repeatedly reassigned to clusters until the algorithm converges.  The updated positions of the centroids are the key visual difference from the previous slide.
+
+
+# Slide 29
+
+**Python Example**
+
+
+---
+
+**Description:**
+
+This slide, titled "Python Example," contains only the text "Python Example" in a large, bold, dark gray font.  There are no figures or other content on the slide.  The slide is likely a placeholder for a slide that will contain Python code examples related to the previous topics discussed in the lecture, such as clustering algorithms or distance calculations.  The context suggests that the following slide will contain a Python code snippet demonstrating how to implement or use a clustering algorithm, likely K-means, in Python.  The slide's purpose is to signal that the next slide will contain a practical example of the concepts discussed in the lecture.
+
+
+**What you see:**
+
+The slide is a plain gray background with the single, bold title "Python Example" in a dark gray font.  There are no images or other elements on the slide.  The slide is a simple title slide for a Python code example.
+
+
+# Slide 31
+
+**Python Example of K-means Clustering**
+
+```python
+import matplotlib.pyplot as plt
+plt.style.use('seaborn')
+from sklearn.datasets.samples_generator import make_blobs
+X, y_true = make_blobs(n_samples=300, centers=4,
+    cluster_std = 0.60, random_state=0)
+plt.scatter(X[:, 0], X[:, 1], s=50)
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=4)
+kmeans.fit(X)
+y_kmeans = kmeans.predict(X)
+# returns array of predictions of cluster for each item
+plt.scatter(X[:, 0], X[:, 1], c=y_kmeans, s=50, cmap='viridis')
+centers = kmeans.cluster_centers_
+plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
+```
+
+**Description of the Figure:**
+
+The slide contains a scatter plot with two overlaid sets of points.  The plot is two-dimensional, with no axes labels or a specified scale.
+
+* **First Set of Points:**  A large number of small, colored points are scattered across the plot.  These points are colored according to the cluster they belong to, using a colormap called 'viridis'.  The colors represent the different clusters identified by the K-means algorithm.  The points are densely packed in some areas and more sparsely distributed in others.
+
+* **Second Set of Points:**  Three larger, black points are positioned within the scatter plot.  These points represent the centroids of the four clusters identified by the K-means algorithm.  The centroids are larger than the data points and are black in color.  Their positions are near the center of the clusters of colored points.
+
+**Reasoning:**
+
+The slide demonstrates a Python implementation of the K-means clustering algorithm using the `scikit-learn` library.  The code generates a dataset of points, clusters them using K-means, and then visualizes the results.  The scatter plot with colored points and black centroids visually represents the clusters and their centers, illustrating the outcome of the K-means algorithm.  The code and the plot together show how the algorithm groups similar data points into clusters and identifies the central points (centroids) of each cluster.  The `make_blobs` function creates a synthetic dataset with four distinct clusters, and the `KMeans` function performs the clustering.  The `plt.scatter` functions are used to visualize the data points and the centroids.  The `cmap='viridis'` argument in `plt.scatter` specifies a colormap for the clusters.  The `alpha=0.5` argument in the final `plt.scatter` call makes the centroids semi-transparent, allowing the underlying data points to be seen.
+
+
+# Slide 32
+
+**How to evaluate Clusters**
+
+
+---
+
+**Description:**
+
+This slide, titled "How to evaluate Clusters," is a simple title slide.  There are no figures or other content on the slide.  The slide is likely a heading for a section of the lecture that will discuss methods for evaluating the quality or effectiveness of clustering results.  It's a placeholder for the next slide, which will likely contain details about metrics or techniques used to assess the performance of clustering algorithms.  The slide's purpose is to introduce the topic of cluster evaluation.
+
+
+**What you see:**
+
+The slide is a plain, light gray background with the single, bold title "How to evaluate Clusters" in a dark gray font.  There are no images or other elements on the slide.  The slide is a simple title slide for a section on cluster evaluation.
+
+
+# Slide 33
+
+**How to choose k in kmeans?**
+
+How many clusters do we need?
+K-means optimization
+* Minimize the sum of squared distances from each point to its cluster centroid
+(this is called the inertia score in sklearn)
+Naive approach to choose k:
+* Try different values of k, pick one that minimizes inertia
+* What is wrong with this? As k increases the inertia
+score cannot increase, thus will pick k=n
+Better approach:
+* Pick k at the "elbow" of the plot
+* Balances accuracy (low value of inertia) and complexity (small value of k)
+
+
+<img src="image.png" alt="Inertia vs. Number of Centers">
+
+**Description of the Figure:**
+
+A line graph is displayed, showing the relationship between the inertia score and the number of clusters (k).  The x-axis is labeled "Number of Centers" and the y-axis is labeled "Inertia".  The graph shows a downward trend, where the inertia score decreases as the number of clusters increases.  The graph starts with a steep decrease in inertia as the number of clusters increases from 1 to 3, then the decrease slows down significantly.  The graph shows a clear "elbow" point around k=3, where the rate of decrease in inertia slows down.  The purpose of this graph is to illustrate the concept of choosing the optimal number of clusters (k) in the K-means algorithm.  The "elbow" point in the graph suggests that a good choice for k is 3, as increasing k beyond that point does not significantly reduce the inertia score, and thus does not improve the clustering quality.  The graph is positioned in the lower right quadrant of the slide.
+
+
+**Description of the Slide:**
+
+This slide discusses how to choose the optimal number of clusters (k) in the K-means clustering algorithm.  It presents a graph showing the relationship between the inertia score and the number of clusters.  The graph visually demonstrates the "elbow" method for selecting k, which balances accuracy (low inertia) and complexity (small k).  The slide is part of a lecture on data science, specifically focusing on the evaluation of clustering results.  The graph is crucial for understanding how to select the optimal number of clusters in the K-means algorithm.
+
+
+# Slide 34
+
+**Clustering will return results, no matter the data**
+
+Four scatter plots are displayed, each showing a different clustering result applied to the same dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left:**  A scatter plot of randomly distributed points, colored red.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are densely packed in some areas and sparsely distributed in others.  This plot represents the raw, unclustered data.
+
+* **Top Right:** A scatter plot of points colored in blue, dark-green, and light-blue.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are clustered, with distinct groups of points of similar color.  This plot represents the result of applying the DBSCAN clustering algorithm.
+
+* **Bottom Left:** A scatter plot of points colored in red, dark-green, and blue.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are clustered, with distinct groups of points of similar color.  This plot represents the result of applying the K-means clustering algorithm.
+
+* **Bottom Right:** A scatter plot of points colored in red, dark-green, and blue.  The x and y axes are labeled "X" and "Y" respectively, but the scale is not specified.  The points are clustered, with distinct groups of points of similar color.  This plot represents the result of applying the Complete Link clustering algorithm.
+
+
+**Description:**
+
+This slide demonstrates that different clustering algorithms can produce different results on the same dataset.  The four plots show the output of four different clustering algorithms (random, DBSCAN, K-means, and Complete Link) applied to a dataset of points.  The purpose of the slide is to illustrate that clustering algorithms are not perfect and that the choice of algorithm can significantly affect the resulting clusters.  The slide is likely part of a lecture on clustering algorithms, where the concept of algorithm choice and its impact on results is being discussed.  The different colors and groupings in the plots visually represent the different clusters produced by each algorithm.  The random plot serves as a baseline, showing the raw data without any clustering applied.
+
+
+# Slide 35
+
+**Unintuitive k-means results**
+
+Four scatter plots are displayed, each showing a different clustering result applied to the same dataset.  The plots are arranged in a 2x2 grid.
+
+* **Top Left (Incorrect Number of Blobs):**  A scatter plot of points colored in dark purple and yellow.  The points appear to be clustered into two groups, but the clustering is not ideal, with some points in the yellow cluster appearing closer to the purple cluster.  The x-axis ranges from approximately -10 to 5, and the y-axis ranges from approximately -8 to 2.
+
+* **Top Right (Anisotropicly Distributed Blobs):** A scatter plot of points colored in teal and yellow.  The points are clustered, but the clusters are elongated and not perfectly spherical.  The x-axis ranges from approximately -5 to 4, and the y-axis ranges from approximately -2 to 4.
+
+* **Bottom Left (Unequal Variance):** A scatter plot of points colored in teal, yellow, and dark purple.  The points are clustered, but the clusters have different variances, with some clusters being more spread out than others.  The x-axis ranges from approximately -12.5 to 25, and the y-axis ranges from approximately -8 to 4.
+
+* **Bottom Right (Unevenly Sized Blobs):** A scatter plot of points colored in teal, yellow, and dark purple.  The points are clustered, but the clusters have different sizes, with some clusters containing significantly more points than others.  The x-axis ranges from approximately -10 to 50, and the y-axis ranges from approximately -4 to 3.
+
+
+**Description:**
+
+This slide demonstrates how the K-means algorithm can produce unintuitive or unexpected results when the data does not conform to its assumptions.  The four scatter plots show examples of datasets with different characteristics (non-spherical clusters, unequal variances, and uneven sizes) and how the K-means algorithm struggles to accurately cluster these datasets.  The slide is part of a lecture on clustering algorithms, specifically highlighting the limitations of K-means and the importance of considering the characteristics of the data when choosing a clustering algorithm.  The title "Unintuitive k-means results" emphasizes the point that the algorithm's output may not always align with the expected or desired clusters.  The plots are intended to visually illustrate these limitations.
+
+
+
+
+# Slide 36
+
+**Interpreting results**
+
+
+---
+
+**Description:**
+
+This slide, titled "Interpreting results," is a simple title slide.  There are no figures or other content on the slide.  The slide is likely a heading for a section of the lecture that will discuss how to interpret the results of clustering algorithms or other data analysis techniques.  It's a placeholder for the next slide, which will likely contain details about interpreting the clusters, evaluating the quality of the results, or drawing conclusions from the analysis.  The slide's purpose is to introduce the topic of result interpretation.
+
+
+**What you see:**
+
+The slide is a plain, light gray background with the single, bold title "Interpreting results" in a dark gray font.  There are no images or other elements on the slide.  The slide is a simple title slide for a section on interpreting results.
+
+
+# Slide 37
+
+**Quantitative evaluation**
+
+For prediction tasks there are a variety of quantitative evaluation metrics
+* Accuracy, squared loss, area under ROC, etc.
+For cluster analysis there is typically no ground truth
+* Evaluation aims measure the "goodness" of the resulting clusters
+
+
+---
+
+**Description:**
+
+This slide discusses quantitative evaluation methods for different types of data analysis tasks.  It's a bulleted list, typical of a slide in a lecture.  The slide's purpose is to introduce the concept of evaluating the quality of results in data science, specifically highlighting the differences between evaluating predictions and evaluating clusters.  There are no figures on this slide.  The content is straightforward and directly explains the different approaches to evaluating the quality of results in data science.  The context suggests that this is part of a larger lecture on data analysis techniques, and this slide specifically introduces the concept of quantitative evaluation for clustering.  The bullet points list common metrics for evaluating predictions (accuracy, squared loss, area under ROC curve) and the different approach needed for evaluating clusters (no ground truth, evaluating "goodness").
+
+
+# Slide 37
+
+**Evaluation Approach: Subjective**
+
+Evaluate how well the clusters "fit" the data
+
+* Order the proximity matrix with respect to cluster labels
+* Inspect visually
+
+Good clusterings exhibit clear block pattern
+
+
+---
+
+**Description:**
+
+This slide describes a subjective approach to evaluating clustering results.  It's a bulleted list, typical of a slide in a lecture.  The slide's purpose is to introduce a qualitative method for assessing the quality of clusters, contrasting with the quantitative methods discussed in the previous slide.  There are no figures on this slide.  The content is straightforward and directly explains the subjective evaluation process, which involves examining the proximity matrix and visually inspecting the clusters.  The context suggests that this is part of a larger lecture on data analysis techniques, specifically focusing on evaluating clustering results.  The phrase "clear block pattern" suggests that a good clustering will have distinct, well-separated clusters, which is a visual characteristic of a well-formed clustering.
+
+
+# Slide 39
+
+**Example 1: Good Clustering**
+
+A scatter plot is displayed on the left side of the slide.  The plot shows three distinct clusters of data points, each colored differently (red, green, and blue).  The x-axis ranges from approximately 0 to 1, and the y-axis ranges from approximately 0 to 1.  The points within each cluster are relatively close to each other, and the clusters are well-separated.  The data points are small circles.
+
+A heatmap-like proximity matrix is displayed on the right side of the slide.  The matrix is a square grid of colored squares.  The colors vary from a light blue to a bright orange/red.  The colors represent the proximity (or distance) between data points.  The pattern of colors in the matrix clearly reflects the clustering structure.  The areas where the colors are similar (e.g., a block of bright orange) correspond to data points that are close together in the scatter plot.  The areas where the colors are different (e.g., a block of light blue) correspond to data points that are far apart in the scatter plot.  The proximity matrix is reordered to reflect the cluster assignments, which is evident in the block-like structure of the colors.
+
+**Description:**
+
+This slide provides an example of a "good" clustering result.  The scatter plot on the left visually demonstrates the separation of data points into distinct clusters.  The proximity matrix on the right visually confirms the quality of the clustering by showing a clear block pattern, where similar colors represent similar distances between data points within the same cluster.  The slide is part of a lecture on clustering, illustrating how a well-structured clustering should appear in both a scatter plot and a proximity matrix.  The example is intended to contrast with examples of poor clustering results shown in previous slides.
+
+
+
+
+# Slide 40
+
+**Example II: Poor Clustering**
+
+Two visualizations are presented on the slide:
+
+* **Left Panel (Scatter Plot):** A scatter plot displays data points.  There are three distinct clusters of data points, each colored differently (red, green, and blue).  The x-axis ranges from approximately 0 to 1, and the y-axis ranges from approximately 0 to 1.  However, the clusters are not well-separated, and some points appear to be misclassified or located in areas where the clusters overlap.  The data points are small circles.
+
+* **Right Panel (Proximity Matrix):** A heatmap-like proximity matrix is shown.  The matrix is a square grid of colored squares, where the colors vary from a light blue to a bright orange/red.  The colors represent the proximity (or distance) between data points.  The pattern of colors in the matrix does *not* clearly reflect a block-like structure corresponding to the clusters.  Instead, there are areas of mixed colors, indicating that the distances between data points in different clusters are not consistently higher than the distances between points within the same cluster.  This lack of a clear block pattern visually confirms that the clustering is not optimal.  The proximity matrix is reordered to reflect the cluster assignments, but the reordering does not result in a clear separation of clusters in the matrix.
+
+
+**Description:**
+
+This slide provides an example of a "poor" clustering result.  The scatter plot on the left visually demonstrates the overlapping or poorly separated clusters.  The proximity matrix on the right confirms this poor clustering by showing a lack of a clear block pattern in the reordered matrix.  This example contrasts with the previous slide's "good" clustering example, highlighting the visual cues for identifying a poor clustering result.  The slide is part of a lecture on clustering, illustrating how a poorly structured clustering will appear in both a scatter plot and a proximity matrix.
+
+
+
+
+# Slide 41
+
+**Evaluation Approach: Subjective**
+
+Visualize clusters:
+* Use PCA to reduce dimensionality
+Show only 2 or 3 dimensions
+* Color points by cluster membership
+* Inspect results
+
+<img src="image.png" alt="Scatter Plot">
+
+
+---
+
+**Description of the Figure:**
+
+A scatter plot is displayed, showing a large number of data points.  The points are colored in a spectrum of colors, ranging from deep reds to blues, and various shades in between.  The colors are not uniformly distributed, but rather appear to cluster in different regions of the plot.  Each color likely represents a different cluster.  The x-axis and y-axis are labeled "X" and "Y", respectively, but the scale is not specified.  The plot is densely populated with data points, and the different colors visually represent the clusters.  The purpose of the scatter plot is to visually represent the clusters resulting from a clustering algorithm.  The colors and the distribution of points within the clusters are key to evaluating the quality of the clustering.  The plot is oriented horizontally, filling most of the slide's width.
+
+
+**Description of the Slide:**
+
+This slide, titled "Evaluation Approach: Subjective," describes a method for visually evaluating clustering results.  The slide presents a scatter plot as the primary visualization tool.  The scatter plot shows data points colored by cluster membership.  The use of Principal Component Analysis (PCA) to reduce the dimensionality of the data to two or three dimensions allows for a visual representation of the clusters.  The method suggests that the user should visually inspect the plot to assess the quality of the clustering.  The different colors and the distribution of points within the clusters are key visual cues for evaluating the clustering's effectiveness.  The slide is part of a lecture on data science, specifically focusing on evaluating clustering results.  The use of PCA and color-coding are important techniques for visualizing and interpreting the results of clustering algorithms.
+
+
+# Slide 42
+
+**Evaluation Approach: Subjective**
+
+Select a small number of "canonical" members of each cluster for inspection.
+* E.g., in k-means select the examples that are closest to cluster centers.
+Hopefully, the chosen examples can be used to interpret the characteristics of each cluster (with domain knowledge).
+
+**Cluster 2:** Sumit R.Das (251), Physical Review D
+Absorption of Fixed scalars and the D-brane Approach to Black Holes; Universal Low-Energy Dynamics for Rotating Black Holes; Interactions involving D-branes; Black Hole Greybody Factors and D-Brane Spectroscopy
+
+**Cluster 7:** Gary T. Horowitz (588), Physics Letters B
+On D-Branes and Black Holes in Four Dimensions; The Black Branes of M-theory; Counting States of Near-Extremal Black Holes; Internal Structure of Black Holes
+
+**Cluster 10:** Juan M. Maldacena (1924), Journal of High Energy Physics
+Field theory models for tachyon and gauge field string dynamics; Super-Poincare Invariant Superstring Field Theory; Level Four Approximation to the Tachyon Potential in Superstring Field Theory; SO(32) Spinors of Type I and Other Solitons on Brane-Antibrane Pair
+
+**Cluster 13:** Ashoke Sen (4683), Nuclear Physics B
+Dynamics of Anti-de Sitter Domain Walls; Gravitational Stability and Renormalization-Group Flow; String Theory on AdS3; The Holographic Bound in Anti-de Sitter Space
+
+Table 8: Example paper titles grouped together by spectral clustering. The authors shown are those with the highest number of non-self citations to papers in the cluster (with this number in parentheses).
+
+
+---
+
+**Description of the Slide:**
+
+This slide continues the discussion of subjective evaluation methods for clustering results.  It provides specific examples of how to select representative examples from each cluster to understand the characteristics of the cluster.  The slide suggests selecting "canonical" members, such as the points closest to the cluster centers in K-means.  The slide then lists four example clusters, each with a prominent author and publication, along with the number of non-self citations to other papers within that cluster.  The examples are likely chosen to illustrate the types of papers or research areas that are grouped together by the clustering algorithm.  The table format and the inclusion of citation counts suggest that the clustering is based on some form of citation analysis or similar research grouping.  The slide is part of a lecture on data science, specifically focusing on evaluating clustering results.
+
+
+# Slide 43
+
+**Evaluation Approach: Objective**
+
+Evaluate the clusters using known class labels
+
+If you have class labels why cluster?
+
+* The labeled dataset is usually hand-labeled specifically for evaluation
+* Cluster the larger dataset automatically
+* Assess the clustering of the hand labeled dataset in the automatic clustering
+
+
+---
+
+**Description:**
+
+This slide discusses an objective approach to evaluating clustering results.  It's a bulleted list, typical of a slide in a lecture.  The slide's purpose is to introduce a quantitative method for assessing the quality of clusters when ground truth (pre-labeled data) is available.  There are no figures on this slide.  The content is straightforward and directly explains the process of using known class labels to evaluate the performance of a clustering algorithm.  The context suggests that this is part of a larger lecture on data analysis techniques, specifically focusing on evaluating clustering results.  The bullet points highlight the practical application of this approach:  evaluating a pre-labeled dataset to assess the accuracy of an automatically generated clustering on a larger dataset.
+
+
+# Slide 44
+
+**Evaluation Approach: Objective**
+
+Purity: a measure of the extent to which cluster/groups (G) contain objects of a particular class (C)
+
+* Each cluster is assigned the class according to the most numerous class of its elements
+* The purity of each cluster  i in G is determined by the number of examples of class j (N<sub>j</sub>) inside each cluster:
+
+purity(C, G) =  1/N * Σ<sub>i=1</sub><sup>K</sup> max<sub>j</sub> N<sub>j</sub> ∈ G<sub>i</sub>
+
+High purity is easy to achieve when the number of clusters is large
+
+<img src="image.png" alt="Cluster Examples">
+
+**Description of the Figure:**
+
+The slide displays three circular diagrams, each labeled "cluster 1," "cluster 2," and "cluster 3."  Each circle represents a cluster.  Within each circle, "x" and "o" symbols are used to represent different classes of data points.  The "x" symbols are more numerous in cluster 1, the "o" symbols are more numerous in cluster 2, and there's a mix of "x" and "o" symbols in cluster 3.  The diagrams are positioned in the lower right quadrant of the slide.  The purpose of these diagrams is to illustrate the concept of purity in clustering.  The different distributions of "x" and "o" symbols within each cluster visually represent the degree to which each cluster is dominated by one class.  The formula for purity is also shown, which is a quantitative measure of how pure the clusters are.  The formula shows how to calculate the purity of a clustering result.  The formula is positioned above the cluster examples.  The text "1 / 17 * (5 + 4 + 3) = 0.71..." is shown below the cluster examples.  This calculation represents the purity of the clusters shown in the diagrams.
+
+
+**Description of the Slide:**
+
+This slide introduces the concept of purity as an objective evaluation metric for clustering.  It defines purity and provides a formula for calculating it.  The slide also visually demonstrates the concept with examples of clusters (cluster 1, cluster 2, and cluster 3) containing different proportions of data points from different classes.  The examples are intended to illustrate how purity is calculated and how it reflects the degree to which clusters are homogeneous with respect to the classes they contain.  The slide is part of a lecture on data science, specifically focusing on evaluating clustering results.  The formula and the examples are crucial for understanding how to quantitatively assess the quality of a clustering based on the distribution of data points within each cluster.
+
+
+# Slide 45
+
+**Evaluation Approach: Objective**
+
+Evaluation via Class Labels: Similarity
+
+Based on premise that any pair of objects in the same
+cluster should have the same class and vice versa
+
+Construct the "observed" similarity matrix
+* Based on cluster membership
+* Entry i,j is 1 if i and j are in the same cluster, 0 otherwise
+
+Construct the "ideal" similarity matrix
+* Based on class values
+* Entry i,j is 1 if i and j are in the same class, 0 otherwise
+
+Measure correlation between these two matrices
+
+
+**Description of the Figure:**
+
+The slide presents two tables, formatted like matrices, labeled "Observed" and "Ideal."  Each table represents a similarity matrix.  The rows and columns of both matrices are labeled "Point 1," "Point 2," and "Point 3."  The entries in the tables are either 0 or 1.  A value of 1 indicates that the corresponding data points (rows and columns) are similar (e.g., in the same class or cluster), while 0 indicates they are dissimilar.
+
+* **Observed Matrix:**  This matrix reflects the similarity based on the *observed* clustering results.  The values in this matrix are derived from the clustering algorithm's output.
+
+* **Ideal Matrix:** This matrix reflects the *ideal* similarity based on the known class labels.  The values in this matrix are derived from the pre-existing class labels of the data points.
+
+The purpose of these matrices is to evaluate the quality of the clustering.  A high correlation between the "Observed" and "Ideal" matrices suggests that the clustering algorithm has successfully grouped data points with similar class labels into the same clusters.  A low correlation indicates that the clustering algorithm has not accurately reflected the underlying class structure of the data.
+
+
+**Description of the Slide:**
+
+This slide describes an objective approach to evaluating clustering results by comparing the observed similarity matrix (derived from the clustering) to an ideal similarity matrix (derived from known class labels).  The method involves constructing two similarity matrices, one based on cluster membership and the other based on class values, and then measuring the correlation between them.  A high correlation indicates a good clustering, while a low correlation suggests a poor clustering.  The slide is part of a lecture on data science, specifically focusing on evaluating clustering results using known class labels.  The tables are crucial for understanding the comparison process.

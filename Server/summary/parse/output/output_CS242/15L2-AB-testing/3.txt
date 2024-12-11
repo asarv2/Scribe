@@ -1,0 +1,41 @@
+# Slide 3
+
+# Expressing Uncertainty without hypothesis test
+
+Headline: 'Catalan public opinion swings toward "no" for independence, says survey' 19 Dec 2014
+
+Do you want Catalonia
+to become an independent state?
+No
+45.3%
+Yes
+44.5%
+No answer
+10.2%
+
+Margin of error: +/-2.95
+Level of confidence = 95%
+
+No uncertainty quantification
+
+
+Do you want Catalonia
+to become an independent state?
+No
+45.3%
+Yes
+44.5%
+No answer
+10.2%
+
+Margin of error: +/-2.95
+Level of confidence = 95%
+
+With uncertainty quantification
+
+
+---
+
+**Description of the Slide:**
+
+This slide presents a comparison of how uncertainty is expressed in a survey about Catalan independence.  The top portion of the slide shows a bar graph with percentages for "No," "Yes," and "No Answer" to the question of Catalan independence.  The bars are colored blue for "No," red for "Yes," and gray for "No Answer."  The bars are accompanied by a horizontal line representing the margin of error.  The bars are labeled with the percentages and the margin of error.  The bottom portion of the slide shows the same data, but with error bars (vertical lines) added to the bars.  These error bars visually represent the uncertainty in the survey results.  The slide is designed to illustrate the difference between presenting survey results without and with uncertainty quantification.  The headline and date at the top provide context for the survey.  The text below the graphs explains the margin of error and confidence level.  The slide is a visual aid to explain the concept of uncertainty in data analysis.  The use of the Catalan independence survey is a real-world example to illustrate the concept.
