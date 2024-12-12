@@ -1,0 +1,69 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Summary</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        margin: 20px;
+                        background-color: #f9f9f9;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        background: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #444;
+                    }
+                    h2, h3 {
+                        border-bottom: 2px solid #ddd;
+                        padding-bottom: 5px;
+                        color: #555;
+                        page-break-before: always;
+                    }
+                    h3 {
+                        margin-left: 20px;
+                        border-bottom: 1px solid #eee;
+                    }
+                    ul {
+                        padding-left: 20px;
+                    }
+                    li {
+                        margin: 5px 0;
+                    }
+                    .subcategory {
+                        margin-left: 40px;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 20px;
+                        font-size: 0.9em;
+                        color: #777;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Summary</h1>
+            <h2>Key Terms</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=1'>Slack Variable</a>: A variable added to a less-than-or-equal-to inequality constraint to transform it into an equality constraint.  The slack variable represents the difference between the left-hand side and the right-hand side of the inequality.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=4'>Feasible Region</a>: The set of all points that satisfy all the constraints of a linear programming problem.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=5'>Vertex</a>: A point where two or more constraint boundaries intersect in the feasible region of a linear programming problem.  In the Simplex method, optimal solutions are found at vertices.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Basic Variable</a>: In the Simplex method, a variable that is expressed in terms of non-basic variables in a dictionary.  Basic variables are set to values that satisfy the constraints.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Non-basic Variable</a>: In the Simplex method, a variable that is set to zero in a given iteration of the algorithm.  The values of the basic variables are determined by the values of the non-basic variables.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=9'>Pivot Operation</a>: The process of exchanging a basic variable with a non-basic variable in the Simplex method, leading to a new dictionary and a movement to a different vertex in the feasible region.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=26'>Dictionary</a>: A representation of a linear programming problem in a tabular format, where basic variables are expressed as functions of non-basic variables.  It is used in the Simplex method to systematically move from one vertex to another.</li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=32'>Auxiliary Problem</a>: A modified linear programming problem introduced to find an initial feasible solution when the origin is not feasible in the original problem.  It involves adding a new variable to shift the feasible region.</li>
+</ul>
+<h2>Problem Types</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=30'>Finding an Initial Feasible Solution</a>: This problem addresses situations where the origin is not a feasible solution to the linear programming problem, requiring a method to find a starting feasible point for algorithms like the Simplex method. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=30'>Handling Infeasible Linear Programs</a>: This problem involves determining whether a given linear program has any feasible solutions at all, and if not, providing a method to determine this. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=2'>Solving Linear Programs Graphically in Two Dimensions</a>: This problem focuses on solving linear programming problems with two variables by visualizing the feasible region and identifying optimal solutions at vertices. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Solving Linear Programs Using the Simplex Method</a>: This problem involves applying the Simplex algorithm to iteratively find an optimal solution by moving between vertices of the feasible region, updating a dictionary of variables in each iteration. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=26'>Understanding the Simplex Dictionary</a>: This problem involves understanding the structure and interpretation of the Simplex dictionary, which represents the basic and non-basic variables and their relationships in a linear program. </li>
+</ul>
+<h2>Algorithm Solutions</h2>
+<ul>
+<li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=6'>Simplex Method</a>: Iteratively move from one vertex of the feasible region to another by setting non-basic variables to zero and choosing a new set of (non)basic variables to improve the objective function value. This corresponds to moving from vertex to vertex in the feasible region. </li><li><a href='https://www.math.purdue.edu/~yipn/421/2024-08-27-ExSimplex.pdf#page=32'>Auxiliary Problem</a>: Introduce a new variable $x_0$ and modify constraints to create a new problem where the origin is feasible. Solve this auxiliary problem to find a feasible solution for the original problem. If $x_0 = 0$ in the optimal solution of the auxiliary problem, then the solution is feasible for the original problem. </li>
+</ul>

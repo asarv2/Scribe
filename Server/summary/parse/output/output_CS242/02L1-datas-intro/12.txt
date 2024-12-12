@@ -1,9 +1,0 @@
-# Slide 12
-
-**Early Data Science**
-
-* **Visual Element:** A simple line drawing of a WWII-era airplane is shown.  Small, reddish-pink dots are scattered across the wings and fuselage of the plane.  The plane is shown in profile view, with the left side of the plane slightly more prominent than the right. The plane is oriented horizontally on the slide.
-
-**Description:**
-
-This slide, likely part of a lecture on the history of data science, illustrates an early example of data analysis.  The image shows a plane with a concentration of red dots on the wings and fuselage.  These dots represent areas where the plane was most often hit during combat.  The image is intended to illustrate how data analysis was used to determine the most vulnerable areas of the plane, allowing for the strategic placement of armor to improve survivability.  The text below the image explains that during World War II, statistician Abraham Wald was asked to help the British determine where to add armor to their planes.  The image and text together demonstrate how data analysis can be used to improve design and strategy in the context of wartime.

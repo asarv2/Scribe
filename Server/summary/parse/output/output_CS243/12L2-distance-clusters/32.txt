@@ -1,9 +1,0 @@
-# 32
-
-**How to evaluate Clusters**
-
----
-
-**Description of what you see:**
-
-This slide, likely part of a lecture on AI Basics, has a plain, light gray background.  The only text on the slide is the heading "How to evaluate Clusters" in a dark gray, sans-serif font.  The text is centered on the slide.  The font size is large, making it easily visible.  The overall design is simple and clean, focusing on the heading to indicate the topic of the upcoming content.  This slide is a title slide, introducing the topic of evaluating the quality of clusters produced by clustering algorithms.  It's a straightforward transition to the next section of the lecture, which will likely discuss various metrics or methods for evaluating the quality of clusters.

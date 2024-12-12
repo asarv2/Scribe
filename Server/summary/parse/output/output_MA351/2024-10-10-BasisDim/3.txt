@@ -1,7 +1,0 @@
-Slide 3
-
-Basis is and dimension of $V$: The number of vectors in a (any) defined basis.
-
-\textbf{Description:}
-
-This slide defines the dimension of a vector space $V$ as the number of vectors in any basis for that space.  The slide number is 3 of 17, indicating this is the third of a series of slides on linear programming.  The handwritten style and red lines suggest this is a lecture or class note.  The slide likely builds upon the previous slides' discussion of bases and dimensions in vector spaces, providing a concise definition of dimension in the context of linear algebra.
