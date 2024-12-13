@@ -1,27 +1,16 @@
-Slide 5
+SLIDE 5
 
-```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Def}} \quad S \subseteq \mathbb{R}^m, \text{ Convex Hull of } S, \\
+Conv(S) = \cap G \\
+G \text{ convex}, S \subseteq G \\
+(= \text{Smallest convex set containing } S) \\
+(\text{Note intersection of convex sets is convex}) \\
+\underline{\text{Thm 10.2}} \quad S \subseteq \mathbb{R}^m, Conv(S) = \text{collection of} \\
+\text{all conv. comb. of finitely many pts from } S
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 50), (70, 10), (70, 50)>Definition of Convex Hull.</FIGURE>
+<FIGURE (10, 60), (10, 100), (70, 60), (70, 100)>Theorem 10.2 statement.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Def 3}
-$S \subseteq \mathbb{R}^m$
-$\text{Conv}(S) = \bigcap \{C \text{ convex } | S \subseteq C \}$
-(= Smallest convex set containing $S$)
-
-\subsection*{Theorem 10.2}
-$S \subseteq \mathbb{R}^m$, $\text{Conv}(S) = \{ \text{collection of all convex combinations of finitely many points from } S \}$
-
-\end{document}
-```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide introduces two important concepts related to convex sets.  Definition 3 defines the convex hull of a set $S$, denoted as $\text{Conv}(S)$.  It's the intersection of all convex sets that contain $S$.  This is crucial in linear programming, as it represents the smallest convex set that encloses the given set.  Theorem 10.2 states that the convex hull of a set $S$ is also the set of all convex combinations of finitely many points from $S$.  This is a fundamental result in convex analysis, providing an alternative characterization of the convex hull.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.
+<DESCRIPTION>This slide introduces the concept of the convex hull of a set and presents Theorem 10.2.  The definition of the convex hull, $Conv(S)$, of a set $S$ in $\mathbb{R}^m$ is given as the intersection of all convex sets containing $S$.  It's described as the smallest convex set containing $S$.  The slide notes that the intersection of convex sets is itself a convex set. Theorem 10.2 then states that the convex hull of $S$ is equivalent to the collection of all convex combinations of finitely many points from $S$.  This theorem is crucial in linear programming because it provides a way to characterize the convex hull of a set of points, which is often relevant to finding optimal solutions within feasible regions. The underlining highlights the key definitions and theorem statement.  The context of linear programming is essential because the convex hull is a fundamental concept in understanding feasible regions and optimal solutions.</DESCRIPTION>

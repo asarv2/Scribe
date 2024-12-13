@@ -1,38 +1,25 @@
-Slide 13
+SLIDE 13
 
 ```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Separation Theorem}} \\
+\text{THEOREM 10.4. Let } P \text{ and } \bar{P} \text{ be two disjoint nonempty polyhedra in } \mathbb{R}^n \text{. Then} \\
+\text{there exist disjoint half-spaces } H \text{ and } \bar{H} \text{ such that } P \subset H \text{ and } \bar{P} \subset \bar{H}. \\
+P \ne \emptyset, \quad P = \{ x : Ax \le b \}, \quad \bar{P} = \{ x : \bar{A}x \le \bar{b} \} \\
+P \cap \bar{P} = \emptyset \iff \begin{cases} Ax \le b \\ \bar{A}x \le \bar{b} \end{cases} \text{ has no solution} \\
+\iff \text{There is a } y, \bar{y} \text{ s.t.} \\
+y^T A + \bar{y}^T \bar{A} = 0 \\
+y^T b + \bar{y}^T \bar{b} < 0 \\
+y, \bar{y} \ge 0 \\
+\underline{\text{Farkas' Lemma}} \\
+\text{LEMMA 10.5. The system } Ax \le b \text{ has no solutions if and only if there is a } y \text{ such that} \\
+(10.8) \quad A^T y = 0 \iff \begin{cases} A^T y = 0 \\ y \ge 0 \\ y^T b < 0 \end{cases}
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 50), (90, 10), (90, 50)>Theorem 10.4 statement.</FIGURE>
+<FIGURE (10, 60), (10, 100), (40, 60), (40, 100)>Definitions of P and P bar.</FIGURE>
+<FIGURE (40, 60), (40, 100), (70, 60), (70, 100)>Equivalence statement.</FIGURE>
+<FIGURE (10, 110), (10, 170), (70, 110), (70, 170)>Farkas' Lemma.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Separation Theorem}
-THEOREM 10.4. Let $P$ and $\bar{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then there exist disjoint half-spaces $H$ and $\bar{H}$ such that $P \subset H$ and $\bar{P} \subset \bar{H}$.
-
-\textbf{Proof:}
-Let $P = \{x: Ax \le b\}$ and $\bar{P} = \{x: A \bar{x} \le \bar{b}\}$.
-If $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that $v^Tx \le c$ for all $x \in P$ and $v^T \bar{x} \ge c$ for all $\bar{x} \in \bar{P}$.
-$P \cap \bar{P} = \emptyset \iff \exists y, \ \bar{y} \ s.t.$
-\begin{align*}
-y^T A + \bar{y}^T A &= 0 \\
-y^T b + \bar{y}^T \bar{b} &< 0 \\
-y, \bar{y} &\ge 0
-\end{align*}
-(Farkas' Lemma)
-
-\textbf{Farkas' Lemma}
-The system $Ax \le b$ has no solution if and only if there exists a vector $y \ge 0$ such that $y^T A = 0$ and $y^T b < 0$.
-
-\end{document}
+<DESCRIPTION>This slide presents the Separation Theorem (Theorem 10.4) and its proof using Farkas' Lemma. The theorem states that two disjoint nonempty polyhedra, $P$ and $\bar{P}$, in $\mathbb{R}^n$ can be separated by disjoint half-spaces. The polyhedra are defined as $P = \{x : Ax \le b\}$ and $\bar{P} = \{x : \bar{A}x \le \bar{b}\}$. The proof uses the equivalence between the disjointness of $P$ and $\bar{P}$ ($P \cap \bar{P} = \emptyset$) and the non-existence of a solution to the system $Ax \le b$ and $\bar{A}x \le \bar{b}$.  This is then linked to Farkas' Lemma (Lemma 10.5), which provides conditions for the non-existence of solutions to a system of inequalities.  Specifically, the non-existence of a solution to $Ax \le b$ is equivalent to the existence of a vector $y$ such that $A^Ty = 0$, $y \ge 0$, and $y^Tb < 0$.  The slide shows this equivalence using a double implication arrow. The underlining highlights key parts of the theorem and the proof. The context of linear programming is crucial because the separation theorem is a fundamental result used in duality theory and the development of algorithms for solving linear programs.</DESCRIPTION>
 ```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide further elaborates on the proof of the Separation Theorem (Theorem 10.4).  It explicitly states Farkas' Lemma, a crucial result in linear programming.  Farkas' Lemma provides a necessary and sufficient condition for the infeasibility of a system of linear inequalities.  The slide connects the condition for disjoint polyhedra ($P \cap \bar{P} = \emptyset$) to the existence of a vector $y$ satisfying specific linear equations and inequalities involving the matrix $A$ and vectors $b$ and $\bar{b}$.  The conditions are presented as a system of linear equations and inequalities involving the vectors $y$, $\bar{y}$, the matrix $A$, and the vectors $b$ and $\bar{b}$.  This system is equivalent to the statement that the system $Ax \le b$ has no solution.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of the separation theorem and sets the stage for the continuation of the proof, which would likely involve showing how to find such a vector $y$ and $\bar{y}$.
-
-

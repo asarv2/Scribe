@@ -1,39 +1,19 @@
-Slide 8
+SLIDE 8
 
-```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Carathéodory Theorem}} \\
+\text{THEOREM 10.3. The convex hull } conv(S) \text{ of a set } S \text{ in } \mathbb{R}^m \text{ consists of all convex} \\
+\text{combinations of } \underline{m+1} \text{ points from } S: \\
+conv(S) = \left\{ z = \sum_{j=1}^{m+1} t_j z_j : z_j \in S \text{ and } t_j \ge 0 \text{ for all } j, \text{ and } \sum_j t_j = 1 \right\} \\
+pf \quad conv(S) = \left\{ z = \sum_{j=1}^n t_j z_j : z_j \in S, t_j \ge 0, \sum_j t_j = 1 \right\} \\
+\text{Consider the LP: } \max \quad c^T x \\
+s.t. \quad Ax = z \\
+\quad x_1 + x_2 + \dots + x_n = 1 \\
+x_i \ge 0 \\
+A = \begin{bmatrix} z_1 & z_2 & \dots & z_n \end{bmatrix} \quad (z \text{ is given, fixed})
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 100), (90, 10), (90, 100)>Theorem 10.3 statement and proof outline.</FIGURE>
+<FIGURE (10, 110), (90, 110), (90, 160), (10, 160)>Linear Programming formulation.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Theorem 10.2}
-$S \subseteq \mathbb{R}^m$, $\text{Conv}(S) = \{ \text{collection of all convex combinations of finitely many points from } S \}$
-
-\textbf{Proof:}
-Let $H = \{ \text{collection of all convex combinations of finitely many points from } S \}$.
-Need to show $\text{Conv}(S) \subseteq H$ and $H \subseteq \text{Conv}(S)$.
-
-(1) $\text{Conv}(S) \subseteq H$
-\textit{Proof:}
-Let $z \in \text{Conv}(S)$.  By definition of $\text{Conv}(S)$, there exists a convex set $C$ such that $S \subseteq C$ and $z \in C$.  Since $C$ is convex and $S \subseteq C$, any convex combination of points in $S$ must also be in $C$.  Thus, $z \in H$.
-
-(2) $H \subseteq \text{Conv}(S)$
-\textit{Proof:}
-Let $z \in H$.  Then $z$ is a convex combination of finitely many points from $S$.  By Theorem 10.1, any convex combination of points in $S$ is in $\text{Conv}(S)$.  Therefore, $z \in \text{Conv}(S)$.
-
-\textbf{Caratheodory Theorem}
-If $z \in \text{Conv}(S)$, then $z$ can be written as a convex combination of at most $m+1$ points from $S$.
-
-\end{document}
-```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide continues the proof of Theorem 10.2, which states that the convex hull of a set $S$ is the set of all convex combinations of finitely many points from $S$.  The proof is now complete, with both inclusions (1) and (2) demonstrated.  Crucially, the slide introduces the Caratheodory Theorem, a significant result in convex analysis.  It states that any point within the convex hull of a set in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from the original set.  This theorem is important because it limits the number of points needed for the convex combination, which is often useful in algorithms and computations.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of convex hulls and convex combinations.
-
-
+<DESCRIPTION>This slide introduces Carathéodory's Theorem (Theorem 10.3) in the context of Linear Programming. The theorem states that the convex hull of a set $S$ in $\mathbb{R}^m$, denoted $conv(S)$, can be represented as the set of all convex combinations of at most $m+1$ points from $S$.  The theorem is formally stated, highlighting that each point in the convex hull is a convex combination of $m+1$ points from the original set $S$, with non-negative weights summing to 1. The proof outline is initiated, suggesting a linear programming (LP) approach.  A linear program is formulated to find a point $z$ in the convex hull, where $z$ is a given fixed point. The matrix $A$ is constructed using points from the set $S$, and the variables $x_i$ represent the weights in the convex combination. The constraint $x_1 + x_2 + ... + x_n = 1$ ensures that the weights sum to 1, and $x_i \ge 0$ ensures non-negativity. The objective function is not specified, suggesting that the feasibility of the LP is the focus of the proof. The underlining emphasizes key aspects of the theorem and the LP formulation. The context of linear programming is crucial because the theorem provides a fundamental result for characterizing convex hulls, which are essential in understanding feasible regions in linear programming problems.</DESCRIPTION>

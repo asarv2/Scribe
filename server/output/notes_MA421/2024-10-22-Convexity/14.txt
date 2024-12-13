@@ -1,45 +1,21 @@
-Slide 14
+SLIDE 14
 
 ```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Separation Theorem}} \\
+\text{THEOREM 10.4. Let } P \text{ and } \bar{P} \text{ be two disjoint nonempty polyhedra in } \mathbb{R}^n \text{. Then} \\
+\text{there exist disjoint half-spaces } H \text{ and } \bar{H} \text{ such that } P \subset H \text{ and } \bar{P} \subset \bar{H}. \\
+P \ne \emptyset, \quad P = \{ x : Ax \le b \}, \quad \bar{P} = \{ x : \bar{A}x \le \bar{b} \} \\
+\text{There is a } y, \bar{y} \text{ s.t.} \begin{cases} y^T A + \bar{y}^T \bar{A} = 0 \\ y^T b + \bar{y}^T \bar{b} < 0 \\ y, \bar{y} \ge 0 \end{cases} \\
+\text{Define } H = \{ x : y^T Ax \le y^T b \}, \quad \bar{H} = \{ x : \bar{y}^T \bar{A}x \le \bar{y}^T \bar{b} \} \\
+H \cap \bar{H} = \emptyset, \quad P \subseteq H, \quad \bar{P} \subseteq \bar{H}
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 50), (90, 10), (90, 50)>Theorem 10.4 statement.</FIGURE>
+<FIGURE (10, 60), (10, 80), (40, 60), (40, 80)>Definitions of P and P bar.</FIGURE>
+<FIGURE (10, 90), (10, 140), (40, 90), (40, 140)>Conditions for y and y bar.</FIGURE>
+<FIGURE (10, 150), (10, 180), (70, 150), (70, 180)>Definitions of H and H bar.</FIGURE>
+<FIGURE (10, 190), (10, 200), (40, 190), (40, 200)>Conclusion.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Separation Theorem}
-THEOREM 10.4. Let $P$ and $\bar{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then there exist disjoint half-spaces $H$ and $\bar{H}$ such that $P \subset H$ and $\bar{P} \subset \bar{H}$.
-
-\textbf{Proof:}
-Let $P = \{x: Ax \le b\}$ and $\bar{P} = \{x: A \bar{x} \le \bar{b}\}$.
-If $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that $v^Tx \le c$ for all $x \in P$ and $v^T \bar{x} \ge c$ for all $\bar{x} \in \bar{P}$.
-$P \cap \bar{P} = \emptyset \iff \exists y, \ \bar{y} \ s.t.$
-\begin{align*}
-y^T A + \bar{y}^T A &= 0 \\
-y^T b + \bar{y}^T \bar{b} &< 0 \\
-y, \bar{y} &\ge 0
-\end{align*}
-(Farkas' Lemma)
-
-\textbf{Farkas' Lemma}
-The system $Ax \le b$ has no solution if and only if there exists a vector $y \ge 0$ such that $y^T A = 0$ and $y^T b < 0$.
-
-\textbf{Proof of Separation Theorem (cont.):}
-Define $H = \{x: y^T x \le y^T b\}$ and $\bar{H} = \{x: y^T x \ge y^T \bar{b}\}$.
-$P \subset H$ and $\bar{P} \subset \bar{H}$.
-$H \cap \bar{H} = \emptyset$.
-
-\end{document}
+<DESCRIPTION>This slide presents the Separation Theorem (Theorem 10.4) and its proof. The theorem states that two disjoint nonempty polyhedra, $P$ and $\bar{P}$, in $\mathbb{R}^n$ can be separated by disjoint half-spaces $H$ and $\bar{H}$.  The polyhedra are defined as $P = \{x : Ax \le b\}$ and $\bar{P} = \{x : \bar{A}x \le \bar{b}\}$. The proof shows that if $P$ and $\bar{P}$ are disjoint, then there exist vectors $y$ and $\bar{y}$ satisfying the conditions: $y^T A + \bar{y}^T \bar{A} = 0$, $y^T b + \bar{y}^T \bar{b} < 0$, and $y, \bar{y} \ge 0$.  Using these vectors, two half-spaces $H$ and $\bar{H}$ are defined, and it is shown that $H \cap \bar{H} = \emptyset$, $P \subseteq H$, and $\bar{P} \subseteq \bar{H}$.  This completes the proof. The underlining highlights key parts of the theorem and the proof. The context of linear programming is crucial because the separation theorem is a fundamental result used in duality theory and the development of algorithms for solving linear programs.  The notation uses superscript T to denote the transpose of a vector or matrix.</DESCRIPTION>
 ```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide continues the proof of the Separation Theorem (Theorem 10.4).  It defines the half-spaces $H$ and $\bar{H}$ in terms of the vector $y$ found from Farkas' Lemma.  The key step is showing that these half-spaces contain the respective polyhedra $P$ and $\bar{P}$ and are disjoint.  The proof likely involves demonstrating that any point in $P$ satisfies the inequality $y^Tx \le y^Tb$, and any point in $\bar{P}$ satisfies the inequality $y^Tx \ge y^T\bar{b}$.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of Farkas' Lemma and sets the stage for the conclusion of the proof of the separation theorem.
-
-
-
-

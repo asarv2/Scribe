@@ -13,7 +13,7 @@ from langchain_core.messages import HumanMessage
 import time
 
 class BaseProcessor:
-    def __init__(self, course_title: str, course_code: str, output_dir: str, regenerate_timestamp: bool = False, timestamp: str = None, course_link: str = None, 
+    def __init__(self, course_title: str, course_code: str, output_dir: str, regenerate: bool = False, timestamp: str = None, course_link: str = None, 
                  brightspace_course_id: str = None, brightspace_course_descriptor: str = None):
         '''
         Base class for all processors.
@@ -25,7 +25,7 @@ class BaseProcessor:
             
             output_dir: The directory to save the output files.
 
-            regenerate_timestamp: Whether to regenerate the timestamp.
+            regenerate: Whether to regenerate the given files.
             
             timestamp: The timestamp to use for the output files.
             
@@ -41,7 +41,7 @@ class BaseProcessor:
         self.course_code = course_code
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
-        self.regenerate_timestamp = regenerate_timestamp
+        self.regenerate = regenerate
         self.timestamp = timestamp if timestamp else datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.course_link = course_link
         self.brightspace_course_id = brightspace_course_id
@@ -365,9 +365,206 @@ class BaseProcessor:
         title = title.replace('{-}', '-')
         return title
     
-    def save_results_latex(self, categorized_results: dict):
+    def save_slide_latex(self, lecture_name: str, slides: dict, figures_dict: dict):
         """
-        Save processed results to a LaTeX PDF file using PyLaTeX.
+        Save processed slides to a LaTeX PDF file using PyLaTeX. Want to create a page for each slides. Each will have 2 sections, one that says 'Content' and one that says 'Figures'. In the content section, we will have the latex for the slide and the description beow, and in the figures section, we will have the figures for the slide.
+        
+        Args:
+            lecture_name (str): The name of the lecture.
+            slides (dict): A dictionary for a given lecture as keys and slide numbers as values. Example: {
+                "1": {
+                    "latex": "\\underline{\text{Def 1}} \\quad \\text{Line Segment}",
+                    "figures": [
+                        {
+                            "bbox": [10, 10, 60, 30],
+                            "description": "A figure of a line segment between two points"
+                        }
+                    ],
+                    "description": "A slide with a line segment between two points"
+                }, 
+                "2": {
+                    "latex": "\\underline{\text{Def 1}} \\quad \\text{Triangle}",
+                    "figures": [
+                        {
+                            "bbox": [10, 10, 60, 30],
+                            "description": "A figure of a triangle"
+                        }
+                    ],
+                    "description": "A slide with a triangle"
+                } ...
+            }
+            figures_dict (dict): A dictionary for a given lecture as keys and slide numbers as values. Example: {
+                "1": [
+                    "figures/line_segment.png"
+                ],
+                "2": [
+                    "figures/triangle.png"
+                ]
+            }
+        """
+        
+        geometry_options = {
+            "margin": "1in",
+            "headheight": "14pt",
+            "headsep": "25pt"
+        }
+        doc = Document(geometry_options=geometry_options)
+        
+        # Add packages
+        for pkg in ['hyperref', 'enumitem', 'fancyhdr', 'xcolor', 'url', 'breakurl', 'amsmath', 'amssymb', 'mathtools', 'amsthm', 'thmtools']:
+            doc.packages.append(Package(pkg))
+
+        doc.preamble.append(NoEscape(r'''
+            \hypersetup{
+                colorlinks=true,
+                linkcolor=blue,
+                filecolor=magenta,
+                urlcolor=blue,
+                breaklinks=true,
+                bookmarks=true,
+                pdfborder={0 0 0}
+            }
+            \urlstyle{same}
+            \Urlmuskip=0mu plus 1mu  % URL breaking in nicer spots
+            
+            % Math configuration
+            \everymath{\displaystyle}
+            \setlength{\jot}{10pt}  % Increase spacing between equations
+            
+            \pagestyle{fancy}
+            \fancyhf{}
+            \rhead{Generated on \today}
+            \cfoot{\thepage}
+            
+            % Better Unicode support
+            \usepackage[utf8]{inputenc}
+            \usepackage{newunicodechar}
+            \usepackage[breaklinks=true]{hyperref}
+            \setlength{\itemsep}{1em} % Adds spacing between items
+            
+            % Configure itemize settings globally
+            \setlist[itemize]{nosep}
+            \setlist[itemize]{leftmargin=*}
+            
+            % Remove section numbering
+            \renewcommand{\thesection}{}
+            \renewcommand{\thesubsection}{}
+        '''))
+        doc.preamble.append(Command('lhead', f'Lecture: {lecture_name}'))
+        
+        doc.preamble.append(Command('title', f'{lecture_name}'))
+        doc.preamble.append(Command('author', 'Generated by Scribe.AI'))
+        doc.preamble.append(Command('date', NoEscape(r'\today')))
+        doc.append(NoEscape(r'\maketitle'))
+        
+        for slide_number, slide_data in slides.items():
+            with doc.create(Section(f'Slide {slide_number}')):
+                # add content
+                doc.append(NoEscape(r'\subsection{Content}'))
+                doc.append(NoEscape(slide_data['latex']))
+                
+                # add description 
+                doc.append(NoEscape(r'\subsection{Description}'))
+                doc.append(NoEscape(slide_data['description']))
+                
+                # add figures
+                doc.append(NoEscape(r'\subsection{Figures}'))
+                figures = figures_dict[str(slide_number)]
+                doc.append(NoEscape(r'\begin{figure}[h]'))
+                doc.append(NoEscape(r'\centering'))
+                # Single row of first 3 figures
+                doc.append(NoEscape(r'\begin{minipage}{\textwidth}'))
+                doc.append(NoEscape(r'\centering'))
+                for idx, figure in enumerate(slides[slide_number]["figures"][:3]):
+                    figure_path = figures[idx]
+                    doc.append(NoEscape(r'\begin{minipage}{0.15\textwidth}'))
+                    doc.append(NoEscape(r'\centering'))
+                    doc.append(NoEscape(r'\includegraphics[width=0.8\textwidth]{' + figure_path + '}'))
+                    doc.append(NoEscape(r'\caption{' + figure['description'] + '}'))
+                    doc.append(NoEscape(r'\end{minipage}'))
+                    if idx < min(2, len(slides[slide_number]["figures"]) - 1):
+                        doc.append(NoEscape(r'\hfill'))
+                doc.append(NoEscape(r'\end{minipage}'))
+                doc.append(NoEscape(r'\end{figure}'))
+            doc.append(NoEscape(r'\newpage'))
+                    
+        base_filename = f"notes"
+        filename = os.path.join(self.output_dir, "lectures", lecture_name, base_filename)
+        
+        log_dir = "_logs"
+        # Generate PDF with logs in separate directory
+        try:
+            # Generate PDF with logs in separate directory
+            doc.generate_pdf(
+                filename,
+                clean_tex=False,
+                compiler='latexmk',
+                compiler_args=[
+                    '-pdf',
+                    '-interaction=nonstopmode',
+                    '-file-line-error',
+                    '-shell-escape',
+                    '-8bit',
+                    # Separate auxiliary files into logs directory
+                    f'-aux-directory={log_dir}',
+                    '-recorder',
+                    '-verbose'
+                ]
+            )
+            
+            # Handle log files
+            log_extensions = ['.log', '.aux', '.out', '.fls']
+            for ext in log_extensions:
+                src_file = os.path.join(self.output_dir, "lectures", lecture_name, log_dir, f"{base_filename}{ext}")
+                if os.path.exists(src_file):
+                    # Display log content for debugging
+                    if ext == '.log':
+                        print(f"\nContents of log file:")
+                        with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
+                            lines = f.readlines()
+                            print("..." if len(lines) > 50 else "")
+                            for line in lines[-50:]:
+                                if "!" in line or "Error" in line or "Warning" in line:
+                                    print(f"ERROR/WARNING: {line.strip()}")
+                
+            print(f"PDF generated successfully: {filename}.pdf")
+            # Clean up the .tex file if successful
+            if os.path.exists(f"{filename}.tex"):
+                os.remove(f"{filename}.tex")
+            return True
+
+        except Exception as e:
+            error_msg = str(e)
+            print(f"Error during compilation: {error_msg}")
+            
+            # Error analysis and log display
+            if "! LaTeX Error:" in error_msg:
+                latex_error = re.search(r'! LaTeX Error:(.*?)\n', error_msg)
+                if latex_error:
+                    print(f"LaTeX Error: {latex_error.group(1).strip()}")
+            elif "! Package" in error_msg:
+                package_error = re.search(r'! Package (.*?) Error:(.*?)\n', error_msg)
+                if package_error:
+                    print(f"Package {package_error.group(1)} Error: {package_error.group(2).strip()}")
+            elif "! Missing" in error_msg:
+                missing_error = re.search(r'! Missing (.*?) inserted', error_msg)
+                if missing_error:
+                    print(f"Missing character error: {missing_error.group(1)}")
+            
+            # Check log files in the log directory
+            for ext in ['.log', '.aux', '.out']:
+                log_file = os.path.join(self.output_dir, "lectures", lecture_name, log_dir, f"{base_filename}{ext}")
+                if os.path.exists(log_file):
+                    print(f"\nContents of {log_file}:")
+                    with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
+                        for line in f:
+                            if any(marker in line for marker in ["!", "Error", "Warning"]):
+                                print(line.strip())
+            return False
+    
+    def save_summary_latex(self, categorized_results: dict):
+        """
+        Save processed summary to a LaTeX PDF file using PyLaTeX.
         """
         geometry_options = {
             "margin": "1in",

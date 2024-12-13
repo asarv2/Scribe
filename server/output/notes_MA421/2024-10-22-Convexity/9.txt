@@ -1,35 +1,21 @@
-Slide 9
+SLIDE 9
 
-```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Carathéodory Theorem}} \\
+\text{THEOREM 10.3. The convex hull } conv(S) \text{ of a set } S \text{ in } \mathbb{R}^m \text{ consists of all convex} \\
+\text{combinations of } \underline{m+1} \text{ points from } S: \\
+conv(S) = \left\{ z = \sum_{j=1}^{m+1} t_j z_j : z_j \in S \text{ and } t_j \ge 0 \text{ for all } j, \text{ and } \sum_j t_j = 1 \right\} \\
+pf \quad conv(S) = \left\{ z = \sum_{j=1}^n t_j z_j : z_j \in S, t_j \ge 0, \sum_j t_j = 1 \right\} \\
+\text{Consider the LP: } \max \quad c^T x \\
+s.t. \quad Ax = z \\
+\quad x_1 + x_2 + \dots + x_n = 1 \\
+\quad x_i \ge 0 \\
+A = \begin{bmatrix} z_1 & z_2 & \dots & z_n \end{bmatrix} \quad (z \text{ is given, fixed}) \\
+\text{This is feasible, and hence has a basic opt. soln} \\
+\text{with } m+1 \text{ basic variables.}
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 170), (90, 10), (90, 170)>Theorem 10.3 statement and proof outline.</FIGURE>
+<FIGURE (10, 180), (90, 180), (90, 220), (10, 220)>Linear Programming formulation.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Caratheodory Theorem}
-If $z \in \text{Conv}(S)$, then $z$ can be written as a convex combination of at most $m+1$ points from $S$.
-
-\textbf{Proof:}
-Consider the LP:
-\begin{align*}
-\max \ c^T x \\
-\text{s.t.} \ Ax = z \\
-x_i \ge 0, \ \sum_{j=1}^n x_j = 1 \\
-\end{align*}
-where $x = [x_1, x_2, \dots, x_n]^T$, $A = [z_1, z_2, \dots, z_n]$, and $z_j \in S$.
-
-This is feasible, and hence has a basic opt. soln with $m+1$ basic variables.
-
-\end{document}
-```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide presents the Caratheodory Theorem and its application to a linear program (LP).  The theorem states that any point within the convex hull of a set in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from the original set.  The slide demonstrates this by considering a linear program where the objective is to maximize a linear function subject to constraints.  The constraints are formulated in terms of a matrix $A$ and a vector $z$, where the columns of $A$ represent points from the set $S$.  The constraints also include non-negativity and a sum-to-one constraint.  The key takeaway is that the LP has a basic optimal solution with at most $m+1$ basic variables, which directly relates to the Caratheodory Theorem's limitation on the number of points needed for the convex combination.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of convex hulls and convex combinations.
-
-
+<DESCRIPTION>This slide introduces Carathéodory's Theorem (Theorem 10.3) and begins its proof using linear programming. The theorem states that any point in the convex hull of a set $S$ in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$. The proof starts by representing the convex hull as the set of all convex combinations of points from $S$, where the number of points is not restricted. Then, a linear program (LP) is formulated to find a point $z$ in the convex hull. The LP's constraints ensure that a solution represents a convex combination of points from $S$. The objective function is unspecified, implying that the focus is on the feasibility and the structure of the optimal solution. The final statement asserts that the LP is feasible and has a basic optimal solution with at most $m+1$ basic variables, which directly implies that $z$ can be expressed as a convex combination of at most $m+1$ points from $S$, thus proving Carathéodory's Theorem.  The underlining highlights the key parts of the theorem and the proof. The notation "pf" stands for "proof," and "conv." is short for "convex". The context of linear programming is crucial because the proof leverages the properties of linear programs to establish a fundamental result about convex hulls, which are central to linear programming theory.</DESCRIPTION>

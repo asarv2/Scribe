@@ -1,3 +1,3 @@
-from .slide import SlideProcessor
+from .slide_processor import SlideProcessor
 
 __all__ = ['SlideProcessor']

@@ -2,7 +2,7 @@
 import json
 from typing import Dict, List, Tuple
 import re
-from lecture.condense.base_processor import BaseProcessor
+from lecture.base_processor import BaseProcessor
 from langchain_core.messages import HumanMessage
 import os
 
@@ -34,13 +34,12 @@ class GroupsProcessor(BaseProcessor):
         self.group_terms_prompt = f"Your objective is to decide which group each of the following Key Terms/Problem Types/Algorithm Solutions belong to, in the context of the course {self.course_title}. If there is only one group that the term is a part of, respond in the following format: <key term>: <GROUP number>. Here is an example to assist you: 'GROUPS: [simplex method]-[GROUP 1]\n[linear programming applications]-[GROUP 2]\n[network flow]-[GROUP 3]\n\nTERMS: primal problem, dual problem, network, node, knapsack problem, maximum weight matching\n\nOUTPUT: <primal problem>: <GROUP 1>\n\n<dual problem>: <GROUP 2>\n\n<network>: <GROUP 3>\n\n<node>: <GROUP 3>\n\n<knapsack problem>: <GROUP 2>\n\n<maximum weight matching>: <GROUP 3>'. For terms that are a part of multiple groups, respond in the following format: <key term>: <GROUP number><GROUP number>. Here is another example to assist you: 'GROUPS: [duality]-[GROUP 1]\n[convexity]-[GROUP 2]\n[network applications]-[GROUP 3]\n\nTERMS: dual problem, weak duality theorem, convex hull, farkas lemma, bellmans equation, dummy node\n\nOUTPUT: <dual problem>: <GROUP 1><GROUP 3>\n\n<weak duality theorem>: <GROUP 1><GROUP 2>\n\n<convex hull>: <GROUP 2>\n\n<farkas lemma>: <GROUP 1>\n\n<bellmans equation>: <GROUP 1>\n\n<dummy node>: <GROUP 1><GROUP 3>'."
         
         # load the previous groups if they exist
-        if self.regenerate_timestamp:
-            self.groups = {}
-        else:
-            filename = os.path.join(self.output_dir, self.timestamp, self.summary_type, "summary.json")
-            with open(filename, "r") as file:
+        if os.path.exists(self.json_output_file) and not self.regenerate:
+            with open(self.json_output_file, "r") as file:
                 self.groups = json.load(file)
-            
+        else:
+            self.groups = {}
+
     
     def generate_groups(self, batch_size: int = None) -> List[str]:
         """
@@ -267,7 +266,7 @@ class GroupsProcessor(BaseProcessor):
                     course_code=self.course_code,
                     output_dir=self.output_dir,
                     timestamp=self.timestamp,
-                    regenerate_timestamp=self.regenerate_timestamp,
+                    regenerate=self.regenerate,
                 )
                 subgroup_processor.process_groups()
                 self.groups[group_name]["subgroups"] = subgroup_processor.groups

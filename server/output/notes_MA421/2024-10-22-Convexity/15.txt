@@ -1,57 +1,24 @@
-Slide 15
+SLIDE 15
 
 ```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
-
-\begin{document}
-
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Separation Theorem}
-THEOREM 10.4. Let $P$ and $\bar{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then there exist disjoint half-spaces $H$ and $\bar{H}$ such that $P \subset H$ and $\bar{P} \subset \bar{H}$.
-
-\textbf{Proof:}
-Let $P = \{x: Ax \le b\}$ and $\bar{P} = \{x: A \bar{x} \le \bar{b}\}$.
-If $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that $v^Tx \le c$ for all $x \in P$ and $v^T \bar{x} \ge c$ for all $\bar{x} \in \bar{P}$.
-$P \cap \bar{P} = \emptyset \iff \exists y, \ \bar{y} \ s.t.$
-\begin{align*}
-y^T A + \bar{y}^T A &= 0 \\
-y^T b + \bar{y}^T \bar{b} &< 0 \\
-y, \bar{y} &\ge 0
-\end{align*}
-(Farkas' Lemma)
-
-\textbf{Farkas' Lemma}
-The system $Ax \le b$ has no solution if and only if there exists a vector $y \ge 0$ such that $y^T A = 0$ and $y^T b < 0$.
-
-\textbf{Proof of Separation Theorem (cont.):}
-Define $H = \{x: y^T x \le y^T b\}$ and $\bar{H} = \{x: y^T x \ge y^T \bar{b}\}$.
-$P \subset H$ and $\bar{P} \subset \bar{H}$.
-$H \cap \bar{H} = \emptyset$.
-
-\textbf{Proof of Farkas' Lemma (sketch): }
-Consider the linear program:
-\begin{align*}
-\max \ 0 \\
-\text{s.t.} \ Ax \le b \\
-x \ge 0
-\end{align*}
-and its dual:
-\begin{align*}
-\min \ y^T b \\
-\text{s.t.} \ y^T A = 0 \\
+<LATEX>
+\underline{\text{Farkas' Lemma}} \\
+\text{LEMMA 10.5. The system } Ax \le b \text{ has no solutions if and only if there is a } y \text{ such that} \\
+\underline{A^T y = 0} \\
+y \ge 0 \\
+b^T y < 0 \\
+\text{PROOF. Consider the linear program} \\
+\text{maximize } 0 \\
+\text{subject to } Ax \le b \\
+\text{and its dual} \\
+\text{minimize } b^T y \\
+\text{subject to } A^T y = 0 \\
 y \ge 0
-\end{align*}
+</LATEX>
 
-\end{document}
+<FIGURE (10, 10), (10, 40), (70, 10), (70, 40)>Farkas' Lemma statement.</FIGURE>
+<FIGURE (10, 50), (10, 100), (70, 50), (70, 100)>Proof: Primal and Dual Linear Programs.</FIGURE>
+<FIGURE (10, 110), (10, 160), (70, 110), (70, 160)>Proof: Conclusion.</FIGURE>
+
+<DESCRIPTION>This slide presents Farkas' Lemma (Lemma 10.5), a fundamental result in linear programming, and its proof. The lemma states that a system of linear inequalities $Ax \le b$ has no solution if and only if there exists a non-negative vector $y$ such that $A^Ty = 0$ and $b^Ty < 0$. The proof uses linear programming duality.  A primal linear program is constructed with an objective function of 0 and constraints $Ax \le b$.  Its dual linear program is then presented, with an objective function of minimizing $b^Ty$ subject to $A^Ty = 0$ and $y \ge 0$. The proof then argues that the primal problem is infeasible (has no solution) if and only if the dual problem is unbounded below, which is equivalent to the existence of a $y$ satisfying the conditions stated in Farkas' Lemma.  The underlining highlights key parts of the lemma and its proof. The context of linear programming is crucial because Farkas' Lemma is a powerful tool used in various aspects of linear programming theory, including duality theory and the development of algorithms.</DESCRIPTION>
 ```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide concludes the proof of the Separation Theorem (Theorem 10.4).  It provides a sketch of the proof of Farkas' Lemma, which was used in the proof of the separation theorem.  The proof of Farkas' Lemma is presented by considering the primal and dual linear programs.  The primal problem is to maximize 0 subject to $Ax \le b$ and $x \ge 0$.  The dual problem is to minimize $y^T b$ subject to $y^T A = 0$ and $y \ge 0$.  The equivalence between the infeasibility of the primal problem and the existence of a feasible solution to the dual problem is the core of Farkas' Lemma.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of the separation theorem and concludes the presentation.
-
-

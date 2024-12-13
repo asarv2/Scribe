@@ -1,33 +1,22 @@
-Slide 3
+SLIDE 3
 
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Thm 10.1}} \quad S \text{ is convex } \iff \\
+\text{it contains all conv. comb. of points in } S \\
+pf \quad \implies \\
+\underline{\text{Suppose } S \text{ is convex}} \\
+n=2: \quad z_1, z_2 \in S \implies t_1 z_1 + t_2 z_2 \in S, \quad t_1, t_2 \ge 0 \\
+\quad t_1 + t_2 = 1 \\
+n=3: \quad z_1, z_2, z_3 \in S \implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \left( \frac{t_1}{t_1 + t_2} z_1 + \frac{t_2}{t_1 + t_2} z_2 \right) + t_3 z_3 \\
+t_1 + t_2 + t_3 = 1 \\
+t_1 + t_2 \ge 0, \quad t_3 \ge 0 \\
+\implies t_1 z_1 + t_2 z_2 + t_3 z_3 \in S
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 40), (70, 10), (70, 40)>Theorem 10.1 statement.</FIGURE>
+<FIGURE (10, 50), (10, 70), (70, 50), (70, 70)>Assumption of the proof.</FIGURE>
+<FIGURE (10, 70), (10, 90), (70, 70), (70, 90)>Proof for n=2.</FIGURE>
+<FIGURE (10, 90), (10, 130), (70, 90), (70, 130)>Proof for n=3.</FIGURE>
+<FIGURE (60, 115), (60, 130), (70, 115), (70, 130)>Conclusion of the proof for n=3.</FIGURE>
 
-\section*{Theorem 10.1}
-$S$ is convex $\iff$
-it contains all conv. comb. of points in $S$
-
-\textbf{Proof} $\Rightarrow$
-Suppose $S$ is convex.
-$n=2$: $z_1, z_2 \in S \implies \lambda z_1 + (1-\lambda) z_2 \in S$
-$0 \le \lambda \le 1$
-
-$n=3$: $z_1, z_2, z_3 \in S \implies \lambda_1 z_1 + \lambda_2 z_2 + \lambda_3 z_3 \in S$
-$\lambda_1 + \lambda_2 + \lambda_3 = 1$
-$\lambda_1, \lambda_2, \lambda_3 \ge 0$
-
-$z_3 \in S \implies \lambda_1 z_1 + \lambda_2 z_2 + \lambda_3 z_3 = (\lambda_1 + \lambda_2) \left(\frac{\lambda_1 z_1 + \lambda_2 z_2}{\lambda_1 + \lambda_2}\right) + \lambda_3 z_3 \in S$
-$\lambda_1 + \lambda_2 \le 1$
-$\lambda_1, \lambda_2 \ge 0$
-$\lambda_3 \ge 0$
-
-\end{document}
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide continues the proof of Theorem 10.1, demonstrating the implication that if a set is convex, then it contains all convex combinations of its points.  It explicitly shows the case for $n=2$ and $n=3$ points, illustrating how the convex combination of points within a convex set remains within the set.  The notation is typical of a linear programming or optimization lecture, focusing on the mathematical details of the proof.  The handwritten style suggests a classroom setting.
+<DESCRIPTION>This slide presents the proof of Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The slide focuses on proving one direction of the implication: if $S$ is convex, then it contains all convex combinations of its points. The proof uses induction. The base case ($n=2$) is shown: if $z_1, z_2 \in S$, then any convex combination $t_1z_1 + t_2z_2$ (with $t_1, t_2 \ge 0$ and $t_1 + t_2 = 1$) is also in $S$ due to the definition of convexity. The inductive step ($n=3$) is then demonstrated. A convex combination $t_1z_1 + t_2z_2 + t_3z_3$ is rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$. Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$. This inductive argument can be extended to any number of points, completing the proof.  The underlining highlights key assumptions and conclusions. The notation "pf" stands for "proof," and "conv. comb." is short for "convex combination." The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.  The implication arrow ($\implies$) indicates the direction of the proof.</DESCRIPTION>

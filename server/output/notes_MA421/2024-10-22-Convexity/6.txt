@@ -1,29 +1,17 @@
-Slide 6
+SLIDE 6
 
 ```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Thm 10.2}} \quad S \subseteq \mathbb{R}^m, Conv(S) = \text{collection of} \\
+\text{all conv. comb. of finitely many pts from } S \\
+pf. \text{ Let } H = \text{collection of all conv. comb.} \\
+\text{of finitely many pts from } S \\
+\downarrow \\
+\text{Need to show } \underline{Conv(S) = H} \\
+(i) \quad \underline{Conv(S) \subseteq H} \quad (\because H \text{ is conv.})
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 50), (70, 10), (70, 50)>Theorem 10.2 statement and proof outline.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Theorem 10.2}
-$S \subseteq \mathbb{R}^m$, $\text{Conv}(S) = \{ \text{collection of all convex combinations of finitely many points from } S \}$
-
-\textbf{Proof:}
-Let $H = \{ \text{collection of all convex combinations of finitely many points from } S \}$.
-Need to show $\text{Conv}(S) \subseteq H$ and $H \subseteq \text{Conv}(S)$.
-
-(1) $\text{Conv}(S) \subseteq H$
-(2) $H \subseteq \text{Conv}(S)$
-
-\end{document}
+<DESCRIPTION>This slide presents Theorem 10.2 and the beginning of its proof.  Theorem 10.2 states that for a set $S$ in $\mathbb{R}^m$, the convex hull of $S$, denoted $Conv(S)$, is equal to the set of all convex combinations of finitely many points from $S$. The proof starts by defining $H$ as the collection of all convex combinations of finitely many points from $S$. The goal is to show that $Conv(S) = H$. The first part of the proof, (i), aims to show that $Conv(S)$ is a subset of $H$, using the fact that $H$ is a convex set.  The underlining highlights the key statement of the theorem and the main goal of the proof. The notation "pf" stands for "proof," and "conv. comb." is short for "convex combination." The context of linear programming is crucial because this theorem provides a practical way to compute or approximate the convex hull, which is essential for understanding feasible regions in linear programming problems.</DESCRIPTION>
 ```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide outlines the proof of Theorem 10.2, which states that the convex hull of a set $S$ is the set of all convex combinations of finitely many points from $S$.  The proof is structured into two parts: (1) showing that the convex hull is a subset of the set of all convex combinations, and (2) showing that the set of all convex combinations is a subset of the convex hull.  This is a crucial step in understanding the properties of convex hulls in linear programming and convex optimization.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of convex hulls and convex combinations.  The proof is likely to be continued on subsequent slides.

@@ -1,0 +1,634 @@
+{
+    "2024-10-22-Convexity": {
+        "1": {
+            "latex": "\n\\underline{\\text{Def 1}} \\quad $S \\subseteq \\mathbb{R}^m$ is \\underline{convex} if \\\\\nfor any $z_1, z_2 \\in S \\implies tz_1 + (1-t)z_2 \\in S$\n$0 < t < 1$\n\n\\underline{\\text{Def 2}} Convex combination of $z_1, z_2, \\dots, z_n \\in \\mathbb{R}^m$\n$t_1 z_1 + t_2 z_2 + \\dots + t_n z_n$\n$t_i \\ge 0$\n$\\sum_i t_i = 1$\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        60
+                    ],
+                    "description": "Definition 1 of convex set."
+                },
+                {
+                    "bbox": [
+                        10,
+                        70,
+                        90,
+                        30
+                    ],
+                    "description": "Illustration of definition 1."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        90,
+                        60
+                    ],
+                    "description": "Definition 2 of convex combination."
+                },
+                {
+                    "bbox": [
+                        10,
+                        170,
+                        40,
+                        30
+                    ],
+                    "description": "Example of convex combination with 2 points."
+                },
+                {
+                    "bbox": [
+                        50,
+                        170,
+                        30,
+                        30
+                    ],
+                    "description": "Example of convex combination with 3 points."
+                },
+                {
+                    "bbox": [
+                        80,
+                        170,
+                        30,
+                        30
+                    ],
+                    "description": "Example of convex combination with 4 points."
+                }
+            ],
+            "description": "This slide introduces two definitions fundamental to convex analysis in the context of linear programming.  Definition 1 defines a convex set $S$ in $\\mathbb{R}^m$ as a set where, for any two points $z_1$ and $z_2$ in $S$, the line segment connecting them ($tz_1 + (1-t)z_2$ for $0 < t < 1$) is entirely contained within $S$.  Definition 2 defines a convex combination of points $z_1, z_2, \\dots, z_n$ in $\\mathbb{R}^m$ as a weighted sum $t_1z_1 + t_2z_2 + \\dots + t_nz_n$, where the weights $t_i$ are non-negative and sum to 1.  The slide includes graphical illustrations of convex combinations for two, three, and four points, showcasing the geometric interpretation of these definitions.  The context of linear programming is crucial because feasible regions in linear programming problems are often convex sets, and convex combinations play a key role in understanding the properties of these regions and finding optimal solutions."
+        },
+        "2": {
+            "latex": "\n\\underline{\\text{Thm 10.1}} \\quad $S$ is convex $\\iff$ \\\\\nit contains all conv. comb. of points in $S$ \\\\\n$pf \\quad \\iff$ \\\\\n\\underline{Suppose $S$ contains all conv. comb. of pts in $S$} \\\\\nThen clearly, for any $z_1, z_2 \\in S$ \\\\\n\\underline{$tz_1 + (1-t)z_2 \\in S$} \\\\\nConv. comb. of $z_1, z_2$ \\\\\n$\\implies$ \\underline{$S$ is convex}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        30
+                    ],
+                    "description": "Theorem 10.1 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        50,
+                        90,
+                        20
+                    ],
+                    "description": "Proof outline."
+                },
+                {
+                    "bbox": [
+                        10,
+                        70,
+                        90,
+                        20
+                    ],
+                    "description": "Assumption of the proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        90,
+                        90,
+                        20
+                    ],
+                    "description": "Key step in the proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        90,
+                        20
+                    ],
+                    "description": "Conclusion of the proof."
+                }
+            ],
+            "description": "This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points. The proof is outlined, focusing on one direction of the implication. It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\le t \\le 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex. The underlining highlights the key steps and conclusions of the proof. The notation \"pf\" indicates \"proof,\" and the double-headed arrow indicates the \"if and only if\" nature of the theorem. The term \"conv. comb.\" is an abbreviation for \"convex combination.\" The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems, specifically in characterizing feasible regions."
+        },
+        "3": {
+            "latex": "\n\\underline{\\text{Thm 10.1}} \\quad S \\text{ is convex } \\iff \\\\\n\\text{it contains all conv. comb. of points in } S \\\\\npf \\quad \\implies \\\\\n\\underline{\\text{Suppose } S \\text{ is convex}} \\\\\nn=2: \\quad z_1, z_2 \\in S \\implies t_1 z_1 + t_2 z_2 \\in S, \\quad t_1, t_2 \\ge 0 \\\\\n\\quad t_1 + t_2 = 1 \\\\\nn=3: \\quad z_1, z_2, z_3 \\in S \\implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \\left( \\frac{t_1}{t_1 + t_2} z_1 + \\frac{t_2}{t_1 + t_2} z_2 \\right) + t_3 z_3 \\\\\nt_1 + t_2 + t_3 = 1 \\\\\nt_1 + t_2 \\ge 0, \\quad t_3 \\ge 0 \\\\\n\\implies t_1 z_1 + t_2 z_2 + t_3 z_3 \\in S\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        30,
+                        30
+                    ],
+                    "description": "Theorem 10.1 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        50,
+                        30,
+                        20
+                    ],
+                    "description": "Proof outline."
+                },
+                {
+                    "bbox": [
+                        10,
+                        70,
+                        30,
+                        20
+                    ],
+                    "description": "Assumption of the proof for n=2."
+                },
+                {
+                    "bbox": [
+                        10,
+                        90,
+                        30,
+                        40
+                    ],
+                    "description": "Proof for n=3."
+                },
+                {
+                    "bbox": [
+                        30,
+                        115,
+                        10,
+                        15
+                    ],
+                    "description": "Conclusion of the proof for n=3."
+                }
+            ],
+            "description": "This slide continues the proof of Theorem 10.1 from the previous slide, demonstrating that if a set $S$ is convex, then it contains all convex combinations of its points. The proof is done by induction. The base case ($n=2$) is shown: if $z_1, z_2 \\in S$, then any convex combination $t_1z_1 + t_2z_2$ (with $t_1, t_2 \\ge 0$ and $t_1 + t_2 = 1$) is also in $S$ by the definition of convexity. The inductive step ($n=3$) is then demonstrated. It shows that if $z_1, z_2, z_3 \\in S$, then a convex combination $t_1z_1 + t_2z_2 + t_3z_3$ can be rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$. Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$. This inductive argument can be extended to any number of points, completing the proof. The underlining highlights key assumptions and conclusions. The notation \"pf\" stands for \"proof,\" and \"conv. comb.\" is short for \"convex combination.\" The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets."
+        },
+        "4": {
+            "latex": "\n\\underline{\\text{Thm 10.1}} \\quad S \\text{ is convex } \\iff \\\\\n\\text{it contains all conv. comb. of points in } S \\\\\npf \\quad \\implies \\\\\n\\underline{\\text{Suppose } S \\text{ is convex}} \\\\\nn=2: \\quad z_1, z_2 \\in S \\implies t_1 z_1 + t_2 z_2 \\in S, \\quad t_1, t_2 \\ge 0 \\\\\n\\quad t_1 + t_2 = 1 \\\\\nn=4: \\quad z_1, z_2, z_3, z_4 \\in S \\\\\nt_1 z_1 + t_2 z_2 + t_3 z_3 + t_4 z_4 = (t_1 + t_2 + t_3) \\left( \\frac{t_1}{t_1 + t_2 + t_3} z_1 + \\frac{t_2}{t_1 + t_2 + t_3} z_2 + \\frac{t_3}{t_1 + t_2 + t_3} z_3 \\right) + t_4 z_4 \\\\\n(t_1 + t_2 + t_3) + t_4 = 1 \\\\\nt_1 + t_2 + t_3 \\ge 0, \\quad t_4 \\ge 0 \\\\\n\\implies t_1 z_1 + t_2 z_2 + t_3 z_3 + t_4 z_4 \\in S\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        30
+                    ],
+                    "description": "Theorem 10.1 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        50,
+                        90,
+                        20
+                    ],
+                    "description": "Proof outline."
+                },
+                {
+                    "bbox": [
+                        10,
+                        70,
+                        90,
+                        20
+                    ],
+                    "description": "Assumption of the proof for n=2."
+                },
+                {
+                    "bbox": [
+                        10,
+                        90,
+                        90,
+                        60
+                    ],
+                    "description": "Proof for n=4."
+                },
+                {
+                    "bbox": [
+                        80,
+                        130,
+                        20,
+                        20
+                    ],
+                    "description": "Conclusion of the proof for n=4."
+                }
+            ],
+            "description": "This slide continues the proof of Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The previous slide showed the base case ($n=2$) and the inductive step for $n=3$. This slide extends the inductive step to $n=4$.  It assumes $S$ is convex and shows that any convex combination of four points ($z_1, z_2, z_3, z_4$) in $S$ is also in $S$.  The proof uses a similar strategy to the $n=3$ case, rewriting the convex combination of four points as a convex combination of a convex combination of three points and a fourth point.  Since the convex combination of three points is in $S$ (by the inductive hypothesis), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$.  This demonstrates the inductive step, implying the theorem holds for all $n$.  The underlining highlights key assumptions and conclusions.  \"pf\" denotes \"proof,\" and \"conv. comb.\" is short for \"convex combination.\"  The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.  The use of induction is a standard technique in mathematical proofs and is particularly relevant in the context of linear programming where properties of sets need to be established for arbitrary numbers of variables or constraints."
+        },
+        "5": {
+            "latex": "\n\\underline{\\text{Def}} \\quad $S \\subseteq \\mathbb{R}^m$, Convex Hull of $S$,\n$Conv(S) = \\cap G$\n$G$ convex, $S \\subseteq G$\n(= Smallest convex set containing $S$)\n(Note intersection of convex sets is convex)\n\n\\underline{\\text{Thm 10.2}} \\quad $S \\subseteq \\mathbb{R}^m$, $Conv(S) = $ collection of\nall conv. comb. of finitely many pts from $S$\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        60
+                    ],
+                    "description": "Definition of Convex Hull."
+                },
+                {
+                    "bbox": [
+                        10,
+                        70,
+                        90,
+                        30
+                    ],
+                    "description": "Note on intersection of convex sets."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        90,
+                        60
+                    ],
+                    "description": "Theorem 10.2 statement."
+                }
+            ],
+            "description": "This slide introduces the concept of the convex hull of a set and presents Theorem 10.2.  The definition of the convex hull, $Conv(S)$, of a set $S$ in $\\mathbb{R}^m$ is given as the intersection of all convex sets containing $S$.  It is explicitly stated that this is the smallest convex set containing $S$.  A note is added that the intersection of convex sets is itself a convex set.  Theorem 10.2 then states that the convex hull of $S$ is equivalent to the collection of all convex combinations of finitely many points from $S$. This theorem is crucial in linear programming because it provides a way to characterize the convex hull of a set of points, which is often relevant in finding optimal solutions within feasible regions. The context of linear programming is essential because the convex hull of a set of points defines the smallest convex set encompassing those points, a concept frequently used in optimization problems."
+        },
+        "6": {
+            "latex": "\n\\underline{\\text{Thm 10.2}} \\quad S \\subseteq \\mathbb{R}^m, \\quad Conv(S) = \\text{collection of} \\\\\n\\text{all conv. comb. of finitely many pts from } S \\\\\npf \\quad \\text{Let } H = \\text{collection of all conv. comb.} \\\\\n\\text{of finitely many pts from } S \\\\\n\\downarrow \\\\\n\\text{Need to show } Conv(S) = H \\\\\n(1) \\quad \\underline{Conv(S) \\subseteq H} \\quad (\\because H \\text{ is conv.})\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        60
+                    ],
+                    "description": "Theorem 10.2 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        70,
+                        90,
+                        30
+                    ],
+                    "description": "Definition of H."
+                },
+                {
+                    "bbox": [
+                        10,
+                        100,
+                        90,
+                        30
+                    ],
+                    "description": "Goal of the proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        130,
+                        90,
+                        20
+                    ],
+                    "description": "First part of the proof."
+                }
+            ],
+            "description": "This slide presents Theorem 10.2 and the beginning of its proof.  Theorem 10.2 states that for a set $S$ in $\\mathbb{R}^m$, the convex hull of $S$, denoted $Conv(S)$, is equal to the set of all convex combinations of finitely many points from $S$. The proof begins by defining $H$ as the collection of all convex combinations of finitely many points from $S$. The goal is to show that $Conv(S) = H$. The first part of the proof aims to show that $Conv(S) \\subseteq H$, using the fact that $H$ is a convex set.  The notation \"conv. comb.\" is shorthand for \"convex combination,\" and \"pts\" is shorthand for \"points.\" The context of linear programming is crucial because this theorem provides a constructive way to determine the convex hull of a set, which is important for understanding feasible regions in linear programming problems.  The proof uses set inclusion to demonstrate the equality of two sets, a common technique in mathematical proofs."
+        },
+        "7": {
+            "latex": "\n\\underline{\\text{Thm 10.2}} \\quad S \\subseteq \\mathbb{R}^m, \\quad Conv(S) = \\text{collection of} \\\\\n\\text{all conv. comb. of finitely many pts from } S \\\\\npf \\quad \\text{Let } H = \\text{collection of all conv. comb.} \\\\\n\\text{of finitely many pts from } S \\\\\n\\downarrow \\\\\n\\text{Need to show } Conv(S) = H \\\\\n(2) \\quad H \\subseteq Conv(S)\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        60
+                    ],
+                    "description": "Theorem 10.2 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        70,
+                        90,
+                        30
+                    ],
+                    "description": "Definition of H."
+                },
+                {
+                    "bbox": [
+                        10,
+                        100,
+                        90,
+                        30
+                    ],
+                    "description": "Goal of the proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        130,
+                        90,
+                        20
+                    ],
+                    "description": "Second part of the proof."
+                },
+                {
+                    "bbox": [
+                        70,
+                        135,
+                        30,
+                        25
+                    ],
+                    "description": "Reference to Theorem 10.1."
+                }
+            ],
+            "description": "This slide continues the proof of Theorem 10.2, which states that the convex hull of a set $S$ is equal to the set of all convex combinations of finitely many points from $S$.  The previous slide established the goal of proving $Conv(S) = H$, where $H$ is the set of all convex combinations of finitely many points from $S$. This slide focuses on proving the second part of the equality: $H \\subseteq Conv(S)$. The proof uses Theorem 10.1, which states that a set is convex if and only if it contains all convex combinations of its points.  The downward arrow indicates the logical flow of the proof.  The notation \"conv. comb.\" is shorthand for \"convex combination,\" and \"pts\" is shorthand for \"points.\" The context of linear programming is crucial because this theorem provides a constructive method to find the convex hull of a set, which is essential for understanding feasible regions in linear programming problems. The proof uses set inclusion to demonstrate the equality of two sets, a common technique in mathematical proofs."
+        },
+        "8": {
+            "latex": "\n\\underline{\\text{Carath\u00e9odory Theorem}} \\\\\n\\text{THEOREM 10.3. The convex hull } conv(S) \\text{ of a set } S \\text{ in } \\mathbb{R}^m \\text{ consists of all convex} \\\\\n\\text{combinations of } m+1 \\text{ points from } S: \\\\\nconv(S) = \\left\\{ z = \\sum_{j=1}^{m+1} t_j z_j : z_j \\in S \\text{ and } t_j \\ge 0 \\text{ for all } j, \\text{ and } \\sum_j t_j = 1 \\right\\} \\\\\n\\underline{pf} \\quad conv(S) = \\left\\{ z = \\sum_{j=1}^n t_j z_j : z_j \\in S, t_j \\ge 0, \\sum_j t_j = 1 \\right\\} \\\\\n\\text{Consider the LP: } \\max \\quad c^T x \\\\\ns.t. \\quad Ax = z \\\\\n\\quad x_1 + x_2 + \\dots + x_n = 1 \\\\\nx_i \\ge 0 \\\\\nA = \\begin{bmatrix} z_1 & z_2 & \\dots & z_n \\end{bmatrix}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        90
+                    ],
+                    "description": "Theorem 10.3 statement and proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        100,
+                        90,
+                        70
+                    ],
+                    "description": "Linear Programming formulation."
+                },
+                {
+                    "bbox": [
+                        10,
+                        170,
+                        90,
+                        30
+                    ],
+                    "description": "Matrix A definition."
+                }
+            ],
+            "description": "This slide introduces Carath\u00e9odory's Theorem (Theorem 10.3) in the context of linear programming. The theorem states that the convex hull of a set $S$ in $\\mathbb{R}^m$ can be represented by convex combinations of at most $m+1$ points from $S$. The theorem is formally stated, defining the convex hull $conv(S)$ as the set of all points $z$ that can be expressed as a convex combination of $m+1$ points from $S$.  A proof outline is given, suggesting a connection to linear programming. A linear program (LP) is formulated to find a point $z$ in the convex hull of $S$, where the objective function is $\\max c^Tx$, subject to constraints $Ax = z$, $\\sum_{i=1}^n x_i = 1$, and $x_i \\ge 0$. The matrix $A$ is defined as $[z_1, z_2, \\dots, z_n]$, where $z_i$ are points in $S$.  The implication is that solving this LP will provide a way to construct points in the convex hull using at most $m+1$ points from $S$. The context of linear programming is crucial because the theorem and its proof are directly related to the representation of feasible regions and optimal solutions in linear programming problems. The use of a linear program to prove the theorem highlights the deep connection between convex analysis and linear programming."
+        },
+        "9": {
+            "latex": "\n\\underline{\\text{Carath\u00e9odory Theorem}} \\\\\n\\text{THEOREM 10.3. The convex hull } conv(S) \\text{ of a set } S \\text{ in } \\mathbb{R}^m \\text{ consists of all convex} \\\\\n\\text{combinations of } m+1 \\text{ points from } S: \\\\\nconv(S) = \\left\\{ z = \\sum_{j=1}^{m+1} t_j z_j : z_j \\in S \\text{ and } t_j \\ge 0 \\text{ for all } j, \\text{ and } \\sum_j t_j = 1 \\right\\} \\\\\n\\underline{pf} \\quad conv(S) = \\left\\{ z = \\sum_{j=1}^n t_j z_j : z_j \\in S, t_j \\ge 0, \\sum_j t_j = 1 \\right\\} \\\\\n\\text{Consider the LP: } \\max \\quad c^T x \\\\\ns.t. \\quad Ax = z \\\\\n\\quad x_1 + x_2 + \\dots + x_n = 1 \\\\\n\\quad x_i \\ge 0 \\\\\nA = \\begin{bmatrix} z_1 & z_2 & \\dots & z_n \\end{bmatrix} \\\\\n\\text{This is feasible, and hence has a basic opt. soln} \\\\\n\\text{with } m+1 \\text{ basic variables.}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        90,
+                        90
+                    ],
+                    "description": "Theorem 10.3 statement and proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        100,
+                        90,
+                        70
+                    ],
+                    "description": "Linear Programming formulation."
+                },
+                {
+                    "bbox": [
+                        10,
+                        170,
+                        90,
+                        30
+                    ],
+                    "description": "Matrix A definition and conclusion."
+                }
+            ],
+            "description": "This slide presents Carath\u00e9odory's Theorem (Theorem 10.3), a fundamental result in convex geometry, within the context of linear programming. The theorem states that any point in the convex hull of a set $S$ in $\\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$. The slide provides a proof outline. It starts by expressing the convex hull as the set of all convex combinations of points from $S$. Then, it introduces a linear program (LP) to find a point $z$ in the convex hull. The LP's objective function is to maximize $c^Tx$, subject to constraints $Ax = z$, $\\sum x_i = 1$, and $x_i \\ge 0$, where $A$ is a matrix whose columns are points from $S$. The proof argues that this LP is feasible and, due to the constraints, will always have a basic optimal solution with at most $m+1$ positive variables (basic variables), thus proving that $z$ can be expressed as a convex combination of at most $m+1$ points from $S$. The red arrow points to the constraints of the LP, highlighting their importance in the proof. The red text at the bottom concludes that the LP has a basic optimal solution with at most $m+1$ basic variables, completing the proof outline.  The connection to linear programming is crucial because the proof leverages the properties of linear programs, specifically the existence of basic feasible solutions, to establish a geometric result about convex hulls."
+        },
+        "10": {
+            "latex": "\n\\underline{\\text{Separation Theorem}} \\\\\n\\text{THEOREM 10.4. Let } P \\text{ and } \\bar{P} \\text{ be two disjoint nonempty polyhedra in } \\mathbb{R}^n \\text{. Then} \\\\\n\\text{there exist disjoint half-spaces } H \\text{ and } \\bar{H} \\text{ such that } P \\subset H \\text{ and } \\bar{P} \\subset \\bar{H}\\text{.} \\\\\n\\{ x: v^T x \\le c \\} \\quad \\quad \\quad \\quad \\quad \\{ x: A x \\le b \\}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        110,
+                        40
+                    ],
+                    "description": "Illustration of a half-space separating two sets."
+                },
+                {
+                    "bbox": [
+                        140,
+                        60,
+                        110,
+                        40
+                    ],
+                    "description": "Illustration of multiple half-spaces separating two sets."
+                }
+            ],
+            "description": "This slide introduces the Separation Theorem (Theorem 10.4) in the context of linear programming. The theorem states that given two disjoint nonempty polyhedra, $P$ and $\\bar{P}$, in $\\mathbb{R}^n$, there exist two disjoint half-spaces, $H$ and $\\bar{H}$, such that $P$ is a subset of $H$ and $\\bar{P}$ is a subset of $\\bar{H}$.  The slide includes two illustrations. The left illustration shows a single half-space, represented by $\\{x: v^Tx \\le c\\}$, separating two sets. The right illustration shows multiple half-spaces, represented by $\\{x: Ax \\le b\\}$, separating two sets.  The notation $P \\subset H$ denotes that $P$ is a proper subset of $H$. The context of linear programming is crucial because this theorem is fundamental to the theory of linear programming duality and is often used in proofs related to the existence and properties of optimal solutions. The illustrations provide a geometric interpretation of the theorem, showing how half-spaces can be used to separate disjoint convex sets."
+        },
+        "11": {
+            "latex": "\n\\underline{\\text{Separation Theorem}} \\\\\n\\text{THEOREM 10.4. Let } P \\text{ and } \\bar{P} \\text{ be two disjoint nonempty polyhedra in } \\mathbb{R}^n \\text{. Then} \\\\\n\\text{there exist disjoint half-spaces } H \\text{ and } \\bar{H} \\text{ such that } P \\subset H \\text{ and } \\bar{P} \\subset \\bar{H}\\text{.} \\\\\n\\{ x: v^T x \\le c \\} \\quad \\quad \\quad \\quad \\quad \\{ x: A x \\le b \\}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        110,
+                        40
+                    ],
+                    "description": "Illustration of a single half-space separating two sets."
+                },
+                {
+                    "bbox": [
+                        140,
+                        60,
+                        110,
+                        40
+                    ],
+                    "description": "Illustration of multiple half-spaces separating two sets."
+                },
+                {
+                    "bbox": [
+                        10,
+                        120,
+                        110,
+                        120
+                    ],
+                    "description": "Illustration of two polyhedra separated by a hyperplane."
+                },
+                {
+                    "bbox": [
+                        130,
+                        180,
+                        120,
+                        60
+                    ],
+                    "description": "Illustration of two polyhedra separated by multiple hyperplanes."
+                }
+            ],
+            "description": "This slide presents the Separation Theorem (Theorem 10.4) in the context of linear programming.  The theorem states that if $P$ and $\\bar{P}$ are two disjoint nonempty polyhedra in $\\mathbb{R}^n$, then there exist two disjoint half-spaces, $H$ and $\\bar{H}$, such that $P \\subset H$ and $\\bar{P} \\subset \\bar{H}$.  The notation $\\{x: v^Tx \\le c\\}$ represents a half-space defined by a hyperplane, and $\\{x: Ax \\le b\\}$ represents the intersection of multiple half-spaces, forming a polyhedron.  The slide includes two illustrations: one showing a single half-space separating two sets, and another showing multiple half-spaces separating two more complex sets.  The lower illustrations depict two polyhedra ($P$ and $\\bar{P}$) separated by a hyperplane (left) and multiple hyperplanes (right), providing a visual representation of the theorem's core concept.  The theorem is fundamental to linear programming duality and is often used in proofs concerning the existence and properties of optimal solutions. The context of linear programming is crucial because the theorem's implications are directly relevant to the structure and properties of feasible regions in linear programming problems."
+        },
+        "12": {
+            "latex": "\n\\underline{\\text{Separation Theorem}} \\\\\n\\text{THEOREM 10.4. Let } P \\text{ and } \\tilde{P} \\text{ be two disjoint nonempty polyhedra in } \\mathbb{R}^n \\text{. Then} \\\\\n\\text{there exist disjoint half-spaces } H \\text{ and } \\tilde{H} \\text{ such that } P \\subset H \\text{ and } \\tilde{P} \\subset \\tilde{H}\\text{.} \\\\\nP \\ne \\emptyset \\quad P = \\{ x: Ax \\le b \\}, \\quad \\tilde{P} = \\{ x: \\tilde{A}x \\le \\tilde{b} \\} \\\\\nP \\cap \\tilde{P} = \\emptyset \\iff \\begin{cases} Ax \\le b \\\\ \\tilde{A}x \\le \\tilde{b} \\end{cases} \\text{ has no solution} \\\\\n\\iff \\text{There is a } y, \\tilde{y} \\text{ s.t.} \\\\\ny^T A + \\tilde{y}^T \\tilde{A} = 0 \\\\\ny^T b + \\tilde{y}^T \\tilde{b} < 0 \\\\\ny, \\tilde{y} \\ge 0\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        110,
+                        90
+                    ],
+                    "description": "Theorem 10.4 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        110,
+                        70
+                    ],
+                    "description": "Definitions of P and P~."
+                },
+                {
+                    "bbox": [
+                        10,
+                        190,
+                        110,
+                        70
+                    ],
+                    "description": "Equivalence statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        270,
+                        110,
+                        70
+                    ],
+                    "description": "Farkas' Lemma."
+                }
+            ],
+            "description": "This slide presents the Separation Theorem (Theorem 10.4) and its proof using Farkas' Lemma, within the context of linear programming. The theorem states that two disjoint nonempty polyhedra, $P$ and $\\tilde{P}$, in $\\mathbb{R}^n$ can be separated by disjoint half-spaces $H$ and $\\tilde{H}$.  The polyhedra are defined as $P = \\{x: Ax \\le b\\}$ and $\\tilde{P} = \\{x: \\tilde{A}x \\le \\tilde{b}\\}$. The core of the slide shows the equivalence between the disjointness of $P$ and $\\tilde{P}$ ($P \\cap \\tilde{P} = \\emptyset$) and the existence of vectors $y$ and $\\tilde{y}$ satisfying the conditions $y^TA + \\tilde{y}^T\\tilde{A} = 0$, $y^Tb + \\tilde{y}^T\\tilde{b} < 0$, and $y, \\tilde{y} \\ge 0$. This equivalence is a direct consequence of Farkas' Lemma, a fundamental result in linear programming.  The notation $\\tilde{P}$ denotes another polyhedron, and the symbol $\\emptyset$ represents the empty set. The context of linear programming is crucial because the Separation Theorem and Farkas' Lemma are fundamental theorems used in proving duality theorems and other key results in linear programming theory."
+        },
+        "13": {
+            "latex": "\n\\underline{\\text{Separation Theorem}} \\\\\n\\text{THEOREM 10.4. Let } P \\text{ and } \\tilde{P} \\text{ be two disjoint nonempty polyhedra in } \\mathbb{R}^n \\text{. Then} \\\\\n\\text{there exist disjoint half-spaces } H \\text{ and } \\tilde{H} \\text{ such that } P \\subset H \\text{ and } \\tilde{P} \\subset \\tilde{H}\\text{.} \\\\\nP \\ne \\emptyset \\quad P = \\{ x: Ax \\le b \\}, \\quad \\tilde{P} = \\{ x: \\tilde{A}x \\le \\tilde{b} \\} \\\\\nP \\cap \\tilde{P} = \\emptyset \\iff \\begin{cases} Ax \\le b \\\\ \\tilde{A}x \\le \\tilde{b} \\end{cases} \\text{ has no solution} \\\\\n\\iff \\text{There is a } y, \\tilde{y} \\text{ s.t.} \\\\\ny^T A + \\tilde{y}^T \\tilde{A} = 0 \\\\\ny^T b + \\tilde{y}^T \\tilde{b} < 0 \\\\\ny, \\tilde{y} \\ge 0 \\\\\n\\underline{\\text{Farkas' Lemma}} \\\\\n\\text{LEMMA 10.5. The system } Ax \\le b \\text{ has no solutions if and only if there is a } y \\text{ such} \\\\\n\\text{that} \\quad A^T y = 0 \\quad \\iff \\quad \\begin{cases} A^T y = 0 \\\\ y \\ge 0 \\\\ y^T b < 0 \\end{cases}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        110,
+                        90
+                    ],
+                    "description": "Theorem 10.4 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        110,
+                        70
+                    ],
+                    "description": "Definitions of P and P~."
+                },
+                {
+                    "bbox": [
+                        10,
+                        190,
+                        110,
+                        70
+                    ],
+                    "description": "Equivalence statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        270,
+                        110,
+                        70
+                    ],
+                    "description": "Farkas' Lemma."
+                }
+            ],
+            "description": "This slide presents the Separation Theorem (Theorem 10.4) and its proof using Farkas' Lemma. The theorem states that two disjoint nonempty polyhedra, $P$ and $\\tilde{P}$, in $\\mathbb{R}^n$ can be separated by disjoint half-spaces. The polyhedra are defined as $P = \\{x: Ax \\le b\\}$ and $\\tilde{P} = \\{x: \\tilde{A}x \\le \\tilde{b}\\}$. The slide shows the equivalence between the disjointness of $P$ and $\\tilde{P}$ ($P \\cap \\tilde{P} = \\emptyset$) and the existence of vectors $y$ and $\\tilde{y}$ satisfying the conditions $y^TA + \\tilde{y}^T\\tilde{A} = 0$, $y^Tb + \\tilde{y}^T\\tilde{b} < 0$, and $y, \\tilde{y} \\ge 0$. This equivalence is proven using Farkas' Lemma (Lemma 10.5), which states that the system $Ax \\le b$ has no solution if and only if there exists a vector $y$ such that $A^Ty = 0$, $y \\ge 0$, and $y^Tb < 0$.  The notation $\\tilde{P}$ denotes another polyhedron, and the symbol $\\emptyset$ represents the empty set. The context of linear programming is crucial because the Separation Theorem and Farkas' Lemma are fundamental theorems used in proving duality theorems and other key results in linear programming theory."
+        },
+        "14": {
+            "latex": "\n\\underline{\\text{Separation Theorem}} \\\\\n\\text{THEOREM 10.4. Let } P \\text{ and } \\tilde{P} \\text{ be two disjoint nonempty polyhedra in } \\mathbb{R}^n \\text{. Then} \\\\\n\\text{there exist disjoint half-spaces } H \\text{ and } \\tilde{H} \\text{ such that } P \\subset H \\text{ and } \\tilde{P} \\subset \\tilde{H}. \\\\\nP \\ne \\emptyset \\quad P = \\{ x: Ax \\le b \\}, \\quad \\tilde{P} = \\{ x: \\tilde{A}x \\le \\tilde{b} \\} \\\\\n\\text{There is a } y, \\tilde{y} \\text{ s.t.} \\begin{cases} y^T A + \\tilde{y}^T \\tilde{A} = 0 \\\\ y^T b + \\tilde{y}^T \\tilde{b} < 0 \\\\ y, \\tilde{y} \\ge 0 \\end{cases} \\\\\n\\text{Define} \\\\\nH := \\{ x: y^T A x \\le y^T b \\}, \\quad \\tilde{H} := \\{ x: \\tilde{y}^T \\tilde{A} x \\le \\tilde{y}^T \\tilde{b} \\} \\\\\nH \\cap \\tilde{H} = \\emptyset, \\quad P \\subseteq H, \\quad \\tilde{P} \\subseteq \\tilde{H}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        110,
+                        90
+                    ],
+                    "description": "Theorem 10.4 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        110,
+                        70
+                    ],
+                    "description": "Definitions of P and P~."
+                },
+                {
+                    "bbox": [
+                        10,
+                        190,
+                        110,
+                        70
+                    ],
+                    "description": "Conditions for y and y~."
+                },
+                {
+                    "bbox": [
+                        10,
+                        270,
+                        110,
+                        70
+                    ],
+                    "description": "Definitions of H and H~ and conclusion."
+                }
+            ],
+            "description": "This slide focuses on the Separation Theorem (Theorem 10.4) in the context of linear programming.  The theorem states that two disjoint nonempty polyhedra, $P$ and $\\tilde{P}$, in $\\mathbb{R}^n$ can be separated by disjoint half-spaces $H$ and $\\tilde{H}$.  The polyhedra are defined as $P = \\{x: Ax \\le b\\}$ and $\\tilde{P} = \\{x: \\tilde{A}x \\le \\tilde{b}\\}$. The slide shows the conditions for the existence of vectors $y$ and $\\tilde{y}$ that guarantee the separation: $y^TA + \\tilde{y}^T\\tilde{A} = 0$, $y^Tb + \\tilde{y}^T\\tilde{b} < 0$, and $y, \\tilde{y} \\ge 0$.  Using these $y$ and $\\tilde{y}$, the half-spaces $H$ and $\\tilde{H}$ are defined, and it's shown that their intersection is empty ($H \\cap \\tilde{H} = \\emptyset$) and that $P$ is a subset of $H$ and $\\tilde{P}$ is a subset of $\\tilde{H}$.  The notation $\\tilde{P}$ denotes another polyhedron, and the symbol $\\emptyset$ represents the empty set. The context of linear programming is crucial because the Separation Theorem is fundamental to proving duality theorems and other key results in linear programming theory. The proof implicitly relies on Farkas' Lemma, although it's not explicitly stated on this slide."
+        },
+        "15": {
+            "latex": "\n\\underline{\\text{Farkas' Lemma}} \\\\\n\\text{LEMMA 10.5. The system } Ax \\le b \\text{ has no solutions if and only if there is a } y \\text{ such} \\\\\n\\text{that} \\quad A^T y = 0 \\quad \\iff \\quad \\begin{cases} A^T y = 0 \\\\ y \\ge 0 \\\\ b^T y < 0 \\end{cases} \\\\\n\\underline{\\text{PROOF.}} \\text{ Consider the linear program} \\\\\n\\text{maximize } 0 \\\\\n\\text{subject to } Ax \\le b\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        110,
+                        90
+                    ],
+                    "description": "Farkas' Lemma statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        110,
+                        70
+                    ],
+                    "description": "Linear program."
+                },
+                {
+                    "bbox": [
+                        10,
+                        190,
+                        110,
+                        70
+                    ],
+                    "description": "Dual linear program."
+                }
+            ],
+            "description": "This slide presents Farkas' Lemma (Lemma 10.5), a fundamental result in linear programming. The lemma provides a condition for the infeasibility of a system of linear inequalities. It states that the system $Ax \\le b$ has no solution if and only if there exists a vector $y$ such that $A^Ty = 0$, $y \\ge 0$, and $b^Ty < 0$. The proof outline suggests considering a linear program (LP) with objective function 0 and constraints $Ax \\le b$, and its dual LP.  The context of linear programming is crucial because Farkas' Lemma is a cornerstone of linear programming duality theory, used to prove strong duality and other important results. The slide sets the stage for a proof using linear programming duality."
+        }
+    }
+}

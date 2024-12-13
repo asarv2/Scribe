@@ -1,26 +1,19 @@
-Slide 2
+SLIDE 2
 
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Thm 10.1}} \quad S \text{ is convex } \iff \\
+\text{it contains all conv. comb. of points in } S \\
+pf \quad \iff \\
+\underline{\text{Suppose } S \text{ contains all conv. comb. of pts in } S} \\
+\text{Then clearly, for any } z_1, z_2 \in S \\
+\underline{tz_1 + (1-t)z_2 \in S} \\
+\text{Conv. comb. of } z_1, z_2 \\
+\implies \underline{S \text{ is convex}}
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 40), (70, 10), (70, 40)>Theorem 10.1 statement.</FIGURE>
+<FIGURE (10, 50), (10, 70), (70, 50), (70, 70)>Assumption of the proof.</FIGURE>
+<FIGURE (10, 70), (10, 90), (70, 70), (70, 90)>Application of the assumption to two points in S.</FIGURE>
+<FIGURE (10, 90), (10, 110), (70, 90), (70, 110)>Conclusion of the proof.</FIGURE>
 
-\section*{Theorem 10.1}
-$S$ is convex $\iff$
-it contains all conv. comb. of points in $S$
-
-\textbf{Proof} $\Leftarrow$
-Suppose $S$ contain all conv. comb. of pts in $S$
-Then clearly, for any $z_1, z_2 \in S$
-$\lambda z_1 + (1-\lambda) z_2 \in S$
-$0 \le \lambda \le 1$
-$\implies S$ is convex
-
-\end{document}
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide presents a theorem (Theorem 10.1) about convex sets.  It states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof ($\Leftarrow$) demonstrates this by showing that if a set contains all convex combinations of its points, then it must be convex.  The notation and content are typical of a linear programming or optimization lecture, focusing on the theoretical properties of convex sets.  The handwritten style suggests a classroom setting.
+<DESCRIPTION>This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points. The proof shown is for one direction of the implication. It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \le t \le 1$) is also in $S$, directly satisfying the definition of a convex set. This proves that if $S$ contains all convex combinations of its points, then $S$ is convex. The underlining highlights the key steps and conclusions of the proof. The notation "pf" indicates "proof," and the double-headed arrow indicates the "if and only if" nature of the theorem. The term "conv. comb." is an abbreviation for "convex combination." The context of Linear Programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.</DESCRIPTION>

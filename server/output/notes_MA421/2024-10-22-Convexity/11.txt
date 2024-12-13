@@ -1,28 +1,17 @@
-Slide 11
+SLIDE 11
 
 ```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Separation Theorem}} \\
+\text{THEOREM 10.4. Let } P \text{ and } \bar{P} \text{ be two disjoint nonempty polyhedra in } \mathbb{R}^n \text{. Then} \\
+\text{there exist disjoint half-spaces } H \text{ and } \bar{H} \text{ such that } P \subset H \text{ and } \bar{P} \subset \bar{H}\text{.} \\
+\{ x : v^T x \le c \} \qquad \text{intersection of finitely many half spaces} \quad \{ x : Ax \le b \}
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 60), (10, 100), (40, 60), (40, 100)>A simple illustration of two polyhedra separated by a hyperplane.</FIGURE>
+<FIGURE (50, 60), (50, 100), (90, 60), (90, 100)>A more complex illustration of two polyhedra separated by intersecting hyperplanes.</FIGURE>
+<FIGURE (10, 110), (40, 140), (40, 110), (70, 140)>A shaded polyhedron $P$ and a separating hyperplane.</FIGURE>
+<FIGURE (50, 150), (90, 190), (90, 150), (110, 190)>A shaded polyhedron $\bar{P}$ separated from $P$ by a hyperplane.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Separation Theorem}
-THEOREM 10.4. Let $P$ and $\bar{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then there exist disjoint half-spaces $H$ and $\bar{H}$ such that $P \subset H$ and $\bar{P} \subset \bar{H}$.
-
-\textbf{Proof:}
-Let $P = \{x: Ax \le b\}$ and $\bar{P} = \{x: A \bar{x} \le \bar{b}\}$.
-If $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that $v^Tx \le c$ for all $x \in P$ and $v^T \bar{x} \ge c$ for all $\bar{x} \in \bar{P}$.
-
-\end{document}
+<DESCRIPTION>This slide presents the Separation Theorem (Theorem 10.4) for Linear Programming.  The theorem states that given two disjoint nonempty polyhedra, $P$ and $\bar{P}$, in $\mathbb{R}^n$, there exist two disjoint half-spaces, $H$ and $\bar{H}$, such that $P \subset H$ and $\bar{P} \subset \bar{H}$.  The notation $\{x : v^Tx \le c\}$ represents a half-space, and $\{x : Ax \le b\}$ represents a polyhedron as an intersection of finitely many half-spaces. Two figures illustrate the theorem: the first shows a simple case where a line separates two polyhedra, and the second shows a more complex case where intersecting lines separate two polyhedra.  The theorem is fundamental in linear programming, often used in duality theory and algorithm design. The underlining emphasizes the key components of the theorem.  The figures visually represent the concept of separating disjoint polyhedra using hyperplanes.</DESCRIPTION>
 ```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide continues the discussion of the Separation Theorem (Theorem 10.4).  It provides a starting point for the proof, defining the polyhedra $P$ and $\bar{P}$ in terms of linear inequalities.  Crucially, it states that if $P$ and $\bar{P}$ are disjoint, then there exists a vector $v$ and a scalar $c$ such that all points in $P$ satisfy the inequality $v^Tx \le c$, and all points in $\bar{P}$ satisfy the inequality $v^T \bar{x} \ge c$.  This is a key step in the proof, as it establishes the existence of a separating hyperplane.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's introduction of the separation theorem and sets the stage for the continuation of the proof.  The proof likely involves showing how to find such a vector $v$ and scalar $c$.
-
-

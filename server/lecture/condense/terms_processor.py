@@ -4,7 +4,7 @@ from typing import Dict, List
 import os
 import json
 from langchain_core.messages import HumanMessage
-from lecture.condense.base_processor import BaseProcessor
+from lecture.base_processor import BaseProcessor
 
 class TermsProcessor(BaseProcessor):
     def __init__(self, notes_folder: str, save_terms: bool = False, *args, **kwargs):
@@ -34,13 +34,12 @@ class TermsProcessor(BaseProcessor):
         
         "Algorithm Solutions": f"Extract the key algorithms to solve the problems from the following slides, and explain their meaning briefly. Your algorithms should be specific to this lecture, but also make sense as a general algorithm solution in the context of {self.course_title}. Using formulas is encouraged. Respond in the following format: <algorithm>: <formula and/or explanation>. Use LaTeX format when including any math symbols. Do not include any other text, like numbering, intermediate references, or general summaries before/after the algorithm. Do not add any modifiers around the key algorithms, like textbf'{{}}' or texttt'{{}}'. Avoid using HTML tags or unicode. Do not focus on generating Key Terms or Problem Types since this will be done in another section. If you are citing a slide, include the slide number at the end of the term. Here is an example: 'Strong Duality: This theorem states that the optimal objective function values of the primal and dual problems are equal.<SLIDE 2>'. If citing multiple slides, include the slide numbers at the end of the term. Here is another example: 'Caratheodory's Theorem: This theorem states that any point in the convex hull of a set in Rm can be expressed as a convex combination of at most m+1 points. This significantly reduces the computational complexity of algorithms dealing with convex hulls, as it limits the number of points that need to be considered.<SLIDE 8><SLIDE 9>'."
         }
-        
-        if self.regenerate_timestamp:
-            self.terms = {}
-        else:
-            filename = os.path.join(self.output_dir, self.timestamp, self.summary_type, "summary.json")
-            with open(filename, "r") as file:
+        # check if summary.json exists
+        if os.path.exists(self.json_output_file) and not self.regenerate:
+            with open(self.json_output_file, "r") as file:
                 self.terms = json.load(file)
+        else:
+            self.terms = {}
         
         
     def process_batch(self, 

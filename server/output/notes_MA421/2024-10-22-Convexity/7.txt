@@ -1,36 +1,16 @@
-Slide 7
+SLIDE 7
 
-```latex
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
+<LATEX>
+\underline{\text{Thm 10.2}} \quad S \subseteq \mathbb{R}^m, Conv(S) = \text{collection of} \\
+\text{all conv. comb. of finitely many pts from } S \\
+pf. \text{ Let } H = \text{collection of all conv. comb.} \\
+\text{of finitely many pts from } S \\
+\downarrow \\
+\text{Need to show } \underline{Conv(S) = H} \\
+(2) \quad \underline{H \subseteq Conv(S)}
+</LATEX>
 
-\begin{document}
+<FIGURE (10, 10), (10, 50), (70, 10), (70, 50)>Theorem 10.2 statement and proof outline.</FIGURE>
+<FIGURE (10, 75), (30, 95), (70, 75), (70, 95)>Reference to Theorem 10.1.</FIGURE>
 
-\section*{Convex Analysis [V] Chapter 10}
-
-\subsection*{Theorem 10.2}
-$S \subseteq \mathbb{R}^m$, $\text{Conv}(S) = \{ \text{collection of all convex combinations of finitely many points from } S \}$
-
-\textbf{Proof:}
-Let $H = \{ \text{collection of all convex combinations of finitely many points from } S \}$.
-Need to show $\text{Conv}(S) \subseteq H$ and $H \subseteq \text{Conv}(S)$.
-
-(1) $\text{Conv}(S) \subseteq H$
-\textit{Proof:}
-Let $z \in \text{Conv}(S)$.  By definition of $\text{Conv}(S)$, there exists a convex set $C$ such that $S \subseteq C$ and $z \in C$.  Since $C$ is convex and $S \subseteq C$, any convex combination of points in $S$ must also be in $C$.  Thus, $z \in H$.
-
-(2) $H \subseteq \text{Conv}(S)$
-\textit{Proof:}
-Let $z \in H$.  Then $z$ is a convex combination of finitely many points from $S$.  By Theorem 10.1, any convex combination of points in $S$ is in $\text{Conv}(S)$.  Therefore, $z \in \text{Conv}(S)$.
-
-\end{document}
-```
-
-\vspace{1cm}
-
-\textbf{Description:}
-
-This slide continues the proof of Theorem 10.2, which states that the convex hull of a set $S$ is the set of all convex combinations of finitely many points from $S$.  The proof is now presented in a more formal and structured way, with separate proofs for the two inclusions: (1) $\text{Conv}(S) \subseteq H$ and (2) $H \subseteq \text{Conv}(S)$.  Part (1) shows that any point in the convex hull of $S$ is also a convex combination of finitely many points from $S$.  Part (2) shows that any convex combination of finitely many points from $S$ is in the convex hull of $S$.  The proof uses the definition of the convex hull and Theorem 10.1, which states that a set is convex if it contains all convex combinations of its points.  The handwritten style suggests a classroom setting.  The notation is standard for linear programming and convex optimization.  The slide likely follows the previous slide's discussion of convex hulls and convex combinations.  The proof is likely to be continued on subsequent slides.
-
-
+<DESCRIPTION>This slide presents the proof outline for Theorem 10.2, which states that the convex hull of a set $S$ in $\mathbb{R}^m$, denoted $Conv(S)$, is equal to the set of all convex combinations of finitely many points from $S$.  The proof begins by defining $H$ as the set of all convex combinations of finitely many points from $S$. The goal is to prove that $Conv(S) = H$, which requires showing two subset inclusions: $Conv(S) \subseteq H$ and $H \subseteq Conv(S)$. This slide focuses on the second inclusion, $H \subseteq Conv(S)$.  The downward arrow indicates the logical flow of the proof. The underlined parts highlight the main goal and the current step of the proof.  The reference to Theorem 10.1 suggests that this theorem will be used in the proof.  "conv. comb." is an abbreviation for "convex combination". The context of linear programming is crucial because this theorem provides a practical method for constructing the convex hull, a fundamental concept in linear programming for characterizing feasible regions.</DESCRIPTION>
