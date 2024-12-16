@@ -5,14 +5,13 @@
  * 11-15-2024
  */
 
-import { Button, Input, Modal, Stack, Text, Tooltip } from "@mantine/core"
+import { Button, Modal, Stack, Text, Tooltip } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { User } from "@supabase/supabase-js"
-import { IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconTrash } from "@tabler/icons-react"
 import { useState } from "react"
 import { notifications } from "@mantine/notifications"
-import { createSlide, deleteSlide } from "@/utils/services/lecture"
-import { uploadLectureImages } from "@/utils/services/storage"
+import { deleteSlide } from "@/utils/services/lecture"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { isProfessor } from "@/utils/lecture/isProfessor"

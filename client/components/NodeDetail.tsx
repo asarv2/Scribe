@@ -5,12 +5,9 @@
  * 11-14-2024
  */
 
-import { Topic } from '@/types'
-import { getTopic } from '@/utils/queries/get-topic'
 import { getTopicLectures } from '@/utils/queries/get-topic-lectures'
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser'
-import { ActionIcon, Button, Card, Flex, Group, Paper, Skeleton, Stack, Text } from '@mantine/core'
-import { IconArrowNarrowRight, IconArrowRightToArc } from '@tabler/icons-react'
+import { Button, Card, Paper, Skeleton, Stack, Text } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 

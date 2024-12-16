@@ -8,7 +8,7 @@
 "use client"
 
 import { HeaderSimple } from "@/components/HeaderSimple"
-import { Button, Center, Container, Divider, Input, Skeleton, Stack, Text } from "@mantine/core"
+import { Button, Center, Container, Input, Stack, Text } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
 import { login, logout } from "@/utils/services/auth";

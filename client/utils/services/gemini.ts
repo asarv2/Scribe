@@ -11,12 +11,10 @@ import {
 import { TaskType } from "@google/generative-ai";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { createRetrievalChain } from "langchain/chains/retrieval";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
-import { BaseMessage, BaseMessageLike } from "@langchain/core/messages";
-import { Slide, SlideData, Summary, Topic } from "@/types";
+import { SlideData, Summary } from "@/types";
 import { MapNode } from "../map/map-tree";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { v4 as uuidv4 } from "uuid";

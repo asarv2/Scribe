@@ -5,9 +5,8 @@
  * 11-08-2024
  */
 
-import { Chapter, TextbookData } from "@/types"
-import { AspectRatio, Box, Card, Group, SimpleGrid, Skeleton, Text } from "@mantine/core"
-import Image from "next/image"
+import { Chapter } from "@/types"
+import { Box, Card, Group, Skeleton, Text } from "@mantine/core"
 import ChapterSummary from "./ChapterSummary"
 
 type TextbookSummaryProps = {

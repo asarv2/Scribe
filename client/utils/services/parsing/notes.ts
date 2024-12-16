@@ -11,7 +11,7 @@ const apiKey = process.env.GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey as string);
 
 
-const parseNotes = async (className: string) => {
+export const parseNotes = async (className: string) => {
     const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash-8b",
         systemInstruction:
@@ -21,4 +21,5 @@ const parseNotes = async (className: string) => {
         "Extract all of the notes from the slide.",
     );
 
+    return response.response.text()
 };

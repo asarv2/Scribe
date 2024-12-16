@@ -7,38 +7,24 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query";
-import { getLectures } from "../../../utils/queries/get-lectures";
 import useSupabaseBrowser from "../../../utils/supabase/supabase-browser";
-import { AspectRatio, Box, Button, Center, Container, em, Flex, Group, Input, Loader, LoadingOverlay, Modal, SimpleGrid, Skeleton, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Button, Center, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Suspense, useEffect, useState } from "react";
-import { answerQuestion, answerSlideQuestion, } from "../../../utils/services/gemini";
-import { notifications } from '@mantine/notifications';
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import Markdown from 'markdown-to-jsx'
-import { createQuery } from "../../../utils/services/query";
 import { HeaderSimple } from "../../../components/HeaderSimple";
-import VideoSummary from "../../../components/VideoSummary";
-import NotesSummary from "../../../components/NotesSummary";
-import Image from "next/image";
 import { getSlides } from "@/utils/queries/get-slides";
-import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { flattenMapNode, Map } from '@/components/Map'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LINEAR_PROGRAMMING_MAP, LINEAR_PROGRAMMING_V2_MAP, LP_MAP, LP_MAP_CHAT, LP_MAP_CHAT_EDIT, LP_MAP_CHAT_V2, LP_MAP_CHAT_V3 } from "@/utils/map/map-tree";
+import { LP_MAP_CHAT_EDIT } from "@/utils/map/map-tree";
 import { NodeDetail } from "@/components/NodeDetail";
-import { getMap } from "@/utils/queries/get-map";
-import { ReactFlowProvider } from "@xyflow/react";
-import { IconPlus } from "@tabler/icons-react";
 import { getUser } from "@/utils/queries/get-user";
-import { User } from "@supabase/supabase-js";
 import AddLectureModal from "@/components/AddLectureModal";
 import { getClass } from "@/utils/queries/get-class";
-import AddQuestionsModal from "@/components/AddQuestionsModal";
 import { PracticeExam } from "@/types";
+import AddQuestionsModal from "@/components/AddQuestionsModal";
+import { intersectionBy, uniqBy } from "lodash";
 import { getPracticeExams } from "@/utils/queries/get-practice-exams";
-import { isProfessor } from "@/utils/lecture/isProfessor";
-import { differenceBy, intersectionBy, uniqBy } from "lodash";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -62,22 +48,22 @@ export default function Class({ params }: { params: { classId: string } }) {
     // })
     const map = LP_MAP_CHAT_EDIT
 
-    const { data: slides, isLoading: loadingSlides } = useQuery({
+    const { data: slides } = useQuery({
         queryKey: ["slides", classId],
         queryFn: () => getSlides(supabase, classId)
     })
 
-    const { data: user, isLoading: loadingUser } = useQuery({
+    const { data: user } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
     })
 
-    const { data: classData, isLoading: loadingClassData } = useQuery({
+    const { data: classData } = useQuery({
         queryKey: ["class", classId],
         queryFn: () => getClass(supabase, classId)
     })
 
-    const { data: practiceExams, isLoading: loadingPracticeExams } = useQuery({
+    const { data: practiceExams } = useQuery({
         queryKey: ["practiceExams", classId],
         queryFn: () => getPracticeExams(supabase, classId)
     })
@@ -130,7 +116,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                 </SimpleGrid>
             </div>
 
-            <div style={{ position: "fixed", left: "0", top: "35vh", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
+            <div style={{ position: "fixed", left: "0", top: "35vh", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)", display: "none" }}>
                 <SimpleGrid cols={1}>
                     {getCurrentExams(practiceExams).map((exam, i) => (
                         <Button key={i} size={isMobile ? "compact-xs" : "sm"} component={Link} href={`${pathname}/practice-exam/${exam.id}`}>{exam.name}</Button>

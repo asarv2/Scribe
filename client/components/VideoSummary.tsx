@@ -5,10 +5,8 @@
  * 11-08-2024
  */
 
-import { Lecture, LectureData } from "@/types";
+import { LectureData } from "@/types";
 import { Skeleton } from "@mantine/core";
-import Link from "next/link";
-
 
 type VideoSummaryProps = {
     lectureLength: number
@@ -33,7 +31,6 @@ export default function VideoSummary({ documents, loading, clickPlayer, lectureL
         <Skeleton visible={loading}>
             <div id="summaries">
                 {headingsSplit.map((timestamp, index) => {
-                    const timestampBefore = headingsSplit[index - 1] || 0
                     const documentsInHeading = documents.filter((document) => document.timestamp <= timestamp && document.timestamp > headingsSplit[index - 1] || (index === 0 && document.timestamp <= timestamp))
                     return (
                         <div key={timestamp + index}>
@@ -47,12 +44,6 @@ export default function VideoSummary({ documents, loading, clickPlayer, lectureL
                                 return (
                                     <p>{formatTimestamp(document.timestamp)} {document.content}</p>
                                 )
-
-                                if (index % 3 === 0) {
-                                    return (
-                                        <p>{formatTimestamp(document.timestamp)} {document.content}</p>
-                                    )
-                                }
                             })}
                         </div>
                     )

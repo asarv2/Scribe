@@ -8,15 +8,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "../../../../../utils/supabase/supabase-browser";
-import { AspectRatio, Box, Button, Center, Container, em, Group, Input, SimpleGrid, Stack, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { AspectRatio, Box, Button, Container, em, Group, Input, SimpleGrid, Stack } from "@mantine/core";
+import { useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Markdown from 'markdown-to-jsx'
 import { createQuery } from "../../../../../utils/services/query";
 import { HeaderSimple } from "../../../../../components/HeaderSimple";
 import VideoSummary from "@/components/VideoSummary";
-import Image from "next/image";
 import { getLectureDocs } from "@/utils/queries/get-lecture-docs";
 import { answerQuestion } from "@/utils/services/gemini";
 

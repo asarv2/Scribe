@@ -10,7 +10,7 @@ import useSupabaseServer from "../supabase/supabase-server";
 
 export const createSlideQuestions = async (slideId: string, questions: { question: string, solution: string }[]) => {
     const supabase = useSupabaseServer(cookies());
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from("questions")
         .insert(questions.map(q => ({ slide: slideId, question: q.question, solution: q.solution })));
     if (error) {
@@ -46,7 +46,7 @@ export const deletePracticeExam = async (practiceExamId: string) => {
 
 export const createPracticeQuestions = async (practiceExamId: string, questions: { question: string, solution: string }[]) => {
     const supabase = useSupabaseServer(cookies());
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from("practice_questions")
         .insert(questions.map(q => ({ practice_exam: practiceExamId, question: q.question, solution: q.solution })));
     if (error) {

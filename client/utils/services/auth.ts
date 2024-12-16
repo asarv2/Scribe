@@ -9,7 +9,7 @@ import useSupabaseServer from "../supabase/supabase-server";
 
 export const login = async (email: string, password: string): Promise<{ success: boolean, error: string }> => {
     const supabase = useSupabaseServer(cookies());
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
     });

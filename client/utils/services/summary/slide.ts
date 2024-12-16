@@ -10,7 +10,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const apiKey = process.env.GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey as string);
 
-const generateKeyConcepts = async (className: string, slideName: string) => {
+export const generateKeyConcepts = async (className: string, slideName: string) => {
     const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash-8b",
         systemInstruction:
@@ -26,7 +26,7 @@ const generateKeyConcepts = async (className: string, slideName: string) => {
     return response.response.text();
 };
 
-const testKeyConcepts = (content: string, keyConcepts: string[]) => {
+export const testKeyConcepts = (content: string, keyConcepts: string[]) => {
     /**
      * Expecting an LLM to output markdown format with all the key concepts.
      * EXAMPLE:
@@ -47,7 +47,7 @@ const testKeyConcepts = (content: string, keyConcepts: string[]) => {
         );
 };
 
-const testKeyProblems = (content: string, keyProblems: string[]) => {
+export const testKeyProblems = (content: string, keyProblems: string[]) => {
     /**
      * Expecting an LLM to output markdown format with all the key problems.
      * EXAMPLE:
@@ -68,7 +68,7 @@ const testKeyProblems = (content: string, keyProblems: string[]) => {
         );
 };
 
-const testKeyAlgorithmSolutions = (
+export const testKeyAlgorithmSolutions = (
     content: string,
     keyAlgorithmSolutions: string[],
 ) => {

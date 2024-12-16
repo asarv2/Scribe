@@ -13,11 +13,10 @@ import { IconDownload } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { Slide, SlideData, SlideQuestion } from "@/types";
-import { generateSlideQuestions, regeneratePracticeExam, regenerateSlideQuestions } from "@/utils/services/gemini";
+import { regenerateSlideQuestions } from "@/utils/services/gemini";
 import { createSlideQuestions } from "@/utils/services/questions";
 import { jsPDF } from "jspdf";
 import { marked } from "marked";
-import Markdown from "markdown-to-jsx";
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 
@@ -117,7 +116,6 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
 
             // Adjust page width
             const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
 
             doc.html(htmlContent, {
                 x: 40,
@@ -200,11 +198,6 @@ export default function QuestionSolutionSlide({ className, questions, slide, sli
                     </Tabs.Panel>
                 </Tabs>
             </Card >
-            {/* <Flex justify="end" align="center" gap="sm">
-                <Text size="sm">
-                    {new Date(slideQuestions?.[0]?.created_at ?? "").toLocaleString()}
-                </Text>
-            </Flex> */}
         </Skeleton>
     )
 

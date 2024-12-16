@@ -12,7 +12,7 @@ import useSupabaseServer from "../supabase/supabase-server";
 
 export const joinWaitlist = async (email: string): Promise<{ success: boolean, error: string }> => {
     const supabase = useSupabaseServer(cookies());
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from("waitlist")
         .insert({email: email});
     if (error) {

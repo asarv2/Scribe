@@ -6,39 +6,30 @@
  */
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { HeaderSimple } from "@/components/HeaderSimple";
-import { Container, Skeleton, Text } from "@mantine/core";
+import { Container, Text } from "@mantine/core";
 import { getPracticeExam } from "@/utils/queries/get-practice-exam";
 import { getPracticeQuestions } from "@/utils/queries/get-practice-questions";
-import { Stack, Flex, Group, Tooltip } from "@mantine/core";
+import { Stack, Flex, Group } from "@mantine/core";
 import Link from "next/link";
-import { IconArrowLeft, IconReload, IconDownload } from "@tabler/icons-react";
-import { notifications } from "@mantine/notifications";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { PracticeExam } from "@/types";
-import { isProfessor } from "@/utils/lecture/isProfessor";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { getUser } from "@/utils/queries/get-user";
 import DeleteExamModal from "@/components/DeleteExamModal";
-import { regeneratePracticeExam } from "@/utils/services/gemini";
-import jsPDF from "jspdf";
-import { marked } from "marked";
 import QuestionSolutionExam from "@/components/QuestionSolutionExam";
 import { getClass } from "@/utils/queries/get-class";
 
 export default function PracticeExamPage({ params }: { params: { examId: string, classId: string } }) {
 
     const supabase = useSupabaseBrowser();
-    const router = useRouter();
 
     const { data: practiceExam } = useQuery({
         queryKey: ["practiceExam", params.examId],
         queryFn: () => getPracticeExam(supabase, params.examId),
     });
 
-    const { data: classData, isLoading: loadingClassData } = useQuery({
+    const { data: classData } = useQuery({
         queryKey: ["class", params. classId],
         queryFn: () => getClass(supabase, params.classId)
     })

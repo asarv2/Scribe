@@ -5,12 +5,10 @@
  * 11-08-2024
  */
 
-import { Chapter, TextbookData } from "@/types"
 import { getTextbookSubchapters } from "@/utils/queries/get-textbook-subchapters"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
-import { AspectRatio, Box, Card, Group, SimpleGrid, Skeleton, Text } from "@mantine/core"
+import { Group, Skeleton, Text } from "@mantine/core"
 import { useQuery } from "@tanstack/react-query"
-import Image from "next/image"
 
 type ChapterSummaryProps = {
     chapterId: string

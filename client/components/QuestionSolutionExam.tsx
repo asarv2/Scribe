@@ -10,7 +10,6 @@ import { useState } from "react";
 import classes from "./Demo.module.css";
 import { IconReload } from "@tabler/icons-react";
 import { IconDownload } from "@tabler/icons-react";
-import DeleteExamModal from "./DeleteExamModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { PracticeQuestion } from "@/types";
@@ -126,7 +125,6 @@ export default function QuestionSolutionExam({ className, classId, questions, pr
 
             // Adjust page width
             const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
 
             doc.html(htmlContent, {
                 x: 40,

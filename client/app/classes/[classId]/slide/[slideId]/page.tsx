@@ -6,51 +6,24 @@
  */
 "use client"
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-    ActionIcon, Anchor, AspectRatio, Box, Breadcrumbs, Button, Card, Center, Container, Divider, em, Flex, Grid, Group, Input, SimpleGrid, Skeleton, Space, Stack, Text, Tooltip
-    , FloatingIndicator, Tabs
-} from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import { Container, em, Flex, Grid, Group, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
-import Markdown from 'markdown-to-jsx'
-import Image from "next/image";
 import { getSlideDocs } from "@/utils/queries/get-slide-docs";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { answerSlideQuestion, findRelevantNoteDocuments, generateSummary, regenerateSummary } from "@/utils/services/gemini";
-import { createQuery } from "@/utils/services/query";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import NotesSummary from "@/components/NotesSummary";
 import Link from "next/link";
 import { getClass } from "@/utils/queries/get-class";
 import { getSlide } from "@/utils/queries/get-slide";
-import { usePathname } from "next/navigation";
-import { IconArrowLeft, IconArrowRight, IconArrowUp, IconChevronLeft, IconChevronRight, IconDownload, IconReload, IconTrash } from '@tabler/icons-react';
-import { getSummaries } from "@/utils/queries/get-summary";
-import jsPDF from 'jspdf';
-import { marked } from 'marked';
+import { IconArrowLeft } from '@tabler/icons-react';
 import DeleteLectureModal from "@/components/DeleteLectureModal";
 import { getUser } from "@/utils/queries/get-user";
-import { getSlides } from "@/utils/queries/get-slides";
-import { createSummary } from "@/utils/services/summary";
-import classes from "@/public/assets/Demo.module.css"
 import { getQuestions } from "@/utils/queries/get-questions";
 import QuestionSolutionSlide from "@/components/QuestionSolutionSlide";
 
 export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
-    const queryClient = useQueryClient();
-    const [value, setValue] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [response, setResponse] = useState<string>(""); // Store responses
-    const [responseQuestion, setResponseQuestion] = useState<string>(""); // Store question asked
-    const [learnMoreBubbles, setLearnMoreBubbles] = useState<number[]>([]);
-
-    const pathname = usePathname();
-
-    const [touchStartX, setTouchStartX] = useState<number | null>(null);
-
-
     const [pageNumber, setPageNumber] = useState<number>(1);
 
     const supabase = useSupabaseBrowser();
@@ -64,123 +37,34 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
         setPageNumber(newPageNumber);
     };
 
-    const renderLearnMorePage = (pageNumber: number, index: number) => {
-        return (
-            <Button onClick={() => {
-                window.scrollTo(0, 200);
-                handlePageClick(pageNumber - 1)
-            }} color="orange" key={`learn-more-${pageNumber}-${index}`}>Slide {pageNumber}</Button>
-        )
-    }
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-    const { data: summaries, isLoading: loadingSummaries } = useQuery({
-        queryKey: ["summaries", slideId],
-        queryFn: () => getSummaries(supabase, slideId),
-    });
-
-    const { data: questions, isLoading: loadingQuestions } = useQuery({
+    
+    const { data: questions } = useQuery({
         queryKey: ["questions", slideId],
         queryFn: () => getQuestions(supabase, slideId),
     });
 
-    const { data: slide, isLoading: loadingSlide } = useQuery({
+    const { data: slide } = useQuery({
         queryKey: ["slide", slideId],
         queryFn: () => getSlide(supabase, slideId),
     });
 
-    const { data: documents, isLoading: loadingDocs } = useQuery({
+    const { data: documents} = useQuery({
         queryKey: ["slideDocuments", slideId],
         queryFn: () => getSlideDocs(supabase, slideId),
     });
 
-    const { data: classData, isLoading: loadingClassData } = useQuery({
+    const { data: classData } = useQuery({
         queryKey: ["class", classId],
         queryFn: () => getClass(supabase, classId)
     })
 
-    const { data: user, isLoading: loadingUser } = useQuery({
+    const { data: user } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
     })
-
-    const handleNotesClick = async () => {
-        setLoading(true);
-        setResponse("");
-        setResponseQuestion("");
-        setLearnMoreBubbles([]);
-        try {
-            if (!value) {
-                throw new Error("Please enter a question");
-            }
-            if (!documents) {
-                throw new Error("Documents are not loaded yet");
-            }
-
-            const docIds = await findRelevantNoteDocuments(value);
-
-            const docs = docIds.map((id) => documents.find((doc) => doc.id === id)).filter((doc) => doc !== undefined);
-
-            const pages = docs.map((doc) => doc.page);
-            console.log("pages", pages);
-
-            const images = docs.map((doc) => `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${doc.slide}/page_${doc.page}.png`).filter((image) => image !== undefined)
-
-            const context = docs.map((doc) => doc.content).join("\n"); // broken, but alright
-
-            const { response } = await answerSlideQuestion(value, context, images);
-            console.log(response);
-
-            const { success, error } = await createQuery(value, response, classId);
-            if (!success) {
-                throw new Error(error);
-            }
-
-            setResponse(response)
-            setResponseQuestion(value);
-            setLearnMoreBubbles(pages.slice(0, 3));
-
-            notifications.show({
-                title: "Question asked",
-                message: "Your question has been answered",
-                color: "blue",
-            });
-        } catch (error: any) {
-            console.error(error);
-            notifications.show({
-                title: "Failed to ask question",
-                message: error.message,
-                color: "red",
-            });
-        } finally {
-            setLoading(false);
-            setValue("");
-        }
-    }
-
-
-    const getActiveImage = (pageNumber: number) => {
-        const activeDocument = documents?.find((doc) => doc.page === pageNumber);
-        return activeDocument ? `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${slideId}/page_${activeDocument.page}.png` : "";
-    }
-
-    const handleSwipe = (touchEndX: number) => {
-        if (touchStartX !== null) {
-            const deltaX = touchStartX - touchEndX;
-            const minSwipeDistance = 50; // Minimum distance for a swipe
-
-            if (deltaX > minSwipeDistance) {
-                // Swipe left (next page)
-                handlePageClick(pageNumber + 1);
-            } else if (deltaX < -minSwipeDistance) {
-                // Swipe right (previous page)
-                handlePageClick(pageNumber - 1);
-            }
-        }
-        setTouchStartX(null);
-    };
-
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -214,155 +98,12 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                             <DeleteLectureModal slideId={slideId} slideTitle={slide?.name ?? ""} user={user ?? undefined} classId={slide?.class ?? ""} />
                         </Group>
                     </Flex>
-                    {/* <Group>
-                        <Flex w="100%" gap="xs" align={"center"}>
-                            <Input
-                                size="md"
-                                radius="md"
-                                placeholder="Have any questions?"
-                                value={value}
-                                onChange={(e) => {
-                                    setValue(e.currentTarget.value);
-                                }}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        handleNotesClick();
-                                    }
-                                }}
-                                disabled={loading}
-                                style={{ flexGrow: 1 }}
-                            />
-                            <ActionIcon
-                                color="blue"
-                                onClick={handleNotesClick}
-                                loading={loading}
-                                size="lg" // Optional: Adjust size if needed
-                            >
-                                <IconArrowUp size={24} />
-                            </ActionIcon>
-                        </Flex>
-                        {responseQuestion.length !== 0 && response.length !== 0 && <Card padding="md" shadow="xs">
-                            <Text fw={700} size="md">Q: {responseQuestion}</Text>
-                            <Markdown>{response}</Markdown>
-                        </Card>}
-                    </Group> */}
                     <Grid>
                         <Grid.Col span={isMobile ? 12 : 6}>
-                            {/* <Box
-                                style={{ position: 'relative', width: '100%', height: 400 }}
-                                onTouchStart={(e) => {
-                                    setTouchStartX(e.changedTouches[0].clientX);
-                                }}
-                                onTouchEnd={(e) => {
-                                    const touchEndX = e.changedTouches[0].clientX;
-                                    handleSwipe(touchEndX);
-                                }}
-                            >
-                                <Stack>
-                                    <Card padding="md" pos="relative" withBorder>
-                                        <Box
-                                            style={{ position: 'relative', width: '100%', height: 500 }}
-                                            onTouchStart={(e) => {
-                                                setTouchStartX(e.changedTouches[0].clientX);
-                                            }}
-                                            onTouchEnd={(e) => {
-                                                const touchEndX = e.changedTouches[0].clientX;
-                                                handleSwipe(touchEndX);
-                                            }}
-                                        >
-                                            <Image
-                                                src={getActiveImage(pageNumber)}
-                                                alt={`Page ${pageNumber + 1}`}
-                                                fill
-                                                style={{ objectFit: 'contain' }}
-                                            />
-                                            <ActionIcon
-                                                size="xl"
-                                                variant="filled"
-                                                color="gray"
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: '50%',
-                                                    left: 10,
-                                                    transform: 'translateY(-50%)',
-                                                    zIndex: 100,
-                                                }}
-                                                onClick={() => handlePageClick(pageNumber - 1)}
-                                                disabled={pageNumber === 1}
-                                                aria-label="Previous Slide"
-                                            >
-                                                <IconArrowLeft size={32} />
-                                            </ActionIcon>
-                                            <ActionIcon
-                                                size="xl"
-                                                variant="filled"
-                                                color="gray"
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: '50%',
-                                                    right: 10,
-                                                    transform: 'translateY(-50%)',
-                                                    zIndex: 100,
-                                                }}
-                                                onClick={() => handlePageClick(pageNumber + 1)}
-                                                disabled={pageNumber === (documents ? documents.length : 0)}
-                                                aria-label="Next Slide"
-                                            >
-                                                <IconArrowRight size={32} />
-                                            </ActionIcon>
-                                        </Box>
-                                        <Box
-                                            pos="absolute"
-                                            bottom={10}
-                                            right={10}
-                                            p={2}
-                                            style={{
-                                                zIndex: 100,
-                                            }}
-                                        >
-                                            <Text size="sm">Slide {pageNumber}</Text>
-                                        </Box>
-                                    </Card>
-
-                                    <Flex
-                                        gap="0.5rem"
-                                        style={{
-                                            overflowX: 'auto', // Enables horizontal scrolling
-                                        }}
-                                    >
-                                        {documents?.map((doc) => (
-                                            <Box
-                                                key={doc.id}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                    border: `2px solid ${doc.page === pageNumber ? 'blue' : 'transparent'}`,
-                                                    width: 50,
-                                                    height: 50,
-                                                    position: 'relative',
-                                                    flexShrink: 0, // Prevents the items from shrinking
-                                                }}
-                                                onClick={() => handlePageClick(doc.page)}
-                                            >
-                                                <Image
-                                                    src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${doc.slide}/page_${doc.page}.png`}
-                                                    alt={`Page ${doc.page}`}
-                                                    fill
-                                                    style={{ objectFit: 'cover' }}
-                                                />
-                                            </Box>
-                                        ))}
-                                    </Flex>
-                                    {isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />} 
-                                    <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
-                                </Stack>
-                            </Box> */}
-                            {/* <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} /> */}
                             <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />
                         </Grid.Col>
                         <Grid.Col span={isMobile ? 12 : 6}>
                             <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
-                            {/* {!isMobile && <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />} */}
-                            {/* <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} /> */}
                         </Grid.Col>
                     </Grid>
                 </Stack>
@@ -373,202 +114,3 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
 
 
 }
-
-
-
-
-
-// export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
-
-//     const [currentSummaryIndex, setCurrentSummaryIndex] = useState(0);
-
-//     const supabase = useSupabaseBrowser();
-//     const classId = params.classId;
-//     const slideId = params.slideId;
-
-//     const { data: summaries, isLoading: loadingSummaries } = useQuery({
-//         queryKey: ["summaries", slideId],
-//         queryFn: () => getSummaries(supabase, slideId),
-//     });
-
-//     const { data: slide, isLoading: loadingSlide } = useQuery({
-//         queryKey: ["slide", slideId],
-//         queryFn: () => getSlide(supabase, slideId),
-//     });
-
-//     const { data: user, isLoading: loadingUser } = useQuery({
-//         queryKey: ["user"],
-//         queryFn: () => getUser(supabase),
-//     })
-
-
-//     const handleRegenerate = async () => {
-//         try {
-//             // regenerate summary, invalidate the cache
-
-
-//             notifications.show({
-//                 title: "Regenerate",
-//                 message: "Regenerate successful",
-//                 color: "blue",
-//             });
-//         } catch (error: any) {
-//             console.error(error);
-//             notifications.show({
-//                 title: "Failed to regenerate",
-//                 message: error.message,
-//                 color: "red",
-//             });
-//         }
-//     }
-
-//     const handleDownload = async () => {
-//         try {
-//             if (!summaries || summaries.length === 0) {
-//                 throw new Error('No summaries available to download.');
-//             }
-//             const currentSummary = summaries[currentSummaryIndex];
-
-//             const doc = new jsPDF('p', 'pt', 'a4');
-//             const content = currentSummary.content;
-
-//             // Convert Markdown to HTML
-//             const htmlContent = `
-//             <style>
-//               body {
-//                 width: 100%;
-//                 max-width: 100%;
-//                 margin: 0;
-//                 padding: 0;
-//                 font-family: Helvetica, Arial, sans-serif;
-//                 font-size: 12pt;
-//                 line-height: 1.2;
-//               }
-//             </style>
-//             ${marked(content)}
-//           `;
-
-//             // Adjust page width
-//             const pageWidth = doc.internal.pageSize.getWidth();
-//             const pageHeight = doc.internal.pageSize.getHeight();
-
-//             doc.html(htmlContent, {
-//                 x: 40,
-//                 y: 40,
-//                 width: pageWidth - 80, // Account for margins
-//                 windowWidth: pageWidth,
-//                 margin: [20, 20],
-//                 callback: function (doc) {
-//                     doc.save(`${slide?.name || 'summary'}.pdf`);
-//                 },
-//             });
-
-//             notifications.show({
-//                 title: 'Download',
-//                 message: 'Download successful',
-//                 color: 'blue',
-//             });
-//         } catch (error: any) {
-//             console.error(error);
-//             notifications.show({
-//                 title: 'Failed to download',
-//                 message: error.message,
-//                 color: 'red',
-//             });
-//         }
-//     };
-
-
-
-//     const handlePrevSummary = () => {
-//         if (currentSummaryIndex > 0) {
-//             setCurrentSummaryIndex(currentSummaryIndex - 1);
-//         }
-//     };
-
-//     const handleNextSummary = () => {
-//         if (summaries && currentSummaryIndex < summaries.length - 1) {
-//             setCurrentSummaryIndex(currentSummaryIndex + 1);
-//         }
-//     };
-
-
-
-//     return (
-//         <>
-//             <HeaderSimple />
-//             <Container fluid>
-//                 <Stack>
-//                     <Flex justify="space-between" align="center">
-//                         <Group>
-//                             <Link href={`/classes/${classId}`}>
-//                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
-//                             </Link>
-//                             <Text size="xl" fw={700} mb={6}>{slide?.name}</Text>
-//                         </Group>
-//                         <Group>
-//                             <Tooltip label="Regenerate">
-//                                 <IconReload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleRegenerate} />
-//                             </Tooltip>
-//                             <Tooltip label="Download PDF">
-//                                 <IconDownload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleDownload} />
-//                             </Tooltip>
-//                             <DeleteLectureModal slideId={slideId} slideTitle={slide?.name ?? ""} user={user} classId={slide?.class ?? ""} />
-//                         </Group>
-//                     </Flex>
-
-//                     {summaries && summaries.length > 0 ? (
-//                         <>
-//                             <Flex justify="space-between" align="center" gap="sm">
-//                                 <Box>
-//                                     <IconChevronLeft
-//                                         size={24}
-//                                         color={currentSummaryIndex > 0 ? 'black' : 'gray'}
-//                                         style={{ cursor: currentSummaryIndex > 0 ? 'pointer' : 'default' }}
-//                                         onClick={currentSummaryIndex > 0 ? handlePrevSummary : undefined}
-//                                     />
-//                                 </Box>
-//                                 <Box>
-//                                     <Card withBorder mah={600} style={{ overflowY: 'auto' }}>
-//                                         <Skeleton visible={loadingSummaries}>
-//                                             <Markdown>{summaries[currentSummaryIndex]?.content}</Markdown>
-//                                         </Skeleton>
-//                                     </Card>
-//                                     <Flex justify="space-between" align="center" gap="sm">
-//                                         <Text size="sm">
-//                                             {new Date(summaries[currentSummaryIndex].created_at).toLocaleString()}
-//                                         </Text>
-//                                         <Text size="sm">
-//                                             {currentSummaryIndex + 1} of {summaries.length}
-//                                         </Text>
-//                                     </Flex>
-//                                 </Box>
-//                                 <Box>
-//                                     <IconChevronRight
-//                                         size={24}
-//                                         color={
-//                                             summaries && currentSummaryIndex < summaries.length - 1 ? 'black' : 'gray'
-//                                         }
-//                                         style={{
-//                                             cursor:
-//                                                 summaries && currentSummaryIndex < summaries.length - 1
-//                                                     ? 'pointer'
-//                                                     : 'default',
-//                                         }}
-//                                         onClick={
-//                                             summaries && currentSummaryIndex < summaries.length - 1
-//                                                 ? handleNextSummary
-//                                                 : undefined
-//                                         }
-//                                     />
-//                                 </Box>
-//                             </Flex>
-//                         </>
-//                     ) : (
-//                         <Text>No summaries available.</Text>
-//                     )}
-//                 </Stack>
-//             </Container>
-//         </>
-//     );
-// }

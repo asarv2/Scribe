@@ -12,7 +12,6 @@ import {
 	ReactFlow,
 	Background,
 	BackgroundVariant,
-	ControlButton,
 	Controls,
 	Edge,
 	Node,
@@ -29,7 +28,7 @@ import { FlatMapNode, MapNode } from '@/utils/map/map-tree'
 const elk = new ELK()
 
 const useLayoutedElements = () => {
-	const { getNodes, setNodes, getEdges, fitView, setCenter, zoomTo } =
+	const { getNodes, setNodes, getEdges, setCenter, zoomTo } =
 		useReactFlow()
 	const getLayoutedElements = useCallback(
 		async (options: LayoutOptions) => {
@@ -132,7 +131,7 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 	onNodeClick,
 	children,
 }) => {
-	const { fitView, setViewport, getNode, viewportInitialized } = useReactFlow()
+	const { viewportInitialized } = useReactFlow()
 	const [nodes, , onNodesChange] = useNodesState(createMap(rootNode))
 	const [edges, , onEdgesChange] = useEdgesState(createEdge(rootNode))
 	const { getLayoutedElements } = useLayoutedElements()

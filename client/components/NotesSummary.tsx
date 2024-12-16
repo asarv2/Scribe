@@ -5,22 +5,20 @@
  * 11-16-2024
  */
 
-import { Slide, SlideData } from "@/types"
+import { SlideData } from "@/types"
 import { getSummaries } from "@/utils/queries/get-summary"
 import { regenerateSummary } from "@/utils/services/gemini"
 import { createSummary } from "@/utils/services/summary"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
-import { AspectRatio, Box, Card, Flex, Group, SimpleGrid, Skeleton, Text, Title, Tooltip } from "@mantine/core"
+import { Card, Flex, Group, Skeleton, Text, Title, Tooltip } from "@mantine/core"
 import { notifications } from "@mantine/notifications"
-import { IconChevronLeft, IconChevronRight, IconDownload, IconReload } from "@tabler/icons-react"
+import { IconDownload, IconReload } from "@tabler/icons-react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import jsPDF from "jspdf"
 import Markdown from "markdown-to-jsx"
 import { marked } from "marked"
-import Image from "next/image"
 import { useState } from "react"
 import 'katex/dist/katex.min.css';
-import Latex from 'react-latex-next';
 
 type NoteSummaryProps = {
     classId: string
@@ -33,7 +31,6 @@ type NoteSummaryProps = {
 export default function NotesSummary({ classId, slideId, className, slideName, documents }: NoteSummaryProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
-    const [currentSummaryIndex, setCurrentSummaryIndex] = useState(0);
     const [regenerateLoading, setRegenerateLoading] = useState(false);
 
 
@@ -90,7 +87,7 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
             if (!summaries || summaries.length === 0) {
                 throw new Error('No summaries available to download.');
             }
-            const currentSummary = summaries[currentSummaryIndex];
+            const currentSummary = summaries[0];
 
             const doc = new jsPDF('p', 'pt', 'a4');
             const content = currentSummary.content;
@@ -113,7 +110,6 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
 
             // Adjust page width
             const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
 
             doc.html(htmlContent, {
                 x: 40,
@@ -142,18 +138,6 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
     };
 
 
-    const handlePrevSummary = () => {
-        if (currentSummaryIndex > 0) {
-            setCurrentSummaryIndex(currentSummaryIndex - 1);
-        }
-    };
-
-    const handleNextSummary = () => {
-        if (summaries && currentSummaryIndex < summaries.length - 1) {
-            setCurrentSummaryIndex(currentSummaryIndex + 1);
-        }
-    };
-
 
     return (
         <>
@@ -173,43 +157,9 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
                                 </Group>
                             </Flex>
                             <Skeleton visible={loadingSummaries || regenerateLoading}>
-                                <Markdown>{summaries[currentSummaryIndex]?.content}</Markdown>
+                                <Markdown>{summaries[0]?.content}</Markdown>
                             </Skeleton>
                         </Card>
-                        {/* <Flex justify="space-between" align="center" gap="sm">
-                            {summaries && summaries.length > 1 ? <Group gap="xs">
-                                <IconChevronLeft
-                                    size={18}
-                                    color={currentSummaryIndex > 0 ? 'black' : 'gray'}
-                                    style={{ cursor: currentSummaryIndex > 0 ? 'pointer' : 'default' }}
-                                    onClick={currentSummaryIndex > 0 ? handlePrevSummary : undefined}
-                                />
-                                <Text size="sm">
-                                    {currentSummaryIndex + 1} / {summaries.length}
-                                </Text>
-                                <IconChevronRight
-                                    size={18}
-                                    color={
-                                        summaries && currentSummaryIndex < summaries.length - 1 ? 'black' : 'gray'
-                                    }
-                                    style={{
-                                        cursor:
-                                            summaries && currentSummaryIndex < summaries.length - 1
-                                                ? 'pointer'
-                                                : 'default',
-                                    }}
-                                    onClick={
-                                        summaries && currentSummaryIndex < summaries.length - 1
-                                            ? handleNextSummary
-                                            : undefined
-                                    }
-                                />
-                            </Group> : <Box />}
-
-                            <Text size="sm">
-                                {new Date(summaries[currentSummaryIndex].created_at).toLocaleString()}
-                            </Text>
-                        </Flex> */}
                     </>
                 ) : (
                     <Text>No summaries available.</Text>

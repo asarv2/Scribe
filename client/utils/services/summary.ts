@@ -11,7 +11,7 @@ import { cookies } from "next/headers";
 export const createSummary = async (slideId: string, response: string) => {
     const supabase = useSupabaseServer(cookies());
 
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from('summaries')
         .insert({ content: response, slide: slideId });
 

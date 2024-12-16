@@ -8,14 +8,12 @@
 
 
 import { useQuery } from "@tanstack/react-query";
-import { AspectRatio, Box, Button, Center, Container, em, Group, Input, SimpleGrid, Stack, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { AspectRatio, Box, Button, Container, em, Group, Input, SimpleGrid, Stack } from "@mantine/core";
+import { useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Markdown from 'markdown-to-jsx'
-import Image from "next/image";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { getTextbookDocs } from "@/utils/queries/get-textbook-docs";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import TextbookSummary from "@/components/TextbookSummary";
 import { answerTextbookQuestion } from "@/utils/services/gemini";
@@ -89,12 +87,6 @@ export default function Textbook({ params }: { params: { classId: string, textbo
             <Button onClick={() => handlePageClick(pageNumber)} color="orange" key={`learn-more-${pageNumber}-${index}`}>Page {pageNumber}</Button>
         )
     }
-
-    // too much to load all of the textbook documents at once. Rather would do chapters, and subchapters
-    // const { data: documents, isLoading: loadingDocs } = useQuery({
-    //     queryKey: ["textbookDocuments", textbookId],
-    //     queryFn: () => getTextbookDocs(supabase, textbookId),
-    // });
 
     const { data: chapters, isLoading: loadingChapters } = useQuery({
         queryKey: ["textbookChapters", textbookId],

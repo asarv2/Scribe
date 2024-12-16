@@ -5,7 +5,6 @@
  * 09.01.2024
  */
 
-import { useState } from 'react';
 import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from "./HeaderSimple.module.css"
@@ -13,18 +12,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
-// const links = [
-//     { link: '/home', label: 'MA261' },
-// ];
 
 const links = [
-    // { link: '/classes/cfe37701-9a73-4416-ba01-81e28989e64c/lecture/3ae57d24-8426-44c3-816b-f23e3ae04d0b', label: 'MA 261' },
     { link: '/classes/ce907bb8-f51e-4933-b9a2-d042c5b05e67', label: 'MA 421' },
-    // { link: '/classes/cfe37701-9a73-4416-ba01-81e28989e64c', label: 'MA 261' },
-    // { link: '/login', label: 'Professor' },
-    // { link: '/classes/593fee30-d135-4972-8beb-6c6243619e88/textbook/e8944344-2248-472d-9a8c-56a85c76bcba', label: 'MA 341' },
-    // { link: '/classes/77867dcc-0a42-45be-b2d5-0f5dc76abb83', label: '2K1' },
-    // { link: '/classes/15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
+    { link: '/login', label: 'Professor' },
 ];
 
 export function HeaderSimple() {
@@ -95,27 +86,6 @@ export function HeaderSimple() {
                     </Drawer.Body>
                 </Drawer.Content>
             </Drawer.Root >
-
-            {/* <Drawer
-                opened={drawerOpened}
-                onClose={closeDrawer}
-                size="lg"
-                padding="md"
-                hiddenFrom="sm"
-                zIndex={1000000}
-            >
-                <Drawer.Header>
-                    <Drawer.Title>Drawer title</Drawer.Title>
-                    <Drawer.CloseButton />
-                </Drawer.Header>
-
-                <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
-                    <Divider my="sm" />
-
-                    {items}
-
-                </ScrollArea>
-            </Drawer> */}
         </>
     );
 }

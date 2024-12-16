@@ -9,7 +9,7 @@ import useSupabaseServer from "../supabase/supabase-server";
 
 export const createQuery = async (question: string, answer: string, lectureId: string): Promise<{ success: boolean, error: string }> => {
     const supabase = useSupabaseServer(cookies());
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from("queries")
         .insert({question: question, answer: answer, class: lectureId});
     if (error) {
