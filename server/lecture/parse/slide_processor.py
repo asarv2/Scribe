@@ -59,24 +59,22 @@ class SlideProcessor(BaseProcessor):
         return "\n".join([f"<FIGURE {self.unparse_bbox(figure['bbox'])}>{figure['description']}</FIGURE>" for figure in figures])
     
     def parse_bbox(self, bbox: str):
-        """Parse 4 coordinates (x1,y1), (x2,y2), (x3,y3), (x4,y4) into a tuple (x, y, width, height)"""
-        # bbox is of form (x1,y1), (x2,y2), (x3,y3), (x4,y4)
-        # use regex to extract the coordinates
-        x1, y1, x2, y2, x3, y3, x4, y4 = map(int, re.findall(r'\d+', bbox))
-        # Find leftmost x, topmost y, rightmost x, and bottommost y
-        x = min(x1, x2, x3, x4)
-        y = min(y1, y2, y3, y4)
-        max_x = max(x1, x2, x3, x4)
-        max_y = max(y1, y2, y3, y4)
-        # Width and height are the differences
-        width = max_x - x
-        height = max_y - y
-        return (x, y, width, height)
+        """Parse 4 coordinates [ymin, xmin, ymax, xmax]"""
+        
+        bbox = bbox.strip('[] ')
+        
+        # Split by comma and convert to floats, handling any internal whitespace
+        try:
+            ymin, xmin, ymax, xmax = map(lambda x: float(x.strip()), bbox.split(','))
+        except ValueError:
+            # If parsing fails, return default values
+            print(f"Warning: Could not parse bbox {bbox}, using default values")
+            return [0, 0, 1000, 1000]
+        return [ymin, xmin, ymax, xmax]
     
-    def unparse_bbox(self, bbox: tuple[int, int, int, int]):
-        """Unparse bbox into a string. bbox is (x, y, width, height). Want to convert to 4 coordinates, (x1,y1), (x2,y2), (x3,y3), (x4,y4)"""
-        x, y, width, height = bbox
-        return f"({x}, {y}), ({x+width}, {y}), ({x}, {y+height}), ({x+width}, {y+height})"
+    def unparse_bbox(self, bbox: list[int]):
+        """Unparse bbox into a string. bbox is [ymin, xmin, ymax, xmax]"""
+        return f"[{bbox[0]}, {bbox[1]}, {bbox[2]}, {bbox[3]}]"
         
     def draw_grid_on_image(
         self,
@@ -211,7 +209,7 @@ class SlideProcessor(BaseProcessor):
             "latex": "..."
             "figures": [
                 {
-                    "bbox": "(x, y, width, height)",
+                    "bbox": "[xmin, ymin, xmax, ymax]",
                     "description": "..."
                 }
             ],
@@ -334,9 +332,9 @@ class SlideProcessor(BaseProcessor):
                             f"Conv. comb. of $z_1, z_2$\n"
                             f"\\implies \\underline{{S \\text{{ is convex}}}}\n"
                             f"'''}}</LATEX>\n\n"
-                            f"2. Find any important figures on the slides and provide the 4 bounding box coordinates (x, y) "
-                            f"of for each of the figures, based on the grid overlayed on the image. Use <FIGURE> and </FIGURE> tags to enclose the figure coordinates. If there are no figures present, simply do not write any <FIGURE> tags. Example:\n"
-                            f"<FIGURE (100, 200), (100, 600), (500, 200), (500, 600)>A description of the figure.</FIGURE>\n\n"
+                            f"2. Find any important figures on the slides and provide the 4 bounding box coordinates: [ymin, xmin, ymax, xmax]"
+                            f"Use <FIGURE> and </FIGURE> tags to enclose the figure coordinates. If there are no figures present, simply do not write any <FIGURE> tags. Example:\n"
+                            f"<FIGURE [200, 90, 745, 527]>A description of the figure.</FIGURE>\n\n"
                             f"3. Provide a text based description of what you see, including specific details that "
                             f"would not be known unless you were given the context of the slide. Be very detailed and specific, "
                             f"but make sure to stay concise and to the point. Use LaTeX to describe any mathematical content you see on the slide. Use <DESCRIPTION> and </DESCRIPTION> tags to enclose the description. Example: <DESCRIPTION>{'''This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof is outlined, focusing on one direction of the implication.  It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\leq t \\leq 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex.  The underlining highlights the key steps and conclusions of the proof.  The notation \"pf\" indicates \"proof,\" and the double-headed arrow indicates the \"if and only if\" nature of the theorem.  The term \"conv. comb.\" is an abbreviation for \"convex combination.\"  The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.'''}</DESCRIPTION>"
@@ -363,19 +361,17 @@ class SlideProcessor(BaseProcessor):
                             \\implies t_1 z_1 + t_2 z_2 + t_3 z_3 \\in S
                             </LATEX>
                             
-                            <FIGURE (10, 10), (10, 40), (40, 10), (40, 40)>Theorem 10.1 statement.</FIGURE>
-                            <FIGURE (10, 50), (10, 70), (40, 50), (40, 70)>Proof outline.</FIGURE>
-                            <FIGURE (10, 70), (10, 90), (40, 70), (40, 90)>Assumption of the proof for n=2.</FIGURE>
-                            <FIGURE (10, 90), (10, 130), (40, 90), (40, 130)>Proof for n=3.</FIGURE>
-                            <FIGURE (30, 115), (30, 130), (40, 115), (40, 130)>Conclusion of the proof for n=3.</FIGURE>
+                            <FIGURE [200, 90, 745, 527]>Theorem 10.1 statement.</FIGURE>
+                            <FIGURE [400, 490, 800, 700]>Conclusion of the proof for n=3.</FIGURE>
                             
                             <DESCRIPTION>This slide continues the proof of Theorem 10.1 from the previous slide, demonstrating that if a set $S$ is convex, then it contains all convex combinations of its points. The proof is done by induction. The base case ($n=2$) is shown: if $z_1, z_2 \\in S$, then any convex combination $t_1z_1 + t_2z_2$ (with $t_1, t_2 \\ge 0$ and $t_1 + t_2 = 1$) is also in $S$ by the definition of convexity. The inductive step ($n=3$) is then demonstrated. It shows that if $z_1, z_2, z_3 \\in S$, then a convex combination $t_1z_1 + t_2z_2 + t_3z_3$ can be rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$. Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$. This inductive argument can be extended to any number of points, completing the proof. The underlining highlights key assumptions and conclusions. The notation "pf" stands for "proof," and "conv. comb." is short for "convex combination." The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.</DESCRIPTION>''' + f". Now its your turn. INPUT: SLIDE {page_number} of {len(images)}. OUTPUT: "
                         # Draw grid on image
-                        grid_image = self.draw_grid_on_image(image_file)
+                        
+                        # grid_image = self.draw_grid_on_image(image_file)
                         # self.show_image(image_file)
                         
                         # Encode current image
-                        image_base64 = self.encode_image(grid_image)
+                        image_base64 = self.encode_image(image_file)
                         
                         # Create message with context from previous responses
                         message_content = [
@@ -473,8 +469,12 @@ class SlideProcessor(BaseProcessor):
             for page_number in self.notes[lecture_name].keys():
                 structured_output = self.notes[lecture_name][page_number]
                 for idx, figure in enumerate(structured_output["figures"]):
-                    x, y, width, height = figure["bbox"]
-                    cropped = image_file.crop((x, y, x + width, y + height))
+                    ymin, xmin, ymax, xmax = figure["bbox"]
+                    # divide each by 1000
+                    ymin, xmin, ymax, xmax = ymin / 1000, xmin / 1000, ymax / 1000, xmax / 1000
+                    # multiply xs by image width, ys by image height
+                    xmin, ymin, xmax, ymax = xmin * image_file.width, ymin * image_file.height, xmax * image_file.width, ymax * image_file.height
+                    cropped = image_file.crop((xmin, ymin, xmax, ymax))
                     cropped.save(os.path.join(file_path, lecture_name, "figures", f"{page_number}.{idx + 1}.png"))
             
     def save_notes_pdf(self, file_path: str):

@@ -76,7 +76,7 @@ class BaseProcessor:
         )
         
         self.llm_gemini_flash8b = ChatGoogleGenerativeAI(
-            model='gemini-1.5-flash8b',
+            model='gemini-1.5-flash-8b',
             temperature=0, 
             max_tokens=None, 
             timeout=None, 

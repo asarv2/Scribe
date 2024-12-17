@@ -14,14 +14,14 @@ if __name__ == "__main__":
         handwritten=True,
         class_id=class_id,
         output_dir=output_dir,
-        regenerate=False
+        regenerate=True
     )
     
-    slide_processor.save_notes_storage_supabase()
+    # slide_processor.save_notes_storage_supabase()
     
     # slide_processor.save_notes_supabase()
     
-    # slide_processor.process_slides(num_docs=5, num_slides=3)
+    slide_processor.process_slides(num_docs=1, num_slides=3)
     
     # problems_processor = ProblemsProcessor(
     #     class_id=class_id,

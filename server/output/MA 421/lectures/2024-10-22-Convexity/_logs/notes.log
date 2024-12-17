@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  16 DEC 2024 10:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  17 DEC 2024 11:46
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -641,259 +641,287 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 65.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 69.
+(Font)              <10> on input line 70.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 69.
+(Font)              <7> on input line 70.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 69.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:69: Missing $ inserted.
-<inserted text> 
-                $
-l.69 \underline{\text{Def 1}} \quad S \subseteq
-                                                \mathbb{R}^m \text{ is conve...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:77: Missing $ inserted.
-<inserted text> 
-                $
-l.77 \subsection
-                {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
+(Font)              <5> on input line 70.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/1.4.png, id=52, 90.3375pt x 20.075pt>
+2-Convexity/figures/1.4.png, id=36, 90.3375pt x 20.075pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/1.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/1.4.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/1.4.png  used on input line 86.
+A 421/lectures/2024-10-22-Convexity/figures/1.4.png  used on input line 82.
 (pdftex.def)             Requested size: 56.3685pt x 12.5263pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--87
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
 []\T1/lmr/m/n/10 Figure 1:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--87
-[]\T1/lmr/m/n/10 Definition 1:
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+[]\T1/lmr/m/n/10 Definition of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+\T1/lmr/m/n/10 a con-vex set
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+\T1/lmr/m/n/10 seg-ment con-
+ []
+
+
+Underfull \hbox (badness 6047) in paragraph at lines 83--83
+\T1/lmr/m/n/10 en-tirely within
  []
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/1.5.png, id=53, 90.3375pt x 20.075pt>
+2-Convexity/figures/1.5.png, id=37, 90.3375pt x 20.075pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/1.5.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/1.5.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/1.5.png  used on input line 92.
+A 421/lectures/2024-10-22-Convexity/figures/1.5.png  used on input line 88.
 (pdftex.def)             Requested size: 56.3685pt x 12.5263pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 93--93
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
 []\T1/lmr/m/n/10 Figure 2:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 93--93
-[]\T1/lmr/m/n/10 Definition 2:
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+[]\T1/lmr/m/n/10 Examples of
  []
 
 
-Underfull \hbox (badness 4072) in paragraph at lines 93--93
-\T1/lmr/m/n/10 Con-vex com-bi-
- []
-
-</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/1.2.png, id=54, 190.7125pt x 40.15pt>
-File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--10-22-Convexity/figures/1.2.png Graphic file (type png)
-<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-22-Convexity/figures/1.2.png>
-Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/1.2.png  used on input line 98.
-(pdftex.def)             Requested size: 56.3685pt x 11.8668pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 99--99
-[]\T1/lmr/m/n/10 Figure 3:
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+\T1/lmr/m/n/10 con-vex com-
  []
 
 
-Underfull \hbox (badness 5316) in paragraph at lines 99--99
-[]\T1/lmr/m/n/10 Example of a
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+\T1/lmr/m/n/10 bi-na-tions of
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 99--99
+Underfull \hbox (badness 1490) in paragraph at lines 89--89
+\T1/lmr/m/n/10 points $\OML/lmm/m/it/10 z[]; z[]; z[]$
+ []
+
+
+Underfull \hbox (badness 3907) in paragraph at lines 89--89
+\T1/lmr/m/n/10 in $\U/msb/m/n/10 R[]$\T1/lmr/m/n/10 . The
+ []
+
+
+Underfull \hbox (badness 5741) in paragraph at lines 89--89
+\T1/lmr/m/n/10 shaded re-gions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+\T1/lmr/m/n/10 il-lus-trate the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
 \T1/lmr/m/n/10 con-vex com-bi-
+ []
+
+
+Underfull \hbox (badness 2799) in paragraph at lines 89--89
+\T1/lmr/m/n/10 na-tions of the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+\T1/lmr/m/n/10 points, which
+ []
+
+
+Underfull \hbox (badness 1990) in paragraph at lines 89--89
+\T1/lmr/m/n/10 form a con-vex
  []
 
 [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2024/texmf-di
-st/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-dist/fonts/e
-nc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm
--mathex.enc} </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectu
-res/2024-10-22-Convexity/figures/1.4.png (PNG copy)> </Users/ashoksaravanan/Cod
-ing/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.5.pn
-g (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lect
-ures/2024-10-22-Convexity/figures/1.2.png (PNG copy)>]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:110: Missing $ inserted.
-<inserted text> 
-                $
-l.110 ...hm 10.1}} \quad S \text{ is convex } \iff
-                                                   \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:119: Missing $ inserted.
-<inserted text> 
-                $
-l.119 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
+4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
+st/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2024/texmf-dist/fonts/e
+nc/dvips/lm/lm-rm.enc} </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA
+ 421/lectures/2024-10-22-Convexity/figures/1.4.png (PNG copy)> </Users/ashoksar
+avanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figu
+res/1.5.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/2.4.png, id=74, 190.7125pt x 20.075pt>
+2-Convexity/figures/2.4.png, id=56, 190.7125pt x 20.075pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/2.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/2.4.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/2.4.png  used on input line 128.
+A 421/lectures/2024-10-22-Convexity/figures/2.4.png  used on input line 117.
 (pdftex.def)             Requested size: 56.3685pt x 5.9334pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 129--129
-[]\T1/lmr/m/n/10 Figure 4:
+Underfull \hbox (badness 5637) in paragraph at lines 118--118
+[]\T1/lmr/m/n/10 Figure 3: []A
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 129--129
-[]\T1/lmr/m/n/10 Theorem 10.1
- []
-
-</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/2.3.png, id=75, 190.7125pt x 20.075pt>
-File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--10-22-Convexity/figures/2.3.png Graphic file (type png)
-<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-22-Convexity/figures/2.3.png>
-Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/2.3.png  used on input line 134.
-(pdftex.def)             Requested size: 56.3685pt x 5.9334pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]\T1/lmr/m/n/10 Figure 5:
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 state-ment of
  []
 
 
-Underfull \hbox (badness 7451) in paragraph at lines 135--135
-[]\T1/lmr/m/n/10 Assumption of
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 The-o-rem 10.1,
  []
 
-</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/2.2.png, id=76, 190.7125pt x 20.075pt>
-File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--10-22-Convexity/figures/2.2.png Graphic file (type png)
-<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-22-Convexity/figures/2.2.png>
-Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/2.2.png  used on input line 140.
-(pdftex.def)             Requested size: 56.3685pt x 5.9334pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 141--141
-\T1/lmr/m/n/10 step in the
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 show-ing the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 equiv-a-lence
+ []
+
+
+Underfull \hbox (badness 3826) in paragraph at lines 118--118
+\T1/lmr/m/n/10 be-tween a set
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 be-ing con-vex
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 and con-tain-
+ []
+
+
+Underfull \hbox (badness 3078) in paragraph at lines 118--118
+\T1/lmr/m/n/10 ing all con-vex
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 com-bi-na-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 of its points.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 The proof is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+\T1/lmr/m/n/10 in-di-cated by
  []
 
 [2 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
-0-22-Convexity/figures/2.4.png (PNG copy)> </Users/ashoksaravanan/Coding/Scribe
-Lec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/2.3.png (PNG cop
-y)> </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-22-Convexity/figures/2.2.png (PNG copy)>]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:152: Missing $ inserted.
-<inserted text> 
-                $
-l.152 ...hm 10.1}} \quad S \text{ is convex } \iff
-                                                   \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:163: Missing $ inserted.
-<inserted text> 
-                $
-l.163 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
+0-22-Convexity/figures/2.4.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/3.5.png, id=84, 50.1875pt x 20.075pt>
+2-Convexity/figures/3.5.png, id=63, 50.1875pt x 20.075pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/3.5.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/3.5.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/3.5.png  used on input line 172.
+A 421/lectures/2024-10-22-Convexity/figures/3.5.png  used on input line 144.
 (pdftex.def)             Requested size: 56.3685pt x 22.54907pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--173
-[]\T1/lmr/m/n/10 Figure 7:
+Underfull \hbox (badness 5637) in paragraph at lines 145--145
+[]\T1/lmr/m/n/10 Figure 4: []A
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--173
-[]\T1/lmr/m/n/10 Theorem 10.1
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 state-ment of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 The-o-rem 10.1,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 show-ing the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 equiv-a-lence
+ []
+
+
+Underfull \hbox (badness 3826) in paragraph at lines 145--145
+\T1/lmr/m/n/10 be-tween a set
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 be-ing con-vex
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 and con-tain-
+ []
+
+
+Underfull \hbox (badness 3078) in paragraph at lines 145--145
+\T1/lmr/m/n/10 ing all con-vex
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 com-bi-na-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 of its points.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 The proof is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--145
+\T1/lmr/m/n/10 in-di-cated by
  []
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/3.4.png, id=85, 190.7125pt x 50.1875pt>
+2-Convexity/figures/3.4.png, id=64, 190.7125pt x 50.1875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/3.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/3.4.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/3.4.png  used on input line 178.
+A 421/lectures/2024-10-22-Convexity/figures/3.4.png  used on input line 150.
 (pdftex.def)             Requested size: 56.3685pt x 14.83351pt.
-</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/3.1.png, id=86, 190.7125pt x 30.1125pt>
-File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--10-22-Convexity/figures/3.1.png Graphic file (type png)
-<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-22-Convexity/figures/3.1.png>
-Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-22-Convexity/figures/3.1.png  used on input line 184.
-(pdftex.def)             Requested size: 56.3685pt x 8.9001pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 185--185
-[]\T1/lmr/m/n/10 Figure 9:
- []
-
-
-Underfull \hbox (badness 7451) in paragraph at lines 185--185
-[]\T1/lmr/m/n/10 Assumption of
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 185--185
-\T1/lmr/m/n/10 the proof for
- []
-
-[3 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
-0-22-Convexity/figures/3.5.png (PNG copy)> </Users/ashoksaravanan/Coding/Scribe
-Lec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/3.4.png (PNG cop
-y)> </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-22-Convexity/figures/3.1.png (PNG copy)>]
+[3{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc} </Users
+/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Conve
+xity/figures/3.5.png (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/server
+/output/MA 421/lectures/2024-10-22-Convexity/figures/3.4.png (PNG copy)>]
 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/notes.aux)
@@ -901,30 +929,42 @@ enddocument/afterlastpage: lastpage setting LastPage.
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-Package rerunfilecheck Info: File `notes.out' has not changed.
-(rerunfilecheck)             Checksum: D8F4E19A1E6F2B1430FD81C26DE933C9;1134.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `notes.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `notes.out':
+(rerunfilecheck)             Before: 6FC0F7E896D898CDB07646EA9BC3DC1D;754
+(rerunfilecheck)             After:  D8F4E19A1E6F2B1430FD81C26DE933C9;1134.
  ) 
 Here is how much of TeX's memory you used:
- 12993 strings out of 474116
- 210253 string characters out of 5743682
- 1940187 words of memory out of 5000000
- 35090 multiletter control sequences out of 15000+600000
- 607095 words of font info for 76 fonts, out of 8000000 for 9000
+ 12957 strings out of 474116
+ 207038 string characters out of 5743682
+ 1937187 words of memory out of 5000000
+ 35058 multiletter control sequences out of 15000+600000
+ 608380 words of font info for 76 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,14n,79p,1561b,448s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
-cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texliv
-e/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/tex
-mf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fon
-ts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
-blic/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr
-17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr
-/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/tex
-live/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on _logs/notes.pdf (3 pages, 171493 bytes).
+ 75i,11n,79p,1220b,448s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/lo
+cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texliv
+e/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/tex
+mf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fo
+nts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
+ublic/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lm
+r12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb></u
+sr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/tex
+live/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2024/
+texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist
+/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on _logs/notes.pdf (3 pages, 199207 bytes).
 PDF statistics:
- 152 PDF objects out of 1000 (max. 8388607)
- 115 compressed objects within 2 object streams
- 25 named destinations out of 1000 (max. 500000)
- 142 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 141 PDF objects out of 1000 (max. 8388607)
+ 104 compressed objects within 2 object streams
+ 21 named destinations out of 1000 (max. 500000)
+ 90 words of extra memory for PDF output out of 10000 (max. 10000000)
 
