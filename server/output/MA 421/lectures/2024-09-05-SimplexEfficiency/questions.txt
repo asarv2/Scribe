@@ -1,0 +1,51 @@
+QUESTION 1
+According to Dantzig, for a linear programming problem with $m < 50$ and $m + n < 200$, what is the typical number of iterations the simplex method requires?
+A. Approximately $3m$
+B. Usually less than or equal to $\frac{3m}{2}$
+C. Always $2^n - 1$
+D. Always $n$
+E. Always $m+n$
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because while the number of iterations can rarely approach $3m$, it is not the typical case.
+B. Answer B is correct because, according to the slide, the number of iterations is usually less than or equal to $\frac{3m}{2}$.
+C. Answer C is incorrect because $2^n - 1$ is the number of steps for the largest coefficient rule in the Klee-Minty worst-case example, not the typical case.
+D. Answer D is incorrect because $n$ is the number of steps for the smallest coefficient rule in the Klee-Minty worst-case example, not the typical case.
+E. Answer E is incorrect because the number of iterations is not typically $m+n$.
+
+QUESTION 2
+What is the worst-case number of steps required by the simplex method using the Largest Coefficient Rule, as demonstrated by the Klee-Minty example?
+A. n
+B. $\frac{3m}{2}$
+C. 3m
+D. $2^n - 1$
+E. m+n
+
+ANSWER: D
+
+EXPLANATION: 
+A. Answer A is incorrect because $n$ is the number of steps for the Smallest Coefficient Rule in the Klee-Minty example.
+B. Answer B is incorrect because $\frac{3m}{2}$ is the typical number of iterations according to Dantzig, not the worst-case for the Largest Coefficient Rule.
+C. Answer C is incorrect because $3m$ is a rare upper bound on the number of iterations according to Dantzig, not the worst-case for the Largest Coefficient Rule.
+D. Answer D is correct because the slide states that the Largest Coefficient Rule requires $2^n - 1$ steps in the Klee-Minty example.
+E. Answer E is incorrect because $m+n$ is not the number of steps for the Largest Coefficient Rule in the Klee-Minty example.
+
+QUESTION 3
+In the Klee-Minty worst-case example, what is the number of steps required by the simplex method using the Smallest Coefficient Rule?
+A. $2^n - 1$
+B. $\frac{3m}{2}$
+C. 3m
+D. n
+E. m+n
+
+ANSWER: D
+
+EXPLANATION: 
+A. Answer A is incorrect because $2^n - 1$ is the number of steps for the Largest Coefficient Rule in the Klee-Minty example.
+B. Answer B is incorrect because $\frac{3m}{2}$ is the typical number of iterations according to Dantzig, not the worst-case for the Smallest Coefficient Rule.
+C. Answer C is incorrect because $3m$ is a rare upper bound on the number of iterations according to Dantzig, not the worst-case for the Smallest Coefficient Rule.
+D. Answer D is correct because the slide states that the Smallest Coefficient Rule requires $n$ steps in the Klee-Minty example.
+E. Answer E is incorrect because $m+n$ is not the number of steps for the Smallest Coefficient Rule in the Klee-Minty example.
+

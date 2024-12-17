@@ -1,0 +1,443 @@
+{
+    "2024-09-05-SimplexEfficiency": [
+        {
+            "question": "According to Dantzig, for a linear programming problem with $m < 50$ and $m + n < 200$, what is the typical number of iterations the simplex method requires?",
+            "options": {
+                "A": "Approximately $3m$",
+                "B": "Usually less than or equal to $\\frac{3m}{2}$",
+                "C": "Always $2^n - 1$",
+                "D": "Always $n$",
+                "E": "Always $m+n$"
+            },
+            "answers": {
+                "A": false,
+                "B": true,
+                "C": false,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because while the number of iterations can rarely approach $3m$, it is not the typical case.",
+                "B": "Answer B is correct because, according to the slide, the number of iterations is usually less than or equal to $\\frac{3m}{2}$.",
+                "C": "Answer C is incorrect because $2^n - 1$ is the number of steps for the largest coefficient rule in the Klee-Minty worst-case example, not the typical case.",
+                "D": "Answer D is incorrect because $n$ is the number of steps for the smallest coefficient rule in the Klee-Minty worst-case example, not the typical case.",
+                "E": "Answer E is incorrect because the number of iterations is not typically $m+n$."
+            },
+            "type": "conceptual",
+            "slides": [
+                1
+            ]
+        },
+        {
+            "question": "What is the worst-case number of steps required by the simplex method using the Largest Coefficient Rule, as demonstrated by the Klee-Minty example?",
+            "options": {
+                "A": "n",
+                "B": "$\\frac{3m}{2}$",
+                "C": "3m",
+                "D": "$2^n - 1$",
+                "E": "m+n"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": false,
+                "D": true,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because $n$ is the number of steps for the Smallest Coefficient Rule in the Klee-Minty example.",
+                "B": "Answer B is incorrect because $\\frac{3m}{2}$ is the typical number of iterations according to Dantzig, not the worst-case for the Largest Coefficient Rule.",
+                "C": "Answer C is incorrect because $3m$ is a rare upper bound on the number of iterations according to Dantzig, not the worst-case for the Largest Coefficient Rule.",
+                "D": "Answer D is correct because the slide states that the Largest Coefficient Rule requires $2^n - 1$ steps in the Klee-Minty example.",
+                "E": "Answer E is incorrect because $m+n$ is not the number of steps for the Largest Coefficient Rule in the Klee-Minty example."
+            },
+            "type": "conceptual",
+            "slides": [
+                3
+            ]
+        },
+        {
+            "question": "In the Klee-Minty worst-case example, what is the number of steps required by the simplex method using the Smallest Coefficient Rule?",
+            "options": {
+                "A": "$2^n - 1$",
+                "B": "$\\frac{3m}{2}$",
+                "C": "3m",
+                "D": "n",
+                "E": "m+n"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": false,
+                "D": true,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because $2^n - 1$ is the number of steps for the Largest Coefficient Rule in the Klee-Minty example.",
+                "B": "Answer B is incorrect because $\\frac{3m}{2}$ is the typical number of iterations according to Dantzig, not the worst-case for the Smallest Coefficient Rule.",
+                "C": "Answer C is incorrect because $3m$ is a rare upper bound on the number of iterations according to Dantzig, not the worst-case for the Smallest Coefficient Rule.",
+                "D": "Answer D is correct because the slide states that the Smallest Coefficient Rule requires $n$ steps in the Klee-Minty example.",
+                "E": "Answer E is incorrect because $m+n$ is not the number of steps for the Smallest Coefficient Rule in the Klee-Minty example."
+            },
+            "type": "conceptual",
+            "slides": [
+                3
+            ]
+        }
+    ],
+    "2024-09-24-SimplexMatrix": [
+        {
+            "question": "In the matrix notation for linear programming, what does the vector 'b' typically represent?",
+            "options": {
+                "A": "The coefficients of the objective function",
+                "B": "The constraint matrix",
+                "C": "The right-hand side values of the constraints",
+                "D": "The slack variables",
+                "E": "The decision variables"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": true,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because the coefficients of the objective function are represented by 'c'.",
+                "B": "Answer B is incorrect because the constraint matrix is represented by 'A'.",
+                "C": "Answer C is correct because 'b' represents the right-hand side values of the constraints in the standard form of a linear program.",
+                "D": "Answer D is incorrect because the slack variables are represented by 'w'.",
+                "E": "Answer E is incorrect because the decision variables are represented by 'x'."
+            },
+            "type": "conceptual",
+            "slides": [
+                1,
+                2,
+                3
+            ]
+        },
+        {
+            "question": "In the context of the simplex method using matrix notation, what is the purpose of introducing slack variables 'w'?",
+            "options": {
+                "A": "To convert the objective function into a matrix form",
+                "B": "To transform inequality constraints into equality constraints",
+                "C": "To represent the decision variables in the problem",
+                "D": "To define the cost vector",
+                "E": "To represent the right-hand side values of the constraints"
+            },
+            "answers": {
+                "A": false,
+                "B": true,
+                "C": false,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because slack variables do not directly affect the objective function's matrix form.",
+                "B": "Answer B is correct because slack variables are introduced to convert inequality constraints (Ax \u2264 b) into equality constraints (Ax + w = b), which is necessary for the simplex method.",
+                "C": "Answer C is incorrect because the decision variables are represented by 'x'.",
+                "D": "Answer D is incorrect because the cost vector is represented by 'c'.",
+                "E": "Answer E is incorrect because the right-hand side values of the constraints are represented by 'b'."
+            },
+            "type": "conceptual",
+            "slides": [
+                1,
+                2,
+                3
+            ]
+        },
+        {
+            "question": "In the iterative process of the simplex method, as represented in matrix notation, what do the notations $\\overline{A}$, $\\overline{b}$, and $\\overline{w}$ typically represent?",
+            "options": {
+                "A": "The initial constraint matrix, right-hand side vector, and slack variables, respectively",
+                "B": "The final optimal solution values for the constraint matrix, right-hand side vector, and slack variables, respectively",
+                "C": "The modified constraint matrix, right-hand side vector, and slack variables after some iterations, respectively",
+                "D": "The coefficients of the objective function, the right-hand side values of the constraints, and the decision variables, respectively",
+                "E": "The slack variables, the decision variables, and the cost vector, respectively"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": true,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because the initial values are represented by A, b, and w without the overline.",
+                "B": "Answer B is incorrect because the final optimal solution is not explicitly represented by these notations, but rather the result of the iterative process.",
+                "C": "Answer C is correct because $\\overline{A}$, $\\overline{b}$, and $\\overline{w}$ represent the modified constraint matrix, right-hand side vector, and slack variables after some iterations of the simplex method.",
+                "D": "Answer D is incorrect because the coefficients of the objective function are represented by 'c' and the decision variables are represented by 'x'.",
+                "E": "Answer E is incorrect because the slack variables are represented by 'w', the decision variables are represented by 'x', and the cost vector is represented by 'c'."
+            },
+            "type": "conceptual",
+            "slides": [
+                2,
+                3
+            ]
+        }
+    ],
+    "2024-10-22-Convexity": [
+        {
+            "question": "According to Definition 1, which of the following statements is true about a convex set S in $\\mathbb{R}^m$?",
+            "options": {
+                "A": "For any two points $z_1$ and $z_2$ in S, the line segment connecting them, defined by $tz_1 + (1-t)z_2$ where $t \\ge 0$, is entirely contained within S.",
+                "B": "For any two points $z_1$ and $z_2$ in S, the line segment connecting them, defined by $tz_1 + (1-t)z_2$ where $0 < t < 1$, is entirely contained within S.",
+                "C": "For any two points $z_1$ and $z_2$ in S, the line segment connecting them, defined by $tz_1 + (1-t)z_2$ where $t \\le 0$, is entirely contained within S.",
+                "D": "For any two points $z_1$ and $z_2$ in S, the line segment connecting them, defined by $tz_1 + (1-t)z_2$ where $t = 1$, is entirely contained within S.",
+                "E": "For any two points $z_1$ and $z_2$ in S, the line segment connecting them, defined by $tz_1 + (1-t)z_2$ where $t$ is any real number, is entirely contained within S."
+            },
+            "answers": {
+                "A": false,
+                "B": true,
+                "C": false,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because it includes $t=0$ and $t=1$, which are the endpoints of the line segment, not the line segment itself.",
+                "B": "Answer B is correct because it accurately reflects the definition of a convex set, where the line segment connecting any two points within the set must also be within the set, with $0 < t < 1$ defining the line segment.",
+                "C": "Answer C is incorrect because it uses $t \\le 0$, which is not the correct range for the parameter $t$ in the definition of a convex set.",
+                "D": "Answer D is incorrect because it only considers the case where $t=1$, which is just one of the endpoints of the line segment, not the line segment itself.",
+                "E": "Answer E is incorrect because it allows $t$ to be any real number, which does not define the line segment between $z_1$ and $z_2$."
+            },
+            "type": "conceptual",
+            "slides": [
+                1
+            ]
+        },
+        {
+            "question": "According to Theorem 10.1, which of the following is a necessary and sufficient condition for a set S to be convex?",
+            "options": {
+                "A": "S contains at least one convex combination of its points.",
+                "B": "S contains all convex combinations of its points.",
+                "C": "S contains no convex combinations of its points.",
+                "D": "S contains only the endpoints of convex combinations of its points.",
+                "E": "S contains only a subset of convex combinations of its points."
+            },
+            "answers": {
+                "A": false,
+                "B": true,
+                "C": false,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because the theorem requires that S contains *all* convex combinations, not just one.",
+                "B": "Answer B is correct because Theorem 10.1 states that a set S is convex if and only if it contains all convex combinations of its points.",
+                "C": "Answer C is incorrect because a convex set must contain convex combinations of its points.",
+                "D": "Answer D is incorrect because a convex set must contain the entire convex combination, not just the endpoints.",
+                "E": "Answer E is incorrect because a convex set must contain *all* convex combinations, not just a subset."
+            },
+            "type": "conceptual",
+            "slides": [
+                2,
+                3
+            ]
+        },
+        {
+            "question": "In the proof of Theorem 10.1, when demonstrating that if S is convex, then it contains all convex combinations of its points, how is the case for n=3 handled?",
+            "options": {
+                "A": "It is shown that a convex combination of three points can be expressed as a convex combination of two points.",
+                "B": "It is shown that a convex combination of three points can be expressed as a convex combination of a convex combination of two points and a third point.",
+                "C": "It is shown that a convex combination of three points can be expressed as a linear combination of the three points.",
+                "D": "It is shown that a convex combination of three points can be expressed as a convex combination of four points.",
+                "E": "It is shown that a convex combination of three points can be expressed as a single point."
+            },
+            "answers": {
+                "A": false,
+                "B": true,
+                "C": false,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because the proof does not directly reduce the convex combination of three points to a convex combination of two points, but rather uses a nested approach.",
+                "B": "Answer B is correct because the proof for n=3 rewrites the convex combination of three points as a convex combination of a convex combination of two points and the third point, leveraging the base case (n=2).",
+                "C": "Answer C is incorrect because the proof specifically uses convex combinations, not just any linear combination.",
+                "D": "Answer D is incorrect because the proof does not involve a convex combination of four points.",
+                "E": "Answer E is incorrect because a convex combination of three points is not generally a single point."
+            },
+            "type": "conceptual",
+            "slides": [
+                3
+            ]
+        }
+    ],
+    "2024-10-28-ApplsLinProg": [
+        {
+            "question": "According to the production planning model presented, what does the variable \\(x_i\\) represent?",
+            "options": {
+                "A": "The demand for ice cream in month \\(i\\)",
+                "B": "The surplus inventory at the end of month \\(i\\)",
+                "C": "The production level in month \\(i\\)",
+                "D": "The cost of changing production levels between consecutive months",
+                "E": "The cost of storing surplus inventory"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": true,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because \\(d_i\\) represents the demand for ice cream in month \\(i\\).",
+                "B": "Answer B is incorrect because \\(s_i\\) represents the surplus inventory at the end of month \\(i\\).",
+                "C": "Answer C is correct because \\(x_i\\) is defined as the production at month \\(i\\).",
+                "D": "Answer D is incorrect because the cost of changing production levels is represented by \\(50|x_i - x_{i-1}|\\).",
+                "E": "Answer E is incorrect because the cost of storing surplus inventory is represented by \\(20s_i\\)."
+            },
+            "type": "conceptual",
+            "slides": [
+                3
+            ]
+        },
+        {
+            "question": "In the production planning model, what is the purpose of the constraint \\(x_i + s_{i-1} = d_i + s_i\\)?",
+            "options": {
+                "A": "To minimize the total production cost",
+                "B": "To ensure that production plus beginning inventory equals demand plus ending inventory",
+                "C": "To maximize the surplus inventory at the end of each month",
+                "D": "To minimize the cost of changing production levels",
+                "E": "To balance the average demand with the production level"
+            },
+            "answers": {
+                "A": false,
+                "B": true,
+                "C": false,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because the objective function minimizes the total cost, not this constraint.",
+                "B": "Answer B is correct because the constraint ensures that the production in month \\(i\\) plus the surplus from the previous month equals the demand in month \\(i\\) plus the surplus at the end of month \\(i\\).",
+                "C": "Answer C is incorrect because the constraint is about balancing inventory and demand, not maximizing surplus.",
+                "D": "Answer D is incorrect because the cost of changing production levels is part of the objective function, not this constraint.",
+                "E": "Answer E is incorrect because the constraint is about balancing inventory and demand, not the average demand."
+            },
+            "type": "conceptual",
+            "slides": [
+                3
+            ]
+        },
+        {
+            "question": "What does the term \\(\\sum_{i=1}^{12} 50|x_i - x_{i-1}|\\) represent in the objective function of the production planning model?",
+            "options": {
+                "A": "The total cost of storing surplus inventory",
+                "B": "The total demand for ice cream over 12 months",
+                "C": "The total cost of changing production levels between consecutive months",
+                "D": "The total production cost over 12 months",
+                "E": "The average monthly demand"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": true,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because the cost of storing surplus inventory is represented by \\(\\sum_{i=1}^{12} 20 s_i\\).",
+                "B": "Answer B is incorrect because the total demand is represented by \\(\\sum_{i=1}^{12} d_i\\), not this term.",
+                "C": "Answer C is correct because the term represents the cost of changing production levels, where 50 is the cost per unit change.",
+                "D": "Answer D is incorrect because the total production cost is not directly represented by this term alone.",
+                "E": "Answer E is incorrect because the average monthly demand is not directly represented by this term."
+            },
+            "type": "conceptual",
+            "slides": [
+                3
+            ]
+        }
+    ],
+    "2024-11-21-EconNetSimplex": [
+        {
+            "question": "In the context of the network simplex method, what do the variables \\(b_i\\) and \\(b_j\\) typically represent?",
+            "options": {
+                "A": "Flows along the edges",
+                "B": "Costs associated with the edges",
+                "C": "Supply at node i and demand at node j",
+                "D": "Slack variables",
+                "E": "Dual variables"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": true,
+                "D": false,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because flows along the edges are represented by other variables, not \\(b_i\\) and \\(b_j\\).",
+                "B": "Answer B is incorrect because costs associated with the edges are represented by \\(c_{ij}\\), not \\(b_i\\) and \\(b_j\\).",
+                "C": "Answer C is correct because \\(b_i\\) and \\(b_j\\) represent the supply at node i and the demand at node j, respectively, in the network flow problem.",
+                "D": "Answer D is incorrect because slack variables are not directly represented by \\(b_i\\) and \\(b_j\\) in this context.",
+                "E": "Answer E is incorrect because dual variables are not directly represented by \\(b_i\\) and \\(b_j\\) in this context."
+            },
+            "type": "conceptual",
+            "slides": [
+                1,
+                2,
+                3
+            ]
+        },
+        {
+            "question": "In the network simplex method, what does \\(c_{ij}\\) represent?",
+            "options": {
+                "A": "The flow from node i to node j",
+                "B": "The supply at node i",
+                "C": "The demand at node j",
+                "D": "The cost of flow from node i to node j",
+                "E": "The capacity of the edge between node i and node j"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": false,
+                "D": true,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because the flow from node i to node j is represented by a different variable, not \\(c_{ij}\\).",
+                "B": "Answer B is incorrect because the supply at node i is represented by \\(b_i\\), not \\(c_{ij}\\).",
+                "C": "Answer C is incorrect because the demand at node j is represented by \\(b_j\\), not \\(c_{ij}\\).",
+                "D": "Answer D is correct because \\(c_{ij}\\) represents the cost associated with the flow from node i to node j.",
+                "E": "Answer E is incorrect because the capacity of the edge is not directly represented by \\(c_{ij}\\) in this context."
+            },
+            "type": "conceptual",
+            "slides": [
+                1,
+                2,
+                3
+            ]
+        },
+        {
+            "question": "What is the significance of starting with a feasible solution on a spanning tree in the network simplex method?",
+            "options": {
+                "A": "It guarantees the optimal solution",
+                "B": "It simplifies the problem by eliminating cycles",
+                "C": "It ensures that all nodes are connected",
+                "D": "It provides a basic feasible solution",
+                "E": "It reduces the number of variables"
+            },
+            "answers": {
+                "A": false,
+                "B": false,
+                "C": false,
+                "D": true,
+                "E": false
+            },
+            "explanations": {
+                "A": "Answer A is incorrect because starting with a feasible solution on a spanning tree does not guarantee the optimal solution, but rather a starting point for the iterative process.",
+                "B": "Answer B is incorrect because while a spanning tree does eliminate cycles, this is not the primary reason for starting with a feasible solution on a spanning tree.",
+                "C": "Answer C is incorrect because while a spanning tree does connect all nodes, this is not the primary reason for starting with a feasible solution on a spanning tree.",
+                "D": "Answer D is correct because a spanning tree provides a basic feasible solution, which is a starting point for the simplex method.",
+                "E": "Answer E is incorrect because while a spanning tree does reduce the number of edges, it does not reduce the number of variables in the problem."
+            },
+            "type": "conceptual",
+            "slides": [
+                2,
+                3
+            ]
+        }
+    ]
+}

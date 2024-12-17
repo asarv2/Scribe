@@ -18,6 +18,7 @@ class SlideProcessor(BaseProcessor):
         Initialize the SlideProcessor.
         
         Args:
+            notes_dir: Directory containing the notes
             handwritten: Whether processing handwritten notes
         """
         super().__init__(*args, **kwargs)
@@ -533,11 +534,26 @@ class SlideProcessor(BaseProcessor):
                 "class": self.class_id
             }).execute()
         print(f"Saved {len(self.notes)} notes to supabase.")
+        
+    def save_notes_storage_supabase(self):
+        """
+        Save the notes to supabase storage.
+        """
+        for lecture_name in self.notes.keys():
+            # check if notes.pdf exists
+            if not os.path.exists(os.path.join(self.output_dir, self.course_code, "lectures", f"{lecture_name}", "notes.pdf")):
+                print(f"Skipping {lecture_name} - notes.pdf does not exist")
+                continue
+            response = self.supabase.storage.from_("slides").upload(
+                file=os.path.join(self.output_dir, self.course_code, "lectures", f"{lecture_name}", "notes.pdf"),
+                path=f"{self.course_code}/lectures/{lecture_name}/notes.pdf",
+                file_options={"cache-control": "3600", "upsert": "true"},
+            )
+            print(f"Saved {lecture_name} to supabase storage. Response: {response}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process slides for course notes.")
-    parser.add_argument("course_code", type=str, help="The course identifier (e.g., CS243)")
-    parser.add_argument("course_title", type=str, help="The course title (e.g., AI Basics)")
+    parser.add_argument("class_id", type=str, help="The class identifier (e.g., CS243)")
     parser.add_argument("--handwritten", action="store_true", help="Process handwritten notes")
     parser.add_argument("--num_docs", type=int, help="Number of documents to process")
     parser.add_argument("--num_slides", type=int, help="Number of slides to process")
@@ -546,8 +562,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     processor = SlideProcessor(
-        course_title=args.course_title,
-        course_code=args.course_code,
+        class_id=args.class_id,
         output_dir=args.output_dir,
         handwritten=args.handwritten
     )
