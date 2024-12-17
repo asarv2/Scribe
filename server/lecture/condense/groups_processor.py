@@ -5,13 +5,13 @@ import re
 from lecture.base_processor import BaseProcessor
 from langchain_core.messages import HumanMessage
 import os
+import uuid
 
 class GroupsProcessor(BaseProcessor):
     def __init__(self, 
                  terms: Dict[str, Dict],
                  depth: int = 1,
                  max_depth: int = 2,
-                 save_groups: bool = False,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.terms = terms
@@ -22,12 +22,11 @@ class GroupsProcessor(BaseProcessor):
         self.depth = depth
         self.max_depth = max_depth
         self.summary_type = ("sub" * (depth - 1)) + "groups"
-        self.save_groups = save_groups
         
         # Generate timestamp for output file
-        os.makedirs(os.path.join(self.output_dir, self.timestamp, self.summary_type), exist_ok=True)
-        self.json_output_file = os.path.join(self.output_dir, self.timestamp, self.summary_type, "summary.json")
-        self.text_output_file = os.path.join(self.output_dir, self.timestamp, self.summary_type, "summary.txt")
+        os.makedirs(os.path.join(self.output_dir, self.course_code, self.summary_type), exist_ok=True)
+        self.json_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.json")
+        self.text_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.txt")
         
         # prompts
         self.create_groups_prompt = f"Your objective is to condense a large list of terms into a smaller list of groups, where each group is a more specific version of a term. Your groups should not be the same as the terms in the original list. Refrain from making vague groups titled 'Advanced Topic' or 'Advanced Concepts'. Each group should be broad enough to span at least 3 terms in a meaningful way, but not too broad that it becomes a catch-all. If you are unsure, less groups is better, so that each group can have good depth. Your response should be in the following format: <group>: <definition>. Do not number the groups or add special modifiers -- just follow the format.Extract the most important topics from the following terms: "
@@ -156,7 +155,7 @@ class GroupsProcessor(BaseProcessor):
                     continue
                     
                 # Process each group assignment for this term
-                for group_num in group_matches:
+                for group_num in group_matches[0]: # only take the first group found
                     group_idx = int(group_num) - 1
                     if 0 <= group_idx < len(all_groups):
                         group = all_groups[group_idx]
@@ -171,8 +170,8 @@ class GroupsProcessor(BaseProcessor):
                             if term in existing_terms:
                                 print(f"Pruning term: {term} in group: {group}")
                             else:
-                                grouped_terms.append(term)
                                 self.groups[group]["terms"][term] = complete_term
+                                grouped_terms.append(term)
                         else:
                             self.groups[group] = {
                                 "group": formatted_group,
@@ -238,11 +237,12 @@ class GroupsProcessor(BaseProcessor):
 
         # Save results for current depth
         self.save_groups_json(self.json_output_file)
-        if self.save_groups:
-            self.save_groups_text(self.text_output_file)
+        self.save_groups_text(self.text_output_file)
         
         # Process subgroups recursively
         self._process_recursive_groups()
+        
+        return self.groups
 
     def _process_recursive_groups(self) -> Dict[str, Dict]:
         """
@@ -261,19 +261,15 @@ class GroupsProcessor(BaseProcessor):
                     terms=group_data["terms"],
                     depth=self.depth + 1,
                     max_depth=self.max_depth,
-                    save_groups=self.save_groups,
-                    course_title=self.course_title,
-                    course_code=self.course_code,
+                    class_id=self.class_id,
                     output_dir=self.output_dir,
-                    timestamp=self.timestamp,
                     regenerate=self.regenerate,
                 )
-                subgroup_processor.process_groups()
-                self.groups[group_name]["subgroups"] = subgroup_processor.groups
+                group_subgroups = subgroup_processor.process_groups()
+                self.groups[group_name]["subgroups"] = group_subgroups
                 
-        self.save_groups_json(os.path.join(self.output_dir, self.timestamp, "sub" + self.summary_type, "summary.json"))
-        if self.save_groups:
-            self.save_groups_text(os.path.join(self.output_dir, self.timestamp, "sub" + self.summary_type, "summary.txt"))
+        self.save_groups_json(os.path.join(self.output_dir, self.course_code, "sub" + self.summary_type, "summary.json"))
+        self.save_groups_text(os.path.join(self.output_dir, self.course_code, "sub" + self.summary_type, "summary.txt"))
         
     def save_groups_json(self, file_path: str):
         """Save groups to JSON, including all subgroups"""
@@ -315,3 +311,102 @@ class GroupsProcessor(BaseProcessor):
             print(f"Saved groups text at depth {self.depth} to {file_path}")
         except Exception as e:
             print(f"Error saving groups text to {file_path}: {str(e)}")
+            
+    def save_groups_supabase(self):
+        '''
+        This function is used to save the groups to supabase.
+        insert into 'topics' table. Each topic has 'title', 'content', 'class', 'map_parent', 
+        'map_id', 'lectures', 'visual', and 'type'
+        title is the group/term name
+        content is the definition of the group/term
+        class is a class variable, at self.class_id
+        map_id is a randomly generated uuid for each of the topics
+        map_parent is the map id of the parent map
+        lectures is the list of lecture ids that correspond, which comes from each term's 'lectures' 
+        field, mapping to the lecture id in supabase
+        visual is the latex representation of a group/term. (for now we may do the image link, 90%)
+        type is the type of the topic, which is 'group', 'term', 'problem', or 'algorithm'
+        '''
+        
+        # Create a mapping from lecture names to ids
+        lecture_mapping = self.supabase.table("slides").select("id, name").eq("class", self.class_id).execute().data
+        name_to_id = {lecture['name']: lecture['id'] for lecture in lecture_mapping}
+        
+        def create_topic_entry(title, content, parent_id=None, lectures=None, visual=None, topic_type='group'):
+            """Helper function to create a standardized topic entry"""
+            return {
+                "title": title,
+                "content": content,
+                "class": self.class_id,  # Assuming self.class_id exists
+                "map_parent": parent_id,
+                "map_id": str(uuid.uuid4()),
+                "lectures": lectures or [],
+                "visual": visual,
+                "type": topic_type
+            }
+
+        def process_group(group_name, group_data, parent_id=None):
+            """Recursively process groups and their terms"""
+            topics = []
+            
+            # Create entry for the group itself
+            group_entry = create_topic_entry(
+                title=group_data.get("group", group_name),
+                content="",  # Groups don't have definitions
+                parent_id=parent_id,
+                topic_type='group'  # Groups are always type 'group'
+            )
+            topics.append(group_entry)
+            
+            # Process all terms in this group
+            for term_data in group_data.get("terms", {}).values():
+                # Convert lecture names to ids using the mapping
+                lecture_names = list(term_data.get("lectures", {}).keys())
+                lecture_ids = [name_to_id[name] for name in lecture_names if name in name_to_id]
+                
+                # Get the term type from the term data, defaulting to 'term' if not specified
+                term_type = term_data.get("type", "term")
+                if term_type == 'Key Terms':
+                    term_type = 'term'
+                elif term_type == 'Problem Types':
+                    term_type = 'problem'
+                elif term_type == 'Algorithm Solutions':
+                    term_type = 'algorithm'
+                
+                term_entry = create_topic_entry(
+                    title=term_data.get("term", ""),
+                    content=term_data.get("definition", ""),
+                    parent_id=group_entry["map_id"],
+                    lectures=lecture_ids,
+                    visual=term_data.get("visual", None),
+                    topic_type=term_type
+                )
+                topics.append(term_entry)
+            
+            # Recursively process subgroups
+            for subgroup_data in group_data.get("subgroups", {}).values():
+                topics.extend(process_group(subgroup_data["subgroup"], group_entry["map_id"]))
+            
+            return topics
+
+        # Create root node for course
+        root_id = str(uuid.uuid4())
+        root_node = {
+            "title": self.course_title,
+            "content": "",
+            "class": self.class_id,
+            "map_parent": None,
+            "map_id": root_id,
+            "lectures": [lecture['id'] for lecture in lecture_mapping],  # Include all lectures
+            "visual": None,
+            "type": "group"
+        }
+        
+        # Process all groups and collect topics
+        all_topics = [root_node]  # Start with root node
+        for group_name, group_data in self.groups.items():
+            all_topics.extend(process_group(group_name, group_data, root_id))  # Pass root_id as parent
+            
+        # upload to supabase
+        self.supabase.table("topics").insert(all_topics).execute()
+        print(f"Generated {len(all_topics)} topics for Supabase insertion")

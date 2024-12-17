@@ -1,0 +1,390 @@
+{
+    "2024-10-22-Convexity": {
+        "1": {
+            "latex": "\n\\underline{\\text{Def 1}} \\quad S \\subseteq \\mathbb{R}^m \\text{ is convex if} \\\\\n\\text{for any } z_1, z_2 \\in S \\implies tz_1 + (1-t)z_2 \\in S \\\\\n0 < t < 1 \\\\\n\\overrightarrow{z_1 z_2} \\\\\n\\underline{\\text{Def 2}} \\text{ Convex combination of } z_1, z_2, \\dots, z_n \\in \\mathbb{R}^m \\\\\nt_1 z_1 + t_2 z_2 + \\dots + t_n z_n \\quad t_i \\ge 0 \\\\\n\\sum_i t_i = 1\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        190,
+                        40
+                    ],
+                    "description": "Definition 1: Convex set."
+                },
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        190,
+                        40
+                    ],
+                    "description": "Definition 2: Convex combination."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        90,
+                        20
+                    ],
+                    "description": "Example of a convex combination in $\\mathbb{R}^2$."
+                },
+                {
+                    "bbox": [
+                        70,
+                        110,
+                        90,
+                        20
+                    ],
+                    "description": "Example of a convex combination in $\\mathbb{R}^2$."
+                },
+                {
+                    "bbox": [
+                        130,
+                        110,
+                        90,
+                        20
+                    ],
+                    "description": "Example of a convex combination in $\\mathbb{R}^3$."
+                }
+            ],
+            "description": "This slide introduces two definitions fundamental to convex analysis within the context of Linear Programming and Optimization Techniques.  Definition 1 formally defines a convex set $S$ in $\\mathbb{R}^m$:  a set is convex if, for any two points $z_1$ and $z_2$ within the set, the line segment connecting them ($tz_1 + (1-t)z_2$ where $0 < t < 1$) is entirely contained within the set.  Definition 2 defines a convex combination of $n$ points $z_1, z_2, \\dots, z_n$ in $\\mathbb{R}^m$ as a weighted sum $t_1 z_1 + t_2 z_2 + \\dots + t_n z_n$, where the weights $t_i$ are non-negative and sum to 1 ($\\sum_i t_i = 1$). The accompanying figures illustrate convex combinations in $\\mathbb{R}^2$ and $\\mathbb{R}^3$, showing how points are combined to form new points within the convex hull."
+        },
+        "2": {
+            "latex": "\n\\underline{\\text{Thm 10.1}} \\quad S \\text{ is convex } \\iff \\\\\n\\text{it contains all conv. comb. of points in } S \\\\\npf \\quad \\iff \\\\\n\\underline{\\text{Suppose } S \\text{ contains all conv. comb. of pts in } S} \\\\\n\\text{Then clearly, for any } z_1, z_2 \\in S \\\\\n\\underline{tz_1 + (1-t)z_2 \\in S} \\\\\n\\text{Conv. comb. of } z_1, z_2 \\\\\n\\implies \\underline{S \\text{ is convex}}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        190,
+                        30
+                    ],
+                    "description": "Theorem 10.1 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        50,
+                        190,
+                        20
+                    ],
+                    "description": "Assumption of the proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        80,
+                        190,
+                        20
+                    ],
+                    "description": "Key step in the proof."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        190,
+                        20
+                    ],
+                    "description": "Conclusion of the proof."
+                }
+            ],
+            "description": "This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points. The proof is outlined, focusing on one direction of the implication. It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\le t \\le 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex. The underlining highlights the key steps and conclusions of the proof. The notation \"pf\" indicates \"proof,\" and the double-headed arrow indicates the \"if and only if\" nature of the theorem. The term \"conv. comb.\" is an abbreviation for \"convex combination.\" The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems, specifically in characterizing feasible regions."
+        },
+        "3": {
+            "latex": "\n\\underline{\\text{Thm 10.1}} \\quad S \\text{ is convex } \\iff \\\\\n\\text{it contains all conv. comb. of points in } S \\\\\npf \\quad \\implies \\\\\n\\underline{\\text{Suppose } S \\text{ is convex}} \\\\\nn=2: \\quad z_1, z_2 \\in S \\implies t_1 z_1 + t_2 z_2 \\in S, \\quad t_1, t_2 \\ge 0 \\\\\n\\quad t_1 + t_2 = 1 \\\\\nn=3: \\quad z_1, z_2, z_3 \\in S \\implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \\left( \\frac{t_1}{t_1 + t_2} z_1 + \\frac{t_2}{t_1 + t_2} z_2 \\right) + t_3 z_3 \\\\\nt_1 + t_2 + t_3 = 1 \\\\\nt_1 + t_2 \\ge 0, \\quad t_3 \\ge 0 \\\\\n\\implies t_1 z_1 + t_2 z_2 + t_3 z_3 \\in S\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        190,
+                        30
+                    ],
+                    "description": "Theorem 10.1 statement."
+                },
+                {
+                    "bbox": [
+                        10,
+                        50,
+                        190,
+                        20
+                    ],
+                    "description": "Proof outline."
+                },
+                {
+                    "bbox": [
+                        10,
+                        80,
+                        190,
+                        20
+                    ],
+                    "description": "Assumption of the proof for n=2."
+                },
+                {
+                    "bbox": [
+                        10,
+                        110,
+                        190,
+                        50
+                    ],
+                    "description": "Proof for n=3."
+                },
+                {
+                    "bbox": [
+                        150,
+                        140,
+                        50,
+                        20
+                    ],
+                    "description": "Conclusion of the proof for n=3."
+                }
+            ],
+            "description": "This slide completes the proof of Theorem 10.1, demonstrating that if a set $S$ is convex, then it contains all convex combinations of its points.  The proof uses induction. The base case ($n=2$) is shown: if $z_1, z_2 \\in S$, then any convex combination $t_1z_1 + t_2z_2$ (with $t_1, t_2 \\ge 0$ and $t_1 + t_2 = 1$) is also in $S$ by the definition of convexity. The inductive step ($n=3$) is then demonstrated. It shows that if $z_1, z_2, z_3 \\in S$, then a convex combination $t_1z_1 + t_2z_2 + t_3z_3$ can be rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$. Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$. This inductive argument can be extended to any number of points, completing the proof. The underlining highlights key assumptions and conclusions. The notation \"pf\" stands for \"proof,\" and \"conv. comb.\" is short for \"convex combination.\" The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.  The implication arrow ($\\implies$) indicates that the proof is showing that if $S$ is convex, then it contains all convex combinations of its points (one direction of the \"if and only if\" statement from the previous slide)."
+        }
+    },
+    "2024-11-21-EconNetSimplex": {
+        "1": {
+            "latex": "\n\\underline{\\text{Economic Interpretation of Network Simplex}} \\quad [C]p. 297 \\\\\nb_i \\quad c_{ij} \\quad j \\quad b_j\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        30,
+                        190,
+                        150
+                    ],
+                    "description": "A network diagram illustrating the economic interpretation of the network simplex method.  Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities."
+                }
+            ],
+            "description": "This slide presents a diagram illustrating the economic interpretation of the network simplex method within the context of linear programming and optimization techniques. The title \"Economic Interpretation of Network Simplex\" is underlined.  A reference to a book or paper ([C]p. 297) is included. The diagram shows a network with nodes representing sources or destinations ($i$, $j$) and edges representing flows between them.  Each edge is labeled with a cost ($c_{ij}$) and the nodes are labeled with supply or demand values ($b_i$, $b_j$). The diagram visually represents a problem that can be solved using the network simplex algorithm, a specialized version of the simplex method for network flow problems.  The network structure is crucial for understanding the economic interpretation, as it allows for a clear visualization of the flow of goods or resources and their associated costs. The slide likely serves as an introduction to the economic interpretation of the network simplex method, setting the stage for further explanation of the algorithm and its application."
+        },
+        "2": {
+            "latex": "\n\\underline{\\text{Economic Interpretation of Network Simplex}} \\\\\nb_i \\quad c_{ij} \\quad j \\quad b_j \\\\\n\\text{Start a feasible solution on a spanning tree}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        30,
+                        190,
+                        150
+                    ],
+                    "description": "A network diagram illustrating the economic interpretation of the network simplex method. Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities. The nodes are labeled with supply or demand values ($b_i$, $b_j$). A spanning tree is highlighted in salmon color.  The question mark (?) suggests an additional element or question related to the spanning tree."
+                }
+            ],
+            "description": "This slide introduces the economic interpretation of the network simplex method in the context of linear programming. The title \"Economic Interpretation of Network Simplex\" is underlined. The diagram depicts a network flow problem. Nodes represent supply ($b_i$) or demand ($b_j$) points, and edges represent flow between them with associated costs ($c_{ij}$).  A spanning tree within the network is highlighted, indicating that the network simplex method starts with a feasible solution on a spanning tree. The question mark (?) at the bottom suggests a further point of discussion or a question related to the spanning tree's role in the algorithm. The slide sets the stage for explaining how the network simplex method leverages the network structure to efficiently solve optimization problems."
+        },
+        "3": {
+            "latex": "\n\\underline{\\text{Economic Interpretation of Network Simplex}} \\\\\nb_i \\quad c_{ij} \\quad j \\quad b_j \\\\\n\\text{Start a feasible solution on a spanning tree}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        30,
+                        190,
+                        150
+                    ],
+                    "description": "A network diagram illustrating the economic interpretation of the network simplex method. Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities. The nodes are labeled with supply or demand values ($b_i$, $b_j$). A spanning tree is highlighted in salmon color.  The question mark (?) suggests an additional element or question related to the spanning tree."
+                }
+            ],
+            "description": "This slide continues the explanation of the economic interpretation of the network simplex method, building upon the previous slide. The title \"Economic Interpretation of Network Simplex\" is underlined.  The diagram shows a network flow problem, similar to the previous slide, with nodes representing supply ($b_i$) or demand ($b_j$) points, and edges representing flow between them with associated costs ($c_{ij}$).  Crucially, a spanning tree is highlighted within the network, emphasizing that the network simplex algorithm begins by finding a feasible solution that corresponds to a spanning tree of the network.  The question mark (?) at the bottom likely indicates a point of discussion or a question regarding the selection or properties of the initial spanning tree, or perhaps the next step in the algorithm. The slide focuses on the initialization phase of the network simplex method, setting the stage for explaining how the algorithm iteratively improves the solution by modifying the spanning tree."
+        }
+    },
+    "2024-10-28-ApplsLinProg": {
+        "1": {
+            "latex": "\n\\underline{\\text{Production Planning}} \\\\\n\\text{[M\\&D] p.16} \\quad 2.3 \\text{ Ice Cream All Year Round}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        190,
+                        120
+                    ],
+                    "description": "A bar chart showing monthly demands ($d_i$, $i=1,\\dots,12$) for ice cream in tons. The x-axis represents the months (Jan-Dec), and the y-axis represents the sales in tons."
+                }
+            ],
+            "description": "This slide introduces a production planning problem for an ice cream manufacturer. The title \"Production Planning\" is underlined. A reference to a textbook or other source ([M\\&D] p.16) is given, along with the section number (2.3) and title \"Ice Cream All Year Round\". The main content is a bar chart illustrating monthly ice cream demands ($d_i$, where $i$ represents the month from 1 to 12) in tons. The chart shows the predicted monthly sales of ice cream for the next year, providing data for a linear programming optimization problem. The context of the course (Linear Programming and Optimization Techniques) indicates that this data will be used to formulate a linear program to optimize the ice cream production plan, likely aiming to minimize costs or maximize profits while meeting the predicted demand."
+        },
+        "2": {
+            "latex": "\n\\underline{\\text{Production Planning}} \\\\\n\\text{[M\\&D] p.16} \\quad 2.3 \\text{ Ice Cream All Year Round}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        190,
+                        120
+                    ],
+                    "description": "A bar chart showing monthly demands ($d_i$, $i=1,\\dots,12$) for ice cream in tons. The x-axis represents the months (Jan-Dec), and the y-axis represents the sales in tons. A horizontal line indicates the average demand."
+                }
+            ],
+            "description": "This slide presents a production planning problem for Icicle World Ltd., an ice cream manufacturer.  The title \"Production Planning\" is underlined.  A reference to a textbook or other source ([M\\&D] p.16) is given, along with the section number (2.3) and title \"Ice Cream All Year Round\". The main content is a bar chart illustrating the monthly ice cream demand ($d_i$, where $i$ represents the month from 1 to 12) in tons.  The chart shows predicted monthly sales for the next year. A horizontal red line indicates the average monthly demand. The context of the course (Linear Programming and Optimization Techniques) indicates that this data will be used to formulate a linear program to optimize the ice cream production plan, likely aiming to minimize costs or maximize profits while meeting the predicted demand.  The text mentions that the prediction is based on historical data, extensive surveys, and bird observations."
+        },
+        "3": {
+            "latex": "\n\\underline{\\text{Production Planning}} \\\\\n\\text{[M\\&D] p.16} \\\\\n(1) \\quad x_i - \\text{production at month } i \\\\\n(2) \\quad s_i - \\text{surplus at end of month } i \\\\\n(3) \\quad x_i + s_{i-1} = d_i + s_i \\\\\n\\min \\sum_{i=1}^{12} 50|x_i - x_{i-1}| + \\sum_{i=1}^{12} 20 s_i\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        190,
+                        170
+                    ],
+                    "description": "No figure present."
+                }
+            ],
+            "description": "This slide formulates a linear programming model for a production planning problem. The title \"Production Planning\" is underlined. A reference to a textbook or other source ([M\\&D] p.16) is given.  The model involves: (1) $x_i$ representing the production level in month $i$; (2) $s_i$ representing the surplus inventory at the end of month $i$; and (3) a constraint $x_i + s_{i-1} = d_i + s_i$, where $d_i$ is the demand in month $i$, ensuring that production plus beginning inventory equals demand plus ending inventory. The objective function is to minimize the total cost, which consists of two parts: $\\sum_{i=1}^{12} 50|x_i - x_{i-1}|$ representing the cost of changing production levels between consecutive months, and $\\sum_{i=1}^{12} 20 s_i$ representing the cost of storing surplus inventory.  The context of the course (Linear Programming and Optimization Techniques) indicates that this model will be solved using linear programming techniques. The absolute value in the cost of changing production levels suggests that this model might require reformulation to be solved using standard linear programming methods."
+        }
+    },
+    "2024-09-24-SimplexMatrix": {
+        "1": {
+            "latex": "\n\\underline{\\text{Simplex in Matrix Notation}} \\\\\n\\begin{array}{|c|}\n\\hline\n\\text{max } f(x) = c^T x \\\\\n\\text{s.t. } Ax \\le b \\\\\nx \\ge 0 \\\\\n\\hline\n\\end{array}\n\\quad x \\in \\mathbb{R}^n, \\quad c \\in \\mathbb{R}^n \\\\\nA \\in \\mathbb{R}^{m \\times n}, \\quad b \\in \\mathbb{R}^m \\\\\n\\begin{array}{|c|}\n\\hline\n\\text{max } f(x) = c^T x \\\\\n\\text{s.t. } w = b - Ax \\\\\nx, w \\ge 0 \\\\\n\\hline\n\\end{array}\n\\quad w \\in \\mathbb{R}^m\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        190,
+                        60
+                    ],
+                    "description": "First linear program in matrix notation."
+                },
+                {
+                    "bbox": [
+                        10,
+                        130,
+                        190,
+                        60
+                    ],
+                    "description": "Second linear program in matrix notation."
+                }
+            ],
+            "description": "This slide presents two equivalent formulations of a linear program in matrix notation. The title \"Simplex in Matrix Notation\" is underlined. The first formulation is a standard maximization problem: maximize $f(x) = c^Tx$ subject to $Ax \\le b$ and $x \\ge 0$, where $x \\in \\mathbb{R}^n$, $c \\in \\mathbb{R}^n$, $A \\in \\mathbb{R}^{m \\times n}$, and $b \\in \\mathbb{R}^m$. The second formulation introduces slack variables $w \\in \\mathbb{R}^m$, rewriting the constraints as $w = b - Ax$ and $x, w \\ge 0$.  The equivalence between the two formulations is implied by a curved arrow connecting them.  The context of the course (Linear Programming and Optimization Techniques) suggests that this slide introduces the matrix notation used to represent linear programs, which is essential for understanding the simplex method and other optimization algorithms. The slide likely serves as an introduction to the matrix representation of linear programs before delving into the simplex algorithm."
+        },
+        "2": {
+            "latex": "\n\\underline{\\text{Simplex in Matrix Notation}} \\\\\n\\begin{array}{|c|}\n\\hline\n\\text{max } f(x) = c^T x \\\\\n\\text{s.t. } Ax \\le b \\\\\nx \\ge 0 \\\\\n\\hline\n\\end{array}\n\\quad x \\in \\mathbb{R}^n, \\quad c \\in \\mathbb{R}^n \\\\\nA \\in \\mathbb{R}^{m \\times n}, \\quad b \\in \\mathbb{R}^m \\\\\n\\begin{array}{|c|}\n\\hline\n\\text{max } f(x) = c^T x \\\\\n\\text{s.t. } w = b - Ax \\\\\nx, w \\ge 0 \\\\\n\\hline\n\\end{array}\n\\quad w \\in \\mathbb{R}^m \\\\\n\\begin{array}{|c|}\n\\hline\n\\text{max } f(x) = j^T + c^T x \\\\\n\\text{s.t. } \\overline{w} = \\overline{b} - \\overline{A}x \\\\\nx, \\overline{w} \\ge 0 \\\\\n\\hline\n\\end{array}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        90,
+                        60
+                    ],
+                    "description": "First linear program in matrix notation."
+                },
+                {
+                    "bbox": [
+                        10,
+                        130,
+                        90,
+                        60
+                    ],
+                    "description": "Second linear program in matrix notation."
+                },
+                {
+                    "bbox": [
+                        10,
+                        200,
+                        90,
+                        60
+                    ],
+                    "description": "Third linear program in matrix notation."
+                }
+            ],
+            "description": "This slide shows three equivalent formulations of a linear program in matrix notation. The title \"Simplex in Matrix Notation\" is underlined. The first formulation is a standard maximization problem: maximize $f(x) = c^Tx$ subject to $Ax \\le b$ and $x \\ge 0$, where $x \\in \\mathbb{R}^n$, $c \\in \\mathbb{R}^n$, $A \\in \\mathbb{R}^{m \\times n}$, and $b \\in \\mathbb{R}^m$. The second formulation introduces slack variables $w \\in \\mathbb{R}^m$, rewriting the constraints as $w = b - Ax$ and $x, w \\ge 0$. The third formulation is similar to the second, but uses different notation, with $\\overline{w}$, $\\overline{b}$, and $\\overline{A}$ representing modified slack variables, right-hand side vector, and constraint matrix, respectively, and includes a constant term $j^T$ in the objective function.  Curved arrows indicate the iterative process of the simplex method, transforming the problem from one formulation to the next. The context of the course (Linear Programming and Optimization Techniques) suggests that this slide illustrates how linear programs are represented in matrix form, which is crucial for understanding the simplex algorithm.  The slide likely serves as a transition to explaining the simplex method's iterative process."
+        },
+        "3": {
+            "latex": "\n\\underline{\\text{Simplex in Matrix Notation}} \\\\\n\\begin{array}{|c|}\n\\hline\n\\text{max } f(x) = c^T x \\\\\n\\text{s.t. } Ax + w = b \\\\\nx, w \\ge 0 \\\\\n\\hline\n\\end{array}\n\\quad \\begin{array}{c} x \\in \\mathbb{R}^n \\\\ c \\in \\mathbb{R}^n \\\\ A \\in \\mathbb{R}^{m \\times n} \\\\ b \\in \\mathbb{R}^m \\\\ w \\in \\mathbb{R}^m \\end{array}\n\\begin{array}{c} m \\times (n+m) \\\\ \\begin{bmatrix} A & I \\end{bmatrix} \\begin{bmatrix} x \\\\ w \\end{bmatrix} = b \\end{array} \\\\\n\\xrightarrow{\\text{Simplex iterations}} \\\\\n\\begin{array}{|c|}\n\\hline\n\\text{max } f(x) = \\overline{j} + \\overline{c}^T x \\\\\n\\text{s.t. } \\overline{A}x + \\overline{w} = \\overline{b} \\\\\nx, \\overline{w} \\ge 0 \\\\\n\\hline\n\\end{array}\n\\quad \\begin{array}{c} m \\times (n+m) \\\\ \\begin{bmatrix} \\overline{A} & I \\end{bmatrix} \\begin{bmatrix} x \\\\ \\overline{w} \\end{bmatrix} = \\overline{b} \\end{array}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        90,
+                        60
+                    ],
+                    "description": "First linear program in matrix notation."
+                },
+                {
+                    "bbox": [
+                        10,
+                        130,
+                        90,
+                        60
+                    ],
+                    "description": "Second linear program in matrix notation."
+                },
+                {
+                    "bbox": [
+                        120,
+                        70,
+                        80,
+                        30
+                    ],
+                    "description": "Matrix representation of the first linear program."
+                },
+                {
+                    "bbox": [
+                        120,
+                        140,
+                        80,
+                        30
+                    ],
+                    "description": "Matrix representation of the second linear program."
+                }
+            ],
+            "description": "This slide illustrates the simplex method's iterative process using matrix notation within the context of linear programming. The title \"Simplex in Matrix Notation\" is underlined.  The slide presents two equivalent formulations of a linear program. The first is a standard maximization problem: maximize $f(x) = c^Tx$ subject to $Ax + w = b$ and $x, w \\ge 0$, where $x \\in \\mathbb{R}^n$ are the decision variables, $c \\in \\mathbb{R}^n$ is the cost vector, $A \\in \\mathbb{R}^{m \\times n}$ is the constraint matrix, $b \\in \\mathbb{R}^m$ is the right-hand side vector, and $w \\in \\mathbb{R}^m$ are the slack variables. This is then represented in matrix form as $\\begin{bmatrix} A & I \\end{bmatrix} \\begin{bmatrix} x \\\\ w \\end{bmatrix} = b$. The second formulation represents a later iteration of the simplex method, where the objective function and constraints have been modified. The objective function is now $\\overline{j} + \\overline{c}^T x$, and the constraints are $\\overline{A}x + \\overline{w} = \\overline{b}$, with the same non-negativity constraints. This is also represented in matrix form as $\\begin{bmatrix} \\overline{A} & I \\end{bmatrix} \\begin{bmatrix} x \\\\ \\overline{w} \\end{bmatrix} = \\overline{b}$. The arrow indicates the iterative nature of the simplex algorithm, transforming the initial problem into a modified one during each iteration. The dimensions of the matrices are explicitly stated. The slide emphasizes the use of matrix notation to represent and solve linear programs efficiently."
+        }
+    },
+    "2024-09-05-SimplexEfficiency": {
+        "1": {
+            "latex": "\n\\underline{\\text{Efficiency of Simplex Method}} \\\\\n\\text{Worst case vs Average Case} \\\\\n\\bullet \\text{ (Dantzig) } m < 50, \\quad m+n < 200 \\\\\n\\#(\\text{iterations}) \\le \\frac{3m}{2} \\text{ (usually)}, \\quad \\text{rarely } \\approx 3m\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        60,
+                        190,
+                        120
+                    ],
+                    "description": "Two tables showing average numbers of iterations required by the largest-coefficient rule and the largest-increase rule for different values of $m$ and $n$."
+                }
+            ],
+            "description": "This slide discusses the efficiency of the simplex method in the context of linear programming. The title \"Efficiency of Simplex Method\" is underlined.  It compares the worst-case and average-case performance.  According to Dantzig, for problems with $m < 50$ and $m + n < 200$, the number of iterations is usually less than or equal to $\\frac{3m}{2}$, but rarely approaches $3m$.  Two tables are included, likely from a source like Dantzig's work, showing empirical data on the average number of iterations required by two different simplex rules (largest-coefficient and largest-increase) for various problem sizes ($m$ and $n$).  The tables provide evidence supporting the claim about the average-case performance of the simplex method. The context of the course (Linear Programming and Optimization Techniques) is crucial for understanding the significance of this analysis, as it addresses the practical efficiency of a fundamental linear programming algorithm."
+        },
+        "2": {
+            "latex": "\n\\underline{\\text{Worst Case Example: Klee-Minty (1970)}} \\\\\n\\text{The example is quite simple to state:} \\\\\n\\text{maximize } \\sum_{j=1}^n 2^{n-j} x_j \\\\\n\\text{(4.1) subject to } \\sum_{j=1}^i 2^{i-j} x_j + x_{i+1} \\le 100^{i-1}, \\quad i = 1, 2, \\dots, n \\\\\nx_j \\ge 0 \\quad j = 1, 2, \\dots, n \\\\\n\\text{It is instructive to look closely at the constraints. The first three constraints are:} \\\\\nx_1 \\le 1 \\\\\n4x_1 + x_2 \\le 100 \\\\\n8x_1 + 4x_2 + x_3 \\le 10,000\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        190,
+                        170
+                    ],
+                    "description": "No figure present."
+                }
+            ],
+            "description": "This slide presents a worst-case example for the simplex method, known as the Klee-Minty cube. The title \"Worst Case Example: Klee-Minty (1970)\" is underlined. The example is a linear program in the form of a maximization problem with $n$ variables and $n$ constraints. The objective function is $\\sum_{j=1}^n 2^{n-j} x_j$. The constraints are given by $\\sum_{j=1}^i 2^{i-j} x_j + x_{i+1} \\le 100^{i-1}$ for $i = 1, 2, \\dots, n$, and $x_j \\ge 0$ for $j = 1, 2, \\dots, n$. The slide then highlights the first three constraints of this example, showing how they are structured.  The context of the course (Linear Programming and Optimization Techniques) indicates that this example is used to illustrate that the simplex method can have exponential time complexity in the worst case. The Klee-Minty cube is a classic example demonstrating that the simplex method, while efficient in practice, can take an exponential number of iterations in certain pathological cases. The slide likely serves as an introduction to the analysis of the simplex method's worst-case complexity."
+        },
+        "3": {
+            "latex": "\n\\underline{\\text{Worst Case Example: Klee-Minty (1970)}} \\\\\n\\text{[v]} \\\\\n\\text{maximize } \\sum_{j=1}^n 2^{n-j} x_j - \\frac{1}{2} \\sum_{j=1}^n 2^{n-j} \\beta_j \\\\\n\\text{(4.2) subject to } 2 \\sum_{j=1}^{i-1} 2^{i-1-j} x_j + x_i \\le \\sum_{j=1}^{i-1} 2^{i-1-j} \\beta_j + \\beta_i, \\quad i = 1, 2, \\dots, n \\\\\nx_j \\ge 0 \\quad j = 1, 2, \\dots, n \\\\\n1 \\ll \\beta_1 \\ll \\beta_2 \\ll \\dots \\ll \\beta_n \\\\\n\\underline{\\text{Largest Coefficient Rule: require } 2^n - 1 \\text{ steps}} \\\\\n\\underline{\\text{Smallest Coefficient Rule: just } n \\text{ steps}}\n",
+            "figures": [
+                {
+                    "bbox": [
+                        10,
+                        10,
+                        190,
+                        170
+                    ],
+                    "description": "No figure present."
+                }
+            ],
+            "description": "This slide presents the Klee-Minty example (1970), a worst-case scenario for the simplex method in linear programming. The title \"Worst Case Example: Klee-Minty (1970)\" is underlined.  The example is a linear program formulated as a maximization problem with $n$ variables ($x_j$) and $n$ constraints. The objective function is a weighted sum of the variables $x_j$, subtracted by a weighted sum of parameters $\\beta_j$. The constraints are inequalities involving weighted sums of the variables $x_j$ and parameters $\\beta_j$. The parameters $\\beta_j$ satisfy the condition $1 \\ll \\beta_1 \\ll \\beta_2 \\ll \\dots \\ll \\beta_n$, indicating a significant difference in magnitude between consecutive $\\beta_j$ values.  The slide then highlights the performance of two different pivot rules: the Largest Coefficient Rule, which requires $2^n - 1$ steps (exponential complexity), and the Smallest Coefficient Rule, which requires only $n$ steps (linear complexity).  The underlining emphasizes the contrasting performance of these rules. The context of the course (Linear Programming and Optimization Techniques) is crucial because this example demonstrates that the simplex method's efficiency is highly dependent on the chosen pivot rule and can exhibit exponential time complexity in the worst case, despite its generally good performance in practice."
+        }
+    }
+}

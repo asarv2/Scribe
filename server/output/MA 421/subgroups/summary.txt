@@ -1,0 +1,54 @@
+Simplex Method Mechanics
+  Simplex Algorithm Mechanics
+    simplex method
+    largest coefficient rule
+    smallest coefficient rule
+    transforming a linear program through simplex iterations
+    simplex iteration
+  Simplex Method Performance
+    klee-minty cube
+    efficiency of simplex method
+    worst-case example
+    impact of pivot rules
+Linear Programming Fundamentals
+  Linear Program Components
+    slack variables
+    cost vector
+    constraint matrix
+    right-hand side vector
+    decision variables
+  Linear Program Structure
+    representing a linear program in matrix form
+Convexity in Linear Programming
+  Convexity Fundamentals
+    convex set
+    convex combination
+  Convexity Theorems
+    theorem 10.1
+    equivalence of convexity and convex combinations
+  Convexity Validation
+    convex set verification
+    convex combination membership
+Production Planning Applications
+  Production Planning
+    production planning
+    production planning formulation
+  Production Modeling
+    $x_i$
+    $s_i$
+    $d_i$
+Network Simplex Algorithm
+  Network Flow Fundamentals
+    network simplex
+    $b_i$
+    $c_{ij}$
+    $b_j$
+    cycle identification
+    flow adjustment
+  Spanning Tree Operations
+    spanning tree
+    finding a feasible solution on a spanning tree
+  Simplex Algorithm Steps
+    reduced cost calculation
+    entering arc selection
+    leaving arc selection

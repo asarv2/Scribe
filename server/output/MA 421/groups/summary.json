@@ -1,0 +1,426 @@
+{
+    "simplex method mechanics": {
+        "group": "Simplex Method Mechanics",
+        "terms": {
+            "simplex method": {
+                "term": "Simplex Method",
+                "definition": "An iterative algorithm for solving linear programming problems by moving from one feasible solution to another with a better objective function value until an optimal solution is found.",
+                "lectures": {
+                    "2024-09-05-SimplexEfficiency": [
+                        1
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "klee-minty cube": {
+                "term": "Klee-Minty Cube",
+                "definition": "A specific linear programming problem designed to demonstrate the worst-case exponential time complexity of the simplex method.",
+                "lectures": {
+                    "2024-09-05-SimplexEfficiency": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "largest coefficient rule": {
+                "term": "Largest Coefficient Rule",
+                "definition": "A pivot rule in the simplex method that selects the variable with the largest coefficient in the objective function to enter the basis.",
+                "lectures": {
+                    "2024-09-05-SimplexEfficiency": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "smallest coefficient rule": {
+                "term": "Smallest Coefficient Rule",
+                "definition": "A pivot rule in the simplex method that selects the variable with the smallest coefficient in the objective function to enter the basis.",
+                "lectures": {
+                    "2024-09-05-SimplexEfficiency": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "efficiency of simplex method": {
+                "term": "Efficiency of Simplex Method",
+                "definition": "Analyzing the average and worst-case performance of the simplex method, particularly in terms of the number of iterations required for convergence.",
+                "lectures": {
+                    "2024-09-05-SimplexEfficiency": [
+                        1
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "worst-case example": {
+                "term": "Worst-Case Example",
+                "definition": "Constructing a specific linear programming problem (Klee-Minty cube) that forces the simplex method to take an exponential number of steps.",
+                "lectures": {
+                    "2024-09-05-SimplexEfficiency": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "impact of pivot rules": {
+                "term": "Impact of Pivot Rules",
+                "definition": "Demonstrating how different pivot rules (Largest Coefficient Rule vs. Smallest Coefficient Rule) can drastically affect the number of iterations required by the simplex method, especially in worst-case scenarios.",
+                "lectures": {
+                    "2024-09-05-SimplexEfficiency": [
+                        3
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "transforming a linear program through simplex iterations": {
+                "term": "Transforming a linear program through simplex iterations",
+                "definition": "This involves modifying the objective function, constraint matrix, and right-hand side vector of a linear program during the iterative process of the simplex method.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "simplex iteration": {
+                "term": "Simplex Iteration",
+                "definition": "$\\overline{A} = T A$, $\\overline{b} = T b$, $\\overline{c}^T = c^T - y^T A$, $\\overline{j} = y^T b$, where $T$ is a transformation matrix, and $y$ is a vector related to the dual variables.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        3
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            }
+        }
+    },
+    "linear programming fundamentals": {
+        "group": "Linear Programming Fundamentals",
+        "terms": {
+            "slack variables": {
+                "term": "Slack Variables",
+                "definition": "Variables added to convert inequality constraints into equality constraints in a linear program.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "cost vector": {
+                "term": "Cost Vector",
+                "definition": "A vector representing the coefficients of the decision variables in the objective function of a linear program.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "constraint matrix": {
+                "term": "Constraint Matrix",
+                "definition": "A matrix containing the coefficients of the decision variables in the constraints of a linear program.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "right-hand side vector": {
+                "term": "Right-hand Side Vector",
+                "definition": "A vector containing the constant values on the right-hand side of the constraints in a linear program.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "decision variables": {
+                "term": "Decision Variables",
+                "definition": "The variables in a linear program that represent the quantities to be determined in order to optimize the objective function.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "representing a linear program in matrix form": {
+                "term": "Representing a linear program in matrix form",
+                "definition": "This involves expressing the objective function, constraints, and variables of a linear program using matrices and vectors.",
+                "lectures": {
+                    "2024-09-24-SimplexMatrix": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Problem Types"
+            }
+        }
+    },
+    "convexity in linear programming": {
+        "group": "Convexity in Linear Programming",
+        "terms": {
+            "convex set": {
+                "term": "Convex Set",
+                "definition": "A set $S \\subseteq \\mathbb{R}^m$ is convex if for any two points $z_1, z_2 \\in S$, the line segment connecting them, defined by $tz_1 + (1-t)z_2$ where $0 < t < 1$, is entirely contained within $S$.",
+                "lectures": {
+                    "2024-10-22-Convexity": [
+                        1
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "convex combination": {
+                "term": "Convex Combination",
+                "definition": "A convex combination of points $z_1, z_2, \\dots, z_n \\in \\mathbb{R}^m$ is a weighted sum of the form $t_1 z_1 + t_2 z_2 + \\dots + t_n z_n$, where $t_i \\ge 0$ for all $i$ and $\\sum_i t_i = 1$.",
+                "lectures": {
+                    "2024-10-22-Convexity": [
+                        1
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "theorem 10.1": {
+                "term": "Theorem 10.1",
+                "definition": "A set $S$ is convex if and only if it contains all convex combinations of its points.",
+                "lectures": {
+                    "2024-10-22-Convexity": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "convex set verification": {
+                "term": "Convex Set Verification",
+                "definition": "Determining whether a given set satisfies the definition of a convex set, i.e., if the line segment connecting any two points in the set is entirely contained within the set.",
+                "lectures": {
+                    "2024-10-22-Convexity": [
+                        1
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "convex combination membership": {
+                "term": "Convex Combination Membership",
+                "definition": "Determining whether a given point can be expressed as a convex combination of other points within a set.",
+                "lectures": {
+                    "2024-10-22-Convexity": [
+                        1
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "equivalence of convexity and convex combinations": {
+                "term": "Equivalence of Convexity and Convex Combinations",
+                "definition": "Proving that a set is convex if and only if it contains all convex combinations of its points.",
+                "lectures": {
+                    "2024-10-22-Convexity": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Problem Types"
+            }
+        }
+    },
+    "production planning applications": {
+        "group": "Production Planning Applications",
+        "terms": {
+            "production planning": {
+                "term": "Production Planning",
+                "definition": "The process of determining the most efficient way to meet demand for a product over a given time period, considering factors like production capacity, inventory, and costs.",
+                "lectures": {
+                    "2024-10-28-ApplsLinProg": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "$x_i$": {
+                "term": "$x_i$",
+                "definition": "The production level in month $i$.",
+                "lectures": {
+                    "2024-10-28-ApplsLinProg": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "$s_i$": {
+                "term": "$s_i$",
+                "definition": "The surplus inventory at the end of month $i$.",
+                "lectures": {
+                    "2024-10-28-ApplsLinProg": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "$d_i$": {
+                "term": "$d_i$",
+                "definition": "The demand in month $i$.",
+                "lectures": {
+                    "2024-10-28-ApplsLinProg": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "production planning formulation": {
+                "term": "Production Planning Formulation",
+                "definition": "$x_i + s_{i-1} = d_i + s_i$, minimize $\\sum_{i=1}^{12} 50|x_i - x_{i-1}| + \\sum_{i=1}^{12} 20 s_i$.",
+                "lectures": {
+                    "2024-10-28-ApplsLinProg": [
+                        3
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            }
+        }
+    },
+    "network simplex algorithm": {
+        "group": "Network Simplex Algorithm",
+        "terms": {
+            "network simplex": {
+                "term": "Network Simplex",
+                "definition": "A specialized version of the simplex method designed to solve network flow problems, leveraging the network structure for efficiency.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "$b_i$": {
+                "term": "$b_i$",
+                "definition": "Supply at node i in a network flow problem.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "$c_{ij}$": {
+                "term": "$c_{ij}$",
+                "definition": "Cost of flow along the edge from node i to node j in a network flow problem.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "$b_j$": {
+                "term": "$b_j$",
+                "definition": "Demand at node j in a network flow problem.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "spanning tree": {
+                "term": "Spanning Tree",
+                "definition": "A subgraph of a network that includes all nodes and forms a tree (no cycles). In the context of network simplex, it represents a basic feasible solution.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "finding a feasible solution on a spanning tree": {
+                "term": "Finding a feasible solution on a spanning tree",
+                "definition": "The problem of identifying an initial feasible solution for a network flow problem by selecting a spanning tree within the network.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "reduced cost calculation": {
+                "term": "Reduced Cost Calculation",
+                "definition": "$r_{ij} = c_{ij} - (y_i - y_j)$",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        4
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "entering arc selection": {
+                "term": "Entering Arc Selection",
+                "definition": "Select arc $(i,j)$ with $r_{ij} < 0$",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        5
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "cycle identification": {
+                "term": "Cycle Identification",
+                "definition": "Identify the cycle created by adding the entering arc to the spanning tree.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        6
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "flow adjustment": {
+                "term": "Flow Adjustment",
+                "definition": "Adjust flow along the cycle to maintain feasibility.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        7
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "leaving arc selection": {
+                "term": "Leaving Arc Selection",
+                "definition": "Select the arc that reaches zero flow first when adjusting flow along the cycle.",
+                "lectures": {
+                    "2024-11-21-EconNetSimplex": [
+                        7
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            }
+        }
+    }
+}

@@ -1,0 +1,32 @@
+SLIDE 1
+<LATEX>
+\underline{\text{Economic Interpretation of Network Simplex}} \quad [C]p. 297 \\
+b_i \quad c_{ij} \quad j \quad b_j
+</LATEX>
+
+<FIGURE (10, 30), (200, 30), (10, 180), (200, 180)>A network diagram illustrating the economic interpretation of the network simplex method.  Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities.</FIGURE>
+
+<DESCRIPTION>This slide presents a diagram illustrating the economic interpretation of the network simplex method within the context of linear programming and optimization techniques. The title "Economic Interpretation of Network Simplex" is underlined.  A reference to a book or paper ([C]p. 297) is included. The diagram shows a network with nodes representing sources or destinations ($i$, $j$) and edges representing flows between them.  Each edge is labeled with a cost ($c_{ij}$) and the nodes are labeled with supply or demand values ($b_i$, $b_j$). The diagram visually represents a problem that can be solved using the network simplex algorithm, a specialized version of the simplex method for network flow problems.  The network structure is crucial for understanding the economic interpretation, as it allows for a clear visualization of the flow of goods or resources and their associated costs. The slide likely serves as an introduction to the economic interpretation of the network simplex method, setting the stage for further explanation of the algorithm and its application.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\underline{\text{Economic Interpretation of Network Simplex}} \\
+b_i \quad c_{ij} \quad j \quad b_j \\
+\text{Start a feasible solution on a spanning tree}
+</LATEX>
+
+<FIGURE (10, 30), (200, 30), (10, 180), (200, 180)>A network diagram illustrating the economic interpretation of the network simplex method. Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities. The nodes are labeled with supply or demand values ($b_i$, $b_j$). A spanning tree is highlighted in salmon color.  The question mark (?) suggests an additional element or question related to the spanning tree.</FIGURE>
+
+<DESCRIPTION>This slide introduces the economic interpretation of the network simplex method in the context of linear programming. The title "Economic Interpretation of Network Simplex" is underlined. The diagram depicts a network flow problem. Nodes represent supply ($b_i$) or demand ($b_j$) points, and edges represent flow between them with associated costs ($c_{ij}$).  A spanning tree within the network is highlighted, indicating that the network simplex method starts with a feasible solution on a spanning tree. The question mark (?) at the bottom suggests a further point of discussion or a question related to the spanning tree's role in the algorithm. The slide sets the stage for explaining how the network simplex method leverages the network structure to efficiently solve optimization problems.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+\underline{\text{Economic Interpretation of Network Simplex}} \\
+b_i \quad c_{ij} \quad j \quad b_j \\
+\text{Start a feasible solution on a spanning tree}
+</LATEX>
+
+<FIGURE (10, 30), (200, 30), (10, 180), (200, 180)>A network diagram illustrating the economic interpretation of the network simplex method. Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities. The nodes are labeled with supply or demand values ($b_i$, $b_j$). A spanning tree is highlighted in salmon color.  The question mark (?) suggests an additional element or question related to the spanning tree.</FIGURE>
+
+<DESCRIPTION>This slide continues the explanation of the economic interpretation of the network simplex method, building upon the previous slide. The title "Economic Interpretation of Network Simplex" is underlined.  The diagram shows a network flow problem, similar to the previous slide, with nodes representing supply ($b_i$) or demand ($b_j$) points, and edges representing flow between them with associated costs ($c_{ij}$).  Crucially, a spanning tree is highlighted within the network, emphasizing that the network simplex algorithm begins by finding a feasible solution that corresponds to a spanning tree of the network.  The question mark (?) at the bottom likely indicates a point of discussion or a question regarding the selection or properties of the initial spanning tree, or perhaps the next step in the algorithm. The slide focuses on the initialization phase of the network simplex method, setting the stage for explaining how the algorithm iteratively improves the solution by modifying the spanning tree.</DESCRIPTION>
+

@@ -7,25 +7,25 @@ from langchain_core.messages import HumanMessage
 from lecture.base_processor import BaseProcessor
 
 class TermsProcessor(BaseProcessor):
-    def __init__(self, notes_folder: str, save_terms: bool = False, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.save_terms = save_terms
         self.summary_type = "terms" # the name of the output directory for the terms summary
         
         # reading in the slides
+        lectures_folder = os.path.join(self.output_dir, self.course_code, "lectures")
         self.slides = []
         self.slide_names = []
-        for file_name in sorted(os.listdir(notes_folder)):
-            if file_name.endswith('.txt'):
-                slide_path = os.path.join(notes_folder, file_name)
-                with open(slide_path, 'r') as file:
+        for lecture_dir in sorted(os.listdir(lectures_folder)):
+            notes_path = os.path.join(lectures_folder, lecture_dir, "notes.txt")
+            if os.path.isfile(notes_path):
+                with open(notes_path, 'r') as file:
                     self.slides.append(file.read())
-                    self.slide_names.append(file_name.split('.')[0])
+                    self.slide_names.append(lecture_dir)
         
         # Generate timestamp for output file
-        os.makedirs(os.path.join(self.output_dir, self.timestamp, self.summary_type), exist_ok=True)
-        self.json_output_file = os.path.join(self.output_dir, self.timestamp, self.summary_type, "summary.json")
-        self.text_output_file = os.path.join(self.output_dir, self.timestamp, self.summary_type, "summary.txt")
+        os.makedirs(os.path.join(self.output_dir, self.course_code, self.summary_type), exist_ok=True)
+        self.json_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.json")
+        self.text_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.txt")
         
         self.prompts = {
         "Key Terms": f"Extract the key terms from the following slides and provide a clear and concise definition for each one. Your key terms should be specific to this lecture, but also make sense as a general topic in the context of {self.course_title}. Respond in the following format: <term>: <definition>. Use LaTeX format when including any math symbols. Do not include any other text, like numbering, intermediate references, or general summaries before/after the term. Do not add any modifiers around the key terms, like textbf'{{}}' or texttt'{{}}'. Avoid using HTML tags or unicode. Do not focus on generating Problem Types or Algorithm Solutions since this will be done in another section. If you are citing a slide, include the slide number at the end of the term. Here is an example: 'Normal Equation: A closed-form solution for the least squares problem in linear regression. It's always solvable, even if the original system of equations is not.<SLIDE 12>'. If citing multiple slides, include the slide numbers at the end of the definition. Here is another example: 'Support Vectors: The data points closest to the hyperplane in an SVM. They are the most influential points in determining the hyperplane.<SLIDE 10><SLIDE 12><SLIDE 17>'.",
@@ -137,9 +137,7 @@ class TermsProcessor(BaseProcessor):
 
         # Save results to file
         self.save_terms_json(self.json_output_file)
-
-        if self.save_terms:
-            self.save_terms_text(self.text_output_file)
+        self.save_terms_text(self.text_output_file)
                 
     def save_terms_json(self, file_path: str):
         with open(file_path, "w") as file:

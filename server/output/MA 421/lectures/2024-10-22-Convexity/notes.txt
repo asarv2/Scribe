@@ -1,0 +1,60 @@
+SLIDE 1
+<LATEX>
+\underline{\text{Def 1}} \quad S \subseteq \mathbb{R}^m \text{ is convex if} \\
+\text{for any } z_1, z_2 \in S \implies tz_1 + (1-t)z_2 \in S \\
+0 < t < 1 \\
+\overrightarrow{z_1 z_2} \\
+\underline{\text{Def 2}} \text{ Convex combination of } z_1, z_2, \dots, z_n \in \mathbb{R}^m \\
+t_1 z_1 + t_2 z_2 + \dots + t_n z_n \quad t_i \ge 0 \\
+\sum_i t_i = 1
+</LATEX>
+
+<FIGURE (10, 10), (200, 10), (10, 50), (200, 50)>Definition 1: Convex set.</FIGURE>
+<FIGURE (10, 60), (200, 60), (10, 100), (200, 100)>Definition 2: Convex combination.</FIGURE>
+<FIGURE (10, 110), (100, 110), (10, 130), (100, 130)>Example of a convex combination in $\mathbb{R}^2$.</FIGURE>
+<FIGURE (70, 110), (160, 110), (70, 130), (160, 130)>Example of a convex combination in $\mathbb{R}^2$.</FIGURE>
+<FIGURE (130, 110), (220, 110), (130, 130), (220, 130)>Example of a convex combination in $\mathbb{R}^3$.</FIGURE>
+
+<DESCRIPTION>This slide introduces two definitions fundamental to convex analysis within the context of Linear Programming and Optimization Techniques.  Definition 1 formally defines a convex set $S$ in $\mathbb{R}^m$:  a set is convex if, for any two points $z_1$ and $z_2$ within the set, the line segment connecting them ($tz_1 + (1-t)z_2$ where $0 < t < 1$) is entirely contained within the set.  Definition 2 defines a convex combination of $n$ points $z_1, z_2, \dots, z_n$ in $\mathbb{R}^m$ as a weighted sum $t_1 z_1 + t_2 z_2 + \dots + t_n z_n$, where the weights $t_i$ are non-negative and sum to 1 ($\sum_i t_i = 1$). The accompanying figures illustrate convex combinations in $\mathbb{R}^2$ and $\mathbb{R}^3$, showing how points are combined to form new points within the convex hull.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\underline{\text{Thm 10.1}} \quad S \text{ is convex } \iff \\
+\text{it contains all conv. comb. of points in } S \\
+pf \quad \iff \\
+\underline{\text{Suppose } S \text{ contains all conv. comb. of pts in } S} \\
+\text{Then clearly, for any } z_1, z_2 \in S \\
+\underline{tz_1 + (1-t)z_2 \in S} \\
+\text{Conv. comb. of } z_1, z_2 \\
+\implies \underline{S \text{ is convex}}
+</LATEX>
+
+<FIGURE (10, 10), (200, 10), (10, 40), (200, 40)>Theorem 10.1 statement.</FIGURE>
+<FIGURE (10, 50), (200, 50), (10, 70), (200, 70)>Assumption of the proof.</FIGURE>
+<FIGURE (10, 80), (200, 80), (10, 100), (200, 100)>Key step in the proof.</FIGURE>
+<FIGURE (10, 110), (200, 110), (10, 130), (200, 130)>Conclusion of the proof.</FIGURE>
+
+<DESCRIPTION>This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points. The proof is outlined, focusing on one direction of the implication. It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \le t \le 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex. The underlining highlights the key steps and conclusions of the proof. The notation "pf" indicates "proof," and the double-headed arrow indicates the "if and only if" nature of the theorem. The term "conv. comb." is an abbreviation for "convex combination." The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems, specifically in characterizing feasible regions.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+\underline{\text{Thm 10.1}} \quad S \text{ is convex } \iff \\
+\text{it contains all conv. comb. of points in } S \\
+pf \quad \implies \\
+\underline{\text{Suppose } S \text{ is convex}} \\
+n=2: \quad z_1, z_2 \in S \implies t_1 z_1 + t_2 z_2 \in S, \quad t_1, t_2 \ge 0 \\
+\quad t_1 + t_2 = 1 \\
+n=3: \quad z_1, z_2, z_3 \in S \implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \left( \frac{t_1}{t_1 + t_2} z_1 + \frac{t_2}{t_1 + t_2} z_2 \right) + t_3 z_3 \\
+t_1 + t_2 + t_3 = 1 \\
+t_1 + t_2 \ge 0, \quad t_3 \ge 0 \\
+\implies t_1 z_1 + t_2 z_2 + t_3 z_3 \in S
+</LATEX>
+
+<FIGURE (10, 10), (200, 10), (10, 40), (200, 40)>Theorem 10.1 statement.</FIGURE>
+<FIGURE (10, 50), (200, 50), (10, 70), (200, 70)>Proof outline.</FIGURE>
+<FIGURE (10, 80), (200, 80), (10, 100), (200, 100)>Assumption of the proof for n=2.</FIGURE>
+<FIGURE (10, 110), (200, 110), (10, 160), (200, 160)>Proof for n=3.</FIGURE>
+<FIGURE (150, 140), (200, 140), (150, 160), (200, 160)>Conclusion of the proof for n=3.</FIGURE>
+
+<DESCRIPTION>This slide completes the proof of Theorem 10.1, demonstrating that if a set $S$ is convex, then it contains all convex combinations of its points.  The proof uses induction. The base case ($n=2$) is shown: if $z_1, z_2 \in S$, then any convex combination $t_1z_1 + t_2z_2$ (with $t_1, t_2 \ge 0$ and $t_1 + t_2 = 1$) is also in $S$ by the definition of convexity. The inductive step ($n=3$) is then demonstrated. It shows that if $z_1, z_2, z_3 \in S$, then a convex combination $t_1z_1 + t_2z_2 + t_3z_3$ can be rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$. Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$. This inductive argument can be extended to any number of points, completing the proof. The underlining highlights key assumptions and conclusions. The notation "pf" stands for "proof," and "conv. comb." is short for "convex combination." The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.  The implication arrow ($\implies$) indicates that the proof is showing that if $S$ is convex, then it contains all convex combinations of its points (one direction of the "if and only if" statement from the previous slide).</DESCRIPTION>
+

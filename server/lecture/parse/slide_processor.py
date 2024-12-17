@@ -24,21 +24,19 @@ class SlideProcessor(BaseProcessor):
         self.notes_dir = notes_dir
         self.handwritten = handwritten
         
-        # Generate timestamp for output file
-        os.makedirs(os.path.join(self.output_dir), exist_ok=True)
-        self.json_output_file = os.path.join(self.output_dir, "notes.json")
-        self.text_output_file = os.path.join(self.output_dir, "notes.txt")
+        os.makedirs(os.path.join(self.output_dir, self.course_code), exist_ok=True)
+        self.json_output_file = os.path.join(self.output_dir, self.course_code, "notes.json")
         
         # Create lectures directory if it doesn't exist
-        os.makedirs(os.path.join(self.output_dir, "lectures"), exist_ok=True)
-        self.lectures_output_dir = os.path.join(self.output_dir, "lectures")
+        os.makedirs(os.path.join(self.output_dir, self.course_code, "lectures"), exist_ok=True)
+        self.lectures_output_dir = os.path.join(self.output_dir, self.course_code, "lectures")
         # check if notes.json exists
         if os.path.exists(self.json_output_file) and not self.regenerate:
             with open(self.json_output_file, "r") as file:
                 self.notes = json.load(file)
             self.conversation_history = []
             for lecture_name in self.notes.keys():
-                for page_number in self.notes[lecture_name].keys():
+                for page_number  in self.notes[lecture_name].keys():
                     response = self.unparse_response(self.notes[lecture_name][page_number])
                     self.conversation_history.extend([
                         HumanMessage(content=[{"type": "text", "text": f"Slide {page_number} of {len(self.notes[lecture_name])}"}]),
@@ -165,12 +163,12 @@ class SlideProcessor(BaseProcessor):
         trimmed_messages = trim_messages(
             messages,
             strategy="last",
-            token_counter=self.llm,
+            token_counter=self.llm_gemini_flash8b,
             max_tokens=max_tokens,
             allow_partial=True,
         )
         print(f"\nTrimmed conversation history to {len(trimmed_messages)} messages from {len(messages)} messages")
-        print(f"Total tokens: {self.llm.get_num_tokens_from_messages(trimmed_messages)}")
+        print(f"Total tokens: {self.llm_gemini_flash8b.get_num_tokens_from_messages(trimmed_messages)}")
         return trimmed_messages
 
     def extract_text_content(self, file_path: str) -> list[str]:
@@ -402,7 +400,7 @@ class SlideProcessor(BaseProcessor):
                         
                         while True:
                             try:
-                                response = self.llm.generate([self.conversation_history])
+                                response = self.llm_gemini_flash8b.generate([self.conversation_history])
                                 current_response = response.generations[0][0].text
                                 
                                 if current_response == "":
@@ -421,7 +419,7 @@ class SlideProcessor(BaseProcessor):
                                 
                                 # save outputs
                                 self.save_notes_json(self.json_output_file)
-                                self.save_notes_text(self.text_output_file)
+                                self.save_notes_text(self.lectures_output_dir)
                                 self.save_figures_png(self.lectures_output_dir, image_file)
                                 self.save_notes_pdf(self.lectures_output_dir) # after figures are saved
 
@@ -498,16 +496,43 @@ class SlideProcessor(BaseProcessor):
             self.save_slide_latex(lecture_name, self.notes[lecture_name], figures_dict)
 
     def save_notes_text(self, file_path: str):
-        with open(file_path, "w") as file:
-            lecture_names = self.notes.keys()
-            for lecture_name in lecture_names:
-                file.write(f"# {lecture_name}\n")
-                for page_number in self.notes[lecture_name].keys():
-                    file.write(f"## SLIDE {page_number}\n")
+        """Save all slides for each lecture concatenated into a single notes.txt file.
+        Each slide is separated by a newline and labeled with 'SLIDE X' at the top.
+        
+        Args:
+            file_path (str): The path to the output directory.
+        """
+        for lecture_name in self.notes.keys():
+            # Create lecture directory
+            lecture_dir = os.path.join(file_path, lecture_name)
+            os.makedirs(lecture_dir, exist_ok=True)
+            
+            # Write all slides to single notes.txt file
+            notes_path = os.path.join(lecture_dir, "notes.txt")
+            with open(notes_path, "w") as notes_file:
+                for page_number in sorted(self.notes[lecture_name].keys()):
+                    notes_file.write(f"SLIDE {page_number}\n")
                     structured_output = self.notes[lecture_name][page_number]
                     response = self.unparse_response(structured_output)
-                    file.write(response)
-                    file.write("\n\n")
+                    notes_file.write(response)
+                    notes_file.write("\n\n")
+                    
+    def save_notes_supabase(self):
+        """
+        Save the notes to supabase. Will insert into the 'slides' table, with the following fields:
+        name, note_number, class
+        name: the name of the lecture
+        note_number: the note number, in the context of all lectures. Should sort all lectures, and use this ordering to determine the note number.
+        class: the self.class_id
+        """
+        for lecture_name in self.notes.keys():
+            note_number = sorted(self.notes.keys()).index(lecture_name) + 1
+            self.supabase.table("slides").insert({
+                "name": lecture_name,
+                "note_number": note_number,
+                "class": self.class_id
+            }).execute()
+        print(f"Saved {len(self.notes)} notes to supabase.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process slides for course notes.")

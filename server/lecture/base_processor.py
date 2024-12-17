@@ -11,49 +11,79 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
 import time
+from supabase.client import Client, create_client
 
 class BaseProcessor:
-    def __init__(self, course_title: str, course_code: str, output_dir: str, regenerate: bool = False, timestamp: str = None, course_link: str = None, 
-                 brightspace_course_id: str = None, brightspace_course_descriptor: str = None):
+    def __init__(self, class_id: str, output_dir: str, regenerate: bool = False):
         '''
         Base class for all processors.
         
         Args:
-            course_title: A title for the course, ex "Introduction to Linear Programming".
-            
-            course_code: A code for the course, ex MA421.
+            class_id: The uuid of the class in supabase, ex: 123e4567-e89b-12d3-a456-426614174000
             
             output_dir: The directory to save the output files.
 
             regenerate: Whether to regenerate the given files.
             
-            timestamp: The timestamp to use for the output files.
-            
-            course_link: A link to the course, if not a brightspace course, ex: https://www.math.purdue.edu/~yipn/421
-            
-            brightspace_course_id: The 7 digit id found on the link of the brightspace course URL, ex 1095465
-            
-            brightspace_course_descriptor: A descriptor for the course, found on the grid view, ex WL.202510.CS24200.LE1.
+        Attributes:
+            self.supabase: The supabase client.
+            self.llm_gemini_pro: The gemini-1.5-pro llm for processing.
+            self.llm_gemini_flash: The gemini-2.0-flash-exp llm for processing.
+            self.llm_gemini_flash8b: The gemini-1.5-flash8b llm for processing.
+            self.class_id: The uuid of the class in supabase, ex: 123e4567-e89b-12d3-a456-426614174000
+            self.course_title: The title of the course.
+            self.course_code: The code of the course.
+            self.output_dir: The directory to save the output files.
+            self.regenerate: Whether to regenerate the given files.
+            self.course_link: A link to the course, if not a brightspace course, ex: https://www.math.purdue.edu/~yipn/421
+            self.brightspace_course_id: The 7 digit id found on the link of the brightspace course URL, ex 1095465
+            self.brightspace_course_descriptor: A descriptor for the course, found on the grid view, ex WL.202510.CS24200.LE1.
         '''
         load_dotenv()  # Load environment variables
-            
-        self.course_title = course_title
-        self.course_code = course_code
-        self.output_dir = output_dir
-        os.makedirs(self.output_dir, exist_ok=True)
-        self.regenerate = regenerate
-        self.timestamp = timestamp if timestamp else datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.course_link = course_link
-        self.brightspace_course_id = brightspace_course_id
-        self.brightspace_course_descriptor = brightspace_course_descriptor
         
-        self.llm = ChatGoogleGenerativeAI(
-            model='gemini-1.5-flash', 
+        # creating supabase client
+        supabase_url = os.getenv("SUPABASE_URL")
+        supabase_key = os.getenv("SUPABASE_PRIVATE_KEY")
+        self.supabase: Client = create_client(supabase_url, supabase_key)
+        self.class_id = class_id
+        
+        # getting class info
+        class_info = self.supabase.table("classes").select("*").eq("id", class_id).execute().data[0]
+        self.course_title = class_info["title"]
+        self.course_code = class_info["class_code"]
+        self.course_link = class_info["course_link"]
+        self.brightspace_course_id = class_info["brightspace_course_id"]
+        self.brightspace_course_descriptor = class_info["brightspace_course_descriptor"]
+        
+        self.output_dir = output_dir
+        os.makedirs(os.path.join(self.output_dir, self.course_code), exist_ok=True)
+        self.regenerate = regenerate
+        
+        self.llm_gemini_pro = ChatGoogleGenerativeAI(
+            model='gemini-1.5-pro',
             temperature=0, 
             max_tokens=None, 
             timeout=None, 
             max_retries=2
         )
+        
+        self.llm_gemini_flash = ChatGoogleGenerativeAI(
+            model='gemini-2.0-flash-exp',
+            temperature=0, 
+            max_tokens=None, 
+            timeout=None, 
+            max_retries=2
+        )
+        
+        self.llm_gemini_flash8b = ChatGoogleGenerativeAI(
+            model='gemini-1.5-flash8b',
+            temperature=0, 
+            max_tokens=None, 
+            timeout=None, 
+            max_retries=2
+        )
+        
+        
         
     def robust_generate(self, message: HumanMessage, retries: int = 5, initial_wait: int = 5) -> str:
         """
@@ -71,7 +101,7 @@ class BaseProcessor:
         
         for attempt in range(retries):
             try:
-                response = self.llm.generate([[message]])
+                response = self.llm_gemini_flash.generate([[message]])
                 return response.generations[0][0].text
                 
             except Exception as e:
@@ -489,7 +519,7 @@ class BaseProcessor:
             doc.append(NoEscape(r'\newpage'))
                     
         base_filename = f"notes"
-        filename = os.path.join(self.output_dir, "lectures", lecture_name, base_filename)
+        filename = os.path.join(self.output_dir, self.course_code, "lectures", lecture_name, base_filename)
         
         log_dir = "_logs"
         # Generate PDF with logs in separate directory
@@ -515,7 +545,7 @@ class BaseProcessor:
             # Handle log files
             log_extensions = ['.log', '.aux', '.out', '.fls']
             for ext in log_extensions:
-                src_file = os.path.join(self.output_dir, "lectures", lecture_name, log_dir, f"{base_filename}{ext}")
+                src_file = os.path.join(self.output_dir, self.course_code, "lectures", lecture_name, log_dir, f"{base_filename}{ext}")
                 if os.path.exists(src_file):
                     # Display log content for debugging
                     if ext == '.log':
@@ -553,7 +583,7 @@ class BaseProcessor:
             
             # Check log files in the log directory
             for ext in ['.log', '.aux', '.out']:
-                log_file = os.path.join(self.output_dir, "lectures", lecture_name, log_dir, f"{base_filename}{ext}")
+                log_file = os.path.join(self.output_dir, self.course_code, "lectures", lecture_name, log_dir, f"{base_filename}{ext}")
                 if os.path.exists(log_file):
                     print(f"\nContents of {log_file}:")
                     with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
@@ -726,16 +756,13 @@ class BaseProcessor:
                 with doc.create(Section(self.sanitize_section_title(category))):
                     if not process_results(results, doc):
                         doc.pop()  # Remove empty section
-        # Generate timestamp for filename and create directory
-        timestamp_dir = os.path.join(self.output_dir, self.timestamp)
         
         # Create directories if they don't exist
-        os.makedirs(timestamp_dir, exist_ok=True)
-        os.makedirs(os.path.join(timestamp_dir, self.summary_type), exist_ok=True)
+        os.makedirs(os.path.join(self.output_dir, self.course_code, self.summary_type), exist_ok=True)
         
         # Set base filename
         base_filename = f"summary"
-        filename = os.path.join(timestamp_dir, self.summary_type, base_filename)
+        filename = os.path.join(self.output_dir, self.course_code, self.summary_type, base_filename)
         
         log_dir = "../_logs"
 
@@ -761,7 +788,7 @@ class BaseProcessor:
             # Handle log files
             log_extensions = ['.log', '.aux', '.out', '.fls']
             for ext in log_extensions:
-                src_file = os.path.join(timestamp_dir, self.summary_type, f"{base_filename}{ext}")
+                src_file = os.path.join(self.output_dir, self.course_code, self.summary_type, f"{base_filename}{ext}")
                 if os.path.exists(src_file):
                     # Display log content for debugging
                     if ext == '.log':
@@ -799,7 +826,7 @@ class BaseProcessor:
             
             # Check log files in the log directory
             for ext in ['.log', '.aux', '.out']:
-                log_file = os.path.join(log_dir, self.summary_type, f"{base_filename}{ext}")
+                log_file = os.path.join(log_dir, self.course_code, self.summary_type, f"{base_filename}{ext}")
                 if os.path.exists(log_file):
                     print(f"\nContents of {log_file}:")
                     with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:

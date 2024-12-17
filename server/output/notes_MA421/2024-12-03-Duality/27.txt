@@ -1,7 +1,0 @@
-Slide 26
-
-$\Delta \mathcal{S} = - (1 \quad 0 \quad 0) \begin{bmatrix} \Delta b_1 \\ \Delta b_2 \\ \Delta b_3 \end{bmatrix} = -(1 \Delta b_1 + 0 \Delta b_2 + 0 \Delta b_3) = -\Delta b_1$
-
-\textbf{Description:}
-
-This slide shows the calculation of the change in the optimal solution value ($\Delta \mathcal{S}$) of the primal problem (P) when the constraint values ($b$) change.  The formula is derived from the previous slide's formula, specifically focusing on the case where only one constraint ($b_1$) changes.  The calculation shows that the change in the optimal solution value is equal to the negative of the change in the first constraint value ($\Delta b_1$).  The slide is likely part of a linear programming lecture, where the presenter is explaining how to perform sensitivity analysis to determine the impact of parameter changes on the optimal solution.  The formula is crucial for determining the impact of changes in the constraint vector on the optimal solution value.  The result is a direct application of the shadow price concept.

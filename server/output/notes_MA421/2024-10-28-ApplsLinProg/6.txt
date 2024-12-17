@@ -1,7 +1,0 @@
-Slide 6
-
-The slide shows two bar graphs.  The top graph displays predicted monthly ice cream production (in tons) for the year.  The bars are light gray.  The bottom graph shows a possible production plan, with the bars representing the production levels for each month.  Darker bars are used to highlight the production plan.  A red arrow points from the bottom graph to the word "production" in the top graph, indicating a comparison between the predicted production and a possible production plan.  The word "no storage cost" is also written in red, suggesting that the bottom graph is a possible production plan that does not account for storage costs.
-
-\textbf{Description:}
-
-This slide likely accompanies a lecture or presentation on linear programming, specifically focusing on the ice cream production planning problem.  The graphs visually represent the predicted monthly demand and a possible production schedule.  The top graph shows the predicted demand, while the bottom graph illustrates a potential production plan that might be optimized to minimize costs, but without considering storage costs.  The visual comparison between the two graphs is crucial for understanding the problem's constraints and potential solutions.

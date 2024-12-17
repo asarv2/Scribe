@@ -25,6 +25,7 @@ import { PracticeExam } from "@/types";
 import AddQuestionsModal from "@/components/AddQuestionsModal";
 import { intersectionBy, uniqBy } from "lodash";
 import { getPracticeExams } from "@/utils/queries/get-practice-exams";
+import { getMap } from "@/utils/queries/get-map";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -41,12 +42,10 @@ export default function Class({ params }: { params: { classId: string } }) {
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-
-    // const { data: map, isLoading: loadingMap } = useQuery({
-    //     queryKey: ["map", classId],
-    //     queryFn: () => getMap(supabase, classId)
-    // })
-    const map = LP_MAP_CHAT_EDIT
+    const { data: map, isLoading: loadingMap } = useQuery({
+        queryKey: ["map", classId],
+        queryFn: () => getMap(supabase, classId)
+    })
 
     const { data: slides } = useQuery({
         queryKey: ["slides", classId],
@@ -168,7 +167,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                                 </Center>
                             }
                         >
-                            {openNodeId && <NodeDetail lectureIds={flattenMapNode(map).find((node) => node.id === openNodeId)?.lectures ?? []} />}
+                            {openNodeId && map && <NodeDetail lectureIds={flattenMapNode(map).find((node) => node.id === openNodeId)?.lectures ?? []} />}
                         </Suspense>
                     }
                 </Stack>

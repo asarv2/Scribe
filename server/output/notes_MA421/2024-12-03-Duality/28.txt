@@ -1,9 +1,0 @@
-Slide 27
-
-$\Delta \mathcal{S} = - (y^*)^T (\Delta b) = -y_1^* \Delta b_1 - y_2^* \Delta b_2 - y_3^* \Delta b_3$
-
-\textbf{Description:}
-
-This slide shows the calculation of the change in the optimal solution value ($\Delta \mathcal{S}$) of the primal problem (P) when the constraint values ($b$) change.  The formula is derived from the previous slide's formula, specifically focusing on the case where multiple constraints ($b_1$, $b_2$, $b_3$) change.  The calculation shows that the change in the optimal solution value is equal to the negative of the dot product of the optimal dual variables ($y^*$) and the change in the constraint values ($\Delta b$).  The slide is likely part of a linear programming lecture, where the presenter is explaining how to perform sensitivity analysis to determine the impact of parameter changes on the optimal solution.  The formula is crucial for determining the impact of changes in the constraint vector on the optimal solution value.  The result is a direct application of the shadow price concept.  The notation indicates that the calculation is performed at the optimal solution.
-
-

@@ -1,5 +1,0 @@
-Slide 10
-
-The slide introduces the Ford-Fulkerson algorithm for finding the maximum flow in a network.  It shows two network diagrams, likely representing different stages of the algorithm.  The top diagram, labeled "Figure 22.1", depicts the original network with capacities on the edges.  The bottom diagram, labeled "Figure 22.2", shows a modified network with an augmented path highlighted in a lighter color (likely orange or tan).  The augmented path represents a flow improvement step in the Ford-Fulkerson algorithm.  The algorithm iteratively finds augmenting paths and updates the flow along these paths to increase the total flow from the source to the sink.  The numbers on the edges represent the capacities or flows along the edges.  This slide is part of a larger presentation on linear programming and network flow problems.
-
-

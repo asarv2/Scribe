@@ -98,7 +98,7 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                             <DeleteLectureModal slideId={slideId} slideTitle={slide?.name ?? ""} user={user ?? undefined} classId={slide?.class ?? ""} />
                         </Group>
                     </Flex>
-                    <Grid>
+                    <Grid style={{ display: "none" }}>
                         <Grid.Col span={isMobile ? 12 : 6}>
                             <NotesSummary classId={classId} slideId={slideId} className={classData?.title ?? ""} slideName={slide?.name ?? ""} documents={documents ?? []} />
                         </Grid.Col>
@@ -106,6 +106,10 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                             <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
                         </Grid.Col>
                     </Grid>
+                    <Stack>
+                        <Text>Link to download summary</Text>
+                        <Text>Link to download practice problems</Text>
+                    </Stack>
                 </Stack>
             </Container>
 

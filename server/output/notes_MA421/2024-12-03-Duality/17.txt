@@ -1,5 +1,0 @@
-Slide 17
-
-A graph is shown, illustrating the feasible region for the linear programming problem.  The problem is to maximize $x_1 + 2x_2$ subject to the constraints $x_1 + x_2 \le 5$, $x_1 \le 4$, $x_2 \le 3$, and $x_1, x_2 \ge 0$. The graph shows the feasible region as a polygon, bounded by the constraint lines.  The objective function line $x_1 + 2x_2 = 8$ is also shown, and the optimal solution is indicated on the graph.  The coordinates of the vertices of the feasible region are marked on the graph.  This slide is part of a linear programming lecture, demonstrating the graphical method for solving problems and finding the optimal solution.
-
-
