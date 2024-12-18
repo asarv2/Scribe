@@ -107,10 +107,10 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                         </Grid.Col>
                     </Grid>
                     <Stack>
-                        <Link href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/notes.pdf`} target="_blank">
+                        <Link href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/notes.pdf`} target="_blank" rel="noopener noreferrer">
                             <Text>Link to download summary</Text>
                         </Link>
-                        <Link href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/questions.pdf`} target="_blank">
+                        <Link href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/questions.pdf`} target="_blank" rel="noopener noreferrer">
                             <Text>Link to download practice problems</Text>
                         </Link>
                     </Stack>

@@ -40,9 +40,9 @@ class SlideProcessor(BaseProcessor):
                 for page_number  in self.notes[lecture_name].keys():
                     response = self.unparse_response(self.notes[lecture_name][page_number])
                     self.conversation_history.extend([
-                        HumanMessage(content=[{"type": "text", "text": f"Slide {page_number} of {len(self.notes[lecture_name])}"}]),
-                        AIMessage(content=response)
+                        AIMessage(content=[{"type": "text", "text": f"SLIDE {page_number}: {response}"}]),
                     ])
+            print("Conversation history: ", self.conversation_history)
         else:
             self.notes = {}
             self.conversation_history = []
@@ -155,6 +155,26 @@ class SlideProcessor(BaseProcessor):
 
         return image
     
+    
+    def create_square_image(self, image):
+        """Create a square image from the given image by adding white padding and scaling to 1000x1000"""
+        width, height = image.size
+        max_dim = max(width, height)
+        
+        # Create a new white background image with the target square dimensions
+        new_image = Image.new('RGB', (max_dim, max_dim), 'white')
+        
+        # Calculate position to paste original image centered
+        x_offset = (max_dim - width) // 2
+        y_offset = (max_dim - height) // 2
+        
+        # Paste original image onto white background
+        new_image.paste(image, (x_offset, y_offset))
+        
+        # Scale the square image to 1000x1000
+        new_image = new_image.resize((1000, 1000), Image.Resampling.LANCZOS)
+        return new_image
+    
     def prepare_conversation_history(self, messages, max_tokens=1048576):
         """
         Prepare and trim the conversation history to fit within token limits.
@@ -170,27 +190,99 @@ class SlideProcessor(BaseProcessor):
         print(f"Total tokens: {self.llm_gemini_flash8b.get_num_tokens_from_messages(trimmed_messages)}")
         return trimmed_messages
 
-    def extract_text_content(self, file_path: str) -> list[str]:
+    def extract_pdf_content(self, file_path: str) -> tuple[list[str], dict[str, list[dict]]]:
         """
-        Extract text content from each page of a PDF file.
+        Extract text content and images from each page of a PDF file.
         
         Args:
             file_path: Path to the PDF file.
         
         Returns:
-            List of text content for each page.
+            Tuple of (list of text content for each page, dict of image bboxes for each page)
+            Image bboxes are scaled to match the 1000x1000 output format
         """
         text_content = []
+        images_bboxes = {}
 
         try:
             with fitz.open(file_path) as pdf:
-                for page in pdf:
+                for page_number, page in enumerate(pdf):
                     text_content.append(page.get_text())
+                    
+                    # Get page dimensions
+                    page_rect = page.rect
+                    page_width = page_rect.width
+                    page_height = page_rect.height
+                    
+                    # Calculate scaling factors for square image conversion
+                    max_dim = max(page_width, page_height)
+                    x_offset = (max_dim - page_width) / 2
+                    y_offset = (max_dim - page_height) / 2
+                    scale_factor = 1000 / max_dim  # Factor to scale to 1000x1000
+                    
+                    # Extract images
+                    page_bboxes = {"figures": []}
+                    image_list = page.get_images()
+                    
+                    for img_index, img in enumerate(image_list):
+                        try:
+                            xref = img[0]
+                            
+                            # Extract image metadata
+                            image_info = pdf.xref_get_key(xref, "Name")
+                            alt_text = pdf.xref_get_key(xref, "Alt")
+                            actual_text = pdf.xref_get_key(xref, "ActualText")
+                            
+                            # Compile description from available metadata
+                            description = ""
+                            if alt_text and alt_text[0] == "string":
+                                description = alt_text[1]
+                            elif actual_text and actual_text[0] == "string":
+                                description = actual_text[1]
+                            elif image_info and image_info[0] == "name":
+                                # Clean up the name (remove leading '/' and decode if needed)
+                                description = image_info[1].lstrip('/').replace('_', ' ')
+                            
+                            # Try to get additional metadata from the image properties
+                            image_properties = pdf.xref_get_key(xref, "Properties")
+                            if image_properties and image_properties[0] == "dict":
+                                # Parse the properties dictionary for additional metadata
+                                try:
+                                    props_dict = pdf.get_object(xref)
+                                    if "Title" in props_dict:
+                                        description = props_dict["Title"]
+                                    elif "Subject" in props_dict:
+                                        description = props_dict["Subject"]
+                                except:
+                                    pass
+                            
+                            for img_bbox in page.get_image_rects(xref):
+                                # Center the coordinates
+                                centered_x0 = img_bbox.x0 + x_offset
+                                centered_y0 = img_bbox.y0 + y_offset
+                                centered_x1 = img_bbox.x1 + x_offset
+                                centered_y1 = img_bbox.y1 + y_offset
+                                
+                                # Scale to 1000x1000
+                                pixel_x0 = int(centered_x0 * scale_factor)
+                                pixel_y0 = int(centered_y0 * scale_factor)
+                                pixel_x1 = int(centered_x1 * scale_factor)
+                                pixel_y1 = int(centered_y1 * scale_factor)
+                                
+                                page_bboxes["figures"].append({
+                                    "bbox": [pixel_y0, pixel_x0, pixel_y1, pixel_x1],
+                                    "description": description
+                                })
+                        except Exception as e:
+                            print(f"Error extracting image {img_index} from page: {str(e)}")
+                            continue
+                            
+                    images_bboxes[str(page_number + 1)] = page_bboxes
+                    
         except Exception as e:
-            print(f"Error extracting text from {file_path}: {str(e)}")
-
-        return text_content
-
+            print(f"Error extracting content from {file_path}: {str(e)}")
+        return text_content, images_bboxes
+    
     def encode_image(self, image):
         """Convert image to base64 string"""
         buffer = io.BytesIO()
@@ -203,7 +295,7 @@ class SlideProcessor(BaseProcessor):
         image.show()
         input("Press Enter to continue...")
         
-    def clean_response(self, response: str, lecture_name: str, page_number: int) -> str:
+    def clean_response(self, response: str, lecture_name: str, page_number: int, image_bboxes: list[dict]) -> str:
         """Clean the response by removing LaTeX tags and other formatting. Convert into the form of 
         {
             "latex": "..."
@@ -223,18 +315,21 @@ class SlideProcessor(BaseProcessor):
         else:
             latex = ""
             
-        # extract figures. Of form <FIGURE (x1, y1), (x2, y2), (x3, y3), (x4, y4)>(description)</FIGURE>
-        figures = re.findall(r'<FIGURE (.*?)>(.*?)</FIGURE>', response, flags=re.DOTALL)
-        if figures:
-            figures = [
-                {
-                    "bbox": self.parse_bbox(bbox),
-                    "description": description
-                }
-                for bbox, description in figures
-            ]
+        if self.handwritten:
+            # extract figures. Of form <FIGURE (x1, y1), (x2, y2), (x3, y3), (x4, y4)>(description)</FIGURE>
+            figures = re.findall(r'<FIGURE (.*?)>(.*?)</FIGURE>', response, flags=re.DOTALL)
+            if figures:
+                figures = [
+                    {
+                        "bbox": self.parse_bbox(bbox),
+                        "description": description
+                    }
+                    for bbox, description in figures
+                ]
+            else:
+                figures = []
         else:
-            figures = []
+            figures = image_bboxes
         
         # extract description
         description = re.search(r'<DESCRIPTION>(.*?)</DESCRIPTION>', response, flags=re.DOTALL)
@@ -288,13 +383,16 @@ class SlideProcessor(BaseProcessor):
                     images = convert_from_path(pdf_path, dpi=50)   
                     print(f"Extracted {len(images)} images from {pdf_file}")
                     
+                    # create square images
+                    images = [self.create_square_image(image) for image in images]
+                    
                     # Initialize text content
                     text_content = []
                     
                     if not self.handwritten:
                         # Extract text content
-                        pdf_content = self.extract_text_content(pdf_path)
-                        print(f"Extracted text from {len(pdf_content)} pages")
+                        pdf_content, images_bboxes = self.extract_pdf_content(pdf_path)
+                        print(f"Extracted text from {len(pdf_content)} pages and {len(images_bboxes)} images")
                         
                         # Ensure text content matches number of images
                         if len(pdf_content) != len(images):
@@ -309,12 +407,12 @@ class SlideProcessor(BaseProcessor):
                     else:
                         # For handwritten notes, create empty text content
                         text_content = ["" for _ in range(len(images))]
-                        
+                        images_bboxes = {}
+                    
                     if num_slides is not None and len(images) > num_slides:
                         images = images[:num_slides]
                         text_content = text_content[:num_slides]
-                    
-                    
+                        images_bboxes = {k: v for k, v in images_bboxes.items() if k in [str(i + 1) for i in range(num_slides)]}
                     # Base prompt
                     if self.handwritten:
                         base_prompt = (
@@ -340,14 +438,33 @@ class SlideProcessor(BaseProcessor):
                             f"but make sure to stay concise and to the point. Use LaTeX to describe any mathematical content you see on the slide. Use <DESCRIPTION> and </DESCRIPTION> tags to enclose the description. Example: <DESCRIPTION>{'''This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof is outlined, focusing on one direction of the implication.  It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\leq t \\leq 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex.  The underlining highlights the key steps and conclusions of the proof.  The notation \"pf\" indicates \"proof,\" and the double-headed arrow indicates the \"if and only if\" nature of the theorem.  The term \"conv. comb.\" is an abbreviation for \"convex combination.\"  The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.'''}</DESCRIPTION>"
                         )
                     else:
-                        base_prompt = f"Extract exactly what is written on the lecture notes, in the context of the course: {self.course_title}. We will provide you with text content from each of the lecture slides as a reference. Output the extracted content in Markdown format, preserving the formatting of the slide. If there are any figures, provide a very detailed description of what you see, taking note of its placement, orientation, and the reason why it is there in the general context of the lecture. Below the generation, provide a description of what you see: include specific details that would not be known unless you were given the context of the slide."
+                        base_prompt = (
+                            f"Follow the 3 instructions carefully to extract the content from the lecture slides, in the context of the course: "
+                            f"{self.course_title}."
+                            f"1. Re-create the content exactly as it is written on the slide in LaTeX format, preserving the formatting. Use <LATEX> and </LATEX> tags to enclose the LaTeX content, do not use ```latex or ```.\n"
+                            f"Take note of direction of arrows, placement of labels, and other notations. Assume that major math libraries are available, so you can use them to re-create the content. Here is an example:\n\n"
+                            f"<LATEX>{{'''\n"
+                            f"\\textbf{{Thm 10.1}} \\quad $S$ is convex if and only if\n"
+                            f"it contains all conv. comb. of points in $S$\n"
+                            f"$pf$ $\\iff$\n\n"
+                            f"Suppose $S$ contains all conv. comb. of pts in $S$.\n"
+                            f"Then clearly, for any $z_1, z_2 \\in S$\n" 
+                            f"\\underline{{tz_1 + (1-t)z_2 \\in S}}\n"
+                            f"Conv. comb. of $z_1, z_2$\n"
+                            f"\\implies \\underline{{S \\text{{ is convex}}}}\n"
+                            f"'''}}</LATEX>\n\n"
+                            f"2. Provide a text based description of what you see, including specific details that "
+                            f"would not be known unless you were given the context of the slide. Be very detailed and specific, "
+                            f"but make sure to stay concise and to the point. Use LaTeX to describe any mathematical content you see on the slide. Use <DESCRIPTION> and </DESCRIPTION> tags to enclose the description. Example: <DESCRIPTION>{'''This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof is outlined, focusing on one direction of the implication.  It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\leq t \\leq 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex.  The underlining highlights the key steps and conclusions of the proof.  The notation \"pf\" indicates \"proof,\" and the double-headed arrow indicates the \"if and only if\" nature of the theorem.  The term \"conv. comb.\" is an abbreviation for \"convex combination.\"  The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.'''}</DESCRIPTION>"
+                        )
                     
                     for text, image_file, page_number in zip(text_content, images, range(1, len(images) + 1)):
                         if str(page_number) in self.notes[lecture_name]:
                             print(f"Skipping slide {page_number} - output already exists")
                             continue
-                            
-                        additional_prompt = "Use the previous slide's generation to help you understand the context of the current slide. Remember, you should enclose everything in <LATEX> and </LATEX>, <FIGURE> and </FIGURE>, and <DESCRIPTION> and </DESCRIPTION> tags. Do not include any other formats like ```latex or ```. Here is a complete example of what you should output. INPUT: SLIDE 3 of 15. OUTPUT: " + '''
+                         
+                        if self.handwritten:
+                            additional_prompt = "Use the previous slide's generation to help you understand the context of the current slide. Remember, you should enclose everything in <LATEX> and </LATEX>, <FIGURE> and </FIGURE>, and <DESCRIPTION> and </DESCRIPTION> tags. Do not include any other formats like ```latex or ```. Here is a complete example of what you should output. INPUT: SLIDE 3 of 15. OUTPUT: " + '''
                             <LATEX>
                             \\textbf{Thm 10.1} \\quad S \\text{ is convex } \\iff \\\\
                             \\text{it contains all conv. comb. of points in } S \\\\
@@ -365,10 +482,22 @@ class SlideProcessor(BaseProcessor):
                             <FIGURE [400, 490, 800, 700]>Conclusion of the proof for n=3.</FIGURE>
                             
                             <DESCRIPTION>This slide continues the proof of Theorem 10.1 from the previous slide, demonstrating that if a set $S$ is convex, then it contains all convex combinations of its points. The proof is done by induction. The base case ($n=2$) is shown: if $z_1, z_2 \\in S$, then any convex combination $t_1z_1 + t_2z_2$ (with $t_1, t_2 \\ge 0$ and $t_1 + t_2 = 1$) is also in $S$ by the definition of convexity. The inductive step ($n=3$) is then demonstrated. It shows that if $z_1, z_2, z_3 \\in S$, then a convex combination $t_1z_1 + t_2z_2 + t_3z_3$ can be rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$. Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$. This inductive argument can be extended to any number of points, completing the proof. The underlining highlights key assumptions and conclusions. The notation "pf" stands for "proof," and "conv. comb." is short for "convex combination." The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.</DESCRIPTION>''' + f". Now its your turn. INPUT: SLIDE {page_number} of {len(images)}. OUTPUT: "
-                        # Draw grid on image
-                        
-                        # grid_image = self.draw_grid_on_image(image_file)
-                        # self.show_image(image_file)
+                        else:
+                            additional_prompt = "Use the previous slide's generation to help you understand the context of the current slide. Remember, you should enclose everything in <LATEX> and </LATEX> and <DESCRIPTION> and </DESCRIPTION> tags. Do not include any other formats like ```latex or ```. Here is a complete example of what you should output. INPUT: SLIDE 3 of 15. OUTPUT: " + '''
+                            <LATEX>
+                            \\textbf{Thm 10.1} \\quad S \\text{ is convex } \\iff \\\\
+                            \\text{it contains all conv. comb. of points in } S \\\\
+                            pf \\quad \\iff \\\\
+                            \\underline{\\text{Suppose } S \\text{ is convex}} \\\\
+                            n=2: \\quad z_1, z_2 \\in S \\implies t_1 z_1 + t_2 z_2 \\in S, \\quad t_1, t_2 \\ge 0 \\\\
+                            \\quad t_1 + t_2 = 1 \\\\
+                            n=3: \\quad z_1, z_2, z_3 \\in S \\implies t_1 z_1 + t_2 z_2 + t_3 z_3 = \\left( t_1 + t_2 \\right) \\left( \\frac{t_1}{t_1 + t_2} z_1 + \\frac{t_2}{t_1 + t_2} z_2 \\right) + t_3 z_3 \\\\
+                            t_1 + t_2 + t_3 = 1 \\\\
+                            t_1 + t_2 \\ge 0, \\quad t_3 \\ge 0 \\\\
+                            \\implies t_1 z_1 + t_2 z_2 + t_3 z_3 \\in S
+                            </LATEX>
+                            
+                            <DESCRIPTION>This slide continues the proof of Theorem 10.1 from the previous slide, demonstrating that if a set $S$ is convex, then it contains all convex combinations of its points. The proof is done by induction. The base case ($n=2$) is shown: if $z_1, z_2 \\in S$, then any convex combination $t_1z_1 + t_2z_2$ (with $t_1, t_2 \\ge 0$ and $t_1 + t_2 = 1$) is also in $S$ by the definition of convexity. The inductive step ($n=3$) is then demonstrated. It shows that if $z_1, z_2, z_3 \\in S$, then a convex combination $t_1z_1 + t_2z_2 + t_3z_3$ can be rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$. Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$. This inductive argument can be extended to any number of points, completing the proof. The underlining highlights key assumptions and conclusions. The notation "pf" stands for "proof," and "conv. comb." is short for "convex combination." The context of linear programming is crucial because this theorem is fundamental to understanding the properties of feasible regions in linear programming problems, which are often convex sets.</DESCRIPTION>''' + f". Now its your turn. INPUT: SLIDE {page_number} of {len(images)}. OUTPUT: "
                         
                         # Encode current image
                         image_base64 = self.encode_image(image_file)
@@ -394,30 +523,29 @@ class SlideProcessor(BaseProcessor):
                         message = HumanMessage(content=message_content)
                         self.conversation_history.append(message)
                         
-                        
                         while True:
                             try:
-                                response = self.llm_gemini_flash8b.generate([self.conversation_history])
+                                model = self.llm_gemini_pro if self.handwritten else self.llm_gemini_flash8b # use gemini pro to parse handwritten notes, and extract figures.
+                                response = model.generate([self.conversation_history[-4:]]) # only use past 4 messages, one is the prompt and the other are the last 3 slides.
                                 current_response = response.generations[0][0].text
                                 
                                 if current_response == "":
                                     raise Exception("Empty response, retrying...")
                                 
                                 # clean the response
-                                cleaned_response = self.clean_response(current_response, lecture_name, page_number)
+                                cleaned_response = self.clean_response(current_response, lecture_name, page_number, images_bboxes[str(page_number)]["figures"])
                                 
                                 # replacing conversation history last message with the following
                                 self.conversation_history.pop()
                                 response = self.unparse_response(cleaned_response)
                                 self.conversation_history.extend([
-                                    HumanMessage(content=[{"type": "text", "text": f"Slide {page_number} of {len(images)}"}]),
-                                    AIMessage(content=response)
+                                    AIMessage(content=[{"type": "text", "text": f"SLIDE {page_number}: {response}"}])
                                 ])
                                 
                                 # save outputs
                                 self.save_notes_json(self.json_output_file)
                                 self.save_notes_text(self.lectures_output_dir)
-                                self.save_figures_png(self.lectures_output_dir, image_file)
+                                self.save_figures_png(self.lectures_output_dir, images)
                                 self.save_notes_pdf(self.lectures_output_dir) # after figures are saved
 
                                 print(f"\nProcessed Slide {page_number}: {response[:200]}")
@@ -457,24 +585,23 @@ class SlideProcessor(BaseProcessor):
         with open(file_path, "w") as file:
             json.dump(self.notes, file, indent=4)
             
-    def save_figures_png(self, file_path: str, image_file: Image):
+    def save_figures_png(self, file_path: str, images: list[Image.Image]):
         """Save the figures as PNG files.
-        
         Args:
             file_path (str): The path to the output directory.
-            image_file (Image): The image file to crop the figures from.
+            images (list[Image]): The list of images to crop the figures from.
         """
         for lecture_name in self.notes.keys():
             os.makedirs(os.path.join(file_path, lecture_name, "figures"), exist_ok=True)
-            for page_number in self.notes[lecture_name].keys():
+            for page_number, image in zip(sorted(list(self.notes[lecture_name].keys()), key=lambda x: int(x)), images):
                 structured_output = self.notes[lecture_name][page_number]
-                for idx, figure in enumerate(structured_output["figures"]):
+                figures = structured_output["figures"]
+                for idx, figure in enumerate(figures):
                     ymin, xmin, ymax, xmax = figure["bbox"]
-                    # divide each by 1000
-                    ymin, xmin, ymax, xmax = ymin / 1000, xmin / 1000, ymax / 1000, xmax / 1000
-                    # multiply xs by image width, ys by image height
-                    xmin, ymin, xmax, ymax = xmin * image_file.width, ymin * image_file.height, xmax * image_file.width, ymax * image_file.height
-                    cropped = image_file.crop((xmin, ymin, xmax, ymax))
+                    # add some padding to the figure if handwritten
+                    padding = 35 if self.handwritten else 0
+                    xmin, ymin, xmax, ymax = max(0, xmin - padding), max(0, ymin - padding), min(image.width, xmax + padding), min(image.height, ymax + padding)
+                    cropped = image.crop((xmin, ymin, xmax, ymax))
                     cropped.save(os.path.join(file_path, lecture_name, "figures", f"{page_number}.{idx + 1}.png"))
             
     def save_notes_pdf(self, file_path: str):
@@ -511,7 +638,7 @@ class SlideProcessor(BaseProcessor):
             # Write all slides to single notes.txt file
             notes_path = os.path.join(lecture_dir, "notes.txt")
             with open(notes_path, "w") as notes_file:
-                for page_number in sorted(self.notes[lecture_name].keys()):
+                for page_number in sorted(list(self.notes[lecture_name].keys()), key=lambda x: int(x)):
                     notes_file.write(f"SLIDE {page_number}\n")
                     structured_output = self.notes[lecture_name][page_number]
                     response = self.unparse_response(structured_output)

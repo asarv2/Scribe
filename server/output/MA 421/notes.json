@@ -1,67 +1,86 @@
 {
     "2024-10-22-Convexity": {
         "1": {
-            "latex": "\n\\textbf{Convex Analysis} \\quad [EVJ] Chapter 10 \\\\\n\\textbf{Def 1} \\quad $S \\subseteq \\mathbb{R}^m$ is convex if \\\\\nfor any $z_1, z_2 \\in S \\implies tz_1 + (1-t)z_2 \\in S, \\quad 0 \\le t \\le 1$\n",
+            "latex": "\n\\underline{\\text{Convex Analysis}} \\quad \\text{[VJ Chapter 10]} \\\\\n\\underline{\\text{Def 1}} \\quad S \\subseteq \\mathbb{R}^m \\text{ is } \\underline{\\text{convex}} \\text{ if} \\\\\n\\text{for any } z_1, z_2 \\in S \\implies tz_1 + (1-t)z_2 \\in S \\\\\n\\quad 0 \\le t \\le 1 \\\\\n\\underline{\\text{Def 2}} \\quad \\underline{\\text{Convex combination of } z_1, z_2, \\dots, z_n \\in \\mathbb{R}^m} \\\\\n\\underline{t_1 z_1 + t_2 z_2 + \\dots + t_n z_n} \\quad t_i \\ge 0 \\\\\n\\quad \\sum_i t_i = 1\n",
             "figures": [
                 {
                     "bbox": [
-                        100.0,
-                        100.0,
-                        250.0,
-                        600.0
+                        380.0,
+                        260.0,
+                        500.0,
+                        610.0
                     ],
-                    "description": "Definition of a convex set in $\\mathbb{R}^m$.  A line segment connecting any two points in the set $S$ must also lie entirely within $S$."
+                    "description": "A line segment connecting two points $z_1$ and $z_2$, with an arrow indicating the convex combination $tz_1 + (1-t)z_2$ lies on the segment."
                 },
                 {
                     "bbox": [
-                        400.0,
-                        200.0,
-                        600.0,
-                        600.0
+                        730.0,
+                        40.0,
+                        820.0,
+                        170.0
                     ],
-                    "description": "Examples of convex combinations of points $z_1, z_2, z_3$ in $\\mathbb{R}^2$.  The shaded regions illustrate the convex combinations of the points, which form a convex polygon."
-                }
-            ],
-            "description": "This slide introduces the definitions of convex sets and convex combinations.  \\textbf{Definition 1} states that a set $S$ in $\\mathbb{R}^m$ is convex if for any two points $z_1$ and $z_2$ in $S$, the entire line segment connecting them is also contained within $S$.  This is illustrated graphically by a line segment connecting two points in the set.  \\textbf{Definition 2} defines a convex combination of points $z_1, z_2, \\dots, z_n$ in $\\mathbb{R}^m$ as a weighted sum of these points, where the weights $t_i$ are non-negative and sum to 1.  This is illustrated by examples of convex combinations of three points in $\\mathbb{R}^2$, showing how the convex combinations form a convex polygon. The context of the slide is Convex Analysis, a subject within Linear Programming, where convex sets play a crucial role in optimization problems."
-        },
-        "2": {
-            "latex": "\n\\textbf{Thm 10.1} \\quad $S$ is convex $\\iff$ \\\\\nit contains all conv. comb. of points in $S$ \\\\\n\\textit{pf} $\\iff$ \\\\\nSuppose $S$ contains all conv. comb. of pts in $S$ \\\\\nThen clearly, for any $z_1, z_2 \\in S$ \\\\\n$tz_1 + (1-t)z_2 \\in S$ \\quad (conv. comb. of $z_1, z_2$) \\\\\n$\\implies S$ is convex\n",
-            "figures": [
+                    "description": "A line segment connecting two points $z_1$ and $z_2$."
+                },
                 {
                     "bbox": [
-                        10.0,
-                        10.0,
-                        200.0,
+                        730.0,
+                        250.0,
+                        840.0,
                         400.0
                     ],
-                    "description": "A statement of Theorem 10.1, showing the equivalence between a set being convex and containing all convex combinations of its points. The proof is indicated by \"pf\"."
-                }
-            ],
-            "description": "This slide presents a portion of the proof for Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The slide shows the \"if\" direction of the proof.  It begins by assuming that $S$ contains all convex combinations of its points.  Then, it demonstrates that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\le t \\le 1$) is also in $S$.  This directly implies that $S$ is convex, as per the definition of a convex set. The notation \"conv. comb.\" stands for \"convex combination\". The context of the course (Linear Programming) is relevant because convex sets are fundamental to optimization problems in linear programming."
-        },
-        "3": {
-            "latex": "\n\\textbf{Thm 10.1} \\quad $S$ is convex $\\iff$ it contains all conv. comb. of points in $S$ \\\\\n$pf$ \"$\\implies$\" Suppose $S$ is convex. \\\\\n$n=2$: $z_1, z_2 \\in S \\implies t_1 z_1 + t_2 z_2 \\in S$, $t_1, t_2 \\ge 0$, $t_1 + t_2 = 1$ \\\\\n$n=3$: $z_1, z_2, z_3 \\in S \\implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \\left( \\frac{t_1}{t_1 + t_2} z_1 + \\frac{t_2}{t_1 + t_2} z_2 \\right) + t_3 z_3 \\in S$ \\\\\n$t_1 + t_2 + t_3 = 1$, $t_1, t_2, t_3 \\ge 0$\n",
-            "figures": [
-                {
-                    "bbox": [
-                        10.0,
-                        10.0,
-                        180.0,
-                        280.0
-                    ],
-                    "description": "A statement of Theorem 10.1, showing the equivalence between a set being convex and containing all convex combinations of its points. The proof is indicated by \"pf\"."
+                    "description": "A shaded triangle formed by points $z_1$, $z_2$, and $z_3$."
                 },
                 {
                     "bbox": [
-                        10.0,
-                        280.0,
-                        180.0,
-                        480.0
+                        730.0,
+                        450.0,
+                        860.0,
+                        680.0
                     ],
-                    "description": "A portion of the proof for the case n=2 and n=3."
+                    "description": "A shaded tetrahedron formed by points $z_1$, $z_2$, $z_3$, and $z_4$."
                 }
             ],
-            "description": "This slide continues the proof of Theorem 10.1, showing that if a set $S$ is convex, then it contains all convex combinations of its points.  The proof proceeds by induction.  The base case ($n=2$) is shown: if $z_1$ and $z_2$ are in $S$, then any convex combination $t_1 z_1 + t_2 z_2$ (where $t_1, t_2 \\ge 0$ and $t_1 + t_2 = 1$) is also in $S$ by the definition of convexity.  The inductive step ($n=3$) is then demonstrated.  It shows that if $z_1, z_2, z_3$ are in $S$, then a convex combination $t_1 z_1 + t_2 z_2 + t_3 z_3$ can be rewritten as a convex combination of a convex combination of $z_1$ and $z_2$ and $z_3$.  Since the inner convex combination is in $S$ (by the base case), and the outer convex combination is also in $S$ (by the definition of convexity), the entire expression is in $S$.  The notation $t_1, t_2, t_3 \\ge 0$ and $t_1 + t_2 + t_3 = 1$ indicates the non-negative weights and their sum to 1, which are crucial for convex combinations. The context of linear programming is relevant because convex sets are fundamental to optimization problems in linear programming."
+            "description": "This slide introduces the concept of convex analysis, referencing \"VJ Chapter 10.\"  It presents two key definitions: Definition 1 defines a convex set $S$ in $\\mathbb{R}^m$ as a set where, for any two points $z_1$ and $z_2$ in $S$, the line segment connecting them (represented by the convex combination $tz_1 + (1-t)z_2$ for $0 \\le t \\le 1$) is entirely contained within $S$.  A figure illustrates this concept with a line segment and an arrow pointing to a point on the line segment. Definition 2 defines a convex combination of points $z_1, z_2, \\dots, z_n$ in $\\mathbb{R}^m$ as a linear combination $t_1 z_1 + t_2 z_2 + \\dots + t_n z_n$, where each $t_i$ is non-negative and the sum of all $t_i$ equals 1.  The slide includes figures illustrating convex combinations in $\\mathbb{R}^2$ (a line segment, a triangle) and $\\mathbb{R}^3$ (a tetrahedron). The underlining emphasizes the key terms and definitions. The context of linear programming is implicit, as convexity plays a crucial role in the theory and algorithms of linear programming."
+        },
+        "2": {
+            "latex": "\n\\textbf{Thm 10.1} \\quad S \\text{ is convex } \\iff \\\\\n\\text{it contains all conv. comb. of points in } S \\\\\npf \\quad \\impliedby \\\\\n\\underline{\\text{Suppose } S \\text{ contains all conv. comb. of pts in } S} \\\\\n\\text{Then clearly, for any } z_1, z_2 \\in S \\\\\n\\quad \\textcolor{red}{tz_1 + (1-t)z_2 \\in S} \\\\\n\\quad \\textcolor{red}{\\text{Conv. comb. of } z_1, z_2} \\\\\n\\implies \\underline{S \\text{ is convex}}\n",
+            "figures": [],
+            "description": "This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof is outlined, focusing on one direction of the implication (the reverse direction).  It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex.  The underlining highlights the key assumptions and conclusions of the proof.  The notation \"pf\" indicates \"proof,\" and the double-headed arrow indicates the \"if and only if\" nature of the theorem.  The term \"conv. comb.\" is an abbreviation for \"convex combination.\"  The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems."
+        },
+        "3": {
+            "latex": "\n\\textbf{Thm 10.1} \\quad S \\text{ is convex } \\iff \\\\\n\\text{it contains all conv. comb. of points in } S \\\\\npf \\quad ``\\implies\" \\quad \\underline{\\text{Suppose } S \\text{ is convex.}} \\\\\nn=2: \\quad z_1, z_2 \\in S \\implies t_1 z_1 + t_2 z_2 \\in S, \\quad t_1, t_2 \\ge 0 \\\\\n\\quad t_1 + t_2 = 1 \\\\\nn=3: \\quad z_1, z_2, z_3 \\in S \\implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \\left( \\frac{t_1}{t_1 + t_2} z_1 + \\frac{t_2}{t_1 + t_2} z_2 \\right) + t_3 z_3 \\\\\n\\quad \\textcolor{red}{\\in S} \\\\\n\\quad t_1 + t_2 + t_3 = 1 \\\\\n\\quad t_1 + t_2 \\ge 0, \\quad t_3 \\ge 0 \\\\\n\\implies t_1 z_1 + t_2 z_2 + t_3 z_3 \\in S\n",
+            "figures": [],
+            "description": "This slide continues the proof of Theorem 10.1, showing that if a set $S$ is convex, then it contains all convex combinations of points in $S$. This direction of the proof proceeds by induction. The base case, $n=2$, states that if $z_1, z_2 \\in S$, then $t_1z_1 + t_2z_2 \\in S$ for $t_1, t_2 \\ge 0$ and $t_1 + t_2 = 1$. This follows directly from the definition of a convex set. The inductive step, $n=3$, considers $z_1, z_2, z_3 \\in S$.  A convex combination $t_1z_1 + t_2z_2 + t_3z_3$ is rewritten as $(t_1 + t_2)(\\frac{t_1}{t_1 + t_2}z_1 + \\frac{t_2}{t_1 + t_2}z_2) + t_3z_3$, where $t_1 + t_2 + t_3 = 1$ and $t_1, t_2, t_3 \\ge 0$.  Since $\\frac{t_1}{t_1 + t_2}z_1 + \\frac{t_2}{t_1 + t_2}z_2$ is a convex combination of $z_1$ and $z_2$, and $S$ is convex, this term belongs to $S$.  The entire expression is then a convex combination of two elements of $S$, and thus also belongs to $S$. This argument can be generalized for any $n$, completing the proof. The red \"$\\in S$\" emphasizes that the convex combination of $z_1$ and $z_2$ is in $S$. The arrows indicate the flow of logic in the inductive step. The context of linear programming is relevant because convexity is a crucial property of feasible regions in linear programs."
+        },
+        "4": {
+            "latex": "\n\\textbf{Thm 10.1} \\quad S \\text{ is convex } \\iff \\\\\n\\text{it contains all conv. comb. of points in } S \\\\\n\\text{pf} \\quad ``\\implies\" \\quad \\underline{\\text{Suppose } S \\text{ is convex.}} \\\\\nn=2: \\quad z_1, z_2 \\in S \\implies t_1 z_1 + t_2 z_2 \\in S, \\quad t_1, t_2 \\ge 0 \\\\\n\\quad t_1 + t_2 = 1 \\\\\nn=4: \\quad z_1, z_2, z_3, z_4 \\in S \\\\\nt_1 z_1 + t_2 z_2 + t_3 z_3 + t_4 z_4 = (t_1 + t_2 + t_3) \\left( \\frac{t_1 z_1 + t_2 z_2 + t_3 z_3}{t_1 + t_2 + t_3} \\right) + t_4 z_4 \\\\\n(t_1 + t_2 + t_3) + t_4 = 1 \\\\\nt_1 + t_2 + t_3 \\ge 0, \\quad t_4 \\ge 0 \\\\\n\\textcolor{red}{\\in S} \\quad + t_4 z_4 \\quad \\in S\n",
+            "figures": [],
+            "description": "This slide continues the proof of Theorem 10.1, specifically the forward direction (\"if $S$ is convex, then it contains all convex combinations of points in $S$\"), using induction.  It builds upon the $n=2$ and $n=3$ cases from the previous slide and now illustrates the case for $n=4$.  It shows how a convex combination of four points, $z_1, z_2, z_3, z_4 \\in S$, can be rewritten as $(t_1 + t_2 + t_3)(\\frac{t_1z_1 + t_2z_2 + t_3z_3}{t_1 + t_2 + t_3}) + t_4z_4$.  The term in the parentheses is a convex combination of $z_1$, $z_2$, and $z_3$, which belongs to $S$ by the inductive hypothesis (assuming the theorem holds for $n=3$).  The entire expression is then a convex combination of two elements of $S$ (the term in parentheses and $z_4$), and thus also belongs to $S$ by the definition of convexity. This demonstrates the inductive step, suggesting how the proof can be extended to any $n$. The red \"$\\in S$\" emphasizes that the convex combination belongs to $S$. The arrows indicate how the terms are grouped to form convex combinations. The context of linear programming is relevant because this theorem is fundamental to understanding the properties of feasible regions in linear programs, which are often convex sets."
+        },
+        "5": {
+            "latex": "\n\\underline{Def} \\quad S \\subseteq \\mathbb{R}^m, \\text{ Convex Hull of } S, \\\\\nConv(S) = \\bigcap G \\\\\nG \\text{ convex}, \\quad S \\subseteq G \\\\\n(= \\underline{\\text{Smallest convex set containing } S}) \\\\\n(\\text{Note intersection of convex set is convex.}) \\\\\n\n\\underline{Thm \\; 10.2} \\quad S \\subseteq \\mathbb{R}^m, \\quad Conv(S) = \\text{collection of} \\\\\n\\text{all conv. comb. of finitely many pts from } S\n",
+            "figures": [],
+            "description": "This slide defines the convex hull of a set $S$ in $\\mathbb{R}^m$, denoted by $Conv(S)$.  It's defined as the intersection of all convex sets $G$ that contain $S$.  This is equivalent to the smallest convex set containing $S$. The slide also notes that the intersection of convex sets is convex.  Then, Theorem 10.2 is introduced, stating that for a set $S \\subseteq \\mathbb{R}^m$, the convex hull $Conv(S)$ is the collection of all convex combinations of finitely many points from $S$.  The underlining emphasizes the definition and the theorem statement.  \"Conv.\" is short for \"convex,\" and \"comb.\" is short for \"combination.\"  In the context of linear programming, the convex hull is important because it represents the set of all achievable points through convex combinations of points in $S$, which is relevant for optimization problems."
+        },
+        "6": {
+            "latex": "\n\\textbf{Thm 10.2} \\quad S \\subseteq \\mathbb{R}^m, \\quad Conv(S) = \\text{collection of} \\\\\n\\text{all conv. comb. of finitely many pts from } S \\\\\n\\text{Pf.} \\quad \\text{Let } H = \\text{collection of all conv. comb.} \\\\\n\\text{of finitely many pts from } S \\\\\n\\text{Need to show } \\underline{Conv(S) = H} \\\\\n(1) \\quad \\underline{Conv(S) \\subseteq H} \\quad (\\because H \\text{ is conv.})\n",
+            "figures": [],
+            "description": "This slide begins the proof of Theorem 10.2, which states that the convex hull of a set $S$ in $\\mathbb{R}^m$, denoted $Conv(S)$, is the set of all convex combinations of finitely many points from $S$.  The proof starts by defining $H$ as the set of all convex combinations of finitely many points from $S$. The goal is to show that $Conv(S) = H$. The first step (1) aims to prove that $Conv(S)$ is a subset of $H$ ($Conv(S) \\subseteq H$). The justification for this step relies on the fact that $H$ is convex, indicated by the notation \"$\\because H$ is conv.\"  The underlining emphasizes what needs to be shown and the first step of the proof. \"conv. comb.\" is short for \"convex combination,\" and \"pts\" is short for \"points.\"  This theorem is important in linear programming because it provides a concrete way to represent the convex hull of a set, which is crucial for understanding the feasible region of linear programs."
+        },
+        "7": {
+            "latex": "\n\\textbf{Thm 10.2} \\quad S \\subseteq \\mathbb{R}^m, \\quad Conv(S) = \\text{collection of} \\\\\n\\text{all conv. comb. of finitely many pts from } S \\\\\n\\text{Pf.} \\quad \\text{Let } H = \\text{collection of all conv. comb.} \\\\\n\\text{of finitely many pts from } S \\\\\n\\text{Need to show } \\underline{Conv(S) = H} \\\\\n(2) \\quad \\underline{H \\subseteq Conv(S)} \\\\\n\\quad (\\text{Thm 10.1, contains all conv. comb.} \\\\\n\\quad \\text{of pts from } S)\n",
+            "figures": [],
+            "description": "This slide continues the proof of Theorem 10.2.  Having established $Conv(S) \\subseteq H$ in the previous slide, this slide focuses on proving the other direction: $H \\subseteq Conv(S)$.  It states that this follows from Theorem 10.1, which establishes that a convex set contains all convex combinations of its points. Since $Conv(S)$ is defined as the smallest convex set containing $S$, and $H$ is the set of all convex combinations of points from $S$, Theorem 10.1 implies that $Conv(S)$ must contain all elements of $H$.  The underlining emphasizes the current step of the proof. \"conv. comb.\" is short for \"convex combination,\" and \"pts\" is short for \"points.\"  This theorem is important in linear programming because it provides a concrete way to represent the convex hull of a set, which is crucial for understanding the feasible region of linear programs."
+        },
+        "8": {
+            "latex": "\n\\underline{Carath\u00e9odory \\; Theorem} \\\\\n\\textbf{THEOREM 10.3.} \\; The \\; convex \\; hull \\; conv(S) \\; of \\; a \\; set \\; S \\; in \\; \\mathbb{R}^m \\; consists \\; of \\; all \\; convex \\\\\ncombinations \\; of \\; m+1 \\; points \\; from \\; S: \\\\\nconv(S) = \\left\\{ z = \\sum_{j=1}^{m+1} t_j z_j : z_j \\in S \\; and \\; t_j \\ge 0 \\; for \\; all \\; j, \\; and \\; \\sum_j t_j = 1 \\right\\} . \\\\\n\\text{Pf} \\quad Conv(S) = \\left\\{ z = \\sum_{j=1}^n x_j z_j, \\quad z_j \\in S, \\; x_j \\ge 0, \\; \\sum_j x_j = 1 \\right\\} \\\\\nConsider \\; the \\; LP: \\; \\max \\; C^T X \\\\\ns.t. \\quad AX = \\underline{z} \\\\\n\\qquad x_1 + x_2 + \\dots + x_n = 1 \\\\\n\\qquad x_1, x_2, \\dots, x_n \\\\\n(z \\; is \\; given, \\; fixed, \\quad A = \\begin{bmatrix} z_1 & z_2 & \\dots & z_n \\end{bmatrix}^{(m \\times n)})\n",
+            "figures": [],
+            "description": "This slide introduces the Carath\u00e9odory Theorem (Theorem 10.3).  The theorem states that the convex hull of a set $S$ in $\\mathbb{R}^m$, denoted $conv(S)$, can be represented as the set of all convex combinations of at most $m+1$ points from $S$. The slide provides the formal definition of the convex hull using this representation. The proof begins by restating the definition of the convex hull using $n$ points and introduces a linear program (LP) to aid in the proof. The LP aims to maximize an objective function $C^TX$ subject to the constraints $AX = z$, $\\sum_{j=1}^n x_j = 1$, and $x_j \\ge 0$ for all $j$.  Here, $z$ is a fixed point in the convex hull, and $A$ is a matrix whose columns are the points $z_j$ from the set $S$. The notation $\\begin{bmatrix} z_1 & z_2 & \\dots & z_n \\end{bmatrix}^{(m \\times n)}$ indicates that $A$ is an $m \\times n$ matrix.  The underlining emphasizes the fixed vector $z$ in the LP formulation. In the context of linear programming, Carath\u00e9odory's Theorem is important because it shows that any point in the convex hull of a set can be expressed as a convex combination of a relatively small number of points from the set, which has implications for the complexity of algorithms."
+        },
+        "9": {
+            "latex": "\n\\underline{Carath\u00e9odory \\; Theorem} \\\\\n\\textbf{THEOREM 10.3.} \\; The \\; convex \\; hull \\; conv(S) \\; of \\; a \\; set \\; S \\; in \\; \\mathbb{R}^m \\; consists \\; of \\; all \\; convex \\\\\ncombinations \\; of \\; m+1 \\; points \\; from \\; S: \\\\\nconv(S) = \\left\\{ z = \\sum_{j=1}^{m+1} t_j z_j : z_j \\in S \\; and \\; t_j \\ge 0 \\; for \\; all \\; j, \\; and \\; \\sum_j t_j = 1 \\right\\} . \\\\\nPf \\quad Conv(S) = \\left\\{ z = \\sum_{j=1}^n x_j z_j, \\quad z_j \\in S, \\; x_j \\ge 0, \\; \\sum_j x_j = 1 \\right\\} \\\\\nConsider \\; the \\; LP: \\; \\max \\; C^T X \\\\\ns.t. \\quad AX = \\underline{z} \\\\\n\\qquad x_1 + x_2 + \\dots + x_n = 1 \\\\\n\\qquad x_1, x_2, \\dots, x_n \\ge 0 \\\\\n\\qquad \\left. \\begin{array}{c}\n\\\\\n\\\\\n\\\\\n\\end{array} \\right\\} m+1 \\; constraints \\\\\n(z \\; is \\; given, \\; fixed, \\quad A = \\begin{bmatrix} z_1 & z_2 & \\dots & z_n \\end{bmatrix}^{(m \\times n)}) \\\\\nThis \\; is \\; feasible, \\; and \\; hence \\; has \\; a \\; basic \\; opt. \\; soln \\\\\nwith \\; m+1 \\; basic \\; variables.\n",
+            "figures": [],
+            "description": "This slide continues the proof of Carath\u00e9odory's Theorem (Theorem 10.3). It sets up a linear program (LP) to demonstrate that any point $z$ in the convex hull of a set $S$ in $\\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$. The LP is formulated as maximizing a dummy objective function $C^TX$ subject to the constraints $AX = z$, $\\sum_{j=1}^n x_j = 1$, and $x_j \\ge 0$, where $A$ is a matrix whose columns are the points $z_j$ from $S$, and $z$ is the given point in $conv(S)$. The slide notes that this LP has $m+1$ constraints.  It then states that this LP is feasible, meaning a solution exists, and therefore, it has a basic optimal solution with $m+1$ basic variables. This implies that at most $m+1$ of the $x_j$ variables are non-zero, meaning $z$ can be expressed as a convex combination of at most $m+1$ points from $S$. The underlining emphasizes the fixed vector $z$ in the LP formulation. \"opt. soln\" is short for \"optimal solution.\"  In the context of linear programming, this theorem is crucial because it provides a bound on the number of points needed to represent any point in the convex hull, which has implications for computational complexity."
         }
     }
 }
