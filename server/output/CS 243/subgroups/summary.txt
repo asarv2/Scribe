@@ -1,185 +1,155 @@
-Game AI
-  AI & Machine Learning Fundamentals
+Logical Reasoning and Problem Solving
+  Game Playing and Search
     dartmouth workshop
     turing test
-    reinforcement learning
-    loss function minimization
-    gradient calculation
-    supervised learning
-    unsupervised learning
-  Game AI & Search
     game tree
+    search space
     minimax
     game tree search
-    monte carlo tree search
-  Algorithmic & Computational Foundations
     computational complexity
-    algorithm design
-    combinatorial design
-  AI Evaluation & Security
-    adversarial attacks
-    model interpretability
-  AI Ethics & Societal Impact
-    ethical bias
-    data privacy
-    algorithmic bias
-    fairness in ai
-    bias mitigation
-  AI Planning & Reasoning
+    monte carlo tree search
+    state
+    action
+    state space representation
+    graph search
+    exponential complexity
+  Logical Foundations and SAT
+    propositional logic
+    logical connectives
+    satisfiability
+    conjunctive normal form
+    boolean satisfiability problem
+    converting to cnf
+    model checking
     planning as sat
-    sat encoding for planning
-    model checking with sat
-    model generator
-    general inference engine
-  Recursion & Problem Solving
+    combinatorial design
+    cnf conversion
+    automated reasoning
+    encoding problems into sat
+    sat encoding
+  SAT Solving and Algorithms
+    sat reduction to 3-sat
+    satisfiability check
+    partial assignment
+    unit propagation
+    formula simplification
+    dpll algorithm
+    clause learning
+  Recursion and Problem Solving
     recursion
     base case
     recursive case
-    structural recursion
     recursive problem solving
-Search Algorithms
-  Search Representation
-    search space
-    search state
-    state space representation
-    abstraction in search
-    state space
-    successor function
-    abstraction
-    problem instance
-  Search Algorithms
-    graph search
-  Search Optimization
-    redundant state removal
-Image Processing
-  Optimization Methods
-    computational complexity
-    algorithm design
-    loss function minimization
-    gradient calculation
-  Machine Learning Paradigms
+    structural recursion
+    optimizing recursive algorithms
+    optimized recursion
+Neural Networks and Deep Learning
+  Convolutional Neural Network Techniques
     adversarial attacks
-    reinforcement learning
-    image classification
-    supervised learning
-    unsupervised learning
-  Computer Vision Concepts
-    semantic gap
-  Image Feature Extraction
-    invariant features
-    bag of features
-    visual words
-    image invariance
-    image robustness
-    visual vocabulary creation
-    edge detection
-    image gradient
-    canny edge detector
-    harris corner detector
-    gaussian pyramid
-    image derivative calculation
-    edge characterization
-    corner detection
-    image gradient calculation
-    gaussian pyramid construction
-  Image Processing Techniques
-    image noise reduction
-    moving average filter
-    weighted moving average
-    image sharpening
-Linear Models
-  Linear Model Extensions
+    convolutional layer operation
+    sparse connectivity in cnns
+    parameter sharing in convolution
+    pooling layer operation
+  Perceptron Learning
     perceptron
     perceptron structure
-    extending linear models
-    multiple linear regression
-  Linear Model Training
     derivative of sigmoid function
+    gradient calculation
     perceptron algorithm
-    logistic regression update
-    regularized linear regression
-  Linear Model Foundations
+  Convolutional Neural Network Architecture
+    convolutional neural network
+    feature map
+    sparse connectivity
+    pooling layer
+    multidimensional convolution
+Machine Learning Fundamentals
+  Bias and Fairness in AI
+    ethical bias
+    bias in data
+    anonymized data
+    proxies for discrimination
+    disparate treatment
+    disparate impact
+    data privacy
+    algorithmic bias
+    proxy discrimination
+  Machine Learning Fundamentals
+    algorithm design
+    model selection
+    loss function minimization
     linear separability
+    extending linear models
     linear regression model
-  Model Infrastructure
-    model generator
-    general inference engine
-Linear Algebra
+    multiple linear regression
+    logistic regression update
+    supervised learning
+    unsupervised learning
+  Reinforcement Learning and Recommender Systems
+    reinforcement learning
+    recommender system prediction
+  Clustering Techniques
+    clustering
+    euclidean distance
+    k-means
+    distance measures
+    k-means algorithm
+    evaluating clusters
+    choosing the number of clusters
+    hamming distance
+    purity
+    cluster evaluation via similarity
+  Fairness and Interpretability Methods
+    fairness metrics
+    model interpretability
+    fairness through blindness
+    group fairness
+    individual fairness
+    bias detection and removal
+    interpretable models
+Linear Algebra and Dimensionality Reduction
   Matrix Operations
     matrix
     matrix inverse
     matrix multiplication
     matrix transposition
     solving linear equations with matrix inverses
-    matrix transformation
-  Linear Algebra Applications
+  Linear Transformations and Representations
     linear transformation
     matrix representation of linear equations
-  SAT Based Problem Solving
-    planning as sat
-    combinatorial design
-    sat encoding for planning
-    model checking with sat
-Model Evaluation and Tuning
-  Model Evaluation
-    model selection
-    generalization
-    overfitting
-    training error
-    test error
-    model complexity selection
-    training/test data split
-    s-fold cross-validation
-  Model Optimization
-    regularization
-    hyperparameter tuning
-  Model Behavior Analysis
-    diagnosing overfitting/underfitting
-    learning curve analysis
-    diagnosing overfitting
-Convolutional Neural Networks
-  CNN Architecture
-    convolutional neural network
+    matrix transformation
+  Matrix Decomposition and Dimensionality Reduction
+    matrix factorization
+    dimensionality reduction
+    singular value decomposition
+    principal component analysis
+  Low-Rank Approximations
+    latent factors
+    low rank matrix approximation
+Image Processing and Computer Vision
+  Visual Representation
+    image classification
+    semantic gap
     imagenet
-    pooling layer
-  Convolutional Layer Mechanics
-    feature map
-    sparse connectivity
-    convolutional layer operation
-    multidimensional convolution
-    sparse connectivity in cnns
-    parameter sharing in convolution
-    pooling layer operation
-    convolution operation
-    parameter sharing
-Clustering
-  matrix factorization
-  dimensionality reduction
-  singular value decomposition
-  principal component analysis
-  latent factors
-  recommender system prediction
-  bias modeling
-  clustering
-  euclidean distance
-  k-means
-  distance calculation
-  k-means algorithm
-  cluster evaluation
-  choosing the number of clusters
-  hamming distance
-  purity
-  similarity matrix correlation
-Propositional Logic and SAT
-  propositional logic
-  logical equivalence
-  satisfiable
-  conjunctive normal form
-  boolean satisfiability problem
-  satisfiability
-  converting to cnf
-  model checking
-  sat reduction to 3-sat
-  satisfiability check
-  partial assignment
-  unit propagation
+  Feature Extraction
+    invariant features
+    bag of features
+    visual words
+    visual vocabulary creation
+    harris corner detector
+    edge characterization
+    corner detection
+  Image Invariance and Robustness
+    image invariance
+    image robustness
+  Image Preprocessing
+    image noise reduction
+    moving average filter
+    weighted moving average
+    image sharpening
+    edge detection
+    image gradient
+    canny edge detector
+    gaussian pyramid
+    image derivative calculation
+    image gradient calculation
+    gaussian pyramid construction

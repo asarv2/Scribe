@@ -62,74 +62,69 @@ multidimensional convolution
 sparse connectivity in cnns
 parameter sharing in convolution
 pooling layer operation
-convolution operation
-parameter sharing
-generalization
-overfitting
-training error
-test error
-regularization
-model complexity selection
-hyperparameter tuning
-training/test data split
-diagnosing overfitting/underfitting
-regularized linear regression
-learning curve analysis
-s-fold cross-validation
-diagnosing overfitting
 matrix factorization
 dimensionality reduction
 singular value decomposition
 principal component analysis
 latent factors
+low rank matrix approximation
 recommender system prediction
-bias modeling
 clustering
 supervised learning
 unsupervised learning
 euclidean distance
 k-means
-distance calculation
+distance measures
 k-means algorithm
-cluster evaluation
+evaluating clusters
 choosing the number of clusters
 hamming distance
 purity
-similarity matrix correlation
+cluster evaluation via similarity
 propositional logic
-logical equivalence
-satisfiable
+logical connectives
+satisfiability
 conjunctive normal form
 boolean satisfiability problem
-satisfiability
 converting to cnf
 model checking
 planning as sat
 combinatorial design
-sat encoding for planning
+cnf conversion
 sat reduction to 3-sat
-model checking with sat
 satisfiability check
 recursion
 base case
 recursive case
-structural recursion
-search state
+state
+action
 recursive problem solving
+structural recursion
 state space representation
 graph search
-abstraction in search
-state space
-successor function
-abstraction
-redundant state removal
-problem instance
-model generator
-general inference engine
+optimizing recursive algorithms
+optimized recursion
+automated reasoning
+exponential complexity
 partial assignment
 unit propagation
+formula simplification
+encoding problems into sat
+dpll algorithm
+clause learning
+sat encoding
+bias in data
+anonymized data
+proxies for discrimination
+disparate treatment
+disparate impact
 data privacy
 algorithmic bias
-fairness in ai
+proxy discrimination
+fairness metrics
 model interpretability
-bias mitigation
+fairness through blindness
+group fairness
+individual fairness
+bias detection and removal
+interpretable models

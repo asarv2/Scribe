@@ -27,6 +27,7 @@ import { intersectionBy, uniqBy } from "lodash";
 import { getPracticeExams } from "@/utils/queries/get-practice-exams";
 import { getMap } from "@/utils/queries/get-map";
 import Latex from "react-latex-next";
+import { NodeImages } from "@/components/NodeImages";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -109,7 +110,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                 />}
             </div>
 
-            <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
+            <div style={{ position: "fixed", left: "0", top: "0", backgroundColor: "white", padding: 20, overflowY: "scroll", marginLeft: 15, marginTop: 70, height: "30vh", borderRadius: 10, boxShadow: "0 0 10px rgba(0,0,0,0.1)", display: "none" }}>
                 <SimpleGrid cols={1}>
                     {slides?.map((slide) => <Link href={`${pathname}/slide/${slide.id}`}><Button size={isMobile ? "compact-xs" : "sm"}> L{slide.note_number} - {slide.name}</Button></Link>)}
                     <AddLectureModal user={user ?? undefined} isMobile={isMobile ?? true} classId={classId} noteCount={slides?.length ?? 0} currentMap={map ?? null} className={classData?.title ?? ""} />
@@ -158,6 +159,17 @@ export default function Class({ params }: { params: { classId: string } }) {
                 transitionProps={{ transition: 'fade', duration: 200 }}
             >
                 <Stack>
+                    {
+                        <Suspense
+                            fallback={
+                                <Center>
+                                    <Loader />
+                                </Center>
+                            }
+                        >
+                            {openNodeId && map && <NodeImages visuals={flattenMapNode(map).find((node) => node.id === openNodeId)?.visuals ?? []} />}
+                        </Suspense>
+                    }   
                     <Latex key={"Description"}>{openNodeDescription as string}</Latex>
                     {
                         <Suspense

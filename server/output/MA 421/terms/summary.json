@@ -1,0 +1,394 @@
+{
+    "convex set": {
+        "term": "Convex Set",
+        "definition": "A set where for any two points within the set, the line segment connecting them is also entirely within the set.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                1
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "convex combination": {
+        "term": "Convex Combination",
+        "definition": "A linear combination of points where the coefficients are non-negative and sum to one.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                1
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "convex hull": {
+        "term": "Convex Hull",
+        "definition": "The smallest convex set containing a given set, equivalent to the set of all convex combinations of finitely many points from the set.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                5
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "carath\u00e9odory theorem": {
+        "term": "Carath\u00e9odory Theorem",
+        "definition": "Any point in the convex hull of a set in $\\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from the set.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                8
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "farkas' lemma": {
+        "term": "Farkas' Lemma",
+        "definition": "A system of linear inequalities $Ax \\le b$ has no solution if and only if there exists a vector $y$ such that $A^Ty = 0$, $y \\ge 0$, and $b^Ty < 0$.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                13
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "feasibility of linear inequalities": {
+        "term": "Feasibility of Linear Inequalities",
+        "definition": "Determining if a system of linear inequalities, such as $Ax \\le b$, has a solution.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                12,
+                13,
+                15
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "convex hull representation": {
+        "term": "Convex Hull Representation",
+        "definition": "Expressing the convex hull of a set as the set of all convex combinations of its points.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                5,
+                6,
+                7
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "convex combination representation": {
+        "term": "Convex Combination Representation",
+        "definition": "Expressing a point as a convex combination of other points.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                1,
+                2,
+                3,
+                4
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "separating polyhedra": {
+        "term": "Separating Polyhedra",
+        "definition": "Finding disjoint half-spaces that separate two disjoint polyhedra.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                10,
+                11,
+                12,
+                13,
+                14
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "carath\u00e9odory's theorem application": {
+        "term": "Carath\u00e9odory's Theorem Application",
+        "definition": "Determining the minimum number of points needed to represent a point in the convex hull of a set.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                8,
+                9
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "convex set definition": {
+        "term": "Convex Set Definition",
+        "definition": "$S \\subseteq \\mathbb{R}^m$ is convex if for any $z_1, z_2 \\in S$, $tz_1 + (1-t)z_2 \\in S$ for $0 \\le t \\le 1$.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                1
+            ]
+        },
+        "type": "Algorithm Solutions"
+    },
+    "carath\u00e9odory's theorem": {
+        "term": "Carath\u00e9odory's Theorem",
+        "definition": "Any point in the convex hull of a set $S$ in $\\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$.",
+        "lectures": {
+            "2024-10-22-Convexity": [
+                8
+            ]
+        },
+        "type": "Algorithm Solutions"
+    },
+    "production planning": {
+        "term": "Production Planning",
+        "definition": "The process of determining the optimal levels of production over a given time horizon to meet demand while minimizing costs.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "surplus": {
+        "term": "Surplus",
+        "definition": "The amount of inventory remaining at the end of a given period, after satisfying demand.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                3,
+                4
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "production change cost": {
+        "term": "Production Change Cost",
+        "definition": "The cost associated with adjusting production levels from one period to the next.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                3,
+                4
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "risk aversion parameter": {
+        "term": "Risk Aversion Parameter",
+        "definition": "A parameter that controls the trade-off between maximizing expected return and minimizing risk in portfolio selection.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                10,
+                12
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "maximum weight matching": {
+        "term": "Maximum Weight Matching",
+        "definition": "A problem in graph theory where the goal is to find a set of edges in a bipartite graph with the maximum total weight, such that no two edges share a common vertex.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                19,
+                20,
+                21
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "sales force planning": {
+        "term": "Sales Force Planning",
+        "definition": "Determining the optimal number of regular and temporary employees to minimize labor costs, given fluctuating monthly labor needs.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                7,
+                8
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "portfolio selection with absolute deviation": {
+        "term": "Portfolio Selection with Absolute Deviation",
+        "definition": "Maximizing the expected return of a portfolio while minimizing the expected absolute deviation of the portfolio return from its mean.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                9,
+                10,
+                11,
+                12
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "portfolio selection with variance": {
+        "term": "Portfolio Selection with Variance",
+        "definition": "Maximizing the expected return of a portfolio while minimizing the variance of the portfolio return.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                13,
+                14,
+                15,
+                16
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "smallest enclosing ball": {
+        "term": "Smallest Enclosing Ball",
+        "definition": "Finding the smallest ball that contains a given set of points in $\\mathbb{R}^d$.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                17,
+                18
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "production change cost linearization": {
+        "term": "Production Change Cost Linearization",
+        "definition": "Introduce variables $y_i, z_i \\ge 0$ such that $X_i - X_{i-1} = y_i - z_i$ and $|X_i - X_{i-1}| = y_i + z_i$ to linearize the absolute value term in the objective function.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                4
+            ]
+        },
+        "type": "Algorithm Solutions"
+    },
+    "sales force planning linearization": {
+        "term": "Sales Force Planning Linearization",
+        "definition": "Introduce variables $y_i \\ge 0$ such that $a_i - x \\le y_i$ and $\\max(a_i - x, 0) \\le y_i$ to linearize the max function in the objective function.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                8
+            ]
+        },
+        "type": "Algorithm Solutions"
+    },
+    "portfolio selection with absolute deviation linearization": {
+        "term": "Portfolio Selection with Absolute Deviation Linearization",
+        "definition": "Introduce variables $y_t$ such that $-y(t) \\le \\sum_j x_j (R_j(t) - r_j) \\le y(t)$ to linearize the absolute value term in the objective function.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                12
+            ]
+        },
+        "type": "Algorithm Solutions"
+    },
+    "smallest enclosing ball quadratic program": {
+        "term": "Smallest Enclosing Ball Quadratic Program",
+        "definition": "Minimize $x^T Q^T Q x - \\sum_{j=1}^n x_j P_j^T P_j$ subject to $\\sum_{j=1}^n x_j = 1$ and $x \\ge 0$, where $Q$ is a matrix of point coordinates and $x$ are the weights.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                18
+            ]
+        },
+        "type": "Algorithm Solutions"
+    },
+    "maximum weight matching integer program": {
+        "term": "Maximum Weight Matching Integer Program",
+        "definition": "Maximize $\\sum_e w_e x_e$ subject to $\\sum_{e, v \\in e} x_e = 1$ and $x_e \\in \\{0, 1\\}$, where $w_e$ is the weight of edge $e$ and $x_e$ is a binary variable indicating whether edge $e$ is in the matching.",
+        "lectures": {
+            "2024-10-28-ApplsLinProg": [
+                21
+            ]
+        },
+        "type": "Algorithm Solutions"
+    },
+    "spanning tree": {
+        "term": "Spanning Tree",
+        "definition": "A subgraph of a graph that is a tree and connects all the vertices of the graph.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                2,
+                3
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "fair prices": {
+        "term": "Fair Prices",
+        "definition": "A set of prices $y_1, y_2, ..., y_n$ at each node such that $y_i + c_{ij} = y_j$ for each arc $ij$ in the spanning tree, representing the cost of shipping along the arc.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                4
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "reduced cost": {
+        "term": "Reduced Cost",
+        "definition": "The difference between the cost of shipping along an arc and the difference in fair prices between the nodes it connects, i.e., $y_j - y_i - c_{ij}$.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                5
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "entering arc": {
+        "term": "Entering Arc",
+        "definition": "An arc $ij$ not in the current spanning tree where $y_i + c_{ij} < y_j$, indicating a potential for cost reduction.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                5
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "adjusted flow": {
+        "term": "Adjusted Flow",
+        "definition": "The new flow along the arcs of the spanning tree after introducing flow along the entering arc, maintaining feasibility.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                6
+            ]
+        },
+        "type": "Key Terms"
+    },
+    "finding fair prices": {
+        "term": "Finding Fair Prices",
+        "definition": "Determining a set of prices $y_1, y_2, ..., y_n$ at each node such that $y_i + c_{ij} = y_j$ for each arc $ij$ in the current spanning tree $T$.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                4
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "identifying profitable arcs": {
+        "term": "Identifying Profitable Arcs",
+        "definition": "Finding an arc $ij$ not in the current spanning tree such that $y_i + c_{ij} < y_j$, indicating a potential for cost savings.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                5
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "adjusting flows": {
+        "term": "Adjusting Flows",
+        "definition": "Modifying flows along the arcs of the spanning tree $T$ to maintain feasibility after introducing flow along the entering arc.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                6
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "finding an initial feasible solution": {
+        "term": "Finding an Initial Feasible Solution",
+        "definition": "Constructing a spanning tree to start the network simplex algorithm.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                2,
+                3
+            ]
+        },
+        "type": "Problem Types"
+    },
+    "economic interpretation of reduced costs": {
+        "term": "Economic Interpretation of Reduced Costs",
+        "definition": "Understanding the economic meaning of the reduced cost $z_{ij}$ as the difference between the cost of shipping along an arc and the difference in fair prices between the nodes.",
+        "lectures": {
+            "2024-11-21-EconNetSimplex": [
+                5
+            ]
+        },
+        "type": "Problem Types"
+    }
+}

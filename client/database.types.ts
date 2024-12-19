@@ -46,24 +46,47 @@ export type Database = {
       }
       classes: {
         Row: {
+          brightspace_course_descriptor: string | null
+          brightspace_course_id: number | null
           class_code: string
+          course_description: string
+          course_link: string | null
           created_at: string
           id: string
+          root_node: string | null
           title: string
         }
         Insert: {
+          brightspace_course_descriptor?: string | null
+          brightspace_course_id?: number | null
           class_code?: string
+          course_description?: string
+          course_link?: string | null
           created_at?: string
           id?: string
+          root_node?: string | null
           title?: string
         }
         Update: {
+          brightspace_course_descriptor?: string | null
+          brightspace_course_id?: number | null
           class_code?: string
+          course_description?: string
+          course_link?: string | null
           created_at?: string
           id?: string
+          root_node?: string | null
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "classes_root_node_fkey"
+            columns: ["root_node"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       documents: {
         Row: {
@@ -184,6 +207,83 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "embeddings_textbook_textbook_fkey"
+            columns: ["textbook"]
+            isOneToOne: false
+            referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homework: {
+        Row: {
+          class: string
+          created_at: string
+          homework_number: number
+          id: string
+          title: string
+        }
+        Insert: {
+          class?: string
+          created_at?: string
+          homework_number?: number
+          id?: string
+          title?: string
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          homework_number?: number
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homework_problems: {
+        Row: {
+          additional_info: string | null
+          created_at: string
+          homework: string
+          id: string
+          page_number: number | null
+          problem_number: string | null
+          textbook: string | null
+        }
+        Insert: {
+          additional_info?: string | null
+          created_at?: string
+          homework?: string
+          id?: string
+          page_number?: number | null
+          problem_number?: string | null
+          textbook?: string | null
+        }
+        Update: {
+          additional_info?: string | null
+          created_at?: string
+          homework?: string
+          id?: string
+          page_number?: number | null
+          problem_number?: string | null
+          textbook?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_problem_homework_fkey"
+            columns: ["homework"]
+            isOneToOne: false
+            referencedRelation: "homework"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homework_problem_textbook_fkey"
             columns: ["textbook"]
             isOneToOne: false
             referencedRelation: "textbooks"
@@ -462,7 +562,7 @@ export type Database = {
       textbooks: {
         Row: {
           author: string
-          class: string | null
+          class: string
           created_at: string
           id: string
           pages: number
@@ -470,7 +570,7 @@ export type Database = {
         }
         Insert: {
           author: string
-          class?: string | null
+          class?: string
           created_at?: string
           id?: string
           pages: number
@@ -478,7 +578,7 @@ export type Database = {
         }
         Update: {
           author?: string
-          class?: string | null
+          class?: string
           created_at?: string
           id?: string
           pages?: number
@@ -504,6 +604,8 @@ export type Database = {
           map_id: string
           map_parent: string | null
           title: string
+          type: Database["public"]["Enums"]["topic_type"]
+          visuals: string[]
         }
         Insert: {
           class?: string
@@ -514,6 +616,8 @@ export type Database = {
           map_id: string
           map_parent?: string | null
           title?: string
+          type?: Database["public"]["Enums"]["topic_type"]
+          visuals?: string[]
         }
         Update: {
           class?: string
@@ -524,6 +628,8 @@ export type Database = {
           map_id?: string
           map_parent?: string | null
           title?: string
+          type?: Database["public"]["Enums"]["topic_type"]
+          visuals?: string[]
         }
         Relationships: [
           {
@@ -783,7 +889,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      topic_type: "group" | "term" | "problem" | "algorithm"
     }
     CompositeTypes: {
       [_ in never]: never

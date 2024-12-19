@@ -15,13 +15,20 @@ class TermsProcessor(BaseProcessor):
         lectures_folder = os.path.join(self.output_dir, self.course_code, "lectures")
         self.slides = []
         self.slide_names = []
+        self.figures = {}
         for lecture_dir in sorted(os.listdir(lectures_folder)):
             notes_path = os.path.join(lectures_folder, lecture_dir, "notes.txt")
+            self.figures[lecture_dir] = []
+            
             if os.path.isfile(notes_path):
                 with open(notes_path, 'r') as file:
                     self.slides.append(file.read())
                     self.slide_names.append(lecture_dir)
-        
+                    
+            figures_folder = os.path.join(lectures_folder, lecture_dir, "figures")
+            if os.path.isdir(figures_folder):
+                for figure_file in os.listdir(figures_folder):
+                    self.figures[lecture_dir].append(figure_file)
         # Generate timestamp for output file
         os.makedirs(os.path.join(self.output_dir, self.course_code, self.summary_type), exist_ok=True)
         self.json_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.json")
@@ -116,6 +123,7 @@ class TermsProcessor(BaseProcessor):
                         "lecture_name": [1, 2, 3, e.t.c.] # list of slides
                     }
                     "type": "concept/problem/algorithm"
+                    "visuals": ["figure1.png", "figure2.png", "figure3.png", e.t.c.] # list of names of figure files
                 }  
             }
             
@@ -139,6 +147,12 @@ class TermsProcessor(BaseProcessor):
                     else:
                         definition = definition_with_slides.strip()
                         slides = []  # No slides referenced
+                        
+                    visuals = [] # find visuals based on slides. Check the 
+                    for slide in slides:
+                        for figure in self.figures[lecture_name]:
+                            if int(figure.split(".")[0]) == slide:
+                                visuals.append(figure)
                     
                     if term in self.terms:
                         lectures = self.terms[term]["lectures"]
@@ -154,7 +168,8 @@ class TermsProcessor(BaseProcessor):
                             "lectures": {
                                 lecture_name: slides
                             },
-                            "type": category
+                            "type": category,
+                            "visuals": visuals
                         }
                         terms_added.append(term)
                 except Exception as e:

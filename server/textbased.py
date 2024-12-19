@@ -17,6 +17,8 @@ if __name__ == "__main__":
     #     regenerate=False
     # )
     
+    # slide_processor.save_figures_storage_supabase()
+    
     # slide_processor.save_notes_storage_supabase()
     
     # slide_processor.save_notes_supabase()

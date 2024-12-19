@@ -679,7 +679,22 @@ class SlideProcessor(BaseProcessor):
                 file_options={"cache-control": "3600", "upsert": "true"},
             )
             print(f"Saved {lecture_name} to supabase storage. Response: {response}")
-
+    
+    def save_figures_storage_supabase(self):
+        """
+        Save the figures to supabase storage.
+        """
+        for lecture_name in self.notes.keys():
+            print(f"Saving figures for {lecture_name}...")
+            figures = [os.path.join(self.output_dir, self.course_code, "lectures", f"{lecture_name}", "figures", f) for f in os.listdir(os.path.join(self.output_dir, self.course_code, "lectures", f"{lecture_name}", "figures"))]
+            for figure in figures:
+                response = self.supabase.storage.from_("slides").upload(
+                    file=figure,
+                    path=f"{self.course_code}/lectures/{lecture_name}/figures/{figure.split('/')[-1]}",
+                    file_options={"cache-control": "3600", "upsert": "true"},
+                )
+                print(f"Saved {figure} to supabase storage. Response: {response}")
+        
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process slides for course notes.")
     parser.add_argument("class_id", type=str, help="The class identifier (e.g., CS243)")

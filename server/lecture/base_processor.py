@@ -27,11 +27,13 @@ class BaseProcessor:
             
         Attributes:
             self.supabase: The supabase client.
+            self.supabase_url: The url of the supabase instance.
             self.llm_gemini_pro: The gemini-1.5-pro llm for processing.
             self.llm_gemini_flash: The gemini-2.0-flash-exp llm for processing.
             self.llm_gemini_flash8b: The gemini-1.5-flash8b llm for processing.
             self.class_id: The uuid of the class in supabase, ex: 123e4567-e89b-12d3-a456-426614174000
             self.course_title: The title of the course.
+            self.course_description: The description of the course.
             self.course_code: The code of the course.
             self.output_dir: The directory to save the output files.
             self.regenerate: Whether to regenerate the given files.
@@ -42,14 +44,15 @@ class BaseProcessor:
         load_dotenv()  # Load environment variables
         
         # creating supabase client
-        supabase_url = os.getenv("SUPABASE_URL")
+        self.supabase_url = os.getenv("SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_PRIVATE_KEY")
-        self.supabase: Client = create_client(supabase_url, supabase_key)
+        self.supabase: Client = create_client(self.supabase_url, supabase_key)
         self.class_id = class_id
         
         # getting class info
         class_info = self.supabase.table("classes").select("*").eq("id", class_id).execute().data[0]
         self.course_title = class_info["title"]
+        self.course_description = class_info["course_description"]
         self.course_code = class_info["class_code"]
         self.course_link = class_info["course_link"]
         self.brightspace_course_id = class_info["brightspace_course_id"]

@@ -26,14 +26,30 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
         // Find child nodes of the current node
         const children = topics
             .filter(topic => topic.map_parent === nodeId)
-            .map(child => buildTree(topics, child.map_id));
+            .map(child => buildTree(topics, child.map_id))
+            .filter(child => child !== null) as MapNode[];
+
+        // Skip this node if it's a group with no children (unless it's a root node)
+
+        // Combine lectures from all children if this is a group
+        let combinedLectures = nodeData.lectures || [];
+        if (nodeData.type === "group") {
+            children.forEach(child => {
+                if (child.lectures) {
+                    combinedLectures = [...combinedLectures, ...child.lectures];
+                }
+            });
+            // Remove duplicates
+            combinedLectures = Array.from(new Set(combinedLectures));
+        }
 
         return {
             id: nodeData.map_id,
             keyword: nodeData.title,
             description: nodeData.content,
-            lectures: nodeData.lectures,
-            children: children.filter(child => child !== undefined) as MapNode[],
+            lectures: combinedLectures,
+            visuals: nodeData.visuals,
+            children: children,
         };
     }
 

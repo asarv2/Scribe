@@ -9,16 +9,16 @@ if __name__ == "__main__":
     notes_dir = "/Users/ashoksaravanan/Coding/ScribeLec/server/Notes/Notes_MA421"
     output_dir = "/Users/ashoksaravanan/Coding/ScribeLec/server/output"
     
-    slide_processor = SlideProcessor(
-        notes_dir=notes_dir,
-        handwritten=True,
-        class_id=class_id,
-        output_dir=output_dir,
-        regenerate=False
-    )
+    # slide_processor = SlideProcessor(
+    #     notes_dir=notes_dir,
+    #     handwritten=True,
+    #     class_id=class_id,
+    #     output_dir=output_dir,
+    #     regenerate=False
+    # )
     # slide_processor.save_figures_png(slide_processor.lectures_output_dir)
     
-    slide_processor.save_notes_pdf(slide_processor.lectures_output_dir)
+    # slide_processor.save_notes_pdf(slide_processor.lectures_output_dir)
     
     # slide_processor.save_notes_storage_supabase()
     
@@ -37,12 +37,12 @@ if __name__ == "__main__":
     # problems_processor.save_questions_supabase()
     # problems_processor.save_questions_storage_supabase()
     
-    # terms_processor = TermsProcessor(
-    #     class_id=class_id,
-    #     output_dir=output_dir,
-    #     regenerate=False
-    # )
-    # terms_processor.process_terms()
+    terms_processor = TermsProcessor(
+        class_id=class_id,
+        output_dir=output_dir,
+        regenerate=False
+    )
+    terms_processor.process_terms()
     
     # Initialize and process groups with automatic recursion
     # groups_processor = GroupsProcessor(

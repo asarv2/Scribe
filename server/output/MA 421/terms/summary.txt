@@ -1,0 +1,36 @@
+convex set
+convex combination
+convex hull
+carathéodory theorem
+farkas' lemma
+feasibility of linear inequalities
+convex hull representation
+convex combination representation
+separating polyhedra
+carathéodory's theorem application
+convex set definition
+carathéodory's theorem
+production planning
+surplus
+production change cost
+risk aversion parameter
+maximum weight matching
+sales force planning
+portfolio selection with absolute deviation
+portfolio selection with variance
+smallest enclosing ball
+production change cost linearization
+sales force planning linearization
+portfolio selection with absolute deviation linearization
+smallest enclosing ball quadratic program
+maximum weight matching integer program
+spanning tree
+fair prices
+reduced cost
+entering arc
+adjusted flow
+finding fair prices
+identifying profitable arcs
+adjusting flows
+finding an initial feasible solution
+economic interpretation of reduced costs

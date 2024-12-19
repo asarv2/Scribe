@@ -10,6 +10,7 @@ import uuid
 class GroupsProcessor(BaseProcessor):
     def __init__(self, 
                  terms: Dict[str, Dict],
+                 group: str = None,
                  depth: int = 1,
                  max_depth: int = 2,
                  *args, **kwargs):
@@ -18,6 +19,7 @@ class GroupsProcessor(BaseProcessor):
 
         Args:
             terms (Dict[str, Dict]): The terms to process.
+            group (str, optional): The group to start at. If None, then start at the root group. Defaults to None.
             depth (int, optional): The depth of the current group. Used to determine which group to start at. Ex, setting depth to 2 will initialize the GroupsProcessor at the second level of groups (subgroups). Defaults to 1.
             max_depth (int, optional): The maximum depth to process. Defaults to 2.
 
@@ -27,6 +29,7 @@ class GroupsProcessor(BaseProcessor):
         """
         super().__init__(*args, **kwargs)
         self.terms = terms
+        self.group = group if group else self.course_title
         if depth > max_depth:
             raise ValueError("Depth cannot be greater than max depth")
         elif depth < 1 or max_depth < 1:
@@ -41,7 +44,36 @@ class GroupsProcessor(BaseProcessor):
         self.text_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.txt")
         
         # prompts
-        self.create_groups_prompt = f"Your objective is to condense a large list of terms into a smaller list of groups, where each group is a more specific version of a term. Your groups should not be the same as the terms in the original list. Refrain from making vague groups titled 'Advanced Topic' or 'Advanced Concepts'. Each group should be broad enough to span at least 3 terms in a meaningful way, but not too broad that it becomes a catch-all. If you are unsure, less groups is better, so that each group can have good depth. Your response should be in the following format: <group>: <definition>. Do not number the groups or add special modifiers -- just follow the format.Extract the most important topics from the following terms: "
+        self.create_groups_prompt = f"""Your objective is to condense a large list of terms into a smaller list of groups, where each group is a more specific version of a term. You will also be given a hierarchy of what groups have already been created, so you do not recreate them. This is in the context of the course {self.course_title}.
+        
+        WHAT YOU SHOULD DO:
+        1. Your groups should not be the same as the terms in the original list.
+        2. You have a maximum of 5 groups, but less is better.
+        3. Each group should be broad enough to span at least 3 terms in a meaningful way, but not too broad that it becomes a catch-all.
+        4. Your response should be in the following format: <group>: <definition>. Do not number the groups or add special modifiers -- just follow the format.
+        
+        WHAT YOU SHOULD NOT DO:
+        1. Refrain from making vague groups titled 'Advanced Topic' or 'Advanced Concepts'.
+        2. Refrain from making groups that are broad, like 'Fundamentals of [course name]' or '[course name] Basics'.
+        3. Do not repeat the same group name that is in the hierarchy, a group should always be more specific than the parent group.
+        
+        Here is a full example to assist you: 
+        TERMS: convex set, convex combination, convex hull, carathéodory theorem, farkas' lemma, feasibility of linear inequalities, convex hull representation, convex combination representation, separating polyhedra, carathéodory's theorem application, convex set definition, production planning, surplus, production change cost, risk aversion parameter, maximum weight matching, sales force planning, portfolio selection with absolute deviation, portfolio selection with variance, smallest enclosing ball, production change cost linearization, sales force planning linearization, portfolio selection with absolute deviation linearization, smallest enclosing ball quadratic program, maximum weight matching integer program, spanning tree, fair prices, reduced cost, entering arc, adjusted flow, finding fair prices, identifying profitable arcs, adjusting flows, finding an initial feasible solution, economic interpretation of reduced costs
+        
+        HIERARCHY:
+        Linear Programming (YOU ARE HERE)
+        
+        OUTPUT: 
+        Convex Geometry: Key concepts related to convexity in linear programming, including convex sets, convex combinations, convex hulls, and their mathematical representations and theorems like Carathéodory's theorem and Farkas' lemma.
+        
+        Optimization Models and Applications: Practical uses of linear programming models in various fields such as production planning, sales force planning, portfolio selection, and maximum weight matching, including model-specific considerations like risk aversion and production change costs.
+        
+        Algorithmic Methods and Feasibility: Techniques for determining feasibility, adjusting flows, finding initial feasible solutions, and solving optimization problems, including spanning trees, entering arcs, and adjusted flow methods.
+        
+        Duality and Economic Interpretation: Concepts like reduced cost, fair prices, identifying profitable arcs, and the economic interpretation of optimization results, emphasizing duality principles and cost analysis in linear programs.
+        
+        Now it's your turn. Extract the most important topics from the following terms and hierarchy. """
+        
         self.group_terms_prompt = f"Your objective is to decide which group each of the following Key Terms/Problem Types/Algorithm Solutions belong to, in the context of the course {self.course_title}. If there is only one group that the term is a part of, respond in the following format: <key term>: <GROUP number>. Here is an example to assist you: 'GROUPS: [simplex method]-[GROUP 1]\n[linear programming applications]-[GROUP 2]\n[network flow]-[GROUP 3]\n\nTERMS: primal problem, dual problem, network, node, knapsack problem, maximum weight matching\n\nOUTPUT: <primal problem>: <GROUP 1>\n\n<dual problem>: <GROUP 2>\n\n<network>: <GROUP 3>\n\n<node>: <GROUP 3>\n\n<knapsack problem>: <GROUP 2>\n\n<maximum weight matching>: <GROUP 3>'. For terms that are a part of multiple groups, respond in the following format: <key term>: <GROUP number><GROUP number>. Here is another example to assist you: 'GROUPS: [duality]-[GROUP 1]\n[convexity]-[GROUP 2]\n[network applications]-[GROUP 3]\n\nTERMS: dual problem, weak duality theorem, convex hull, farkas lemma, bellmans equation, dummy node\n\nOUTPUT: <dual problem>: <GROUP 1><GROUP 3>\n\n<weak duality theorem>: <GROUP 1><GROUP 2>\n\n<convex hull>: <GROUP 2>\n\n<farkas lemma>: <GROUP 1>\n\n<bellmans equation>: <GROUP 1>\n\n<dummy node>: <GROUP 1><GROUP 3>'."
         
         # load the previous groups if they exist
@@ -51,6 +83,43 @@ class GroupsProcessor(BaseProcessor):
         else:
             self.groups = {}
 
+
+    def generate_hierarchy(self, pointer_group: str = None) -> str:
+        """
+        Generate the hierarchy of groups as an indented string.
+        
+        Args:
+            pointer_group (str, optional): The group name where to show "(YOU ARE HERE)". 
+                If None, no pointer is shown. Defaults to None.
+        
+        Returns:
+            str: A string representation of the complete hierarchy, starting with the course title.
+        """
+        def build_hierarchy(groups, level=0):
+            result = []
+            indent = "  " * level
+            for group_name, group_data in groups.items():
+                if isinstance(group_data, dict):
+                    # Use formatted group title if available, otherwise use group_name
+                    group_title = group_data.get('group', group_name)
+                    # Add pointer if this is the specified group
+                    pointer = " (YOU ARE HERE)" if group_name == pointer_group else ""
+                    result.append(f"{indent}{group_title}{pointer}")
+                    
+                    # Recursively process subgroups if they exist
+                    if 'subgroups' in group_data and group_data['subgroups']:
+                        result.extend(build_hierarchy(group_data['subgroups'], level + 1))
+            
+            return result
+
+        # Start with course title
+        # Add pointer if course title is the specified location
+        pointer = " (YOU ARE HERE)" if self.course_title == pointer_group else ""
+        hierarchy = [f"{self.course_title}{pointer}"]
+        # Add all groups and their subgroups
+        hierarchy.extend(build_hierarchy(self.groups, level=1))
+        
+        return "\n".join(hierarchy)
     
     def generate_groups(self, batch_size: int = None) -> List[str]:
         """
@@ -68,7 +137,9 @@ class GroupsProcessor(BaseProcessor):
         all_raw_groups = []
         
         for i, batch in enumerate(batches):
-            prompt = self.create_groups_prompt + ', '.join(batch)
+            terms_str = "TERMS: " + ', '.join(batch)
+            hierarchy_str = "HIERARCHY: " + self.generate_hierarchy(pointer_group=self.group)
+            prompt = self.create_groups_prompt + terms_str + hierarchy_str + "\nOUTPUT: "
             try:
                 batch_results = self.robust_generate(HumanMessage(content=[{"type": "text", "text": prompt}]))
                 all_raw_groups.extend(batch_results.split('\n'))
@@ -79,7 +150,7 @@ class GroupsProcessor(BaseProcessor):
         return all_raw_groups
     
     
-    def clean_generated_groups(self, generated_groups: List[str]) -> Tuple[List[str], List[str]]:
+    def clean_generated_groups(self, generated_groups: List[str]) -> Tuple[List[str], List[str], List[str]]:
         """
         Clean the generated groups and combine the results.
         
@@ -87,14 +158,16 @@ class GroupsProcessor(BaseProcessor):
             generated_groups (List[str]): The generated groups to clean
             
         Returns:
-            Tuple[List[str], List[str]]: Combined group names and formatted group names
+            Tuple[List[str], List[str], List[str]]: Combined group names, formatted group names, and definitions
         """
         # Combine and process all groups
         groups = []
         formatted_groups = []
+        definitions = []
         for line in generated_groups:
             if ":" in line:
-                formatted_group = line.split(":")[0].strip().strip("*").strip()
+                sections = line.split(":")
+                formatted_group = sections[0].strip().strip("*").strip()
                 # make lowercase
                 group = formatted_group.lower()
                 # remove parentheses
@@ -104,7 +177,8 @@ class GroupsProcessor(BaseProcessor):
                 else:
                     groups.append(group)
                     formatted_groups.append(formatted_group)
-        return groups, formatted_groups
+                    definitions.append(sections[1].strip())
+        return groups, formatted_groups, definitions
     
     def process_batch(self, 
                       terms: List[str], 
@@ -126,11 +200,12 @@ class GroupsProcessor(BaseProcessor):
         
         return self.robust_generate(message)
     
-    def clean_result(self, result: str, terms: List[str], all_groups: List[str], formatted_groups: List[str]):
+    def clean_result(self, result: str, terms: List[str], all_groups: List[str], formatted_groups: List[str], definitions: List[str]):
         """
         Clean up the result by getting it in the form of {
             "cleaned_group_name" : {
                     "group": "group",
+                    "definition": "definition",
                     "terms": {
                         "cleaned_term_name": {
                             "term": "term",
@@ -172,6 +247,7 @@ class GroupsProcessor(BaseProcessor):
                     if 0 <= group_idx < len(all_groups):
                         group = all_groups[group_idx]
                         formatted_group = formatted_groups[group_idx]
+                        definition = definitions[group_idx]
                         
                         # finding original term from the cleaned term
                         complete_term = self.terms[term]
@@ -187,6 +263,7 @@ class GroupsProcessor(BaseProcessor):
                         else:
                             self.groups[group] = {
                                 "group": formatted_group,
+                                "definition": definition,                                
                                 "terms": {
                                     term: complete_term
                                 }
@@ -219,7 +296,7 @@ class GroupsProcessor(BaseProcessor):
         
         # Generate and process initial groups
         raw_generated_groups = self.generate_groups(batch_size)
-        generated_groups, formatted_groups = self.clean_generated_groups(raw_generated_groups)
+        generated_groups, formatted_groups, definitions = self.clean_generated_groups(raw_generated_groups)
         print("Generated groups: ", generated_groups)
 
         terms = list(self.terms.keys())
@@ -228,7 +305,7 @@ class GroupsProcessor(BaseProcessor):
             # Process all terms at once
             try:
                 result = self.process_batch(terms, generated_groups, 0)
-                self.clean_result(result, terms, generated_groups, formatted_groups)
+                self.clean_result(result, terms, generated_groups, formatted_groups, definitions)
             except Exception as e:
                 print(f"Error processing groups: {e}")
         else:
@@ -237,7 +314,7 @@ class GroupsProcessor(BaseProcessor):
                 batch = terms[i:i + batch_size]
                 try:
                     result = self.process_batch(batch, generated_groups, i // batch_size)
-                    batch_groups = self.clean_result(result, batch, generated_groups, formatted_groups)
+                    batch_groups = self.clean_result(result, batch, generated_groups, formatted_groups, definitions)
                     # Merge batch results into current_groups
                     for group_name, group_data in batch_groups.items():
                         if group_name in self.groups:
@@ -269,6 +346,7 @@ class GroupsProcessor(BaseProcessor):
                 print(f"Processing subgroup {group_name} at depth {self.depth + 1}")
                 # Create new processor for subgroup
                 subgroup_processor = GroupsProcessor(
+                    group=group_name,
                     terms=group_data["terms"],
                     depth=self.depth + 1,
                     max_depth=self.max_depth,
@@ -358,7 +436,7 @@ class GroupsProcessor(BaseProcessor):
         lecture_mapping = self.supabase.table("slides").select("id, name").eq("class", self.class_id).execute().data
         name_to_id = {lecture['name']: lecture['id'] for lecture in lecture_mapping}
         
-        def create_topic_entry(title, content, parent_id=None, lectures=None, visual=None, topic_type='group'):
+        def create_topic_entry(title, content, parent_id=None, lectures=None, visuals=None, topic_type='group'):
             """Helper function to create a standardized topic entry"""
             return {
                 "title": title,
@@ -367,7 +445,7 @@ class GroupsProcessor(BaseProcessor):
                 "map_parent": parent_id,
                 "map_id": str(uuid.uuid4()),
                 "lectures": lectures or [],
-                "visual": visual,
+                "visuals": visuals or [],
                 "type": topic_type
             }
 
@@ -378,7 +456,7 @@ class GroupsProcessor(BaseProcessor):
             # Create entry for the group itself
             group_entry = create_topic_entry(
                 title=group_data.get("group", group_name),
-                content="",  # Groups don't have definitions
+                content=group_data.get("definition", ""),
                 parent_id=parent_id,
                 topic_type='group'  # Groups are always type 'group'
             )
@@ -398,13 +476,16 @@ class GroupsProcessor(BaseProcessor):
                     term_type = 'problem'
                 elif term_type == 'Algorithm Solutions':
                     term_type = 'algorithm'
+                    
+                visuals = term_data.get("visuals", [])
+                visuals = [os.path.join(self.supabase_url, "storage", "v1", "object", "public", "slides", self.course_code, "lectures", lecture_names[0], "figures", visual) for visual in visuals]
                 
                 term_entry = create_topic_entry(
                     title=term_data.get("term", ""),
                     content=term_data.get("definition", ""),
                     parent_id=group_entry["map_id"],
                     lectures=lecture_ids,
-                    visual=term_data.get("visual", None),
+                    visuals=visuals,
                     topic_type=term_type
                 )
                 topics.append(term_entry)
@@ -421,12 +502,12 @@ class GroupsProcessor(BaseProcessor):
         root_id = str(uuid.uuid4())
         root_node = {
             "title": self.course_title,
-            "content": "",
+            "content": self.course_description,
             "class": self.class_id,
             "map_parent": None,
             "map_id": root_id,
             "lectures": [lecture['id'] for lecture in lecture_mapping],  # Include all lectures
-            "visual": None,
+            "visuals": [],
             "type": "group"
         }
         
