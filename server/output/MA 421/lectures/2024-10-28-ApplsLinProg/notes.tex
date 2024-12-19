@@ -17,6 +17,9 @@
 \usepackage{mathtools}%
 \usepackage{amsthm}%
 \usepackage{thmtools}%
+\usepackage{float}%
+\usepackage{subcaption}%
+\usepackage[font=small,labelfont=bf]{caption}%
 %
 
             \hypersetup{
@@ -30,29 +33,32 @@
             }
             \urlstyle{same}
             \Urlmuskip=0mu plus 1mu  % URL breaking in nicer spots
-            
+
             % Math configuration
             \everymath{\displaystyle}
             \setlength{\jot}{10pt}  % Increase spacing between equations
-            
+
             \pagestyle{fancy}
             \fancyhf{}
             \rhead{Generated on \today}
             \cfoot{\thepage}
-            
+
             % Better Unicode support
             \usepackage[utf8]{inputenc}
             \usepackage{newunicodechar}
-            \usepackage[breaklinks=true]{hyperref}
             \setlength{\itemsep}{1em} % Adds spacing between items
-            
+
             % Configure itemize settings globally
             \setlist[itemize]{nosep}
             \setlist[itemize]{leftmargin=*}
-            
+
             % Remove section numbering
             \renewcommand{\thesection}{}
             \renewcommand{\thesubsection}{}
+
+            % Adjust caption spacing around figures
+            \setlength{\abovecaptionskip}{0pt}
+            \setlength{\belowcaptionskip}{5pt}
         %
 \lhead{Lecture: 2024{-}10{-}28{-}ApplsLinProg}%
 \title{2024{-}10{-}28{-}ApplsLinProg}%
@@ -66,22 +72,28 @@
 \label{sec:Slide1}%
 \subsection{Content}%
 
-\underline{\text{Production Planning}} \\
-\text{[M\&D] p.16} \quad 2.3 \text{ Ice Cream All Year Round}
+\underline{Production Planning} \\
+\text{[EMG] p.16} \\
+2.3 \text{ Ice Cream All Year Round} \\
+\text{The next application of linear programming again concerns food (which} \\
+\text{should not be surprising, given the importance of food in life and the dif-} \\
+\text{ficulties in optimizing sleep or love). The ice cream manufacturer Icicle Wor-} \\
+\text{Ltd.$^2$ needs to set up a production plan for the next year. Based on histor-} \\
+\text{ical extensive surveys, and bird observations, the marketing department has come} \\
+\text{up with the following prediction of monthly sales of ice cream in the next} \\
+\text{year:} \\
+\text{sales [tons]} \quad \underline{\text{Monthly Demands } d_i, i=1,\dots,12}
 %
 \subsection{Description}%
-This slide introduces a production planning problem for an ice cream manufacturer. The title "Production Planning" is underlined. A reference to a textbook or other source ([M\&D] p.16) is given, along with the section number (2.3) and title "Ice Cream All Year Round". The main content is a bar chart illustrating monthly ice cream demands ($d_i$, where $i$ represents the month from 1 to 12) in tons. The chart shows the predicted monthly sales of ice cream for the next year, providing data for a linear programming optimization problem. The context of the course (Linear Programming and Optimization Techniques) indicates that this data will be used to formulate a linear program to optimize the ice cream production plan, likely aiming to minimize costs or maximize profits while meeting the predicted demand.%
+This slide introduces a production planning problem for an ice cream manufacturer, Icicle Wor Ltd., as an application of linear programming. The problem involves determining a production plan for the next year based on predicted monthly sales. The slide mentions that the marketing department has used historical surveys and "bird observations" (likely a humorous touch) to predict monthly ice cream sales. The slide title is "Production Planning" with a subheading "2.3 Ice Cream All Year Round."  The source is indicated as "[EMG] p.16".  A bar graph visualizes the predicted monthly demands ($d_i$) for ice cream in tons, with months labeled on the x-axis and sales in tons on the y-axis. The handwritten note emphasizes "Monthly Demands $d_i, i=1,\dots,12$," indicating that these values are crucial for the linear programming formulation that will likely be developed in subsequent slides. The context of the course, Linear Programming, suggests that this example will be used to illustrate how linear programming techniques can be applied to real-world production planning scenarios.%
 \subsection{Figures}%
-\begin{figure}[h]%
+\begin{figure}[H]%
 \centering%
-\begin{minipage}{\textwidth}%
+\begin{subfigure}[b]{0.15\textwidth}%
 \centering%
-\begin{minipage}{0.15\textwidth}%
-\centering%
-\includegraphics[width=0.8\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png}%
-\caption{A bar chart showing monthly demands ($d_i$, $i=1,\dots,12$) for ice cream in tons. The x-axis represents the months (Jan-Dec), and the y-axis represents the sales in tons.}%
-\end{minipage}%
-\end{minipage}%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png}%
+\caption{Bar graph showing monthly ice cream sales predictions.}%
+\end{subfigure}%
 \end{figure}
 
 %
@@ -90,22 +102,28 @@ This slide introduces a production planning problem for an ice cream manufacture
 \label{sec:Slide2}%
 \subsection{Content}%
 
-\underline{\text{Production Planning}} \\
-\text{[M\&D] p.16} \quad 2.3 \text{ Ice Cream All Year Round}
+\underline{Production Planning} \\
+\text{[EMG] p.16} \\
+2.3 \text{ Ice Cream All Year Round} \\
+\text{The next application of linear programming again concerns food (which} \\
+\text{should not be surprising, given the importance of food in life and the dif-} \\
+\text{ficulties in optimizing sleep or love). The ice cream manufacturer Icicle Wor-} \\
+\text{Ltd.$^2$ needs to set up a production plan for the next year. Based on histor-} \\
+\text{ical extensive surveys, and bird observations, the marketing department has come} \\
+\text{up with the following prediction of monthly sales of ice cream in the next} \\
+\text{year:} \\
+\text{sales [tons]} \quad \underline{\text{Monthly Demands } d_i, i=1,\dots,12}
 %
 \subsection{Description}%
-This slide presents a production planning problem for Icicle World Ltd., an ice cream manufacturer.  The title "Production Planning" is underlined.  A reference to a textbook or other source ([M\&D] p.16) is given, along with the section number (2.3) and title "Ice Cream All Year Round". The main content is a bar chart illustrating the monthly ice cream demand ($d_i$, where $i$ represents the month from 1 to 12) in tons.  The chart shows predicted monthly sales for the next year. A horizontal red line indicates the average monthly demand. The context of the course (Linear Programming and Optimization Techniques) indicates that this data will be used to formulate a linear program to optimize the ice cream production plan, likely aiming to minimize costs or maximize profits while meeting the predicted demand.  The text mentions that the prediction is based on historical data, extensive surveys, and bird observations.%
+This slide introduces a production planning problem for an ice cream manufacturer, Icicle Wor Ltd., as an application of linear programming. The problem involves determining a production plan for the next year based on predicted monthly sales. The slide mentions that the marketing department has used historical surveys and "bird observations" (likely a humorous touch) to predict monthly ice cream sales. The slide title is "Production Planning" with a subheading "2.3 Ice Cream All Year Round."  The source is indicated as "[EMG] p.16".  A bar graph visualizes the predicted monthly demands ($d_i$) for ice cream in tons, with months labeled on the x-axis and sales in tons on the y-axis. The handwritten note emphasizes "Monthly Demands $d_i, i=1,\dots,12$," indicating that these values are crucial for the linear programming formulation that will likely be developed in subsequent slides.  A horizontal line across the graph and the handwritten "average demand" label suggest that the average demand over the year will be an important factor in the problem. The context of the course, Linear Programming, suggests that this example will be used to illustrate how linear programming techniques can be applied to real-world production planning scenarios.%
 \subsection{Figures}%
-\begin{figure}[h]%
+\begin{figure}[H]%
 \centering%
-\begin{minipage}{\textwidth}%
+\begin{subfigure}[b]{0.15\textwidth}%
 \centering%
-\begin{minipage}{0.15\textwidth}%
-\centering%
-\includegraphics[width=0.8\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/2.1.png}%
-\caption{A bar chart showing monthly demands ($d_i$, $i=1,\dots,12$) for ice cream in tons. The x-axis represents the months (Jan-Dec), and the y-axis represents the sales in tons. A horizontal line indicates the average demand.}%
-\end{minipage}%
-\end{minipage}%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/2.1.png}%
+\caption{Bar graph showing monthly ice cream sales predictions.}%
+\end{subfigure}%
 \end{figure}
 
 %
@@ -114,26 +132,457 @@ This slide presents a production planning problem for Icicle World Ltd., an ice 
 \label{sec:Slide3}%
 \subsection{Content}%
 
-\underline{\text{Production Planning}} \\
-\text{[M\&D] p.16} \\
-(1) \quad x_i - \text{production at month } i \\
-(2) \quad s_i - \text{surplus at end of month } i \\
-(3) \quad x_i + s_{i-1} = d_i + s_i \\
-\min \sum_{i=1}^{12} 50|x_i - x_{i-1}| + \sum_{i=1}^{12} 20 s_i
+\underline{Production Planning} \\
+\text{[EMG] p.16} \\
+\text{(1)} \quad X_i - \text{production at month } i \\
+\text{(2)} \quad S_i - \text{Surplus at end of month } i \\
+\text{(3)} \quad X_i + S_{i-1} = d_i + S_i \\
+\min \sum_{i=1}^{12} 50 |X_i - X_{i-1}| + \sum_{i=1}^{12} 20 S_i \\
+\underbrace{\qquad \qquad \qquad \qquad}_{\text{Cost of Changing Production}} \quad \underbrace{\qquad \qquad}_{\text{Cost of Storage}}
 %
 \subsection{Description}%
-This slide formulates a linear programming model for a production planning problem. The title "Production Planning" is underlined. A reference to a textbook or other source ([M\&D] p.16) is given.  The model involves: (1) $x_i$ representing the production level in month $i$; (2) $s_i$ representing the surplus inventory at the end of month $i$; and (3) a constraint $x_i + s_{i-1} = d_i + s_i$, where $d_i$ is the demand in month $i$, ensuring that production plus beginning inventory equals demand plus ending inventory. The objective function is to minimize the total cost, which consists of two parts: $\sum_{i=1}^{12} 50|x_i - x_{i-1}|$ representing the cost of changing production levels between consecutive months, and $\sum_{i=1}^{12} 20 s_i$ representing the cost of storing surplus inventory.  The context of the course (Linear Programming and Optimization Techniques) indicates that this model will be solved using linear programming techniques. The absolute value in the cost of changing production levels suggests that this model might require reformulation to be solved using standard linear programming methods.%
+This slide, titled "Production Planning" and referencing "[EMG] p.16," formulates a linear programming problem for optimizing ice cream production. It introduces three key variables: $X_i$ representing the production in month $i$, $S_i$ representing the surplus inventory at the end of month $i$, and $d_i$ (from the previous slides) representing the demand in month $i$. Equation (3), $X_i + S_{i-1} = d_i + S_i$, represents the inventory balance constraint: production plus previous month's surplus equals demand plus current month's surplus. The objective function aims to minimize the total cost, which consists of two parts: the cost of changing production from one month to the next, represented by $\sum_{i=1}^{12} 50 |X_i - X_{i-1}|$, and the cost of storing surplus inventory, represented by $\sum_{i=1}^{12} 20 S_i$. The underbraces clarify these two cost components.  The absolute value in the production change cost term makes the problem non-linear as formulated.  In the context of linear programming, this suggests that further manipulation will be needed to convert this into a linear program, likely by introducing auxiliary variables.%
 \subsection{Figures}%
-\begin{figure}[h]%
+\begin{figure}[H]%
 \centering%
-\begin{minipage}{\textwidth}%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 4}%
+\label{sec:Slide4}%
+\subsection{Content}%
+
+\underline{Production Planning} \\
+\text{[EMG] p.16} \\
+\text{(1)} \quad X_i - \text{production at month } i \\
+\text{(2)} \quad S_i - \text{Surplus at end of month } i \\
+\text{(3)} \quad X_i + S_{i-1} = d_i + S_i \\
+\min \sum_{i=1}^{12} 50 |X_i - X_{i-1}| + \sum_{i=1}^{12} 20 S_i \\
+X_i - X_{i-1} = y_i - z_i, \quad y_i, z_i \ge 0 \\
+|X_i - X_{i-1}| = y_i + z_i
+%
+\subsection{Description}%
+This slide continues the development of the ice cream production planning problem, focusing on the treatment of the absolute value term in the objective function.  It reiterates the definitions of $X_i$ (production in month $i$) and $S_i$ (surplus at the end of month $i$), along with the inventory balance equation (3): $X_i + S_{i-1} = d_i + S_i$. The objective function, aiming to minimize total cost, is shown as $\min \sum_{i=1}^{12} 50 |X_i - X_{i-1}| + \sum_{i=1}^{12} 20 S_i$.  To handle the absolute value $|X_i - X_{i-1}|$, which makes the problem non-linear, the slide introduces two new non-negative variables $y_i$ and $z_i$ such that $X_i - X_{i-1} = y_i - z_i$ and $|X_i - X_{i-1}| = y_i + z_i$. This transformation allows the problem to be formulated as a linear program, as the absolute value is replaced by a linear expression.  This is a standard technique in linear programming for dealing with absolute values in the objective function. The red arrow and highlighting emphasize the key transformation using $y_i$ and $z_i$.%
+\subsection{Figures}%
+\begin{figure}[H]%
 \centering%
-\begin{minipage}{0.15\textwidth}%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 5}%
+\label{sec:Slide5}%
+\subsection{Content}%
+
+\underline{Production Planning} \\
+\text{[EMG] p.16} \\
+\min 50 \sum_{i=1}^{12} (y_i + z_i) + 20 \sum_{i=1}^{12} S_i \\
+s.t. \\
+X_i + S_{i-1} - S_i = d_i \quad i=1, 2, \dots, 12 \\
+X_i - X_{i-1} = y_i - z_i \\
+X_0 = 0 \\
+S_0 = 0 \\
+S_{12} = 0 \\
+X_i, y_i, z_i, S_i \ge 0 \quad i=1, 2, \dots, 12
+%
+\subsection{Description}%
+This slide presents the complete linear programming formulation for the ice cream production planning problem. The objective function, $\min 50 \sum_{i=1}^{12} (y_i + z_i) + 20 \sum_{i=1}^{12} S_i$, minimizes the total cost, which includes production change costs (using $y_i$ and $z_i$ to represent the absolute value of production change) and storage costs ($S_i$). The constraints are listed as follows:
+\begin{itemize}
+    \item $X_i + S_{i-1} - S_i = d_i$: Inventory balance constraint for each month $i$, where $d_i$ is the demand.
+    \item $X_i - X_{i-1} = y_i - z_i$: Definition of $y_i$ and $z_i$ to handle the absolute value of production change.
+    \item $X_0 = 0$: Initial production is zero.
+    \item $S_0 = 0$: Initial surplus is zero.
+    \item $S_{12} = 0$: Final surplus is zero (no leftover inventory at the end of the year).
+    \item $X_i, y_i, z_i, S_i \ge 0$: Non-negativity constraints for all variables.
+\end{itemize}
+The index $i$ runs from 1 to 12, representing the months of the year.  The "s.t." stands for "subject to," indicating the constraints of the optimization problem. This formulation is now a standard linear program that can be solved using linear programming solvers.  The context of the course, Linear Programming, makes it clear that this is the final formulation of the problem introduced in the previous slides, ready to be solved using appropriate algorithms.%
+\subsection{Figures}%
+\begin{figure}[H]%
 \centering%
-\includegraphics[width=0.8\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/3.1.png}%
-\caption{No figure present.}%
-\end{minipage}%
-\end{minipage}%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 6}%
+\label{sec:Slide6}%
+\subsection{Content}%
+
+\underline{Production Planning} \\
+\text{[EMG] p.16}
+%
+\subsection{Description}%
+This slide, titled "Production Planning" and referencing "[EMG] p.16," visually presents two bar graph solutions to the ice cream production planning problem formulated in the previous slides. The top graph represents a solution where storage costs are considered in the optimization. The bottom graph represents a solution where there are "no storage costs," as indicated by the handwritten note and arrow. Both graphs show production levels (in tons) across 12 months (presumably). The gray bars likely represent the production quantity $X_i$ in each month, while the black bars in the top graph likely represent the demand $d_i$.  The difference between the gray and black bars in the top graph would visually represent the surplus $S_i$. In the bottom graph, the gray bars likely directly correspond to the demand since there's no storage.  The comparison of these two graphs highlights the impact of storage costs on the optimal production plan.  In the context of the linear programming course, this visualization demonstrates the practical application of the optimization model developed in the previous slides.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\begin{subfigure}[b]{0.15\textwidth}%
+\centering%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/6.1.png}%
+\caption{Top bar graph showing production levels with storage costs.}%
+\end{subfigure}%
+\hspace{0.05\textwidth}%
+\begin{subfigure}[b]{0.15\textwidth}%
+\centering%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/6.2.png}%
+\caption{Bottom bar graph showing production levels without storage costs.}%
+\end{subfigure}%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 7}%
+\label{sec:Slide7}%
+\subsection{Content}%
+
+[V] p. 209 \\
+\begin{tabular}{c c c c}
+Jan & 390 & May & 310 & Sep & 550 \\
+Feb & 420 & Jun & 590 & Oct & 360 \\
+Mar & 340 & Jul & 340 & Nov & 420 \\
+Apr & 320 & Aug & 580 & Dec & 600
+\end{tabular} \\
+TABLE 12.2. Projected labor hours by month. \\
+12.7 \textbf{Sales Force Planning.} \\
+minimize \sum_i (25 \max(a_i - x, 0) + 17.50x) \\
+(a) \dots \\
+(b) \dots \\
+(c) \dots
+%
+\subsection{Description}%
+This slide introduces a sales force planning problem (problem 12.7) from page 209 of the textbook (likely denoted by "[V]"). The problem involves a distributor of office equipment with seasonal fluctuations in labor needs. The company uses two types of salespersons: regular employees (costing $17.50/hour) and temporary employees (costing $25/hour).  The table (TABLE 12.2) provides projected labor hours ($a_i$) needed for each month. The variable $x$ represents the number of hours per month handled by regular employees. The objective is to minimize total labor costs, represented by the given minimization problem: $\min \sum_i (25 \max(a_i - x, 0) + 17.50x)$. This expression calculates the cost by considering the more expensive temporary employees for hours exceeding $x$ (represented by $\max(a_i - x, 0)$) and the regular employees for $x$ hours. The problem then asks to (a) reformulate this as a linear program, (b) solve it with the given data, and (c) find a formula for the optimal $x$ using calculus. The red arrow and highlighting on parts (b) and (c) likely indicate the focus of the current discussion or the next steps in the lecture.  The context of a linear programming course suggests that the reformulation in part (a) is key to solving this problem using linear programming techniques.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 8}%
+\label{sec:Slide8}%
+\subsection{Content}%
+
+\min 25 \sum_{i=1}^{12} y_i + (17.5 \times 12)x \\
+s.t. \\
+a_i - x \le y_i \\
+0 \le y_i \\
+x \ge 0 \\
+\color{red} \max(a_i - x, 0) \le y_i
+%
+\subsection{Description}%
+This slide presents a linear programming formulation for the sales force planning problem introduced on the previous slide. The objective function, $\min 25 \sum_{i=1}^{12} y_i + (17.5 \times 12)x$, aims to minimize the total cost of hiring both temporary ($y_i$) and regular ($x$) salespersons. The constraints are:
+\begin{itemize}
+    \item $a_i - x \le y_i$: This ensures that the number of hours assigned to temporary employees ($y_i$) covers any excess demand beyond the hours covered by regular employees ($x$).
+    \item $0 \le y_i$: Non-negativity constraint for temporary employee hours.
+    \item $x \ge 0$: Non-negativity constraint for regular employee hours.
+\end{itemize}
+The red equation, $\max(a_i - x, 0) \le y_i$, is an equivalent way of expressing the first constraint and highlights the connection to the original problem formulation involving the max function.  The downward red arrow likely emphasizes the objective function.  This reformulation converts the original problem with the max function into a standard linear program, which can be solved using linear programming algorithms. The context of the linear programming course makes it clear that this reformulation is a crucial step in solving the sales force planning problem.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 9}%
+\label{sec:Slide9}%
+\subsection{Content}%
+
+\underline{Portfolio Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 13} \\
+\textcircled{1} \; R_i - (annual) \; return \; of \; i^{th} \; investment \\
+(a \; random \; variable) \\
+\textcircled{2} \; x_j - proportion \; of \; investment \; in \; i \\
+(x_j \ge 0, \; \sum_j x_j = 1) \\
+\max \sum_j x_j R_j \leftarrow random \\
+or \\
+\max \sum_j x_j E R_j \\
+\underbrace{\qquad \qquad \qquad}_{\text{average return}}
+%
+\subsection{Description}%
+This slide introduces the concept of portfolio selection using the Markowitz model, referenced from Chapter 13 of a textbook likely denoted by "[V]".  The model aims to maximize the return on investment while considering the risk involved.  The slide defines $R_i$ as the annual return of the $i$-th investment, noting that it's a random variable.  It then defines $x_j$ as the proportion of investment in asset $i$ (note there appears to be an inconsistency in the index used, it should likely be $x_i$ instead of $x_j$), with the constraints that each proportion is non-negative ($x_j \ge 0$) and the sum of all proportions equals 1 ($\sum_j x_j = 1$). The initial objective function is to maximize the total return, $\max \sum_j x_j R_j$, but it's noted that this is a random variable.  Therefore, an alternative objective function is presented: maximizing the expected return, $\max \sum_j x_j E[R_j]$, where $E[R_j]$ represents the expected value (or average return) of the $i$-th investment. The underlining emphasizes the title "Portfolio Selection," and the red annotation clarifies that $E[R_j]$ represents the average return. The context of a linear programming course suggests that this problem will be formulated and solved as a linear program, likely involving techniques to handle the uncertainty represented by the random returns.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 10}%
+\label{sec:Slide10}%
+\subsection{Content}%
+
+\underline{Portfolio Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 13} \\
+\textcircled{1} \; R_i - (annual) \; return \; of \; i^{th} \; investment \\
+(a \; random \; variable) \\
+\textcircled{2} \; x_j - proportion \; of \; investment \; in \; i \\
+(x_j \ge 0, \; \sum_j x_j = 1) \\
+\max \mu \sum_j x_j E R_j - E \left| \sum_j x_j \widetilde{R}_j \right| \\
+\color{red} \widetilde{R}_j = R_j - ER_j \\
+\underbrace{\qquad \qquad \qquad}_{\color{red} fluctuation}
+%
+\subsection{Description}%
+This slide continues the discussion of portfolio selection using the Markowitz model. It introduces a new objective function that incorporates a risk aversion parameter, $\mu$. The objective is to maximize $\mu \sum_j x_j E[R_j] - E|\sum_j x_j \widetilde{R}_j|$, where $E[R_j]$ is the expected return of the $i$-th investment, and $\widetilde{R}_j$ represents the fluctuation of the return, defined as $\widetilde{R}_j = R_j - E[R_j]$. The parameter $\mu$ controls the trade-off between maximizing expected return and minimizing risk (represented by the expected absolute deviation of the portfolio return from its mean).  The constraints on $x_j$ remain the same: $x_j \ge 0$ and $\sum_j x_j = 1$. The red annotations clarify that $\widetilde{R}_j$ represents the fluctuation of the return and label the term $E|\sum_j x_j \widetilde{R}_j|$ as a measure of fluctuation. The underlining emphasizes the title "Portfolio Selection." The context of a linear programming course suggests that this problem, despite involving an absolute value, will likely be reformulated into a linear program that can be solved using standard linear programming techniques.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 11}%
+\label{sec:Slide11}%
+\subsection{Content}%
+
+\underline{Portfolio \; Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 13} \quad Estimation \; of \; ER_j \; and \; E \left| \sum_j x_j \widetilde{R}_j \right| \\
+Given \; historical \; data, \; R_j(t), \; t = 1, \dots, T \\
+\textcircled{1} \quad ER_j = \frac{1}{T} \sum_{t=1}^T R_j(t) \; (= \overline{r}_j) \\
+\textcircled{2} \quad E \left| \sum_j x_j \widetilde{R}_j \right| = \frac{1}{T} \sum_{t=1}^T \left| \sum_j x_j (R_j(t) - \overline{r}_j) \right|
+%
+\subsection{Description}%
+This slide discusses the estimation of the expected return ($ER_j$) and the expected fluctuation ($E|\sum_j x_j \widetilde{R}_j|$) in the Markowitz portfolio selection model, using historical data.  Given historical data of returns $R_j(t)$ for each investment $j$ over time periods $t = 1, \dots, T$, the expected return $ER_j$ is estimated as the average of the historical returns, denoted by $\frac{1}{T} \sum_{t=1}^T R_j(t)$, which is also represented as $\overline{r}_j$. The expected fluctuation is estimated as the average of the absolute deviations of the portfolio return from its mean over the historical time periods.  The formula is given as $\frac{1}{T} \sum_{t=1}^T |\sum_j x_j (R_j(t) - \overline{r}_j)|$. The red arrow indicates that $\overline{r}_j$ is substituted into the second equation. The underlining emphasizes the title "Portfolio Selection."  The context of the linear programming course suggests that these estimations will be used in a linear programming formulation of the portfolio selection problem.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 12}%
+\label{sec:Slide12}%
+\subsection{Content}%
+
+\underline{Portfolio \; Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 13} \\
+\max \mu \sum_j x_j r_j - \frac{1}{T} \sum_{t=1}^T \left| \sum_j x_j (R_j(t) - r_j) \right| \\
+s.t. \quad \sum_j x_j = 1, \quad x_j \ge 0, \quad \left( r_j = \frac{1}{T} \sum_{t=1}^T R_j(t) \right) \\
+\boxed{
+\begin{aligned}
+\max \quad & \mu \sum_j x_j r_j - \frac{1}{T} \sum_{t=1}^T y_t \quad (LP) \\
+s.t. \quad & -y(t) \le \sum_j x_j (R_j(t) - r_j) \le y(t) \\
+& \sum_j x_j = 1, \quad x_j \ge 0
+\end{aligned}
+}
+%
+\subsection{Description}%
+This slide presents the formulation of the Markowitz portfolio selection model as a linear program (LP). The initial formulation involves an absolute value term, making it non-linear.  The top part of the slide shows this initial formulation, where the objective is to maximize the risk-adjusted return, with $\mu$ as the risk aversion parameter. The constraints include the requirement that the sum of investment proportions equals 1 and that each proportion is non-negative. The expected return $r_j$ is calculated from historical data. The boxed section shows the linear programming formulation, where the absolute value term is replaced by new variables $y_t$ and additional constraints. The objective function now becomes maximizing $\mu \sum_j x_j r_j - \frac{1}{T} \sum_{t=1}^T y_t$. The constraints $-y(t) \le \sum_j x_j (R_j(t) - r_j) \le y(t)$ ensure that $y_t$ represents the absolute value of the fluctuations in return for each time period $t$. The annotation "(LP)" emphasizes that this is a linear program. The context of the linear programming course highlights the importance of transforming the initially non-linear problem into a solvable linear program.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 13}%
+\label{sec:Slide13}%
+\subsection{Content}%
+
+\underline{Portfolio \; Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 24} \\
+\max \mu \sum_j x_j ER_j - E \left( \sum_j x_j \widetilde{R}_j \right)^2 \\
+s.t. \quad \sum_j x_j = 1, \quad x_j \ge 0 \\
+\underbrace{\qquad \qquad \qquad \qquad}_{\color{red} variance} \\
+E \left( \sum_j x_j \widetilde{R}_j \right)^2 = E \left( \sum_{i,j} x_i x_j \widetilde{R}_i \widetilde{R}_j \right) \\
+= \sum_{i,j} x_i x_j E(\widetilde{R}_i \widetilde{R}_j)
+%
+\subsection{Description}%
+This slide introduces the Markowitz portfolio selection model, aiming to maximize a risk-adjusted return. The objective function is $\max \mu \sum_j x_j ER_j - E(\sum_j x_j \widetilde{R}_j)^2$, where $x_j$ represents the proportion of investment in asset $j$, $ER_j$ is the expected return of asset $j$, $\widetilde{R}_j$ is the deviation of the return from its expected value, and $\mu$ is a risk-aversion parameter. The constraints are $\sum_j x_j = 1$ (total investment is 1) and $x_j \ge 0$ (no short selling). The term $E(\sum_j x_j \widetilde{R}_j)^2$ represents the variance of the portfolio return, as indicated by the annotation. The slide further expands the variance term into a double summation involving the covariance of the returns of different assets. The context of linear programming suggests that this quadratic objective will likely be addressed through transformations or approximations to fit within the linear programming framework.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 14}%
+\label{sec:Slide14}%
+\subsection{Content}%
+
+\underline{Portfolio \; Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 24} \\
+\max \mu \sum_j x_j ER_j - E \left( \sum_j x_j \widetilde{R}_j \right)^2 \\
+s.t. \quad \sum_j x_j = 1, \quad x_j \ge 0 \\
+\underbrace{\qquad \qquad \qquad \qquad}_{\color{red} variance} \\
+E \left( \sum_j x_j \widetilde{R}_j \right)^2 = E \left( \sum_{i,j} x_i x_j \widetilde{R}_i \widetilde{R}_j \right) \\
+= \sum_{i,j} x_i x_j E(\widetilde{R}_i \widetilde{R}_j) \\
+\underbrace{\qquad \qquad}_{\color{red} c_{ij}}
+%
+\subsection{Description}%
+This slide continues the discussion of the Markowitz portfolio selection model, focusing on the variance term in the objective function. The objective is to maximize $\mu \sum_j x_j ER_j - E(\sum_j x_j \widetilde{R}_j)^2$, subject to $\sum_j x_j = 1$ and $x_j \ge 0$. The slide emphasizes that $E(\sum_j x_j \widetilde{R}_j)^2$ represents the variance of the portfolio return. It then expands this term, showing that the variance can be expressed as $E(\sum_{i,j} x_i x_j \widetilde{R}_i \widetilde{R}_j)$, which simplifies to $\sum_{i,j} x_i x_j E(\widetilde{R}_i \widetilde{R}_j)$.  The term $E(\widetilde{R}_i \widetilde{R}_j)$ is identified as $c_{ij}$, representing the covariance between the returns of assets $i$ and $j$.  The context of linear programming suggests that this quadratic formulation of variance will need further manipulation to be solved using linear programming techniques.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 15}%
+\label{sec:Slide15}%
+\subsection{Content}%
+
+\underline{Portfolio \; Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 24} \\
+\boxed{
+\begin{aligned}
+\max \quad & \mu \sum_j x_j r_j - \sum_{i,j} x_i x_j c_{ij} \\
+s.t. \quad & \sum_j x_j = 1, \quad x_j \ge 0
+\end{aligned}
+} \\
+\color{red}{\text{quadratic fct} \leftarrow}
+%
+\subsection{Description}%
+This slide presents the Markowitz portfolio selection model in a compact form. The objective function aims to maximize the risk-adjusted return, with $\mu$ representing the risk aversion parameter. The first term, $\sum_j x_j r_j$, represents the expected return of the portfolio, where $x_j$ is the proportion invested in asset $j$ and $r_j$ is the expected return of asset $j$. The second term, $\sum_{i,j} x_i x_j c_{ij}$, represents the portfolio variance, where $c_{ij}$ is the covariance between assets $i$ and $j$. The constraints are $\sum_j x_j = 1$ (total investment equals 1) and $x_j \ge 0$ (no short selling).  The red annotation "quadratic fct" highlights that the objective function is quadratic due to the presence of the $x_i x_j$ term in the variance component. This quadratic nature makes the problem more challenging to solve within the context of linear programming, suggesting the need for transformations or approximations to apply linear programming techniques.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 16}%
+\label{sec:Slide16}%
+\subsection{Content}%
+
+\underline{Portfolio \; Selection} \quad (Markowitz \; Model) \\
+\text{[V] Ch. 24} \\
+\boxed{
+\begin{aligned}
+\max \quad & \mu \sum_j x_j r_j - \sum_{i,j} x_i x_j c_{ij} \\
+s.t. \quad & \sum_j x_j = 1, \quad x_j \ge 0
+\end{aligned}
+} \\
+\color{red}{\leftarrow \text{quadratic fct}} \\
+\underline{Quadratic \; Programming} \\
+\boxed{
+\begin{aligned}
+\min \quad & c^T x + \frac{1}{2} x^T Q x \\
+s.t. \quad & Ax \le b \\
+& x \ge 0
+\end{aligned}
+}
+%
+\subsection{Description}%
+This slide continues the discussion of the Markowitz portfolio selection model and introduces the general form of a quadratic program.  The top portion reiterates the Markowitz model objective function: $\max \mu \sum_j x_j r_j - \sum_{i,j} x_i x_j c_{ij}$, subject to $\sum_j x_j = 1$ and $x_j \ge 0$. The red "quadratic fct" annotation again emphasizes the quadratic nature of the objective function due to the $x_i x_j$ term. The lower portion of the slide presents the general form of a quadratic program: $\min c^T x + \frac{1}{2} x^T Q x$, subject to $Ax \le b$ and $x \ge 0$. Here, $x$ is the vector of decision variables, $c$ is a vector of coefficients for the linear terms, $Q$ is a matrix representing the coefficients of the quadratic terms, $A$ is the constraint matrix, and $b$ is the vector of constraint right-hand sides.  The slide implicitly connects the Markowitz model to the broader class of quadratic programming problems, indicating that specialized techniques beyond linear programming are required to solve the portfolio optimization problem.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 17}%
+\label{sec:Slide17}%
+\subsection{Content}%
+
+[MG] p. 184 \\
+8.7 Smallest Balls and Convex Programming \\
+The smallest ball problem. We are given points $p_1, \dots, p_n \in \mathbb{R}^d$, and we want to find a ball of the smallest radius that contains all the points.
+%
+\subsection{Description}%
+This slide introduces the smallest enclosing ball problem within the context of convex programming.  The slide states the problem: given a set of points $p_1, \dots, p_n$ in $\mathbb{R}^d$, find the smallest ball (in terms of radius) that contains all of these points. The figure illustrates this problem in $\mathbb{R}^2$ (i.e., $d=2$), showing several points and a circle enclosing them. The goal is to find the circle with the minimum radius that still encloses all the given points.  The reference "[MG] p. 184" likely refers to a textbook or other resource providing further details on this problem.  The connection to convex programming suggests that this problem can be formulated and solved using convex optimization techniques.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\begin{subfigure}[b]{0.15\textwidth}%
+\centering%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/17.1.png}%
+\caption{A circle encompassing a set of points in 2D space.}%
+\end{subfigure}%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 18}%
+\label{sec:Slide18}%
+\subsection{Content}%
+
+[MG] p. 184 \\
+8.7.4 Theorem. Let $P_1, \dots, P_n$ be points in $\mathbb{R}^d$, and let $Q$ be the $d \times n$ matrix whose $j$th column is formed by the $d$ coordinates of the point $P_j$. Let us consider the optimization problem
+$$
+\begin{aligned}
+\text{minimize} \quad & x^T Q^T Q x - \sum_{j=1}^n x_j P_j^T P_j \\
+\text{subject to} \quad & \sum_{j=1}^n x_j = 1 \\
+& x \ge 0
+\end{aligned} \quad (8.15)
+$$
+in the variables $x_1, \dots, x_n$. Then the objective function $f(x) := x^T Q^T Q x - \sum_{j=1}^n x_j P_j^T P_j$ is convex, and the following statements hold. \\
+(i) Problem (8.15) has an optimal solution $x^*$. \\
+(ii) There exists a point $p^*$ such that $p^* = Qx^*$ holds for every optimal solution $x^*$. Moreover, the ball with center $p^*$ and squared radius $-f(x^*)$ is the unique ball of smallest radius containing $P$.
+%
+\subsection{Description}%
+This slide presents Theorem 8.7.4 related to the smallest enclosing ball problem.  It defines a quadratic optimization problem (8.15) where the objective function minimizes $x^T Q^T Q x - \sum_{j=1}^n x_j P_j^T P_j$ subject to $\sum_{j=1}^n x_j = 1$ and $x \ge 0$. Here, $P_1, \dots, P_n$ are points in $\mathbb{R}^d$, $Q$ is a $d \times n$ matrix whose columns are the coordinates of the points, and $x$ is a vector of variables. The theorem states that the objective function $f(x)$ is convex.  It then asserts two key results: (i) the optimization problem has an optimal solution $x^*$, and (ii) there exists a point $p^*$ equal to $Qx^*$ for every optimal solution $x^*$.  Furthermore, the ball centered at $p^*$ with a squared radius of $-f(x^*)$ is the unique smallest ball containing all the points $P_j$.  This theorem provides a method for finding the smallest enclosing ball by solving a convex quadratic program. The context of linear programming is relevant because this problem, although quadratic, can be solved using techniques related to convex optimization, a field closely connected to linear programming.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 19}%
+\label{sec:Slide19}%
+\subsection{Content}%
+
+\underline{Integer \; Programming} \\
+\text{[ME] p. 3} \quad Maximum \; Weight \; Matching
+%
+\subsection{Description}%
+This slide introduces the concept of maximum weight matching within the context of integer programming. The title indicates the topic, and the reference "[ME] p. 3" points to a likely source for further information. The main content of the slide is a bipartite graph. The left-hand side lists various job titles (quality manager, representative appearance, secretary, trend analyst, undersecretary, vacation specialist, webmaster), while the right-hand side lists names of individuals (Amos, Boris, Colette, Devdatt, Eleanor, Fortunato, Gudrun).  The edges connecting the two sides represent potential assignments of individuals to jobs. Each edge has a weight associated with it, indicating the suitability or value of that particular assignment. The goal of the maximum weight matching problem is to find a set of assignments (edges) such that each job is assigned to exactly one person, each person is assigned to at most one job, and the sum of the weights of the chosen edges is maximized.  This problem is relevant to integer programming because the decision variables (whether or not to assign a person to a job) are binary (0 or 1), making it an integer programming problem.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\begin{subfigure}[b]{0.15\textwidth}%
+\centering%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/19.1.png}%
+\caption{A bipartite graph representing potential job assignments and their associated weights.}%
+\end{subfigure}%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 20}%
+\label{sec:Slide20}%
+\subsection{Content}%
+
+\underline{Integer \; Programming} \\
+\text{[ME] p. 3} \quad Maximum \; Weight \; Matching
+%
+\subsection{Description}%
+This slide continues the discussion of integer programming, specifically focusing on the maximum weight matching problem. The reference "[ME] p. 3" suggests a source for further reading. The slide depicts a bipartite graph. The left-hand side lists various job titles (quality manager, representative appearance, secretary, trend analyst, undersecretary, vacation specialist, webmaster), and the right-hand side lists names of individuals (Amos, Boris, Colette, Devdatt, Eleanor, Fortunato, Gudrun).  The edges connecting the two sides represent potential job assignments, with the weights on each edge representing the value or suitability of a particular assignment.  The goal is to find a matching—a set of edges where no two edges share a common vertex—that maximizes the sum of the edge weights.  The annotations "edge" (in blue) and "vertices, $v$" (in red and underlined with a wavy line) highlight these graph components.  In the context of integer programming, this problem can be formulated with binary variables representing whether or not a particular person is assigned to a specific job. The objective function would then be to maximize the sum of the weights of the selected edges, subject to constraints ensuring that each person is assigned to at most one job and each job is assigned to at most one person.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\begin{subfigure}[b]{0.15\textwidth}%
+\centering%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/20.1.png}%
+\caption{A bipartite graph with edge weights, representing a maximum weight matching problem.}%
+\end{subfigure}%
+\end{figure}
+
+%
+\newpage%
+\section{Slide 21}%
+\label{sec:Slide21}%
+\subsection{Content}%
+
+\underline{Integer \; Programming} \\
+\text{[ME] p. 3} \quad Maximum \; Weight \; Matching \\
+\max \sum_e w_e x_e \\
+s.t. \\
+\sum_{e, v \in e} x_e = 1 \\
+x_e \in \{0, 1\}
+%
+\subsection{Description}%
+This slide continues the discussion of the maximum weight matching problem within the context of integer programming.  The slide shows a bipartite graph representing potential job assignments, similar to the previous slides.  A specific edge is highlighted in blue, with the label "$e$ edge" indicating a general edge in the graph.  The vertices are also highlighted with a wavy underline in red, labeled "vertices, $v$".  Alongside the graph, a mathematical formulation of the maximum weight matching problem is presented. The objective function $\max \sum_e w_e x_e$ aims to maximize the sum of the weights ($w_e$) of the selected edges, where $x_e$ is a binary variable indicating whether edge $e$ is included in the matching ($x_e = 1$) or not ($x_e = 0$). The constraint $\sum_{e, v \in e} x_e = 1$ ensures that for each vertex $v$, exactly one edge incident to $v$ is selected. The constraint $x_e \in \{0, 1\}$ enforces the binary nature of the decision variables.  The reference "[ME] p. 3" likely points to a more detailed explanation of this formulation. This slide connects the visual representation of the problem with its mathematical formulation, crucial for solving it using integer programming techniques.%
+\subsection{Figures}%
+\begin{figure}[H]%
+\centering%
+\begin{subfigure}[b]{0.15\textwidth}%
+\centering%
+\includegraphics[width=\textwidth]{/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/21.1.png}%
+\caption{A bipartite graph with a highlighted edge and vertices, along with a mathematical formulation of the maximum weight matching problem.}%
+\end{subfigure}%
 \end{figure}
 
 %

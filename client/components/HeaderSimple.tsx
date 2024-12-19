@@ -15,6 +15,7 @@ import Image from 'next/image';
 
 const links = [
     { link: '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b', label: 'MA 421' },
+    { link: '/classes/c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
     // { link: '/login', label: 'Professor' },
 ];
 

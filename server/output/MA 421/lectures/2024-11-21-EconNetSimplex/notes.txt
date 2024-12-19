@@ -1,32 +1,95 @@
 SLIDE 1
 <LATEX>
-\underline{\text{Economic Interpretation of Network Simplex}} \quad [C]p. 297 \\
-b_i \quad c_{ij} \quad j \quad b_j
+\underline{Economic Interpretation of Network Simplex} \\
+[C] p. 297.
 </LATEX>
 
-<FIGURE (10, 30), (200, 30), (10, 180), (200, 180)>A network diagram illustrating the economic interpretation of the network simplex method.  Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities.</FIGURE>
+<FIGURE [240.0, 130.0, 650.0, 850.0]>A network diagram.</FIGURE>
 
-<DESCRIPTION>This slide presents a diagram illustrating the economic interpretation of the network simplex method within the context of linear programming and optimization techniques. The title "Economic Interpretation of Network Simplex" is underlined.  A reference to a book or paper ([C]p. 297) is included. The diagram shows a network with nodes representing sources or destinations ($i$, $j$) and edges representing flows between them.  Each edge is labeled with a cost ($c_{ij}$) and the nodes are labeled with supply or demand values ($b_i$, $b_j$). The diagram visually represents a problem that can be solved using the network simplex algorithm, a specialized version of the simplex method for network flow problems.  The network structure is crucial for understanding the economic interpretation, as it allows for a clear visualization of the flow of goods or resources and their associated costs. The slide likely serves as an introduction to the economic interpretation of the network simplex method, setting the stage for further explanation of the algorithm and its application.</DESCRIPTION>
+<DESCRIPTION>This slide introduces the economic interpretation of the network simplex method, referencing page 297 of a source denoted by "[C]". The main content of the slide is a simple network diagram.  The diagram consists of nodes (represented by circles) and edges (represented by lines connecting the nodes). Some nodes are labeled: one with $b_i \bar{u}$, another with $j$ and $b_j$, and an edge connecting these two nodes is labeled $c_{ij}$. This suggests a network flow problem where $b_i$ and $b_j$ could represent supply/demand at nodes $i$ and $j$ respectively, and $c_{ij}$ could represent the cost of transporting one unit of flow along the edge connecting nodes $i$ and $j$. The $\bar{u}$ likely represents a dual variable associated with node $i$. The context of the network simplex method implies that this diagram represents a specific step or situation within the algorithm, possibly illustrating the concept of reduced costs or shadow prices.  The network structure is crucial here, as the network simplex method exploits the graph structure of the problem to efficiently solve network flow linear programs.</DESCRIPTION>
 
 SLIDE 2
 <LATEX>
-\underline{\text{Economic Interpretation of Network Simplex}} \\
-b_i \quad c_{ij} \quad j \quad b_j \\
+\underline{Economic Interpretation of Network Simplex} \\
+b_i \bar{u} \\
+c_{ij} \\
+j \quad b_j \\
 \text{Start a feasible solution on a spanning tree}
 </LATEX>
 
-<FIGURE (10, 30), (200, 30), (10, 180), (200, 180)>A network diagram illustrating the economic interpretation of the network simplex method. Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities. The nodes are labeled with supply or demand values ($b_i$, $b_j$). A spanning tree is highlighted in salmon color.  The question mark (?) suggests an additional element or question related to the spanning tree.</FIGURE>
+<FIGURE [270.0, 138.0, 580.0, 822.0]>A network diagram.</FIGURE>
 
-<DESCRIPTION>This slide introduces the economic interpretation of the network simplex method in the context of linear programming. The title "Economic Interpretation of Network Simplex" is underlined. The diagram depicts a network flow problem. Nodes represent supply ($b_i$) or demand ($b_j$) points, and edges represent flow between them with associated costs ($c_{ij}$).  A spanning tree within the network is highlighted, indicating that the network simplex method starts with a feasible solution on a spanning tree. The question mark (?) at the bottom suggests a further point of discussion or a question related to the spanning tree's role in the algorithm. The slide sets the stage for explaining how the network simplex method leverages the network structure to efficiently solve optimization problems.</DESCRIPTION>
+<DESCRIPTION>This slide continues the discussion on the economic interpretation of the network simplex method. It presents a network diagram with nodes and edges. Some nodes and edges are labeled. One node is labeled with $b_i\bar{u}$, likely representing node $i$ with a supply/demand $b_i$ and a dual variable $\bar{u}$. Another node is labeled with $j$ and $b_j$, representing node $j$ with a supply/demand $b_j$. An edge connecting a node near $i$ and a node near $j$ is labeled $c_{ij}$, likely representing the cost associated with that edge. Some edges in the diagram are highlighted in red, possibly indicating a spanning tree. Below the diagram, the instruction "Start a feasible solution on a spanning tree" is written, suggesting an initial step in the network simplex algorithm. A question mark in parentheses "(?)" is present at the end of the instruction, possibly indicating uncertainty or a point for further discussion. The context of the network simplex method implies that this diagram and instruction relate to finding an initial feasible solution by constructing a spanning tree, which is a crucial first step in the algorithm.</DESCRIPTION>
 
 SLIDE 3
 <LATEX>
-\underline{\text{Economic Interpretation of Network Simplex}} \\
-b_i \quad c_{ij} \quad j \quad b_j \\
-\text{Start a feasible solution on a spanning tree}
+\underline{Economic Interpretation of Network Simplex} \\
+b_i \bar{u} \\
+c_{ij} \\
+j \quad b_j \\
+\text{Start a feasible solution on a spanning tree} \quad (?)
 </LATEX>
 
-<FIGURE (10, 30), (200, 30), (10, 180), (200, 180)>A network diagram illustrating the economic interpretation of the network simplex method. Nodes represent sources or destinations, and edges represent flows with associated costs ($c_{ij}$) and capacities. The nodes are labeled with supply or demand values ($b_i$, $b_j$). A spanning tree is highlighted in salmon color.  The question mark (?) suggests an additional element or question related to the spanning tree.</FIGURE>
+<FIGURE [190.0, 120.0, 670.0, 850.0]>A network diagram with nodes and edges, some highlighted in red.</FIGURE>
 
-<DESCRIPTION>This slide continues the explanation of the economic interpretation of the network simplex method, building upon the previous slide. The title "Economic Interpretation of Network Simplex" is underlined.  The diagram shows a network flow problem, similar to the previous slide, with nodes representing supply ($b_i$) or demand ($b_j$) points, and edges representing flow between them with associated costs ($c_{ij}$).  Crucially, a spanning tree is highlighted within the network, emphasizing that the network simplex algorithm begins by finding a feasible solution that corresponds to a spanning tree of the network.  The question mark (?) at the bottom likely indicates a point of discussion or a question regarding the selection or properties of the initial spanning tree, or perhaps the next step in the algorithm. The slide focuses on the initialization phase of the network simplex method, setting the stage for explaining how the algorithm iteratively improves the solution by modifying the spanning tree.</DESCRIPTION>
+<DESCRIPTION>This slide continues the discussion of the economic interpretation of the network simplex method. It presents a network diagram with nodes and edges. Some nodes and edges are labeled. One node is labeled with $b_i\bar{u}$, likely representing node $i$ with a supply/demand $b_i$ and a dual variable $\bar{u}$. Another node is labeled with $j$ and $b_j$, representing node $j$ with a supply/demand $b_j$. An edge connecting nodes is labeled $c_{ij}$, likely representing the cost associated with that edge. Some edges in the diagram are highlighted in a reddish/pink color, likely indicating a spanning tree. Below the diagram, the instruction "Start a feasible solution on a spanning tree" is written, followed by a question mark in parentheses "(?)", suggesting an initial step in the network simplex algorithm and prompting further discussion or uncertainty. The context of the network simplex method implies that this diagram and instruction relate to finding an initial feasible solution by constructing a spanning tree, which is a crucial first step in the algorithm. The highlighted edges likely represent the initial spanning tree chosen for the feasible solution.</DESCRIPTION>
+
+SLIDE 4
+<LATEX>
+\underline{Economic Interpretation of Network Simplex} \\
+\underline{Three Steps of Simplex} \\
+\textcircled{1} \\
+\text{In the first part of the iteration, we imagine that the current feasible tree solution} \\
+\text{has been } \underline{\text{adopted}} \text{ by a transportation company. Because of the shipping costs, the} \\
+\text{market price of the commodity will vary with location: for example, oranges cost} \\
+\text{more in Alaska than they do in Florida. If the unit price is } y_i \text{ at a node } i \text{ and if the} \\
+\text{company ships the commodity along an arc } ij\text{, then it is fair to expect a unit price of} \\
+y_i + c_{ij} \text{ at the node } j\text{: a lower price would make shipping along the arc } ij \text{ wasteful,} \\
+\text{whereas a higher price would allow competitors to undersell the company at } j \text{ and} \\
+\text{still make a profit for themselves. Our first task is to determine a set of ``fair prices''} \\
+y_1, y_2, \dots, y_n \text{ such that} \\
+y_i + c_{ij} = y_j \quad \text{for each } ij \in T. \quad \leftarrow \text{tree arc} \quad (19.4)
+</LATEX>
+
+
+
+<DESCRIPTION>This slide discusses the economic interpretation of the network simplex method, specifically focusing on the first step of the algorithm within a given iteration. The title highlights "Three Steps of Simplex," indicating a broader context. The slide uses the analogy of a transportation company to explain the concept of "fair prices" in a network. It explains that due to varying shipping costs, the market price of a commodity (e.g., oranges) will differ based on location (e.g., higher in Alaska than Florida).  If the unit price at node $i$ is $y_i$, and the company ships along arc $ij$, the price at node $j$ is expected to be $y_i + c_{ij}$, where $c_{ij}$ is the shipping cost along the arc. A lower price at $j$ would make shipping along $ij$ wasteful, while a higher price would allow competitors to undersell the company. The goal is to find a set of "fair prices" $y_1, y_2, ..., y_n$ such that the relationship $y_i + c_{ij} = y_j$ holds for each arc $ij$ in the current spanning tree $T$.  The equation (19.4) formalizes this condition. The annotation "tree arc" emphasizes that this equation applies only to arcs within the spanning tree. The underlined words "adopted" emphasize the assumption that the transportation company is using the current feasible tree solution. The example of oranges and different prices in Alaska and Florida provides a real-world context for the concept of varying prices in a network.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\underline{Economic Interpretation of Network Simplex} \\
+\underline{Three Steps of Simplex} \\
+\textcircled{2} \\
+\text{In the second step of each iteration, we put ourselves in the role of a competitor:} \\
+\text{would it pay to buy the commodity at some node } i\text{, ship it along an arc } ij \text{ and sell at} \\
+\text{the node } j\text{? In our example, the answer is affirmative for several different arcs } ij\text{. For} \\
+\text{instance, we could buy at the node 2 for } y_2 = 23 \text{ and ship along the arc 25 for } c_{25} = \\
+37\text{: the total expense of } y_2 + c_{25} = 60 \text{ compares favorably with the selling price of} \\
+y_5 = 62\text{. In general, this second step consists of choosing an arc } ij \text{ such that} \\
+\underline{y_i + c_{ij} < y_j} \quad \leftarrow \text{non-tree arc} \quad (19.5) \\
+\text{i} \xdashedrightarrow{z_{ij} < 0} \text{j} \\
+y_j - y_i + z_{ij} = c_{ij} \quad i.e. \quad y_j - y_i > c_{ij}
+</LATEX>
+
+<FIGURE [630.0, 250.0, 780.0, 650.0]>Diagram illustrating a non-tree arc.</FIGURE>
+
+<DESCRIPTION>This slide continues the discussion of the economic interpretation of the network simplex method, specifically focusing on the second step of each iteration.  It introduces the perspective of a competitor trying to find profitable opportunities within the existing market prices established by the transportation company in the previous step. The competitor considers buying the commodity at node $i$ for price $y_i$, shipping it along arc $ij$ with cost $c_{ij}$, and selling it at node $j$ for price $y_j$.  A profitable opportunity exists if $y_i + c_{ij} < y_j$. The slide provides a specific example where buying at node 2 for $y_2 = 23$, shipping along arc 25 with cost $c_{25} = 37$, results in a total cost of 60, which is less than the selling price at node 5, $y_5 = 62$. This condition is highlighted and labeled as applying to a "non-tree arc."  The equation (19.5) formalizes this condition.  A small diagram illustrates a non-tree arc $ij$ with a negative flow $z_{ij} < 0$. The relationship $y_j - y_i + z_{ij} = c_{ij}$ is introduced, which implies $y_j - y_i > c_{ij}$ when $z_{ij} < 0$. This reinforces the idea that a competitor can profit by shipping along this arc. The context of the network simplex method implies that identifying such an arc is crucial for improving the current feasible solution.</DESCRIPTION>
+
+SLIDE 6
+<LATEX>
+\underline{Economic Interpretation of Network Simplex} \\
+\underline{Three Steps of Simplex} \\
+\textcircled{3} \\
+\text{In the third step of each iteration, we imagine that the first company has found out} \\
+\text{about its competitor's plan and hastens to use the information to its own advantage.} \\
+\text{It will now ship } t \text{ units through the entering arc and keep ignoring other out-of-tree} \\
+\text{arcs; the shipments along the arcs of } T \text{ will have to be adjusted so as to maintain} \\
+\text{feasibility of the resulting schedule. The adjustments, easy to work out, are shown in} \\
+\widetilde{z}_{ij} = 0, \quad i.e. \quad \widetilde{y}_j - \widetilde{y}_i = c_{ij} \\
+\text{(i)} \xrightarrow{\text{flow} = t} \text{(j)}
+</LATEX>
+
+<FIGURE [700.0, 250.0, 850.0, 650.0]>Diagram illustrating flow along an arc.</FIGURE>
+
+<DESCRIPTION>This slide concludes the discussion of the three steps of the network simplex method, focusing on the third step within an iteration.  It explains that the original company (from step one) reacts to the competitor's strategy (from step two) by shipping $t$ units of the commodity along the profitable arc identified by the competitor (the "entering arc"). The company continues to ignore other non-tree arcs.  The shipments along the existing spanning tree arcs ($T$) are adjusted to maintain feasibility.  The slide states that these adjustments are easy to work out and are shown in the accompanying diagram. The equation $\widetilde{z}_{ij} = 0$ indicates that the reduced cost along the entering arc becomes zero after the adjustment, implying that the arc now effectively becomes part of the spanning tree. The equation $\widetilde{y}_j - \widetilde{y}_i = c_{ij}$ shows the relationship between the adjusted dual variables (fair prices) $\widetilde{y}_j$ and $\widetilde{y}_i$ and the cost $c_{ij}$ along the entering arc. The diagram depicts nodes $i$ and $j$ connected by an arc with a flow of $t$ units. The context of the network simplex method implies that this third step completes one iteration of the algorithm, leading to a new feasible solution with a potentially improved objective function value.</DESCRIPTION>
 

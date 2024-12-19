@@ -14,14 +14,17 @@ if __name__ == "__main__":
         handwritten=True,
         class_id=class_id,
         output_dir=output_dir,
-        regenerate=True
+        regenerate=False
     )
+    # slide_processor.save_figures_png(slide_processor.lectures_output_dir)
+    
+    slide_processor.save_notes_pdf(slide_processor.lectures_output_dir)
     
     # slide_processor.save_notes_storage_supabase()
     
     # slide_processor.save_notes_supabase()
     
-    slide_processor.process_slides(num_docs=1, num_slides=9)
+    # slide_processor.process_slides(num_docs=3)
     
     # problems_processor = ProblemsProcessor(
     #     class_id=class_id,
@@ -44,7 +47,7 @@ if __name__ == "__main__":
     # Initialize and process groups with automatic recursion
     # groups_processor = GroupsProcessor(
     #     terms=terms_processor.terms,
-    #     depth=1,
+    #     depth=2,
     #     max_depth=2,
     #     class_id=class_id,
     #     output_dir=output_dir,

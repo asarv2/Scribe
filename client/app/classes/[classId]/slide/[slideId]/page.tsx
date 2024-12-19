@@ -22,20 +22,15 @@ import DeleteLectureModal from "@/components/DeleteLectureModal";
 import { getUser } from "@/utils/queries/get-user";
 import { getQuestions } from "@/utils/queries/get-questions";
 import QuestionSolutionSlide from "@/components/QuestionSolutionSlide";
+import PDFViewer from "@/components/PDFViewer";
 
 export default function Slide({ params }: { params: { classId: string, slideId: string } }) {
-    const [pageNumber, setPageNumber] = useState<number>(1);
+    const [notesPageNumber, setNotesPageNumber] = useState<number>(0);
+    const [questionsPageNumber, setQuestionsPageNumber] = useState<number>(0);
 
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
     const slideId = params.slideId;
-
-    const handlePageClick = (newPageNumber: number) => {
-        if (newPageNumber < 1 || (newPageNumber > (documents?.length ?? 0))) {
-            return;
-        }
-        setPageNumber(newPageNumber);
-    };
 
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
@@ -66,21 +61,6 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
         queryFn: () => getUser(supabase),
     })
 
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'ArrowLeft') {
-                handlePageClick(pageNumber - 1);
-            } else if (event.key === 'ArrowRight') {
-                handlePageClick(pageNumber + 1);
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [pageNumber, documents]);
-
 
     return (
         <>
@@ -106,14 +86,17 @@ export default function Slide({ params }: { params: { classId: string, slideId: 
                             <QuestionSolutionSlide className={classData?.title ?? ""} questions={questions ? questions.map(q => ({ question: q.question, solution: q.solution })) : []} slide={slide} slideQuestions={questions} documents={documents ?? []} />
                         </Grid.Col>
                     </Grid>
-                    <Stack>
-                        <Link href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/notes.pdf`} target="_blank" rel="noopener noreferrer">
-                            <Text>Link to download summary</Text>
-                        </Link>
-                        <Link href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/questions.pdf`} target="_blank" rel="noopener noreferrer">
-                            <Text>Link to download practice problems</Text>
-                        </Link>
-                    </Stack>
+                    {isMobile ? <Stack>
+                        <PDFViewer pdfUrl={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/notes.pdf`} pageNumber={notesPageNumber} setPageNumber={setNotesPageNumber} />
+                        <PDFViewer pdfUrl={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/questions.pdf`} pageNumber={questionsPageNumber} setPageNumber={setQuestionsPageNumber} />
+                    </Stack> : <Grid>
+                        <Grid.Col span={6}>
+                            <PDFViewer pdfUrl={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/notes.pdf`} pageNumber={notesPageNumber} setPageNumber={setNotesPageNumber} />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <PDFViewer pdfUrl={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classData?.class_code}/lectures/${slide?.name}/questions.pdf`} pageNumber={questionsPageNumber} setPageNumber={setQuestionsPageNumber} />
+                        </Grid.Col>
+                    </Grid>}
                 </Stack>
             </Container>
 

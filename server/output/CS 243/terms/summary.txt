@@ -1,0 +1,135 @@
+dartmouth workshop
+turing test
+game tree
+search space
+minimax
+game tree search
+computational complexity
+adversarial attacks
+ethical bias
+algorithm design
+reinforcement learning
+perceptron
+monte carlo tree search
+matrix
+linear transformation
+matrix inverse
+matrix multiplication
+matrix transposition
+matrix representation of linear equations
+solving linear equations with matrix inverses
+matrix transformation
+perceptron structure
+derivative of sigmoid function
+model selection
+loss function minimization
+linear separability
+gradient calculation
+extending linear models
+linear regression model
+multiple linear regression
+perceptron algorithm
+logistic regression update
+image classification
+semantic gap
+invariant features
+bag of features
+visual words
+image invariance
+image robustness
+visual vocabulary creation
+image noise reduction
+moving average filter
+weighted moving average
+image sharpening
+edge detection
+image gradient
+canny edge detector
+harris corner detector
+gaussian pyramid
+image derivative calculation
+edge characterization
+corner detection
+image gradient calculation
+gaussian pyramid construction
+convolutional neural network
+imagenet
+feature map
+sparse connectivity
+pooling layer
+convolutional layer operation
+multidimensional convolution
+sparse connectivity in cnns
+parameter sharing in convolution
+pooling layer operation
+convolution operation
+parameter sharing
+generalization
+overfitting
+training error
+test error
+regularization
+model complexity selection
+hyperparameter tuning
+training/test data split
+diagnosing overfitting/underfitting
+regularized linear regression
+learning curve analysis
+s-fold cross-validation
+diagnosing overfitting
+matrix factorization
+dimensionality reduction
+singular value decomposition
+principal component analysis
+latent factors
+recommender system prediction
+bias modeling
+clustering
+supervised learning
+unsupervised learning
+euclidean distance
+k-means
+distance calculation
+k-means algorithm
+cluster evaluation
+choosing the number of clusters
+hamming distance
+purity
+similarity matrix correlation
+propositional logic
+logical equivalence
+satisfiable
+conjunctive normal form
+boolean satisfiability problem
+satisfiability
+converting to cnf
+model checking
+planning as sat
+combinatorial design
+sat encoding for planning
+sat reduction to 3-sat
+model checking with sat
+satisfiability check
+recursion
+base case
+recursive case
+structural recursion
+search state
+recursive problem solving
+state space representation
+graph search
+abstraction in search
+state space
+successor function
+abstraction
+redundant state removal
+problem instance
+model generator
+general inference engine
+partial assignment
+unit propagation
+data privacy
+algorithmic bias
+fairness in ai
+model interpretability
+bias mitigation

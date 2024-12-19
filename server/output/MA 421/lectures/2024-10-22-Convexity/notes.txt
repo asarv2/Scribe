@@ -4,43 +4,43 @@ SLIDE 1
 \underline{\text{Def 1}} \quad S \subseteq \mathbb{R}^m \text{ is } \underline{\text{convex}} \text{ if} \\
 \text{for any } z_1, z_2 \in S \implies tz_1 + (1-t)z_2 \in S \\
 \quad 0 \le t \le 1 \\
-\underline{\text{Def 2}} \quad \underline{\text{Convex combination of } z_1, z_2, \dots, z_n \in \mathbb{R}^m} \\
+\underline{\text{Def 2}} \quad \underline{\text{Convex combination of }} z_1, z_2, \dots, z_n \in \mathbb{R}^m \\
 \underline{t_1 z_1 + t_2 z_2 + \dots + t_n z_n} \quad t_i \ge 0 \\
 \quad \sum_i t_i = 1
 </LATEX>
 
-<FIGURE [380.0, 260.0, 500.0, 610.0]>A line segment connecting two points $z_1$ and $z_2$, with an arrow indicating the convex combination $tz_1 + (1-t)z_2$ lies on the segment.</FIGURE>
-<FIGURE [730.0, 40.0, 820.0, 170.0]>A line segment connecting two points $z_1$ and $z_2$.</FIGURE>
-<FIGURE [730.0, 250.0, 840.0, 400.0]>A shaded triangle formed by points $z_1$, $z_2$, and $z_3$.</FIGURE>
-<FIGURE [730.0, 450.0, 860.0, 680.0]>A shaded tetrahedron formed by points $z_1$, $z_2$, $z_3$, and $z_4$.</FIGURE>
+<FIGURE [400.0, 280.0, 500.0, 600.0]>A line segment connecting two points $z_1$ and $z_2$, with an arrow indicating the convex combination $tz_1 + (1-t)z_2$ lies on the segment.</FIGURE>
+<FIGURE [720.0, 40.0, 820.0, 170.0]>A line segment connecting two points $z_1$ and $z_2$.</FIGURE>
+<FIGURE [720.0, 250.0, 850.0, 400.0]>A shaded triangle formed by three points $z_1$, $z_2$, and $z_3$.</FIGURE>
+<FIGURE [720.0, 450.0, 880.0, 680.0]>A shaded tetrahedron formed by four points, with the base triangle shaded differently.</FIGURE>
 
-<DESCRIPTION>This slide introduces the concept of convex analysis, referencing "VJ Chapter 10."  It presents two key definitions: Definition 1 defines a convex set $S$ in $\mathbb{R}^m$ as a set where, for any two points $z_1$ and $z_2$ in $S$, the line segment connecting them (represented by the convex combination $tz_1 + (1-t)z_2$ for $0 \le t \le 1$) is entirely contained within $S$.  A figure illustrates this concept with a line segment and an arrow pointing to a point on the line segment. Definition 2 defines a convex combination of points $z_1, z_2, \dots, z_n$ in $\mathbb{R}^m$ as a linear combination $t_1 z_1 + t_2 z_2 + \dots + t_n z_n$, where each $t_i$ is non-negative and the sum of all $t_i$ equals 1.  The slide includes figures illustrating convex combinations in $\mathbb{R}^2$ (a line segment, a triangle) and $\mathbb{R}^3$ (a tetrahedron). The underlining emphasizes the key terms and definitions. The context of linear programming is implicit, as convexity plays a crucial role in the theory and algorithms of linear programming.</DESCRIPTION>
+<DESCRIPTION>This slide introduces the concept of convex analysis, referencing "VJ Chapter 10."  It provides two key definitions: Definition 1 defines a convex set $S$ in $\mathbb{R}^m$ as a set where, for any two points $z_1$ and $z_2$ in $S$, the line segment connecting them (all convex combinations $tz_1 + (1-t)z_2$ for $0 \le t \le 1$) is also contained within $S$.  A figure illustrates this concept with a line segment between two points and an arrow pointing to a point on the line representing a convex combination. Definition 2 defines a convex combination of points $z_1, z_2, ..., z_n$ in $\mathbb{R}^m$ as $t_1z_1 + t_2z_2 + ... + t_nz_n$, where each $t_i$ is non-negative and the sum of all $t_i$ equals 1.  Three additional figures illustrate convex combinations: a line segment (representing the convex hull of two points), a shaded triangle (representing the convex hull of three points), and a shaded tetrahedron (representing the convex hull of four points). The context of linear programming makes these definitions crucial for understanding the geometry of feasible regions.</DESCRIPTION>
 
 SLIDE 2
 <LATEX>
-\textbf{Thm 10.1} \quad S \text{ is convex } \iff \\
-\text{it contains all conv. comb. of points in } S \\
-pf \quad \impliedby \\
-\underline{\text{Suppose } S \text{ contains all conv. comb. of pts in } S} \\
-\text{Then clearly, for any } z_1, z_2 \in S \\
-\quad \textcolor{red}{tz_1 + (1-t)z_2 \in S} \\
-\quad \textcolor{red}{\text{Conv. comb. of } z_1, z_2} \\
-\implies \underline{S \text{ is convex}}
+\textbf{Thm 10.1} \quad $S$ is convex iff \\
+it contains all conv. comb. of points in $S$ \\
+pf "$\impliedby$" \\
+\underline{Suppose $S$ contain all conv. comb. of pts in $S$} \\
+Then clearly, for any $z_1, z_2 \in S$ \\
+\textcolor{red}{$tz_1 + (1-t)z_2 \in S$} \\
+\textcolor{red}{Conv. comb. of $z_1, z_2$} \\
+$\implies$ \underline{$S$ is convex}
 </LATEX>
 
 
 
-<DESCRIPTION>This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof is outlined, focusing on one direction of the implication (the reverse direction).  It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex.  The underlining highlights the key assumptions and conclusions of the proof.  The notation "pf" indicates "proof," and the double-headed arrow indicates the "if and only if" nature of the theorem.  The term "conv. comb." is an abbreviation for "convex combination."  The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.</DESCRIPTION>
+<DESCRIPTION>This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points.  The proof is outlined, focusing on one direction of the implication (the reverse direction, indicated by the left arrow).  It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex.  The underlining highlights the key assumptions and conclusions of the proof.  The notation "pf" indicates "proof," and the double-headed arrow indicates the "if and only if" nature of the theorem.  The term "conv. comb." is an abbreviation for "convex combination."  The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.</DESCRIPTION>
 
 SLIDE 3
 <LATEX>
 \textbf{Thm 10.1} \quad S \text{ is convex } \iff \\
 \text{it contains all conv. comb. of points in } S \\
-pf \quad ``\implies" \quad \underline{\text{Suppose } S \text{ is convex.}} \\
+\text{pf} \quad ``\implies" \quad \underline{\text{Suppose } S \text{ is convex}} \\
 n=2: \quad z_1, z_2 \in S \implies t_1 z_1 + t_2 z_2 \in S, \quad t_1, t_2 \ge 0 \\
 \quad t_1 + t_2 = 1 \\
 n=3: \quad z_1, z_2, z_3 \in S \implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \left( \frac{t_1}{t_1 + t_2} z_1 + \frac{t_2}{t_1 + t_2} z_2 \right) + t_3 z_3 \\
-\quad \textcolor{red}{\in S} \\
+\quad \overbrace{t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2) \left( \frac{t_1}{t_1 + t_2} z_1 + \frac{t_2}{t_1 + t_2} z_2 \right) + t_3 z_3}^{\in S} \\
 \quad t_1 + t_2 + t_3 = 1 \\
 \quad t_1 + t_2 \ge 0, \quad t_3 \ge 0 \\
 \implies t_1 z_1 + t_2 z_2 + t_3 z_3 \in S
@@ -48,47 +48,48 @@ n=3: \quad z_1, z_2, z_3 \in S \implies t_1 z_1 + t_2 z_2 + t_3 z_3 = (t_1 + t_2
 
 
 
-<DESCRIPTION>This slide continues the proof of Theorem 10.1, showing that if a set $S$ is convex, then it contains all convex combinations of points in $S$. This direction of the proof proceeds by induction. The base case, $n=2$, states that if $z_1, z_2 \in S$, then $t_1z_1 + t_2z_2 \in S$ for $t_1, t_2 \ge 0$ and $t_1 + t_2 = 1$. This follows directly from the definition of a convex set. The inductive step, $n=3$, considers $z_1, z_2, z_3 \in S$.  A convex combination $t_1z_1 + t_2z_2 + t_3z_3$ is rewritten as $(t_1 + t_2)(\frac{t_1}{t_1 + t_2}z_1 + \frac{t_2}{t_1 + t_2}z_2) + t_3z_3$, where $t_1 + t_2 + t_3 = 1$ and $t_1, t_2, t_3 \ge 0$.  Since $\frac{t_1}{t_1 + t_2}z_1 + \frac{t_2}{t_1 + t_2}z_2$ is a convex combination of $z_1$ and $z_2$, and $S$ is convex, this term belongs to $S$.  The entire expression is then a convex combination of two elements of $S$, and thus also belongs to $S$. This argument can be generalized for any $n$, completing the proof. The red "$\in S$" emphasizes that the convex combination of $z_1$ and $z_2$ is in $S$. The arrows indicate the flow of logic in the inductive step. The context of linear programming is relevant because convexity is a crucial property of feasible regions in linear programs.</DESCRIPTION>
+<DESCRIPTION>This slide continues the proof of Theorem 10.1, showing that if a set $S$ is convex, then it contains all convex combinations of points in $S$. This is the forward direction of the "if and only if" statement. The proof proceeds by induction. The base case, $n=2$, follows directly from the definition of convexity: if $z_1, z_2 \in S$, then any convex combination $t_1z_1 + t_2z_2$ (where $t_1, t_2 \ge 0$ and $t_1 + t_2 = 1$) is also in $S$.  The inductive step considers $n=3$: given $z_1, z_2, z_3 \in S$, the goal is to show that $t_1z_1 + t_2z_2 + t_3z_3 \in S$ for $t_1, t_2, t_3 \ge 0$ and $t_1 + t_2 + t_3 = 1$. The expression $t_1z_1 + t_2z_2 + t_3z_3$ is rewritten as $(t_1 + t_2)(\frac{t_1}{t_1 + t_2}z_1 + \frac{t_2}{t_1 + t_2}z_2) + t_3z_3$.  The term in the parentheses is a convex combination of $z_1$ and $z_2$, and since $S$ is convex, this combination is in $S$.  Then, the entire expression becomes a convex combination of two elements in $S$, which is also in $S$ by the definition of convexity. This argument can be generalized to any $n$ by induction.  The underlining and brace highlight key parts of the argument.  "pf" stands for proof, and "conv. comb." is short for convex combination.  In the context of linear programming, this theorem is crucial for understanding the properties of feasible regions, which are often convex sets.</DESCRIPTION>
 
 SLIDE 4
 <LATEX>
-\textbf{Thm 10.1} \quad S \text{ is convex } \iff \\
+\textbf{Thm 10.1} \quad S \text{ is convex iff} \\
 \text{it contains all conv. comb. of points in } S \\
-\text{pf} \quad ``\implies" \quad \underline{\text{Suppose } S \text{ is convex.}} \\
+\text{pf ``} \implies \text{'' Suppose } S \text{ is convex.} \\
 n=2: \quad z_1, z_2 \in S \implies t_1 z_1 + t_2 z_2 \in S, \quad t_1, t_2 \ge 0 \\
 \quad t_1 + t_2 = 1 \\
 n=4: \quad z_1, z_2, z_3, z_4 \in S \\
 t_1 z_1 + t_2 z_2 + t_3 z_3 + t_4 z_4 = (t_1 + t_2 + t_3) \left( \frac{t_1 z_1 + t_2 z_2 + t_3 z_3}{t_1 + t_2 + t_3} \right) + t_4 z_4 \\
 (t_1 + t_2 + t_3) + t_4 = 1 \\
 t_1 + t_2 + t_3 \ge 0, \quad t_4 \ge 0 \\
-\textcolor{red}{\in S} \quad + t_4 z_4 \quad \in S
+\quad \in S \quad + t_4 z_4 \quad \in S \\
+\implies t_1 z_1 + t_2 z_2 + t_3 z_3 + t_4 z_4 \in S
 </LATEX>
 
 
 
-<DESCRIPTION>This slide continues the proof of Theorem 10.1, specifically the forward direction ("if $S$ is convex, then it contains all convex combinations of points in $S$"), using induction.  It builds upon the $n=2$ and $n=3$ cases from the previous slide and now illustrates the case for $n=4$.  It shows how a convex combination of four points, $z_1, z_2, z_3, z_4 \in S$, can be rewritten as $(t_1 + t_2 + t_3)(\frac{t_1z_1 + t_2z_2 + t_3z_3}{t_1 + t_2 + t_3}) + t_4z_4$.  The term in the parentheses is a convex combination of $z_1$, $z_2$, and $z_3$, which belongs to $S$ by the inductive hypothesis (assuming the theorem holds for $n=3$).  The entire expression is then a convex combination of two elements of $S$ (the term in parentheses and $z_4$), and thus also belongs to $S$ by the definition of convexity. This demonstrates the inductive step, suggesting how the proof can be extended to any $n$. The red "$\in S$" emphasizes that the convex combination belongs to $S$. The arrows indicate how the terms are grouped to form convex combinations. The context of linear programming is relevant because this theorem is fundamental to understanding the properties of feasible regions in linear programs, which are often convex sets.</DESCRIPTION>
+<DESCRIPTION>This slide continues the proof of Theorem 10.1, specifically the forward implication: if $S$ is convex, then it contains all convex combinations of its points.  The proof uses induction. The case for $n=2$ is shown, which follows directly from the definition of convexity: if $z_1, z_2 \in S$, then $t_1z_1 + t_2z_2 \in S$ for $t_1, t_2 \ge 0$ and $t_1 + t_2 = 1$.  The slide then shows the inductive step for $n=4$.  It demonstrates that a convex combination of four points, $t_1z_1 + t_2z_2 + t_3z_3 + t_4z_4$, can be rewritten as $(t_1 + t_2 + t_3)(\frac{t_1z_1 + t_2z_2 + t_3z_3}{t_1 + t_2 + t_3}) + t_4z_4$. The term in the parentheses is a convex combination of $z_1$, $z_2$, and $z_3$. By the inductive hypothesis (assuming the theorem holds for $n=3$), this term is in $S$.  The entire expression then becomes a convex combination of two elements in $S$, which, by the definition of convexity, is also in $S$. This completes the inductive step for $n=4$.  The annotations and arrows indicate how the expression is rewritten and which parts belong to the set $S$.  "pf" stands for proof, and "conv. comb." is short for convex combination.  In the context of linear programming, this theorem is important for understanding the properties of feasible regions, which are often convex sets.</DESCRIPTION>
 
 SLIDE 5
 <LATEX>
 \underline{Def} \quad S \subseteq \mathbb{R}^m, \text{ Convex Hull of } S, \\
 Conv(S) = \bigcap G \\
-G \text{ convex}, \quad S \subseteq G \\
-(= \underline{\text{Smallest convex set containing } S}) \\
+G \text{ convex}, \ S \subseteq G \\
+(= \underline{\text{Smallest convex set containing S}}) \\
 (\text{Note intersection of convex set is convex.}) \\
 
-\underline{Thm \; 10.2} \quad S \subseteq \mathbb{R}^m, \quad Conv(S) = \text{collection of} \\
+\underline{Thm 10.2} \quad S \subseteq \mathbb{R}^m, \ Conv(S) = \text{collection of} \\
 \text{all conv. comb. of finitely many pts from } S
 </LATEX>
 
 
 
-<DESCRIPTION>This slide defines the convex hull of a set $S$ in $\mathbb{R}^m$, denoted by $Conv(S)$.  It's defined as the intersection of all convex sets $G$ that contain $S$.  This is equivalent to the smallest convex set containing $S$. The slide also notes that the intersection of convex sets is convex.  Then, Theorem 10.2 is introduced, stating that for a set $S \subseteq \mathbb{R}^m$, the convex hull $Conv(S)$ is the collection of all convex combinations of finitely many points from $S$.  The underlining emphasizes the definition and the theorem statement.  "Conv." is short for "convex," and "comb." is short for "combination."  In the context of linear programming, the convex hull is important because it represents the set of all achievable points through convex combinations of points in $S$, which is relevant for optimization problems.</DESCRIPTION>
+<DESCRIPTION>This slide defines the convex hull of a set $S$ in $\mathbb{R}^m$, denoted as $Conv(S)$. The definition is given as the intersection of all convex sets $G$ that contain $S$.  This is equivalent to the smallest convex set containing $S$.  A note mentions that the intersection of convex sets is also convex.  Then, Theorem 10.2 is introduced. It states that for a set $S$ in $\mathbb{R}^m$, the convex hull $Conv(S)$ is the collection of all convex combinations of finitely many points from $S$.  The underlining emphasizes the definition and the theorem statement.  "conv. comb." is an abbreviation for "convex combination." In the context of linear programming, the convex hull is a crucial concept for understanding the feasible region of a linear program.  Theorem 10.2 provides a practical way to characterize the convex hull, which is important for various optimization algorithms.</DESCRIPTION>
 
 SLIDE 6
 <LATEX>
-\textbf{Thm 10.2} \quad S \subseteq \mathbb{R}^m, \quad Conv(S) = \text{collection of} \\
+\textbf{Thm 10.2} \quad S \subseteq \mathbb{R}^m, \ Conv(S) = \text{collection of} \\
 \text{all conv. comb. of finitely many pts from } S \\
-\text{Pf.} \quad \text{Let } H = \text{collection of all conv. comb.} \\
+\text{pf.} \quad \text{Let } H = \text{collection of all conv. comb.} \\
 \text{of finitely many pts from } S \\
 \text{Need to show } \underline{Conv(S) = H} \\
 (1) \quad \underline{Conv(S) \subseteq H} \quad (\because H \text{ is conv.})
@@ -96,64 +97,160 @@ SLIDE 6
 
 
 
-<DESCRIPTION>This slide begins the proof of Theorem 10.2, which states that the convex hull of a set $S$ in $\mathbb{R}^m$, denoted $Conv(S)$, is the set of all convex combinations of finitely many points from $S$.  The proof starts by defining $H$ as the set of all convex combinations of finitely many points from $S$. The goal is to show that $Conv(S) = H$. The first step (1) aims to prove that $Conv(S)$ is a subset of $H$ ($Conv(S) \subseteq H$). The justification for this step relies on the fact that $H$ is convex, indicated by the notation "$\because H$ is conv."  The underlining emphasizes what needs to be shown and the first step of the proof. "conv. comb." is short for "convex combination," and "pts" is short for "points."  This theorem is important in linear programming because it provides a concrete way to represent the convex hull of a set, which is crucial for understanding the feasible region of linear programs.</DESCRIPTION>
+<DESCRIPTION>This slide begins the proof of Theorem 10.2, which states that the convex hull of a set $S$ in $\mathbb{R}^m$, denoted $Conv(S)$, is the set of all convex combinations of finitely many points from $S$.  The proof starts by defining $H$ as the set of all convex combinations of finitely many points from $S$. The goal is then stated as needing to show that $Conv(S) = H$. The first part of the proof aims to show that $Conv(S)$ is a subset of $H$ ($Conv(S) \subseteq H$). The justification for this part of the proof relies on the fact that $H$ is convex, indicated by the symbol "$\because$".  The underlining emphasizes the main goal and the first step of the proof. "conv. comb." is short for "convex combination," and "pts" is short for "points."  In the context of linear programming, this theorem is important for characterizing the feasible region, which is often represented as the convex hull of a set of points.</DESCRIPTION>
 
 SLIDE 7
 <LATEX>
-\textbf{Thm 10.2} \quad S \subseteq \mathbb{R}^m, \quad Conv(S) = \text{collection of} \\
+\textbf{Thm 10.2} \quad S \subseteq \mathbb{R}^m, \ Conv(S) = \text{collection of} \\
 \text{all conv. comb. of finitely many pts from } S \\
-\text{Pf.} \quad \text{Let } H = \text{collection of all conv. comb.} \\
+\text{pf.} \quad \text{Let } H = \text{collection of all conv. comb.} \\
 \text{of finitely many pts from } S \\
 \text{Need to show } \underline{Conv(S) = H} \\
 (2) \quad \underline{H \subseteq Conv(S)} \\
-\quad (\text{Thm 10.1, contains all conv. comb.} \\
-\quad \text{of pts from } S)
+\quad \uparrow \text{Thm 10.1, contains all conv. comb.} \\
+\quad \quad \text{of pts from } S
 </LATEX>
 
 
 
-<DESCRIPTION>This slide continues the proof of Theorem 10.2.  Having established $Conv(S) \subseteq H$ in the previous slide, this slide focuses on proving the other direction: $H \subseteq Conv(S)$.  It states that this follows from Theorem 10.1, which establishes that a convex set contains all convex combinations of its points. Since $Conv(S)$ is defined as the smallest convex set containing $S$, and $H$ is the set of all convex combinations of points from $S$, Theorem 10.1 implies that $Conv(S)$ must contain all elements of $H$.  The underlining emphasizes the current step of the proof. "conv. comb." is short for "convex combination," and "pts" is short for "points."  This theorem is important in linear programming because it provides a concrete way to represent the convex hull of a set, which is crucial for understanding the feasible region of linear programs.</DESCRIPTION>
+<DESCRIPTION>This slide continues the proof of Theorem 10.2.  Having established $Conv(S) \subseteq H$ in the previous slide, this slide focuses on proving the reverse inclusion: $H \subseteq Conv(S)$.  It states that this follows from Theorem 10.1, which establishes that a convex set contains all convex combinations of its points.  Since $Conv(S)$ is defined as the smallest convex set containing $S$, and $H$ is the set of all convex combinations of finitely many points from $S$, Theorem 10.1 implies that $Conv(S)$ must contain all elements of $H$.  The underlining emphasizes the goal of this part of the proof and the conclusion drawn using Theorem 10.1. "conv. comb." is short for "convex combination," and "pts" is short for "points."  In the context of linear programming, this theorem is crucial for understanding the structure of the feasible region, which can be represented as the convex hull of a set of points.</DESCRIPTION>
 
 SLIDE 8
 <LATEX>
-\underline{Carathéodory \; Theorem} \\
-\textbf{THEOREM 10.3.} \; The \; convex \; hull \; conv(S) \; of \; a \; set \; S \; in \; \mathbb{R}^m \; consists \; of \; all \; convex \\
-combinations \; of \; m+1 \; points \; from \; S: \\
-conv(S) = \left\{ z = \sum_{j=1}^{m+1} t_j z_j : z_j \in S \; and \; t_j \ge 0 \; for \; all \; j, \; and \; \sum_j t_j = 1 \right\} . \\
-\text{Pf} \quad Conv(S) = \left\{ z = \sum_{j=1}^n x_j z_j, \quad z_j \in S, \; x_j \ge 0, \; \sum_j x_j = 1 \right\} \\
-Consider \; the \; LP: \; \max \; C^T X \\
-s.t. \quad AX = \underline{z} \\
-\qquad x_1 + x_2 + \dots + x_n = 1 \\
-\qquad x_1, x_2, \dots, x_n \\
-(z \; is \; given, \; fixed, \quad A = \begin{bmatrix} z_1 & z_2 & \dots & z_n \end{bmatrix}^{(m \times n)})
+\underline{Carathéodory Theorem} \\
+\textbf{THEOREM 10.3.} The convex hull conv(S) of a set $S$ in $\mathbb{R}^m$ consists of all convex \\
+combinations of $m+1$ points from $S$:
+$$ conv(S) = \left\{ z = \sum_{j=1}^{m+1} t_j z_j : z_j \in S \text{ and } t_j \ge 0 \text{ for all } j, \text{ and } \sum_j t_j = 1 \right\}. $$
+pf \quad $Conv(S) = \{z = \sum_{j=1}^n x_j z_j, \ z_j \in S, \ x_j \ge 0, \ \sum_j x_j = 1 \}$ \\
+Consider the LP: $\max \quad C^T X$ \\
+s.t. $\quad AX = \underline{z}$ \\
+$\quad x_1 + x_2 + \dots + x_n = 1$ \\
+$\quad x_1, x_2, \dots, x_n$ \\
+($z$ is given, fixed, $A = [z_1, z_2, \dots z_n]^{m \times n}$)
 </LATEX>
 
 
 
-<DESCRIPTION>This slide introduces the Carathéodory Theorem (Theorem 10.3).  The theorem states that the convex hull of a set $S$ in $\mathbb{R}^m$, denoted $conv(S)$, can be represented as the set of all convex combinations of at most $m+1$ points from $S$. The slide provides the formal definition of the convex hull using this representation. The proof begins by restating the definition of the convex hull using $n$ points and introduces a linear program (LP) to aid in the proof. The LP aims to maximize an objective function $C^TX$ subject to the constraints $AX = z$, $\sum_{j=1}^n x_j = 1$, and $x_j \ge 0$ for all $j$.  Here, $z$ is a fixed point in the convex hull, and $A$ is a matrix whose columns are the points $z_j$ from the set $S$. The notation $\begin{bmatrix} z_1 & z_2 & \dots & z_n \end{bmatrix}^{(m \times n)}$ indicates that $A$ is an $m \times n$ matrix.  The underlining emphasizes the fixed vector $z$ in the LP formulation. In the context of linear programming, Carathéodory's Theorem is important because it shows that any point in the convex hull of a set can be expressed as a convex combination of a relatively small number of points from the set, which has implications for the complexity of algorithms.</DESCRIPTION>
+<DESCRIPTION>This slide introduces the Carathéodory Theorem (Theorem 10.3).  The theorem states that for a set $S$ in $\mathbb{R}^m$, its convex hull, denoted $conv(S)$, can be represented as the set of all convex combinations of at most $m+1$ points from $S$. The theorem is formally stated using mathematical notation. The proof begins by restating the definition of the convex hull as the set of all convex combinations of points in $S$, but without specifying the number of points.  A linear program (LP) is then introduced to aid in the proof. The LP aims to maximize an objective function $C^T X$ subject to the constraints $AX = z$, $\sum_{j=1}^n x_j = 1$, and $x_j \ge 0$ for all $j$.  The matrix $A$ is formed by the points $z_j$ in $S$, and the vector $z$ is considered given and fixed. The notation "pf" stands for "proof."  In the context of linear programming, Carathéodory's Theorem is important because it provides a bound on the number of points needed to express any point in the convex hull, which has implications for algorithms and computational complexity.</DESCRIPTION>
 
 SLIDE 9
 <LATEX>
-\underline{Carathéodory \; Theorem} \\
-\textbf{THEOREM 10.3.} \; The \; convex \; hull \; conv(S) \; of \; a \; set \; S \; in \; \mathbb{R}^m \; consists \; of \; all \; convex \\
-combinations \; of \; m+1 \; points \; from \; S: \\
-conv(S) = \left\{ z = \sum_{j=1}^{m+1} t_j z_j : z_j \in S \; and \; t_j \ge 0 \; for \; all \; j, \; and \; \sum_j t_j = 1 \right\} . \\
-Pf \quad Conv(S) = \left\{ z = \sum_{j=1}^n x_j z_j, \quad z_j \in S, \; x_j \ge 0, \; \sum_j x_j = 1 \right\} \\
-Consider \; the \; LP: \; \max \; C^T X \\
-s.t. \quad AX = \underline{z} \\
-\qquad x_1 + x_2 + \dots + x_n = 1 \\
-\qquad x_1, x_2, \dots, x_n \ge 0 \\
-\qquad \left. \begin{array}{c}
-\\
-\\
-\\
-\end{array} \right\} m+1 \; constraints \\
-(z \; is \; given, \; fixed, \quad A = \begin{bmatrix} z_1 & z_2 & \dots & z_n \end{bmatrix}^{(m \times n)}) \\
-This \; is \; feasible, \; and \; hence \; has \; a \; basic \; opt. \; soln \\
-with \; m+1 \; basic \; variables.
+\underline{Carathéodory Theorem} \\
+\textbf{THEOREM 10.3.} The convex hull conv(S) of a set $S$ in $\mathbb{R}^m$ consists of all convex \\
+combinations of $m+1$ points from $S$:
+$$ conv(S) = \left\{ z = \sum_{j=1}^{m+1} t_j z_j : z_j \in S \text{ and } t_j \ge 0 \text{ for all } j, \text{ and } \sum_j t_j = 1 \right\}. $$
+pf \quad $Conv(S) = \{z = \sum_{j=1}^n x_j z_j, \ z_j \in S, \ x_j \ge 0, \ \sum_j x_j = 1 \}$ \\
+Consider the LP: $\max \quad C^T X$ \\
+s.t. $\quad AX = \underline{z}$ \\
+$\quad x_1 + x_2 + \dots + x_n = 1$ \\
+$\quad x_1, x_2, \dots, x_n \ge 0$ \\
+($m+1$ constraints) \\
+This is feasible, and hence has a basic opt. soln \\
+with $m+1$ basic variables.
+($z$ is given, fixed, $A = [z_1, z_2, \dots z_n]^{m \times n}$)
 </LATEX>
 
 
 
-<DESCRIPTION>This slide continues the proof of Carathéodory's Theorem (Theorem 10.3). It sets up a linear program (LP) to demonstrate that any point $z$ in the convex hull of a set $S$ in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$. The LP is formulated as maximizing a dummy objective function $C^TX$ subject to the constraints $AX = z$, $\sum_{j=1}^n x_j = 1$, and $x_j \ge 0$, where $A$ is a matrix whose columns are the points $z_j$ from $S$, and $z$ is the given point in $conv(S)$. The slide notes that this LP has $m+1$ constraints.  It then states that this LP is feasible, meaning a solution exists, and therefore, it has a basic optimal solution with $m+1$ basic variables. This implies that at most $m+1$ of the $x_j$ variables are non-zero, meaning $z$ can be expressed as a convex combination of at most $m+1$ points from $S$. The underlining emphasizes the fixed vector $z$ in the LP formulation. "opt. soln" is short for "optimal solution."  In the context of linear programming, this theorem is crucial because it provides a bound on the number of points needed to represent any point in the convex hull, which has implications for computational complexity.</DESCRIPTION>
+<DESCRIPTION>This slide continues the proof of Carathéodory's Theorem (Theorem 10.3). It sets up a linear program (LP) to demonstrate that any point in the convex hull of a set $S$ in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$. The LP aims to maximize an arbitrary objective function $C^TX$ subject to the constraints $AX = z$, $\sum_{j=1}^n x_j = 1$, and $x_j \ge 0$. Here, $z$ is a fixed point in the convex hull, and $A$ is a matrix whose columns are the points $z_j$ from the set $S$. The slide notes that this LP is feasible (meaning it has at least one solution) and therefore has a basic optimal solution.  Crucially, it points out that there are $m+1$ constraints in this LP (m constraints from $AX=z$ and one constraint from $\sum x_j = 1$). This implies that a basic optimal solution will have at most $m+1$ non-zero variables, corresponding to at most $m+1$ points from $S$ being used in the convex combination that represents $z$. The matrix $A$ is explicitly defined as $[z_1, z_2, \dots, z_n]^{m \times n}$, indicating its dimensions. The notation "pf" stands for "proof," "opt. soln" stands for "optimal solution," and "LP" stands for "linear program."  The context of linear programming is essential here, as the proof relies on the properties of basic feasible solutions in LPs.</DESCRIPTION>
+
+SLIDE 10
+<LATEX>
+\underline{Separation Theorem} \\
+\textbf{THEOREM 10.4.} Let $P$ and $\hat{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then \\
+there exist disjoint half-spaces $H$ and $\hat{H}$ such that $P \subset H$ and $\hat{P} \subset \hat{H}$.
+$\{ x : U^T x \le c \}$
+$\text{intersection of finitely}$ \\
+$\text{many half spaces}$
+$\{ x : Ax \le b \}$
+</LATEX>
+
+<FIGURE [316.0, 66.0, 450.0, 328.0]>A half-space defined by an inequality.</FIGURE>
+<FIGURE [316.0, 480.0, 515.0, 804.0]>Intersection of multiple half-spaces forming a polyhedron.</FIGURE>
+
+<DESCRIPTION>This slide introduces the Separation Theorem (Theorem 10.4) in the context of linear programming. The theorem states that if $P$ and $\hat{P}$ are two disjoint nonempty polyhedra in $\mathbb{R}^n$, then there exist disjoint half-spaces $H$ and $\hat{H}$ such that $P$ is contained in $H$ and $\hat{P}$ is contained in $\hat{H}$.  The slide visually represents a half-space with shading and the inequality $\{ x : U^T x \le c \}$, and a polyhedron as the intersection of finitely many half-spaces, represented by the inequality $\{ x : Ax \le b \}$. The arrows indicate how the visual representations relate to the mathematical notation.  In the context of linear programming, the Separation Theorem is a fundamental result with implications for duality theory and algorithms for solving linear programs. It provides a way to separate two disjoint convex sets (in this case, polyhedra) using a hyperplane.</DESCRIPTION>
+
+SLIDE 11
+<LATEX>
+\underline{Separation Theorem} \\
+\textbf{THEOREM 10.4.} Let $P$ and $\hat{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then \\
+there exist disjoint half-spaces $H$ and $\hat{H}$ such that $P \subset H$ and $\hat{P} \subset \hat{H}$. \\
+$\{ x : U^T x \le c \}$ \quad intersection of finitely \\
+\quad \quad \quad \quad \quad \quad \quad many half spaces \quad $\{ x : Ax \le b \}$
+</LATEX>
+
+<FIGURE [312.0, 72.0, 484.0, 344.0]>A half-space defined by an inequality.</FIGURE>
+<FIGURE [328.0, 476.0, 548.0, 776.0]>Intersection of multiple half-spaces forming a polyhedron.</FIGURE>
+<FIGURE [556.0, 128.0, 720.0, 408.0]>Polyhedron P within half-space H.</FIGURE>
+<FIGURE [616.0, 428.0, 856.0, 720.0]>Polyhedron \hat{P} within half-space \hat{H}.</FIGURE>
+<FIGURE [664.0, 100.0, 888.0, 840.0]>Disjoint half-spaces H and \hat{H} separating polyhedra P and \hat{P}.</FIGURE>
+
+<DESCRIPTION>This slide illustrates the Separation Theorem (Theorem 10.4) for linear programming.  The theorem states that given two disjoint nonempty polyhedra, $P$ and $\hat{P}$, in $\mathbb{R}^n$, there exist disjoint half-spaces $H$ and $\hat{H}$ such that $P$ is contained within $H$ and $\hat{P}$ is contained within $\hat{H}$. A half-space is visually depicted and represented mathematically as $\{ x : U^T x \le c \}$. A polyhedron is described as the intersection of finitely many half-spaces and represented as $\{ x : Ax \le b \}$. The main diagram shows the two disjoint polyhedra, $P$ and $\hat{P}$, separated by a hyperplane that defines the disjoint half-spaces $H$ and $\hat{H}$. The red line represents the separating hyperplane, with arrows indicating the direction of the half-spaces.  The labels $H$ and $\hat{H}$ are placed near the arrows to indicate which side of the hyperplane corresponds to each half-space. The polyhedra $P$ and $\hat{P}$ are shaded in blue and labeled accordingly.  The context of linear programming is crucial here, as the Separation Theorem is a fundamental result used in duality theory and optimization algorithms.</DESCRIPTION>
+
+SLIDE 12
+<LATEX>
+\underline{Separation Theorem} \\
+\textbf{THEOREM 10.4.} Let $P$ and $\widetilde{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then \\
+there exist disjoint half-spaces $H$ and $\widetilde{H}$ such that $P \subset H$ and $\widetilde{P} \subset \widetilde{H}$. \\
+$P \ne \emptyset \quad P = \{x : Ax \le b \}, \quad \widetilde{P} = \{x : \widetilde{A}x \le \widetilde{b} \} $ \\
+$P \cap \widetilde{P} = \emptyset \iff \begin{cases} Ax \le b \\ \widetilde{A}x \le \widetilde{b} \end{cases} \text{ has no solution} \\
+\iff \text{There is a } y, \widetilde{y} \text{ s.t.} \\
+\quad y^T A + \widetilde{y}^T \widetilde{A} = 0 \\
+\quad y^T b + \widetilde{y}^T \widetilde{b} < 0 \\
+\quad y, \widetilde{y} \ge 0 \\
+(\text{Farka's Lemma})
+</LATEX>
+
+
+
+<DESCRIPTION>This slide continues the discussion of the Separation Theorem (Theorem 10.4) and introduces Farka's Lemma.  It states that two disjoint nonempty polyhedra $P$ and $\widetilde{P}$ (defined by systems of linear inequalities $Ax \le b$ and $\widetilde{A}x \le \widetilde{b}$, respectively) can be separated by disjoint half-spaces if and only if the combined system of inequalities has no solution. This condition is then connected to Farka's Lemma, which provides an alternative way to express the infeasibility of the combined system. Farka's Lemma states that the system has no solution if and only if there exist vectors $y$ and $\widetilde{y}$ (both non-negative) such that $y^TA + \widetilde{y}^T\widetilde{A} = 0$ and $y^Tb + \widetilde{y}^T\widetilde{b} < 0$.  The notation $\widetilde{P}$ and $\widetilde{H}$ represents the second polyhedron and half-space, respectively. The double-headed arrow signifies the "if and only if" condition. The context of linear programming is essential here, as Farka's Lemma is a key result in duality theory and provides a certificate of infeasibility for systems of linear inequalities.</DESCRIPTION>
+
+SLIDE 13
+<LATEX>
+\underline{Separation Theorem} \\
+THEOREM 10.4. Let $P$ and $\widetilde{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then \\
+there exist disjoint half-spaces $H$ and $\widetilde{H}$ such that $P \subset H$ and $\widetilde{P} \subset \widetilde{H}$. \\
+$P \ne \emptyset \quad P = \{x : Ax \le b \}, \quad \widetilde{P} = \{x : \widetilde{A}x \le \widetilde{b} \} $ \\
+$P \cap \widetilde{P} = \emptyset \iff \begin{cases} Ax \le b \\ \widetilde{A}x \le \widetilde{b} \end{cases} \text{ has no solution} \\
+\underline{Farkas' Lemma} \\
+LEMMA 10.5. The system $Ax \le b$ has no solutions if and only if there is a $y$ such \\
+that \\
+(10.8) \quad $\begin{cases} A^T y = 0 \\ y \ge 0 \\ b^T y < 0. \end{cases} \iff \begin{cases} y^T A = 0 \\ y \ge 0 \\ y^T b < 0 \end{cases}$
+</LATEX>
+
+
+
+<DESCRIPTION>This slide continues the discussion of the Separation Theorem and introduces Farka's Lemma (Lemma 10.5). It reiterates that two disjoint nonempty polyhedra, $P$ and $\widetilde{P}$ (defined by $Ax \le b$ and $\widetilde{A}x \le \widetilde{b}$ respectively), can be separated by disjoint half-spaces if and only if their intersection is empty, which is equivalent to the combined system of inequalities having no solution.  Farka's Lemma provides a condition for the infeasibility of the system $Ax \le b$. It states that this system has no solution if and only if there exists a non-negative vector $y$ such that $A^Ty = 0$ and $b^Ty < 0$.  The slide also presents an equivalent form of Farka's Lemma using transposed notation: $y^TA = 0$ and $y^Tb < 0$. The equation number (10.8) is provided for reference.  The context of linear programming is crucial here, as Farka's Lemma is a fundamental result used in duality theory and provides a certificate of infeasibility for systems of linear inequalities.  It is directly related to the Separation Theorem by providing an algebraic condition for when two polyhedra are disjoint.</DESCRIPTION>
+
+SLIDE 14
+<LATEX>
+\underline{Separation Theorem} \\
+THEOREM 10.4. Let $P$ and $\widetilde{P}$ be two disjoint nonempty polyhedra in $\mathbb{R}^n$. Then \\
+there exist disjoint half-spaces $H$ and $\widetilde{H}$ such that $P \subset H$ and $\widetilde{P} \subset \widetilde{H}$. \\
+$P \ne \emptyset \quad P = \{ x : Ax \le b \}, \quad \widetilde{P} = \{ x : \widetilde{A}x \le \widetilde{b} \} $ \\
+There is a $y, \widetilde{y}$ s.t. $\begin{cases} y^T A + \widetilde{y}^T \widetilde{A} = 0 \\ y^T b + \widetilde{y}^T \widetilde{b} < 0 \\ y, \widetilde{y} \ge 0 \end{cases}$ \\
+Define \\
+$H := \{ x : y^T Ax \le y^T b \}, \quad \widetilde{H} := \{ x : \widetilde{y}^T \widetilde{A} x \le \widetilde{y}^T \widetilde{b} \} $ \\
+$H \cap \widetilde{H} = \emptyset, \quad P \subseteq H, \quad \widetilde{P} \subseteq \widetilde{H}$
+</LATEX>
+
+
+
+<DESCRIPTION>This slide concludes the discussion of the Separation Theorem (Theorem 10.4) by showing how to construct the separating hyperplanes using Farka's Lemma.  It reiterates the theorem statement: two disjoint nonempty polyhedra $P$ and $\widetilde{P}$ can be separated by disjoint half-spaces $H$ and $\widetilde{H}$. The polyhedra are defined by the systems of inequalities $Ax \le b$ and $\widetilde{A}x \le \widetilde{b}$, respectively.  The slide then uses the results from the previous slides, stating that there exist vectors $y$ and $\widetilde{y}$ satisfying the conditions of Farka's Lemma. These vectors are then used to define the separating half-spaces $H$ and $\widetilde{H}$.  $H$ is defined as $\{x : y^TAx \le y^Tb\}$ and $\widetilde{H}$ is defined as $\{x : \widetilde{y}^T\widetilde{A}x \le \widetilde{y}^T\widetilde{b}\}$.  Finally, the slide concludes that the intersection of these half-spaces is empty ($H \cap \widetilde{H} = \emptyset$), and that $P$ is contained in $H$ ($P \subseteq H$) and $\widetilde{P}$ is contained in $\widetilde{H}$ ($\widetilde{P} \subseteq \widetilde{H}$). The context of linear programming is crucial here, as this construction is fundamental for understanding duality and developing optimization algorithms.</DESCRIPTION>
+
+SLIDE 15
+<LATEX>
+\textit{Farkas' Lemma} \\
+LEMMA 10.5. The system $Ax \le b$ has no solutions if and only if there is a $y$ such \\
+that
+\begin{align*} \label{eq:10.8} \tag{10.8} A^T y = 0 \\ y \ge 0 \\ b^T y < 0. \end{align*} \\
+PROOF. Consider the linear program
+\begin{align*} \text{maximize} \quad &0 \\ \text{subject to} \quad &Ax \le b \end{align*}
+and its dual
+\begin{align*} \text{minimize} \quad &b^T y \\ \text{subject to} \quad &A^T y = 0 \\ &y \ge 0. \end{align*}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide presents Farka's Lemma (Lemma 10.5) and the beginning of its proof. Farka's Lemma states that the system $Ax \le b$ has no solution if and only if there exists a vector $y$ such that $A^Ty = 0$, $y \ge 0$, and $b^Ty < 0$. The proof begins by considering a linear program with the objective function equal to 0 and the constraint $Ax \le b$.  The slide then presents the dual of this linear program. The dual program aims to minimize $b^Ty$ subject to $A^Ty = 0$ and $y \ge 0$. The context of linear programming is crucial here, as Farka's Lemma is a fundamental result in duality theory and provides a certificate of infeasibility for systems of linear inequalities. The proof connects the infeasibility of the primal problem ($Ax \le b$) to the properties of its dual.</DESCRIPTION>
 

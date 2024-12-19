@@ -1,0 +1,347 @@
+SLIDE 1
+<LATEX>
+\textbf{CS 24300 - AI Basics} \\
+Tony Bergstrom \\
+Slides adapted from Yexiang Xue
+</LATEX>
+
+
+
+<DESCRIPTION>This is the title slide for a lecture on Artificial Intelligence Basics, likely part of a course called CS 24300.  It gives the course title, the instructor's name (Tony Bergstrom), and a credit to the original source of the slides (Yexiang Xue).  The slide uses a dark gray background with light text, which is a common presentation style.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\textbf{Generalization and Overfitting}
+</LATEX>
+
+<FIGURE [407, 105, 727, 319]></FIGURE>
+<FIGURE [400, 355, 733, 595]></FIGURE>
+<FIGURE [400, 631, 733, 935]></FIGURE>
+
+<DESCRIPTION>This slide, titled "Generalization and Overfitting," likely from a course on Artificial Intelligence Basics, presents three cartoon-like robot images.  The robots are depicted in different poses, suggesting different concepts related to machine learning.  The context of the course suggests that the slide is introducing the topic of model generalization and overfitting in machine learning.  The images are likely visual aids to help students understand these concepts.  Without further context, the specific meaning of each robot's pose is unknown, but it is likely related to the concepts of generalization and overfitting in machine learning.</DESCRIPTION>
+
+SLIDE 3
+<LATEX></LATEX>
+
+<FIGURE [427, 742, 668, 903]></FIGURE>
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, displays a graph illustrating the concept of overfitting in machine learning.  The graph shows a smooth, wavy line (likely a sine wave) plotted against a set of scattered data points. The smooth line represents a model that has been trained to fit the data, but it is overly complex, capturing the noise in the data as well as the underlying trend.  The data points are shown as small circles. The title "Overfitting" clearly indicates the topic of the slide. The graph visually demonstrates how a model that fits the training data too closely can perform poorly on unseen data.  The context of the course suggests that this slide is part of a section on model selection and the importance of avoiding overfitting when training machine learning models. The graph is a visual aid to help students understand the concept of overfitting and its consequences.</DESCRIPTION>
+
+SLIDE 4
+<LATEX></LATEX>
+
+<FIGURE [356, 195, 769, 791]></FIGURE>
+
+<DESCRIPTION>This slide from a lecture on Artificial Intelligence Basics displays a graph illustrating the relationship between training and testing errors in machine learning models, as a function of model complexity.  The x-axis represents the model complexity, ranging from low to high. The y-axis represents the prediction error.  Two curves are plotted: one in red representing the error on the training sample, and one in cyan representing the error on the test sample.  Both curves show a U-shaped pattern, with the training error decreasing as the model complexity increases, reaching a minimum, and then increasing again. The test error, however, initially decreases with increasing complexity, reaches a minimum at a lower complexity than the training error, and then increases again.  The graph visually demonstrates the concept of overfitting and underfitting.  The dashed lines represent the prediction error for models with high bias and low variance (red dashed line) and low bias and high variance (cyan dashed line).  The graph highlights the trade-off between model complexity and generalization performance.  The point where the test error is minimized represents the optimal model complexity for the given data.  The context of the course suggests that this slide is part of a section on model selection and the importance of avoiding overfitting and underfitting when training machine learning models.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\textbf{Training and Testing}
+</LATEX>
+
+<FIGURE [402, 31, 643, 324]></FIGURE>
+<FIGURE [410, 665, 587, 980]></FIGURE>
+<FIGURE [400, 337, 641, 649]></FIGURE>
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, depicts two cartoon robots in a classroom setting.  The slide's title, "Training and Testing," indicates the topic.  On the left, a robot is standing at a whiteboard, pointing to diagrams of an apple and a car.  The whiteboard also has some lines and symbols, suggesting a training process.  The text "Apple" and "Car" are written below the respective images, indicating that the robot is teaching or training on these examples.  On the right, another robot is seated at a desk, with a notebook and pen, and a whiteboard in front of it.  The whiteboard on the right has the text "Practice Exam" written on it.  This suggests that the robot is taking a practice exam.  The robot on the right is likely testing the model's ability to generalize to new data.  The robot on the left is likely training the model on a dataset.  The context of the course suggests that this slide is introducing the concepts of training and testing in machine learning, emphasizing the importance of evaluating a model's performance on unseen data (the practice exam) after training on a training dataset.  The cartoon style is likely used to make the concepts more accessible and engaging for students.</DESCRIPTION>
+
+SLIDE 6
+<LATEX></LATEX>
+
+<FIGURE [327, 234, 514, 462]></FIGURE>
+<FIGURE [514, 259, 652, 437]></FIGURE>
+<FIGURE [638, 259, 739, 441]></FIGURE>
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, outlines important concepts related to machine learning model evaluation and training.  It visually depicts the different stages of the experimentation cycle, emphasizing the crucial distinction between training, held-out, and test data.  The slide uses a simple diagram with labeled boxes to represent the different data sets.  The text describes the process of training a model on the training set, tuning hyperparameters on a held-out set, and finally evaluating the model's performance on a separate test set.  The key takeaway is the importance of not looking at the test set during the training or tuning process to avoid overfitting.  The slide also highlights the concept of overfitting, where a model performs exceptionally well on the training data but poorly on unseen data.  The context of the course suggests that this slide is part of a section on model evaluation and the importance of avoiding overfitting when training machine learning models.  The diagram of a person teaching and a person taking a test visually reinforces the concept of training and testing.</DESCRIPTION>
+
+SLIDE 7
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, presents a simple visual representation of the training/test cycle in machine learning.  The title "Training/test cycle" clearly indicates the topic.  A large, light gray rectangle represents the "Sample Data" which is a crucial component of the machine learning process.  The rectangle is positioned on the left side of the slide, suggesting that this data is the input for the training and testing process.  The text "Sample Data" is written below the rectangle, further clarifying its role.  The overall design is minimalist, focusing on the core concept of the training/test cycle without any further details or specific steps.  The context of the course suggests that this slide is likely an introductory slide to the topic of machine learning, setting the stage for further discussion on the process of training and testing machine learning models.</DESCRIPTION>
+
+SLIDE 8
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, visually depicts the training/test cycle in machine learning.  A large, light gray rectangle labeled "Sample Data" is positioned on the left, representing the overall dataset.  From this dataset, three distinct subsets are shown: "Training Data" (a dark teal rectangle), "Held Out Data" (an orange rectangle), and "Test Data" (a green rectangle).  These are arranged in a vertical column to the right of the "Sample Data" rectangle.  The slide's title, "Training/test cycle," clearly indicates the topic.  The visual representation emphasizes the separation of data into distinct sets for training, validation, and testing, crucial for evaluating the performance of a machine learning model.  The context of the course suggests that this slide is part of a section on model evaluation and the importance of properly splitting data for reliable results.  The different colors used for each data subset visually distinguish their roles in the machine learning pipeline.</DESCRIPTION>
+
+SLIDE 9
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, depicts the training/test cycle in machine learning.  A large gray rectangle labeled "Sample Data" represents the overall dataset.  A smaller, teal rectangle to the right is labeled "Training Data."  The text "Estimate model parameters $\theta$ from training data" is positioned to the right of the "Training Data" rectangle, indicating the process of using the training data to determine the model parameters.  Below and further to the right, the text "Evaluation function (applied to training data) $L(x, \theta) = \prod_{i} P_{\theta}(x_i)$" describes the evaluation of the model's performance on the training data using a likelihood function.  The formula $L(x, \theta) = \prod_{i} P_{\theta}(x_i)$ represents the likelihood of observing the training data given the model parameters $\theta$.  The visual layout emphasizes the sequential steps of training a model on training data and evaluating its performance using a likelihood function. The context of the course suggests that this slide is part of a section on model training and evaluation, specifically focusing on the calculation of likelihoods.</DESCRIPTION>
+
+SLIDE 10
+<LATEX></LATEX>
+
+<FIGURE [619, 725, 674, 900]></FIGURE>
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, depicts the training/test cycle in machine learning.  A large gray rectangle labeled "Sample Data" represents the overall dataset.  A smaller, orange rectangle labeled "Held Out Data" is positioned to the right of the "Sample Data" rectangle, indicating a subset of the data used for validation.  The text "Estimate model hyperparameters from validation data" is positioned below and to the right of the "Held Out Data" rectangle, describing the process of using the held-out data to tune the model's hyperparameters.  Below this text, the text "Evaluation function (applied to validation data)" describes the process of evaluating the model's performance on the held-out data.  The formula $\frac{1}{N} \sum_{i=1}^{N} I(y_i = f(x_i))$ is shown below the evaluation function description. This formula represents the calculation of the accuracy of the model on the validation data, where $N$ is the number of data points, $y_i$ is the true label for the $i$-th data point, $f(x_i)$ is the predicted label for the $i$-th data point, and $I(y_i = f(x_i))$ is an indicator function that is 1 if the predicted label matches the true label and 0 otherwise. The visual layout emphasizes the steps of using a held-out dataset to tune model hyperparameters and evaluate the model's performance. The context of the course suggests that this slide is part of a section on model evaluation and hyperparameter tuning.</DESCRIPTION>
+
+SLIDE 11
+<LATEX>
+\textbf{Training/test cycle} \\
+\begin{tikzpicture}
+\node[draw, fill=gray!50, minimum width=2cm, minimum height=1cm] (sample) at (0, 0) {Sample Data};
+\node[draw, fill=green!50, minimum width=1cm, minimum height=0.5cm] (test) at (2, -0.5) {Test Data};
+\node[below of=test, xshift=0.5cm] (apply) {Apply model to test data (using \\ chosen $\theta$ and hyperparameters)};
+\node[below of=apply, xshift=0.5cm] (eval) {Evaluation function \\ (applied to test data)};
+\node[below of=eval, xshift=0.5cm] (formula) {$\frac{1}{N} \sum_{i=1}^{N} I(y_i = f(x_i))$};
+\end{tikzpicture}
+</LATEX>
+
+<FIGURE [707, 725, 762, 900]></FIGURE>
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, depicts the final stage of the training/test cycle in machine learning.  A large gray rectangle labeled "Sample Data" represents the overall dataset.  A smaller, green rectangle labeled "Test Data" is positioned to the right of the "Sample Data" rectangle, indicating a subset of the data used for testing the trained model.  The text "Apply model to test data (using chosen $\theta$ and hyperparameters)" describes the process of applying the trained model to the test data.  The text "Evaluation function (applied to test data)" describes the process of evaluating the model's performance on the test data.  The formula $\frac{1}{N} \sum_{i=1}^{N} I(y_i = f(x_i))$ is shown below the evaluation function description. This formula represents the calculation of the accuracy of the model on the test data, where $N$ is the number of data points, $y_i$ is the true label for the $i$-th data point, $f(x_i)$ is the predicted label for the $i$-th data point, and $I(y_i = f(x_i))$ is an indicator function that is 1 if the predicted label matches the true label and 0 otherwise. The visual layout emphasizes the final step of evaluating a trained model's performance on unseen test data. The context of the course suggests that this slide is part of a section on model evaluation and testing, specifically focusing on the calculation of accuracy metrics.</DESCRIPTION>
+
+SLIDE 12
+<LATEX></LATEX>
+
+<FIGURE [707, 725, 762, 900]></FIGURE>
+<FIGURE [493, 727, 548, 901]></FIGURE>
+
+<DESCRIPTION>This slide, from a lecture on Artificial Intelligence Basics, outlines the process for diagnosing overfitting in machine learning models.  It visually depicts the comparison of model performance on training and test data.  A gray rectangle labeled "Sample Data" represents the overall dataset.  A teal rectangle labeled "Training Data" and a green rectangle labeled "Test Data" are subsets of the sample data.  The slide emphasizes the crucial step of applying the trained model to both the training and test data.  The text "Apply model to training data (using chosen $\theta$ and hyperparameters)" describes the process of applying the model to the training data using the estimated parameters ($\theta$) and hyperparameters.  Similarly, "Apply model to test data (using chosen $\theta$ and hyperparameters)" describes the application of the model to the test data.  The slide then shows the evaluation function applied to both datasets.  The formula $\frac{1}{N} \sum_{i=1}^{N} I(y_i = f(x_i))$ is used to calculate the accuracy of the model on both the training and test data.  Here, $N$ is the number of data points, $y_i$ is the true label for the $i$-th data point, $f(x_i)$ is the predicted label for the $i$-th data point, and $I(y_i = f(x_i))$ is an indicator function that is 1 if the predicted label matches the true label and 0 otherwise.  The arrows visually connect the application of the model to the evaluation of the model's performance on each dataset.  The context of the course suggests that this slide is part of a section on model evaluation and overfitting detection, focusing on the importance of evaluating model performance on unseen test data to identify overfitting.</DESCRIPTION>
+
+SLIDE 13
+<LATEX></LATEX>
+
+<FIGURE [356, 195, 769, 791]></FIGURE>
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, displays a graph illustrating the relationship between model complexity and prediction error for both training and test samples.  The x-axis represents "Model Complexity," ranging from low to high. The y-axis represents "Prediction Error."  Two curves are plotted: one in cyan, representing the prediction error for the training sample, and one in red, representing the prediction error for the test sample.  Both curves are U-shaped, demonstrating a trade-off between model complexity and prediction error.  The training error curve decreases as model complexity increases, reaching a minimum, and then increases again. The test error curve, however, initially decreases, reaches a minimum at a lower complexity than the training error, and then increases more steeply.  The graph visually highlights the concept of overfitting:  a model that is too complex (high complexity) will perform very well on the training data but poorly on unseen test data.  The graph also shows the concept of underfitting: a model that is too simple (low complexity) will perform poorly on both training and test data.  The dashed lines indicate the scenarios of "High Bias, Low Variance" and "Low Bias, High Variance," respectively, providing context for interpreting the graph.  The context of the course suggests that this slide is part of a section on model selection and overfitting, emphasizing the importance of finding the optimal model complexity to minimize both training and test errors.</DESCRIPTION>
+
+SLIDE 14
+<LATEX></LATEX>
+
+<FIGURE [349, 253, 719, 746]></FIGURE>
+
+<DESCRIPTION>This slide, likely from a lecture on Artificial Intelligence Basics, presents the topic of "Hyper-Parameter Tuning."  The title is displayed prominently at the top of the slide.  The content of the slide consists of a simple cartoon image of a small, robotic mail sorter.  The robot has an articulated arm that is in the process of manipulating an object.  The image is stylized and hand-drawn, with a light, whimsical aesthetic.  The text "TWEAK-O-MATIC 9000" is visible in the image, suggesting a humorous or playful approach to the topic of hyper-parameter tuning.  The context of the course suggests that this slide introduces the concept of hyper-parameter tuning as a crucial step in the machine learning process, likely preceding a discussion of methods and techniques for performing this tuning.</DESCRIPTION>
+
+SLIDE 15
+<LATEX></LATEX>
+
+<FIGURE [331, 195, 532, 466]></FIGURE>
+<FIGURE [335, 525, 526, 780]></FIGURE>
+<FIGURE [542, 352, 747, 627]></FIGURE>
+
+<DESCRIPTION>This slide from an Artificial Intelligence Basics lecture demonstrates the concept of overfitting in polynomial curve fitting.  Three graphs are shown, each plotting a cubic function (in green) fitted to the same set of data points (blue circles).  The data points appear to be sampled from a sinusoidal function.  The graphs differ in the degree (M) of the polynomial used to fit the data.
+
+* **M = 1:** The fitted polynomial (red) is a straight line, significantly underfitting the data.  It does not capture the oscillations in the data.
+
+* **M = 3:** The fitted polynomial (red) is a curve that better approximates the data's general shape, but still shows some deviation from the data points.
+
+* **M = 9:** The fitted polynomial (red) closely follows the data points, almost perfectly matching them.  However, this high-degree polynomial exhibits significant oscillations and fluctuations, which are not present in the underlying data. This is a clear example of overfitting. The model is overly complex, fitting the noise in the training data rather than the underlying trend.  The graph visually illustrates how increasing the polynomial degree can lead to a better fit on the training data but a worse fit on unseen data. The context of the course suggests that this slide is part of a section on model complexity, overfitting, and the importance of choosing an appropriate model complexity to avoid overfitting.</DESCRIPTION>
+
+SLIDE 16
+<LATEX></LATEX>
+
+<FIGURE [420, 551, 675, 917]></FIGURE>
+
+<DESCRIPTION>This slide, from a lecture on Artificial Intelligence Basics, discusses controlling model complexity in polynomial fitting.  The table shows the coefficients ($w_0$, $w_1$, etc.) of polynomial models of different degrees ($M=0, 1, 3, 9$).  The coefficients are presented in a tabular format, with each row representing a coefficient and each column representing a different model degree.  The values in the table represent the coefficients of the polynomial.  The slide highlights that the degree of the polynomial ($M$) directly controls the model's complexity.  The slide prompts the question of how to control complexity when the degree is fixed.  The final statement, "Intuitively, large weights $\rightarrow$ complex model," suggests that the magnitude of the coefficients is related to the complexity of the model.  The context of the course suggests that this slide is part of a discussion on model selection and overfitting, emphasizing the trade-off between model complexity and performance.</DESCRIPTION>
+
+SLIDE 17
+<LATEX>
+\textbf{Regularized Linear Regression}
+
+New loss function for linear regression:
+
+$E(w) = RSS(w) + \lambda R(w)$
+
+$R(w) = \frac{1}{2} \sum_{i=1}^{k} w_i^2 = w_1^2 + w_2^2 + \dots + w_k^2$, often called a regularizer
+
+$R(w) = \sum_{i=1}^{k} |w_i| = |w_1| + |w_2| + \dots + |w_k|$ also used (called LASSO)
+
+$\lambda$, often called a regularization coefficient
+
+$\bullet$ $\lambda = 0$, no regularization
+$\bullet$ $\lambda = +\infty$, best $w$ is 0.
+$\bullet$ $\lambda$ controls the trade-off between training error and complexity.
+</LATEX>
+
+
+
+<DESCRIPTION>This slide introduces the concept of regularized linear regression.  It defines a new loss function $E(w)$ as the sum of the residual sum of squares (RSS) and a regularization term $R(w)$.  Two types of regularization terms are presented:
+
+* $R(w) = \frac{1}{2} \sum_{i=1}^{k} w_i^2$:  This is the $L_2$ norm (or squared Euclidean norm) of the weight vector $w$, often called ridge regression or L2 regularization.
+
+* $R(w) = \sum_{i=1}^{k} |w_i|$: This is the $L_1$ norm (or Manhattan distance) of the weight vector $w$, often called LASSO (Least Absolute Shrinkage and Selection Operator).
+
+The parameter $\lambda$ is a regularization coefficient that controls the strength of the regularization.  A larger $\lambda$ value increases the importance of the regularization term, potentially leading to a simpler model with smaller weights.  Conversely, a smaller $\lambda$ value gives more weight to the RSS term, potentially leading to a more complex model with larger weights.  The slide highlights that $\lambda = 0$ corresponds to no regularization, while $\lambda = +\infty$ leads to the optimal solution being a model with all weights set to zero.  The final point emphasizes that $\lambda$ controls the trade-off between the training error (measured by RSS) and the complexity of the model (measured by the regularization term).  The context of the course (Artificial Intelligence Basics) suggests that this slide is part of a discussion on model selection and overfitting in linear regression models.</DESCRIPTION>
+
+SLIDE 18
+<LATEX>
+\textbf{Hyperparameter Tuning for Neural Networks}
+
+\textbf{What can be tuned?}
+
+\begin{itemize}
+    \item Input: $28 \times 28 \times 1$
+    \item Conv: $5 \times 5$, 32 filters, Padding: 2, Pool: $2 \times 2$, stride: 2
+    \item $28 \times 28 \times 32$
+    \item $14 \times 14 \times 32$
+    \item Conv: $5 \times 5$, 64 filters, Padding: 2, Pool: $2 \times 2$, stride: 2
+    \item $14 \times 14 \times 64$
+    \item Flatten features $\rightarrow$ $1 \times 1 \times 1024$
+    \item $7 \times 7 \times 64$
+    \item Dropout 0.5
+    \item Fc 1.2, 1024
+    \item Output: $1 \times 1 \times 10$
+\end{itemize}
+</LATEX>
+
+<FIGURE [414, 125, 737, 875]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics lecture, displays a diagram of a Convolutional Neural Network (CNN).  It's focused on hyperparameter tuning, showing the different layers and their associated dimensions.  The diagram visually represents the flow of data through the network, from the input layer ($28 \times 28 \times 1$) to the output layer ($1 \times 1 \times 10$).  Each layer is labeled with its type (Input, Conv, Pool, Flatten, Dropout, Fully Connected (FC)), and the dimensions of the data at each stage are shown.  For example, the input is a 28x28 image with one channel.  The first convolutional layer uses 5x5 filters, 32 filters in total, padding of 2, and 2x2 pooling with a stride of 2.  The second convolutional layer uses 5x5 filters, 64 filters in total, padding of 2, and 2x2 pooling with a stride of 2.  The flattened layer transforms the data into a 1x1x1024 format.  The final layer is a fully connected layer with 1024 neurons, followed by a dropout layer with a rate of 0.5, and finally an output layer with 10 neurons.  The slide highlights the various hyperparameters that can be tuned in the network, such as the number of filters, filter size, padding, pooling stride, and dropout rate, to optimize the model's performance.  The context of the course suggests that this slide is part of a section on deep learning architectures and hyperparameter optimization.</DESCRIPTION>
+
+SLIDE 19
+<LATEX>
+\textbf{Tuning on Held-Out Validation Data}
+
+Now we've got two kinds of unknowns
+\begin{itemize}
+    \item Parameters: the probabilities $P(X|Y)$, $P(Y)$
+    \item Hyperparameters:
+    e.g., the amount / type of smoothing to do: $k$, $\alpha$
+\end{itemize}
+
+What should we learn where?
+\begin{itemize}
+    \item Learn parameters from training data
+    \item Tune hyperparameters on (different) validation data.
+\end{itemize}
+
+Why?
+\begin{itemize}
+    \item For each value of the hyperparameters, estimate model on training data and test on the held-out validation data
+    \item Choose the best values and do a final test on the test data
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{held_out_validation_graph.png} % Replace with actual image path
+\caption{Accuracy vs. k}
+\end{figure}
+</LATEX>
+
+<FIGURE [577, 631, 704, 716]></FIGURE>
+<FIGURE [583, 738, 710, 829]></FIGURE>
+<FIGURE [579, 856, 706, 972]></FIGURE>
+
+<DESCRIPTION>This slide discusses hyperparameter tuning in the context of a machine learning model, likely in an Artificial Intelligence Basics course.  It introduces the concept of "held-out validation data" as a crucial step in model selection.  The slide explains that there are two types of unknowns in a model: parameters and hyperparameters.  Parameters, like probabilities $P(X|Y)$ and $P(Y)$, are learned from the training data.  Hyperparameters, such as the smoothing parameter $k$ or $\alpha$, control the model's behavior and are not directly learned from the data.  The slide emphasizes the importance of tuning hyperparameters on a separate validation dataset.  The process involves evaluating the model's performance on the validation data for different hyperparameter values.  The best hyperparameter values are then selected, and a final evaluation is performed on a separate test dataset to assess the model's generalization ability.  A graph (likely showing accuracy vs. a hyperparameter like $k$) is included, visually demonstrating how the model's performance varies with different hyperparameter settings.  The context of the course suggests that this slide is part of a discussion on model evaluation and selection techniques.</DESCRIPTION>
+
+SLIDE 20
+<LATEX>
+\textbf{Learning curves illuminate likely causes of error}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{learning_curve.png} % Replace with actual image path
+\caption{Learning Curve}
+\end{figure}
+
+\textbf{Accuracy} \\
+\textbf{Model complexity} \\
+\textbf{Training set} \\
+\textbf{Test set}
+</LATEX>
+
+<FIGURE [313, 164, 816, 835]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics lecture, introduces the concept of learning curves.  It states that learning curves help identify potential sources of error in a machine learning model.  The slide displays a simple graph, likely a plot of accuracy versus model complexity.  Two curves are shown: one representing the accuracy on the training set and the other representing the accuracy on a separate test set.  The x-axis likely represents the model complexity (e.g., number of parameters, depth of a neural network).  The y-axis represents the accuracy of the model.  The graph visually depicts how the accuracy of the model changes as the model complexity increases.  The labels "Training set" and "Test set" indicate that the curves correspond to the model's performance on the training data and a separate, unseen test data set.  The context of the course suggests that this slide is part of a discussion on model evaluation and overfitting, where learning curves are used to diagnose issues like high bias or high variance.</DESCRIPTION>
+
+SLIDE 21
+<LATEX></LATEX>
+
+<FIGURE [413, -2, 696, 375]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics course, discusses the decision of whether to acquire more data or modify the model when dealing with underfitting.  It presents a graph (learning curve) depicting the relationship between model complexity (likely on the x-axis) and accuracy (likely on the y-axis).  Two curves are shown: one for the training set and one for the test set.  The graph shows an underfitting scenario, where both the training and test set accuracies are low and relatively flat, indicating that the model is not learning the underlying patterns in the data.  The text below the graph states that if the learning curves continue to increase (as model complexity increases), then adding more data will not significantly improve the model's performance.  In this case, the solution is to increase the complexity of the model, rather than collecting more data.  The context of the slide suggests a discussion on model selection and the trade-off between data and model complexity in machine learning.</DESCRIPTION>
+
+SLIDE 22
+<LATEX></LATEX>
+
+<FIGURE [413, -1, 696, 376]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics course, discusses the decision of whether to acquire more data or modify the model when dealing with overfitting.  It presents a graph (learning curve) depicting the relationship between model complexity (likely on the x-axis, though not explicitly shown) and accuracy (likely on the y-axis).  Two curves are shown: one for the training set and one for the test set.  The graph shows an overfitting scenario, where the training set accuracy is high, but the test set accuracy is lower and starts to decrease as the model complexity increases.  This indicates that the model is learning the training data too well, including noise and irrelevant details, and is not generalizing well to unseen data.  The text below the graph states that if the test set accuracy starts to decrease, it suggests the model is overfitting.  In this case, the solution is to either get more data to better represent the underlying patterns or to regularize the model during learning to reduce its complexity and prevent it from focusing too much on the idiosyncrasies of the training data. The context of the slide suggests a discussion on model selection and the trade-off between data and model complexity in machine learning, specifically addressing the issue of overfitting.</DESCRIPTION>
+
+SLIDE 23
+<LATEX>
+\textbf{When to get more data vs. use different model}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.3\textwidth]{learning_curve.png} % Replace with actual image path
+\caption{Learning Curve}
+\end{figure}
+
+\textbf{Just right} \\
+\textbf{Training set} \\
+\textbf{Test set} \\
+
+If learning curve on training data reaches a high plateau and test performance is similar \\
+$\implies$ stop to celebrate, this almost never happens!
+</LATEX>
+
+<FIGURE [413, 0, 696, 377]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics lecture, discusses the decision of whether to acquire more data or modify the model when evaluating a machine learning model.  It presents a graph (learning curve) depicting the relationship between model complexity (likely on the x-axis, though not explicitly shown) and accuracy (likely on the y-axis).  Two curves are shown: one for the training set and one for the test set.  The graph shows a scenario where the training set accuracy reaches a high plateau, and the test set accuracy is similar.  The text below the graph states that if the learning curve on the training data reaches a high plateau and the test performance is similar, then it's a sign that the model is performing well and the model complexity is appropriate.  The text further emphasizes that this scenario is rare, implying that in most cases, further improvements are possible by either acquiring more data or modifying the model. The context of the slide suggests a discussion on model selection and the trade-off between data and model complexity in machine learning, specifically addressing the point where the model is performing well on both training and test data.</DESCRIPTION>
+
+SLIDE 24
+<LATEX></LATEX>
+
+<FIGURE [362, 4, 645, 382]></FIGURE>
+<FIGURE [362, 317, 645, 695]></FIGURE>
+<FIGURE [362, 630, 645, 1008]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics course, presents a visual aid to help students understand when to acquire more data versus modifying the model in machine learning.  It's divided into three sections: Underfitting, Overfitting, and Just Right.
+
+* **Underfitting:**  A graph shows a learning curve where both the training and test set accuracies are low and relatively flat, indicating that the model is not learning the underlying patterns in the data.  The solution is to increase the complexity of the model.
+
+* **Overfitting:** A graph shows a learning curve where the training set accuracy is high, but the test set accuracy is lower and starts to decrease as the model complexity increases. This indicates that the model is learning the training data too well, including noise and irrelevant details, and is not generalizing well to unseen data. The solution is to get more data and/or regularize the model during learning.
+
+* **Just Right:** A graph shows a learning curve where the training set accuracy reaches a high plateau, and the test set accuracy is similar. This indicates that the model is performing well and the model complexity is appropriate.  The text emphasizes that this scenario is rare.
+
+The slide uses graphs (learning curves) to illustrate the relationship between model complexity and accuracy for training and test sets in each scenario.  The text below each graph provides guidance on the appropriate action to take (increase model complexity, get more data, or regularize). The context of the course is machine learning model selection and the trade-off between data and model complexity.  The slide is designed to help students understand the different scenarios and make informed decisions about data acquisition and model modification.</DESCRIPTION>
+
+SLIDE 25
+<LATEX></LATEX>
+
+<FIGURE [367, 35, 692, 492]></FIGURE>
+
+<DESCRIPTION>This slide describes the process of S-fold cross-validation, a technique used in machine learning to evaluate a model's performance.  The method is presented in the context of an Artificial Intelligence Basics course.  The slide visually depicts a 5-fold cross-validation example, where the data is divided into 5 equal parts.  Each part is used as a validation set once, while the remaining parts are used as the training set.  This process is repeated 5 times, resulting in 5 different training and validation sets.  The slide emphasizes that every data point is used as a validation point exactly once.  The text also explains the steps involved: splitting the training data into S equal parts, using each part as a validation set, choosing the hyper-parameter that yields the best average performance across all runs, and the specific case of leave-one-out cross-validation.  The visual representation uses white boxes for training data and red boxes for validation data, making the process clear and easy to understand.  The context of the slide is model evaluation and hyperparameter tuning in machine learning.</DESCRIPTION>
+
+SLIDE 26
+<LATEX></LATEX>
+
+<FIGURE [445, 785, 456, 818]></FIGURE>
+<FIGURE [445, 583, 456, 617]></FIGURE>
+<FIGURE [445, 322, 456, 356]></FIGURE>
+<FIGURE [463, 36, 560, 208]></FIGURE>
+<FIGURE [329, 36, 455, 163]></FIGURE>
+<FIGURE [463, 211, 557, 305]></FIGURE>
+<FIGURE [348, 165, 454, 315]></FIGURE>
+<FIGURE [307, 628, 384, 765]></FIGURE>
+<FIGURE [392, 644, 474, 749]></FIGURE>
+<FIGURE [483, 652, 571, 741]></FIGURE>
+<FIGURE [307, 373, 511, 422]></FIGURE>
+<FIGURE [316, 429, 502, 550]></FIGURE>
+<FIGURE [518, 373, 578, 565]></FIGURE>
+<FIGURE [304, 831, 363, 962]></FIGURE>
+<FIGURE [463, 832, 591, 963]></FIGURE>
+<FIGURE [370, 827, 463, 966]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics lecture, presents a visual representation of the data analysis pipeline.  It's a flowchart-like diagram showing the sequential steps involved in a typical machine learning project.  The four main stages are: Collect Data, Design Model, Infer Parameters, and Apply Model.  Each stage has a brief description of potential issues or challenges that can arise at each step.  For example, the "Collect Data" stage notes that the data might contain unexpected errors or outliers.  The "Design Model" stage highlights that the model's assumptions might not perfectly match the data's characteristics.  The "Infer Parameters" stage points out that algorithm code can have bugs or errors, especially due to approximations.  Finally, the "Apply Model" stage emphasizes that the test data might differ significantly from the training data, potentially leading to poor generalization.  The slide is designed to illustrate the iterative and potentially problematic nature of the data analysis process, emphasizing the importance of careful consideration at each step.</DESCRIPTION>
+
+SLIDE 27
+<LATEX></LATEX>
+
+<FIGURE [356, 195, 769, 791]></FIGURE>
+
+<DESCRIPTION>This slide, from an Artificial Intelligence Basics course, displays a graph illustrating the relationship between model complexity and prediction error for both training and test samples.  The x-axis represents the model complexity, ranging from low to high. The y-axis represents the prediction error.  Two curves are plotted: one in red for the training sample and one in cyan for the test sample.
+
+The red curve (training sample) shows a U-shaped relationship, decreasing rapidly at first as model complexity increases, reaching a minimum, and then increasing again.  The cyan curve (test sample) also shows a U-shaped relationship, but it has a minimum at a higher complexity than the training sample curve.  The minimum point of the test sample curve is higher than the minimum point of the training sample curve.
+
+The graph visually demonstrates the concept of bias-variance trade-off in machine learning models.  The labels "High Bias, Low Variance" and "Low Bias, High Variance" are placed on the graph to indicate the different scenarios.  The graph suggests that there is an optimal model complexity that minimizes the prediction error on both the training and test sets.  The context of the slide is model selection and the trade-off between model complexity and generalization performance in machine learning.</DESCRIPTION>
+

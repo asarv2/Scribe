@@ -1,0 +1,823 @@
+SLIDE 1
+<LATEX>
+\textbf{CS 24300: AI Basics} \\
+Tony Bergstrom \\
+Slides adapted from Yexiang Xue and Tony Bergstrom
+</LATEX>
+
+
+
+<DESCRIPTION>This slide is a title slide for a lecture on Artificial Intelligence Basics, likely part of a course called CS 24300.  It displays the course title, "CS 24300: AI Basics," and the instructor's name, "Tony Bergstrom."  It also credits the source of the slides, "Slides adapted from Yexiang Xue and Tony Bergstrom," indicating that the content may be based on materials from another source.  The overall presentation is simple and straightforward, focusing on the course title and instructor information.  The context of the course is crucial for understanding the content of the lecture that will follow.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\textbf{Recursion}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, displays a single word: "Recursion."  It's a simple title slide, likely introducing a section or topic about recursion in the context of AI algorithms or problem-solving techniques.  The context of the course is crucial for understanding the specific discussion that will follow on this topic.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+\textbf{A quick review of recursion} \\
+Recursion is a self reference, eventually terminating in \\
+a base case \\
+Methods: \\
+\begin{itemize}
+    \item A method can call itself \\
+    \item Example Fibonacci
+\end{itemize} \\
+Data Structures: \\
+\begin{itemize}
+    \item A data structure can reference itself \\
+    \item Example: LinkedList is a node that points to a \\
+    \hspace{1cm} LinkedList \\
+    \item Example: Trees are nodes that point to Trees
+\end{itemize}
+\begin{tikzpicture}[node distance=1cm]
+\node[draw, rectangle, fill=blue!50] (fibn) {fib(n)};
+\node[draw, rectangle, fill=blue!50, right of=fibn] (fibn1) {fib(n-1)};
+\node[draw, rectangle, fill=blue!50, right of=fibn1] (fibn2) {fib(n-2)};
+\draw[->] (fibn) -- (fibn1);
+\draw[->] (fibn) -- (fibn2);
+\node[draw, rectangle, fill=blue!50, below of=fibn, node distance=2cm] (linkedlist) {LinkedList};
+\node[draw, rectangle, fill=blue!50, left of=linkedlist, node distance=1cm] (node) {Node};
+\draw[->] (linkedlist) -- (node);
+\draw[->] (node) -- (linkedlist);
+\node[draw, rectangle, fill=blue!50, below of=linkedlist, node distance=2cm] (tree) {Tree};
+\node[draw, rectangle, fill=blue!50, below left of=tree, node distance=1cm] (treea) {Tree A};
+\node[draw, rectangle, fill=blue!50, below right of=tree, node distance=1cm] (treeb) {Tree B};
+\draw[->] (tree) -- (treea);
+\draw[->] (tree) -- (treeb);
+\end{tikzpicture}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide provides a quick review of recursion, focusing on its application in methods and data structures.  It defines recursion as a self-referencing process that eventually terminates at a base case.  The slide illustrates this concept with a diagram showing how a function `fib(n)` (likely a Fibonacci sequence function) recursively calls itself with `fib(n-1)` and `fib(n-2)`.  The diagram also demonstrates how data structures like LinkedLists and Trees can be recursively defined.  A LinkedList is recursively defined as a node that points to another LinkedList.  Similarly, a Tree is recursively defined as a node that points to other Trees.  The visual representation using boxes and arrows clearly illustrates the recursive nature of these concepts.  The context of the course (Artificial Intelligence Basics) suggests that this slide is a preliminary review of recursion, which is a fundamental concept in many AI algorithms and data structures.</DESCRIPTION>
+
+SLIDE 4
+<LATEX>
+\textbf{Recursive Problem Solving} \\
+Do part of the work and reduce the rest into a similar but smaller problem. \\
+Examples: \\
+Need to calculate Fibonacci(n)? \\
+If n is 0, the answer is 1 \\
+If n is 1, the answer is 1 \\
+Otherwise, Get Help: \\
+\begin{itemize}
+    \item Alice calculates Fibonacci(n-1) \\
+    \item Bob calculates Fibonacci(n-2) \\
+    \item Alice and Bob can ask others for help if they need to \\
+    \item You can add Alice and Bob's answers.
+\end{itemize}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, introduces the concept of recursive problem-solving.  It defines recursion as breaking down a problem into a similar but smaller subproblem.  The example provided is calculating the Fibonacci sequence.  The slide details the steps involved in calculating Fibonacci(n):  If n is 0 or 1, the answer is 1; otherwise, Alice calculates Fibonacci(n-1), Bob calculates Fibonacci(n-2), and the results are combined.  The slide also mentions that Alice and Bob can ask others for help if needed, and that the final answer is the sum of Alice and Bob's answers.  The context of the course suggests that this slide is introducing a fundamental technique in AI, where problems are often broken down into smaller, self-similar subproblems for efficient solution.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\textbf{Recursion must eventually end} \\
+The method does not always call itself \\
+The data structure does not always link to another data structure \\
+There are two main pieces to any recursive approach \\
+\begin{itemize}
+    \item The Base Case - what can you do right now, in this call.
+    \item The Recursive Case - the same problem/method/data structure, but smaller
+\end{itemize} \\
+The Recursive Case needs to be "smaller" in some sense: closer to the base case.
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, discusses the crucial requirement for recursion to terminate.  It emphasizes that a recursive method or data structure does not always call itself or link to another instance of itself.  The key components of a recursive approach are highlighted: the Base Case and the Recursive Case.  The Base Case represents the condition that allows the recursion to stop, providing a direct solution to the problem in the current call.  The Recursive Case describes how the problem is broken down into a smaller, similar subproblem, bringing the solution closer to the base case.  The slide stresses that the recursive case must be "smaller" in some way, ensuring that the recursion eventually reaches the base case and terminates.  The context of the course (Artificial Intelligence Basics) suggests that this slide is part of a discussion on the design and implementation of recursive algorithms and data structures, emphasizing the importance of termination conditions for avoiding infinite loops.</DESCRIPTION>
+
+SLIDE 6
+<LATEX>
+\textbf{Method Recursion: a Fibonacci Example} \\
+Fibonacci is a classic recursive example \\
+fib(0) = 1 \\
+fib(1) = 1 \\
+fib(n) = fib(n-1) + fib(n-2) \\
+The resulting call structure resembles a tree \\
+\begin{tikzpicture}[node distance=1cm]
+\node[draw, rectangle, fill=blue!50] (fib4) {fib(4)};
+\node[draw, rectangle, fill=blue!50, below left of=fib4] (fib3) {fib(3)};
+\node[draw, rectangle, fill=blue!50, below right of=fib4] (fib2) {fib(2)};
+\node[draw, rectangle, fill=blue!50, below left of=fib3] (fib2_1) {fib(2)};
+\node[draw, rectangle, fill=blue!50, below right of=fib3] (fib1) {fib(1)};
+\node[draw, rectangle, fill=blue!50, below left of=fib2_1] (fib1_1) {fib(1)};
+\node[draw, rectangle, fill=blue!50, below right of=fib2_1] (fib0) {fib(0)};
+\node[draw, rectangle, fill=blue!50, below left of=fib1] (fib1_2) {fib(1)};
+\node[draw, rectangle, fill=blue!50, below right of=fib1] (fib0_1) {fib(0)};
+\draw[->] (fib4) -- (fib3);
+\draw[->] (fib4) -- (fib2);
+\draw[->] (fib3) -- (fib2_1);
+\draw[->] (fib3) -- (fib1);
+\draw[->] (fib2_1) -- (fib1_1);
+\draw[->] (fib2_1) -- (fib0);
+\draw[->] (fib1) -- (fib1_2);
+\draw[->] (fib1) -- (fib0_1);
+\end{tikzpicture} \\
+Note the order in which the nodes finish execution, more on this later.
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, illustrates method recursion using a Fibonacci example.  It shows a tree diagram representing the recursive calls made to calculate Fibonacci(4).  The nodes in the tree represent function calls `fib(n)` for different values of `n`, from `fib(4)` at the root down to `fib(0)` at the leaves.  Each node's value is calculated by recursively calling `fib(n-1)` and `fib(n-2)`, as defined by the Fibonacci sequence formula.  The diagram visually demonstrates how the recursive calls are nested and how the calculation proceeds.  The slide also notes the order in which the nodes (function calls) complete their execution, a topic that will likely be discussed further in the lecture.  The context of the course suggests that this slide is introducing the concept of recursion and its application in algorithms, specifically in the context of the Fibonacci sequence, which is a common example in introductory computer science and AI.</DESCRIPTION>
+
+SLIDE 7
+<LATEX>
+\textbf{Recursive Data Structures} \\
+Recursion is useful with some data structures like \\
+a LinkedList, Tree, or Graph. \\
+Consider a Tree: \\
+\begin{itemize}
+    \item Base Case: a null, or empty root node
+    \item Recursive Case: A node with links to 1 or more subtrees
+\end{itemize} \\
+Processing the tree recursively: \\
+\begin{itemize}
+    \item If the root node is null, done
+    \item Otherwise, process the root node and children
+\end{itemize} \\
+Activities: \\
+\begin{itemize}
+    \item Printing all elements
+    \item Summing elements
+    \item Finding a specific element
+    \item Identifying a "best" element
+\end{itemize}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, discusses the use of recursion with specific data structures, focusing on trees.  It states that recursion is useful with data structures like linked lists, trees, and graphs.  The slide then specifically considers trees, outlining the base case (a null or empty root node) and the recursive case (a node with links to one or more subtrees).  The slide also details the recursive processing of a tree: if the root node is null, the process is complete; otherwise, the root node and its children are processed.  Finally, the slide lists common activities that can be performed recursively on a tree, such as printing all elements, summing elements, finding a specific element, and identifying a "best" element.  The context of the course suggests that this slide is introducing the concept of recursion and its application in traversing and manipulating tree-based data structures, which are frequently used in AI algorithms and data representation.</DESCRIPTION>
+
+SLIDE 8
+<LATEX>
+\textbf{Structural Recursion: Traversal} \\
+Breadth First visits a level at a time: \\
+\begin{itemize}
+    \item 36, 10, 78, 3, 21, 55, 105, ...
+    \item Check the current node,
+    add children to a queue
+\end{itemize} \\
+Depth First traverses down a branch: \\
+\begin{itemize}
+    \item 36, 10, 3, 1, 6, 21, 15, 28, ...
+    \item Check current node,
+    then left, then right (other orders are possible)
+\end{itemize} \\
+\begin{tikzpicture}[level distance=1.5cm,
+every node/.style={draw, rectangle, minimum size=1em, fill=blue!50}]
+\node {36}
+child {node {10}
+child {node {3}
+child {node {1}}
+child {node {6}}}
+child {node {21}
+child {node {15}}
+child {node {28}}}}
+child {node {78}
+child {node {55}
+child {node {45}}
+child {node {66}}}
+child {node {105}
+child {node {91}}
+child {node {120}}}}};
+\end{tikzpicture} \\
+Note: a depth first traversal is like the call order of \\
+our Fibonacci example.
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, discusses structural recursion, specifically focusing on tree traversal methods.  It presents a tree diagram with nodes labeled by numbers.  The slide outlines two primary traversal strategies: Breadth-First and Depth-First.  Breadth-First traversal visits nodes level by level, starting from the root node (36) and proceeding to the next level (10, 78), and so on.  Depth-First traversal, on the other hand, explores a branch of the tree as deeply as possible before backtracking.  The example shows a Depth-First traversal, where the algorithm would visit nodes in the order 36, 10, 3, 1, 6, 21, 15, 28, ...  The slide also highlights that other orders are possible within the Depth-First approach, depending on the specific implementation (e.g., left-then-right, right-then-left).  The diagram visually represents the tree structure and the order in which nodes would be visited using each traversal method.  The note at the bottom connects the concept of Depth-First traversal to the call order of a recursive function, such as the Fibonacci sequence example, which was likely discussed in previous slides.  The context of the course suggests that this slide is introducing the fundamental concepts of tree traversal algorithms and their relationship to recursive procedures.</DESCRIPTION>
+
+SLIDE 9
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, demonstrates structural recursion using a binary search tree.  The slide title, "Structural Recursion: a Binary Tree Example," clearly indicates the topic.  A binary search tree is depicted visually using a tree diagram.  Each node in the tree is represented by a rectangle filled with a light blue color.  The numbers inside the rectangles represent the values associated with each node.  The tree structure is hierarchical, with the root node at the top (36) and child nodes branching downwards.  The slide also includes a bulleted list describing the properties of a binary search tree: each node has a value and two children (left and right); the left child's value is less than the parent's value; and the right child's value is greater than the parent's value.  These properties are crucial for the efficient search and retrieval of data within the tree structure.  The context of the course suggests that this slide is introducing the concept of structural recursion in the context of tree traversal and manipulation, which are fundamental operations in many AI algorithms.</DESCRIPTION>
+
+SLIDE 10
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, demonstrates structural recursion using a binary search tree.  The title, "Structural Recursion: a Binary Tree Example," clearly indicates the topic.  A binary search tree is visually depicted.  Each node in the tree is represented by a rectangle filled with a light blue color.  The numbers inside the rectangles represent the values associated with each node.  The tree structure is hierarchical, with the root node at the top (36) and child nodes branching downwards.  The slide also includes a recursive algorithm description for searching for a value X within the tree.  The algorithm first examines the current node's value (V). If V equals X, the search is successful (return True). If there are no children, the value X is not present (return False). If X is less than V, the search continues recursively in the left subtree; otherwise, it continues in the right subtree.  The context of the course suggests that this slide is introducing the concept of structural recursion in the context of tree traversal and manipulation, which are fundamental operations in many AI algorithms.  The algorithm presented is a common way to search a binary search tree, which is an efficient data structure for storing and retrieving data.</DESCRIPTION>
+
+SLIDE 11
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, illustrates how methods and structural recursion work together in a search algorithm, likely for a game like guessing a number between 0 and 100.  A tree structure is shown, visually representing the search process.  The root node is labeled "50".  From this node, two branches extend downwards.  The left branch leads to node "75", and the right branch leads to node "63".  From "63", a branch leads to "57".  Dotted lines represent the expansion of the search tree, indicating that the algorithm explores possible states by examining the current state and expanding to new states.  The text emphasizes that this process of examining the current state and expanding to new states is a common technique for building a search tree during the search process.  The context of the course suggests that the slide is demonstrating a recursive search algorithm, where the algorithm recursively explores possible states until the target is found. The numbers in the nodes likely represent the values being considered in the search.</DESCRIPTION>
+
+SLIDE 12
+<LATEX>
+\textbf{Problem Solving as Search}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, presents a simple title: "Problem Solving as Search".  No further details or visual aids are present.  The context suggests that the following slides will delve into the concept of representing and solving problems using search algorithms in the field of AI.  The date and page number (4/5/202, 3) indicate the slide's position within a larger presentation.</DESCRIPTION>
+
+SLIDE 13
+<LATEX>
+\text{``...an agent with several immediate options of} \\
+\text{unknown value can decide what to do by first} \\
+\text{examining different possible sequences of actions} \\
+\text{that lead to states of known value, and then} \\
+\text{choosing the best sequence.''} \\
+\text{Russell \& Norving, p. 60}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide presents a quote describing a problem-solving strategy for an agent in an Artificial Intelligence context.  The quote states that an agent with multiple, uncertain options can determine the best course of action by first exploring different sequences of actions that lead to states with known values.  The agent then selects the sequence that yields the best outcome.  The citation "Russell & Norving, p. 60" indicates the source of the quote, likely a textbook or reference material on AI.  The context of the course (Artificial Intelligence Basics) suggests that this slide introduces the concept of decision-making under uncertainty and the use of search algorithms to find optimal solutions.</DESCRIPTION>
+
+SLIDE 14
+<LATEX>
+\textbf{Problem Solving as Search} \\
+Search: Exploration of possibilities \\
+\begin{itemize}
+    \item Abstraction of general problem solving method
+\end{itemize}
+Basic ingredients: \\
+\begin{itemize}
+    \item States: describe configuration of environment \\
+    \item Actions: activities which move you from one state to another \\
+    \item Search algorithm: determines which actions should be tried in which order to find solution
+\end{itemize}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces the concept of problem-solving as a search process.  It defines "Search" as the exploration of possible solutions.  The slide further emphasizes that this approach is a general method for solving problems.  The slide then lists the fundamental components of a search-based problem-solving approach:  
+\begin{itemize}
+    \item \textbf{States}:  These represent configurations of the environment being considered.  For example, in a game, a state might describe the positions of pieces on the board.
+    \item \textbf{Actions}: These are the possible steps or moves that can be taken to transition from one state to another.  In a game, actions might be "move pawn forward," "attack opponent's piece," etc.
+    \item \textbf{Search algorithm}: This is the method used to systematically explore the possible states and actions to find a solution.  The algorithm determines the order in which actions are tried.
+\end{itemize}
+The slide is a high-level overview, setting the stage for more detailed discussions on specific search algorithms and their applications in AI.</DESCRIPTION>
+
+SLIDE 15
+<LATEX>
+\textbf{Searching States – Chess is a classic example} \\
+When game-playing AI plays chess; it creates and models as many \\
+states as it can. \\
+\begin{itemize}
+    \item At a basic level – what does the board look like if that piece is \\
+    moved?
+    \item Evaluate if it’s good or bad
+    \item Create and consider as many as possible
+\end{itemize}
+\textbf{Some Observations:} \\
+\begin{itemize}
+    \item The search tree is large: White has 20 possible first moves, as \\
+    does black. 400 states in 2 moves.
+    \item Black and White are searching for different outcomes
+    \item For most computers, searching the entire space isn’t feasible
+\end{itemize}
+Before we get further into game playing, lets consider some \\
+simpler search spaces. \\
+https://www.bewitched.com/chess.html
+</LATEX>
+
+<FIGURE [345, 533, 541, 819]></FIGURE>
+<FIGURE [550, 587, 729, 765]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, discusses the complexity of searching possible states in a game-playing AI context, using chess as an example.  It highlights that when an AI plays chess, it explores and models many possible states of the game.  The slide emphasizes the following points:
+\begin{itemize}
+    \item \textbf{State Exploration}:  At a basic level, the AI considers how the board changes after each move.
+    \item \textbf{Evaluation}: The AI evaluates if a move is beneficial (good) or detrimental (bad).
+    \item \textbf{Exhaustive Search}: The AI aims to create and consider as many possible states as possible.
+    \item \textbf{Search Tree Size}: The slide points out the significant size of the search tree in chess.  White has 20 possible first moves, and Black has 20 possible first moves, leading to 400 possible states after two moves.
+    \item \textbf{Different Outcomes}: Black and White are searching for different outcomes in the game.
+    \item \textbf{Computational Feasibility}: The slide emphasizes that searching the entire state space of chess is computationally infeasible for most computers.
+\end{itemize}
+The slide concludes by suggesting that simpler search spaces should be considered before tackling the full complexity of chess.  The URL at the bottom of the slide likely links to a chess-playing resource or demonstration. The context of the course is crucial for understanding the discussion of search algorithms and their limitations in complex problem domains like game playing.</DESCRIPTION>
+
+SLIDE 16
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces the concept of maze-solving as a search problem.  The slide title, "Mazes – A first problem," indicates the focus of the discussion.  The slide presents a simple maze represented as a grid.  The grid has rows and columns labeled 0 to 3.  The walls of the maze are drawn as lines within the grid.  The slide poses three key questions related to representing and solving the maze using search algorithms:
+\begin{itemize}
+    \item \textbf{What is a "State"?}:  This question prompts consideration of how the maze's configuration is represented as a state in the search process.  A state might represent the current position of a hypothetical agent navigating the maze.
+    \item \textbf{What "Actions" can we take}: This question focuses on the possible moves or actions an agent can perform to change its state within the maze.  Possible actions might include moving up, down, left, or right.
+    \item \textbf{How will we search the states?}: This question anticipates the need for a search algorithm to explore the possible states and actions to find a path through the maze.
+\end{itemize}
+The context of the course is crucial for understanding the discussion of search algorithms and their application to solving problems like mazes. The maze diagram is a visual aid to illustrate the problem domain.</DESCRIPTION>
+
+SLIDE 17
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces maze-solving as a search problem.  The title, "Mazes – A first problem," indicates the focus.  The slide presents a simple maze represented as a 4x4 grid.  The grid lines and walls are drawn to show the maze structure.  The slide defines the following key elements:
+\begin{itemize}
+    \item \textbf{State}: The current location of an agent navigating the maze, represented by coordinates $(x, y)$.
+    \item \textbf{Action}: Possible moves (Left, Right, Up, Down) are defined by the vector additions:  (-1, 0), (1, 0), (0, -1), (0, 1).  These vectors represent the change in x and y coordinates for each move.
+    \item \textbf{Search Algorithm}: The slide poses the question of how to search the maze to find a solution.
+\end{itemize}
+The slide concludes by stating that the maze-solving process can be viewed as a tree-like structure.  The context of the course is crucial for understanding the introduction of search algorithms and their application to solving problems like mazes. The maze diagram is a visual aid to illustrate the problem domain.</DESCRIPTION>
+
+SLIDE 18
+<LATEX>
+\textbf{Mazes – A first problem} \\
+Consider the first state to be location $(x, y)$ \\
+Move L $(-1, 0)$, R $(1, 0)$, U $(0, -1)$, or D $(0, 1)$ \\
+That's just a tree of possibilities! \\
+\dots Though some may be redundant \\
+\begin{tikzpicture}[scale=0.7]
+\node[draw, fill=blue!50, rounded corners] (start) at (2, 3) {$(x, y)$};
+\node[draw, fill=blue!50, rounded corners] (L) at (1, 2) {$(x-1, y)$};
+\node[draw, fill=blue!50, rounded corners] (R) at (3, 2) {$(x+1, y)$};
+\node[draw, fill=blue!50, rounded corners] (U) at (2, 4) {$(x, y-1)$};
+\node[draw, fill=blue!50, rounded corners] (D) at (2, 2) {$(x, y+1)$};
+
+\draw[->] (start) -- (L) node[midway, left] {L};
+\draw[->] (start) -- (R) node[midway, right] {R};
+\draw[->] (start) -- (U) node[midway, above] {U};
+\draw[->] (start) -- (D) node[midway, below] {D};
+
+\node[draw, fill=blue!50, rounded corners] (LL) at (0.5, 1) {$(x-2, y)$};
+\node[draw, fill=blue!50, rounded corners] (LR) at (3.5, 1) {$(x+2, y)$};
+\node[draw, fill=blue!50, rounded corners] (LU) at (1.5, 5) {$(x-1, y-1)$};
+\node[draw, fill=blue!50, rounded corners] (LD) at (1.5, 0) {$(x-1, y+1)$};
+\node[draw, fill=blue!50, rounded corners] (RU) at (4.5, 5) {$(x+1, y-1)$};
+\node[draw, fill=blue!50, rounded corners] (RD) at (4.5, 0) {$(x+1, y+1)$};
+
+\draw[->] (L) -- (LL) node[midway, left] {L};
+\draw[->] (L) -- (LU) node[midway, left] {U};
+\draw[->] (L) -- (LD) node[midway, left] {D};
+\draw[->] (R) -- (LR) node[midway, right] {R};
+\draw[->] (R) -- (RU) node[midway, right] {U};
+\draw[->] (R) -- (RD) node[midway, right] {D};
+\draw[->] (U) -- (LU) node[midway, above] {U};
+\draw[->] (U) -- (RU) node[midway, above] {R};
+\draw[->] (U) -- (U) node[midway, above] {U};
+\draw[->] (D) -- (LD) node[midway, below] {L};
+\draw[->] (D) -- (RD) node[midway, below] {R};
+\draw[->] (D) -- (D) node[midway, below] {D};
+\end{tikzpicture}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces maze-solving as a search problem.  The title "Mazes – A first problem" clearly indicates the topic.  The slide visually represents a simple maze-solving scenario using a tree structure.  The root node of the tree is labeled (x, y), representing the starting location.  The branches emanating from the root node represent possible moves: Left (L), Right (R), Up (U), and Down (D).  Each move corresponds to a change in the x and y coordinates, as specified by the vectors (-1, 0), (1, 0), (0, -1), and (0, 1), respectively.  The slide highlights that this branching structure represents a tree of possible states or locations that an agent might explore while navigating the maze.  The notation (x-1, y), (x+1, y), (x, y-1), and (x, y+1) are used to label the child nodes, indicating the new position after each move.  The slide also mentions that some paths might be redundant, implying that the search algorithm needs to consider efficiency in exploring the possible states.  The context of the course is crucial for understanding the introduction of search algorithms and their application to solving problems like mazes. The tree diagram is a visual aid to illustrate the problem domain and the possible states that can be explored.</DESCRIPTION>
+
+SLIDE 19
+<LATEX>
+\textbf{Mazes – A first problem} \\
+For our maze \\
+\begin{itemize}
+    \item Start at (0,0), Search for (2,3)
+    \item Move by expanding the state L,R,U,D as possible
+    \item The smaller we make the tree – the faster we find a solution
+    \item Identify redundant states
+    \item Don't explore redundant states (don't get into loops)
+\end{itemize}
+This removes whole branches of our tree that are less useful: \\
+\begin{itemize}
+    \item (0,0), (1,0), (0,0)
+    \item (0,0), (1,0), (1,1), (1,0)
+    \item (0,0), (1,0), (1,1), (1,0), (0,0)
+    \item Etc.
+\end{itemize}
+Traverse the tree to find the solution: \\
+Note, a Depth first search without removing redundant states would explore \\
+LRLRLRLR…
+\begin{tikzpicture}[scale=0.5]
+\draw[step=1cm,gray,very thin] (0,0) grid (4,4);
+\draw (0.5,0.5) -- (3.5,0.5);
+\draw (0.5,1.5) -- (0.5,3.5);
+\draw (0.5,3.5) -- (3.5,3.5);
+\draw (1.5,0.5) -- (1.5,1.5);
+\draw (2.5,0.5) -- (2.5,1.5);
+\draw (2.5,1.5) -- (3.5,1.5);
+\draw (1.5,2.5) -- (3.5,2.5);
+\draw (1.5,3.5) -- (2.5,3.5);
+\draw (2.5,3.5) -- (3.5,3.5);
+\draw (2.5,2.5) -- (3.5,2.5);
+\draw (2.5,2.5) -- (3.5,2.5);
+\draw (3.5,2.5) -- (3.5,3.5);
+\draw (0,0) node[below left] {0};
+\draw (1,0) node[below] {1};
+\draw (2,0) node[below] {2};
+\draw (3,0) node[below] {3};
+\draw (0,1) node[left] {0};
+\draw (0,2) node[left] {1};
+\draw (0,3) node[left] {2};
+\draw (0,4) node[left] {3};
+\end{tikzpicture}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces maze-solving as a search problem.  The title "Mazes – A first problem" clearly indicates the topic.  A 4x4 grid represents a maze with walls.  The slide describes a strategy for solving the maze using a search algorithm.  The algorithm starts at the top-left corner (0,0) and aims to reach the bottom-right corner (2,3).  The algorithm expands possible states (moves) in a tree-like structure, exploring possible paths.  The key idea is to identify and avoid redundant states (loops) to make the search more efficient.  The slide emphasizes that the smaller the search tree, the faster a solution is found.  The example shows how redundant states (e.g., (0,0), (1,0), (0,0)) can be avoided.  The slide also mentions Depth-First Search (DFS) as a search algorithm that would explore all possible paths without removing redundant states, leading to a potentially very large search space.  The context of the course is crucial for understanding the introduction of search algorithms and their application to solving problems like mazes. The maze diagram is a visual aid to illustrate the problem domain and the possible states that can be explored.</DESCRIPTION>
+
+SLIDE 20
+<LATEX>
+\textbf{Mazes – A first problem} \\
+Each node is a position in the maze \\
+Each connection represents moving L, R, D, or U in the \\
+maze, without redundancies \\
+Just like "Guess a Number", we can generate this tree \\
+as we go \\
+\begin{itemize}
+    \item The tree structure represents paths to all locations \\
+    in the maze \\
+    \item Explore all possible next moves \\
+    \item If there is no next move (deadend), backtrack up \\
+    the tree to an unexplored path
+\end{itemize}
+\begin{tikzpicture}[scale=0.6]
+\draw[step=1cm,gray,very thin] (0,0) grid (4,4);
+\draw (0.5,0.5) -- (3.5,0.5);
+\draw (0.5,1.5) -- (0.5,3.5);
+\draw (0.5,3.5) -- (3.5,3.5);
+\draw (1.5,0.5) -- (1.5,1.5);
+\draw (2.5,0.5) -- (2.5,1.5);
+\draw (2.5,1.5) -- (3.5,1.5);
+\draw (1.5,2.5) -- (3.5,2.5);
+\draw (1.5,3.5) -- (2.5,3.5);
+\draw (2.5,3.5) -- (3.5,3.5);
+\draw (2.5,2.5) -- (3.5,2.5);
+\draw (0,0) node[below left] {0};
+\draw (1,0) node[below] {1};
+\draw (2,0) node[below] {2};
+\draw (3,0) node[below] {3};
+\draw (0,1) node[left] {0};
+\draw (0,2) node[left] {1};
+\draw (0,3) node[left] {2};
+\draw (0,4) node[left] {3};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (0,0) {0,0};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (0,1) {0,1};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (0,2) {0,2};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (0,3) {0,3};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (1,0) {1,0};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (1,1) {1,1};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (1,2) {1,2};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (1,3) {1,3};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (2,0) {2,0};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (2,1) {2,1};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (2,2) {2,2};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (2,3) {2,3};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (3,0) {3,0};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (3,1) {3,1};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (3,2) {3,2};
+\node[draw, circle, fill=blue!20, inner sep=1pt] at (3,3) {3,3};
+\end{tikzpicture}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces maze-solving as a search problem.  The title "Mazes – A first problem" clearly indicates the topic.  A 4x4 grid represents a maze with walls.  The slide describes a strategy for solving the maze using a tree-like structure.  Each node in the tree represents a position (x, y) in the maze.  Connections between nodes represent possible moves (Left, Right, Up, Down).  The slide emphasizes that the tree structure represents all possible paths through the maze.  The algorithm explores possible next moves, and if a dead end is reached, it backtracks to an unexplored path.  The slide uses the analogy of "Guess a Number" to illustrate the tree-building process.  The context of the course is crucial for understanding the introduction of search algorithms and their application to solving problems like mazes. The maze diagram and the tree diagram are visual aids to illustrate the problem domain and the possible states that can be explored.</DESCRIPTION>
+
+SLIDE 21
+<LATEX>
+\textbf{Revisiting Fibonacci} \\
+Many recursive approaches benefit from \\
+removing redundant states. \\
+Build your approach to avoid doing work \\
+2 or more times if once will suffice \\
+Why calculate fib(2), two times? \\
+\begin{tikzpicture}[level distance=1.5cm,
+    every node/.style={rectangle, rounded corners, draw,
+    minimum size=1cm, align=center}]
+    \node {fib(4)}
+    child {node {fib(3)}}
+    child {node {fib(2)}}
+    child[missing] {}
+    child {node {fib(1)}}
+    child {node {fib(1)}}
+    child {node {fib(0)}}
+    ;
+    \node[below of=fib(3), xshift=-1cm] {fib(2)};
+    \node[below of=fib(3), xshift=1cm] {fib(1)};
+    \node[below of=fib(2), xshift=-1cm] {fib(1)};
+    \node[below of=fib(2), xshift=1cm] {fib(0)};
+\end{tikzpicture}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, revisits the Fibonacci sequence problem, focusing on the efficiency of recursive solutions.  The title "Revisiting Fibonacci" indicates a review of a previously discussed topic.  The slide highlights that many recursive approaches can be improved by removing redundant calculations.  The text "Build your approach to avoid doing work 2 or more times if once will suffice" emphasizes the need for memoization or dynamic programming to avoid recalculating the same Fibonacci numbers multiple times.  The diagram shows a tree structure representing the recursive calls for calculating fib(4).  The key point is that fib(2) is calculated twice in the recursive process, demonstrating the redundancy that can be eliminated.  The context of the course is crucial for understanding the concept of dynamic programming and its application to optimizing recursive algorithms. The tree diagram visually illustrates the recursive calls and the repeated calculations of fib(2).</DESCRIPTION>
+
+SLIDE 22
+<LATEX>
+\textbf{Count the number of calls to fib(n)} \\
+\begin{tabular}{c|cccccccccc}
+n $\rightarrow$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\hline
+fib(n) & 1 & 1 & 2 & 3 & 5 & 8 & 13 & 21 & 34 & 55 \\
+Count & 1 & 1 & 3 & 5 & 9 & 15 & 25 & 41 & 67 & 109
+\end{tabular}
+\\
+\begin{tabular}{c|c}
+n $\rightarrow$ & 10 \\
+\hline
+fib(n) & 89 \\
+Count & 177
+\end{tabular}
+\\
+Count(fib(n)) = Count(fib(n-1)) + Count(fib(n-2)) + 1 \\
+\begin{tikzpicture}[node distance=1.5cm]
+\node[draw, rectangle, fill=teal!50, rounded corners] (fibn) {fib(n)};
+\node[draw, rectangle, fill=teal!50, rounded corners, below left of=fibn] (fibn1) {fib(n-1)};
+\node[draw, rectangle, fill=teal!50, rounded corners, below right of=fibn] (fibn2) {fib(n-2)};
+\node[draw, rectangle, fill=teal!50, rounded corners, right of=fibn2] (fib0) {fib(0)};
+\node[draw, rectangle, fill=teal!50, rounded corners, left of=fibn1] (fib1) {fib(1)};
+\draw[->, thick, dashed] (fibn) -- (fibn1);
+\draw[->, thick, dashed] (fibn) -- (fibn2);
+\draw[->, thick, dashed] (fibn1) -- (fib0);
+\draw[->, thick, dashed] (fibn2) -- (fib1);
+\end{tikzpicture}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide from an Artificial Intelligence Basics course presents a table and a diagram illustrating the computational cost of calculating the Fibonacci sequence. The table shows the Fibonacci numbers (fib(n)) for values of n from 0 to 10, along with the corresponding count of recursive calls required to compute each Fibonacci number.  The table demonstrates that the number of calls grows exponentially with n. The diagram visually represents the recursive calls needed to compute fib(n).  Each node in the diagram represents a call to the fib function.  The arrows show the recursive calls to compute fib(n-1) and fib(n-2). The formula "Count(fib(n)) = Count(fib(n-1)) + Count(fib(n-2)) + 1" is given, highlighting the recursive nature of the calculation and the constant overhead of +1 for each call. The context of the course suggests that the slide is discussing the efficiency of recursive algorithms and the potential for optimization techniques like dynamic programming to improve performance.</DESCRIPTION>
+
+SLIDE 23
+<LATEX>
+\textbf{Lets optimize a bit} \\
+\begin{tikzpicture}[node distance=1.5cm]
+\node[draw, rectangle, fill=teal!50, rounded corners] (fib1) {fib(1)};
+\node[draw, rectangle, fill=teal!50, rounded corners, right of=fib1] (fib0) {fib(0)};
+\node[draw, rectangle, fill=teal!50, rounded corners, below left of=fib1] (fib2) {fib(2)};
+\node[draw, rectangle, fill=teal!50, rounded corners, below of=fib0] (fib1b) {fib(1)};
+\node[draw, rectangle, fill=teal!50, rounded corners, below of=fib2] (fib3) {fib(3)};
+\node[draw, rectangle, fill=teal!50, rounded corners, right of=fib0] (fib4) {fib(4)};
+\node[draw, rectangle, fill=teal!50, rounded corners, right of=fib4] (fib3b) {fib(3)};
+\node[draw, rectangle, fill=teal!50, rounded corners, above right of=fib3b] (fib5) {fib(5)};
+\node[draw, rectangle, fill=teal!50, rounded corners, below right of=fib3] (fib2b) {fib(2)};
+\node[draw, rectangle, fill=teal!50, rounded corners, below of=fib4] (fib4b) {fib(4)};
+\draw[->, thick] (fib1) -- (fib2);
+\draw[->, thick] (fib0) -- (fib2);
+\draw[->, thick] (fib2) -- (fib3);
+\draw[->, thick] (fib1b) -- (fib3);
+\draw[->, thick] (fib4) -- (fib5);
+\draw[->, thick] (fib3b) -- (fib5);
+\draw[->, thick] (fib2b) -- (fib4b);
+\end{tikzpicture}
+\begin{tabular}{c|c}
+List Cache & \\
+\hline
+0 & 1 \\
+1 & 1 \\
+2 & 2 \\
+3 & 3 \\
+4 & 5 \\
+5 & 8
+\end{tabular}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, presents an optimization strategy for calculating Fibonacci numbers.  The slide shows a directed acyclic graph (DAG) representing the recursive calls needed to compute Fibonacci numbers up to fib(5).  Each node in the graph represents a call to the fib function, and the arrows indicate the dependencies between the calls.  For example, the node `fib(5)` depends on the nodes `fib(4)` and `fib(3)`.  The graph visually demonstrates the redundant calculations that occur in a naive recursive implementation.  A "List Cache" table is included, showing the Fibonacci numbers from fib(0) to fib(5) and their corresponding values.  The context of the course suggests that the slide is introducing dynamic programming as a technique to optimize recursive algorithms by storing and reusing previously computed results, thereby avoiding redundant calculations.  The slide is preparing the audience for a discussion on memoization or tabulation techniques to improve the efficiency of recursive Fibonacci calculations.</DESCRIPTION>
+
+SLIDE 24
+<LATEX>
+\textbf{Comparison} \\
+\begin{tikzpicture}
+\begin{axis}[
+    title={Comparison},
+    xlabel={n},
+    ylabel={Value},
+    legend pos=south east,
+    ymode=log,
+    xmin=0, xmax=50,
+    ymin=1, ymax=2e8,
+    xtick={0,1,2,3,4,5,6,7,8,9,10,20,30,40,50},
+    ytick={1,10,100,1000,10000,100000,1000000,10000000,100000000,2e8},
+    log basis y=10,
+    ]
+    \addplot[blue, mark=*, mark size=1.5pt] coordinates {
+        (0, 1) (1, 1) (2, 2) (3, 3) (4, 5) (5, 8) (6, 13) (7, 21) (8, 34) (9, 55) (10, 89) (20, 6765) (30, 832040) (40, 102334155) (50, 20365011074)};
+    \addlegendentry{fib(n)};
+    \addplot[green, mark=*, mark size=1.5pt] coordinates {
+        (0, 1) (1, 1) (2, 3) (3, 5) (4, 9) (5, 15) (6, 25) (7, 41) (8, 67) (9, 109) (10, 177) (20, 6765) (30, 832040) (40, 102334155) (50, 20365011074)};
+    \addlegendentry{C-fib};
+    \addplot[green!50!black, mark=*, mark size=1.5pt] coordinates {
+        (0, 1) (1, 1) (2, 3) (3, 5) (4, 7) (5, 9) (6, 11) (7, 13) (8, 15) (9, 17) (10, 19) (20, 6765) (30, 832040) (40, 102334155) (50, 20365011074)};
+    \addlegendentry{C-fibE};
+\end{axis}
+\end{tikzpicture}
+\\
+\begin{tabular}{c|cccccccccc}
+n $\rightarrow$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\hline
+fib(n) & 1 & 1 & 2 & 3 & 5 & 8 & 13 & 21 & 34 & 55 \\
+C-fib & 1 & 1 & 3 & 5 & 9 & 15 & 25 & 41 & 67 & 109 \\
+C-fibE & 1 & 1 & 3 & 5 & 7 & 9 & 11 & 13 & 15 & 17
+\end{tabular}
+\\
+\begin{tabular}{c|c}
+n $\rightarrow$ & 10 \\
+\hline
+fib(n) & 89 \\
+C-fib & 177 \\
+C-fibE & 19
+\end{tabular}
+\\
+\begin{tabular}{c|c}
+n $\rightarrow$ & 50 \\
+\hline
+fib(n) & 20,365,011,074 \\
+C-fib & 40,730,022,147 \\
+C-fibE & 99
+\end{tabular}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide from an Artificial Intelligence Basics course presents a comparison of different methods for calculating Fibonacci numbers.  A graph displays the growth of the Fibonacci sequence (fib(n)) and two optimized versions (C-fib and C-fibE) as a function of n. The y-axis is logarithmic, highlighting the exponential growth of the Fibonacci sequence. The x-axis represents the input value n. The graph shows that the optimized methods (C-fib and C-fibE) have significantly lower computational costs compared to the standard recursive approach.  The table below the graph provides a numerical comparison of the different methods for various values of n.  The table shows the Fibonacci numbers (fib(n)) and the number of function calls required for each method (C-fib and C-fibE).  The context of the course suggests that the slide is discussing the efficiency of different algorithms for calculating Fibonacci numbers, emphasizing the importance of optimization techniques in AI applications where computational speed is critical. The table shows that the C-fibE method has a much lower computational cost than the C-fib method, which in turn has a lower cost than the standard recursive approach.  The difference in computational cost becomes increasingly significant as n increases.</DESCRIPTION>
+
+SLIDE 25
+<LATEX>
+\textbf{Searching Graphs and Maps}
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, likely the title slide for a section of a lecture on Artificial Intelligence Basics, introduces the topic of searching graphs and maps.  It's a straightforward title slide, indicating the subject matter of the upcoming content.</DESCRIPTION>
+
+SLIDE 26
+<LATEX>
+\textbf{Searching in more complicated structures} \\
+Our search approach is built on a tree \\
+But what if our problem is built on a graph? \\
+What if there are more than one ways to reach a state? \\
+If a solution is found, will it be the best?
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, introduces the topic of searching in more complex structures than trees.  It poses a series of questions to transition the discussion from tree-based search algorithms to graph-based search algorithms.  The questions highlight the need for more sophisticated search strategies when dealing with graphs, where multiple paths to a solution might exist.  The questions specifically address: 1) the difference between tree and graph search, 2) the possibility of multiple solutions, and 3) the optimality of the solution found.  The context suggests that the lecture will cover graph search algorithms and their properties, such as exploring all possible paths and finding the best solution (e.g., shortest path, lowest cost).  The slide is a prelude to a discussion on graph traversal algorithms like Breadth-First Search (BFS) or Depth-First Search (DFS), and potentially more advanced algorithms like A* search.</DESCRIPTION>
+
+SLIDE 27
+<LATEX>
+\textbf{Example Map} \\
+\begin{tikzpicture}
+\node[circle, fill=green!50, minimum size=5pt, inner sep=0pt] (start) at (2, 7) {};
+\node[below of=start, xshift=0.5cm] {Start};
+\node[circle, fill=red!50, minimum size=5pt, inner sep=0pt] (goal) at (6, 5) {};
+\node[below of=goal, xshift=0.5cm] {Goal};
+\end{tikzpicture}
+\end{document}
+</LATEX>
+
+<FIGURE [235, 141, 781, 866]></FIGURE>
+
+<DESCRIPTION>This slide, likely part of a lecture on Artificial Intelligence Basics, presents a simple example map.  It shows a bird's-eye view of a campus-like area, with a green circle labeled "Start" and a red circle labeled "Goal."  The circles represent starting and destination points on a map.  The context suggests that the slide is introducing the concept of graph search algorithms, where the goal is to find a path from the "Start" location to the "Goal" location within the complex structure of the map.  The map itself is a visual representation of a graph, where nodes represent locations and edges represent possible paths between them.  The lack of explicit edges between nodes implies that the paths are not directly shown, but rather need to be determined by a search algorithm.  The slide is a setup for discussing algorithms like Breadth-First Search (BFS), Depth-First Search (DFS), or A* search, which would be used to find a path between the start and goal points on this map.</DESCRIPTION>
+
+SLIDE 28
+<LATEX>
+\textbf{Example Map} \\
+\begin{tikzpicture}
+% Simplified representation of the map
+% (This is a placeholder, as the exact details are not available from the image)
+\node[circle, fill=green!50, minimum size=5pt, inner sep=0pt] (start) at (2, 7) {};
+\node[below of=start, xshift=0.5cm] {Start};
+\node[circle, fill=red!50, minimum size=5pt, inner sep=0pt] (goal) at (6, 5) {};
+\node[below of=goal, xshift=0.5cm] {Goal};
+\draw[thick, black] (start) -- (2.5, 6.5) -- (3, 6) -- (3.5, 5.5) -- (4, 5) -- (4.5, 5.5) -- (5, 6) -- (5.5, 6.5) -- (goal);
+% Add more nodes and edges to represent the graph structure
+\end{tikzpicture}
+\end{document}
+</LATEX>
+
+<FIGURE [235, 141, 781, 866]></FIGURE>
+<FIGURE [235, 144, 781, 870]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, presents a map-like graph.  The map depicts a complex network of interconnected nodes (represented by small black circles) and edges (represented by black lines).  A green circle labeled "Start" and a red circle labeled "Goal" are clearly marked on the map.  The edges represent possible paths between locations.  The slide is likely introducing the concept of graph search algorithms, where the goal is to find a path from the "Start" node to the "Goal" node within the graph structure.  Crucially, the slide also includes a text box asking "What has been abstracted away?"  This question prompts the audience to consider the simplifications made in representing the real-world map as a graph.  The text box below the map, "What are States? Actions? Initial state? Goal state? Step cost? Path cost? Feasible solution? Optimal solution?", further suggests that the lecture will discuss the elements of a search problem, such as states, actions, costs, and optimal solutions, in the context of graph search algorithms.  The context of the course is crucial for understanding the significance of graph representation and search algorithms in AI problem-solving.</DESCRIPTION>
+
+SLIDE 29
+<LATEX></LATEX>
+
+<FIGURE [515, 295, 728, 704]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces the 8-puzzle as an example of a problem that can be represented as a graph.  The 8-puzzle is a sliding tile puzzle where the goal is to arrange the tiles in a specific order (often visually represented as a solved state).  The slide explicitly states that the search space for the 8-puzzle is a graph, not a tree, despite the fact that a tree-like approach might be used in the algorithm.  Two configurations of the 8-puzzle are shown: a "Start State" and a "Goal State."  These configurations are represented as 3x3 grids of numbers, illustrating the arrangement of tiles in each state.  The context suggests that the lecture will discuss graph search algorithms (like Breadth-First Search or Depth-First Search, or potentially A*) to find a solution path from the Start State to the Goal State.  The slide is a transition from tree-based search to graph-based search, highlighting the difference in structure and the need for more sophisticated algorithms to handle the multiple possible paths in a graph.</DESCRIPTION>
+
+SLIDE 30
+<LATEX></LATEX>
+
+<FIGURE [338, 469, 551, 878]></FIGURE>
+
+<DESCRIPTION>This slide presents the 8-puzzle as a graph problem in the context of Artificial Intelligence Basics.  It shows the start state and goal state of the puzzle as 3x3 grids of numbers.  The start state is [7, 2, 4, 5, 0, 6, 8, 3, 1] and the goal state is [0, 1, 2, 3, 4, 5, 6, 7, 8].  The slide highlights that the actions available are sliding tiles (L, R, U, D).  The slide also notes that the graph representation of the puzzle has loops, meaning that the same state can be reached by multiple paths.  The question "Which path is best?" is posed, implying that the lecture will discuss optimal pathfinding algorithms to solve the 8-puzzle, such as Breadth-First Search, Depth-First Search, or A*.  The context of the course is crucial for understanding the representation of the 8-puzzle as a graph and the need for algorithms to find the optimal solution path.</DESCRIPTION>
+
+SLIDE 31
+<LATEX></LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, discusses strategies for searching the 8-puzzle space.  It emphasizes that the 8-puzzle, and similar problems, are best represented as graphs.  The slide lists three key points: 1)  "Identify and note any explored states" –  This highlights the importance of keeping track of visited states during the search process. 2) "Avoid exploring the same state twice to avoid loops" – This is crucial for preventing infinite loops in the search algorithm.  3) "Know that the first solution found is just A solution" – This emphasizes that the search algorithm may not necessarily find the optimal solution, but rather a solution.  The context of the course suggests that the lecture is covering graph search algorithms, such as Breadth-First Search, Depth-First Search, or A*, and the need to manage the search space efficiently to find a solution to the 8-puzzle.</DESCRIPTION>
+
+SLIDE 32
+<LATEX></LATEX>
+
+<FIGURE [344, 343, 694, 924]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, presents a graph representation of a road network problem.  The nodes represent cities (e.g., Arad, Bucharest, Zerind), and the edges represent roads connecting those cities.  The numbers on the edges indicate the distance (cost) between the cities.  The goal is to find the shortest path from the starting city (Arad) to the destination city (Bucharest).  The context of the course suggests that the slide is introducing graph search algorithms (like Dijkstra's algorithm or A*) as a method to solve this type of problem.  The graph visually depicts the possible routes and associated costs, making it suitable for pathfinding algorithms.  The labels on the nodes and edges are crucial for understanding the problem's structure and the distances between locations.</DESCRIPTION>
+
+SLIDE 33
+<LATEX></LATEX>
+
+<FIGURE [501, 319, 698, 985]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, introduces a robotic assembly problem.  It defines the key components of the problem in the context of a search problem.  The \textit{State} is described as real-valued coordinates of robot joint angles and the parts of the object to be assembled.  The \textit{Action} is defined as continuous motions of robot joints. The \textit{Goal} is to complete the assembly of the object.  The \textit{Path Cost} is the time taken to execute the assembly.  A diagram of a robotic arm manipulating parts is included, illustrating the problem domain.  The labels "P" and "R" likely indicate points or joints on the robot arm, and the diagram shows the robot arm in a configuration where it is manipulating parts of an object.  The context of the course suggests that the slide is preparing the audience for discussing search algorithms or planning algorithms that can be used to find optimal sequences of actions for the robot to achieve the goal of assembling the object.  The focus is on continuous state spaces and actions, which differ from discrete state spaces seen in problems like the 8-puzzle.</DESCRIPTION>
+
+SLIDE 34
+<LATEX>
+\textbf{Assumptions of Simple Search Abstraction} \\
+Static: The world does not change on its own, and our actions don't change it. \\
+Discrete: A finite number of individual states exist rather than a continuous state of options \\
+Observable: States can be determined by observations \\
+Deterministic: Action have certain outcomes
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, lists the assumptions underlying a simplified model for search problems.  The assumptions are crucial for designing and implementing search algorithms.  The slide states that the world is static, meaning it doesn't change independently of the agent's actions.  It also assumes that the states are discrete, meaning there are a finite number of possible states, rather than a continuous range of states.  The states are observable, meaning that the agent can determine the current state through observation.  Finally, the model is deterministic, meaning that actions have predictable outcomes.  These assumptions are often made in introductory AI courses to simplify the problem and allow for the application of basic search algorithms.  The context of the course suggests that the slide is preparing the audience for discussing search algorithms that operate under these specific conditions.</DESCRIPTION>
+
+SLIDE 35
+<LATEX></LATEX>
+
+<FIGURE [336, 210, 593, 789]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, depicts a Pac-Man game as an example of an agent interacting with an environment.  It visually represents the agent-environment interaction model.  A diagram shows Pac-Man (the agent) in a maze (the environment).  The score is displayed (SCORE: 18).  The slide illustrates the key components of the agent-environment interaction:  The agent has sensors that perceive the environment, and actuators that execute actions.  The environment provides percepts to the agent, and the agent's actions affect the environment.  The diagram uses boxes to represent the agent, environment, sensors, actuators, percepts, and actions.  Arrows indicate the flow of information between these components.  The question mark (?) above the sensors box suggests that the specific sensor readings are not explicitly shown but are implied.  The context of the course suggests that the slide is introducing the concept of an agent interacting with an environment, using Pac-Man as a concrete example to illustrate the agent's sensors, actuators, and the environment's percepts and actions.  The slide is likely part of a discussion on the structure of an agent and how it interacts with its environment.</DESCRIPTION>
+
+SLIDE 36
+<LATEX></LATEX>
+
+<FIGURE [402, 302, 484, 382]></FIGURE>
+<FIGURE [585, 315, 667, 396]></FIGURE>
+<FIGURE [402, 496, 482, 575]></FIGURE>
+<FIGURE [645, 547, 727, 627]></FIGURE>
+<FIGURE [402, 793, 482, 871]></FIGURE>
+<FIGURE [402, 400, 482, 479]></FIGURE>
+<FIGURE [535, 544, 616, 624]></FIGURE>
+<FIGURE [402, 692, 481, 771]></FIGURE>
+<FIGURE [402, 593, 482, 673]></FIGURE>
+<FIGURE [402, 204, 482, 282]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, uses the Pac-Man game as an example to illustrate the concept of a state space and a successor function.  The "State Space" section shows several different configurations of the Pac-Man game board, each representing a possible state.  The "Successor Function" section depicts a transition between two states.  An arrow connects two game board configurations, labeled with "N", 1.0 and "E", 1.0.  These labels likely represent the action taken (moving North or East) and the associated cost (1.0).  The context of the course suggests that the slide is introducing the concept of state spaces and successor functions in the context of game playing agents.  The images show Pac-Man and pellets in a grid-based environment.  The slide is likely part of a discussion on search algorithms or planning algorithms that can be used to find optimal paths for Pac-Man to collect pellets.</DESCRIPTION>
+
+SLIDE 37
+<LATEX>
+\textbf{What's in a State Space?} \\
+A world state includes every detail of the environment \\
+A search state keeps only the details needed for planning (abstraction) \\
+\textbf{Problem: Pathing} \\
+\begin{itemize}
+    \item States: (x,y) location
+    \item Actions: NSEW
+    \item Successor: update location only
+    \item Goal test: is (x,y)=END
+\end{itemize}
+\textbf{Problem: Eat All Dots} \\
+\begin{itemize}
+    \item States: \{(x,y), dot booleans\}
+    \item Actions: NSEW
+    \item Successor: update location and dots
+    \item Goal Tests: dots all false
+\end{itemize}
+</LATEX>
+
+<FIGURE [597, 384, 759, 959]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, discusses the concept of state spaces in the context of search problems.  It contrasts a "world state," which encompasses all details of the environment, with a "search state," which is an abstraction containing only the necessary information for planning.  Two specific problems are presented: "Pathing" and "Eat All Dots."  For "Pathing," the state is defined by the (x,y) coordinates, actions are North, South, East, and West (NSEW), the successor function updates only the location, and the goal test checks if the current location matches the "END" location.  For "Eat All Dots," the state includes the (x,y) coordinates and a boolean value for each dot (representing whether it has been eaten or not).  Actions are again NSEW, the successor function updates both location and dot status, and the goal test checks if all dots have been eaten (all dot booleans are false).  The slide uses these examples to illustrate how different search problems require different levels of detail in their state representations.  A visual representation of a Pac-Man-like game board is included, illustrating the environment for the "Eat All Dots" problem.  The context of the course suggests that the slide is preparing the audience for discussing different search algorithms and their applicability to various problems.</DESCRIPTION>
+
+SLIDE 38
+<LATEX></LATEX>
+
+<FIGURE [356, 471, 718, 827]></FIGURE>
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, presents a calculation of state space sizes for a Pac-Man-like game.  It lists the components of a world state, including the agent's position (120 possibilities), the number of food pellets (30), the positions of ghosts (12), and the agent's direction (NSEW).  The slide then asks "How many?" and provides the number of possible world states, calculated as the product of the different components' possibilities.  The calculation for world states is 120 x (230) x (122) x 4.  The slide also lists the number of states for pathing (120) and for the "eat-all-dots" problem (120 x 230).  The context of the course suggests that the slide is discussing the complexity of state spaces in the context of search algorithms, specifically within the Pac-Man game environment.  The numbers represent the possible configurations of the game board, which are crucial for understanding the computational demands of solving problems within this environment.</DESCRIPTION>
+
+SLIDE 39
+<LATEX>
+\textbf{Al is about designing Rational Agents} \\
+\textbf{Rational behavior}: doing the things which are expected to maximize goal achievement, \\
+given available information \\
+Doesn't necessarily involve thinking (e.g., blinking reflex), but thinking should be in the \\
+service of rational action. \\
+\textbf{Aristotle's philosophy}: Actions are justified by a logical connection between goals and \\
+knowledge of the action's outcome \\
+Suggests an algorithmic approach to backward planning from a goal
+</LATEX>
+
+
+
+<DESCRIPTION>This slide, part of a lecture on Artificial Intelligence Basics, defines rational agents and discusses Aristotle's philosophy in the context of AI.  It states that AI is about designing rational agents.  "Rational behavior" is defined as doing the things expected to maximize goal achievement, given the available information.  Importantly, rational behavior doesn't necessarily require conscious thought; reflexes like blinking are rational if they contribute to achieving a goal.  The slide then introduces Aristotle's philosophy, stating that actions are justified by a logical connection between goals and knowledge of the action's outcome.  This implies a systematic, potentially algorithmic, approach to planning, specifically backward planning from a goal.  The context of the lecture suggests that the slide is introducing foundational concepts about what constitutes a rational agent in AI and how different philosophical perspectives can inform the design of such agents.</DESCRIPTION>
+

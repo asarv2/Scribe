@@ -1,0 +1,51 @@
+QUESTION 1
+According to the lecture, what is the primary goal of clustering?
+A. To predict future outcomes based on labeled data
+B. To group similar objects into classes
+C. To reduce the dimensionality of the data
+D. To find the optimal parameters for a model
+E. To classify data into predefined categories
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because predicting future outcomes is a goal of supervised learning, not clustering.
+B. Answer B is correct because clustering is defined as the process of grouping a set of objects into classes of similar objects.
+C. Answer C is incorrect because dimensionality reduction is a separate task, although it can be used in conjunction with clustering.
+D. Answer D is incorrect because finding optimal parameters is a goal of model training, not clustering.
+E. Answer E is incorrect because classifying data into predefined categories is a goal of supervised learning, not clustering.
+
+QUESTION 2
+According to the lecture, what is the most commonly used distance measure for continuous data in clustering?
+A. Hamming distance
+B. Matching coefficient
+C. Euclidean distance
+D. Manhattan distance
+E. Cosine similarity
+
+ANSWER: C
+
+EXPLANATION: 
+A. Answer A is incorrect because Hamming distance is used for discrete data, not continuous data.
+B. Answer B is incorrect because the matching coefficient is used for discrete data, not continuous data.
+C. Answer C is correct because the lecture states that Euclidean distance is the most commonly used distance measure for continuous data.
+D. Answer D is incorrect because while Manhattan distance is a valid distance measure, Euclidean distance is more commonly used for continuous data.
+E. Answer E is incorrect because cosine similarity is typically used for text or high-dimensional data, not general continuous data.
+
+QUESTION 3
+According to the lecture, what type of clustering is K-means?
+A. Hierarchical, hard clustering
+B. Hierarchical, soft clustering
+C. Flat, hard clustering
+D. Flat, soft clustering
+E. None of the above
+
+ANSWER: C
+
+EXPLANATION: 
+A. Answer A is incorrect because K-means is not hierarchical.
+B. Answer B is incorrect because K-means is not hierarchical and is not soft clustering.
+C. Answer C is correct because the lecture states that K-means is a flat, hard clustering approach.
+D. Answer D is incorrect because K-means is not soft clustering.
+E. Answer E is incorrect because K-means is a flat, hard clustering approach.
+

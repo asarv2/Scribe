@@ -509,11 +509,17 @@ class BaseProcessor:
                 # Begin figure environment - using H (from float package) to force position
                 doc.append(NoEscape(r'\begin{figure}[H]'))
                 doc.append(NoEscape(r'\centering'))
+                
+                figure_list = slides[slide_number]["figures"]
+                
+                if len(figures) != len(figure_list):
+                    print(f"Warning: Number of figures ({len(figures)}) does not match the number of figure descriptions ({len(figure_list)}) for slide {slide_number}.")
+                    continue
 
                 # Iterate over up to 5 figures
-                figure_list = slides[slide_number]["figures"][:5]
+                figure_list = figure_list[:5]
                 sorted_figure_paths = sorted(figures)
-
+                
                 for idx, figure in enumerate(figure_list):
                     figure_path = sorted_figure_paths[idx]
                     # Begin subfigure

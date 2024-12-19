@@ -13,6 +13,18 @@ class GroupsProcessor(BaseProcessor):
                  depth: int = 1,
                  max_depth: int = 2,
                  *args, **kwargs):
+        """
+        Initialize the GroupsProcessor.
+
+        Args:
+            terms (Dict[str, Dict]): The terms to process.
+            depth (int, optional): The depth of the current group. Used to determine which group to start at. Ex, setting depth to 2 will initialize the GroupsProcessor at the second level of groups (subgroups). Defaults to 1.
+            max_depth (int, optional): The maximum depth to process. Defaults to 2.
+
+        Raises:
+            ValueError: If the depth is greater than the max depth.
+            ValueError: If the depth or max depth is less than 1.
+        """
         super().__init__(*args, **kwargs)
         self.terms = terms
         if depth > max_depth:
@@ -252,7 +264,6 @@ class GroupsProcessor(BaseProcessor):
         if self.depth >= self.max_depth:  # Base case: max depth reached
             return
     
-        
         for group_name, group_data in self.groups.items():
             if len(group_data["terms"]) >= 3:
                 print(f"Processing subgroup {group_name} at depth {self.depth + 1}")
@@ -266,8 +277,23 @@ class GroupsProcessor(BaseProcessor):
                     regenerate=self.regenerate,
                 )
                 group_subgroups = subgroup_processor.process_groups()
-                self.groups[group_name]["subgroups"] = group_subgroups
                 
+                if group_subgroups:  # Only process if subgroups were created
+                    # Keep track of which terms were successfully grouped into subgroups
+                    terms_in_subgroups = set()
+                    for subgroup_data in group_subgroups.values():
+                        terms_in_subgroups.update(subgroup_data["terms"].keys())
+                    
+                    # Remove terms that were grouped in subgroups from the parent group
+                    group_data["terms"] = {
+                        term: data 
+                        for term, data in group_data["terms"].items() 
+                        if term not in terms_in_subgroups
+                    }
+                    
+                    # Add the subgroups to the current group
+                    self.groups[group_name]["subgroups"] = group_subgroups
+        
         self.save_groups_json(os.path.join(self.output_dir, self.course_code, "sub" + self.summary_type, "summary.json"))
         self.save_groups_text(os.path.join(self.output_dir, self.course_code, "sub" + self.summary_type, "summary.txt"))
         
@@ -384,8 +410,10 @@ class GroupsProcessor(BaseProcessor):
                 topics.append(term_entry)
             
             # Recursively process subgroups
-            for subgroup_data in group_data.get("subgroups", {}).values():
-                topics.extend(process_group(subgroup_data["subgroup"], group_entry["map_id"]))
+            for subgroup_name, subgroup_data in group_data.get("subgroups", {}).items():
+                # Recursively process each subgroup with the current group's map_id as parent
+                subgroup_topics = process_group(subgroup_name, subgroup_data, group_entry["map_id"])
+                topics.extend(subgroup_topics)
             
             return topics
 
@@ -406,7 +434,7 @@ class GroupsProcessor(BaseProcessor):
         all_topics = [root_node]  # Start with root node
         for group_name, group_data in self.groups.items():
             all_topics.extend(process_group(group_name, group_data, root_id))  # Pass root_id as parent
-            
+        
         # upload to supabase
         self.supabase.table("topics").insert(all_topics).execute()
         print(f"Generated {len(all_topics)} topics for Supabase insertion")

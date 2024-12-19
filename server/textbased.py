@@ -9,19 +9,20 @@ if __name__ == "__main__":
     notes_dir = "/Users/ashoksaravanan/Coding/ScribeLec/server/Notes/Notes_CS243"
     output_dir = "/Users/ashoksaravanan/Coding/ScribeLec/server/output"
     
-    slide_processor = SlideProcessor(
-        notes_dir=notes_dir,
-        handwritten=False,
-        class_id=class_id,
-        output_dir=output_dir,
-        regenerate=True
-    )
+    # slide_processor = SlideProcessor(
+    #     notes_dir=notes_dir,
+    #     handwritten=False,
+    #     class_id=class_id,
+    #     output_dir=output_dir,
+    #     regenerate=False
+    # )
     
     # slide_processor.save_notes_storage_supabase()
     
     # slide_processor.save_notes_supabase()
+    # slide_processor.save_notes_pdf(slide_processor.lectures_output_dir)
     
-    slide_processor.process_slides(num_docs=1)
+    # slide_processor.process_slides()
     
     # problems_processor = ProblemsProcessor(
     #     class_id=class_id,
@@ -34,21 +35,21 @@ if __name__ == "__main__":
     # problems_processor.save_questions_supabase()
     # problems_processor.save_questions_storage_supabase()
     
-    # terms_processor = TermsProcessor(
-    #     class_id=class_id,
-    #     output_dir=output_dir,
-    #     regenerate=False
-    # )
+    terms_processor = TermsProcessor(
+        class_id=class_id,
+        output_dir=output_dir,
+        regenerate=False
+    )
     # terms_processor.process_terms()
     
     # Initialize and process groups with automatic recursion
-    # groups_processor = GroupsProcessor(
-    #     terms=terms_processor.terms,
-    #     depth=1,
-    #     max_depth=2,
-    #     class_id=class_id,
-    #     output_dir=output_dir,
-    #     regenerate=False
-    # )
+    groups_processor = GroupsProcessor(
+        terms=terms_processor.terms,
+        depth=2,
+        max_depth=2,
+        class_id=class_id,
+        output_dir=output_dir,
+        regenerate=False
+    )
     # groups_processor.process_groups()
-    # groups_processor.save_groups_supabase()
+    groups_processor.save_groups_supabase()

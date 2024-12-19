@@ -1,0 +1,1647 @@
+{
+    "game ai": {
+        "group": "Game AI",
+        "terms": {
+            "dartmouth workshop": {
+                "term": "Dartmouth Workshop",
+                "definition": "A 1956 summer research project that is considered the birth of AI, aiming to simulate human intelligence in machines.",
+                "lectures": {
+                    "02L2-Intro": [
+                        4
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "turing test": {
+                "term": "Turing Test",
+                "definition": "An operational test for intelligent behavior, where a machine tries to imitate a human in a conversation to see if an interrogator can distinguish between them.",
+                "lectures": {
+                    "02L2-Intro": [
+                        6,
+                        7
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "game tree": {
+                "term": "Game Tree",
+                "definition": "A tree-like structure representing all possible moves and outcomes in a game, used by AI algorithms to plan strategies.",
+                "lectures": {
+                    "02L2-Intro": [
+                        11
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "minimax": {
+                "term": "Minimax",
+                "definition": "A decision-making algorithm used in game theory to find the optimal move for a player, assuming the opponent plays optimally as well.",
+                "lectures": {
+                    "02L2-Intro": [
+                        23
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "game tree search": {
+                "term": "Game Tree Search",
+                "definition": "Algorithms search over game trees to determine optimal moves, where nodes represent game states and edges represent possible actions.",
+                "lectures": {
+                    "02L2-Intro": [
+                        11
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "computational complexity": {
+                "term": "Computational Complexity",
+                "definition": "The size of game search spaces grows exponentially, making brute-force search infeasible for complex games.",
+                "lectures": {
+                    "02L2-Intro": [
+                        12
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "adversarial attacks": {
+                "term": "Adversarial Attacks",
+                "definition": "AI systems can be vulnerable to adversarial attacks, where carefully crafted inputs can cause misclassification.",
+                "lectures": {
+                    "02L2-Intro": [
+                        19
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "ethical bias": {
+                "term": "Ethical Bias",
+                "definition": "AI systems can exhibit bias, leading to unfair or discriminatory outcomes in real-world applications.",
+                "lectures": {
+                    "02L2-Intro": [
+                        20
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "algorithm design": {
+                "term": "Algorithm Design",
+                "definition": "AI algorithms require components such as state representation, action sets, planning, and reasoning about opponents.",
+                "lectures": {
+                    "02L2-Intro": [
+                        24,
+                        28,
+                        33,
+                        36,
+                        39,
+                        42
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "reinforcement learning": {
+                "term": "Reinforcement Learning",
+                "definition": "An approach where an agent learns to make decisions by interacting with an environment, receiving rewards or penalties for its actions, and adjusting its strategy to maximize cumulative reward.",
+                "lectures": {
+                    "02L2-Intro": [
+                        46
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "monte carlo tree search": {
+                "term": "Monte Carlo Tree Search",
+                "definition": "A search algorithm that uses random sampling to explore the game tree, balancing exploration and exploitation to find optimal moves.",
+                "lectures": {
+                    "02L2-Intro": [
+                        50
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "loss function minimization": {
+                "term": "Loss Function Minimization",
+                "definition": "The problem of finding the parameters of a model that minimize a given loss function, which quantifies the error between the model's predictions and the true values.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        9,
+                        10,
+                        28
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "gradient calculation": {
+                "term": "Gradient Calculation",
+                "definition": "The problem of computing the gradient of a loss function with respect to the model's parameters, which is necessary for gradient-based optimization algorithms.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        29
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "supervised learning": {
+                "term": "Supervised Learning",
+                "definition": "Learning a function from paired inputs and outputs.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "unsupervised learning": {
+                "term": "Unsupervised Learning",
+                "definition": "Learning a function to simplify data from input examples only.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "planning as sat": {
+                "term": "Planning as SAT",
+                "definition": "Encoding planning problems as SAT problems to find optimal plans.",
+                "lectures": {
+                    "13L1-Logic": [
+                        21
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "combinatorial design": {
+                "term": "Combinatorial Design",
+                "definition": "Using SAT to find mathematical structures with specific properties, such as Latin squares.",
+                "lectures": {
+                    "13L1-Logic": [
+                        22
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "sat encoding for planning": {
+                "term": "SAT Encoding for Planning",
+                "definition": "Encode planning problems into SAT by creating a planning graph, representing actions and facts at each time step as variables, and encoding preconditions, effects, and mutual exclusion as CNF clauses.",
+                "lectures": {
+                    "13L1-Logic": [
+                        21
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "model checking with sat": {
+                "term": "Model Checking with SAT",
+                "definition": "Encode reachability in a finite transition graph as a CNF formula to verify safety and liveness properties of hardware and software systems.",
+                "lectures": {
+                    "13L1-Logic": [
+                        20
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "recursion": {
+                "term": "Recursion",
+                "definition": "A self-referential process that terminates at a base case.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "base case": {
+                "term": "Base Case",
+                "definition": "The condition in a recursive approach that provides a direct solution without further recursion.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        5
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "recursive case": {
+                "term": "Recursive Case",
+                "definition": "The part of a recursive approach that breaks down a problem into a smaller, similar subproblem.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        5
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "structural recursion": {
+                "term": "Structural Recursion",
+                "definition": "Recursion applied to data structures like trees, where the structure itself is recursively defined.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        8,
+                        7
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "recursive problem solving": {
+                "term": "Recursive Problem Solving",
+                "definition": "Breaking down a problem into smaller, self-similar subproblems.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        4
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "model generator": {
+                "term": "Model Generator (Encoder)",
+                "definition": "A component that transforms a problem instance into a generic model suitable for a general inference engine.",
+                "lectures": {
+                    "15L2-SAT": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "general inference engine": {
+                "term": "General Inference Engine",
+                "definition": "A component that takes a generic model and produces a solution.",
+                "lectures": {
+                    "15L2-SAT": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "data privacy": {
+                "term": "Data Privacy",
+                "definition": "Methods for handling sensitive data and the potential for data science to undermine privacy.",
+                "lectures": {
+                    "16L2-ethics": [
+                        9,
+                        10,
+                        11
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "algorithmic bias": {
+                "term": "Algorithmic Bias",
+                "definition": "The potential for algorithms to perpetuate or amplify existing biases, including unintentional red-lining and re-inscription of biases.",
+                "lectures": {
+                    "16L2-ethics": [
+                        9,
+                        12,
+                        13,
+                        14,
+                        15,
+                        16,
+                        17,
+                        20,
+                        21,
+                        23
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "fairness in ai": {
+                "term": "Fairness in AI",
+                "definition": "Defining and operationalizing fairness in AI systems, including disparate treatment and disparate impact.",
+                "lectures": {
+                    "16L2-ethics": [
+                        18,
+                        19,
+                        26,
+                        27
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "model interpretability": {
+                "term": "Model Interpretability",
+                "definition": "The need for transparent and understandable AI models, especially in high-stakes domains like healthcare.",
+                "lectures": {
+                    "16L2-ethics": [
+                        28,
+                        29,
+                        30,
+                        31,
+                        32,
+                        33
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "bias mitigation": {
+                "term": "Bias Mitigation",
+                "definition": "Strategies for detecting and removing bias from models, including the importance of retaining bias features during training.",
+                "lectures": {
+                    "16L2-ethics": [
+                        34
+                    ]
+                },
+                "type": "Problem Types"
+            }
+        }
+    },
+    "search algorithms": {
+        "group": "Search Algorithms",
+        "terms": {
+            "search space": {
+                "term": "Search Space",
+                "definition": "The set of all possible states or configurations in a problem, often very large in complex games, making brute-force search infeasible.",
+                "lectures": {
+                    "02L2-Intro": [
+                        12
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "search state": {
+                "term": "Search State",
+                "definition": "An abstraction of the environment containing only the details needed for planning.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        37
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "state space representation": {
+                "term": "State Space Representation",
+                "definition": "Defining the possible configurations of an environment for search.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        14
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "graph search": {
+                "term": "Graph Search",
+                "definition": "Exploring paths in a graph structure to find a solution.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        26
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "abstraction in search": {
+                "term": "Abstraction in Search",
+                "definition": "Simplifying a problem by focusing on essential details for planning.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        37
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "state space": {
+                "term": "State Space",
+                "definition": "A representation of all possible configurations of a problem.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        36
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "successor function": {
+                "term": "Successor Function",
+                "definition": "A function that generates the next possible states from a given state.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        36
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "abstraction": {
+                "term": "Abstraction",
+                "definition": "The process of simplifying a problem by focusing on essential details and ignoring irrelevant ones.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        37
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "redundant state removal": {
+                "term": "Redundant State Removal",
+                "definition": "The process of identifying and avoiding revisiting previously explored states to improve search efficiency.",
+                "lectures": {
+                    "14L1-DepthFS": [
+                        19
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "problem instance": {
+                "term": "Problem Instance",
+                "definition": "A specific case of a problem, often domain-specific, that needs to be solved.",
+                "lectures": {
+                    "15L2-SAT": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            }
+        }
+    },
+    "image processing": {
+        "group": "Image Processing",
+        "terms": {
+            "computational complexity": {
+                "term": "Computational Complexity",
+                "definition": "The size of game search spaces grows exponentially, making brute-force search infeasible for complex games.",
+                "lectures": {
+                    "02L2-Intro": [
+                        12
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "adversarial attacks": {
+                "term": "Adversarial Attacks",
+                "definition": "AI systems can be vulnerable to adversarial attacks, where carefully crafted inputs can cause misclassification.",
+                "lectures": {
+                    "02L2-Intro": [
+                        19
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "algorithm design": {
+                "term": "Algorithm Design",
+                "definition": "AI algorithms require components such as state representation, action sets, planning, and reasoning about opponents.",
+                "lectures": {
+                    "02L2-Intro": [
+                        24,
+                        28,
+                        33,
+                        36,
+                        39,
+                        42
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "reinforcement learning": {
+                "term": "Reinforcement Learning",
+                "definition": "An approach where an agent learns to make decisions by interacting with an environment, receiving rewards or penalties for its actions, and adjusting its strategy to maximize cumulative reward.",
+                "lectures": {
+                    "02L2-Intro": [
+                        46
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "loss function minimization": {
+                "term": "Loss Function Minimization",
+                "definition": "The problem of finding the parameters of a model that minimize a given loss function, which quantifies the error between the model's predictions and the true values.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        9,
+                        10,
+                        28
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "gradient calculation": {
+                "term": "Gradient Calculation",
+                "definition": "The problem of computing the gradient of a loss function with respect to the model's parameters, which is necessary for gradient-based optimization algorithms.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        29
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "image classification": {
+                "term": "Image Classification",
+                "definition": "The task of assigning a predefined label to an image.",
+                "lectures": {
+                    "07L2-Vision": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "semantic gap": {
+                "term": "Semantic Gap",
+                "definition": "The difference between how a computer represents an image (as a grid of numbers) and how humans understand it (as a meaningful scene).",
+                "lectures": {
+                    "07L2-Vision": [
+                        4
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "invariant features": {
+                "term": "Invariant Features",
+                "definition": "Features of an object that remain consistent despite variations in the image, such as changes in illumination, pose, or scale.",
+                "lectures": {
+                    "07L2-Vision": [
+                        11,
+                        21
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "bag of features": {
+                "term": "Bag of Features",
+                "definition": "A method of representing images by the frequencies of visual words, disregarding their spatial arrangement.",
+                "lectures": {
+                    "07L2-Vision": [
+                        16,
+                        12
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "visual words": {
+                "term": "Visual Words",
+                "definition": "Distinctive local features extracted from images, used as the basis for image representation in the Bag of Features method.",
+                "lectures": {
+                    "07L2-Vision": [
+                        14
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "image invariance": {
+                "term": "Image Invariance",
+                "definition": "The problem of finding features that are not affected by geometric transformations like translation, rotation, and scaling.",
+                "lectures": {
+                    "07L2-Vision": [
+                        11,
+                        21
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "image robustness": {
+                "term": "Image Robustness",
+                "definition": "The problem of finding features that are not affected by noise, detection errors, illumination changes, partial occlusion, and intrinsic shape distortions.",
+                "lectures": {
+                    "07L2-Vision": [
+                        21
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "visual vocabulary creation": {
+                "term": "Visual Vocabulary Creation",
+                "definition": "The problem of learning a set of representative visual features (visual words) from a collection of images, often through clustering.",
+                "lectures": {
+                    "07L2-Vision": [
+                        26,
+                        27
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "image noise reduction": {
+                "term": "Image Noise Reduction",
+                "definition": "The problem of removing or reducing unwanted variations in pixel intensities caused by sensor noise or other factors.",
+                "lectures": {
+                    "07L2-Vision": [
+                        38,
+                        39,
+                        40,
+                        41,
+                        42,
+                        43,
+                        44,
+                        45,
+                        46,
+                        47,
+                        48
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "moving average filter": {
+                "term": "Moving Average Filter",
+                "definition": "Replace each pixel with an average of all the values in its neighborhood.",
+                "lectures": {
+                    "07L2-Vision": [
+                        38
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "weighted moving average": {
+                "term": "Weighted Moving Average",
+                "definition": "Apply non-uniform weights to the moving average, giving more importance to central pixels.",
+                "lectures": {
+                    "07L2-Vision": [
+                        41
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "image sharpening": {
+                "term": "Image Sharpening",
+                "definition": "$f_{sharp} = f + \\alpha(f - f_{blur}) = (1+\\alpha)f - \\alpha(w*f) = (1+\\alpha)f - \\alpha(v*f)$.",
+                "lectures": {
+                    "07L2-Vision": [
+                        55
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "edge detection": {
+                "term": "Edge Detection",
+                "definition": "The process of identifying sharp changes in image intensity, often corresponding to object boundaries.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        4
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "image gradient": {
+                "term": "Image Gradient",
+                "definition": "A vector that points in the direction of the greatest rate of change in image intensity.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        17,
+                        34
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "canny edge detector": {
+                "term": "Canny Edge Detector",
+                "definition": "An algorithm for edge detection that uses a multi-stage process to identify edges in an image.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        19
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "harris corner detector": {
+                "term": "Harris Corner Detector",
+                "definition": "An algorithm for detecting corners in an image by analyzing the local changes in image intensity.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        28,
+                        29
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "gaussian pyramid": {
+                "term": "Gaussian Pyramid",
+                "definition": "A multi-scale representation of an image created by repeatedly smoothing and downsampling the image.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        31
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "image derivative calculation": {
+                "term": "Image Derivative Calculation",
+                "definition": "Approximating the partial derivative of a digital image using finite differences and implementing it as a linear filter.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        15
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "edge characterization": {
+                "term": "Edge Characterization",
+                "definition": "Identifying edges as locations of rapid change in image intensity and relating them to extrema of the derivative.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        13
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "corner detection": {
+                "term": "Corner Detection",
+                "definition": "Identifying corners as locations where a small window translated over an image shows significant changes in patch appearance.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        25,
+                        20,
+                        22,
+                        23
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "image gradient calculation": {
+                "term": "Image Gradient Calculation",
+                "definition": "Determining the direction and magnitude of the image gradient using partial derivatives.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        17,
+                        34
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "gaussian pyramid construction": {
+                "term": "Gaussian Pyramid Construction",
+                "definition": "Creating a multi-scale representation of an image by repeatedly blurring and subsampling.",
+                "lectures": {
+                    "08L2-Feature Extraction": [
+                        30,
+                        31
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "supervised learning": {
+                "term": "Supervised Learning",
+                "definition": "Learning a function from paired inputs and outputs.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "unsupervised learning": {
+                "term": "Unsupervised Learning",
+                "definition": "Learning a function to simplify data from input examples only.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            }
+        }
+    },
+    "linear models": {
+        "group": "Linear Models",
+        "terms": {
+            "perceptron": {
+                "term": "Perceptron",
+                "definition": "A basic unit of a neural network that takes multiple inputs, applies weights, sums them, and passes the result through an activation function to produce an output.",
+                "lectures": {
+                    "02L2-Intro": [
+                        45
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "perceptron structure": {
+                "term": "Perceptron Structure",
+                "definition": "Understanding the structure of a perceptron, including weighted inputs, summation, bias, and the threshold function.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        17
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "derivative of sigmoid function": {
+                "term": "Derivative of Sigmoid Function",
+                "definition": "Calculating the derivative of the logistic sigmoid function, $\\sigma(x) = \\frac{1}{1+e^{-x}}$, which is $\\frac{d}{dx}\\sigma(x) = \\frac{e^{-x}}{(1+e^{-x})^2}$.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        20,
+                        21
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "linear separability": {
+                "term": "Linear Separability",
+                "definition": "The problem of determining whether a set of data points can be perfectly separated into different classes by a linear decision boundary.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        30
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "extending linear models": {
+                "term": "Extending Linear Models",
+                "definition": "The problem of extending linear models to handle non-linear relationships in data, often by using polynomial features or other transformations.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        13
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "linear regression model": {
+                "term": "Linear Regression Model",
+                "definition": "$f(x) = w^Tx + l$, where $w$ is the weight vector, $x$ is the input vector, and $l$ is the bias term. This model predicts a continuous output based on a linear combination of input features.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        6
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "multiple linear regression": {
+                "term": "Multiple Linear Regression",
+                "definition": "$\\mathbf{\\beta}^* = (\\mathbf{X}^T \\mathbf{X})^{-1} \\mathbf{X}^T \\mathbf{y}$, where $\\mathbf{\\beta}^*$ is the vector of optimal coefficients, $\\mathbf{X}$ is the design matrix containing the independent variables, and $\\mathbf{y}$ is the vector of dependent variables. This formula calculates the optimal coefficients for a linear model with multiple independent variables.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        11
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "perceptron algorithm": {
+                "term": "Perceptron Algorithm",
+                "definition": "If $\\text{sign}(w^T x_n) \\neq y_n$, then $w \\leftarrow w + y_n x_n$, where $w$ is the weight vector, $x_n$ is a randomly selected data point, and $y_n$ is the corresponding target value. This algorithm iteratively updates the weight vector based on misclassified data points until a separating hyperplane is found.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        30
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "logistic regression update": {
+                "term": "Logistic Regression Update",
+                "definition": "$w \\leftarrow w + \\sigma(-y_n w^T x_n) y_n x_n$, where $w$ is the weight vector, $x_n$ is a randomly selected data point, $y_n$ is the corresponding target value, and $\\sigma$ is the sigmoid function. This algorithm updates the weight vector based on the logistic loss function, using the sigmoid function to map the dot product to a probability.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        33
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "regularized linear regression": {
+                "term": "Regularized Linear Regression",
+                "definition": "$E(w) = RSS(w) + \\lambda R(w)$, where $R(w)$ is a regularization term (e.g., $L_2$ or $L_1$ norm) and $\\lambda$ controls the trade-off between training error and model complexity.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        17
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "model generator": {
+                "term": "Model Generator (Encoder)",
+                "definition": "A component that transforms a problem instance into a generic model suitable for a general inference engine.",
+                "lectures": {
+                    "15L2-SAT": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "general inference engine": {
+                "term": "General Inference Engine",
+                "definition": "A component that takes a generic model and produces a solution.",
+                "lectures": {
+                    "15L2-SAT": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            }
+        }
+    },
+    "linear algebra": {
+        "group": "Linear Algebra",
+        "terms": {
+            "matrix": {
+                "term": "Matrix",
+                "definition": "A rectangular array of numbers, symbols, or expressions, organized into rows and columns.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        4
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "linear transformation": {
+                "term": "Linear Transformation",
+                "definition": "A mapping between vector spaces that preserves vector addition and scalar multiplication.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        5,
+                        6
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "matrix inverse": {
+                "term": "Matrix Inverse",
+                "definition": "A matrix that, when multiplied by the original matrix, results in the identity matrix.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        10
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "matrix multiplication": {
+                "term": "Matrix Multiplication",
+                "definition": "An operation that combines two matrices to produce a new matrix, representing the composition of linear transformations.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        14
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "matrix transposition": {
+                "term": "Matrix Transposition",
+                "definition": "An operation that flips a matrix over its diagonal, switching rows and columns.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        16
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "matrix representation of linear equations": {
+                "term": "Matrix Representation of Linear Equations",
+                "definition": "Representing systems of linear equations using matrices, such as $Ax = b$, where $A$ is the coefficient matrix, $x$ is the variable vector, and $b$ is the constant vector.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        11
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "solving linear equations with matrix inverses": {
+                "term": "Solving Linear Equations with Matrix Inverses",
+                "definition": "Solving systems of linear equations by using the inverse of the coefficient matrix, such as $x = A^{-1}b$.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        12
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "matrix transformation": {
+                "term": "Matrix Transformation",
+                "definition": "Understanding how matrices represent linear transformations, such as rotation, scaling, and projections, and how these transformations map points, lines, and spaces to other points, lines, and spaces.",
+                "lectures": {
+                    "04L1-Linear Algebra Primer": [
+                        5,
+                        7
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "planning as sat": {
+                "term": "Planning as SAT",
+                "definition": "Encoding planning problems as SAT problems to find optimal plans.",
+                "lectures": {
+                    "13L1-Logic": [
+                        21
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "combinatorial design": {
+                "term": "Combinatorial Design",
+                "definition": "Using SAT to find mathematical structures with specific properties, such as Latin squares.",
+                "lectures": {
+                    "13L1-Logic": [
+                        22
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "sat encoding for planning": {
+                "term": "SAT Encoding for Planning",
+                "definition": "Encode planning problems into SAT by creating a planning graph, representing actions and facts at each time step as variables, and encoding preconditions, effects, and mutual exclusion as CNF clauses.",
+                "lectures": {
+                    "13L1-Logic": [
+                        21
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "model checking with sat": {
+                "term": "Model Checking with SAT",
+                "definition": "Encode reachability in a finite transition graph as a CNF formula to verify safety and liveness properties of hardware and software systems.",
+                "lectures": {
+                    "13L1-Logic": [
+                        20
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            }
+        }
+    },
+    "model evaluation and tuning": {
+        "group": "Model Evaluation and Tuning",
+        "terms": {
+            "model selection": {
+                "term": "Model Selection",
+                "definition": "The problem of choosing the best model from a set of possible models, often involving a trade-off between model complexity and generalization ability.",
+                "lectures": {
+                    "05L2-ML Basics": [
+                        8,
+                        14
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "generalization": {
+                "term": "Generalization",
+                "definition": "The ability of a model to perform well on unseen data after being trained on a specific dataset.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        2
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "overfitting": {
+                "term": "Overfitting",
+                "definition": "A phenomenon where a model learns the training data too well, including noise and irrelevant details, leading to poor performance on unseen data.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        2,
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "training error": {
+                "term": "Training Error",
+                "definition": "The error of a model on the data it was trained on.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        4
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "test error": {
+                "term": "Test Error",
+                "definition": "The error of a model on unseen data, used to evaluate its generalization performance.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        4
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "regularization": {
+                "term": "Regularization",
+                "definition": "A technique used to prevent overfitting by adding a penalty term to the loss function, which discourages complex models.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        17
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "model complexity selection": {
+                "term": "Model Complexity Selection",
+                "definition": "Choosing the appropriate complexity of a model to balance underfitting and overfitting.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        4,
+                        13,
+                        15,
+                        16,
+                        27
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "hyperparameter tuning": {
+                "term": "Hyperparameter Tuning",
+                "definition": "Optimizing model hyperparameters using validation data to improve generalization performance.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        19,
+                        10,
+                        18,
+                        14
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "training/test data split": {
+                "term": "Training/Test Data Split",
+                "definition": "Dividing data into training, validation, and test sets to properly train and evaluate machine learning models.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        6,
+                        8,
+                        9,
+                        11,
+                        12
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "diagnosing overfitting/underfitting": {
+                "term": "Diagnosing Overfitting/Underfitting",
+                "definition": "Identifying whether a model is underfitting or overfitting the data using learning curves.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        20,
+                        21,
+                        22,
+                        24
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "learning curve analysis": {
+                "term": "Learning Curve Analysis",
+                "definition": "Plot training and test set performance (e.g., accuracy) against model complexity or training data size to diagnose underfitting, overfitting, or optimal model performance.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        20
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "s-fold cross-validation": {
+                "term": "S-fold Cross-Validation",
+                "definition": "Split the training data into S equal parts, use each part as a validation set once, and average the performance across all runs to select the best hyperparameter.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        25
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "diagnosing overfitting": {
+                "term": "Diagnosing Overfitting",
+                "definition": "Compare model performance on training and test data; a large gap between training and test performance indicates overfitting.",
+                "lectures": {
+                    "10L1-CrossValidation": [
+                        12
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            }
+        }
+    },
+    "convolutional neural networks": {
+        "group": "Convolutional Neural Networks",
+        "terms": {
+            "convolutional neural network": {
+                "term": "Convolutional Neural Network",
+                "definition": "A type of neural network that uses convolution operations to process data, particularly effective for image and video recognition.",
+                "lectures": {
+                    "09L1-cnn": [
+                        2
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "imagenet": {
+                "term": "ImageNet",
+                "definition": "A large dataset of labeled images used for training and evaluating image recognition models.",
+                "lectures": {
+                    "09L1-cnn": [
+                        3
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "feature map": {
+                "term": "Feature Map",
+                "definition": "The output of a convolutional layer, representing the extracted features from the input data.",
+                "lectures": {
+                    "09L1-cnn": [
+                        8
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "sparse connectivity": {
+                "term": "Sparse Connectivity",
+                "definition": "A connection pattern where each neuron is connected to only a small subset of neurons in the previous layer, as seen in convolutional layers.",
+                "lectures": {
+                    "09L1-cnn": [
+                        10,
+                        11
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "pooling layer": {
+                "term": "Pooling Layer",
+                "definition": "A layer in a CNN that reduces the spatial dimensions of feature maps, often using max pooling or average pooling.",
+                "lectures": {
+                    "09L1-cnn": [
+                        14,
+                        15
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "convolutional layer operation": {
+                "term": "Convolutional Layer Operation",
+                "definition": "The process of applying a filter to an input feature map to extract features, involving element-wise multiplication and summation.",
+                "lectures": {
+                    "09L1-cnn": [
+                        6,
+                        7
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "multidimensional convolution": {
+                "term": "Multidimensional Convolution",
+                "definition": "Applying filters to input feature maps with multiple channels, such as RGB images, to create multichannel output maps.",
+                "lectures": {
+                    "09L1-cnn": [
+                        8,
+                        19
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "sparse connectivity in cnns": {
+                "term": "Sparse Connectivity in CNNs",
+                "definition": "The use of small convolution kernels to connect each neuron to only a small neighborhood of input neurons, reducing the number of parameters compared to fully connected layers.",
+                "lectures": {
+                    "09L1-cnn": [
+                        10,
+                        11
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "parameter sharing in convolution": {
+                "term": "Parameter Sharing in Convolution",
+                "definition": "The use of the same parameters across all spatial locations in the input, reducing the number of parameters compared to traditional matrix multiplication.",
+                "lectures": {
+                    "09L1-cnn": [
+                        12
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "pooling layer operation": {
+                "term": "Pooling Layer Operation",
+                "definition": "The process of downsampling feature maps, typically using max pooling or average pooling, to reduce spatial dimensions and computational cost.",
+                "lectures": {
+                    "09L1-cnn": [
+                        15,
+                        6,
+                        14
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "convolution operation": {
+                "term": "Convolution Operation",
+                "definition": "Applying a filter to an input matrix by sliding the filter across the input, performing element-wise multiplication and summation to produce an output matrix.",
+                "lectures": {
+                    "09L1-cnn": [
+                        6,
+                        7
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "parameter sharing": {
+                "term": "Parameter Sharing",
+                "definition": "Convolutional filters share the same parameters across all spatial locations in the input, further reducing the number of parameters.",
+                "lectures": {
+                    "09L1-cnn": [
+                        12
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            }
+        }
+    },
+    "clustering": {
+        "group": "Clustering",
+        "terms": {
+            "matrix factorization": {
+                "term": "Matrix Factorization",
+                "definition": "A technique that decomposes a matrix into the product of two or more matrices, often with lower rank, to reveal latent structures in the data.",
+                "lectures": {
+                    "11L2-svd-pca-recommender": [
+                        2,
+                        3,
+                        4,
+                        5,
+                        13
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "dimensionality reduction": {
+                "term": "Dimensionality Reduction",
+                "definition": "Methods that transform data from a high-dimensional space to a lower-dimensional space, aiming to discard irrelevant features, visualize data, or reflect the intrinsic dimensionality of the data.",
+                "lectures": {
+                    "11L2-svd-pca-recommender": [
+                        8,
+                        9
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "singular value decomposition": {
+                "term": "Singular Value Decomposition (SVD)",
+                "definition": "A matrix factorization technique that decomposes a matrix into the product of three matrices: $A = USV^T$, where $U$ and $V$ are orthogonal matrices and $S$ is a diagonal matrix containing singular values.",
+                "lectures": {
+                    "11L2-svd-pca-recommender": [
+                        10,
+                        11,
+                        34
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "principal component analysis": {
+                "term": "Principal Component Analysis (PCA)",
+                "definition": "A linear dimensionality reduction technique that identifies the principal components of a dataset, which are the directions of maximum variance, and projects the data onto these components.",
+                "lectures": {
+                    "11L2-svd-pca-recommender": [
+                        14,
+                        15,
+                        16,
+                        17,
+                        18
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "latent factors": {
+                "term": "Latent Factors",
+                "definition": "Underlying, unobserved variables that influence the observed data, often used in matrix factorization to represent user preferences or item characteristics in a lower-dimensional space.",
+                "lectures": {
+                    "11L2-svd-pca-recommender": [
+                        5,
+                        36,
+                        37
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "recommender system prediction": {
+                "term": "Recommender System Prediction",
+                "definition": "Predicting user ratings for items they have not yet rated, often using matrix factorization and considering user and item biases.",
+                "lectures": {
+                    "11L2-svd-pca-recommender": [
+                        36,
+                        39,
+                        44,
+                        31
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "bias modeling": {
+                "term": "Bias Modeling",
+                "definition": "Incorporating user and item biases into rating prediction models to account for systematic differences in user preferences and item popularity. $r_{ij} \\approx \\mu + b_i + b_j + u_i \\cdot v_j$",
+                "lectures": {
+                    "11L2-svd-pca-recommender": [
+                        41,
+                        44
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "clustering": {
+                "term": "Clustering",
+                "definition": "The process of grouping a set of objects into classes of similar objects.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        4
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "euclidean distance": {
+                "term": "Euclidean distance",
+                "definition": "A measure of the straight-line distance between two points in a multi-dimensional space. $d(x, y) = \\sqrt{\\sum_{i=1}^{p} (x_i - y_i)^2}$",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        17
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "k-means": {
+                "term": "K-means",
+                "definition": "A clustering algorithm that partitions data into K disjoint subsets by iteratively assigning points to the nearest cluster mean and updating the means.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        21,
+                        22
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "distance calculation": {
+                "term": "Distance Calculation",
+                "definition": "Measuring the dissimilarity between data points using metrics like Euclidean distance or Hamming distance.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        17,
+                        19
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "k-means algorithm": {
+                "term": "K-means Algorithm",
+                "definition": "Partitioning data into K disjoint subsets by iteratively assigning points to the closest cluster mean and updating the cluster means.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        22
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "cluster evaluation": {
+                "term": "Cluster Evaluation",
+                "definition": "Assessing the quality of clustering results using subjective methods like visual inspection or objective methods like purity and similarity measures.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        37,
+                        44,
+                        45
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "choosing the number of clusters": {
+                "term": "Choosing the Number of Clusters",
+                "definition": "Determining the optimal number of clusters (k) in K-means by analyzing the inertia score and identifying the \"elbow\" point.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        33
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "hamming distance": {
+                "term": "Hamming Distance",
+                "definition": "Counts the number of differing bits between two binary vectors, or mismatches in discrete data.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        19
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "purity": {
+                "term": "Purity",
+                "definition": "$\\text{purity}(C, G) = \\frac{1}{N} \\sum_{i=1}^{K} \\max_{j} N_j, \\quad N_j \\in G_i$, measures the extent to which clusters contain objects of a particular class.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        44
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "similarity matrix correlation": {
+                "term": "Similarity Matrix Correlation",
+                "definition": "Measures the correlation between an \"observed\" similarity matrix based on cluster membership and an \"ideal\" similarity matrix based on class labels.",
+                "lectures": {
+                    "12L2-distance-clusters": [
+                        45
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            }
+        }
+    },
+    "propositional logic and sat": {
+        "group": "Propositional Logic and SAT",
+        "terms": {
+            "propositional logic": {
+                "term": "Propositional Logic",
+                "definition": "A system of logic that deals with propositions (statements that can be true or false) and their relationships using logical connectives.",
+                "lectures": {
+                    "13L1-Logic": [
+                        8
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "logical equivalence": {
+                "term": "Logical Equivalence",
+                "definition": "Two logical statements are logically equivalent if they have the same truth value in all possible models.",
+                "lectures": {
+                    "13L1-Logic": [
+                        12
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "satisfiable": {
+                "term": "Satisfiable",
+                "definition": "A logical formula is satisfiable if there exists at least one model (assignment of truth values to variables) that makes the formula true.",
+                "lectures": {
+                    "13L1-Logic": [
+                        13
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "conjunctive normal form": {
+                "term": "Conjunctive Normal Form (CNF)",
+                "definition": "A logical formula expressed as a conjunction (AND) of clauses, where each clause is a disjunction (OR) of literals (variables or their negations).",
+                "lectures": {
+                    "13L1-Logic": [
+                        16
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "boolean satisfiability problem": {
+                "term": "Boolean Satisfiability Problem (SAT)",
+                "definition": "The problem of determining whether a given propositional formula is satisfiable.",
+                "lectures": {
+                    "13L1-Logic": [
+                        15
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "satisfiability": {
+                "term": "Satisfiability",
+                "definition": "Determining if a propositional logic formula has a model that makes it true.",
+                "lectures": {
+                    "13L1-Logic": [
+                        13,
+                        14,
+                        15,
+                        19
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "converting to cnf": {
+                "term": "Converting to CNF",
+                "definition": "Transforming a propositional logic formula into Conjunctive Normal Form, a standard format for SAT solvers.",
+                "lectures": {
+                    "13L1-Logic": [
+                        16,
+                        17,
+                        18
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "model checking": {
+                "term": "Model Checking",
+                "definition": "Verifying properties of hardware or software systems by encoding their behavior as a SAT problem.",
+                "lectures": {
+                    "13L1-Logic": [
+                        20
+                    ]
+                },
+                "type": "Problem Types"
+            },
+            "sat reduction to 3-sat": {
+                "term": "SAT Reduction to 3-SAT",
+                "definition": "Transform a general SAT problem into a 3-SAT problem by converting each clause with n literals into a conjunction of n-2 clauses with 3 literals each, introducing fresh variables to maintain equisatisfiability.",
+                "lectures": {
+                    "13L1-Logic": [
+                        24
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "satisfiability check": {
+                "term": "Satisfiability Check",
+                "definition": "Determine if a propositional formula is satisfiable by checking if there exists an assignment of truth values to its variables that makes the formula true.",
+                "lectures": {
+                    "13L1-Logic": [
+                        15
+                    ]
+                },
+                "type": "Algorithm Solutions"
+            },
+            "partial assignment": {
+                "term": "Partial Assignment",
+                "definition": "A function that assigns truth values to some, but not necessarily all, Boolean variables.",
+                "lectures": {
+                    "15L2-SAT": [
+                        14
+                    ]
+                },
+                "type": "Key Terms"
+            },
+            "unit propagation": {
+                "term": "Unit Propagation",
+                "definition": "A process that assigns a truth value to a literal in a unit clause, where all other literals are false.",
+                "lectures": {
+                    "15L2-SAT": [
+                        20
+                    ]
+                },
+                "type": "Key Terms"
+            }
+        }
+    }
+}

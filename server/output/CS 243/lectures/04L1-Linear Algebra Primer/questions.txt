@@ -1,0 +1,51 @@
+QUESTION 1
+According to the lecture, what is the dimension of a matrix with $n$ columns and $m$ rows?
+A. $n \times m$
+B. $m \times n$
+C. $n + m$
+D. $n - m$
+E. $m/n$
+
+ANSWER: B
+
+EXPLANATION: 
+A. The dimensions are given as rows by columns, so this is incorrect.
+B. The lecture states that a matrix with $n$ columns and $m$ rows has dimensions $m \times n$.
+C. The dimensions are not the sum of the rows and columns.
+D. The dimensions are not the difference of the rows and columns.
+E. The dimensions are not the ratio of the rows and columns.
+
+QUESTION 2
+If a linear transformation $T$ is defined as $T(x) = Ax$, where $A$ is a matrix, which of the following properties must it satisfy?
+A. $T(u + v) = T(u) + T(v)$ and $T(cu) = cT(u)$
+B. $T(u + v) = T(u) - T(v)$ and $T(cu) = cT(u)$
+C. $T(u + v) = T(u)T(v)$ and $T(cu) = c + T(u)$
+D. $T(u + v) = T(u) + T(v)$ and $T(cu) = c + T(u)$
+E. $T(u + v) = T(u) - T(v)$ and $T(cu) = c - T(u)$
+
+ANSWER: A
+
+EXPLANATION: 
+A. The lecture states that a linear transformation $T$ must satisfy $T(u + v) = T(u) + T(v)$ and $T(cu) = cT(u)$ for all vectors $u, v$ and scalars $c$.
+B. The first property is incorrect, it should be addition not subtraction.
+C. Both properties are incorrect.
+D. The second property is incorrect, it should be multiplication not addition.
+E. Both properties are incorrect.
+
+QUESTION 3
+What is the result of multiplying a matrix $A$ of dimensions $m \times n$ with a matrix $B$ of dimensions $n \times p$?
+A. A matrix of dimensions $n \times m$
+B. A matrix of dimensions $m \times p$
+C. A matrix of dimensions $p \times m$
+D. A matrix of dimensions $n \times p$
+E. The matrices cannot be multiplied
+
+ANSWER: B
+
+EXPLANATION: 
+A. The dimensions are incorrect.
+B. The lecture states that the product of an $m \times n$ matrix $A$ and an $n \times p$ matrix $B$ is an $m \times p$ matrix.
+C. The dimensions are incorrect.
+D. The dimensions are incorrect.
+E. The matrices can be multiplied because the inner dimensions match.
+

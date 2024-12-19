@@ -42,7 +42,6 @@ class SlideProcessor(BaseProcessor):
                     self.conversation_history.extend([
                         AIMessage(content=[{"type": "text", "text": f"SLIDE {page_number}: {response}"}]),
                     ])
-            print("Conversation history: ", self.conversation_history)
         else:
             self.notes = {}
             self.conversation_history = []
@@ -533,7 +532,7 @@ class SlideProcessor(BaseProcessor):
                                     raise Exception("Empty response, retrying...")
                                 
                                 # clean the response
-                                cleaned_response = self.clean_response(current_response, lecture_name, page_number, images_bboxes[str(page_number)]["figures"])
+                                cleaned_response = self.clean_response(current_response, lecture_name, page_number, images_bboxes.get(str(page_number), {}).get("figures", []))
                                 
                                 # replacing conversation history last message with the following
                                 self.conversation_history.pop()
@@ -545,7 +544,7 @@ class SlideProcessor(BaseProcessor):
                                 # save outputs
                                 self.save_notes_json(self.json_output_file)
                                 self.save_notes_text(self.lectures_output_dir)
-                                self.save_figures_png(self.lectures_output_dir, images)
+                                self.save_figures_png(self.lectures_output_dir)
                                 self.save_notes_pdf(self.lectures_output_dir) # after figures are saved
 
                                 print(f"\nProcessed Slide {page_number}: {response[:200]}")
@@ -585,14 +584,17 @@ class SlideProcessor(BaseProcessor):
         with open(file_path, "w") as file:
             json.dump(self.notes, file, indent=4)
             
-    def save_figures_png(self, file_path: str, images: list[Image.Image]):
+    def save_figures_png(self, file_path: str):
         """Save the figures as PNG files.
         Args:
             file_path (str): The path to the output directory.
-            images (list[Image]): The list of images to crop the figures from.
         """
+        pdf_files = [f for f in os.listdir(self.notes_dir) if f.lower().endswith('.pdf')]
         for lecture_name in self.notes.keys():
             os.makedirs(os.path.join(file_path, lecture_name, "figures"), exist_ok=True)
+            pdf_file_index = pdf_files.index(lecture_name + ".pdf")
+            images = convert_from_path(os.path.join(self.notes_dir, pdf_files[pdf_file_index]), dpi=50)
+            images = [self.create_square_image(image) for image in images]
             for page_number, image in zip(sorted(list(self.notes[lecture_name].keys()), key=lambda x: int(x)), images):
                 structured_output = self.notes[lecture_name][page_number]
                 figures = structured_output["figures"]
@@ -601,7 +603,7 @@ class SlideProcessor(BaseProcessor):
                     # add some padding to the figure if handwritten
                     padding = 35 if self.handwritten else 0
                     xmin, ymin, xmax, ymax = max(0, xmin - padding), max(0, ymin - padding), min(image.width, xmax + padding), min(image.height, ymax + padding)
-                    cropped = image.crop((xmin, ymin, xmax, ymax))
+                    cropped = image.crop((min(xmin, xmax), min(ymin, ymax), max(xmin, xmax), max(ymin, ymax)))    
                     cropped.save(os.path.join(file_path, lecture_name, "figures", f"{page_number}.{idx + 1}.png"))
             
     def save_notes_pdf(self, file_path: str):

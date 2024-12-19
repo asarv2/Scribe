@@ -28,11 +28,59 @@ class TermsProcessor(BaseProcessor):
         self.text_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.txt")
         
         self.prompts = {
-        "Key Terms": f"Extract the key terms from the following slides and provide a clear and concise definition for each one. Your key terms should be specific to this lecture, but also make sense as a general topic in the context of {self.course_title}. Respond in the following format: <term>: <definition>. Use LaTeX format when including any math symbols. Do not include any other text, like numbering, intermediate references, or general summaries before/after the term. Do not add any modifiers around the key terms, like textbf'{{}}' or texttt'{{}}'. Avoid using HTML tags or unicode. Do not focus on generating Problem Types or Algorithm Solutions since this will be done in another section. If you are citing a slide, include the slide number at the end of the term. Here is an example: 'Normal Equation: A closed-form solution for the least squares problem in linear regression. It's always solvable, even if the original system of equations is not.<SLIDE 12>'. If citing multiple slides, include the slide numbers at the end of the definition. Here is another example: 'Support Vectors: The data points closest to the hyperplane in an SVM. They are the most influential points in determining the hyperplane.<SLIDE 10><SLIDE 12><SLIDE 17>'.",
+        "Key Terms": f"""Extract the key terms from the following slides and provide a clear and concise definition for each one.
         
-        "Problem Types": f"Extract the key types of problems discussed in the following slides and provide examples if possible. Your problem types should be specific to this lecture, but also make sense as a general problem in the context of {self.course_title}. Respond in the following format: <problem type>: <description>. Use LaTeX format when including any math symbols. Do not include any other text, like numbering, intermediate references, or general summaries before/after the problem type. Do not add any modifiers around the key types of problems, like textbf'{{}}' or texttt'{{}}'. Avoid using HTML tags or unicode. Do not focus on generating Key Terms or Algorithm Solutions since this will be done in another section. If you are citing a slide, include the slide number at the end of the term. Here is an example: 'Verifying Optimality: A method for verifying the optimality of a solution is presented, involving checking the objective function value and the feasibility of the dual solution.<SLIDE 13>'. If citing multiple slides, include the slide numbers at the end of the description. Here is another example: 'Determining the existence of a non-negative solution to `Ax = b`: This problem investigates whether there exists a vector `x` with non-negative components that satisfies the equation `Ax = b`. Several equivalent conditions are presented using a vector `y`. <SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5><SLIDE 6><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11>'.",
+        WHAT YOU SHOULD DO:
+        1. Your key terms should be specific to this lecture, but also make sense as a general topic in the context of {self.course_title}. 
+        2. Respond in the following format: <term>: <definition>. 
+        3. Use LaTeX format when including any math symbols. 
+        4. If you are citing a slide, include the slide number at the end of the term, with the format <SLIDE <slide number>>. 
+        5. Make all terms concise as you can, try to avoid many-word terms. 
+        6. Someone should be able to see how this term is specific to this course, and not just a vague scenario. 
         
-        "Algorithm Solutions": f"Extract the key algorithms to solve the problems from the following slides, and explain their meaning briefly. Your algorithms should be specific to this lecture, but also make sense as a general algorithm solution in the context of {self.course_title}. Using formulas is encouraged. Respond in the following format: <algorithm>: <formula and/or explanation>. Use LaTeX format when including any math symbols. Do not include any other text, like numbering, intermediate references, or general summaries before/after the algorithm. Do not add any modifiers around the key algorithms, like textbf'{{}}' or texttt'{{}}'. Avoid using HTML tags or unicode. Do not focus on generating Key Terms or Problem Types since this will be done in another section. If you are citing a slide, include the slide number at the end of the term. Here is an example: 'Strong Duality: This theorem states that the optimal objective function values of the primal and dual problems are equal.<SLIDE 2>'. If citing multiple slides, include the slide numbers at the end of the term. Here is another example: 'Caratheodory's Theorem: This theorem states that any point in the convex hull of a set in Rm can be expressed as a convex combination of at most m+1 points. This significantly reduces the computational complexity of algorithms dealing with convex hulls, as it limits the number of points that need to be considered.<SLIDE 8><SLIDE 9>'."
+        WHAT YOU SHOULD AVOID:
+        1. Do not include any other text, like numbering, intermediate references, or general summaries before/after the term. 
+        2. Do not add any modifiers around the key terms, like textbf'{{}}' or texttt'{{}}'. 
+        3. Avoid using HTML tags or unicode. 
+        4. Do not focus on generating Problem Types or Algorithm Solutions since this will be done in another section. 
+        5. You should have a maximum of 5 key terms, so make sure they are the most important ones. 
+        Here is a full example: 'Normal Equation: A closed-form solution for the least squares problem in linear regression. It's always solvable, even if the original system of equations is not.<SLIDE 12>'. If citing multiple slides, include the slide numbers at the end of the definition. Here is another example: 'Support Vectors: The data points closest to the hyperplane in an SVM. They are the most influential points in determining the hyperplane.<SLIDE 10><SLIDE 12><SLIDE 17>'.""",
+        
+        "Problem Types": f"""Extract the key types of problems discussed in the following slides and provide examples if possible. 
+        
+        WHAT YOU SHOULD DO:
+        1. Your problem types should be specific to this lecture, but also make sense as a general problem in the context of {self.course_title}. 
+        2. Respond in the following format: <problem type>: <description>. 
+        3. Use LaTeX format when including any math symbols. 
+        4. If you are citing a slide, include the slide number at the end of the term, with the format <SLIDE <slide number>>. 
+        5. Make all problem types concise as you can, try to avoid many-word terms. 
+        6. Someone should be able to see how this problem type is specific to this course, and not just a vague scenario. 
+        7. You should have a maximum of 5 problem types, so make sure they are the most important ones. 
+        
+        WHAT YOU SHOULD AVOID:
+        1. Do not include any other text, like numbering, intermediate references, or general summaries before/after the problem type. 
+        2. Do not add any modifiers around the key types of problems, like textbf'{{}}' or texttt'{{}}'. 
+        3. Avoid using HTML tags or unicode. 
+        4. Do not focus on generating Key Terms or Algorithm Solutions since this will be done in another section. 
+        
+        Here is an example: 'Verifying Optimality: A method for verifying the optimality of a solution is presented, involving checking the objective function value and the feasibility of the dual solution.<SLIDE 13>'. If citing multiple slides, include the slide numbers at the end of the description. Here is another example: 'Determining the existence of a non-negative solution to `Ax = b`: This problem investigates whether there exists a vector `x` with non-negative components that satisfies the equation `Ax = b`. Several equivalent conditions are presented using a vector `y`. <SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5><SLIDE 6><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11>'.""",
+        
+        "Algorithm Solutions": f"""Extract the key algorithms to solve the problems from the following slides, and explain their meaning briefly. 
+        
+        WHAT YOU SHOULD DO:
+        1. Your algorithms should be specific to this lecture, but also make sense as a general algorithm solution in the context of {self.course_title}. 
+        2. Respond in the following format: <algorithm>: <formula and/or explanation>. Use LaTeX format when including any math symbols. 
+        3. If you are citing a slide, include the slide number at the end of the term, with the format <SLIDE <slide number>>. 
+        4. Make all algorithms concise as you can, try to avoid many-word terms. 
+        5. Someone should be able to see how this algorithm is specific to this course, and not just a vague scenario. 
+        6. You should have a maximum of 5 algorithms, so make sure they are the most important ones. 
+        WHAT YOU SHOULD AVOID:
+        1. Do not include any other text, like numbering, intermediate references, or general summaries before/after the algorithm. 
+        2. Do not add any modifiers around the key algorithms, like textbf'{{}}' or texttt'{{}}'. 
+        3. Avoid using HTML tags or unicode. 
+        4. Do not focus on generating Key Terms or Problem Types since this will be done in another section. 
+        
+        Here is an example: 'Strong Duality: This theorem states that the optimal objective function values of the primal and dual problems are equal.<SLIDE 2>'. If citing multiple slides, include the slide numbers at the end of the term. Here is another example: 'Caratheodory's Theorem: This theorem states that any point in the convex hull of a set in Rm can be expressed as a convex combination of at most m+1 points. This significantly reduces the computational complexity of algorithms dealing with convex hulls, as it limits the number of points that need to be considered.<SLIDE 8><SLIDE 9>'."""
         }
         # check if summary.json exists
         if os.path.exists(self.json_output_file) and not self.regenerate:

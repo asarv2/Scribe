@@ -1,0 +1,51 @@
+QUESTION 1
+According to the lecture, what is the primary role of logic in automated reasoning?
+A. To provide a set of rules for learning from data
+B. To serve as a language for expressing assumptions and conclusions
+C. To define the architecture of intelligent agents
+D. To optimize the performance of search algorithms
+E. To create visual representations of data
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because logic is not primarily used for learning from data, but for reasoning.
+B. Answer B is correct because the lecture states that logic is the language of automated reasoning, used to express assumptions and conclusions.
+C. Answer C is incorrect because logic is not used to define the architecture of intelligent agents, but to enable reasoning.
+D. Answer D is incorrect because logic is not used to optimize search algorithms, but to enable reasoning.
+E. Answer E is incorrect because logic is not used to create visual representations of data, but to enable reasoning.
+
+QUESTION 2
+According to the lecture, which of the following is NOT a logical connective used in propositional logic?
+A. Conjunction ($\land$)
+B. Disjunction ($\lor$)
+C. Implication ($\Rightarrow$)
+D. Biconditional ($\Leftrightarrow$)
+E. Quantification ($\forall$)
+
+ANSWER: E
+
+EXPLANATION: 
+A. Answer A is incorrect because conjunction is a logical connective used in propositional logic.
+B. Answer B is incorrect because disjunction is a logical connective used in propositional logic.
+C. Answer C is incorrect because implication is a logical connective used in propositional logic.
+D. Answer D is incorrect because biconditional is a logical connective used in propositional logic.
+E. Answer E is correct because quantification is not a logical connective used in propositional logic, but in predicate logic.
+
+QUESTION 3
+According to the lecture, what does it mean for a propositional logic sentence to be "satisfiable"?
+A. It is true in all possible models.
+B. It is false in all possible models.
+C. It is true in at least one model.
+D. It is equivalent to another sentence.
+E. It contains no logical connectives.
+
+ANSWER: C
+
+EXPLANATION: 
+A. Answer A is incorrect because a sentence that is true in all possible models is considered valid, not just satisfiable.
+B. Answer B is incorrect because a sentence that is false in all possible models is considered unsatisfiable, not satisfiable.
+C. Answer C is correct because a sentence is satisfiable if it is true in at least one model.
+D. Answer D is incorrect because logical equivalence is a different concept from satisfiability.
+E. Answer E is incorrect because satisfiability is a property of sentences that can contain logical connectives.
+

@@ -1,0 +1,51 @@
+QUESTION 1
+According to the lecture, what is the "semantic gap" in the context of image recognition?
+A. The difference in processing speed between humans and computers.
+B. The difference between how humans understand an image and how a computer represents it numerically.
+C. The difference in the number of pixels between high-resolution and low-resolution images.
+D. The difference between the RGB color channels in an image.
+E. The difference between the number of images a human can process versus a computer.
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because the semantic gap is not about processing speed.
+B. Answer B is correct because the semantic gap refers to the difference between the numerical representation of an image by a computer and the human understanding of the image's content.
+C. Answer C is incorrect because the semantic gap is not about image resolution.
+D. Answer D is incorrect because the semantic gap is not about the RGB color channels.
+E. Answer E is incorrect because the semantic gap is not about the number of images processed.
+
+QUESTION 2
+In the context of image classification, what is the purpose of finding "invariant features"?
+A. To find features that are unique to each image.
+B. To find features that change with different lighting conditions.
+C. To find features that remain consistent despite variations in the image, such as changes in object position, size, or orientation.
+D. To find features that are only present in high-resolution images.
+E. To find features that are only present in images with a specific color palette.
+
+ANSWER: C
+
+EXPLANATION: 
+A. Answer A is incorrect because invariant features are not unique to each image, but rather consistent across variations of the same object.
+B. Answer B is incorrect because invariant features should not change with lighting conditions.
+C. Answer C is correct because invariant features are those that remain consistent despite variations in the image.
+D. Answer D is incorrect because invariant features are not specific to high-resolution images.
+E. Answer E is incorrect because invariant features are not specific to a particular color palette.
+
+QUESTION 3
+According to the lecture, what is the main idea behind the "Bag of Features" approach for image representation?
+A. To represent an image as a grid of pixels.
+B. To represent an image as a collection of its constituent features, disregarding their spatial relationships.
+C. To represent an image as a sequence of color values.
+D. To represent an image as a set of geometric shapes.
+E. To represent an image as a set of edges and corners.
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because the Bag of Features approach does not focus on the spatial arrangement of pixels.
+B. Answer B is correct because the Bag of Features approach treats an image as a collection of features, disregarding their spatial arrangement.
+C. Answer C is incorrect because the Bag of Features approach does not focus on color values.
+D. Answer D is incorrect because the Bag of Features approach does not focus on geometric shapes.
+E. Answer E is incorrect because the Bag of Features approach does not focus on edges and corners.
+

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 08:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 11:59
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -685,14 +685,14 @@ I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/1.1.png, id=132, 421.575pt x 190.7125pt>
+2-Convexity/figures/1.1.png, id=245, 391.4625pt x 170.6375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/1.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/1.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-10-22-Convexity/figures/1.1.png  used on input line 90.
-(pdftex.def)             Requested size: 70.46037pt x 31.8736pt.
+(pdftex.def)             Requested size: 70.46037pt x 30.71341pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 91--91
 \T1/lmr/m/n/8 con-nect-ing two
@@ -709,42 +709,42 @@ Underfull \hbox (badness 10000) in paragraph at lines 91--91
  []
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/1.2.png, id=133, 200.75pt x 160.6pt>
+2-Convexity/figures/1.2.png, id=246, 200.75pt x 170.6375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/1.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/1.2.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-10-22-Convexity/figures/1.2.png  used on input line 96.
-(pdftex.def)             Requested size: 70.46037pt x 56.37012pt.
+(pdftex.def)             Requested size: 70.46037pt x 59.89325pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 97--97
 \T1/lmr/m/n/8 con-nect-ing two
  []
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/1.3.png, id=134, 220.825pt x 180.675pt>
+2-Convexity/figures/1.3.png, id=247, 220.825pt x 200.75pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/1.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/1.3.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-10-22-Convexity/figures/1.3.png  used on input line 102.
-(pdftex.def)             Requested size: 70.46037pt x 57.649pt.
+(pdftex.def)             Requested size: 70.46037pt x 64.05444pt.
 
 Underfull \hbox (badness 5403) in paragraph at lines 103--103
 \T1/lmr/m/n/8 an-gle formed by
  []
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-2-Convexity/figures/1.4.png, id=135, 301.125pt x 200.75pt>
+2-Convexity/figures/1.4.png, id=248, 301.125pt x 230.8625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-22-Convexity/figures/1.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-22-Convexity/figures/1.4.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-10-22-Convexity/figures/1.4.png  used on input line 108.
-(pdftex.def)             Requested size: 70.46037pt x 46.97408pt.
+(pdftex.def)             Requested size: 70.46037pt x 54.02019pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 109--109
 []\T1/lmr/bx/n/8 (d) |\T1/lmr/m/n/8 A shaded
@@ -756,8 +756,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 109--109
  []
 
 
-Underfull \hbox (badness 1748) in paragraph at lines 109--109
-\T1/lmr/m/n/8 formed by points
+Underfull \hbox (badness 10000) in paragraph at lines 109--109
+\T1/lmr/m/n/8 formed by four
+ []
+
+
+Underfull \hbox (badness 4543) in paragraph at lines 109--109
+\T1/lmr/m/n/8 points, with the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 109--109
+\T1/lmr/m/n/8 base tri-an-gle
  []
 
 [1
@@ -773,26 +783,7 @@ ing/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.2.pn
 g (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lect
 ures/2024-10-22-Convexity/figures/1.3.png (PNG copy)> </Users/ashoksaravanan/Co
 ding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.4.p
-ng (PNG copy)>]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:119: Missing $ inserted.
-<inserted text> 
-                $
-l.119 ...Thm 10.1} \quad S \text{ is convex } \iff
-                                                   \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:128: Missing $ inserted.
-<inserted text> 
-                $
-l.128 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-[2]
+ng (PNG copy)>] [2]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
 -Convexity/notes.tex:141: Missing $ inserted.
 <inserted text> 
@@ -813,197 +804,378 @@ you left one out. Proceed, with fingers crossed.
 
 [3]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:165: Missing $ inserted.
+-Convexity/notes.tex:167: Missing $ inserted.
 <inserted text> 
                 $
-l.165 ...Thm 10.1} \quad S \text{ is convex } \iff
-                                                   \\
+l.167 \text{pf ``} \implies
+                            \text{'' Suppose } S \text{ is convex.} \\
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:176: Missing $ inserted.
+-Convexity/notes.tex:177: Missing $ inserted.
 <inserted text> 
                 $
-l.176 \subsection
+l.177 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 [4]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:189: Missing $ inserted.
+-Convexity/notes.tex:190: Missing $ inserted.
 <inserted text> 
                 $
-l.189 \underline{Def} \quad S \subseteq
+l.190 \underline{Def} \quad S \subseteq
                                         \mathbb{R}^m, \text{ Convex Hull of ...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:194: Missing $ inserted.
+-Convexity/notes.tex:195: Missing $ inserted.
 <inserted text> 
                 $
-l.194 
+l.195 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 189--194
+Underfull \hbox (badness 10000) in paragraph at lines 190--195
 
  []
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:195: Missing $ inserted.
+-Convexity/notes.tex:196: Missing $ inserted.
 <inserted text> 
                 $
-l.195 \underline{Thm \; 10.2} \quad S \subseteq
-                                                \mathbb{R}^m, \quad Conv(S) ...
+l.196 \underline{Thm 10.2} \quad S \subseteq
+                                             \mathbb{R}^m, \ Conv(S) = \text...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:198: Missing $ inserted.
+-Convexity/notes.tex:199: Missing $ inserted.
 <inserted text> 
                 $
-l.198 \subsection
+l.199 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 [5]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:211: Missing $ inserted.
+-Convexity/notes.tex:212: Missing $ inserted.
 <inserted text> 
                 $
-l.211 \textbf{Thm 10.2} \quad S \subseteq
-                                          \mathbb{R}^m, \quad Conv(S) = \tex...
+l.212 \textbf{Thm 10.2} \quad S \subseteq
+                                          \mathbb{R}^m, \ Conv(S) = \text{co...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:218: Missing $ inserted.
+-Convexity/notes.tex:219: Missing $ inserted.
 <inserted text> 
                 $
-l.218 \subsection
+l.219 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 [6]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:231: Missing $ inserted.
+-Convexity/notes.tex:232: Missing $ inserted.
 <inserted text> 
                 $
-l.231 \textbf{Thm 10.2} \quad S \subseteq
-                                          \mathbb{R}^m, \quad Conv(S) = \tex...
+l.232 \textbf{Thm 10.2} \quad S \subseteq
+                                          \mathbb{R}^m, \ Conv(S) = \text{co...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:240: Missing $ inserted.
+-Convexity/notes.tex:241: Missing $ inserted.
 <inserted text> 
                 $
-l.240 \subsection
+l.241 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-[7]
+[7] [8] [9]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+2-Convexity/figures/10.1.png, id=316, 333.245pt x 204.765pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-22-Convexity/figures/10.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/10.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-22-Convexity/figures/10.1.png  used on input line 320.
+(pdftex.def)             Requested size: 70.46037pt x 43.29248pt.
+
+Underfull \hbox (badness 2538) in paragraph at lines 321--321
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A half-space
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+2-Convexity/figures/10.2.png, id=317, 395.4775pt x 270.00874pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-22-Convexity/figures/10.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/10.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-22-Convexity/figures/10.2.png  used on input line 326.
+(pdftex.def)             Requested size: 70.46037pt x 48.10507pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--327
+[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 In-ter-sec-tion
+ []
+
+
+Underfull \hbox (badness 5417) in paragraph at lines 327--327
+\T1/lmr/m/n/8 of mul-ti-ple half-
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 327--327
+\T1/lmr/m/n/8 spaces form-ing a
+ []
+
+[10 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/10.1.png (PNG copy)> </Users/ashoksaravanan/Coding/Scri
+beLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/10.2.png (PNG 
+copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+2-Convexity/figures/11.1.png, id=324, 343.2825pt x 242.9075pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-22-Convexity/figures/11.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/11.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-22-Convexity/figures/11.1.png  used on input line 350.
+(pdftex.def)             Requested size: 70.46037pt x 49.85565pt.
+
+Underfull \hbox (badness 2538) in paragraph at lines 351--351
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A half-space
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+2-Convexity/figures/11.2.png, id=325, 371.3875pt x 291.0875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-22-Convexity/figures/11.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/11.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-22-Convexity/figures/11.2.png  used on input line 356.
+(pdftex.def)             Requested size: 70.46037pt x 55.2228pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 357--357
+[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 In-ter-sec-tion
+ []
+
+
+Underfull \hbox (badness 5417) in paragraph at lines 357--357
+\T1/lmr/m/n/8 of mul-ti-ple half-
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 357--357
+\T1/lmr/m/n/8 spaces form-ing a
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+2-Convexity/figures/11.3.png, id=326, 351.3125pt x 234.8775pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-22-Convexity/figures/11.3.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/11.3.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-22-Convexity/figures/11.3.png  used on input line 362.
+(pdftex.def)             Requested size: 70.46037pt x 47.10727pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 363--363
+\T1/lmr/m/n/8 within half-space
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+2-Convexity/figures/11.4.png, id=327, 363.3575pt x 311.1625pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-22-Convexity/figures/11.4.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/11.4.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-22-Convexity/figures/11.4.png  used on input line 368.
+(pdftex.def)             Requested size: 70.46037pt x 60.33696pt.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:254: LaTeX Error: \mathbb allowed only in math mode.
+-Convexity/notes.tex:369: Package amsmath Error: \hat allowed only in math mode
+.
 
-See the LaTeX manual or LaTeX Companion for explanation.
+See the amsmath package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.254 ...) \; of \; a \; set \; S \; in \; \mathbb
-                                                  {R}^m \; consists \; of \;...
-
+l.369 ...edron \hat{P} within half-space \hat{H}.}
+                                                  %
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:254: Missing $ inserted.
-<inserted text> 
-                $
-l.254 ... of \; a \; set \; S \; in \; \mathbb{R}^
-                                                  m \; consists \; of \; all...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:264: Missing $ inserted.
-<inserted text> 
-                $
-l.264 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+-Convexity/notes.tex:369: Package amsmath Error: \hat allowed only in math mode
+.
 
-[8]
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:278: LaTeX Error: \mathbb allowed only in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
+See the amsmath package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.278 ...) \; of \; a \; set \; S \; in \; \mathbb
-                                                  {R}^m \; consists \; of \;...
-
+l.369 ...edron \hat{P} within half-space \hat{H}.}
+                                                  %
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:278: Missing $ inserted.
-<inserted text> 
-                $
-l.278 ... of \; a \; set \; S \; in \; \mathbb{R}^
-                                                  m \; consists \; of \; all...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/notes.tex:295: Missing $ inserted.
+-Convexity/notes.tex:369: Package amsmath Error: \hat allowed only in math mode
+.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.369 ...edron \hat{P} within half-space \hat{H}.}
+                                                  %
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/notes.tex:369: Package amsmath Error: \hat allowed only in math mode
+.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.369 ...edron \hat{P} within half-space \hat{H}.}
+                                                  %
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 369--369
+[]\T1/lmr/bx/n/8 (d) |\T1/lmr/m/n/8 Poly-he-dron
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+2-Convexity/figures/11.5.png, id=328, 813.0375pt x 295.1025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-22-Convexity/figures/11.5.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/11.5.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-22-Convexity/figures/11.5.png  used on input line 374.
+(pdftex.def)             Requested size: 70.46037pt x 25.57193pt.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/notes.tex:375: Package amsmath Error: \hat allowed only in math mode
+.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.375 ...t{H} separating polyhedra P and \hat{P}.}
+                                                  %
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/notes.tex:375: Package amsmath Error: \hat allowed only in math mode
+.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.375 ...t{H} separating polyhedra P and \hat{P}.}
+                                                  %
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/notes.tex:375: Package amsmath Error: \hat allowed only in math mode
+.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.375 ...t{H} separating polyhedra P and \hat{P}.}
+                                                  %
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/notes.tex:375: Package amsmath Error: \hat allowed only in math mode
+.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.375 ...t{H} separating polyhedra P and \hat{P}.}
+                                                  %
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[11 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-22-Convexity/figures/11.1.png (PNG copy)> </Users/ashoksaravanan/Coding/Scri
+beLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.2.png (PNG 
+copy)> </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-10-22-Convexity/figures/11.3.png (PNG copy)> </Users/ashoksaravanan/Coding/S
+cribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.4.png (P
+NG copy)> </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures
+/2024-10-22-Convexity/figures/11.5.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/notes.tex:396: Missing $ inserted.
 <inserted text> 
                 $
-l.295 \subsection
+l.396 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-[9] 
+[12]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/notes.tex:415: Missing $ inserted.
+<inserted text> 
+                $
+l.415 LEMMA 10.5. The system $Ax \le
+                                     b$ has no solutions if and only if ther...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[13] [14] [15] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/notes.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `notes.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `notes.out':
-(rerunfilecheck)             Before: 1789D183052E0E7D7EF42D56F012DF6A;3039
-(rerunfilecheck)             After:  FB9CF960FC433AB5BFCCA380FA69010F;3420.
+Package rerunfilecheck Info: File `notes.out' has not changed.
+(rerunfilecheck)             Checksum: 2732A74E2011A70E501EF4B79E2748B8;5778.
  ) 
 Here is how much of TeX's memory you used:
- 14519 strings out of 474116
- 235976 string characters out of 5743682
+ 14642 strings out of 474116
+ 242531 string characters out of 5743682
  1943187 words of memory out of 5000000
- 36569 multiletter control sequences out of 15000+600000
- 619074 words of font info for 80 fonts, out of 8000000 for 9000
+ 36654 multiletter control sequences out of 15000+600000
+ 623337 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,11n,131p,1363b,681s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 83i,11n,131p,1482b,681s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2024/texm
@@ -1015,15 +1187,16 @@ sr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/te
 xlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2024/
 texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2024/texmf-dist/f
 onts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
-ublic/lm/lmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lms
-y10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></u
-sr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/te
-xlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/loca
-l/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on _logs/notes.pdf (9 pages, 383158 bytes).
+ublic/lm/lmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr
+i10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></
+usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/t
+exlive/2024/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2024
+/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/
+2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on _logs/notes.pdf (15 pages, 889893 bytes).
 PDF statistics:
- 308 PDF objects out of 1000 (max. 8388607)
- 252 compressed objects within 3 object streams
- 55 named destinations out of 1000 (max. 500000)
- 277 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 468 PDF objects out of 1000 (max. 8388607)
+ 396 compressed objects within 4 object streams
+ 92 named destinations out of 1000 (max. 500000)
+ 536 words of extra memory for PDF output out of 10000 (max. 10000000)
 

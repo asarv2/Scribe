@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 09:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 12:04
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -685,7 +685,7 @@ you're probably due for more error messages, and you
 might try typing `S' now just to see what is salvageable.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/3.1.png, id=647, 252.945pt x 361.35pt>
+on/figures/3.1.png, id=261, 252.945pt x 361.35pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/3.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -702,7 +702,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 131.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/4.1.png, id=654, 252.945pt x 361.35pt>
+on/figures/4.1.png, id=268, 252.945pt x 361.35pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/4.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -711,7 +711,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/4.1.png  used on input line 141.
 (pdftex.def)             Requested size: 70.46037pt x 100.65901pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/4.2.png, id=655, 745.78625pt x 415.5525pt>
+on/figures/4.2.png, id=269, 745.78625pt x 415.5525pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/4.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -727,7 +727,7 @@ CS 243/lectures/07L2-Vision/figures/4.2.png (PNG copy)>] [5{/usr/local/texlive/
 -dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/fonts/en
 c/dvips/lm/lm-mathex.enc}]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/6.1.png, id=672, 252.945pt x 361.35pt>
+on/figures/6.1.png, id=286, 252.945pt x 361.35pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/6.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -736,7 +736,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/6.1.png  used on input line 185.
 (pdftex.def)             Requested size: 70.46037pt x 100.65901pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/6.2.png, id=673, 614.295pt x 415.5525pt>
+on/figures/6.2.png, id=287, 614.295pt x 415.5525pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/6.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -745,7 +745,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/6.2.png  used on input line 191.
 (pdftex.def)             Requested size: 70.46037pt x 47.66388pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/6.3.png, id=674, 84.315pt x 83.31125pt>
+on/figures/6.3.png, id=288, 84.315pt x 83.31125pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/6.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -759,7 +759,7 @@ er/output/CS 243/lectures/07L2-Vision/figures/6.2.png (PNG copy)> </Users/ashok
 saravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures/6.
 3.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/7.1.png, id=680, 477.785pt x 257.96375pt>
+on/figures/7.1.png, id=294, 477.785pt x 257.96375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/7.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -768,7 +768,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/7.1.png  used on input line 217.
 (pdftex.def)             Requested size: 70.46037pt x 38.03947pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/7.2.png, id=681, 457.71pt x 257.96375pt>
+on/figures/7.2.png, id=295, 457.71pt x 257.96375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/7.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -781,7 +781,7 @@ S 243/lectures/07L2-Vision/figures/7.2.png  used on input line 223.
 ision/figures/7.1.png (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/serve
 r/output/CS 243/lectures/07L2-Vision/figures/7.2.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/8.1.png, id=688, 432.61626pt x 261.97874pt>
+on/figures/8.1.png, id=302, 432.61626pt x 261.97874pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/8.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -790,7 +790,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/8.1.png  used on input line 243.
 (pdftex.def)             Requested size: 70.46037pt x 42.66898pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/8.2.png, id=689, 428.60126pt x 261.97874pt>
+on/figures/8.2.png, id=303, 428.60126pt x 261.97874pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/8.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -802,7 +802,7 @@ S 243/lectures/07L2-Vision/figures/8.2.png  used on input line 249.
 Vision/figures/8.1.png (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/serv
 er/output/CS 243/lectures/07L2-Vision/figures/8.2.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/9.1.png, id=695, 838.13126pt x 249.93375pt>
+on/figures/9.1.png, id=309, 838.13126pt x 249.93375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/9.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -813,7 +813,7 @@ S 243/lectures/07L2-Vision/figures/9.1.png  used on input line 269.
  [9 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
 Vision/figures/9.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/10.1.png, id=701, 707.64375pt x 286.06876pt>
+on/figures/10.1.png, id=315, 707.64375pt x 286.06876pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/10.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -824,7 +824,7 @@ S 243/lectures/07L2-Vision/figures/10.1.png  used on input line 289.
  [10 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/10.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/11.1.png, id=707, 252.945pt x 361.35pt>
+on/figures/11.1.png, id=322, 252.945pt x 361.35pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/11.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -835,7 +835,7 @@ S 243/lectures/07L2-Vision/figures/11.1.png  used on input line 314.
  [11 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/11.1.png (PNG copy)>] [12]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/13.1.png, id=719, 177.66376pt x 314.17375pt>
+on/figures/13.1.png, id=333, 177.66376pt x 314.17375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/13.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -844,7 +844,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/13.1.png  used on input line 351.
 (pdftex.def)             Requested size: 70.46037pt x 124.60301pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/13.2.png, id=720, 299.1175pt x 341.275pt>
+on/figures/13.2.png, id=334, 299.1175pt x 341.275pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/13.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -856,7 +856,7 @@ S 243/lectures/07L2-Vision/figures/13.2.png  used on input line 357.
 -Vision/figures/13.1.png (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/se
 rver/output/CS 243/lectures/07L2-Vision/figures/13.2.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/14.1.png, id=727, 597.23125pt x 455.7025pt>
+on/figures/14.1.png, id=341, 597.23125pt x 455.7025pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/14.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -868,7 +868,7 @@ S 243/lectures/07L2-Vision/figures/14.1.png  used on input line 377.
 [14 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
 Vision/figures/14.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/15.1.png, id=733, 663.47874pt x 208.78pt>
+on/figures/15.1.png, id=347, 663.47874pt x 208.78pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/15.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -877,7 +877,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/15.1.png  used on input line 397.
 (pdftex.def)             Requested size: 70.46037pt x 22.16943pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/15.2.png, id=734, 663.47874pt x 207.77625pt>
+on/figures/15.2.png, id=348, 663.47874pt x 207.77625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/15.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -889,7 +889,7 @@ S 243/lectures/07L2-Vision/figures/15.2.png  used on input line 403.
 -Vision/figures/15.1.png (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/se
 rver/output/CS 243/lectures/07L2-Vision/figures/15.2.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/16.1.png, id=740, 268.00125pt x 365.365pt>
+on/figures/16.1.png, id=354, 268.00125pt x 365.365pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/16.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -898,7 +898,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/16.1.png  used on input line 425.
 (pdftex.def)             Requested size: 70.46037pt x 96.05748pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/16.10.png, id=741, 44.165pt x 96.36pt>
+on/figures/16.10.png, id=355, 44.165pt x 96.36pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/16.10.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -907,7 +907,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/16.10.png  used on input line 431.
 (pdftex.def)             Requested size: 70.46037pt x 153.7336pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/16.11.png, id=742, 44.165pt x 96.36pt>
+on/figures/16.11.png, id=356, 44.165pt x 96.36pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/16.11.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -916,7 +916,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/16.11.png  used on input line 437.
 (pdftex.def)             Requested size: 70.46037pt x 153.7336pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/16.12.png, id=743, 44.165pt x 96.36pt>
+on/figures/16.12.png, id=357, 44.165pt x 96.36pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/16.12.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -925,7 +925,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/16.12.png  used on input line 443.
 (pdftex.def)             Requested size: 70.46037pt x 153.7336pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/16.13.png, id=744, 46.1725pt x 58.2175pt>
+on/figures/16.13.png, id=358, 46.1725pt x 58.2175pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/16.13.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -942,7 +942,7 @@ S 243/lectures/07L2-Vision/figures/16.12.png (PNG copy)> </Users/ashoksaravanan
 /Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures/16.13.png (
 PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/17.1.png, id=750, 529.98pt x 361.35pt>
+on/figures/17.1.png, id=368, 529.98pt x 361.35pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/17.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1135,7 +1135,7 @@ Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/18.1.png, id=756, 497.86pt x 319.1925pt>
+on/figures/18.1.png, id=378, 497.86pt x 319.1925pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/18.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1156,7 +1156,7 @@ If you're in the wrong mode, you might be able to
 return to the right one by typing `I}' or `I$' or `I\par'.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/19.1.png, id=762, 177.66376pt x 315.1775pt>
+on/figures/19.1.png, id=388, 177.66376pt x 315.1775pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/19.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1178,7 +1178,7 @@ you're probably due for more error messages, and you
 might try typing `S' now just to see what is salvageable.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/20.1.png, id=769, 563.10374pt x 215.80624pt>
+on/figures/20.1.png, id=399, 563.10374pt x 215.80624pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/20.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1187,7 +1187,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/20.1.png  used on input line 584.
 (pdftex.def)             Requested size: 70.46037pt x 27.00204pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/20.2.png, id=770, 571.13374pt x 216.81pt>
+on/figures/20.2.png, id=400, 571.13374pt x 216.81pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/20.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1196,7 +1196,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/20.2.png  used on input line 590.
 (pdftex.def)             Requested size: 70.46037pt x 26.7472pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/20.3.png, id=771, 565.11125pt x 208.78pt>
+on/figures/20.3.png, id=401, 565.11125pt x 208.78pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/20.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1463,7 +1463,7 @@ If you're in the wrong mode, you might be able to
 return to the right one by typing `I}' or `I$' or `I\par'.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/22.1.png, id=783, 177.66376pt x 315.1775pt>
+on/figures/22.1.png, id=421, 177.66376pt x 315.1775pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/22.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1474,7 +1474,7 @@ S 243/lectures/07L2-Vision/figures/22.1.png  used on input line 658.
 [22 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
 Vision/figures/22.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/23.1.png, id=789, 389.455pt x 243.91125pt>
+on/figures/23.1.png, id=431, 389.455pt x 243.91125pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/23.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1485,7 +1485,7 @@ S 243/lectures/07L2-Vision/figures/23.1.png  used on input line 682.
  [23 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/23.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/24.1.png, id=795, 363.3575pt x 496.85625pt>
+on/figures/24.1.png, id=442, 363.3575pt x 496.85625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/24.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1494,7 +1494,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/24.1.png  used on input line 700.
 (pdftex.def)             Requested size: 70.46037pt x 96.3445pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/24.10.png, id=796, 143.53625pt x 85.31876pt>
+on/figures/24.10.png, id=443, 143.53625pt x 85.31876pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/24.10.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1503,7 +1503,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/24.10.png  used on input line 706.
 (pdftex.def)             Requested size: 70.46037pt x 41.88335pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/24.11.png, id=797, 169.63374pt x 101.37875pt>
+on/figures/24.11.png, id=444, 169.63374pt x 101.37875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/24.11.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1512,7 +1512,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/24.11.png  used on input line 712.
 (pdftex.def)             Requested size: 70.46037pt x 42.1085pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/24.12.png, id=798, 77.28876pt x 183.68625pt>
+on/figures/24.12.png, id=445, 77.28876pt x 183.68625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/24.12.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1521,7 +1521,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/24.12.png  used on input line 718.
 (pdftex.def)             Requested size: 70.46037pt x 167.47144pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/24.13.png, id=799, 60.225pt x 262.9825pt>
+on/figures/24.13.png, id=446, 60.225pt x 262.9825pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/24.13.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1539,7 +1539,7 @@ hoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures
 Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures/24.13.png (P
 NG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/25.1.png, id=806, 312.16624pt x 205.76875pt>
+on/figures/25.1.png, id=456, 312.16624pt x 205.76875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/25.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1561,7 +1561,7 @@ you're probably due for more error messages, and you
 might try typing `S' now just to see what is salvageable.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/26.1.png, id=813, 241.90375pt x 331.2375pt>
+on/figures/26.1.png, id=467, 241.90375pt x 331.2375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/26.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1570,7 +1570,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/26.1.png  used on input line 764.
 (pdftex.def)             Requested size: 70.46037pt x 96.48096pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/26.10.png, id=814, 71.26625pt x 43.16125pt>
+on/figures/26.10.png, id=468, 71.26625pt x 43.16125pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/26.10.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1579,7 +1579,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/26.10.png  used on input line 770.
 (pdftex.def)             Requested size: 70.46037pt x 42.67311pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/26.11.png, id=815, 70.2625pt x 42.1575pt>
+on/figures/26.11.png, id=469, 70.2625pt x 42.1575pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/26.11.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1588,7 +1588,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/26.11.png  used on input line 776.
 (pdftex.def)             Requested size: 70.46037pt x 42.2783pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/26.12.png, id=816, 60.225pt x 146.5475pt>
+on/figures/26.12.png, id=470, 60.225pt x 146.5475pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/26.12.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1597,7 +1597,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/26.12.png  used on input line 782.
 (pdftex.def)             Requested size: 70.46037pt x 171.4688pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/26.13.png, id=817, 39.14626pt x 168.63pt>
+on/figures/26.13.png, id=471, 39.14626pt x 168.63pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/26.13.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1614,7 +1614,7 @@ hoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures
 Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures/26.13.png (P
 NG copy)>] [27]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/28.1.png, id=828, 188.705pt x 187.70125pt>
+on/figures/28.1.png, id=490, 188.705pt x 187.70125pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/28.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1623,7 +1623,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/28.1.png  used on input line 829.
 (pdftex.def)             Requested size: 70.46037pt x 70.0842pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/28.10.png, id=829, 21.07875pt x 21.07875pt>
+on/figures/28.10.png, id=491, 21.07875pt x 21.07875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/28.10.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1632,7 +1632,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/28.10.png  used on input line 835.
 (pdftex.def)             Requested size: 70.46037pt x 70.46219pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/28.11.png, id=830, 21.07875pt x 21.07875pt>
+on/figures/28.11.png, id=492, 21.07875pt x 21.07875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/28.11.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1641,7 +1641,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/28.11.png  used on input line 841.
 (pdftex.def)             Requested size: 70.46037pt x 70.46219pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/28.12.png, id=831, 21.07875pt x 21.07875pt>
+on/figures/28.12.png, id=493, 21.07875pt x 21.07875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/28.12.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1650,7 +1650,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/28.12.png  used on input line 847.
 (pdftex.def)             Requested size: 70.46037pt x 70.46219pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/28.2.png, id=832, 188.705pt x 187.70125pt>
+on/figures/28.2.png, id=494, 188.705pt x 187.70125pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/28.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1667,7 +1667,7 @@ S 243/lectures/07L2-Vision/figures/28.12.png (PNG copy)> </Users/ashoksaravanan
 /Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures/28.2.png (P
 NG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/29.1.png, id=838, 486.81876pt x 398.48875pt>
+on/figures/29.1.png, id=504, 486.81876pt x 398.48875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/29.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1678,7 +1678,7 @@ S 243/lectures/07L2-Vision/figures/29.1.png  used on input line 871.
  [29 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/29.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/30.1.png, id=844, 504.88625pt x 323.2075pt>
+on/figures/30.1.png, id=514, 504.88625pt x 323.2075pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/30.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1687,7 +1687,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/30.1.png  used on input line 900.
 (pdftex.def)             Requested size: 70.46037pt x 45.10571pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/30.2.png, id=845, 63.23625pt x 81.30376pt>
+on/figures/30.2.png, id=515, 63.23625pt x 81.30376pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/30.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1699,7 +1699,7 @@ S 243/lectures/07L2-Vision/figures/30.2.png  used on input line 906.
 -Vision/figures/30.1.png (PNG copy)> </Users/ashoksaravanan/Coding/ScribeLec/se
 rver/output/CS 243/lectures/07L2-Vision/figures/30.2.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/31.1.png, id=851, 529.98pt x 361.35pt>
+on/figures/31.1.png, id=525, 529.98pt x 361.35pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/31.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1710,7 +1710,7 @@ S 243/lectures/07L2-Vision/figures/31.1.png  used on input line 924.
  [31 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/31.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/32.1.png, id=858, 497.86pt x 319.1925pt>
+on/figures/32.1.png, id=536, 497.86pt x 319.1925pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/32.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1721,7 +1721,7 @@ S 243/lectures/07L2-Vision/figures/32.1.png  used on input line 942.
  [32 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/32.1.png (PNG copy)>] [33] [34]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/35.1.png, id=874, 159.59625pt x 119.44624pt>
+on/figures/35.1.png, id=564, 159.59625pt x 119.44624pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/35.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1730,7 +1730,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/35.1.png  used on input line 998.
 (pdftex.def)             Requested size: 70.46037pt x 52.7351pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/35.2.png, id=875, 159.59625pt x 119.44624pt>
+on/figures/35.2.png, id=565, 159.59625pt x 119.44624pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/35.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1739,7 +1739,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/35.2.png  used on input line 1004.
 (pdftex.def)             Requested size: 70.46037pt x 52.7351pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/35.3.png, id=876, 158.5925pt x 119.44624pt>
+on/figures/35.3.png, id=566, 158.5925pt x 119.44624pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/35.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1748,7 +1748,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/35.3.png  used on input line 1010.
 (pdftex.def)             Requested size: 70.46037pt x 53.06865pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/35.4.png, id=877, 159.59625pt x 119.44624pt>
+on/figures/35.4.png, id=567, 159.59625pt x 119.44624pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/35.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1757,7 +1757,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/35.4.png  used on input line 1016.
 (pdftex.def)             Requested size: 70.46037pt x 52.7351pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/35.5.png, id=878, 159.59625pt x 120.45pt>
+on/figures/35.5.png, id=568, 159.59625pt x 120.45pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/35.5.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1774,7 +1774,7 @@ hoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures
 ding/ScribeLec/server/output/CS 243/lectures/07L2-Vision/figures/35.5.png (PNG 
 copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/36.1.png, id=884, 349.305pt x 436.63126pt>
+on/figures/36.1.png, id=579, 349.305pt x 436.63126pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/36.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1785,7 +1785,7 @@ S 243/lectures/07L2-Vision/figures/36.1.png  used on input line 1054.
  [36 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/36.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/37.1.png, id=891, 561.09625pt x 430.60875pt>
+on/figures/37.1.png, id=589, 561.09625pt x 430.60875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/37.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1801,7 +1801,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1094--1098
 
 [38]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/39.1.png, id=903, 321.2pt x 233.87375pt>
+on/figures/39.1.png, id=609, 321.2pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/39.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1810,7 +1810,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/39.1.png  used on input line 1122.
 (pdftex.def)             Requested size: 70.46037pt x 51.30249pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/39.2.png, id=904, 321.2pt x 233.87375pt>
+on/figures/39.2.png, id=610, 321.2pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/39.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1819,7 +1819,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/39.2.png  used on input line 1128.
 (pdftex.def)             Requested size: 70.46037pt x 51.30249pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/39.3.png, id=905, 321.2pt x 233.87375pt>
+on/figures/39.3.png, id=611, 321.2pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/39.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1828,7 +1828,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/39.3.png  used on input line 1134.
 (pdftex.def)             Requested size: 70.46037pt x 51.30249pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/39.4.png, id=906, 321.2pt x 233.87375pt>
+on/figures/39.4.png, id=612, 321.2pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/39.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1837,7 +1837,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/39.4.png  used on input line 1140.
 (pdftex.def)             Requested size: 70.46037pt x 51.30249pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/39.5.png, id=907, 321.2pt x 233.87375pt>
+on/figures/39.5.png, id=613, 321.2pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/39.5.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1891,7 +1891,7 @@ the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/40.1.png, id=913, 320.19624pt x 233.87375pt>
+on/figures/40.1.png, id=623, 320.19624pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/40.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1900,7 +1900,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/40.1.png  used on input line 1169.
 (pdftex.def)             Requested size: 70.46037pt x 51.46307pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/41.1.png, id=914, 320.19624pt x 233.87375pt>
+on/figures/41.1.png, id=624, 320.19624pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/41.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1909,7 +1909,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/41.1.png  used on input line 1192.
 (pdftex.def)             Requested size: 70.46037pt x 51.46307pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/41.2.png, id=915, 320.19624pt x 233.87375pt>
+on/figures/41.2.png, id=625, 320.19624pt x 233.87375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/41.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1918,7 +1918,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/41.2.png  used on input line 1198.
 (pdftex.def)             Requested size: 70.46037pt x 51.46307pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/48.1.png, id=916, 339.2675pt x 329.23pt>
+on/figures/48.1.png, id=626, 339.2675pt x 329.23pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/48.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1927,7 +1927,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/48.1.png  used on input line 1295.
 (pdftex.def)             Requested size: 70.46037pt x 68.37172pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/48.2.png, id=917, 337.26pt x 329.23pt>
+on/figures/48.2.png, id=627, 337.26pt x 329.23pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/48.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1936,7 +1936,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/48.2.png  used on input line 1301.
 (pdftex.def)             Requested size: 70.46037pt x 68.77863pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/50.1.png, id=918, 153.57375pt x 152.57pt>
+on/figures/50.1.png, id=628, 153.57375pt x 152.57pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/50.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1945,7 +1945,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/50.1.png  used on input line 1332.
 (pdftex.def)             Requested size: 70.46037pt x 69.99913pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/50.2.png, id=919, 18.0675pt x 54.2025pt>
+on/figures/50.2.png, id=629, 18.0675pt x 54.2025pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/50.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1954,7 +1954,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/50.2.png  used on input line 1338.
 (pdftex.def)             Requested size: 70.46037pt x 211.43849pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/50.3.png, id=920, 152.57pt x 153.57375pt>
+on/figures/50.3.png, id=630, 152.57pt x 153.57375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/50.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1963,7 +1963,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/50.3.png  used on input line 1344.
 (pdftex.def)             Requested size: 70.46037pt x 70.92598pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/51.1.png, id=921, 154.5775pt x 152.57pt>
+on/figures/51.1.png, id=631, 154.5775pt x 152.57pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/51.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1972,7 +1972,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/51.1.png  used on input line 1368.
 (pdftex.def)             Requested size: 70.46037pt x 69.5475pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/51.2.png, id=922, 153.57375pt x 152.57pt>
+on/figures/51.2.png, id=632, 153.57375pt x 152.57pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/51.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -1981,7 +1981,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/51.2.png  used on input line 1374.
 (pdftex.def)             Requested size: 70.46037pt x 69.99913pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/52.1.png, id=923, 624.3325pt x 359.3425pt>
+on/figures/52.1.png, id=633, 624.3325pt x 359.3425pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/52.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2020,7 +2020,7 @@ You may provide a definition with
 \DeclareUnicodeCharacter 
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/53.1.png, id=924, 205.76875pt x 178.6675pt>
+on/figures/53.1.png, id=634, 205.76875pt x 178.6675pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/53.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2029,7 +2029,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/53.1.png  used on input line 1410.
 (pdftex.def)             Requested size: 70.46037pt x 61.17961pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/53.2.png, id=925, 205.76875pt x 179.67125pt>
+on/figures/53.2.png, id=635, 205.76875pt x 179.67125pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/53.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2038,7 +2038,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/53.2.png  used on input line 1416.
 (pdftex.def)             Requested size: 70.46037pt x 61.52332pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/53.3.png, id=926, 200.75pt x 178.6675pt>
+on/figures/53.3.png, id=636, 200.75pt x 178.6675pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/53.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2047,7 +2047,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/53.3.png  used on input line 1422.
 (pdftex.def)             Requested size: 70.46037pt x 62.71176pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/53.4.png, id=927, 311.1625pt x 178.6675pt>
+on/figures/53.4.png, id=637, 311.1625pt x 178.6675pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/53.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2056,7 +2056,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/53.4.png  used on input line 1428.
 (pdftex.def)             Requested size: 70.46037pt x 40.45744pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/53.5.png, id=928, 311.1625pt x 178.6675pt>
+on/figures/53.5.png, id=638, 311.1625pt x 178.6675pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/53.5.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2065,7 +2065,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/53.5.png  used on input line 1434.
 (pdftex.def)             Requested size: 70.46037pt x 40.45744pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/54.1.png, id=929, 370.38374pt x 321.2pt>
+on/figures/54.1.png, id=639, 370.38374pt x 321.2pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/54.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2074,7 +2074,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/54.1.png  used on input line 1452.
 (pdftex.def)             Requested size: 70.46037pt x 61.10214pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/54.2.png, id=930, 370.38374pt x 322.20375pt>
+on/figures/54.2.png, id=640, 370.38374pt x 322.20375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/54.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2083,7 +2083,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/54.2.png  used on input line 1458.
 (pdftex.def)             Requested size: 70.46037pt x 61.29309pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/55.1.png, id=931, 18.0675pt x 54.2025pt>
+on/figures/55.1.png, id=641, 18.0675pt x 54.2025pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/55.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2092,7 +2092,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/55.1.png  used on input line 1476.
 (pdftex.def)             Requested size: 70.46037pt x 211.43849pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/56.1.png, id=932, 154.5775pt x 152.57pt>
+on/figures/56.1.png, id=642, 154.5775pt x 152.57pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/56.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2101,7 +2101,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/56.1.png  used on input line 1494.
 (pdftex.def)             Requested size: 70.46037pt x 69.5475pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/56.2.png, id=933, 37.13875pt x 123.46124pt>
+on/figures/56.2.png, id=643, 37.13875pt x 123.46124pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/56.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2110,7 +2110,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/56.2.png  used on input line 1500.
 (pdftex.def)             Requested size: 70.46037pt x 234.2698pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/56.3.png, id=934, 34.1275pt x 125.46875pt>
+on/figures/56.3.png, id=644, 34.1275pt x 125.46875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/56.3.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2119,7 +2119,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/56.3.png  used on input line 1506.
 (pdftex.def)             Requested size: 70.46037pt x 259.06198pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/56.4.png, id=935, 15.05624pt x 44.165pt>
+on/figures/56.4.png, id=645, 15.05624pt x 44.165pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/56.4.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2128,7 +2128,7 @@ Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
 S 243/lectures/07L2-Vision/figures/56.4.png  used on input line 1512.
 (pdftex.def)             Requested size: 70.46037pt x 206.70407pt.
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visi
-on/figures/56.5.png, id=936, 154.5775pt x 154.5775pt>
+on/figures/56.5.png, id=646, 154.5775pt x 154.5775pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2
 -Vision/figures/56.5.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-
@@ -2143,9 +2143,18 @@ enddocument/afterlastpage: lastpage setting LastPage.
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-Package rerunfilecheck Info: File `notes.out' has not changed.
-(rerunfilecheck)             Checksum: ECE4ED3B56391BA55603898FC1B7773F;15267.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `notes.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `notes.out':
+(rerunfilecheck)             Before: 2732A74E2011A70E501EF4B79E2748B8;5778
+(rerunfilecheck)             After:  ECE4ED3B56391BA55603898FC1B7773F;15267.
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/07L2-Visio
 n/notes.tex:1525: You can't use `\end' in internal vertical mode.
 \enddocument ...cument/end}\deadcycles \z@ \@@end 
@@ -2165,10 +2174,10 @@ return to the right one by typing `I}' or `I$' or `I\par'.
 
  
 Here is how much of TeX's memory you used:
- 15482 strings out of 474116
- 302579 string characters out of 5743682
+ 15386 strings out of 474116
+ 301067 string characters out of 5743682
  1972187 words of memory out of 5000000
- 37349 multiletter control sequences out of 15000+600000
+ 37253 multiletter control sequences out of 15000+600000
  613466 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  83i,11n,131p,2043b,720s stack positions out of 10000i,1000n,20000p,200000b,200000s

@@ -1,0 +1,51 @@
+QUESTION 1
+According to the lecture, what was the main goal of the 1956 Dartmouth summer research project?
+A. To develop a computer that could play chess.
+B. To create a machine that could simulate any aspect of learning or intelligence.
+C. To build a robot that could perform physical tasks.
+D. To design a new programming language for AI.
+E. To study the human brain and its functions.
+
+ANSWER: B
+
+EXPLANATION: 
+A. While game playing is a part of AI, the Dartmouth project's goal was broader than just chess.
+B. The Dartmouth project aimed to explore the possibility of simulating any aspect of learning or intelligence with a machine.
+C. The Dartmouth project focused on cognitive simulation, not physical robotics.
+D. The project's goal was not to create a new programming language, but to explore the possibility of AI.
+E. The project focused on simulating intelligence, not studying the human brain directly.
+
+QUESTION 2
+Which of the following best describes the Turing Test?
+A. A test to measure a machine's ability to perform complex calculations.
+B. A test to determine if a machine can exhibit intelligent behavior indistinguishable from a human.
+C. A test to evaluate a machine's physical capabilities.
+D. A test to assess a machine's ability to learn from data.
+E. A test to measure a machine's processing speed.
+
+ANSWER: B
+
+EXPLANATION: 
+A. The Turing Test is not about computational power, but about intelligent behavior.
+B. The Turing Test is designed to see if a machine can behave in a way that is indistinguishable from a human.
+C. The Turing Test focuses on cognitive abilities, not physical capabilities.
+D. While learning is a part of AI, the Turing Test is not specifically about learning from data.
+E. The Turing Test is not about processing speed, but about the quality of responses.
+
+QUESTION 3
+According to the lecture, what is a key limitation of using search algorithms alone for complex games like chess or Go?
+A. Search algorithms are too slow to be effective.
+B. The search space is too large to explore exhaustively.
+C. Search algorithms cannot handle uncertainty in game states.
+D. Search algorithms are not compatible with machine learning techniques.
+E. Search algorithms require too much memory to store game states.
+
+ANSWER: B
+
+EXPLANATION: 
+A. While speed is a factor, the primary limitation is the size of the search space.
+B. The lecture emphasizes that the search space for complex games is too vast to explore completely, making brute-force search infeasible.
+C. Search algorithms can handle uncertainty, but the size of the search space is the main issue.
+D. Search algorithms can be combined with machine learning, but search alone is insufficient.
+E. Memory is a factor, but the size of the search space is the main limitation.
+

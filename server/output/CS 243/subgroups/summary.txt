@@ -1,0 +1,185 @@
+Game AI
+  AI & Machine Learning Fundamentals
+    dartmouth workshop
+    turing test
+    reinforcement learning
+    loss function minimization
+    gradient calculation
+    supervised learning
+    unsupervised learning
+  Game AI & Search
+    game tree
+    minimax
+    game tree search
+    monte carlo tree search
+  Algorithmic & Computational Foundations
+    computational complexity
+    algorithm design
+    combinatorial design
+  AI Evaluation & Security
+    adversarial attacks
+    model interpretability
+  AI Ethics & Societal Impact
+    ethical bias
+    data privacy
+    algorithmic bias
+    fairness in ai
+    bias mitigation
+  AI Planning & Reasoning
+    planning as sat
+    sat encoding for planning
+    model checking with sat
+    model generator
+    general inference engine
+  Recursion & Problem Solving
+    recursion
+    base case
+    recursive case
+    structural recursion
+    recursive problem solving
+Search Algorithms
+  Search Representation
+    search space
+    search state
+    state space representation
+    abstraction in search
+    state space
+    successor function
+    abstraction
+    problem instance
+  Search Algorithms
+    graph search
+  Search Optimization
+    redundant state removal
+Image Processing
+  Optimization Methods
+    computational complexity
+    algorithm design
+    loss function minimization
+    gradient calculation
+  Machine Learning Paradigms
+    adversarial attacks
+    reinforcement learning
+    image classification
+    supervised learning
+    unsupervised learning
+  Computer Vision Concepts
+    semantic gap
+  Image Feature Extraction
+    invariant features
+    bag of features
+    visual words
+    image invariance
+    image robustness
+    visual vocabulary creation
+    edge detection
+    image gradient
+    canny edge detector
+    harris corner detector
+    gaussian pyramid
+    image derivative calculation
+    edge characterization
+    corner detection
+    image gradient calculation
+    gaussian pyramid construction
+  Image Processing Techniques
+    image noise reduction
+    moving average filter
+    weighted moving average
+    image sharpening
+Linear Models
+  Linear Model Extensions
+    perceptron
+    perceptron structure
+    extending linear models
+    multiple linear regression
+  Linear Model Training
+    derivative of sigmoid function
+    perceptron algorithm
+    logistic regression update
+    regularized linear regression
+  Linear Model Foundations
+    linear separability
+    linear regression model
+  Model Infrastructure
+    model generator
+    general inference engine
+Linear Algebra
+  Matrix Operations
+    matrix
+    matrix inverse
+    matrix multiplication
+    matrix transposition
+    solving linear equations with matrix inverses
+    matrix transformation
+  Linear Algebra Applications
+    linear transformation
+    matrix representation of linear equations
+  SAT Based Problem Solving
+    planning as sat
+    combinatorial design
+    sat encoding for planning
+    model checking with sat
+Model Evaluation and Tuning
+  Model Evaluation
+    model selection
+    generalization
+    overfitting
+    training error
+    test error
+    model complexity selection
+    training/test data split
+    s-fold cross-validation
+  Model Optimization
+    regularization
+    hyperparameter tuning
+  Model Behavior Analysis
+    diagnosing overfitting/underfitting
+    learning curve analysis
+    diagnosing overfitting
+Convolutional Neural Networks
+  CNN Architecture
+    convolutional neural network
+    imagenet
+    pooling layer
+  Convolutional Layer Mechanics
+    feature map
+    sparse connectivity
+    convolutional layer operation
+    multidimensional convolution
+    sparse connectivity in cnns
+    parameter sharing in convolution
+    pooling layer operation
+    convolution operation
+    parameter sharing
+Clustering
+  matrix factorization
+  dimensionality reduction
+  singular value decomposition
+  principal component analysis
+  latent factors
+  recommender system prediction
+  bias modeling
+  clustering
+  euclidean distance
+  k-means
+  distance calculation
+  k-means algorithm
+  cluster evaluation
+  choosing the number of clusters
+  hamming distance
+  purity
+  similarity matrix correlation
+Propositional Logic and SAT
+  propositional logic
+  logical equivalence
+  satisfiable
+  conjunctive normal form
+  boolean satisfiability problem
+  satisfiability
+  converting to cnf
+  model checking
+  sat reduction to 3-sat
+  satisfiability check
+  partial assignment
+  unit propagation

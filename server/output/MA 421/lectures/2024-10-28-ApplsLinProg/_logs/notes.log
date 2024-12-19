@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  16 DEC 2024 10:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 11:59
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -466,67 +466,84 @@ Package: thm-restate 2023/05/04 v0.76
 Package: thm-amsthm 2023/05/04 v0.76
 \thmt@style@headstyle=\toks37
 ))
-Package hyperref Info: Option `colorlinks' set `true' on input line 30.
-Package hyperref Info: Option `breaklinks' set `true' on input line 30.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count298
+\float@exts=\toks38
+\float@box=\box55
+\@float@everytoks=\toks39
+\@floatcapt=\box56
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen173
+\captionmargin=\dimen174
+\caption@leftmargin=\dimen175
+\caption@rightmargin=\dimen176
+\caption@width=\dimen177
+\caption@indent=\dimen178
+\caption@parindent=\dimen179
+\caption@hangindent=\dimen180
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count299
+\c@continuedfloat=\count300
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count301
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count302
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 33.
+Package hyperref Info: Option `breaklinks' set `true' on input line 33.
 
 
 Package hyperref Warning: Option `bookmarks' has already been used,
-(hyperref)                setting the option has no effect on input line 30.
+(hyperref)                setting the option has no effect on input line 33.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/newunicodechar/newunicodechar.sty
 Package: newunicodechar 2018/04/08 v1.2 Defining Unicode characters
 )
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:47: LaTeX Error: Option clash for package hyperref.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.47             \setlength
-                           {\itemsep}{1em} % Adds spacing between items
-The package hyperref has already been loaded with options:
-  []
-There has now been an attempt to load it with options
-  [breaklinks=true]
-Adding the global options:
-  ,breaklinks=true
-to your \documentclass declaration may fix this.
-Try typing  <return>  to proceed.
-
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 62
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 68
 .
-(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/t1lmr.fd
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count298
-\l__pdf_internal_box=\box55
+\l__color_backend_stack_int=\count303
+\l__pdf_internal_box=\box57
 )
 (_logs/notes.aux)
 \openout1 = `notes.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -562,7 +579,7 @@ LaTeX Font Info:    ... okay on input line 62.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring ON on input line 62.
+Package hyperref Info: Link coloring ON on input line 68.
 (_logs/notes.out) (_logs/notes.out)
 \@outlinefile=\write3
 \openout3 = `notes.out'.
@@ -570,17 +587,17 @@ Package hyperref Info: Link coloring ON on input line 62.
 
 (/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count299
-\scratchdimen=\dimen173
-\scratchbox=\box56
-\nofMPsegments=\count300
-\nofMParguments=\count301
-\everyMPshowfont=\toks38
-\MPscratchCnt=\count302
-\MPscratchDim=\dimen174
-\MPnumerator=\count303
-\makeMPintoPDFobject=\count304
-\everyMPtoPDFconversion=\toks39
+\scratchcounter=\count304
+\scratchdimen=\dimen181
+\scratchbox=\box58
+\nofMPsegments=\count305
+\nofMParguments=\count306
+\everyMPshowfont=\toks40
+\MPscratchCnt=\count307
+\MPscratchDim=\dimen182
+\MPnumerator=\count308
+\makeMPintoPDFobject=\count309
+\everyMPtoPDFconversion=\toks41
 ) (/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 
@@ -595,234 +612,853 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 107.
 )
-\Gin@req@height=\dimen175
-\Gin@req@width=\dimen176
+\Gin@req@height=\dimen183
+\Gin@req@width=\dimen184
 )
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 6
-5.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 7
+1.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6
-5.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
+1.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-65.
+71.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-65.
+71.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 65.
+(Font)              <12> on input line 71.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 65.
+(Font)              <8> on input line 71.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 65.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 65.
+(Font)              <6> on input line 71.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 71.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 65.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 69.
+(Font)              <10> on input line 75.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 69.
+(Font)              <7> on input line 75.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 69.
+(Font)              <5> on input line 75.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:85: Missing $ inserted.
+<inserted text> 
+                $
+l.85 ...\text{Monthly Demands } d_i, i=1,\dots,12}
+                                                  
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:85: Extra }, or forgotten $.
+\underline  ...{#1}\else $\@@underline {\hbox {#1}
+                                                  }\m@th $\relax \fi 
+l.85 ...\text{Monthly Demands } d_i, i=1,\dots,12}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:85: Extra }, or forgotten $.
+\underline  ...#1}\else $\@@underline {\hbox {#1}}
+                                                  \m@th $\relax \fi 
+l.85 ...\text{Monthly Demands } d_i, i=1,\dots,12}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:87: LaTeX Error: Something's wrong--perhaps a missing \
+item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.87 \subsection
+                {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:87: LaTeX Error: Something's wrong--perhaps a missing \
+item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.87 \subsection
+                {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:87: Missing } inserted.
+<inserted text> 
+                }
+l.87 \subsection{Description}
+                             %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:87: Missing $ inserted.
+<inserted text> 
+                $
+l.87 \subsection{Description}
+                             %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:87: Missing } inserted.
+<inserted text> 
+                }
+l.87 \subsection{Description}
+                             %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/1.1.png, id=52, 190.7125pt x 120.45pt>
+8-ApplsLinProg/figures/1.1.png, id=309, 843.15pt x 421.575pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/1.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/1.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png  used on input line 81.
-(pdftex.def)             Requested size: 56.3685pt x 35.60043pt.
+A 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png  used on input line 94.
+(pdftex.def)             Requested size: 70.46037pt x 35.22551pt.
 
-Underfull \hbox (badness 5637) in paragraph at lines 82--82
-[]\T1/lmr/m/n/10 Figure 1: []A
+Underfull \hbox (badness 10000) in paragraph at lines 95--95
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Bar graph
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 ing monthly
+Underfull \hbox (badness 10000) in paragraph at lines 95--95
+\T1/lmr/m/n/8 show-ing monthly
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 de-mands ($\OML/lmm/m/it/10 d[]$\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1158) in paragraph at lines 82--82
-\OML/lmm/m/it/10 i \OT1/lmr/m/n/10 = 1\OML/lmm/m/it/10 ; [] ; \OT1/lmr/m/n/10 1
-2$\T1/lmr/m/n/10 )
- []
-
-
-Underfull \hbox (badness 7415) in paragraph at lines 82--82
-\T1/lmr/m/n/10 for ice cream
- []
-
-
-Underfull \hbox (badness 5519) in paragraph at lines 82--82
-\T1/lmr/m/n/10 axis rep-re-sents
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 the months
- []
-
-
-Underfull \hbox (badness 1303) in paragraph at lines 82--82
-\T1/lmr/m/n/10 (Jan-Dec), and
+Underfull \hbox (badness 10000) in paragraph at lines 95--95
+\T1/lmr/m/n/8 ice cream sales
  []
 
 [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
-st/fonts/enc/dvips/lm/lm-rm.enc} </Users/ashoksaravanan/Coding/ScribeLec/server
+4/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/f
+onts/enc/dvips/lm/lm-mathit.enc} </Users/ashoksaravanan/Coding/ScribeLec/server
 /output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:115: Missing $ inserted.
+<inserted text> 
+                $
+l.115 ...text{Monthly Demands } d_i, i=1,\dots,12}
+                                                  
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:115: Extra }, or forgotten $.
+\underline  ...{#1}\else $\@@underline {\hbox {#1}
+                                                  }\m@th $\relax \fi 
+l.115 ...text{Monthly Demands } d_i, i=1,\dots,12}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:115: Extra }, or forgotten $.
+\underline  ...#1}\else $\@@underline {\hbox {#1}}
+                                                  \m@th $\relax \fi 
+l.115 ...text{Monthly Demands } d_i, i=1,\dots,12}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:117: LaTeX Error: Something's wrong--perhaps a missing 
+\item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.117 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:117: LaTeX Error: Something's wrong--perhaps a missing 
+\item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.117 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:117: Missing } inserted.
+<inserted text> 
+                }
+l.117 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:117: Missing $ inserted.
+<inserted text> 
+                $
+l.117 \subsection{Description}
+                              %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:117: Missing } inserted.
+<inserted text> 
+                }
+l.117 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/2.1.png, id=66, 190.7125pt x 120.45pt>
+8-ApplsLinProg/figures/2.1.png, id=326, 642.4pt x 572.1375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/2.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/2.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/2.1.png  used on input line 105.
+A 421/lectures/2024-10-28-ApplsLinProg/figures/2.1.png  used on input line 124.
 
-(pdftex.def)             Requested size: 56.3685pt x 35.60043pt.
+(pdftex.def)             Requested size: 70.46037pt x 62.75198pt.
 
-Underfull \hbox (badness 5637) in paragraph at lines 106--106
-[]\T1/lmr/m/n/10 Figure 2: []A
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Bar graph
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 ing monthly
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+\T1/lmr/m/n/8 show-ing monthly
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 de-mands ($\OML/lmm/m/it/10 d[]$\T1/lmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 1158) in paragraph at lines 106--106
-\OML/lmm/m/it/10 i \OT1/lmr/m/n/10 = 1\OML/lmm/m/it/10 ; [] ; \OT1/lmr/m/n/10 1
-2$\T1/lmr/m/n/10 )
- []
-
-
-Underfull \hbox (badness 7415) in paragraph at lines 106--106
-\T1/lmr/m/n/10 for ice cream
- []
-
-
-Underfull \hbox (badness 5519) in paragraph at lines 106--106
-\T1/lmr/m/n/10 axis rep-re-sents
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 the months
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 (Jan-Dec),
- []
-
-
-Underfull \hbox (badness 1478) in paragraph at lines 106--106
-\T1/lmr/m/n/10 and the y-axis
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 rep-re-sents the
- []
-
-
-Underfull \hbox (badness 7685) in paragraph at lines 106--106
-\T1/lmr/m/n/10 sales in tons.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 A hor-i-zon-tal
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 line in-di-cates
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-\T1/lmr/m/n/10 the av-er-age
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+\T1/lmr/m/n/8 ice cream sales
  []
 
 [2 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
 0-28-ApplsLinProg/figures/2.1.png (PNG copy)>]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:119: Missing $ inserted.
+-ApplsLinProg/notes.tex:137: Missing $ inserted.
 <inserted text> 
                 $
-l.119 (1) \quad x_
-                  i - \text{production at month } i \\
+l.137 \text{(1)} \quad X_
+                         i - \text{production at month } i \\
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:124: Missing $ inserted.
+-ApplsLinProg/notes.tex:143: Missing $ inserted.
 <inserted text> 
                 $
-l.124 \subsection
+l.143 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[3{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
+cal/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:158: Missing $ inserted.
+<inserted text> 
+                $
+l.158 \text{(1)} \quad X_
+                         i - \text{production at month } i \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:165: Missing $ inserted.
+<inserted text> 
+                $
+l.165 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[4]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:180: Missing $ inserted.
+<inserted text> 
+                $
+l.180 \min
+           50 \sum_{i=1}^{12} (y_i + z_i) + 20 \sum_{i=1}^{12} S_i \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:189: Missing $ inserted.
+<inserted text> 
+                $
+l.189 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
+92.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/6.1.png, id=352, 692.5875pt x 398.48875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/6.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/6.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/6.1.png  used on input line 221.
+
+(pdftex.def)             Requested size: 70.46037pt x 40.5383pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--222
+\T1/lmr/m/n/8 show-ing pro-duc-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--222
+\T1/lmr/m/n/8 tion lev-els with
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/6.2.png, id=353, 692.5875pt x 398.48875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/6.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/6.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/6.2.png  used on input line 227.
+
+(pdftex.def)             Requested size: 70.46037pt x 40.5383pt.
+
+Underfull \hbox (badness 4429) in paragraph at lines 228--228
+[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 Bot-tom bar
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 228--228
+\T1/lmr/m/n/8 graph show-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 228--228
+\T1/lmr/m/n/8 pro-duc-tion lev-els
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 228--228
+\T1/lmr/m/n/8 with-out stor-age
+ []
+
+[6 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
+0-28-ApplsLinProg/figures/6.1.png (PNG copy)> </Users/ashoksaravanan/Coding/Scr
+ibeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/6.2.png (P
+NG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:240: Extra alignment tab has been changed to \cr.
+<recently read> \endtemplate 
+                             
+l.240 Jan & 390 & May & 310 &
+                              Sep & 550 \\
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:241: Extra alignment tab has been changed to \cr.
+<recently read> \endtemplate 
+                             
+l.241 Feb & 420 & Jun & 590 &
+                              Oct & 360 \\
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:242: Extra alignment tab has been changed to \cr.
+<recently read> \endtemplate 
+                             
+l.242 Mar & 340 & Jul & 340 &
+                              Nov & 420 \\
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:243: Extra alignment tab has been changed to \cr.
+<recently read> \endtemplate 
+                             
+l.243 Apr & 320 & Aug & 580 &
+                              Dec & 600
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:247: Missing $ inserted.
+<inserted text> 
+                $
+l.247 minimize \sum
+                   _i (25 \max(a_i - x, 0) + 17.50x) \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:252: Missing $ inserted.
+<inserted text> 
+                $
+l.252 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (109.68288pt too wide) in paragraph at lines 253--254
+\T1/lmr/m/n/10 needs. The com-pany uses two types of sales-per-sons: reg-u-lar 
+em-ploy-ees (cost-ing $\OT1/lmr/m/n/10 17\OML/lmm/m/it/10 :\OT1/lmr/m/n/10 50\O
+ML/lmm/m/it/10 =hour\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 andtemporaryemployees\OT1
+/lmr/m/n/10 (\OML/lmm/m/it/10 costing$\T1/lmr/m/n/10 25/hour).
+ []
+
+[7]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:265: Missing $ inserted.
+<inserted text> 
+                $
+l.265 \min
+           25 \sum_{i=1}^{12} y_i + (17.5 \times 12)x \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:272: Missing $ inserted.
+<inserted text> 
+                $
+l.272 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[8]
+LaTeX Font Info:    Trying to load font information for OMS+lmr on input line 2
+93.
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
+File: omslmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 293.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:293: Missing $ inserted.
+<inserted text> 
+                $
+l.293 \textcircled{1} \; R_
+                           i - (annual) \; return \; of \; i^{th} \; investm...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 295.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 295.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:302: Missing $ inserted.
+<inserted text> 
+                $
+l.302 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[9]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:317: Missing $ inserted.
+<inserted text> 
+                $
+l.317 \textcircled{1} \; R_
+                           i - (annual) \; return \; of \; i^{th} \; investm...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 319.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 319.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:325: Missing $ inserted.
+<inserted text> 
+                $
+l.325 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[10]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:339: Missing $ inserted.
+<inserted text> 
+                $
+l.339 ...[V] Ch. 13} \quad Estimation \; of \; ER_
+                                                  j \; and \; E \left| \sum_...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 341.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 341.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 342.
+
+
+LaTeX Warning: Command \textcircled invalid in math mode on input line 342.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:344: Missing $ inserted.
+<inserted text> 
+                $
+l.344 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[11]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:359: Missing $ inserted.
+<inserted text> 
+                $
+l.359 \max
+           \mu \sum_j x_j r_j - \frac{1}{T} \sum_{t=1}^T \left| \sum_j x_j (...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:369: Missing $ inserted.
+<inserted text> 
+                $
+l.369 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[12]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:384: Missing $ inserted.
+<inserted text> 
+                $
+l.384 \max
+           \mu \sum_j x_j ER_j - E \left( \sum_j x_j \widetilde{R}_j \right)...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:390: Missing $ inserted.
+<inserted text> 
+                $
+l.390 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[13]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:405: Missing $ inserted.
+<inserted text> 
+                $
+l.405 \max
+           \mu \sum_j x_j ER_j - E \left( \sum_j x_j \widetilde{R}_j \right)...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:412: Missing $ inserted.
+<inserted text> 
+                $
+l.412 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[14]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:433: Missing $ inserted.
+<inserted text> 
+                $
+l.433 \color{red}{\text{quadratic fct} \leftarrow
+                                                 }
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:433: Extra }, or forgotten $.
+l.433 \color{red}{\text{quadratic fct} \leftarrow}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:435: Missing $ inserted.
+<inserted text> 
+                $
+l.435 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[15]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:456: Missing $ inserted.
+<inserted text> 
+                $
+l.456 \color{red}{\leftarrow
+                             \text{quadratic fct}} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:456: Extra }, or forgotten $.
+l.456 \color{red}{\leftarrow \text{quadratic fct}}
+                                                   \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:466: Missing $ inserted.
+<inserted text> 
+                $
+l.466 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[16]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/17.1.png, id=414, 521.95pt x 356.33125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/17.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/17.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/17.1.png  used on input line 490
+.
+(pdftex.def)             Requested size: 70.46037pt x 48.10263pt.
+
+Underfull \hbox (badness 1968) in paragraph at lines 491--491
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A cir-cle en-
+ []
+
+[17 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/17.1.png (PNG copy)>] [18]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/19.1.png, id=426, 531.9875pt x 572.1375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/19.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/19.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/19.1.png  used on input line 537
+.
+(pdftex.def)             Requested size: 70.46037pt x 75.7773pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 538--538
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bi-par-tite
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 538--538
+\T1/lmr/m/n/8 po-ten-tial job
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 538--538
+\T1/lmr/m/n/8 as-sign-ments and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 538--538
+\T1/lmr/m/n/8 their as-so-ci-ated
+ []
+
+[19 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/19.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/20.1.png, id=434, 592.2125pt x 642.4pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/20.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/20.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/20.1.png  used on input line 558
+.
+(pdftex.def)             Requested size: 70.46037pt x 76.42792pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 559--559
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bi-par-tite
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 559--559
+\T1/lmr/m/n/8 graph with edge
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 559--559
+\T1/lmr/m/n/8 ing a max-i-mum
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 559--559
+\T1/lmr/m/n/8 weight match-ing
+ []
+
+[20 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/20.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:571: Missing $ inserted.
+<inserted text> 
+                $
+l.571 \max
+           \sum_e w_e x_e \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:576: Missing $ inserted.
+<inserted text> 
+                $
+l.576 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/3.1.png, id=72, 190.7125pt x 170.6375pt>
+8-ApplsLinProg/figures/21.1.png, id=444, 451.6875pt x 632.3625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--10-28-ApplsLinProg/figures/3.1.png Graphic file (type png)
+-10-28-ApplsLinProg/figures/21.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-28-ApplsLinProg/figures/3.1.png>
+10-28-ApplsLinProg/figures/21.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/3.1.png  used on input line 133.
+A 421/lectures/2024-10-28-ApplsLinProg/figures/21.1.png  used on input line 583
+.
+(pdftex.def)             Requested size: 70.46037pt x 98.64236pt.
 
-(pdftex.def)             Requested size: 56.3685pt x 50.43396pt.
-
-Underfull \hbox (badness 2277) in paragraph at lines 134--134
-[]\T1/lmr/m/n/10 Figure 3: []No
+Underfull \hbox (badness 10000) in paragraph at lines 584--584
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bi-par-tite
  []
 
-[3{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
-cal/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc} </Users/ashoksara
-vanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/fi
-gures/3.1.png (PNG copy)>]
+
+Underfull \hbox (badness 10000) in paragraph at lines 584--584
+\T1/lmr/m/n/8 graph with a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 584--584
+\T1/lmr/m/n/8 high-lighted edge
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 584--584
+\T1/lmr/m/n/8 i-cal for-mu-la-tion
+ []
+
+
+Underfull \hbox (badness 3536) in paragraph at lines 584--584
+\T1/lmr/m/n/8 of the max-i-mum
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 584--584
+\T1/lmr/m/n/8 weight match-ing
+ []
+
+[21 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/21.1.png (PNG copy)>]
 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/notes.aux)
@@ -830,30 +1466,50 @@ enddocument/afterlastpage: lastpage setting LastPage.
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-Package rerunfilecheck Info: File `notes.out' has not changed.
-(rerunfilecheck)             Checksum: D8F4E19A1E6F2B1430FD81C26DE933C9;1134.
- ) 
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `notes.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `notes.out':
+(rerunfilecheck)             Before: C91C57F0CE4CC36F945E80D21A9F7A14;7350
+(rerunfilecheck)             After:  392988E59AF721E7D1CE7BB0E15F561B;8136.
+ )
+(\end occurred inside a group at level 2)
+
+### simple group (level 2) entered at line 456 ({)
+### simple group (level 1) entered at line 433 ({)
+### bottom level 
 Here is how much of TeX's memory you used:
- 12945 strings out of 474116
- 205579 string characters out of 5743682
- 1934187 words of memory out of 5000000
- 35048 multiletter control sequences out of 15000+600000
- 607095 words of font info for 76 fonts, out of 8000000 for 9000
+ 14731 strings out of 474116
+ 242377 string characters out of 5743682
+ 1936187 words of memory out of 5000000
+ 36701 multiletter control sequences out of 15000+600000
+ 619439 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,1253b,448s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
-cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texliv
-e/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/tex
-mf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fon
-ts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
-blic/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr
-17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr
-/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/tex
-live/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on _logs/notes.pdf (3 pages, 176428 bytes).
+ 83i,11n,131p,1472b,762s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx1
+0.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></us
+r/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/tex
+live/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/
+texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist
+/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type
+1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm
+/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb>
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local
+/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/202
+4/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2024/texmf-dist
+/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/typ
+e1/public/lm/lmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/a
+msfonts/symbols/msbm10.pfb>
+Output written on _logs/notes.pdf (21 pages, 1152603 bytes).
 PDF statistics:
- 139 PDF objects out of 1000 (max. 8388607)
- 108 compressed objects within 2 object streams
- 19 named destinations out of 1000 (max. 500000)
- 112 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 559 PDF objects out of 1000 (max. 8388607)
+ 490 compressed objects within 5 object streams
+ 127 named destinations out of 1000 (max. 500000)
+ 649 words of extra memory for PDF output out of 10000 (max. 10000000)
 

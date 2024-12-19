@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  16 DEC 2024 10:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 11:59
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -466,67 +466,84 @@ Package: thm-restate 2023/05/04 v0.76
 Package: thm-amsthm 2023/05/04 v0.76
 \thmt@style@headstyle=\toks37
 ))
-Package hyperref Info: Option `colorlinks' set `true' on input line 30.
-Package hyperref Info: Option `breaklinks' set `true' on input line 30.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count298
+\float@exts=\toks38
+\float@box=\box55
+\@float@everytoks=\toks39
+\@floatcapt=\box56
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen173
+\captionmargin=\dimen174
+\caption@leftmargin=\dimen175
+\caption@rightmargin=\dimen176
+\caption@width=\dimen177
+\caption@indent=\dimen178
+\caption@parindent=\dimen179
+\caption@hangindent=\dimen180
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count299
+\c@continuedfloat=\count300
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count301
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count302
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 33.
+Package hyperref Info: Option `breaklinks' set `true' on input line 33.
 
 
 Package hyperref Warning: Option `bookmarks' has already been used,
-(hyperref)                setting the option has no effect on input line 30.
+(hyperref)                setting the option has no effect on input line 33.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/newunicodechar/newunicodechar.sty
 Package: newunicodechar 2018/04/08 v1.2 Defining Unicode characters
 )
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:47: LaTeX Error: Option clash for package hyperref.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.47             \setlength
-                           {\itemsep}{1em} % Adds spacing between items
-The package hyperref has already been loaded with options:
-  []
-There has now been an attempt to load it with options
-  [breaklinks=true]
-Adding the global options:
-  ,breaklinks=true
-to your \documentclass declaration may fix this.
-Try typing  <return>  to proceed.
-
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 62
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 68
 .
-(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/t1lmr.fd
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count298
-\l__pdf_internal_box=\box55
+\l__color_backend_stack_int=\count303
+\l__pdf_internal_box=\box57
 )
 (_logs/notes.aux)
 \openout1 = `notes.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -562,7 +579,7 @@ LaTeX Font Info:    ... okay on input line 62.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring ON on input line 62.
+Package hyperref Info: Link coloring ON on input line 68.
 (_logs/notes.out) (_logs/notes.out)
 \@outlinefile=\write3
 \openout3 = `notes.out'.
@@ -570,17 +587,17 @@ Package hyperref Info: Link coloring ON on input line 62.
 
 (/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count299
-\scratchdimen=\dimen173
-\scratchbox=\box56
-\nofMPsegments=\count300
-\nofMParguments=\count301
-\everyMPshowfont=\toks38
-\MPscratchCnt=\count302
-\MPscratchDim=\dimen174
-\MPnumerator=\count303
-\makeMPintoPDFobject=\count304
-\everyMPtoPDFconversion=\toks39
+\scratchcounter=\count304
+\scratchdimen=\dimen181
+\scratchbox=\box58
+\nofMPsegments=\count305
+\nofMParguments=\count306
+\everyMPshowfont=\toks40
+\MPscratchCnt=\count307
+\MPscratchDim=\dimen182
+\MPnumerator=\count308
+\makeMPintoPDFobject=\count309
+\everyMPtoPDFconversion=\toks41
 ) (/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 
@@ -595,389 +612,270 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 107.
 )
-\Gin@req@height=\dimen175
-\Gin@req@width=\dimen176
+\Gin@req@height=\dimen183
+\Gin@req@width=\dimen184
 )
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 6
-5.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 7
+1.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6
-5.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
+1.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-65.
+71.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-65.
+71.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 65.
+(Font)              <12> on input line 71.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 65.
+(Font)              <8> on input line 71.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 65.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 65.
+(Font)              <6> on input line 71.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 71.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 65.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 69.
+(Font)              <10> on input line 75.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 69.
+(Font)              <7> on input line 75.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 69.
+(Font)              <5> on input line 75.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:70: Missing $ inserted.
-<inserted text> 
-                $
-l.70 b_
-       i \quad c_{ij} \quad j \quad b_j
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+-EconNetSimplex/notes.tex:76: Missing number, treated as zero.
+<to be read again> 
+                   C
+l.76 [C]
+         p. 297.
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:72: Missing $ inserted.
-<inserted text> 
-                $
-l.72 \subsection
-                {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+-EconNetSimplex/notes.tex:76: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   C
+l.76 [C]
+         p. 297.
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:76: Package calc Error: `C' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.76 [C]
+         p. 297.
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:76: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.76 [C]
+         p. 297.
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/1.1.png, id=52, 190.7125pt x 150.5625pt>
+1-EconNetSimplex/figures/1.1.png, id=4, 792.9625pt x 481.8pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -11-21-EconNetSimplex/figures/1.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 11-21-EconNetSimplex/figures/1.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-11-21-EconNetSimplex/figures/1.1.png  used on input line 81
+A 421/lectures/2024-11-21-EconNetSimplex/figures/1.1.png  used on input line 85
 .
-(pdftex.def)             Requested size: 56.3685pt x 44.50055pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 work di-a-gram
- []
-
-
-Underfull \hbox (badness 3354) in paragraph at lines 82--82
-\T1/lmr/m/n/10 il-lus-trat-ing the
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 net-work sim-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 plex method.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 Nodes rep-re-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 des-ti-na-tions,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--82
-\T1/lmr/m/n/10 re-sent flows
- []
-
-
-Underfull \hbox (badness 1052) in paragraph at lines 82--82
-\T1/lmr/m/n/10 costs ($\OML/lmm/m/it/10 c[]$\T1/lmr/m/n/10 ) and
- []
-
-[1
-
-{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc} </Users/ashoksaravanan/Coding/Sc
-ribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/1.1.png
- (PNG copy)>]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:94: Missing $ inserted.
-<inserted text> 
-                $
-l.94 b_
-       i \quad c_{ij} \quad j \quad b_j \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
+(pdftex.def)             Requested size: 70.46037pt x 42.80875pt.
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
 -EconNetSimplex/notes.tex:97: Missing $ inserted.
 <inserted text> 
                 $
-l.97 \subsection
-                {Description}%
+l.97 b_
+       i \bar{u} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:102: Missing $ inserted.
+<inserted text> 
+                $
+l.102 \subsection
+                 {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/2.1.png, id=65, 190.7125pt x 150.5625pt>
+1-EconNetSimplex/figures/2.1.png, id=5, 756.8275pt x 381.425pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -11-21-EconNetSimplex/figures/2.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 11-21-EconNetSimplex/figures/2.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png  used on input line 10
-6.
-(pdftex.def)             Requested size: 56.3685pt x 44.50055pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 work di-a-gram
- []
-
-
-Underfull \hbox (badness 3354) in paragraph at lines 107--107
-\T1/lmr/m/n/10 il-lus-trat-ing the
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 net-work sim-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 plex method.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 ti-na-tions, and
- []
-
-
-Underfull \hbox (badness 1281) in paragraph at lines 107--107
-\T1/lmr/m/n/10 edges rep-re-sent
- []
-
-
-Underfull \hbox (badness 3229) in paragraph at lines 107--107
-\T1/lmr/m/n/10 flows with as-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 so-ci-ated costs
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 are la-beled
- []
-
-
-Underfull \hbox (badness 5231) in paragraph at lines 107--107
-\T1/lmr/m/n/10 de-mand val-ues
- []
-
-
-Underfull \hbox (badness 4779) in paragraph at lines 107--107
-\T1/lmr/m/n/10 ($\OML/lmm/m/it/10 b[]$\T1/lmr/m/n/10 , $\OML/lmm/m/it/10 b[]$\T
-1/lmr/m/n/10 ). A
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 span-ning tree
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 is high-lighted
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 in salmon
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 color. The
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 ques-tion mark
- []
-
-
-Underfull \hbox (badness 4492) in paragraph at lines 107--107
-\T1/lmr/m/n/10 (?) sug-gests
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 an ad-di-tional
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
-\T1/lmr/m/n/10 el-e-ment or
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[2]
+9.
+(pdftex.def)             Requested size: 70.46037pt x 35.50824pt.
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:119: Missing $ inserted.
+-EconNetSimplex/notes.tex:121: Missing $ inserted.
 <inserted text> 
                 $
-l.119 b_
-        i \quad c_{ij} \quad j \quad b_j \\
+l.121 b_
+        i \bar{u} \\
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:122: Missing $ inserted.
+-EconNetSimplex/notes.tex:126: Missing $ inserted.
 <inserted text> 
                 $
-l.122 \subsection
+l.126 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-[3 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
-1-21-EconNetSimplex/figures/2.1.png (PNG copy)>]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/3.1.png, id=75, 190.7125pt x 150.5625pt>
+1-EconNetSimplex/figures/3.1.png, id=6, 803.0pt x 552.0625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -11-21-EconNetSimplex/figures/3.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 11-21-EconNetSimplex/figures/3.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png  used on input line 13
+3.
+(pdftex.def)             Requested size: 70.46037pt x 48.43675pt.
+
+Underfull \hbox (badness 3460) in paragraph at lines 134--134
+\T1/lmr/m/n/8 and edges, some
+ []
+
+LaTeX Font Info:    Trying to load font information for OMS+lmr on input line 1
+46.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
+File: omslmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 146.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:150: Missing $ inserted.
+<inserted text> 
+                $
+l.150 ... do in Florida. If the unit price is } y_
+                                                  i \text{ at a node } i \te...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:158: Missing $ inserted.
+<inserted text> 
+                $
+l.158 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:177: Missing $ inserted.
+<inserted text> 
+                $
+l.177 ...ance, we could buy at the node 2 for } y_
+                                                  2 = 23 \text{ and ship alo...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:181: Undefined control sequence.
+l.181 \text{i} \xdashedrightarrow
+                                 {z_{ij} < 0} \text{j} \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:184: Missing $ inserted.
+<inserted text> 
+                $
+l.184 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
+1-EconNetSimplex/figures/5.1.png, id=7, 471.7625pt x 220.825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-21-EconNetSimplex/figures/5.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-21-EconNetSimplex/figures/5.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png  used on input line 19
 1.
-(pdftex.def)             Requested size: 56.3685pt x 44.50055pt.
+(pdftex.def)             Requested size: 70.46037pt x 32.98079pt.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:210: Missing $ inserted.
+<inserted text> 
+                $
+l.210 \widetilde{z}
+                   _{ij} = 0, \quad i.e. \quad \widetilde{y}_j - \widetilde{...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
 
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 work di-a-gram
- []
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:213: Missing $ inserted.
+<inserted text> 
+                $
+l.213 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
 
-
-Underfull \hbox (badness 3354) in paragraph at lines 132--132
-\T1/lmr/m/n/10 il-lus-trat-ing the
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 net-work sim-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 plex method.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 ti-na-tions, and
- []
-
-
-Underfull \hbox (badness 1281) in paragraph at lines 132--132
-\T1/lmr/m/n/10 edges rep-re-sent
- []
-
-
-Underfull \hbox (badness 3229) in paragraph at lines 132--132
-\T1/lmr/m/n/10 flows with as-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 so-ci-ated costs
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 are la-beled
- []
-
-
-Underfull \hbox (badness 5231) in paragraph at lines 132--132
-\T1/lmr/m/n/10 de-mand val-ues
- []
-
-
-Underfull \hbox (badness 4779) in paragraph at lines 132--132
-\T1/lmr/m/n/10 ($\OML/lmm/m/it/10 b[]$\T1/lmr/m/n/10 , $\OML/lmm/m/it/10 b[]$\T
-1/lmr/m/n/10 ). A
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 span-ning tree
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 is high-lighted
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 in salmon
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 color. The
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 ques-tion mark
- []
-
-
-Underfull \hbox (badness 4492) in paragraph at lines 132--132
-\T1/lmr/m/n/10 (?) sug-gests
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 an ad-di-tional
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--132
-\T1/lmr/m/n/10 el-e-ment or
- []
-
-[4 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
-1-21-EconNetSimplex/figures/3.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
+1-EconNetSimplex/figures/6.1.png, id=8, 471.7625pt x 220.825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-21-EconNetSimplex/figures/6.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-21-EconNetSimplex/figures/6.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-21-EconNetSimplex/figures/6.1.png  used on input line 22
+0.
+(pdftex.def)             Requested size: 70.46037pt x 32.98079pt.
 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/notes.aux)
@@ -986,26 +884,32 @@ LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
 Package rerunfilecheck Info: File `notes.out' has not changed.
-(rerunfilecheck)             Checksum: D8F4E19A1E6F2B1430FD81C26DE933C9;1134.
- ) 
-Here is how much of TeX's memory you used:
- 12943 strings out of 474116
- 205598 string characters out of 5743682
- 1935187 words of memory out of 5000000
- 35048 multiletter control sequences out of 15000+600000
- 607095 words of font info for 76 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 75i,11n,79p,1208b,452s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
-cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
-e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
-f-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/font
-s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
-lic/lm/lmr17.pfb>
-Output written on _logs/notes.pdf (4 pages, 148506 bytes).
-PDF statistics:
- 116 PDF objects out of 1000 (max. 8388607)
- 94 compressed objects within 1 object stream
- 20 named destinations out of 1000 (max. 500000)
- 112 words of extra memory for PDF output out of 10000 (max. 10000000)
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:227: You can't use `\end' in internal vertical mode.
+\enddocument ...cument/end}\deadcycles \z@ \@@end 
+                                                  
+l.227 \end{document}
+                    
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+)
+! Emergency stop.
+<*> ...ctures/2024-11-21-EconNetSimplex/notes.tex"
+                                                  
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 14437 strings out of 474116
+ 235849 string characters out of 5743682
+ 1948187 words of memory out of 5000000
+ 36546 multiletter control sequences out of 15000+600000
+ 616079 words of font info for 79 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 83i,14n,131p,1559b,740s stack positions out of 10000i,1000n,20000p,200000b,200000s
+!  ==> Fatal error occurred, no output PDF file produced!

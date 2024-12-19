@@ -1,0 +1,2951 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 12:14
+entering extended mode
+ \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-De
+pthFS/notes.tex"
+
+(/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Dept
+hFS/notes.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count188
+\c@section=\count189
+\c@subsection=\count190
+\c@subsubsection=\count191
+\c@paragraph=\count192
+\c@subparagraph=\count193
+\c@figure=\count194
+\c@table=\count195
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lastpage/lastpage.sty
+Package: lastpage 2023/10/14 v2.0e lastpage: 2.09 or 2e? (HMM)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lastpage/lastpage2e.sty
+Package: lastpage2e 2023/10/14 v2.0e Decide which 2e lastpage version to use (H
+MM)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lastpage/lastpagemodern.sty
+Package: lastpagemodern 2023-10-14 v2.0e Refers to last page's name (HMM; JPG)
+\c@lastpagecount=\count196
+) 
+)) (/usr/local/texlive/2024/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks19
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count197
+\Gm@cntv=\count198
+\c@Gm@tempcnt=\count199
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks20
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2024-01-20 v7.01h Hypertext links for LaTeX
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2023-11-26 v2.56 Cross-referencing by name of section
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count266
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count267
+)
+\@linkdim=\dimen149
+\Hy@linkcounter=\count268
+\Hy@pagecounter=\count269
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2024-01-20 v7.01h Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count270
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2024-01-20 v7.01h Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4179.
+Package hyperref Info: Link nesting OFF on input line 4184.
+Package hyperref Info: Hyper index ON on input line 4187.
+Package hyperref Info: Plain pages OFF on input line 4194.
+Package hyperref Info: Backreferencing OFF on input line 4199.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4446.
+\c@Hy@tempcnt=\count271
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4784.
+\XeTeXLinkMargin=\dimen150
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count272
+\Field@Width=\dimen151
+\Fld@charsize=\dimen152
+Package hyperref Info: Hyper figures OFF on input line 6063.
+Package hyperref Info: Link nesting OFF on input line 6068.
+Package hyperref Info: Hyper index ON on input line 6071.
+Package hyperref Info: backreferencing OFF on input line 6078.
+Package hyperref Info: Link coloring OFF on input line 6083.
+Package hyperref Info: Link coloring with OCG OFF on input line 6088.
+Package hyperref Info: PDF/A mode OFF on input line 6093.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count273
+\c@Item=\count274
+\c@Hfootnote=\count275
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2024-01-20 v7.01h Hyperref driver for pdfTeX
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
+kage
+with kernel methods
+)
+\Fld@listcount=\count276
+\c@bookmark@seq@number=\count277
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+85.
+)
+\Hy@SectionHShift=\skip50
+) (/usr/local/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip51
+\enit@outerparindent=\dimen153
+\enit@toks=\toks21
+\enit@inbox=\box51
+\enit@count@id=\count278
+\enitdp@description=\count279
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2022/11/09 v4.1 Extensive control of page headers and footers
+
+\f@nch@headwidth=\skip52
+\f@nch@O@elh=\skip53
+\f@nch@O@erh=\skip54
+\f@nch@O@olh=\skip55
+\f@nch@O@orh=\skip56
+\f@nch@O@elf=\skip57
+\f@nch@O@erf=\skip58
+\f@nch@O@olf=\skip59
+\f@nch@O@orf=\skip60
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1350.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1354.
+Package xcolor Info: Model `RGB' extended on input line 1366.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1368.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1372.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1373.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/breakurl/breakurl.sty
+Package: breakurl 2013/04/10 v1.40 Breakable hyperref URLs
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2024/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks22
+\XKV@tempa@toks=\toks23
+)
+\XKV@depth=\count280
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+(/usr/local/texlive/2024/texmf-dist/tex/generic/iftex/ifpdf.sty
+Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
+)
+
+Package breakurl Warning: You are using breakurl while processing via pdflatex.
+
+(breakurl)                \burl will be just a synonym of \url.
+(breakurl)                 on input line 48.
+
+) (/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2023/05/13 v2.17o AMS math features
+\@mathmargin=\skip61
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks24
+\ex@=\dimen154
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen155
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count281
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count282
+\leftroot@=\count283
+LaTeX Info: Redefining \overline on input line 399.
+LaTeX Info: Redefining \colon on input line 410.
+\classnum@=\count284
+\DOTSCASE@=\count285
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box52
+\strutbox@=\box53
+LaTeX Info: Redefining \big on input line 722.
+LaTeX Info: Redefining \Big on input line 723.
+LaTeX Info: Redefining \bigg on input line 724.
+LaTeX Info: Redefining \Bigg on input line 725.
+\big@size=\dimen156
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count286
+LaTeX Info: Redefining \bmod on input line 905.
+LaTeX Info: Redefining \pmod on input line 910.
+LaTeX Info: Redefining \smash on input line 940.
+LaTeX Info: Redefining \relbar on input line 970.
+LaTeX Info: Redefining \Relbar on input line 971.
+\c@MaxMatrixCols=\count287
+\dotsspace@=\muskip17
+\c@parentequation=\count288
+\dspbrk@lvl=\count289
+\tag@help=\toks25
+\row@=\count290
+\column@=\count291
+\maxfields@=\count292
+\andhelp@=\toks26
+\eqnshift@=\dimen157
+\alignsep@=\dimen158
+\tagshift@=\dimen159
+\tagwidth@=\dimen160
+\totwidth@=\dimen161
+\lineht@=\dimen162
+\@envbody=\toks27
+\multlinegap=\skip62
+\multlinetaggap=\skip63
+\mathdisplay@stack=\toks28
+LaTeX Info: Redefining \[ on input line 2953.
+LaTeX Info: Redefining \] on input line 2954.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/mathtools/mathtools.sty
+Package: mathtools 2024/03/11 v1.30 mathematical typesetting tools
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2023/07/08 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count293
+\calc@Bcount=\count294
+\calc@Adimen=\dimen163
+\calc@Bdimen=\dimen164
+\calc@Askip=\skip64
+\calc@Bskip=\skip65
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count295
+\calc@Cskip=\skip66
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/mathtools/mhsetup.sty
+Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
+)
+\g_MT_multlinerow_int=\count296
+\l_MT_multwidth_dim=\dimen165
+\origjot=\skip67
+\l_MT_shortvdotswithinadjustabove_dim=\dimen166
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen167
+\l_MT_above_intertext_sep=\dimen168
+\l_MT_below_intertext_sep=\dimen169
+\l_MT_above_shortintertext_sep=\dimen170
+\l_MT_below_shortintertext_sep=\dimen171
+\xmathstrut@box=\box54
+\xmathstrut@dim=\dimen172
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty
+Package: amsthm 2020/05/29 v2.20.6
+\thm@style=\toks29
+\thm@bodyfont=\toks30
+\thm@headfont=\toks31
+\thm@notefont=\toks32
+\thm@headpunct=\toks33
+\thm@preskip=\skip68
+\thm@postskip=\skip69
+\thm@headsep=\skip70
+\dth@everypar=\toks34
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thmtools.sty
+Package: thmtools 2023/05/04 v0.76
+\thmt@toks=\toks35
+\c@thmt@dummyctr=\count297
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-patch.sty
+Package: thm-patch 2023/05/04 v0.76
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/parseargs.sty
+Package: parseargs 2023/05/04 v0.76
+\@parsespec=\toks36
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-kv.sty
+Package: thm-kv 2023/05/04 v0.76
+Package thm-kv Info: Theorem names will be uppercased on input line 42.
+Package thm-kv Info: kvsetkeys patch (v1.16 or later) on input line 158.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-autoref.sty
+Package: thm-autoref 2023/05/04 v0.76
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/aliasctr.sty
+Package: aliasctr 2023/05/04 v0.76
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-listof.sty
+Package: thm-listof 2023/05/04 v0.76
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-restate.sty
+Package: thm-restate 2023/05/04 v0.76
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-amsthm.sty
+Package: thm-amsthm 2023/05/04 v0.76
+\thmt@style@headstyle=\toks37
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count298
+\float@exts=\toks38
+\float@box=\box55
+\@float@everytoks=\toks39
+\@floatcapt=\box56
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen173
+\captionmargin=\dimen174
+\caption@leftmargin=\dimen175
+\caption@rightmargin=\dimen176
+\caption@width=\dimen177
+\caption@indent=\dimen178
+\caption@parindent=\dimen179
+\caption@hangindent=\dimen180
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count299
+\c@continuedfloat=\count300
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count301
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count302
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 33.
+Package hyperref Info: Option `breaklinks' set `true' on input line 33.
+
+
+Package hyperref Warning: Option `bookmarks' has already been used,
+(hyperref)                setting the option has no effect on input line 33.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/newunicodechar/newunicodechar.sty
+Package: newunicodechar 2018/04/08 v1.2 Defining Unicode characters
+)
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 68
+.
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count303
+\l__pdf_internal_box=\box57
+)
+(_logs/notes.aux)
+\openout1 = `notes.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-39.0pt
+* \headheight=14.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package hyperref Info: Link coloring ON on input line 68.
+(_logs/notes.out) (_logs/notes.out)
+\@outlinefile=\write3
+\openout3 = `notes.out'.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count304
+\scratchdimen=\dimen181
+\scratchbox=\box58
+\nofMPsegments=\count305
+\nofMParguments=\count306
+\everyMPshowfont=\toks40
+\MPscratchCnt=\count307
+\MPscratchDim=\dimen182
+\MPnumerator=\count308
+\makeMPintoPDFobject=\count309
+\everyMPtoPDFconversion=\toks41
+) (/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+)
+\Gin@req@height=\dimen183
+\Gin@req@width=\dimen184
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 7
+1.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
+1.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+71.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+71.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 71.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 71.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 71.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 71.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
+
+{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
+al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [2]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
+12.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+Underfull \hbox (badness 10000) in paragraph at lines 107--112
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 112--113
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:115: LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.115 D
+       ata Structures: \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--117
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 117--118
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--120
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:122: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.122 \begin{tikzpicture}
+                         [node distance=1cm]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:123: Undefined control sequence.
+l.123 \node
+           [draw, rectangle, fill=blue!50] (fibn) {fib(n)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:124: Undefined control sequence.
+l.124 \node
+           [draw, rectangle, fill=blue!50, right of=fibn] (fibn1) {fib(n-1)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:125: Undefined control sequence.
+l.125 \node
+           [draw, rectangle, fill=blue!50, right of=fibn1] (fibn2) {fib(n-2)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:126: Undefined control sequence.
+l.126 \draw
+           [->] (fibn) -- (fibn1);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:127: Undefined control sequence.
+l.127 \draw
+           [->] (fibn) -- (fibn2);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:128: Undefined control sequence.
+l.128 \node
+           [draw, rectangle, fill=blue!50, below of=fibn, node distance=2cm]...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:129: Undefined control sequence.
+l.129 \node
+           [draw, rectangle, fill=blue!50, left of=linkedlist, node distance...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:130: Undefined control sequence.
+l.130 \draw
+           [->] (linkedlist) -- (node);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:131: Undefined control sequence.
+l.131 \draw
+           [->] (node) -- (linkedlist);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:132: Undefined control sequence.
+l.132 \node
+           [draw, rectangle, fill=blue!50, below of=linkedlist, node distanc...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:133: Undefined control sequence.
+l.133 \node
+           [draw, rectangle, fill=blue!50, below left of=tree, node distance...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:134: Undefined control sequence.
+l.134 \node
+           [draw, rectangle, fill=blue!50, below right of=tree, node distanc...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:135: Undefined control sequence.
+l.135 \draw
+           [->] (tree) -- (treea);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:136: Undefined control sequence.
+l.136 \draw
+           [->] (tree) -- (treeb);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:137: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.137 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[3{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+Underfull \hbox (badness 10000) in paragraph at lines 152--160
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 160--161
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 161--162
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 179--184
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:187: LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.187 T
+       he Recursive Case needs to be "smaller" in some sense: closer to the ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[5]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:208: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.208 \begin{tikzpicture}
+                         [node distance=1cm]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:209: Undefined control sequence.
+l.209 \node
+           [draw, rectangle, fill=blue!50] (fib4) {fib(4)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:210: Undefined control sequence.
+l.210 \node
+           [draw, rectangle, fill=blue!50, below left of=fib4] (fib3) {fib(3)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:211: Undefined control sequence.
+l.211 \node
+           [draw, rectangle, fill=blue!50, below right of=fib4] (fib2) {fib(...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:212: Undefined control sequence.
+l.212 \node
+           [draw, rectangle, fill=blue!50, below left of=fib3] (fib2_1) {fib...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:212: Missing $ inserted.
+<inserted text> 
+                $
+l.212 ... fill=blue!50, below left of=fib3] (fib2_
+                                                  1) {fib(2)};
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 212.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 212.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 212.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:213: Undefined control sequence.
+l.213 \node
+           [draw, rectangle, fill=blue!50, below right of=fib3] (fib1) {fib(...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:214: Undefined control sequence.
+l.214 \node
+           [draw, rectangle, fill=blue!50, below left of=fib2_1] (fib1_1) {f...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:215: Undefined control sequence.
+l.215 \node
+           [draw, rectangle, fill=blue!50, below right of=fib2_1] (fib0) {fi...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:216: Undefined control sequence.
+l.216 \node
+           [draw, rectangle, fill=blue!50, below left of=fib1] (fib1_2) {fib...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:217: Undefined control sequence.
+l.217 \node
+           [draw, rectangle, fill=blue!50, below right of=fib1] (fib0_1) {fi...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:218: Undefined control sequence.
+l.218 \draw
+           [->] (fib4) -- (fib3);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:219: Undefined control sequence.
+l.219 \draw
+           [->] (fib4) -- (fib2);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:220: Undefined control sequence.
+l.220 \draw
+           [->] (fib3) -- (fib2_1);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:221: Undefined control sequence.
+l.221 \draw
+           [->] (fib3) -- (fib1);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:222: Undefined control sequence.
+l.222 \draw
+           [->] (fib2_1) -- (fib1_1);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:223: Undefined control sequence.
+l.223 \draw
+           [->] (fib2_1) -- (fib0);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:224: Undefined control sequence.
+l.224 \draw
+           [->] (fib1) -- (fib1_2);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:225: Undefined control sequence.
+l.225 \draw
+           [->] (fib1) -- (fib0_1);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:226: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.226 \end{tikzpicture}
+                        \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:226: Missing $ inserted.
+<inserted text> 
+                $
+l.226 \end{tikzpicture}
+                        \\
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (118.17383pt too wide) in paragraph at lines 202--229
+\T1/lmr/m/n/10 fill=blue!50, be-low left of=fib3] (fib2$[]\OT1/lmr/m/n/10 )[]; 
+[\OML/lmm/m/it/10 draw; rectangle; fill \OT1/lmr/m/n/10 = \OML/lmm/m/it/10 blue
+\OT1/lmr/m/n/10 !50\OML/lmm/m/it/10 ; belowrightof \OT1/lmr/m/n/10 = \OML/lmm/m
+/it/10 fib\OT1/lmr/m/n/10 3](\OML/lmm/m/it/10 fib\OT1/lmr/m/n/10 1)[]; [\OML/lm
+m/m/it/10 draw; rectangle; fill \OT1/lmr/m/n/10 =
+ []
+
+
+Overfull \hbox (116.5054pt too wide) in paragraph at lines 202--229
+\OML/lmm/m/it/10 blue\OT1/lmr/m/n/10 !50\OML/lmm/m/it/10 ; belowleftof \OT1/lmr
+/m/n/10 = \OML/lmm/m/it/10 fib\OT1/lmr/m/n/10 2[]](\OML/lmm/m/it/10 fib\OT1/lmr
+/m/n/10 1[])[]; [\OML/lmm/m/it/10 draw; rectangle; fill \OT1/lmr/m/n/10 = \OML/
+lmm/m/it/10 blue\OT1/lmr/m/n/10 !50\OML/lmm/m/it/10 ; belowrightof \OT1/lmr/m/n
+/10 = \OML/lmm/m/it/10 fib\OT1/lmr/m/n/10 2[]](\OML/lmm/m/it/10 fib\OT1/lmr/m/n
+/10 0)[]; [\OML/lmm/m/it/10 draw; rectangle; fill \OT1/lmr/m/n/10 =
+ []
+
+
+Overfull \hbox (30.78345pt too wide) in paragraph at lines 202--229
+\OML/lmm/m/it/10 blue\OT1/lmr/m/n/10 !50\OML/lmm/m/it/10 ; belowleftof \OT1/lmr
+/m/n/10 = \OML/lmm/m/it/10 fib\OT1/lmr/m/n/10 1](\OML/lmm/m/it/10 fib\OT1/lmr/m
+/n/10 1[])[]; [\OML/lmm/m/it/10 draw; rectangle; fill \OT1/lmr/m/n/10 = \OML/lm
+m/m/it/10 blue\OT1/lmr/m/n/10 !50\OML/lmm/m/it/10 ; belowrightof \OT1/lmr/m/n/1
+0 = \OML/lmm/m/it/10 fib\OT1/lmr/m/n/10 1](\OML/lmm/m/it/10 fib\OT1/lmr/m/n/10 
+0[])[]; [\OMS/lmsy/m/n/10   \OML/lmm/m/it/10 >
+ []
+
+[6{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/
+texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/20
+24/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
+Underfull \hbox (badness 10000) in paragraph at lines 242--247
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:250: LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.250 P
+       rocessing the tree recursively: \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 250--252
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:255: LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.255 A
+       ctivities: \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 255--257
+
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 276--279
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:283: LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.283 D
+       epth First traverses down a branch: \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 283--285
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:289: LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.289 \begin
+            {tikzpicture}[level distance=1.5cm,
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:289: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.289 \begin{tikzpicture}
+                         [level distance=1.5cm,
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:291: Undefined control sequence.
+l.291 \node
+            {36}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:305: Extra }, or forgotten \endgroup.
+l.305 child {node {120}}}}}
+                           ;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:306: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.306 \end{tikzpicture}
+                        \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[8] [9] [10] [11] [12]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:385: Misplaced alignment tab character &.
+l.385 ...he best outcome.  The citation "Russell &
+                                                   Norving, p. 60" indicates...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+[13]
+Underfull \hbox (badness 10000) in paragraph at lines 397--400
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 402--404
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 404--405
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 405--406
+
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 428--432
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 437--439
+
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Dept
+hFS/figures/15.1.png, id=514, 287.0725pt x 196.735pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1
+-DepthFS/figures/15.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-
+DepthFS/figures/15.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
+S 243/lectures/14L1-DepthFS/figures/15.1.png  used on input line 464.
+(pdftex.def)             Requested size: 70.46037pt x 48.28604pt.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Dept
+hFS/figures/15.2.png, id=515, 178.6675pt x 179.67125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1
+-DepthFS/figures/15.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-
+DepthFS/figures/15.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/C
+S 243/lectures/14L1-DepthFS/figures/15.2.png  used on input line 470.
+(pdftex.def)             Requested size: 70.46037pt x 70.85558pt.
+[15] [16 </Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/
+14L1-DepthFS/figures/15.1.png (PNG copy)> </Users/ashoksaravanan/Coding/ScribeL
+ec/server/output/CS 243/lectures/14L1-DepthFS/figures/15.2.png (PNG copy)>]
+[17] [18]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:524: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.524 \begin{tikzpicture}
+                         [scale=0.7]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:525: Undefined control sequence.
+l.525 \node
+           [draw, fill=blue!50, rounded corners] (start) at (2, 3) {$(x, y)$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:526: Undefined control sequence.
+l.526 \node
+           [draw, fill=blue!50, rounded corners] (L) at (1, 2) {$(x-1, y)$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:527: Undefined control sequence.
+l.527 \node
+           [draw, fill=blue!50, rounded corners] (R) at (3, 2) {$(x+1, y)$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:528: Undefined control sequence.
+l.528 \node
+           [draw, fill=blue!50, rounded corners] (U) at (2, 4) {$(x, y-1)$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:529: Undefined control sequence.
+l.529 \node
+           [draw, fill=blue!50, rounded corners] (D) at (2, 2) {$(x, y+1)$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:531: Undefined control sequence.
+l.531 \draw
+           [->] (start) -- (L) node[midway, left] {L};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:532: Undefined control sequence.
+l.532 \draw
+           [->] (start) -- (R) node[midway, right] {R};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:533: Undefined control sequence.
+l.533 \draw
+           [->] (start) -- (U) node[midway, above] {U};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:534: Undefined control sequence.
+l.534 \draw
+           [->] (start) -- (D) node[midway, below] {D};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:536: Undefined control sequence.
+l.536 \node
+           [draw, fill=blue!50, rounded corners] (LL) at (0.5, 1) {$(x-2, y)$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:537: Undefined control sequence.
+l.537 \node
+           [draw, fill=blue!50, rounded corners] (LR) at (3.5, 1) {$(x+2, y)$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:538: Undefined control sequence.
+l.538 \node
+           [draw, fill=blue!50, rounded corners] (LU) at (1.5, 5) {$(x-1, y-...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:539: Undefined control sequence.
+l.539 \node
+           [draw, fill=blue!50, rounded corners] (LD) at (1.5, 0) {$(x-1, y+...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:540: Undefined control sequence.
+l.540 \node
+           [draw, fill=blue!50, rounded corners] (RU) at (4.5, 5) {$(x+1, y-...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:541: Undefined control sequence.
+l.541 \node
+           [draw, fill=blue!50, rounded corners] (RD) at (4.5, 0) {$(x+1, y+...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:543: Undefined control sequence.
+l.543 \draw
+           [->] (L) -- (LL) node[midway, left] {L};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:544: Undefined control sequence.
+l.544 \draw
+           [->] (L) -- (LU) node[midway, left] {U};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:545: Undefined control sequence.
+l.545 \draw
+           [->] (L) -- (LD) node[midway, left] {D};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:546: Undefined control sequence.
+l.546 \draw
+           [->] (R) -- (LR) node[midway, right] {R};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:547: Undefined control sequence.
+l.547 \draw
+           [->] (R) -- (RU) node[midway, right] {U};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:548: Undefined control sequence.
+l.548 \draw
+           [->] (R) -- (RD) node[midway, right] {D};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:549: Undefined control sequence.
+l.549 \draw
+           [->] (U) -- (LU) node[midway, above] {U};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:550: Undefined control sequence.
+l.550 \draw
+           [->] (U) -- (RU) node[midway, above] {R};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:551: Undefined control sequence.
+l.551 \draw
+           [->] (U) -- (U) node[midway, above] {U};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:552: Undefined control sequence.
+l.552 \draw
+           [->] (D) -- (LD) node[midway, below] {L};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:553: Undefined control sequence.
+l.553 \draw
+           [->] (D) -- (RD) node[midway, below] {R};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:554: Undefined control sequence.
+l.554 \draw
+           [->] (D) -- (D) node[midway, below] {D};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:555: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.555 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[19]
+Underfull \hbox (badness 10000) in paragraph at lines 570--573
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 579--581
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:589: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.589 \begin{tikzpicture}
+                         [scale=0.5]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:590: Undefined control sequence.
+l.590 \draw
+           [step=1cm,gray,very thin] (0,0) grid (4,4);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:591: Undefined control sequence.
+l.591 \draw
+            (0.5,0.5) -- (3.5,0.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:592: Undefined control sequence.
+l.592 \draw
+            (0.5,1.5) -- (0.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:593: Undefined control sequence.
+l.593 \draw
+            (0.5,3.5) -- (3.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:594: Undefined control sequence.
+l.594 \draw
+            (1.5,0.5) -- (1.5,1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:595: Undefined control sequence.
+l.595 \draw
+            (2.5,0.5) -- (2.5,1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:596: Undefined control sequence.
+l.596 \draw
+            (2.5,1.5) -- (3.5,1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:597: Undefined control sequence.
+l.597 \draw
+            (1.5,2.5) -- (3.5,2.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:598: Undefined control sequence.
+l.598 \draw
+            (1.5,3.5) -- (2.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:599: Undefined control sequence.
+l.599 \draw
+            (2.5,3.5) -- (3.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:600: Undefined control sequence.
+l.600 \draw
+            (2.5,2.5) -- (3.5,2.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:601: Undefined control sequence.
+l.601 \draw
+            (2.5,2.5) -- (3.5,2.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:602: Undefined control sequence.
+l.602 \draw
+            (3.5,2.5) -- (3.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:603: Undefined control sequence.
+l.603 \draw
+            (0,0) node[below left] {0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:604: Undefined control sequence.
+l.604 \draw
+            (1,0) node[below] {1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:605: Undefined control sequence.
+l.605 \draw
+            (2,0) node[below] {2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:606: Undefined control sequence.
+l.606 \draw
+            (3,0) node[below] {3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:607: Undefined control sequence.
+l.607 \draw
+            (0,1) node[left] {0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:608: Undefined control sequence.
+l.608 \draw
+            (0,2) node[left] {1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:609: Undefined control sequence.
+l.609 \draw
+            (0,3) node[left] {2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:610: Undefined control sequence.
+l.610 \draw
+            (0,4) node[left] {3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:611: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.611 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[20]
+Underfull \hbox (badness 10000) in paragraph at lines 626--633
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 633--635
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 635--636
+
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:639: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.639 \begin{tikzpicture}
+                         [scale=0.6]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:640: Undefined control sequence.
+l.640 \draw
+           [step=1cm,gray,very thin] (0,0) grid (4,4);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:641: Undefined control sequence.
+l.641 \draw
+            (0.5,0.5) -- (3.5,0.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:642: Undefined control sequence.
+l.642 \draw
+            (0.5,1.5) -- (0.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:643: Undefined control sequence.
+l.643 \draw
+            (0.5,3.5) -- (3.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:644: Undefined control sequence.
+l.644 \draw
+            (1.5,0.5) -- (1.5,1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:645: Undefined control sequence.
+l.645 \draw
+            (2.5,0.5) -- (2.5,1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:646: Undefined control sequence.
+l.646 \draw
+            (2.5,1.5) -- (3.5,1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:647: Undefined control sequence.
+l.647 \draw
+            (1.5,2.5) -- (3.5,2.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:648: Undefined control sequence.
+l.648 \draw
+            (1.5,3.5) -- (2.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:649: Undefined control sequence.
+l.649 \draw
+            (2.5,3.5) -- (3.5,3.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:650: Undefined control sequence.
+l.650 \draw
+            (2.5,2.5) -- (3.5,2.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:651: Undefined control sequence.
+l.651 \draw
+            (0,0) node[below left] {0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:652: Undefined control sequence.
+l.652 \draw
+            (1,0) node[below] {1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:653: Undefined control sequence.
+l.653 \draw
+            (2,0) node[below] {2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:654: Undefined control sequence.
+l.654 \draw
+            (3,0) node[below] {3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:655: Undefined control sequence.
+l.655 \draw
+            (0,1) node[left] {0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:656: Undefined control sequence.
+l.656 \draw
+            (0,2) node[left] {1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:657: Undefined control sequence.
+l.657 \draw
+            (0,3) node[left] {2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:658: Undefined control sequence.
+l.658 \draw
+            (0,4) node[left] {3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:659: Undefined control sequence.
+l.659 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (0,0) {0,0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:660: Undefined control sequence.
+l.660 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (0,1) {0,1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:661: Undefined control sequence.
+l.661 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (0,2) {0,2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:662: Undefined control sequence.
+l.662 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (0,3) {0,3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:663: Undefined control sequence.
+l.663 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (1,0) {1,0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:664: Undefined control sequence.
+l.664 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (1,1) {1,1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:665: Undefined control sequence.
+l.665 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (1,2) {1,2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:666: Undefined control sequence.
+l.666 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (1,3) {1,3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:667: Undefined control sequence.
+l.667 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (2,0) {2,0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:668: Undefined control sequence.
+l.668 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (2,1) {2,1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:669: Undefined control sequence.
+l.669 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (2,2) {2,2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:670: Undefined control sequence.
+l.670 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (2,3) {2,3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:671: Undefined control sequence.
+l.671 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (3,0) {3,0};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:672: Undefined control sequence.
+l.672 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (3,1) {3,1};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:673: Undefined control sequence.
+l.673 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (3,2) {3,2};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:674: Undefined control sequence.
+l.674 \node
+           [draw, circle, fill=blue!20, inner sep=1pt] at (3,3) {3,3};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:675: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.675 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[21]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:696: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.696 \begin{tikzpicture}
+                         [level distance=1.5cm,
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:699: Undefined control sequence.
+l.699     \node
+                {fib(4)}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:707: Undefined control sequence.
+l.707     \node
+               [below of=fib(3), xshift=-1cm] {fib(2)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:708: Undefined control sequence.
+l.708     \node
+               [below of=fib(3), xshift=1cm] {fib(1)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:709: Undefined control sequence.
+l.709     \node
+               [below of=fib(2), xshift=-1cm] {fib(1)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:710: Undefined control sequence.
+l.710     \node
+               [below of=fib(2), xshift=1cm] {fib(0)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:711: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.711 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (4.27303pt too wide) in paragraph at lines 690--713
+\T1/lmr/m/n/10 [level dis-tance=1.5cm, ev-ery node/.style=rectangle, rounded co
+r-ners, draw, min-i-mum size=1cm, align=center]
+ []
+
+[22]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:742: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.742 \begin{tikzpicture}
+                         [node distance=1.5cm]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:743: Undefined control sequence.
+l.743 \node
+           [draw, rectangle, fill=teal!50, rounded corners] (fibn) {fib(n)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:744: Undefined control sequence.
+l.744 \node
+           [draw, rectangle, fill=teal!50, rounded corners, below left of=fi...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:745: Undefined control sequence.
+l.745 \node
+           [draw, rectangle, fill=teal!50, rounded corners, below right of=f...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:746: Undefined control sequence.
+l.746 \node
+           [draw, rectangle, fill=teal!50, rounded corners, right of=fibn2] ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:747: Undefined control sequence.
+l.747 \node
+           [draw, rectangle, fill=teal!50, rounded corners, left of=fibn1] (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:748: Undefined control sequence.
+l.748 \draw
+           [->, thick, dashed] (fibn) -- (fibn1);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:749: Undefined control sequence.
+l.749 \draw
+           [->, thick, dashed] (fibn) -- (fibn2);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:750: Undefined control sequence.
+l.750 \draw
+           [->, thick, dashed] (fibn1) -- (fib0);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:751: Undefined control sequence.
+l.751 \draw
+           [->, thick, dashed] (fibn2) -- (fib1);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:752: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.752 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (12.30988pt too wide) in paragraph at lines 726--754
+\T1/lmr/m/n/10 [node dis-tance=1.5cm] [draw, rect-an-gle, fill=teal!50, rounded
+ cor-ners] (fibn) fib(n); [draw, rect-an-gle, fill=teal!50,
+ []
+
+[23]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:768: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.768 \begin{tikzpicture}
+                         [node distance=1.5cm]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:769: Undefined control sequence.
+l.769 \node
+           [draw, rectangle, fill=teal!50, rounded corners] (fib1) {fib(1)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:770: Undefined control sequence.
+l.770 \node
+           [draw, rectangle, fill=teal!50, rounded corners, right of=fib1] (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:771: Undefined control sequence.
+l.771 \node
+           [draw, rectangle, fill=teal!50, rounded corners, below left of=fi...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:772: Undefined control sequence.
+l.772 \node
+           [draw, rectangle, fill=teal!50, rounded corners, below of=fib0] (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:773: Undefined control sequence.
+l.773 \node
+           [draw, rectangle, fill=teal!50, rounded corners, below of=fib2] (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:774: Undefined control sequence.
+l.774 \node
+           [draw, rectangle, fill=teal!50, rounded corners, right of=fib0] (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:775: Undefined control sequence.
+l.775 \node
+           [draw, rectangle, fill=teal!50, rounded corners, right of=fib4] (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:776: Undefined control sequence.
+l.776 \node
+           [draw, rectangle, fill=teal!50, rounded corners, above right of=f...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:777: Undefined control sequence.
+l.777 \node
+           [draw, rectangle, fill=teal!50, rounded corners, below right of=f...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:778: Undefined control sequence.
+l.778 \node
+           [draw, rectangle, fill=teal!50, rounded corners, below of=fib4] (...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:779: Undefined control sequence.
+l.779 \draw
+           [->, thick] (fib1) -- (fib2);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:780: Undefined control sequence.
+l.780 \draw
+           [->, thick] (fib0) -- (fib2);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:781: Undefined control sequence.
+l.781 \draw
+           [->, thick] (fib2) -- (fib3);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:782: Undefined control sequence.
+l.782 \draw
+           [->, thick] (fib1b) -- (fib3);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:783: Undefined control sequence.
+l.783 \draw
+           [->, thick] (fib4) -- (fib5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:784: Undefined control sequence.
+l.784 \draw
+           [->, thick] (fib3b) -- (fib5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:785: Undefined control sequence.
+l.785 \draw
+           [->, thick] (fib2b) -- (fib4b);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:786: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.786 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (11.19888pt too wide) in paragraph at lines 767--798
+\T1/lmr/m/n/10 [node dis-tance=1.5cm] [draw, rect-an-gle, fill=teal!50, rounded
+ cor-ners] (fib1) fib(1); [draw, rect-an-gle, fill=teal!50,
+ []
+
+[24]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:812: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.812 \begin{tikzpicture}
+                         
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:813: LaTeX Error: Environment axis undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.813 \begin{axis}
+                  [
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:825: Undefined control sequence.
+l.825     \addplot
+                  [blue, mark=*, mark size=1.5pt] coordinates {
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:827: Undefined control sequence.
+l.827     \addlegendentry
+                         {fib(n)};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:828: Undefined control sequence.
+l.828     \addplot
+                  [green, mark=*, mark size=1.5pt] coordinates {
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:830: Undefined control sequence.
+l.830     \addlegendentry
+                         {C-fib};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:831: Undefined control sequence.
+l.831     \addplot
+                  [green!50!black, mark=*, mark size=1.5pt] coordinates {
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:833: Undefined control sequence.
+l.833     \addlegendentry
+                         {C-fibE};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:834: LaTeX Error: \begin{document} ended by \end{axis}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.834 \end{axis}
+                
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:835: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.835 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (6.77376pt too wide) in paragraph at lines 811--861
+\T1/lmr/m/n/10 [ ti-tle=Comparison, xla-bel=n, yla-bel=Value, leg-end pos=south
+ east, ymode=log, xmin=0, xmax=50, ymin=1,
+ []
+
+
+Overfull \hbox (51.24634pt too wide) in paragraph at lines 811--861
+\T1/lmr/m/n/10 ymax=2e8, xtick=0,1,2,3,4,5,6,7,8,9,10,20,30,40,50, yt-ick=1,10,
+100,1000,10000,100000,1000000,10000000,100000000,2e8,
+ []
+
+[25] [26] [27]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:909: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.909 \begin{tikzpicture}
+                         
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:910: Undefined control sequence.
+l.910 \node
+           [circle, fill=green!50, minimum size=5pt, inner sep=0pt] (start) ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:911: Undefined control sequence.
+l.911 \node
+           [below of=start, xshift=0.5cm] {Start};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:912: Undefined control sequence.
+l.912 \node
+           [circle, fill=red!50, minimum size=5pt, inner sep=0pt] (goal) at ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:913: Undefined control sequence.
+l.913 \node
+           [below of=goal, xshift=0.5cm] {Goal};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/CS 243/lectures/14L1-Depth
+FS/notes.tex:914: LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.914 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[28] 
+enddocument/afterlastpage: lastpage setting LastPage.
+(_logs/notes.aux)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+ ***********
+Package rerunfilecheck Info: File `notes.out' has not changed.
+(rerunfilecheck)             Checksum: 89B232CAA9F7535C6B3E821FAC7D2231;10291.
+ ) 
+Here is how much of TeX's memory you used:
+ 14739 strings out of 474116
+ 238029 string characters out of 5743682
+ 1940187 words of memory out of 5000000
+ 36681 multiletter control sequences out of 15000+600000
+ 613466 words of font info for 79 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 83i,11n,131p,1460b,683s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/lo
+cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texliv
+e/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2024/texm
+f-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fon
+ts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
+blic/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr
+17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr
+/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
+Output written on _logs/notes.pdf (28 pages, 389790 bytes).
+PDF statistics:
+ 673 PDF objects out of 1000 (max. 8388607)
+ 614 compressed objects within 7 object streams
+ 161 named destinations out of 1000 (max. 500000)
+ 859 words of extra memory for PDF output out of 10000 (max. 10000000)
+

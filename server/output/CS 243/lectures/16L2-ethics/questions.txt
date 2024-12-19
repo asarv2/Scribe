@@ -1,0 +1,51 @@
+QUESTION 1
+According to the lecture, what is a key concern regarding the use of data about people in AI systems?
+A. Data about people is always perfectly anonymized and safe.
+B. Data about people can cause harm and algorithmic outcomes are often not explainable.
+C. Data about people is only used for web advertising and ridesharing.
+D. Data about people is always used to promote fairness and equality.
+E. Data about people is only collected through public records.
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because the lecture emphasizes that anonymized data is not always safe.
+B. Answer B is correct because the lecture highlights that data about people can cause harm and algorithmic outcomes are often not explainable.
+C. Answer C is incorrect because the lecture provides multiple examples of AI use in society, not just web advertising and ridesharing.
+D. Answer D is incorrect because the lecture discusses how AI can perpetuate biases and not always promote fairness.
+E. Answer E is incorrect because the lecture mentions multiple sources of data collection, not just public records.
+
+QUESTION 2
+According to the lecture, what is a potential issue with using proxies for protected attributes in machine learning?
+A. Proxies are always perfectly correlated with protected attributes.
+B. Proxies are not a concern as they do not directly use protected attributes.
+C. Machine learning using proxies can re-inscribe bias from historical records.
+D. Proxies are only used in web advertising and not in other applications.
+E. Proxies are always used to promote fairness and equality.
+
+ANSWER: C
+
+EXPLANATION: 
+A. Answer A is incorrect because proxies are not always perfectly correlated with protected attributes.
+B. Answer B is incorrect because the lecture highlights that proxies can be a source of bias.
+C. Answer C is correct because the lecture explains that machine learning using biased historical records and proxies is likely to re-inscribe bias.
+D. Answer D is incorrect because the lecture mentions multiple examples of AI use in society, not just web advertising.
+E. Answer E is incorrect because the lecture discusses how AI can perpetuate biases and not always promote fairness.
+
+QUESTION 3
+According to the lecture, what is the main idea behind "Fairness through Blindness"?
+A. To always use protected attributes in the model.
+B. To ignore all irrelevant or protected attributes.
+C. To always equalize outcomes for all groups.
+D. To always treat all individuals the same.
+E. To always use the most accurate model, regardless of fairness.
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because "Fairness through Blindness" aims to avoid using protected attributes.
+B. Answer B is correct because the lecture explains that "Fairness through Blindness" involves ignoring irrelevant or protected attributes.
+C. Answer C is incorrect because "Fairness through Blindness" is not about equalizing outcomes, but about ignoring protected attributes.
+D. Answer D is incorrect because "Fairness through Blindness" is not about treating all individuals the same, but about ignoring protected attributes.
+E. Answer E is incorrect because "Fairness through Blindness" is about fairness, not just accuracy.
+

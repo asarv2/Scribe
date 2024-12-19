@@ -26,6 +26,7 @@ import AddQuestionsModal from "@/components/AddQuestionsModal";
 import { intersectionBy, uniqBy } from "lodash";
 import { getPracticeExams } from "@/utils/queries/get-practice-exams";
 import { getMap } from "@/utils/queries/get-map";
+import Latex from "react-latex-next";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -144,7 +145,7 @@ export default function Class({ params }: { params: { classId: string } }) {
             <Modal
                 opened={opened}
                 onClose={close}
-                title={<h3>{openNodeLabel}</h3>}
+                title={<h3><Latex key={"Label"}>{openNodeLabel as string}</Latex></h3>}
                 centered
                 overlayProps={{
                     color:
@@ -157,8 +158,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                 transitionProps={{ transition: 'fade', duration: 200 }}
             >
                 <Stack>
-                    <Text>{openNodeDescription}</Text>
-
+                    <Latex key={"Description"}>{openNodeDescription as string}</Latex>
                     {
                         <Suspense
                             fallback={

@@ -5,7 +5,9 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
     const { data: topics, error } = await client
         .from("topics")
         .select("*")
-        .eq("class", classId);
+        .eq("class", classId)
+        .neq("type", "problem")
+        .neq("type", "algorithm");
 
     if (error) {
         throw new Error(error.message);

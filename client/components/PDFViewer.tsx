@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Stack, Group } from '@mantine/core';
+import { Button, Stack, Group, Tooltip } from '@mantine/core';
+import { IconDownload } from '@tabler/icons-react';
 
 type PDFViewerProps = {
     pdfUrl: string;
@@ -12,7 +13,7 @@ type PDFViewerProps = {
 export default function PDFViewer({ pdfUrl, pageNumber, setPageNumber }: PDFViewerProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const renderTaskRef = useRef<any>(null); // Ref to store the current render task.
-    const [numPages, setNumPages] = useState(0);
+    const [numPages, setNumPages] = useState(pageNumber);
     const [pdfDoc, setPdfDoc] = useState<any>(null);
 
     useEffect(() => {
@@ -103,18 +104,30 @@ export default function PDFViewer({ pdfUrl, pageNumber, setPageNumber }: PDFView
     return (
         <Stack>
             <Stack align="center">
-                <canvas ref={canvasRef} style={{ width: '50%', border: '1px solid black' }} />
+                <canvas ref={canvasRef} style={{ width: '100%', border: '1px solid black' }} />
             </Stack>
-            <Group>
-                <Button onClick={handlePrevPage} disabled={pageNumber <= 1}>
-                    Previous
-                </Button>
-                <Button onClick={handleNextPage} disabled={pageNumber >= numPages}>
-                    Next
-                </Button>
-                <span>
-                    Page {pageNumber} of {numPages}
-                </span>
+            <Group justify="space-between">
+                <Group>
+                    <Button onClick={handlePrevPage} disabled={pageNumber <= 1}>
+                        Previous
+                    </Button>
+                    <Button onClick={handleNextPage} disabled={pageNumber >= numPages}>
+                        Next
+                    </Button>
+                    <span>
+                        Page {pageNumber} of {numPages}
+                    </span>
+                </Group>
+                <Tooltip label="Download PDF">
+                    <Button 
+                        component="a" 
+                        href={pdfUrl}
+                        download
+                        leftSection={<IconDownload size={16} />}
+                    >
+                        Download
+                    </Button>
+                </Tooltip>
             </Group>
         </Stack>
     );

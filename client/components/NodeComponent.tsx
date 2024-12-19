@@ -1,5 +1,6 @@
 import { Handle, NodeProps, Position as FlowPosition } from '@xyflow/react';
 import React from 'react';
+import Latex from 'react-latex-next';
 
 export const NodeComponent: React.FC<NodeProps> = ({ data}) => {
     return (
@@ -19,7 +20,7 @@ export const NodeComponent: React.FC<NodeProps> = ({ data}) => {
                     whiteSpace: 'nowrap',    // Add this line if text wraps unexpectedly
                 }}
             >
-                {data.label as string}
+                <Latex>{data.label as string}</Latex>
             </div>
             <Handle type="source" position={FlowPosition.Bottom} />
         </div>

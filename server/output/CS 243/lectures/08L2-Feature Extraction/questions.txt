@@ -1,0 +1,51 @@
+QUESTION 1
+According to the lecture, what is the main advantage of using edges for image analysis?
+A. Edges are highly sensitive to changes in lighting and color.
+B. Edges are not useful for matching patches across images.
+C. Edges are resilient to lighting and color variations and useful for recognition.
+D. Edges are only useful for 3D reconstruction.
+E. Edges are not useful for object recognition.
+
+ANSWER: C
+
+EXPLANATION: 
+A. Answer A is incorrect because the lecture states that edges are resilient to lighting and color, not sensitive.
+B. Answer B is incorrect because the lecture states that edges are useful for matching patches across images.
+C. Answer C is correct because the lecture states that edges are resilient to lighting and color and useful for recognition and matching patches across images.
+D. Answer D is incorrect because the lecture states that edges are useful for recognition and matching patches across images, not just 3D reconstruction.
+E. Answer E is incorrect because the lecture states that edges are useful for object recognition.
+
+QUESTION 2
+In the context of edge detection, what does the term "intensity profile" refer to?
+A. The 3D representation of an image.
+B. The plot of intensity values along a scanline in an image.
+C. The histogram of pixel intensities in an image.
+D. The gradient magnitude of an image.
+E. The color distribution of an image.
+
+ANSWER: B
+
+EXPLANATION: 
+A. Answer A is incorrect because the intensity profile is a 1D plot, not a 3D representation.
+B. Answer B is correct because the intensity profile is a plot of the intensity values along a scanline in the image.
+C. Answer C is incorrect because the intensity profile is a plot along a line, not a histogram of the entire image.
+D. Answer D is incorrect because the intensity profile is a plot of intensity values, not the gradient magnitude.
+E. Answer E is incorrect because the intensity profile is a plot of intensity values, not color distribution.
+
+QUESTION 3
+According to the lecture, what is the main idea behind corner detection?
+A. To find areas where the image intensity is constant.
+B. To find areas where the image intensity changes significantly in one direction.
+C. To find areas where the image intensity changes significantly in all directions when a window is translated.
+D. To find areas where the image intensity changes gradually.
+E. To find areas where the image intensity is zero.
+
+ANSWER: C
+
+EXPLANATION: 
+A. Answer A is incorrect because corner detection aims to find areas of change, not constant intensity.
+B. Answer B is incorrect because corner detection aims to find areas of change in all directions, not just one.
+C. Answer C is correct because the lecture states that corner detection aims to find areas where the image intensity changes significantly in all directions when a window is translated.
+D. Answer D is incorrect because corner detection aims to find areas of rapid change, not gradual change.
+E. Answer E is incorrect because corner detection aims to find areas of change, not zero intensity.
+
