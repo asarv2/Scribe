@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import { createQueryClient } from "../react-query/queryClient";
+import { SchemaName } from "@/types";
 
 export const updateSession = async (request: NextRequest) => {
   // This `try/catch` block is only here for the interactive tutorial.
@@ -31,6 +32,7 @@ export const updateSession = async (request: NextRequest) => {
             )
           },
         },
+        db: { schema: process.env.NEXT_PUBLIC_SUPABASE_SCHEMA as SchemaName }
       },
     );
 

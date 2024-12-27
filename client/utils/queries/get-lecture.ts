@@ -1,10 +1,11 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getPracticeQuestions(client: TypedSupabaseClient, examId: string) {
+export async function getLecture(client: TypedSupabaseClient, lectureId: string) {
     const {data, error} = await client
-        .from("practice_questions")
+        .from("lectures")
         .select("*")
-        .eq("practice_exam", examId)
+        .eq("id", lectureId)
+        .single();
     
     if (error) {
         throw new Error(error.message);

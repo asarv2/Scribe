@@ -17,6 +17,10 @@ export type NodeImagesProps = {
 export const NodeImages: React.FC<NodeImagesProps> = ({ visuals }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
+    // Calculate prev and next indices
+    const prevIndex = (currentIndex - 1 + visuals.length) % visuals.length
+    const nextIndex = (currentIndex + 1) % visuals.length
+
     const nextImage = () => {
         setCurrentIndex((prev) => (prev + 1) % visuals.length)
     }
@@ -34,10 +38,14 @@ export const NodeImages: React.FC<NodeImagesProps> = ({ visuals }) => {
                         alt="Topic Image" 
                         fill
                         style={{ objectFit: 'contain' }}
+                        priority
                     />
                     
                     {visuals.length > 1 && (
                         <>
+                            <link rel="preload" as="image" href={visuals[prevIndex]} />
+                            <link rel="preload" as="image" href={visuals[nextIndex]} />
+
                             <ActionIcon
                                 variant="filled"
                                 style={{

@@ -1,30 +1,27 @@
 /**
- * QuestionSolutionLecture.tsx
+ * QuestionSolutionTopic.tsx
  * Will show the questions and solutions in a tab format.
  * @AshokSaravanan222
  * 11-16-2024
  */
 
-import { Card, Tabs, FloatingIndicator, Box, Text, Flex, Group, Tooltip, Skeleton, List } from "@mantine/core"
+import { Card, Tabs, FloatingIndicator, Box, Text, Flex, Group, Tooltip, Skeleton } from "@mantine/core"
 import { useState } from "react";
 import classes from "./Demo.module.css";
 import { IconReload } from "@tabler/icons-react";
 import { IconDownload } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { notifications } from "@mantine/notifications";
-import { Lecture, Question } from "@/types";
-import { jsPDF } from "jspdf";
-import { marked } from "marked";
+import { Topic, Question } from "@/types";
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 
 
-type QuestionSolutionLectureProps = {
-    lecture: Lecture | undefined
-    lectureQuestions: Question[] | undefined
+type QuestionSolutionTopicProps = {
+    topic: Topic | undefined
+    topicQuestions: Question[] | undefined
 }
 
-export default function QuestionSolutionLecture({ lecture, lectureQuestions }: QuestionSolutionLectureProps) {
+export default function QuestionSolutionTopic({ topic, topicQuestions }: QuestionSolutionTopicProps) {
     const [regenerateLoading, setRegenerateLoading] = useState(false);
     const queryClient = useQueryClient();
 
@@ -59,15 +56,10 @@ export default function QuestionSolutionLecture({ lecture, lectureQuestions }: Q
 
                     <Tabs.Panel value="1">
                         <Flex direction="column" gap="md">
-                            {lectureQuestions && lectureQuestions.length > 0 ? lectureQuestions.map(
+                            {topicQuestions && topicQuestions.length > 0 ? topicQuestions.map(
                                 (question, index) => (
                                     <Box key={index}>
                                         <h3><Latex>{`${index + 1}. ${question.question}`}</Latex></h3>
-                                        <h4><Latex>{`A. ${question.option_a || ""}`}</Latex></h4>
-                                        <h4><Latex>{`B. ${question.option_b || ""}`}</Latex></h4>
-                                        <h4><Latex>{`C. ${question.option_c || ""}`}</Latex></h4>
-                                        <h4><Latex>{`D. ${question.option_d || ""}`}</Latex></h4>
-                                        <h4><Latex>{`E. ${question.option_e || ""}`}</Latex></h4>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No questions found.</Text></Box>}
@@ -75,15 +67,11 @@ export default function QuestionSolutionLecture({ lecture, lectureQuestions }: Q
                     </Tabs.Panel>
                     <Tabs.Panel value="2">
                         <Flex direction="column" gap="md">
-                            {lectureQuestions && lectureQuestions.length > 0 ? lectureQuestions.map(
+                            {topicQuestions && topicQuestions.length > 0 ? topicQuestions.map(
                                 (question, index) => (
                                     <Box key={index}>
                                         <h3><Latex>{`${index + 1}. ${question.question}`}</Latex></h3>
-                                        <h4 style={{ color: question.solution === "A" ? "red" : "black" }}><Latex>{`A. ${question.explanation_a || ""}`}</Latex></h4>
-                                        <h4 style={{ color: question.solution === "B" ? "red" : "black" }}><Latex>{`B. ${question.explanation_b || ""}`}</Latex></h4>
-                                        <h4 style={{ color: question.solution === "C" ? "red" : "black" }}><Latex>{`C. ${question.explanation_c || ""}`}</Latex></h4>
-                                        <h4 style={{ color: question.solution === "D" ? "red" : "black" }}><Latex>{`D. ${question.explanation_d || ""}`}</Latex></h4>
-                                        <h4 style={{ color: question.solution === "E" ? "red" : "black" }}><Latex>{`E. ${question.explanation_e || ""}`}</Latex></h4>
+                                        <Text c="red" size="lg" fw={500}><Latex>{question.solution}</Latex></Text>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No solutions found.</Text></Box>}

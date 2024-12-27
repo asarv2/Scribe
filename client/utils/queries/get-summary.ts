@@ -4,7 +4,7 @@ export async function getSummaries(client: TypedSupabaseClient, documentId: stri
     const {data, error} = await client
         .from("summaries")
         .select("*")
-        .eq("slide", documentId)
+        .eq("lecture", documentId)
         .order("created_at", {ascending: true})
     
     if (error) {

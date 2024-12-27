@@ -25,20 +25,20 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ lectureIds }) => {
     })
 
     return (
-        <Paper>
+        lectures && lectures.length > 0 && <Paper>
             <Stack>
                 <Card withBorder>
                     <Skeleton visible={loadingLectures}>
-                        <Stack>
-                            {lectures && lectures.length > 0 ? lectures.map(lecture => (
-                                <Link href={`${window.location.origin}/classes/${lecture.class}/slide/${lecture.id}`} key={lecture.id}>
+                        <Stack mah={200} style={{ overflowY: "scroll" }}>
+                            {lectures.map(lecture => (
+                                <Link href={`${window.location.origin}/classes/${lecture.class}/lecture/${lecture.id}`} key={lecture.id}>
                                     <Button
                                         color='teal'
                                     >
-                                        L{lecture.note_number} - {lecture.name}
+                                        Lecture {lecture.note_number} - {lecture.name}
                                     </Button>
                                 </Link>
-                            )) : <Text>No lectures found.</Text>}
+                            ))}
                         </Stack>
                     </Skeleton>
                 </Card>

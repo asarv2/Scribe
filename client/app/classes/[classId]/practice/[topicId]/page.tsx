@@ -1,50 +1,52 @@
 /**
- * app/classes/[classId]/lecture/[lectureId]/page.tsx
- * The page for a specific lecture in a class.
+ * app/classes/[classId]/practice/[topicId]/page.tsx
+ * This page is for the practice exam. It will show the questions and the user can take the exam.
  * @AshokSaravanan222
- * 11.11.2024
+ * 11/16/2024
  */
-"use client"
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Button, Container, em, Flex, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
-import { useEffect, useState } from "react";
-import { useMediaQuery } from "@mantine/hooks";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { HeaderSimple } from "@/components/HeaderSimple";
-import NotesSummary from "@/components/NotesSummary";
+import { Container, Text, Tooltip } from "@mantine/core";
+import { Stack, Flex, Group } from "@mantine/core";
 import Link from "next/link";
-import { IconArrowLeft, IconDownload } from '@tabler/icons-react';
-import { getLecture } from "@/utils/queries/get-lecture";
+import { IconArrowLeft, IconDownload } from "@tabler/icons-react";
+import { getUser } from "@/utils/queries/get-user";
+import { getClass } from "@/utils/queries/get-class";
+import { getTopicQuestions } from "@/utils/queries/get-questions";
+import QuestionSolutionSlide from "@/components/QuestionSolutionSlide";
+import QuestionSolutionTopic from "@/components/QuestionSolutionTopic";
+import { getTopic } from "@/utils/queries/get-topic";
 import jsPDF from "jspdf";
 import { marked } from "marked";
 import { notifications } from "@mantine/notifications";
-import { getSummaries } from "@/utils/queries/get-summary";
 
-export default function Lecture({ params }: { params: { classId: string, lectureId: string } }) {
+export default function PracticeTopicPage({ params }: { params: { topicId: string, classId: string } }) {
+
     const supabase = useSupabaseBrowser();
-    const classId = params.classId;
-    const lectureId = params.lectureId;
 
-    const { data: summaries } = useQuery({
-        queryKey: ["summaries", lectureId],
-        queryFn: () => getSummaries(supabase, lectureId),
+    const { data: questions } = useQuery({
+        queryKey: ["questions", params.topicId],
+        queryFn: () => getTopicQuestions(supabase, params.topicId),
     });
 
-    const { data: lecture } = useQuery({
-        queryKey: ["lecture", lectureId],
-        queryFn: () => getLecture(supabase, lectureId),
+    const { data: topic } = useQuery({
+        queryKey: ["topic", params.topicId],
+        queryFn: () => getTopic(supabase, params.topicId),
     });
-
 
     const handleDownload = async () => {
         try {
-            if (!summaries || summaries.length === 0) {
+            if (!questions || questions.length === 0) {
                 throw new Error('No practice questions available to download.');
             }
 
             const doc = new jsPDF('p', 'pt', 'a4');
-            const content = summaries.map(s => s.content).join("<br><br>");
+            const questionContent = questions.map(q => q.question).join("<br><br>");
+            const solutionContent = questions.map(q => q.question + "<br><br>" + `<span style="color: red;">${q.solution}</span>`).join("<br><br>");
+            const content = `QUESTIONS<br><br>${questionContent}<br><br><br><br><br><br>SOLUTIONS<br><br>${solutionContent}`;
 
             // Convert Markdown to HTML
             const htmlContent = `
@@ -72,7 +74,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                 windowWidth: pageWidth,
                 margin: [20, 20],
                 callback: function (doc) {
-                    doc.save(`${lecture?.name || 'lecture'}.pdf`);
+                    doc.save(`${topic?.title || 'topic'}.pdf`);
                 },
             });
 
@@ -99,13 +101,10 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}`}>
+                            <Link href={`/classes/${params.classId}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
-                            <Link href={`/classes/${classId}/lecture/${lectureId}/practice`}>
-                                <Button>Practice</Button>
-                            </Link>
+                            <Text size="xl" fw={700} mb={6}>{topic?.title} Practice</Text>
                         </Group>
                         <Group p={"sm"}>
                             <Tooltip label="Download PDF">
@@ -113,7 +112,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                             </Tooltip>
                         </Group>
                     </Flex>
-                    <NotesSummary lectureId={lectureId} lectureName={lecture?.name ?? ""} />
+                    <QuestionSolutionTopic topic={topic} topicQuestions={questions} />
                 </Stack>
             </Container>
 

@@ -8,12 +8,12 @@
 import useSupabaseServer from "../supabase/supabase-server";
 import { cookies } from "next/headers";
 
-export const createSummary = async (slideId: string, response: string) => {
+export const createSummary = async (lectureId: string, response: string) => {
     const supabase = useSupabaseServer(cookies());
 
     const { error } = await supabase
         .from('summaries')
-        .insert({ content: response, slide: slideId });
+        .insert({ content: response, lecture: lectureId });
 
     if (error) {
         return { success: false, error: error.message };

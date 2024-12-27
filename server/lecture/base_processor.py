@@ -46,7 +46,8 @@ class BaseProcessor:
         # creating supabase client
         self.supabase_url = os.getenv("SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_PRIVATE_KEY")
-        self.supabase: Client = create_client(self.supabase_url, supabase_key)
+        schema = os.getenv("SUPABASE_SCHEMA")
+        self.supabase: Client = create_client(self.supabase_url, supabase_key, schema=schema)
         self.class_id = class_id
         
         # getting class info

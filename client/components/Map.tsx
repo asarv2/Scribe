@@ -7,7 +7,7 @@
 
 
 import ELK, { ElkNode, LayoutOptions } from 'elkjs/lib/elk.bundled.js'
-import { PropsWithChildren, useCallback, useEffect } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import {
 	ReactFlow,
 	Background,
@@ -19,48 +19,85 @@ import {
 	useEdgesState,
 	useNodesState,
 	useReactFlow,
+	ControlButton,
+	NodeChange,
+	NodeReplaceChange,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { NodeComponent } from '@/components/NodeComponent'
 import { FlatMapNode, MapNode } from '@/utils/map/map-tree'
+import { Modal, Tooltip, Button, Stack, Text } from '@mantine/core';
+import { IconArrowBackUp, IconArrowDown, IconCircle, IconDownload, IconPlus, IconRefresh, IconRosette, IconRotate, IconRotate360 } from '@tabler/icons-react';
+import { User } from '@supabase/supabase-js';
+import { isProfessor } from '@/utils/lecture/isProfessor';
+import { useDisclosure } from '@mantine/hooks';
+import { useQueryClient } from '@tanstack/react-query';
+import { updateTopicPosition } from '@/utils/services/topics';
+import { DownloadIcon, MagicWandIcon, ReloadIcon, TargetIcon } from '@radix-ui/react-icons'
 
 const elk = new ELK()
 
-const useLayoutedElements = () => {
+const useLayoutedElements = (rootNode: MapNode, computeGraph: boolean, setupMap: boolean, setSetupMap: React.Dispatch<React.SetStateAction<boolean>>, onNodePositionChange: (nodes: { id: string, map_id: string, x: number | null, y: number | null }[]) => void) => {
 	const { getNodes, setNodes, getEdges, setCenter, zoomTo } =
 		useReactFlow()
 	const getLayoutedElements = useCallback(
 		async (options: LayoutOptions) => {
-			const layoutOptions = { ...options }
-			const graph: ElkNode = {
-				id: 'root',
-				// @ts-ignore
-				layoutOptions,
-				// @ts-ignore
-				children: getNodes(),
-				// @ts-ignore
-				edges: getEdges(),
-			}
-			let rootNodePosition = { x: 0, y: 0 }
-			const { children } = await elk.layout(graph)
-			// By mutating the children in-place we saves ourselves from creating a
-			// needless copy of the nodes array.
-			// @ts-ignore
-			children.forEach(node => {
-				if (typeof (node as any).parentNodeId === 'undefined') {
-					console.log('rootNodePosition', node)
-					rootNodePosition = { x: node.x!, y: node.y! }
+			let rootNodePosition = { x: rootNode.xPosition ?? 0, y: rootNode.yPosition ?? 0 }
+
+			if (computeGraph) {
+				const layoutOptions = { ...options }
+				const graph: ElkNode = {
+					id: 'root',
+					// @ts-ignore
+					layoutOptions,
+					// @ts-ignore
+					children: getNodes(),
+					// @ts-ignore
+					edges: getEdges(),
 				}
+				const { children } = await elk.layout(graph)
+				// By mutating the children in-place we saves ourselves from creating a
+				// needless copy of the nodes array.
 				// @ts-ignore
-				node.position = { x: node.x, y: node.y }
-			})
-			// @ts-ignore
-			setNodes(children)
-			setTimeout(() => {
-				setCenter(rootNodePosition.x, rootNodePosition.y)
-				zoomTo(1)
-			})
+				children.forEach(node => {
+					if ((node as any).parentNodeId === 'undefined') {
+						console.log("rootNodePosition", rootNodePosition)
+						rootNodePosition = { x: node.x!, y: node.y! }
+					}
+					// @ts-ignore
+					node.position = { x: node.x, y: node.y }
+				})
+				// @ts-ignore
+				setNodes(children)
+
+				if (children) {
+					const flatNodes = flattenMapNode(rootNode)
+					const positionUpdates = children
+						.map(node => {
+							const supabaseId = flatNodes.find(n => n.id === node.id)?.supabaseId
+							if (!supabaseId) return null
+							return {
+								id: supabaseId,
+								map_id: node.id,
+								x: node.x ?? null,
+								y: node.y ?? null
+							}
+						})
+						.filter((update): update is NonNullable<typeof update> => update !== null)
+
+					if (positionUpdates.length > 0) {
+						onNodePositionChange?.(positionUpdates)
+					}
+				}
+			}
+			if (!setupMap) {
+				setTimeout(() => {
+					setCenter(rootNodePosition.x, rootNodePosition.y)
+					zoomTo(1)
+				})
+				setSetupMap(true)
+			}
 		},
 		[setNodes, setCenter, zoomTo],
 	)
@@ -105,7 +142,7 @@ const createMap = (mapNode: MapNode): Node[] =>
 			color: node.color,
 			description: node.description,
 		},
-		position: { x: 0, y: 0 },
+		position: { x: node.xPosition ?? 0, y: node.yPosition ?? 0 },
 		sourcePosition: Position.Top,
 		targetPosition: Position.Bottom,
 	}))
@@ -122,23 +159,79 @@ const createEdge = (mapNode: MapNode): Edge[] => {
 }
 
 export type MapProps = {
+	classId: string
+	user: User | undefined
 	rootNode: MapNode
-	onNodeClick?: (id: string, nodeLabel: string, description: string) => void
+	onNodeClick: (id: string, nodeLabel: string, description: string) => void
+	onNodePositionChange: (nodes: { id: string, map_id: string, x: number | null, y: number | null }[]) => void
+}
+
+// Add this helper function to check if layout is needed
+const needsLayout = (nodes: FlatMapNode[]): boolean => {
+	return nodes.some(node =>
+		node.xPosition === undefined ||
+		node.yPosition === undefined
+	);
 }
 
 export const Map: React.FC<PropsWithChildren<MapProps>> = ({
+	classId,
+	user,
 	rootNode,
 	onNodeClick,
+	onNodePositionChange,
 	children,
 }) => {
+	const queryClient = useQueryClient()
+	const computeGraph = needsLayout(flattenMapNode(rootNode))
 	const { viewportInitialized } = useReactFlow()
-	const [nodes, , onNodesChange] = useNodesState(createMap(rootNode))
+	const [nodes, setNodes, onNodesChange] = useNodesState(createMap(rootNode))
 	const [edges, , onEdgesChange] = useEdgesState(createEdge(rootNode))
-	const { getLayoutedElements } = useLayoutedElements()
+	const [setupMap, setSetupMap] = useState(false)
+	const { getLayoutedElements } = useLayoutedElements(rootNode, computeGraph, setupMap, setSetupMap, onNodePositionChange)
 
+	const [downloadOpened, { open: openDownload, close: closeDownload }] = useDisclosure(false);
+	const [resetOpened, { open: openReset, close: closeReset }] = useDisclosure(false);
+
+	const [loading, setLoading] = useState(false);
+
+	const handleCenter = () => {
+		getLayoutedElements({
+			'elk.algorithm': 'org.eclipse.elk.stress',
+			// @ts-ignore
+			'org.eclipse.elk.stress.desiredEdgeLength': 300,
+		})
+	}
+
+	const handleResetCoordinates = async () => {
+		try {
+			setLoading(true);
+			setSetupMap(false);
+
+			// Create NodeChange objects to reset positions
+			const resetChanges = nodes.map((node: any) => ({
+				id: node.id,
+				type: 'position', // Specify the type of change
+				position: { x: node.parentNodeId ? null : 0, y: node.parentNodeId ? null : 0 }, // set the root node to 0,0 and all other nodes to null,null
+				dragging: false, // Ensure dragging is set to false
+			}));
+
+			// Apply the changes
+			await handleNodesChange(resetChanges);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoading(false);
+			handleCenter(); // Re-center the map after reset
+			closeReset();   // Close the modal
+		}
+	};
+
+
+
+	// Modified effect to only run layout if needed
 	useEffect(() => {
-		console.log('viewportInitialized', viewportInitialized)
-		if (viewportInitialized) {
+		if (viewportInitialized && !setupMap) {
 			setTimeout(
 				() =>
 					getLayoutedElements({
@@ -149,25 +242,82 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 				100,
 			)
 		}
-	}, [getLayoutedElements, viewportInitialized])
+	}, [getLayoutedElements, viewportInitialized, nodes])
+
+	// Handle position changes
+	const handleNodesChange = useCallback(async (changes: any[]) => {
+		onNodesChange(changes)
+
+		// Only call update when dragging ends
+		const flatNodes = flattenMapNode(rootNode)
+		const positionUpdates = changes
+			.filter(change => change.type === 'position' && change.dragging === false)
+			.map(change => {
+				const supabaseId = flatNodes.find(n => n.id === change.id)?.supabaseId
+				if (!supabaseId) return null
+				return {
+					id: supabaseId,
+					map_id: change.id,
+					x: change.position.x,
+					y: change.position.y
+				}
+			})
+			.filter((update): update is NonNullable<typeof update> => update !== null)
+
+		if (positionUpdates.length > 0) {
+			onNodePositionChange?.(positionUpdates)
+		}
+	}, [onNodesChange, onNodePositionChange])
 
 	return (
-		<ReactFlow
-			snapGrid={[16, 16]}
-			nodes={nodes}
-			edges={edges}
-			onNodesChange={onNodesChange}
-			onEdgesChange={onEdgesChange}
-			fitView
-			fitViewOptions={{ padding: 20 }}
-			nodeTypes={NODE_TYPES}
-			onNodeClick={(e, n) => {
-				onNodeClick?.(n.id, n.data.label as string, n.data.description as string)
-			}}
-		>
-			<Controls showInteractive={true} />
-			<Background variant={BackgroundVariant.Dots} gap={16} size={1} />
-			{children}
-		</ReactFlow>
+		<>
+			<ReactFlow
+				snapGrid={[16, 16]}
+				nodes={nodes}
+				edges={edges}
+				onNodesChange={handleNodesChange}
+				onEdgesChange={onEdgesChange}
+				fitView
+				fitViewOptions={{ padding: 20 }}
+				nodeTypes={NODE_TYPES}
+				onNodeClick={(e, n) => {
+					onNodeClick?.(n.id, n.data.label as string, n.data.description as string)
+				}}
+				nodesDraggable={isProfessor(user, classId)}
+				nodesConnectable={false}
+			>
+				<Controls showInteractive={false} showZoom={true} showFitView={true} orientation='horizontal'>
+					<ControlButton onClick={handleCenter}>
+						<TargetIcon />
+					</ControlButton>
+					<ControlButton onClick={openDownload}>
+						<DownloadIcon />
+					</ControlButton>
+					{isProfessor(user, classId) && <ControlButton onClick={openReset}>
+						<ReloadIcon />
+					</ControlButton>}
+				</Controls>
+				<Background variant={BackgroundVariant.Dots} gap={16} size={1} />
+				{children}
+			</ReactFlow>
+			<Modal opened={resetOpened} onClose={closeReset} title="Reset Nodes" centered>
+				<Stack>
+					<Text>Are you sure you want to reset the node positions?</Text>
+					<Button onClick={handleResetCoordinates} loading={loading} color="red">Reset</Button>
+				</Stack>
+			</Modal>
+			<Modal opened={downloadOpened} onClose={closeDownload} title="Download Map" centered>
+				<Stack>
+					<Button
+						component="a"
+						href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classId}/summary.pdf`}
+						download
+						leftSection={<IconDownload size={16} />}
+					>
+						Download
+					</Button>
+				</Stack>
+			</Modal>
+		</>
 	)
 }

@@ -1,3 +1,4 @@
+import { SchemaName } from '@/types';
 import { Database } from '../../database.types'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
@@ -17,6 +18,7 @@ export default function useSupabaseServer(cookieStore: ReturnType<typeof cookies
           );
         },
       },
+      db: { schema: process.env.NEXT_PUBLIC_SUPABASE_SCHEMA as SchemaName }
     }
   )
 }

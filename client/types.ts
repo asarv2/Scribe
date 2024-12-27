@@ -1,35 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 
+const schema = process.env.NEXT_PUBLIC_SUPABASE_SCHEMA as keyof Database;
+
+export type SchemaName = typeof schema; 
 export type TypedSupabaseClient = SupabaseClient<Database>
 
-export type Lecture = Database["public"]["Tables"]["lectures"]["Row"]
-
-export type Textbook = Database["public"]["Tables"]["textbooks"]["Row"]
-
-export type Slide = Database["public"]["Tables"]["slides"]["Row"]
-export type SlideQuestion = Database["public"]["Tables"]["questions"]["Row"]
-
-export type PracticeExam = Database["public"]["Tables"]["practice_exams"]["Row"]
-export type PracticeQuestion = Database["public"]["Tables"]["practice_questions"]["Row"]
-
-export type Chapter = Database["public"]["Tables"]["chapters"]["Row"]
-export type Topic = Database["public"]["Tables"]["topics"]["Row"]
-export type Summary = Database["public"]["Tables"]["summaries"]["Row"]
-
-export type LectureData = Database["public"]["Tables"]["embeddings_lecture"]["Row"]
-export type SlideData = Database["public"]["Tables"]["embeddings_slide"]["Row"]
-export type TextbookData = Database["public"]["Tables"]["embeddings_textbook"]["Row"]
-
-// export type SummaryData = {
-//     heading: string,
-//     timestamp: string,
-//     children: {
-//         subheading: string,
-//         timestamp: string,
-//         children: {
-//             text: string,
-//             timestamp: string,
-//         }[]
-//     }[]
-// }[]
+export type Lecture = Database[SchemaName]["Tables"]["lectures"]["Row"]
+export type Topic = Database[SchemaName]["Tables"]["topics"]["Row"]
+export type Question = Database[SchemaName]["Tables"]["questions"]["Row"]
+export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"]

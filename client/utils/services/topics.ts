@@ -65,3 +65,18 @@ export const createTopics = async (
 
     return { success: true, error: "" };
 };
+
+
+export const updateTopicPosition = async (
+    topics: {id: string, map_id: string, x: number | null, y: number | null}[]
+) => {
+    const supabase = useSupabaseServer(cookies());
+
+    const { error } = await supabase
+        .from("topics")
+        .upsert(topics)
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}

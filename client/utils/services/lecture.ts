@@ -7,11 +7,11 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
-export const createSlide = async (classId: string, slideTitle: string, slideNumber: number) => {
+export const createLecture = async (classId: string, lectureTitle: string, lectureNumber: number) => {
     const supabase = useSupabaseServer(cookies());
     const { data, error } = await supabase
-        .from("slides")
-        .insert({class: classId, name: slideTitle, note_number: slideNumber})
+        .from("lectures")
+        .insert({class: classId, name: lectureTitle, note_number: lectureNumber})
         .select("id, name")
         .single();
     if (error) {
@@ -20,12 +20,12 @@ export const createSlide = async (classId: string, slideTitle: string, slideNumb
     return data;
 }
 
-export const deleteSlide = async (slideId: string) => {
+export const deleteLecture = async (lectureId: string) => {
     const supabase = useSupabaseServer(cookies());
     const { error } = await supabase
-        .from("slides")
+        .from("lectures")
         .update({deleted: true})
-        .eq("id", slideId);
+        .eq("id", lectureId);
     if (error) {
         return { success: false, error: error.message };
     }

@@ -5,83 +5,31 @@
  * 11-16-2024
  */
 
-import { SlideData } from "@/types"
 import { getSummaries } from "@/utils/queries/get-summary"
-import { regenerateSummary } from "@/utils/services/gemini"
-import { createSummary } from "@/utils/services/summary"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
 import { Card, Flex, Group, Skeleton, Text, Title, Tooltip } from "@mantine/core"
 import { notifications } from "@mantine/notifications"
-import { IconDownload, IconReload } from "@tabler/icons-react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { IconDownload } from "@tabler/icons-react"
+import { useQuery } from "@tanstack/react-query"
 import jsPDF from "jspdf"
 import Markdown from "markdown-to-jsx"
 import { marked } from "marked"
-import { useState } from "react"
 import 'katex/dist/katex.min.css';
 
 type NoteSummaryProps = {
-    classId: string
-    slideId: string
-    className: string
-    slideName: string
-    documents: SlideData[]
+    lectureId: string
+    lectureName: string
 }
 
-export default function NotesSummary({ classId, slideId, className, slideName, documents }: NoteSummaryProps) {
+export default function NotesSummary({ lectureId, lectureName }: NoteSummaryProps) {
     const supabase = useSupabaseBrowser();
-    const queryClient = useQueryClient();
-    const [regenerateLoading, setRegenerateLoading] = useState(false);
-
-
 
     const { data: summaries, isLoading: loadingSummaries } = useQuery({
-        queryKey: ["summaries", slideId],
-        queryFn: () => getSummaries(supabase, slideId),
+        queryKey: ["summaries", lectureId],
+        queryFn: () => getSummaries(supabase, lectureId),
     });
 
-    const handleRegenerate = async () => {
-        setRegenerateLoading(true);
-        try {
-            if (!documents || documents.length === 0) {
-                throw new Error('No documents available to regenerate summary.');
-            }
-            if (!summaries || summaries.length === 0) {
-                throw new Error('No summaries available to regenerate.');
-            }
-            // regenerate summary, invalidate the cache
-            const summary = await regenerateSummary(classId, className, documents, summaries);
-            if (!summary) {
-                throw new Error('Failed to regenerate summary');
-            }
-
-            const { success, error } = await createSummary(slideId, summary);
-            if (!success) {
-                throw new Error(error);
-            } else {
-                queryClient.invalidateQueries({
-                    queryKey: ["summaries", slideId]
-                });
-            }
-
-
-            notifications.show({
-                title: "Regenerate",
-                message: "Regenerate successful",
-                color: "blue",
-            });
-        } catch (error: any) {
-            console.error(error);
-            notifications.show({
-                title: "Failed to regenerate",
-                message: error.message,
-                color: "red",
-            });
-        } finally {
-            setRegenerateLoading(false);
-        }
-    }
-
+    
     const handleDownload = async () => {
         try {
             if (!summaries || summaries.length === 0) {
@@ -118,7 +66,7 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
                 windowWidth: pageWidth,
                 margin: [20, 20],
                 callback: function (doc) {
-                    doc.save(`${slideName || 'summary'}.pdf`);
+                    doc.save(`${lectureName || 'summary'}.pdf`);
                 },
             });
 
@@ -148,15 +96,12 @@ export default function NotesSummary({ classId, slideId, className, slideName, d
                             <Flex justify="space-between">
                                 <Title order={3}>Summary</Title>
                                 <Group>
-                                    <Tooltip label="Regenerate">
-                                        <IconReload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleRegenerate} />
-                                    </Tooltip>
                                     <Tooltip label="Download PDF">
                                         <IconDownload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleDownload} />
                                     </Tooltip>
                                 </Group>
                             </Flex>
-                            <Skeleton visible={loadingSummaries || regenerateLoading}>
+                            <Skeleton visible={loadingSummaries}>
                                 <Markdown>{summaries[0]?.content}</Markdown>
                             </Skeleton>
                         </Card>

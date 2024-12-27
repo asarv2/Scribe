@@ -50,6 +50,9 @@ export async function getMap(client: TypedSupabaseClient, classId: string): Prom
             lectures: combinedLectures,
             visuals: nodeData.visuals,
             children: children,
+            xPosition: nodeData.x ?? undefined,
+            yPosition: nodeData.y ?? undefined,
+            supabaseId: nodeData.id,
         };
     }
 

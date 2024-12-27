@@ -5,16 +5,12 @@ from langchain_core.messages import HumanMessage
 import re
 
 
-class ProblemsProcessor(BaseProcessor):
+class SummaryProcessor(BaseProcessor):
     def __init__(self, *args, **kwargs):
         """
-        Initialize the ProblemsProcessor class.
+        Initialize the SummaryProcessor class.
         
-        will be questions for each lecture, similar to the notes. As we generate problems, we will add them to the dictionary. Have 3 types for each question, 'conceptual', 'computational', and 'multi-part'. For now, just MCQ. Have 4 sections, 'question', 'options', 'answer', and 'explanation'.
-        
-        Steps:
-        1. Use problem_types and algorithm_solutions if given, otherwise, ask to generate from scratch. One prompt is one question. We will need a way to avoid duplicates. 
-        2. Ask it to generate the question plus options. Try the explations with it, in one shot. If it fails, then seperate the tasks.
+        TO BE IMPLEMENTED. RIGHT NOW, JUST A COPY OF THE PROBLEMS PROCESSOR. This will be used for each of the lecture summary pages.
         
         """
         super().__init__(*args, **kwargs)
@@ -210,26 +206,16 @@ class ProblemsProcessor(BaseProcessor):
         slide: the slide number that the question is from
         """
         
-        lecture_mapping = self.supabase.table("lectures").select("id, name").eq("class", self.class_id).execute().data
-        lecture_mapping = {row["name"]: row["id"] for row in lecture_mapping}
-
+        slide_mapping = self.supabase.table("slides").select("id, name").eq("class", self.class_id).execute().data
+        slide_mapping = {row["name"]: row["id"] for row in slide_mapping}
+        
         questions_added = 0
         for lecture_name in self.questions.keys():
             for question in self.questions[lecture_name]:
                 self.supabase.table("questions").insert({
-                    "question": question["question"],
-                    "option_a": question["options"]["A"],
-                    "option_b": question["options"]["B"],
-                    "option_c": question["options"]["C"],
-                    "option_d": question["options"]["D"],
-                    "option_e": question["options"]["E"],
-                    "solution": [opt for opt, value in question["answers"].items() if value][0],
-                    "explanation_a": question["explanations"]["A"],
-                    "explanation_b": question["explanations"]["B"],
-                    "explanation_c": question["explanations"]["C"],
-                    "explanation_d": question["explanations"]["D"],
-                    "explanation_e": question["explanations"]["E"],
-                    "lecture": lecture_mapping[lecture_name]
+                    "question": question["question"] + "\n\n" + "\n".join([f"{opt}. {question['options'][opt]}" for opt in question["options"].keys()]),
+                    "solution": "ANSWER: " + [opt for opt, value in question["answers"].items() if value][0] + "\n\n" + "EXPLANATION: \n" + "\n".join([f"{opt}. {question['explanations'][opt]}" for opt in question["explanations"].keys()]),
+                    "slide": slide_mapping[lecture_name]
                 }).execute()
                 questions_added += 1
         print(f"Saved {questions_added} questions to supabase.")

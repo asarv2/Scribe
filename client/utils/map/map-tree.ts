@@ -6,6 +6,9 @@ export type MapNode = {
 	children?: MapNode[]
 	lectures?: string[]
     visuals?: string[]
+    xPosition?: number
+    yPosition?: number
+    supabaseId?: string
 }
 
 export type FlatMapNode = {
@@ -16,6 +19,9 @@ export type FlatMapNode = {
 	parentId?: string
 	lectures?: string[]
     visuals?: string[]
+    xPosition?: number
+    yPosition?: number
+    supabaseId?: string
 }
 
 export const CALCULUS_MAP: MapNode = {

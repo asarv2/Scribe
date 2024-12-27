@@ -1,5 +1,5 @@
 /**
- * app/classes/[classId]/lecture/[lectureId]/page.tsx
+ * app/classes/[classId]/lecture/[lectureId]/practice/page.tsx
  * The page for a specific lecture in a class.
  * @AshokSaravanan222
  * 11.11.2024
@@ -14,37 +14,44 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import NotesSummary from "@/components/NotesSummary";
 import Link from "next/link";
-import { IconArrowLeft, IconDownload } from '@tabler/icons-react';
+import { IconArrowLeft, IconDownload, IconRefresh } from '@tabler/icons-react';
+import { getLectureQuestions } from "@/utils/queries/get-questions";
+import QuestionSolutionSlide from "@/components/QuestionSolutionSlide";
 import { getLecture } from "@/utils/queries/get-lecture";
 import jsPDF from "jspdf";
 import { marked } from "marked";
 import { notifications } from "@mantine/notifications";
-import { getSummaries } from "@/utils/queries/get-summary";
 
-export default function Lecture({ params }: { params: { classId: string, lectureId: string } }) {
+export default function LecturePractice({ params }: { params: { classId: string, lectureId: string } }) {
+
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
     const lectureId = params.lectureId;
 
-    const { data: summaries } = useQuery({
-        queryKey: ["summaries", lectureId],
-        queryFn: () => getSummaries(supabase, lectureId),
-    });
 
+    const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    
+    const { data: questions } = useQuery({
+        queryKey: ["questions", lectureId],
+        queryFn: () => getLectureQuestions(supabase, lectureId),
+    });
+    
     const { data: lecture } = useQuery({
         queryKey: ["lecture", lectureId],
         queryFn: () => getLecture(supabase, lectureId),
     });
 
-
     const handleDownload = async () => {
         try {
-            if (!summaries || summaries.length === 0) {
+            if (!questions || questions.length === 0) {
                 throw new Error('No practice questions available to download.');
             }
 
             const doc = new jsPDF('p', 'pt', 'a4');
-            const content = summaries.map(s => s.content).join("<br><br>");
+            const questionContent = questions.map(q => q.question).join("<br><br>");
+            const solutionContent = questions.map(q => q.question + "<br><br>" + `<span style="color: red;">${q.solution}</span>`).join("<br><br>");
+            const content = `QUESTIONS<br><br>${questionContent}<br><br><br><br><br><br>SOLUTIONS<br><br>${solutionContent}`;
 
             // Convert Markdown to HTML
             const htmlContent = `
@@ -99,13 +106,10 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}`}>
+                            <Link href={`/classes/${classId}/lecture/${lectureId}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
-                            <Link href={`/classes/${classId}/lecture/${lectureId}/practice`}>
-                                <Button>Practice</Button>
-                            </Link>
+                            <Text size="xl" fw={700} mb={6}>Lecture {lecture?.note_number} Practice ({lecture?.name})</Text>
                         </Group>
                         <Group p={"sm"}>
                             <Tooltip label="Download PDF">
@@ -113,7 +117,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                             </Tooltip>
                         </Group>
                     </Flex>
-                    <NotesSummary lectureId={lectureId} lectureName={lecture?.name ?? ""} />
+                    <QuestionSolutionSlide lecture={lecture} lectureQuestions={questions} />
                 </Stack>
             </Container>
 

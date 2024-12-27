@@ -5,7 +5,8 @@ export async function getLectures(client: TypedSupabaseClient, classId: string) 
         .from("lectures")
         .select("*")
         .eq("class", classId)
-        .order("created_at", {ascending: true});
+        .eq("deleted", false)
+        .order("note_number", {ascending: true})
     
     if (error) {
         throw new Error(error.message);
