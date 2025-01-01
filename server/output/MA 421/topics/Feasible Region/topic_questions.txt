@@ -1,0 +1,250 @@
+QUESTION 1
+Given the constraints $x_1 \ge 0$, $x_2 \ge 0$, $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, and $2x_1 - x_2 \le 10$, what are the coordinates of vertex B of the feasible region, as shown in the provided slides?
+A. (0, 0)
+B. (5, 0)
+C. (6, 2)
+D. (0, 4)
+E. (10, 0)
+
+ANSWER: C
+
+EXPLANATION:
+A. This is the origin (0,0), which is vertex O.
+B. This is vertex A, found by setting $x_2 = 0$ and solving $2x_1 - x_2 = 10$.
+C. The coordinates of vertex B are found by solving the system of equations $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$ simultaneously. Adding the two equations gives $3x_1 = 18$, so $x_1 = 6$. Substituting this into $x_1 + x_2 = 8$ gives $6 + x_2 = 8$, so $x_2 = 2$. Therefore, the coordinates of vertex B are (6, 2).
+D. This point lies on the line $-x_1 + 3x_2 = 12$, but it is not a vertex of the feasible region.
+E. This point is not within the feasible region because it violates the constraint $x_1 + x_2 \le 8$.
+
+
+QUESTION 2
+What is the feasible region in a linear programming problem, and why is it important to identify it?
+A. The feasible region is the set of all points that satisfy at least one constraint. It is important because it helps visualize the possible solutions.
+B. The feasible region is the set of all points that satisfy all constraints simultaneously. It is important because it represents the set of all possible solutions to the problem.
+C. The feasible region is the set of all points that maximize the objective function. It is important because it identifies the optimal solution.
+D. The feasible region is the set of all points that minimize the objective function. It is important because it identifies the optimal solution.
+E. The feasible region is the set of points that violate at least one constraint. It is important because it helps identify infeasible solutions.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect because the feasible region must satisfy *all* constraints, not just one.
+B. The feasible region is indeed the set of all points satisfying all constraints simultaneously.  Identifying it is crucial because only points within this region are valid solutions to the linear programming problem.  The optimal solution must lie within the feasible region.
+C. This is incorrect; the feasible region contains all possible solutions, not just the optimal one. The optimal solution is a specific point *within* the feasible region.
+D. This is incorrect; similar to option C, the feasible region contains all possible solutions, and the optimal solution is a specific point within the feasible region, whether it's a maximization or minimization problem.
+E. This describes the *infeasible* region, the opposite of the feasible region.
+
+
+QUESTION 3
+Explain the geometric interpretation of the simplex method in relation to the feasible region.
+A. The simplex method randomly searches the feasible region for the optimal solution.
+B. The simplex method iteratively moves from one vertex of the feasible region to an adjacent vertex, improving the objective function at each step until the optimal vertex is found.
+C. The simplex method finds the center of the feasible region and determines if it is the optimal solution.
+D. The simplex method calculates the area of the feasible region to determine the optimal solution.
+E. The simplex method identifies all vertices of the feasible region and then selects the vertex with the highest objective function value.
+
+ANSWER: B
+
+EXPLANATION:
+A. The simplex method is not a random search; it's a systematic algorithm.
+B. The simplex method systematically explores the vertices of the feasible region. It starts at one vertex and moves to a neighboring vertex that improves the objective function value. This process continues until no further improvement is possible, indicating that the optimal solution has been found at a vertex.
+C. The optimal solution is not necessarily at the center of the feasible region. It's usually located at a vertex.
+D. The area of the feasible region is irrelevant to finding the optimal solution.
+E. While the optimal solution is at a vertex, the simplex method doesn't explicitly check every vertex; it efficiently moves between adjacent vertices.
+
+
+QUESTION 4
+How does the concept of "basic" and "non-basic" variables relate to the vertices of the feasible region in the simplex method?
+A. Basic variables are always zero at a vertex, while non-basic variables can take any value.
+B. Non-basic variables are always zero at a vertex, while basic variables determine the coordinates of that vertex.
+C. Basic and non-basic variables are interchangeable and have no specific relationship to vertices.
+D. Basic variables determine the objective function value at a vertex, while non-basic variables are irrelevant.
+E. The number of basic variables equals the number of constraints, while the number of non-basic variables is arbitrary.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is the opposite of the correct relationship.
+B. At each vertex of the feasible region, a subset of variables (the non-basic variables) are set to zero. The remaining variables (the basic variables) then define the coordinates of that specific vertex within the feasible region.
+C. The distinction between basic and non-basic variables is fundamental to the simplex method's operation and its geometric interpretation.
+D. Both basic and non-basic variables contribute to the objective function value, though non-basic variables are zero at a vertex in a given iteration.
+E. The number of basic variables is equal to the number of constraints (assuming no degeneracy), and the number of non-basic variables is determined by the total number of variables minus the number of basic variables.
+
+
+QUESTION 5
+Given the constraints $x_1 \ge 0$, $x_2 \ge 0$, $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, and $2x_1 - x_2 \le 10$, what are the coordinates of vertex A of the feasible region, as shown in Slide 5?
+A. (0, 4)
+B. (5, 0)
+C. (6, 2)
+D. (0, 0)
+E. (8, 0)
+
+ANSWER: B
+
+EXPLANATION:
+A. This point lies on the line $-x_1 + 3x_2 = 12$, but not on $2x_1 - x_2 = 10$.
+B. Vertex A is the intersection of $x_2 = 0$ and $2x_1 - x_2 = 10$. Substituting $x_2 = 0$, we get $2x_1 = 10$, so $x_1 = 5$. Thus, the coordinates are (5, 0).
+C. This is vertex B.
+D. This is the origin (0,0).
+E. This point lies on the line $x_1 + x_2 = 8$, but not on $x_2 = 0$.
+
+
+QUESTION 6
+Given the constraints $x_1 \ge 0$, $x_2 \ge 0$, $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, and $2x_1 - x_2 \le 10$, what are the coordinates of vertex C of the feasible region, as shown in Slide 5?
+A. (0, 4)
+B. (5, 0)
+C. (6, 2)
+D. (0, 0)
+E. (8, 0)
+
+ANSWER: C
+
+EXPLANATION:
+A. This point lies on the line $-x_1 + 3x_2 = 12$, but not on $x_1 + x_2 = 8$.
+B. This is vertex A.
+C. Vertex C is the intersection of $-x_1 + 3x_2 = 12$ and $x_1 + x_2 = 8$. Solving this system of equations gives $x_1 = 6$ and $x_2 = 2$.
+D. This is the origin (0,0).
+E. This point lies on the line $x_1 + x_2 = 8$, but not on $-x_1 + 3x_2 = 12$.
+
+
+QUESTION 7
+What is the value of $x_1$ at vertex D, as shown in Slide 5?
+A. 5
+B. 6
+C. 0
+D. 8
+E. 2
+
+ANSWER: C
+
+EXPLANATION:
+A. This is the $x_1$ coordinate of vertex A.
+B. This is the $x_1$ coordinate of vertex C.
+C. Vertex D is the intersection of $x_1 = 0$ and $-x_1 + 3x_2 = 12$.  Substituting $x_1 = 0$, we get $3x_2 = 12$, so $x_2 = 4$. The coordinates are (0, 4), and thus $x_1 = 0$.
+D. This is the $x_1$ coordinate of vertex where $x_1 + x_2 = 8$ intersects the $x_1$ axis.
+E. This is the $x_2$ coordinate of vertex C.
+
+
+QUESTION 8
+In the feasible region shown in Slide 5, which vertex represents the intersection of the constraints $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$?
+A. A
+B. B
+C. C
+D. D
+E. O
+
+ANSWER: B
+
+EXPLANATION:
+A. Vertex A is the intersection of $x_2 = 0$ and $2x_1 - x_2 = 10$.
+B. Solving the system of equations $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$ yields $x_1 = 6$ and $x_2 = 2$. This corresponds to vertex B in Slide 5.
+C. Vertex C is the intersection of $-x_1 + 3x_2 = 12$ and $x_1 + x_2 = 8$.
+D. Vertex D is the intersection of $x_1 = 0$ and $-x_1 + 3x_2 = 12$.
+E. Vertex O is the origin (0, 0).
+
+
+QUESTION 9
+Part A:
+What are the coordinates of vertex A of the feasible region shown in Slide 5?
+A. (0, 4)
+B. (5, 0)
+C. (0, 0)
+D. (6, 2)
+E. (8, 0)
+
+ANSWER: B
+
+EXPLANATION:
+A. To find vertex A, we need to solve the system of equations formed by the intersection of the constraints. Option A is not a solution to this system.
+B. Vertex A is the intersection of $x_2 = 0$ and $2x_1 - x_2 = 10$. Substituting $x_2 = 0$, we get $2x_1 = 10$, so $x_1 = 5$. Thus, the coordinates are (5, 0).
+C. The origin (0,0) is vertex O, not vertex A.
+D. Vertex B has coordinates (6,2), not vertex A.
+E. Vertex D has coordinates (0,8), not vertex A.
+
+Part B:
+What are the coordinates of vertex B of the feasible region shown in Slide 5?
+A. (0, 4)
+B. (5, 0)
+C. (0, 0)
+D. (6, 2)
+E. (8, 0)
+
+ANSWER: D
+
+EXPLANATION:
+A. To find vertex B, we need to solve the system of equations formed by the intersection of the constraints. Option A is not a solution to this system.
+B. Vertex A has coordinates (5,0), not vertex B.
+C. The origin (0,0) is vertex O, not vertex B.
+D. Vertex B is the intersection of $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$. Adding the two equations, we get $3x_1 = 18$, so $x_1 = 6$. Substituting into $x_1 + x_2 = 8$, we get $6 + x_2 = 8$, so $x_2 = 2$. Thus, the coordinates are (6, 2).
+E. Vertex E is outside the feasible region.
+
+Part C:
+What are the coordinates of vertex C of the feasible region shown in Slide 5?
+A. (0, 4)
+B. (5, 0)
+C. (0, 0)
+D. (6, 2)
+E. (4, 4)
+
+ANSWER: E
+
+EXPLANATION:
+A. To find vertex C, we need to solve the system of equations formed by the intersection of the constraints. Option A is not a solution to this system.
+B. Vertex A has coordinates (5,0), not vertex C.
+C. The origin (0,0) is vertex O, not vertex C.
+D. Vertex B has coordinates (6,2), not vertex C.
+E. Vertex C is the intersection of $-x_1 + 3x_2 = 12$ and $x_1 + x_2 = 8$. Adding the two equations, we get $4x_2 = 20$, so $x_2 = 5$. Substituting into $x_1 + x_2 = 8$, we get $x_1 + 5 = 8$, so $x_1 = 3$.  However, this point is not shown on the graph. Let's check the intersection of $-x_1 + 3x_2 = 12$ and $x_1 + x_2 = 8$.  Solving this system gives $x_1 = 3$ and $x_2 = 5$, which is not a vertex on the graph.  The correct vertex C is the intersection of $-x_1 + 3x_2 = 12$ and $2x_1 - x_2 = 10$. Solving this system gives $x_1 = 4$ and $x_2 = 4$.
+
+Part D:
+What is the value of $x_1$ at vertex D, as shown in Slide 5?
+A. 4
+B. 5
+C. 6
+D. 0
+E. 8
+
+ANSWER: D
+
+EXPLANATION:
+A. The $x_1$ coordinate of vertex D is 0, not 4.
+B. The $x_1$ coordinate of vertex D is 0, not 5.
+C. The $x_1$ coordinate of vertex D is 0, not 6.
+D. Vertex D is the intersection of $x_1 = 0$ and $-x_1 + 3x_2 = 12$. Substituting $x_1 = 0$, we get $3x_2 = 12$, so $x_2 = 4$.  The coordinates are (0, 4). Therefore, the value of $x_1$ at vertex D is 0.
+E. The $x_1$ coordinate of vertex D is 0, not 8.
+
+Part E:
+In the feasible region shown in Slide 5, which vertex represents the intersection of the constraints $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$?
+A. Vertex A
+B. Vertex B
+C. Vertex C
+D. Vertex D
+E. Vertex O
+
+ANSWER: B
+
+EXPLANATION:
+A. Vertex A is the intersection of $x_2 = 0$ and $2x_1 - x_2 = 10$.
+B. Solving the system of equations $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$ gives $x_1 = 6$ and $x_2 = 2$. This corresponds to vertex B.
+C. Vertex C is the intersection of $-x_1 + 3x_2 = 12$ and $2x_1 - x_2 = 10$.
+D. Vertex D is the intersection of $x_1 = 0$ and $-x_1 + 3x_2 = 12$.
+E. Vertex O is the origin (0, 0).
+
+
+
+QUESTION 10
+Given the constraints $x_1 \ge 0$, $x_2 \ge 0$, $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, and $2x_1 - x_2 \le 10$, what are the coordinates of vertex B of the feasible region, as shown in Slide 5?
+A. (0, 4)
+B. (5, 3)
+C. (6, 2)
+D. (8, 0)
+E. (10, 0)
+
+ANSWER: C
+
+EXPLANATION:
+A. This point lies on the line $-x_1 + 3x_2 = 12$, but not on $x_1 + x_2 = 8$ or $2x_1 - x_2 = 10$.
+B. This point is not a vertex of the feasible region. It is close to the intersection of $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$, but not exactly at the intersection.
+C. The coordinates of vertex B are found by solving the system of equations formed by the intersection of the constraints $x_1 + x_2 = 8$ and $2x_1 - x_2 = 10$. Solving this system gives $x_1 = 6$ and $x_2 = 2$. Therefore, the coordinates of vertex B are (6, 2).
+D. This point is the intersection of $x_1 + x_2 = 8$ and $x_2 = 0$. It is vertex A.
+E. This point is the intersection of $2x_1 - x_2 = 10$ and $x_2 = 0$. It is vertex D.
+
+

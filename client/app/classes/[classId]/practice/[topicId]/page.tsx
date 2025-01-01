@@ -22,19 +22,22 @@ import { getTopic } from "@/utils/queries/get-topic";
 import jsPDF from "jspdf";
 import { marked } from "marked";
 import { notifications } from "@mantine/notifications";
+import Latex from "react-latex-next";
+import { useEffect } from "react";
 
 export default function PracticeTopicPage({ params }: { params: { topicId: string, classId: string } }) {
 
     const supabase = useSupabaseBrowser();
 
-    const { data: questions } = useQuery({
-        queryKey: ["questions", params.topicId],
-        queryFn: () => getTopicQuestions(supabase, params.topicId),
-    });
-
     const { data: topic } = useQuery({
         queryKey: ["topic", params.topicId],
         queryFn: () => getTopic(supabase, params.topicId),
+    });
+
+    const { data: questions } = useQuery({
+        queryKey: ["topicQuestions", params.topicId],
+        queryFn: () => getTopicQuestions(supabase, topic!.id),
+        enabled: !!topic,
     });
 
     const handleDownload = async () => {
@@ -93,6 +96,10 @@ export default function PracticeTopicPage({ params }: { params: { topicId: strin
         }
     }
 
+    useEffect(() => {
+        console.log(questions);
+    }, [questions]);
+
 
     return (
         <>
@@ -104,7 +111,7 @@ export default function PracticeTopicPage({ params }: { params: { topicId: strin
                             <Link href={`/classes/${params.classId}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}>{topic?.title} Practice</Text>
+                            <Text size="xl" fw={700} mb={6}><Latex>{topic?.title || ""} Practice</Latex></Text>
                         </Group>
                         <Group p={"sm"}>
                             <Tooltip label="Download PDF">

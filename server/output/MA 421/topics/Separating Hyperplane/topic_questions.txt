@@ -1,0 +1,90 @@
+QUESTION 1
+In the context of linear programming duality, what does the Separating Hyperplane Theorem assert about the relationship between a primal problem with an empty feasible region and its dual problem?
+A. The dual problem must also have an empty feasible region.
+B. The dual problem must have an unbounded objective function.
+C. There exists a hyperplane separating the feasible regions of the primal and dual problems.
+D. The dual problem must have a unique optimal solution.
+E. The dual problem's objective function value is always zero.
+
+ANSWER: B
+
+EXPLANATION:
+A. The dual problem does not necessarily have an empty feasible region.  It could be feasible but unbounded.
+B. If the primal feasible region is empty, the dual problem is unbounded.  The Separating Hyperplane Theorem, in this context, implies that there's no feasible solution to the primal problem, meaning the dual problem's objective function can be made arbitrarily large (for a maximization dual) or arbitrarily small (for a minimization dual), hence unbounded.
+C. While the Separating Hyperplane Theorem deals with hyperplanes, it doesn't directly assert a hyperplane separating the feasible regions of the primal and dual problems when the primal is infeasible. The theorem applies to separating a point from a convex set, not necessarily two convex sets.
+D. The dual problem does not necessarily have a unique optimal solution; it could have multiple optimal solutions or be unbounded.
+E. The dual problem's objective function value is not always zero.  It can take on any value, or be unbounded, depending on the problem's structure.
+
+
+QUESTION 2
+Considering the primal and dual problems presented on Slide 1, how does the Separating Hyperplane Theorem provide a geometric interpretation of strong duality when both the primal and dual problems have optimal solutions?
+A. It shows that the optimal objective function values are equal because the optimal solutions lie on the same hyperplane.
+B. It demonstrates that there is always a hyperplane separating the feasible regions of the primal and dual problems.
+C. It proves that if the primal problem is unbounded, the dual problem must be infeasible.
+D. It implies that the optimal solutions of the primal and dual problems are always unique.
+E. It suggests that the feasible regions of the primal and dual problems are always disjoint.
+
+ANSWER: A
+
+EXPLANATION:
+A. Strong duality states that the optimal objective function values of the primal and dual problems are equal. The Separating Hyperplane Theorem, in this context, can be interpreted geometrically:  when both problems have optimal solutions, there is no hyperplane separating the optimal solutions; they essentially lie on the same hyperplane (or are very close to each other), reflecting the equality of their objective function values.
+B. This statement is incorrect.  The Separating Hyperplane Theorem applies when there is a point outside a convex set.  In strong duality, we are concerned with the equality of optimal values, not necessarily a separation of feasible regions.
+C. This is a consequence of weak duality, not a direct interpretation from the Separating Hyperplane Theorem.
+D. The optimal solutions are not always unique.  Both primal and dual problems can have multiple optimal solutions.
+E. The feasible regions are not always disjoint.  In fact, strong duality implies a close relationship between the optimal solutions of the primal and dual problems.
+
+
+QUESTION 3
+In the context of the Separating Hyperplane Theorem, explain how the existence or non-existence of a separating hyperplane relates to the feasibility and boundedness of both the primal and dual linear programming problems.
+A. If a separating hyperplane exists, both the primal and dual problems are feasible and bounded.
+B. If no separating hyperplane exists, at least one of the problems is infeasible.
+C. The existence of a separating hyperplane implies that the primal problem is unbounded.
+D. The non-existence of a separating hyperplane implies that the dual problem is unbounded.
+E. The existence or non-existence of a separating hyperplane has no bearing on the feasibility or boundedness of the problems.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect.  A separating hyperplane can exist even if one problem is unbounded.
+B. The Separating Hyperplane Theorem states that if a point is not in a convex set, there exists a hyperplane separating the point from the set. In linear programming, if one problem is infeasible (its feasible region is empty), then the other problem is either infeasible or unbounded.  The non-existence of a separating hyperplane reflects this situation where at least one problem is infeasible.
+C. This is incorrect.  The existence of a separating hyperplane is associated with infeasibility, not unboundedness.
+D. This is incorrect.  The non-existence of a separating hyperplane is associated with infeasibility, not unboundedness.
+E. This is incorrect. The Separating Hyperplane Theorem is fundamental to understanding the relationship between feasibility and boundedness in duality.
+
+
+QUESTION 4
+Suppose we have a primal linear programming problem and its dual.  The primal problem is found to be infeasible.  Using the Separating Hyperplane Theorem, what can we conclude about the dual problem?
+A. The dual problem is also infeasible.
+B. The dual problem is unbounded.
+C. The dual problem has a unique optimal solution.
+D. The dual problem is feasible and bounded.
+E. There is not enough information to determine the status of the dual problem.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect. The dual problem could be unbounded.
+B. If the primal problem is infeasible, then the dual problem is either infeasible or unbounded. The Separating Hyperplane Theorem helps illustrate this. Since the primal feasible region is empty (a point outside a convex set), there is no separating hyperplane, indicating the dual problem is unbounded.
+C. This is incorrect. The dual problem could be unbounded or infeasible.
+D. This is incorrect. The dual problem could be unbounded or infeasible.
+E. This is incorrect. The Separating Hyperplane Theorem provides information about the dual problem's status based on the primal problem's infeasibility.
+
+
+QUESTION 5
+Explain the Separating Hyperplane Theorem in the context of linear programming duality, and illustrate its significance using the primal and dual problems presented on Slide 1.
+A. The Separating Hyperplane Theorem states that if two convex sets are disjoint (meaning they don't overlap), then there exists a hyperplane that separates them. In linear programming, this means that if the feasible region of the primal problem is empty, then the dual problem must be unbounded, and vice versa.  This is illustrated on Slide 1 by showing that if the constraints of the primal problem are inconsistent, leading to an empty feasible region, then the dual problem's objective function can be made arbitrarily small (for a minimization problem) or large (for a maximization problem).
+B. The Separating Hyperplane Theorem states that for any point outside a convex set, there exists a hyperplane that separates the point from the set. In linear programming, this is irrelevant to duality because the feasible regions of the primal and dual problems are always convex, and therefore, a separating hyperplane would never exist between them.
+C. The Separating Hyperplane Theorem is only applicable to problems with two variables, allowing for a simple geometric interpretation.  It is not relevant to higher-dimensional linear programming problems or to the duality relationship between primal and dual problems.
+D. The Separating Hyperplane Theorem states that if the feasible region of the primal problem is non-empty and bounded, then the dual problem must also have a non-empty and bounded feasible region.  Slide 1 illustrates this by showing that if the primal problem has a solution, the dual problem also has a solution, and their objective function values are equal.
+E. The Separating Hyperplane Theorem is a purely geometric concept and has no relevance to the algebraic relationships between primal and dual linear programming problems.  Slide 1 simply shows two separate problems with no connection between them.
+
+ANSWER: A
+
+EXPLANATION:
+A. The Separating Hyperplane Theorem is a fundamental result in convex analysis that has significant implications for linear programming duality.  It states that if two convex sets are disjoint, there exists a hyperplane that separates them. In the context of linear programming, if the primal feasible region is empty (infeasible), then the dual problem is unbounded, and vice versa. Slide 1 sets up the primal and dual problems.  The theorem provides a geometric interpretation of the duality relationship, showing how the infeasibility of one problem implies the unboundedness of the other.  This is a crucial link between the geometry of the feasible regions and the behavior of the objective functions in primal and dual problems.
+B. This option incorrectly states that the Separating Hyperplane Theorem is irrelevant to linear programming duality. The theorem is, in fact, crucial for understanding the relationship between the feasibility and unboundedness of primal and dual problems.  The theorem's application to linear programming duality is a key result in optimization theory.
+C. This option incorrectly limits the applicability of the Separating Hyperplane Theorem to only two-variable problems. The theorem holds true for convex sets in any finite-dimensional space, making it applicable to linear programming problems with any number of variables. The duality relationship between primal and dual problems is not limited to two dimensions.
+D. This option misrepresents the Separating Hyperplane Theorem. The theorem does not guarantee that both primal and dual problems will have non-empty and bounded feasible regions.  Instead, it establishes a relationship between the infeasibility of one problem and the unboundedness of the other.
+E. This option incorrectly claims that the Separating Hyperplane Theorem is unrelated to linear programming duality.  The theorem provides a geometric interpretation of the strong duality theorem, which is a cornerstone of linear programming duality theory.
+
+

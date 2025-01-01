@@ -176,10 +176,10 @@ INPUT _logs/notes.out
 INPUT _logs/notes.out
 INPUT _logs/notes.out
 INPUT _logs/notes.out
+OUTPUT _logs/notes.pdf
 INPUT _logs/notes.out
 INPUT _logs/notes.out
 OUTPUT _logs/notes.out
-OUTPUT _logs/notes.pdf
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -254,26 +254,34 @@ INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr9.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmbx8.tfm
+INPUT /usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/4.1.png
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr7.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png
-INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
-INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
-INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/6.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/6.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/6.1.png
@@ -282,3 +290,17 @@ INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 INPUT _logs/notes.aux
 INPUT _logs/notes.out
 INPUT _logs/notes.out
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi6.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi8.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr8.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy8.pfb

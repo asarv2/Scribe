@@ -433,7 +433,7 @@ class GroupsProcessor(BaseProcessor):
         '''
         
         # Create a mapping from lecture names to ids
-        lecture_mapping = self.supabase.table("slides").select("id, name").eq("class", self.class_id).execute().data
+        lecture_mapping = self.supabase.table("lectures").select("id, name").eq("class", self.class_id).execute().data
         name_to_id = {lecture['name']: lecture['id'] for lecture in lecture_mapping}
         
         def create_topic_entry(title, content, parent_id=None, lectures=None, visuals=None, topic_type='group'):

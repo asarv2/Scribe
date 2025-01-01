@@ -34,6 +34,8 @@ class TermsProcessor(BaseProcessor):
         self.json_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.json")
         self.text_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.txt")
         
+        self.processed_terms_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "processed_terms.txt")
+        
         self.prompts = {
         "Key Terms": f"""Extract the key terms from the following slides and provide a clear and concise definition for each one.
         
@@ -95,7 +97,12 @@ class TermsProcessor(BaseProcessor):
                 self.terms = json.load(file)
         else:
             self.terms = {}
-        
+            
+        if os.path.exists(self.processed_terms_file) and not self.regenerate:
+            with open(self.processed_terms_file, "r") as file:
+                self.processed_terms = file.read().splitlines()
+        else:
+            self.processed_terms = []
         
     def process_batch(self, 
                       slides: List[str], 
@@ -192,15 +199,23 @@ class TermsProcessor(BaseProcessor):
         for i in range(0, len(self.slides) if num_slides is None else num_slides, batch_size):
             batch = self.slides[i:i + batch_size]
             for category in self.prompts.keys():
+                if f"{self.slide_names[i]} - {category}" in self.processed_terms:
+                    print(f"Skipping {self.slide_names[i]} - {category} because it has already been processed")
+                    continue
                 try:
                     result = self.process_batch(batch, category, i // batch_size)
                     self.clean_result(result, self.slide_names[i], category)
+                    
+                    # Save results to file
+                    self.save_terms_json(self.json_output_file)
+                    self.save_terms_text(self.text_output_file)
+                    self.update_processed_terms(self.slide_names[i], category)
                 except Exception as e:
                     print(f"Error processing batch {i // batch_size} for {category}: {e}")
-
-        # Save results to file
-        self.save_terms_json(self.json_output_file)
-        self.save_terms_text(self.text_output_file)
+                    
+    def update_processed_terms(self, lecture_name: str, category: str):
+        self.processed_terms.append(f"{lecture_name} - {category}")
+        self.save_processed_terms(self.processed_terms_file)
                 
     def save_terms_json(self, file_path: str):
         with open(file_path, "w") as file:
@@ -210,3 +225,7 @@ class TermsProcessor(BaseProcessor):
         with open(file_path, "w") as file:
             terms = self.terms.keys()
             file.write("\n".join(terms))
+            
+    def save_processed_terms(self, file_path: str):
+        with open(file_path, "w") as file:
+            file.write("\n".join(self.processed_terms))

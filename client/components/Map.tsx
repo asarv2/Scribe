@@ -35,6 +35,9 @@ import { useDisclosure } from '@mantine/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { updateTopicPosition } from '@/utils/services/topics';
 import { DownloadIcon, MagicWandIcon, ReloadIcon, TargetIcon } from '@radix-ui/react-icons'
+import jsPDF from 'jspdf';
+import { marked } from 'marked';
+import { notifications } from '@mantine/notifications';
 
 const elk = new ELK()
 
@@ -269,6 +272,58 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 		}
 	}, [onNodesChange, onNodePositionChange])
 
+	const handleDownload = async () => {
+        try {
+
+            const doc = new jsPDF('p', 'pt', 'a4');
+			const flatmap = flattenMapNode(rootNode)
+            const content = flatmap.map(s => s.keyword + "<br><br>" + s.description).join("<br><br>");
+
+            // Convert Markdown to HTML
+            const htmlContent = `
+            <style>
+              body {
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 12pt;
+                line-height: 1.2;
+              }
+            </style>
+            ${marked(content)}
+          `;
+
+            // Adjust page width
+            const pageWidth = doc.internal.pageSize.getWidth();
+
+            doc.html(htmlContent, {
+                x: 40,
+                y: 40,
+                width: pageWidth - 80, // Account for margins
+                windowWidth: pageWidth,
+                margin: [20, 20],
+                callback: function (doc) {
+                    doc.save(`summary.pdf`);
+                },
+            });
+
+            notifications.show({
+                title: 'Download',
+                message: 'Download successful',
+                color: 'blue',
+            });
+        } catch (error: any) {
+            console.error(error);
+            notifications.show({
+                title: 'Failed to download',
+                message: error.message,
+                color: 'red',
+            });
+        }
+    }
+
 	return (
 		<>
 			<ReactFlow
@@ -308,14 +363,15 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 			</Modal>
 			<Modal opened={downloadOpened} onClose={closeDownload} title="Download Map" centered>
 				<Stack>
-					<Button
+					{/* <Button
 						component="a"
 						href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/slides/${classId}/summary.pdf`}
 						download
 						leftSection={<IconDownload size={16} />}
 					>
 						Download
-					</Button>
+					</Button> */}
+					<Button onClick={handleDownload} leftSection={<IconDownload size={16} />}>Download</Button>
 				</Stack>
 			</Modal>
 		</>

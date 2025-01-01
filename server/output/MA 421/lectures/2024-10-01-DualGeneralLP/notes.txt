@@ -1,0 +1,107 @@
+SLIDE 1
+<LATEX></LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Derivation of the dual LP problem.</FIGURE>
+
+<DESCRIPTION>Slide 1 of 7 in a Linear Programming course introduces the dual of a general linear program.  The slide begins by stating the title "Dual of general LP Problem" and referencing a textbook (CV).  It then recalls the primal linear program (P), which is a maximization problem with objective function $\zeta = c^T x$, subject to constraints $Ax \le b$ and $x \ge 0$.  The dual linear program (D) is presented as a minimization problem with objective function $\xi = b^T y$, subject to constraints $A^T y \ge c$ and $y \ge 0$.  The derivation of the dual is explained as taking a linear combination of the constraints in the primal problem, using $y$ as Lagrange multipliers.  The mathematical steps showing how the constraints of the primal problem lead to the constraints of the dual problem are shown. The arrow indicates the direction of the derivation. The context of the course is crucial for understanding the relationship between the primal and dual linear programs and the significance of Lagrange multipliers in optimization.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\text{General LP} \\
+\text{(MI)} \quad \max \quad c^T x \\
+\text{s.t.} \quad Ax \le b \\
+\quad \quad x \le u \quad (\text{not necessarily } x \ge 0) \\
+\max \quad c^T (x^+ - x^-) \\
+A(x^+ - x^-) \le b \\
+x^+ - x^- \le u \\
+x^+, x^- \ge 0 \\
+x = x^+ - x^-
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Derivation of the dual LP problem.</FIGURE>
+
+<DESCRIPTION>Slide 2 of 7 in a Linear Programming course shows the transformation of a general linear program (LP) into a form suitable for duality analysis.  The initial problem (MI) is a maximization problem with objective function $c^T x$, subject to inequality constraints $Ax \le b$ and $x \le u$. Importantly, the non-negativity constraint $x \ge 0$ is not necessarily present.  The slide then introduces a transformation where the variable $x$ is expressed as the difference of two non-negative variables: $x = x^+ - x^-$, where $x^+$ and $x^-$ represent the positive and negative parts of $x$, respectively. This transformation allows the problem to be rewritten as a maximization problem with objective function $c^T(x^+ - x^-)$, subject to constraints $A(x^+ - x^-) \le b$, $x^+ - x^- \le u$, and $x^+, x^- \ge 0$. The red arrow indicates the transformation process. The context of the course is crucial for understanding the manipulation of the general LP problem to a form that facilitates the derivation of its dual.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+y^T A(x^+ - x^-) \le y^T b \quad y \ge 0 \\
+z^T (x^+ - x^-) \le z^T u \quad z \ge 0 \\
+\hline
+(y^T A + z^T) x^+ + (-y^T A - z^T) x^- \le y^T b + z^T u \\
+\underbrace{\ge c^T}_{\text{}} \quad \underbrace{\ge -c^T}_{\text{}} \\
+(D) \quad \min \quad \xi(y, z) = b^T y + u^T z \\
+\text{s.t.} \quad A^T y + z \ge c \\
+\quad \quad A^T y + z \le c \implies A^T y + z = c \\
+\quad \quad y, z \ge 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Derivation of the dual LP problem.</FIGURE>
+
+<DESCRIPTION>Slide 3 of 7 in a Linear Programming course continues the derivation of the dual linear program (D) from a general primal linear program (P), which was introduced in the previous slides.  The slide starts with two inequalities derived from the primal problem's constraints and the non-negativity of the dual variables $y$ and $z$. These inequalities involve the primal variables $x^+$ and $x^-$, which represent the positive and negative parts of the primal variable $x$.  These inequalities are combined to yield a single inequality.  The expressions $\ge c^T$ and $\ge -c^T$ are added under the combined inequality, indicating that the left-hand side is bounded below by $c^T$ and above by $-c^T$.  The dual problem (D) is then presented as a minimization problem with objective function $\xi(y, z) = b^T y + u^T z$, subject to constraints $A^T y + z \ge c$ and $y, z \ge 0$.  The implication $A^T y + z \le c \implies A^T y + z = c$ suggests that the inequality constraint is tightened to an equality constraint.  The red arrow and box highlight the transformation of the inequality constraint into an equality constraint. The context of the course is crucial for understanding the steps involved in deriving the dual problem from the primal problem and the implications of the constraints.</DESCRIPTION>
+
+SLIDE 4
+<LATEX>
+\boxed{(M2)} \quad \begin{cases}
+\max \quad c^T x \\
+\text{s.t.} \quad Ax \le b \\
+\quad \quad x \le u
+\end{cases}
+\iff
+\begin{cases}
+\max \quad \xi(x) = c^T x \\
+\text{s.t.} \quad Ax - b \le 0 \\
+\quad \quad x - u \le 0
+\end{cases} \\
+\text{Lagrangian function} \\
+L(x, y, z) = c^T x - y^T (Ax - b) - z^T (x - u) \\
+y \ge 0 \\
+z \ge 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Derivation of the dual LP problem.</FIGURE>
+
+<DESCRIPTION>Slide 4 of 7 in a Linear Programming course shows the formulation of the Lagrangian function for a general linear program (LP). The slide begins by presenting a maximization problem (M2), which is a linear program with an objective function $c^T x$ subject to constraints $Ax \le b$ and $x \le u$.  The non-negativity constraint on $x$ is not explicitly stated.  The problem is then reformulated with inequality constraints expressed as $Ax - b \le 0$ and $x - u \le 0$.  The core of the slide is the introduction of the Lagrangian function, $L(x, y, z) = c^T x - y^T (Ax - b) - z^T (x - u)$, where $y$ and $z$ are the Lagrange multipliers associated with the constraints $Ax - b \le 0$ and $x - u \le 0$, respectively.  The non-negativity constraints $y \ge 0$ and $z \ge 0$ are explicitly stated. The boxed (M2) indicates this is problem number 2 in the module. The double-headed arrow indicates the equivalence between the two formulations of the problem. The context of the course is crucial for understanding the application of the Lagrangian function in the context of linear programming and the derivation of the dual problem.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\text{Let } \hat{x} \text{ is (P)-feasible.} \\
+\xi(\hat{x}) = c^T \hat{x} \\
+\le c^T \hat{x} - y^T (A \hat{x} - b) - z^T (\hat{x} - u) \\
+y \ge 0 \quad \le 0 \quad z \ge 0 \quad \le 0 \\
+\le \max_x (c^T x - y^T (Ax - b) - z^T (x - u)) \\
+:= \xi(y, z) \\
+\text{Weak Duality} \quad \xi(\hat{x}) \le \xi(y, z) \\
+x: \text{P-feasible} \implies \max_x \xi(x) \le \min_{y, z} \xi(y, z) \quad y, z \ge 0 \\
+\xi^* \le \xi^*
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Derivation of the dual LP problem.</FIGURE>
+
+<DESCRIPTION>Slide 5 of 7 in a Linear Programming course demonstrates weak duality.  The slide starts by assuming $\hat{x}$ is a feasible solution to the primal problem (P).  It then defines $\xi(\hat{x}) = c^T \hat{x}$ and manipulates this expression using the constraints of the primal problem ($Ax \le b$ and $x \le u$) and the non-negativity of the dual variables $y$ and $z$.  The inequalities $y \ge 0$, $Ax - b \le 0$, $z \ge 0$, and $x - u \le 0$ are used to show that $\xi(\hat{x})$ is less than or equal to the expression $\max_x (c^T x - y^T (Ax - b) - z^T (x - u))$. This maximum is then defined as $\xi(y, z)$. The core concept of weak duality is then stated: $\xi(\hat{x}) \le \xi(y, z)$, meaning the objective function value of any feasible solution to the primal problem is less than or equal to the objective function value of any feasible solution to the dual problem.  The implication is shown: if $x$ is a feasible solution to the primal problem, then the maximum value of the primal objective function ($\xi^*$) is less than or equal to the minimum value of the dual objective function ($\xi^*$). The red arrows indicate the direction of the inequalities and implications. The context of the course is crucial for understanding the relationship between the primal and dual problems and the significance of weak duality in optimization.</DESCRIPTION>
+
+SLIDE 6
+<LATEX>
+(D) \quad \min_{Y, Z \ge 0} \quad \xi(Y, Z) \\
+= \min_{Y, Z \ge 0} \quad c^T x - Y^T (Ax - b) - Z^T (x - u) \\
+= \min_{Y, Z \ge 0} \quad (c^T - Y^T A - Z^T) x + Y^T b + Z^T u \\
+= \begin{cases}
+\min_{Y, Z \ge 0} \quad Y^T b + Z^T u & \text{if } c^T - Y^T A - Z^T = 0 \\
++\infty & \text{if } c^T - Y^T A - Z^T \ne 0
+\end{cases}
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Derivation of the dual LP problem.</FIGURE>
+
+<DESCRIPTION>Slide 6 of 7 in a Linear Programming course shows the derivation of the dual linear program (D).  The slide starts with the Lagrangian function from the previous slide and proceeds to minimize it with respect to $x$. The expression $(c^T - Y^T A - Z^T)x$ is highlighted with a red underline. The minimization of the Lagrangian function leads to a piecewise function. If the term $(c^T - Y^T A - Z^T)$ is equal to zero, the minimum value is $Y^T b + Z^T u$. Otherwise, if $(c^T - Y^T A - Z^T)$ is not equal to zero, the minimum value is $+\infty$. This result is a key step in deriving the dual problem, showing how the dual objective function and constraints arise from the primal problem's Lagrangian. The context of the course is crucial for understanding the steps involved in deriving the dual problem from the primal problem and the implications of the constraints.</DESCRIPTION>
+
+SLIDE 7
+<LATEX>
+\boxed{(D)} \quad \min \quad b^T y + u^T z \\
+\text{s.t.} \quad A^T y + z = c \\
+\quad \quad y, z \ge 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 200.0, 300.0]>Dual linear program.</FIGURE>
+
+<DESCRIPTION>Slide 7 of 7 in a Linear Programming course presents the final dual linear program (D). Building upon the previous slides' derivations using the Lagrangian function, this slide concisely states the dual problem. The objective function is to minimize $b^T y + u^T z$, subject to the constraints $A^T y + z = c$ and $y, z \ge 0$.  The boxed (D) indicates this is the dual problem. The superscript T denotes the transpose of a matrix or vector.  The variables $y$ and $z$ are the dual variables corresponding to the primal constraints $Ax \le b$ and $x \le u$ respectively. The equality constraint $A^T y + z = c$ arises from setting the gradient of the Lagrangian with respect to $x$ to zero. The non-negativity constraints $y, z \ge 0$ are inherited from the Lagrangian formulation. The context of the course is crucial for understanding the relationship between the primal and dual linear programs and the significance of duality theory in optimization.</DESCRIPTION>
+

@@ -30,60 +30,60 @@ export default function NotesSummary({ lectureId, lectureName }: NoteSummaryProp
     });
 
     
-    const handleDownload = async () => {
-        try {
-            if (!summaries || summaries.length === 0) {
-                throw new Error('No summaries available to download.');
-            }
-            const currentSummary = summaries[0];
+    // const handleDownload = async () => {
+    //     try {
+    //         if (!summaries || summaries.length === 0) {
+    //             throw new Error('No summaries available to download.');
+    //         }
+    //         const currentSummary = summaries[0];
 
-            const doc = new jsPDF('p', 'pt', 'a4');
-            const content = currentSummary.content;
+    //         const doc = new jsPDF('p', 'pt', 'a4');
+    //         const content = currentSummary.content;
 
-            // Convert Markdown to HTML
-            const htmlContent = `
-            <style>
-              body {
-                width: 100%;
-                max-width: 100%;
-                margin: 0;
-                padding: 0;
-                font-family: Helvetica, Arial, sans-serif;
-                font-size: 12pt;
-                line-height: 1.2;
-              }
-            </style>
-            ${marked(content)}
-          `;
+    //         // Convert Markdown to HTML
+    //         const htmlContent = `
+    //         <style>
+    //           body {
+    //             width: 100%;
+    //             max-width: 100%;
+    //             margin: 0;
+    //             padding: 0;
+    //             font-family: Helvetica, Arial, sans-serif;
+    //             font-size: 12pt;
+    //             line-height: 1.2;
+    //           }
+    //         </style>
+    //         ${marked(content)}
+    //       `;
 
-            // Adjust page width
-            const pageWidth = doc.internal.pageSize.getWidth();
+    //         // Adjust page width
+    //         const pageWidth = doc.internal.pageSize.getWidth();
 
-            doc.html(htmlContent, {
-                x: 40,
-                y: 40,
-                width: pageWidth - 80, // Account for margins
-                windowWidth: pageWidth,
-                margin: [20, 20],
-                callback: function (doc) {
-                    doc.save(`${lectureName || 'summary'}.pdf`);
-                },
-            });
+    //         doc.html(htmlContent, {
+    //             x: 40,
+    //             y: 40,
+    //             width: pageWidth - 80, // Account for margins
+    //             windowWidth: pageWidth,
+    //             margin: [20, 20],
+    //             callback: function (doc) {
+    //                 doc.save(`${lectureName || 'summary'}.pdf`);
+    //             },
+    //         });
 
-            notifications.show({
-                title: 'Download',
-                message: 'Download successful',
-                color: 'blue',
-            });
-        } catch (error: any) {
-            console.error(error);
-            notifications.show({
-                title: 'Failed to download',
-                message: error.message,
-                color: 'red',
-            });
-        }
-    };
+    //         notifications.show({
+    //             title: 'Download',
+    //             message: 'Download successful',
+    //             color: 'blue',
+    //         });
+    //     } catch (error: any) {
+    //         console.error(error);
+    //         notifications.show({
+    //             title: 'Failed to download',
+    //             message: error.message,
+    //             color: 'red',
+    //         });
+    //     }
+    // };
 
 
 
@@ -95,11 +95,11 @@ export default function NotesSummary({ lectureId, lectureName }: NoteSummaryProp
                         <Card withBorder style={{ overflowY: 'auto' }} h={600}>
                             <Flex justify="space-between">
                                 <Title order={3}>Summary</Title>
-                                <Group>
+                                {/* <Group>
                                     <Tooltip label="Download PDF">
                                         <IconDownload size={24} color="black" style={{ cursor: "pointer" }} onClick={handleDownload} />
                                     </Tooltip>
-                                </Group>
+                                </Group> */}
                             </Flex>
                             <Skeleton visible={loadingSummaries}>
                                 <Markdown>{summaries[0]?.content}</Markdown>

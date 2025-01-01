@@ -1,0 +1,144 @@
+QUESTION 1
+In the economic interpretation of the network simplex method (Slides 1-6), what is the significance of the equation $y_i + c_{ij} = y_j$ in the first step, where $y_i$ is the price at node $i$, $c_{ij}$ is the cost from $i$ to $j$, and $y_j$ is the price at node $j$?
+A. It ensures that the total cost of shipping from node $i$ to node $j$ is minimized.
+B. It guarantees that no arbitrage opportunities exist in the network.
+C. It determines the optimal flow along each arc in the network.
+D. It calculates the reduced cost for each arc in the network.
+E. It establishes the initial feasible solution for the network simplex method.
+
+ANSWER: B
+
+EXPLANATION:
+A. While minimizing shipping costs is a goal, this equation doesn't directly minimize the total cost. The total cost is minimized through the entire simplex process, not just this step.
+B. The equation $y_i + c_{ij} = y_j$ ensures that there are no arbitrage opportunities. If the equation didn't hold, one could buy at a lower price at node $i$, ship to node $j$, and sell at a higher price, making a profit without any risk.  This condition is crucial for establishing a set of "fair prices" in the network.
+C. The optimal flow is determined through the entire simplex process, not just by this equation. This equation establishes a condition for fair pricing, which is a step in finding the optimal flow.
+D. Reduced costs are calculated later in the simplex method. This equation is about establishing fair prices based on shipping costs.
+E. This equation is a condition for the prices, not the initial feasible solution itself. The initial feasible solution is established by selecting a spanning tree.
+
+
+QUESTION 2
+In the second step of the network simplex method's economic interpretation (Slide 5), the algorithm checks the condition $y_i + c_{ij} < y_j$. What is the economic significance of this inequality?
+A. It identifies an arc where increasing the flow will decrease the total cost.
+B. It indicates an arc where the current prices allow for profitable arbitrage.
+C. It determines the leaving arc in the current iteration of the simplex method.
+D. It signifies that the current solution is optimal.
+E. It calculates the reduced cost of the arc $(i,j)$.
+
+ANSWER: B
+
+EXPLANATION:
+A. While it identifies an arc for improvement, it doesn't directly relate to decreasing the total cost. The total cost is minimized through the entire simplex process.
+B. The inequality $y_i + c_{ij} < y_j$ signifies that it is profitable to buy at node $i$, ship along arc $(i,j)$, and sell at node $j$. This represents an arbitrage opportunity, indicating that the current prices are not in equilibrium and the solution is not optimal.
+C. The leaving arc is determined later in the iteration, based on the flow adjustments needed to maintain feasibility.
+D. This inequality indicates that the current solution is *not* optimal, as there is a profitable arbitrage opportunity.
+E. The reduced cost is related to this inequality but is not directly calculated by it. The reduced cost is implicitly considered in the comparison.
+
+
+QUESTION 3
+In the third step of the network simplex method's economic interpretation (Slide 6), the algorithm adjusts the flow to maintain feasibility. What is the economic interpretation of the equation $\tilde{y}_j - \tilde{y}_i = c_{ij}$ after the adjustment?
+A. It ensures that the total flow in the network is conserved.
+B. It guarantees that the new flow is optimal.
+C. It establishes a new set of equilibrium prices in the network.
+D. It calculates the change in the objective function value.
+E. It identifies the next entering arc for the next iteration.
+
+ANSWER: C
+
+EXPLANATION:
+A. Flow conservation is maintained throughout the process, not just by this equation. This equation focuses on price equilibrium.
+B. Optimality is not guaranteed after this step; further iterations may be needed.
+C. After adjusting the flow, the equation $\tilde{y}_j - \tilde{y}_i = c_{ij}$ establishes a new set of equilibrium prices.  The prices are adjusted to reflect the new flow, eliminating the arbitrage opportunity identified in the previous step.
+D. The change in the objective function value is a consequence of the flow adjustment, not directly calculated by this equation.
+E. The next entering arc is identified in the next iteration, not in this step.
+
+
+QUESTION 4
+The network simplex method uses a spanning tree to represent a feasible solution.  Why is starting with a feasible solution on a spanning tree (Slide 2) advantageous in the context of the economic interpretation?
+A. It simplifies the calculation of the reduced costs.
+B. It ensures that the initial solution is optimal.
+C. It allows for easy identification of arbitrage opportunities.
+D. It guarantees that the flow is conserved at each node.
+E. It provides a straightforward way to establish a set of initial prices that prevent arbitrage.
+
+ANSWER: E
+
+EXPLANATION:
+A. Reduced costs are calculated later in the algorithm, not directly from the spanning tree.
+B. The initial solution on a spanning tree is feasible but not necessarily optimal.
+C. While the spanning tree helps, the identification of arbitrage opportunities is done by checking the condition $y_i + c_{ij} < y_j$, not solely from the tree structure.
+D. Flow conservation is a constraint of the problem, and the spanning tree helps maintain feasibility, but it doesn't directly guarantee conservation.
+E. A spanning tree provides a simple structure where each arc has a unique path from the source to the sink. This allows for a straightforward calculation of prices that prevent arbitrage, forming the basis for the economic interpretation of the algorithm.  The initial prices are set such that $y_i + c_{ij} = y_j$ for each arc in the spanning tree.
+
+
+QUESTION 5
+In the economic interpretation of the network simplex method (Slide 4), what is the significance of the equation $y_i + c_{ij} = y_j$ for an arc $(i, j)$ in the spanning tree $T$?
+A. It ensures that the flow along arc $(i, j)$ is maximized.
+B. It guarantees that the total cost of the network flow is minimized.
+C. It establishes a set of "fair prices" such that there is no incentive for arbitrage between nodes $i$ and $j$.
+D. It determines the optimal flow along each arc in the network.
+E. It ensures that the supply at node $i$ equals the demand at node $j$.
+
+ANSWER: C
+
+EXPLANATION:
+A. The equation does not directly maximize flow; that's determined by the overall optimization process.
+B. Minimizing total cost is the overall goal, but this equation is a condition for a specific part of the solution.
+C. The equation $y_i + c_{ij} = y_j$ represents a condition of no arbitrage.  If the equation didn't hold, a competitor could buy at node $i$ and sell at node $j$ for a profit, contradicting the "fair price" assumption.
+D. The optimal flow is determined by the entire simplex algorithm, not just this single equation.
+E. This equation doesn't directly relate supply and demand; those are represented by the node labels $b_i$ and $b_j$.
+
+
+QUESTION 6
+In Slide 5, the second step of the network simplex method involves checking the condition $y_i + c_{ij} < y_j$ for arcs $(i, j)$ not in the spanning tree $T$. What is the economic interpretation of this inequality?
+A. It indicates that the current flow is optimal.
+B. It suggests an opportunity for a competitor to profitably ship goods from node $i$ to node $j$.
+C. It means the arc $(i, j)$ should be removed from the network.
+D. It implies that the prices at nodes $i$ and $j$ are inconsistent.
+E. It signifies that the supply at node $i$ exceeds the demand at node $j$.
+
+ANSWER: B
+
+EXPLANATION:
+A. The inequality indicates the opposite: the current flow is *not* optimal.
+B. If $y_i + c_{ij} < y_j$, it means a competitor could profitably buy at node $i$, ship to node $j$, and sell at a higher price than the current market price at node $j$, indicating a non-optimal solution.
+C. The arc is not removed; it's considered for inclusion in the spanning tree to improve the solution.
+D. The prices are not necessarily inconsistent; the inequality highlights an opportunity for improvement.
+E. The inequality doesn't directly relate to supply and demand; those are represented by the node labels.
+
+
+QUESTION 7
+In the third step of the network simplex method's economic interpretation (Slide 6), the flow is adjusted to maintain feasibility. What is the economic significance of the equation $\tilde{y}_j - \tilde{y}_i = c_{ij}$ after the adjustment, where $\tilde{y}_i$ and $\tilde{y}_j$ are the adjusted prices at nodes $i$ and $j$, respectively?
+A. It ensures that the total flow in the network is conserved.
+B. It guarantees that the total cost of the network flow is minimized.
+C. It establishes a new set of "fair prices" where there is no longer an incentive for arbitrage between nodes $i$ and $j$ along the newly added arc.
+D. It indicates that the flow along arc $(i, j)$ is at its maximum capacity.
+E. It implies that the supply at node $i$ is equal to the demand at node $j$.
+
+ANSWER: C
+
+EXPLANATION:
+A. Flow conservation is maintained throughout the algorithm, but this equation specifically addresses pricing.
+B. Cost minimization is the overall goal, but this equation focuses on price equilibrium.
+C. After adjustment, the equation $\tilde{y}_j - \tilde{y}_i = c_{ij}$ ensures that the adjusted prices eliminate the arbitrage opportunity identified in step 2. The new prices reflect the cost of shipping between the nodes.
+D. The equation doesn't directly relate to capacity; that's a separate constraint.
+E. Supply and demand are represented by node labels, not this equation.
+
+
+QUESTION 8
+Why is starting with a feasible solution on a spanning tree (Slide 2) advantageous in the context of the economic interpretation of the network simplex method?
+A. It simplifies the calculation of the maximum flow in the network.
+B. It ensures that the initial solution satisfies all supply and demand constraints.
+C. It allows for a straightforward determination of "fair prices" using the equation $y_i + c_{ij} = y_j$ for arcs in the tree.
+D. It guarantees that the algorithm will converge to the optimal solution in a single iteration.
+E. It makes it easier to identify the minimum cut in the network.
+
+ANSWER: C
+
+EXPLANATION:
+A. Maximum flow is not directly related to the initial feasible solution on a spanning tree.
+B. While the initial solution must be feasible, starting on a spanning tree doesn't guarantee this; it's a choice to simplify the initial price calculation.
+C. A spanning tree provides a connected subgraph without cycles. This structure allows for a direct calculation of prices using the equation $y_i + c_{ij} = y_j$ for each arc in the tree, providing a starting point for the economic interpretation.
+D. The algorithm typically requires multiple iterations to reach optimality.
+E. Minimum cut is a concept related to the max-flow min-cut theorem, not directly to the initial feasible solution.
+
+

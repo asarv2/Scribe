@@ -1,0 +1,269 @@
+QUESTION 1
+Given the primal problem $\max \quad \xi(x) = c^T x$ subject to $Ax \leq b, x \geq 0$, and its dual problem $\min \quad \xi(y) = b^T y$ subject to $A^T y \geq c, y \geq 0$, what is the value of $\xi(x)$ if $x = (0, 0, \dots, 0)$ and $c = (1, 2, 3)$?
+A. 1
+B. 2
+C. 3
+D. 6
+E. 0
+
+ANSWER: E
+
+EXPLANATION:
+A. This would be the case if only the first component of $c$ was considered and the rest were zero.
+B. This would be the case if only the second component of $c$ was considered and the rest were zero.
+C. This would be the case if only the third component of $c$ was considered and the rest were zero.
+D. This is the sum of the components of $c$, but it is not the value of the objective function when $x = (0, 0, \dots, 0)$.
+E. The objective function $\xi(x) = c^T x$ is a linear combination of the variables in $x$. If $x = (0, 0, \dots, 0)$, then $\xi(x) = c^T (0, 0, \dots, 0) = 0$, regardless of the values in $c$.
+
+
+QUESTION 2
+What is the significance of the Weak Duality Theorem in the context of primal and dual linear programs?
+A. It guarantees that the optimal solutions of the primal and dual problems always exist and are equal.
+B. It states that the objective function value of any feasible solution to the primal problem is less than or equal to the objective function value of any feasible solution to the dual problem.
+C. It provides a method for constructing the dual problem from the primal problem.
+D. It establishes the conditions for complementary slackness to hold.
+E. It proves that the duality gap is always zero.
+
+ANSWER: B
+
+EXPLANATION:
+A. This describes the Strong Duality Theorem, not the Weak Duality Theorem. The Weak Duality Theorem only provides an inequality, not equality.
+B. The Weak Duality Theorem states that for any feasible solution to the primal problem and any feasible solution to the dual problem, the objective function value of the primal solution is less than or equal to the objective function value of the dual solution. This provides a bound on the optimal objective function value.
+C. While the dual problem can be constructed from the primal problem, this is not the significance of the Weak Duality Theorem. The theorem deals with the relationship between the objective function values of feasible solutions.
+D. Complementary slackness is a separate but related concept. The Weak Duality Theorem provides a foundation for understanding complementary slackness but doesn't directly establish its conditions.
+E. The Weak Duality Theorem does not prove that the duality gap is always zero.  That is the result of the Strong Duality Theorem.
+
+
+QUESTION 3
+Explain the concept of strong duality and its implications for solving linear programs.
+A. Strong duality states that if the primal problem is feasible, then the dual problem is also feasible, but their optimal values may differ.
+B. Strong duality states that if either the primal or dual problem has an optimal solution, then the other problem also has an optimal solution, and their optimal objective function values are equal.
+C. Strong duality implies that the primal and dual problems always have feasible solutions, regardless of the problem's constraints.
+D. Strong duality is only relevant when both the primal and dual problems are unbounded.
+E. Strong duality states that the optimal solution of the primal problem is always greater than the optimal solution of the dual problem.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect; strong duality implies that if one problem has an optimal solution, the other does too, and their optimal values are equal.  There is no duality gap.
+B. Strong duality states that if one of the primal or dual problems has an optimal solution, then the other also has an optimal solution, and their optimal objective function values are equal. This means there is no duality gap. This is a powerful result because it allows us to solve either the primal or dual problem to find the optimal solution for both.
+C. This is false. Strong duality does not guarantee feasibility; it only relates the optimal values when optimal solutions exist.
+D. Strong duality applies when optimal solutions exist, not when both problems are unbounded.  If both are unbounded, it indicates infeasibility in the other.
+E. This is incorrect; strong duality states that the optimal values are equal, not that one is greater than the other.
+
+
+QUESTION 4
+How does the Complementary Slackness Theorem relate to the optimal solutions of primal and dual linear programs?
+A. It states that the optimal solutions of the primal and dual problems are always equal.
+B. It provides a condition for determining the feasibility of the primal and dual problems.
+C. It states that at optimality, for each pair of primal and dual variables, at least one must be zero.
+D. It guarantees that the primal and dual problems always have a finite optimal solution.
+E. It establishes a relationship between the objective function values of the primal and dual problems, but not their variables.
+
+ANSWER: C
+
+EXPLANATION:
+A. This describes strong duality, not complementary slackness. Complementary slackness deals with the individual variables, not just the objective function values.
+B. Feasibility is determined by whether the constraints are satisfied. Complementary slackness deals with the relationship between primal and dual variables at optimality.
+C. The Complementary Slackness Theorem states that if $x$ and $y$ are optimal solutions to the primal and dual problems respectively, then for each pair of primal and dual variables, at least one must be zero. This provides a necessary and sufficient condition for optimality.
+D. Complementary slackness doesn't guarantee the existence of a finite optimal solution; it only describes a condition that must hold if optimal solutions exist.
+E. Complementary slackness relates both the objective function values and the variables at optimality.
+
+
+QUESTION 5
+Part A:
+Explain the concept of duality in linear programming and its significance in solving optimization problems.
+A. Duality involves transforming a maximization problem into a minimization problem, and vice versa, providing an alternative way to solve the original problem.  The optimal solutions of both problems are related, and this relationship can be exploited to solve either problem more efficiently.
+B. Duality is a technique to simplify the constraints of a linear program, making it easier to solve graphically.
+C. Duality is a method for checking the feasibility of a linear program by examining the signs of the variables.
+D. Duality is only relevant for linear programs with a specific structure, such as those involving network flows.
+E. Duality is a concept that is only useful for theoretical analysis of linear programs and has no practical applications in solving them.
+
+ANSWER: A
+
+EXPLANATION:
+A. Duality in linear programming involves formulating a dual problem from a given primal problem.  The primal and dual problems are closely related, and their optimal solutions provide valuable insights into the original problem.  The relationship between the primal and dual problems can be exploited to solve either problem more efficiently, particularly in cases where one problem is easier to solve than the other.  This is a fundamental concept in linear programming with significant practical implications.
+B. While simplifying constraints can be a goal in linear programming, duality is not directly about simplifying constraints.  It's about creating a related problem that offers alternative solution approaches.
+C. Feasibility is checked through different methods in linear programming, such as checking if the constraints are satisfied. Duality provides a different perspective on the problem, not a direct method for checking feasibility.
+D. Duality applies to a wide range of linear programs, not just those with specific structures like network flows.  It's a general concept in linear programming.
+E. Duality is a powerful tool with significant practical applications in solving linear programs.  It's not just a theoretical concept.
+
+Part B:
+State and explain the Weak Duality Theorem.  How does it relate to the feasibility and boundedness of the primal and dual problems?
+A. The Weak Duality Theorem states that the objective function value of any feasible solution to the primal problem is less than or equal to the objective function value of any feasible solution to the dual problem.  If the primal problem is unbounded, the dual problem is infeasible. If the dual problem is unbounded, the primal problem is infeasible.
+B. The Weak Duality Theorem states that the optimal objective function value of the primal problem is equal to the optimal objective function value of the dual problem. This holds only if both problems are feasible.
+C. The Weak Duality Theorem states that if the primal problem is feasible, then the dual problem is also feasible.  The converse is also true.
+D. The Weak Duality Theorem is only applicable to linear programs with non-negative variables.
+E. The Weak Duality Theorem is a special case of the Strong Duality Theorem and is rarely used in practice.
+
+ANSWER: A
+
+EXPLANATION:
+A. The Weak Duality Theorem states that for any feasible solution to the primal problem and any feasible solution to the dual problem, the objective function value of the primal solution is less than or equal to the objective function value of the dual solution. This implies that if the primal problem is unbounded (its objective function can grow infinitely large), then the dual problem must be infeasible (it has no feasible solution), and vice versa.  This relationship between feasibility and boundedness is a key consequence of the Weak Duality Theorem.
+B. This describes the Strong Duality Theorem, not the Weak Duality Theorem. The Weak Duality Theorem only establishes an inequality between feasible solutions, not equality between optimal solutions.
+C. This statement is incorrect.  The feasibility of one problem does not guarantee the feasibility of the other.  The Weak Duality Theorem relates the objective function values, not the feasibility.
+D. The Weak Duality Theorem applies to linear programs regardless of whether the variables are non-negative or not.  The non-negativity constraint is a common assumption but not a requirement for the theorem.
+E. The Weak Duality Theorem is a fundamental result in linear programming and is a stepping stone to proving the Strong Duality Theorem. It's not a special case and is frequently used in theoretical analysis and algorithm design.
+
+
+
+QUESTION 6
+Part A:
+Write the dual problem (D) explicitly, substituting the given values of A, b, and c.
+A. $\min \quad \xi(y) = 4y_1 + 5y_2$ subject to $y_1 + 3y_2 \geq 2$, $2y_1 + y_2 \geq 1$, $y_1, y_2 \geq 0$
+B. $\min \quad \xi(y) = 2y_1 + y_2$ subject to $y_1 + 2y_2 \geq 4$, $3y_1 + y_2 \geq 5$, $y_1, y_2 \geq 0$
+C. $\min \quad \xi(y) = 4y_1 + 5y_2$ subject to $y_1 + 2y_2 \geq 2$, $3y_1 + y_2 \geq 1$, $y_1, y_2 \geq 0$
+D. $\min \quad \xi(y) = 2y_1 + y_2$ subject to $y_1 + 3y_2 \geq 4$, $2y_1 + y_2 \geq 5$, $y_1, y_2 \geq 0$
+E. $\min \quad \xi(y) = 5y_1 + 4y_2$ subject to $3y_1 + y_2 \geq 2$, $y_1 + 2y_2 \geq 1$, $y_1, y_2 \geq 0$
+
+ANSWER: A
+
+EXPLANATION:
+A. The correct answer is A. Substituting the given values into the dual problem definition yields the objective function $\xi(y) = b^T y = 4y_1 + 5y_2$. The constraints are given by $A^T y \geq c$, which translates to $y_1 + 3y_2 \geq 2$ and $2y_1 + y_2 \geq 1$.  The non-negativity constraints $y_1, y_2 \geq 0$ remain.
+B. This option incorrectly uses c as the objective function coefficients and A transposed incorrectly in the constraints.
+C. This option uses the correct objective function but incorrectly transposes A in the constraints.
+D. This option uses the correct constraints but incorrectly uses c as the objective function coefficients.
+E. This option incorrectly switches the order of b in the objective function and incorrectly transposes A in the constraints.
+
+Part B:
+If $x = \begin{pmatrix} 0 \\ 2 \end{pmatrix}$ is a feasible solution for the primal problem (P), what is the value of the primal objective function $\xi(x)$?
+A. 0
+B. 2
+C. 4
+D. 6
+E. 8
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect; it assumes both $x_1$ and $x_2$ are 0.
+B. The correct answer is B.  $\xi(x) = c^T x = \begin{pmatrix} 2 & 1 \end{pmatrix} \begin{pmatrix} 0 \\ 2 \end{pmatrix} = 0 + 2 = 2$.
+C. This is incorrect; it uses an incorrect calculation.
+D. This is incorrect; it uses an incorrect calculation.
+E. This is incorrect; it uses an incorrect calculation.
+
+Part C:
+Is the solution $x = \begin{pmatrix} 0 \\ 2 \end{pmatrix}$ feasible for the primal problem (P)?  Show your work.
+A. Yes
+B. No
+C. Cannot be determined
+D. Only if $c = \begin{pmatrix} 1 \\ 2 \end{pmatrix}$
+E. Only if $b = \begin{pmatrix} 5 \\ 4 \end{pmatrix}$
+
+ANSWER: NO CORRECT ANSWER MARKED
+
+EXPLANATION:
+A. This is incorrect; the constraints are satisfied.
+B. This is incorrect; the constraints are satisfied.
+C. This is incorrect; the feasibility can be directly checked.
+D. This is incorrect; the feasibility is independent of the objective function coefficients.
+E. This is incorrect; the feasibility is independent of the right-hand side vector b.
+
+Part D:
+Suppose a feasible solution to the dual problem is $y = \begin{pmatrix} 1/2 \\ 1/2 \end{pmatrix}$. What is the value of the dual objective function $\xi(y)$?
+A. 1/2
+B. 1
+C. 9/2
+D. 5/2
+E. 7/2
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect; it uses an incorrect calculation.
+B. This is incorrect; it uses an incorrect calculation.
+C. The correct answer is C. $\xi(y) = b^T y = \begin{pmatrix} 4 & 5 \end{pmatrix} \begin{pmatrix} 1/2 \\ 1/2 \end{pmatrix} = 2 + 5/2 = 9/2$.
+D. This is incorrect; it uses an incorrect calculation.
+E. This is incorrect; it uses an incorrect calculation.
+
+Part E:
+Is the solution $y = \begin{pmatrix} 1/2 \\ 1/2 \end{pmatrix}$ feasible for the dual problem (D)? Show your work.
+A. Yes
+B. No
+C. Cannot be determined
+D. Only if $c = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$
+E. Only if $b = \begin{pmatrix} 2 \\ 2 \end{pmatrix}$
+
+ANSWER: NO CORRECT ANSWER MARKED
+
+EXPLANATION:
+A. This is incorrect; the constraints are satisfied.
+B. This is incorrect; the constraints are satisfied.
+C. This is incorrect; the feasibility can be directly checked.
+D. This is incorrect; the feasibility is independent of the objective function coefficients.
+E. This is incorrect; the feasibility is independent of the right-hand side vector b.
+
+
+
+QUESTION 7
+Explain the concept of weak duality in the context of primal and dual linear programs, and how it relates to the feasibility and boundedness of both problems.
+A. Weak duality states that the optimal objective function value of the primal problem is always greater than or equal to the optimal objective function value of the dual problem, regardless of feasibility.
+B. Weak duality states that for any feasible solution to the primal problem and any feasible solution to the dual problem, the objective function value of the primal solution is less than or equal to the objective function value of the dual solution.  If the primal is unbounded, the dual is infeasible, and vice versa.
+C. Weak duality only applies when both the primal and dual problems are feasible and bounded. It states that the optimal objective function values are equal.
+D. Weak duality is a special case of strong duality that applies only to problems with non-negative variables.
+E. Weak duality is irrelevant to the feasibility and boundedness of the primal and dual problems; it only concerns the relationship between the objective function coefficients.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect.  Weak duality states that the primal objective function value is *less than or equal to* the dual objective function value for feasible solutions, not the other way around.
+B. Weak duality states that the objective function value of any feasible primal solution is always less than or equal to the objective function value of any feasible dual solution. This implies that if the primal problem is unbounded (its objective function can grow infinitely large), then the dual problem must be infeasible (it has no feasible solution), and vice versa.  If the primal is feasible and bounded, then the dual is feasible and bounded.
+C. This describes strong duality, not weak duality. Strong duality states that the optimal objective function values are equal *if* both problems are feasible and bounded.
+D. Weak duality is a fundamental concept in linear programming, applicable to all linear programs, regardless of the non-negativity of variables. Strong duality is a more specific result.
+E. Weak duality is directly related to the feasibility and boundedness of both problems.  The relationship between objective function coefficients is a consequence of the duality relationship, not the definition of weak duality itself.
+
+
+QUESTION 8
+Explain the concept of strong duality and its implications for solving linear programs.  How does it relate to the weak duality theorem?
+A. Strong duality states that if both the primal and dual problems are feasible, their optimal objective function values are equal.  It is independent of the weak duality theorem.
+B. Strong duality states that if the primal problem has an optimal solution, then the dual problem also has an optimal solution, and their optimal objective function values are equal. This strengthens weak duality, which only provides an inequality between feasible solutions.
+C. Strong duality only applies to problems with a unique optimal solution. If multiple optimal solutions exist, strong duality does not hold.
+D. Strong duality is a special case of weak duality that applies only to problems with non-negative variables.
+E. Strong duality states that the primal and dual problems always have the same optimal objective function value, regardless of feasibility.
+
+ANSWER: B
+
+EXPLANATION:
+A. Strong duality does not hold *only* if both problems are feasible. It requires that at least one problem has an optimal solution.  It is also directly related to weak duality, strengthening the inequality to an equality under certain conditions.
+B. Strong duality states that if a primal linear program has an optimal solution, then its dual also has an optimal solution, and their optimal objective function values are equal. This is a stronger statement than weak duality, which only guarantees an inequality between the objective function values of feasible primal and dual solutions.  Strong duality provides a powerful tool for solving linear programs, as finding the optimal solution to one problem automatically provides the optimal solution to the other.
+C. Strong duality holds even if multiple optimal solutions exist. The equality of optimal objective function values remains true regardless of the uniqueness of the optimal solution.
+D. Strong duality is a more powerful result than weak duality, not a special case. It applies to all linear programs, regardless of the non-negativity of variables.
+E. This is incorrect. Strong duality requires that at least one of the problems has an optimal solution; it does not hold if both problems are infeasible or unbounded.
+
+
+QUESTION 9
+Given the primal problem $\max \quad \xi(x) = c^T x$ subject to $Ax \leq b, x \geq 0$, and its dual problem $\min \quad \xi(y) = b^T y$ subject to $A^T y \geq c, y \geq 0$,  if $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$, $b = \begin{pmatrix} 5 \\ 6 \end{pmatrix}$, and $c = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$, what is the dual objective function $\xi(y)$?
+A. $5y_1 + 6y_2$
+B. $y_1 + y_2$
+C. $y_1 + 2y_2$
+D. $3y_1 + 4y_2$
+E. $6y_1 + 5y_2$
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual objective function is given by $\xi(y) = b^T y$. Substituting the given values of $b$, we get $\xi(y) = \begin{pmatrix} 5 & 6 \end{pmatrix} \begin{pmatrix} y_1 \\ y_2 \end{pmatrix} = 5y_1 + 6y_2$. Therefore, option A is correct.
+B. This option incorrectly uses the vector $c$ instead of $b$ in the dual objective function.
+C. This option seems to arbitrarily select elements from $A$ and $b$ to form the objective function.
+D. This option seems to arbitrarily select elements from $A$ and $b$ to form the objective function.
+E. This option reverses the order of elements in $b$ when forming the objective function.
+
+
+QUESTION 10
+Consider the primal problem: $\max \quad \xi(x) = 2x_1 + 3x_2$ subject to $x_1 + x_2 \le 4$, $2x_1 + x_2 \le 5$, $x_1, x_2 \ge 0$. What is the first constraint of the dual problem?
+A. $y_1 + 2y_2 \le 2$
+B. $y_1 + y_2 \ge 2$
+C. $y_1 + 2y_2 \ge 2$
+D. $y_1 + y_2 \le 2$
+E. $2y_1 + y_2 \ge 3$
+
+ANSWER: C
+
+EXPLANATION:
+A. This reverses the inequality and uses the wrong coefficients.
+B. This reverses the inequality.
+C. The primal problem has constraints $x_1 + x_2 \le 4$ and $2x_1 + x_2 \le 5$. The dual problem will have constraints $y_1 + 2y_2 \ge 2$ and $y_1 + y_2 \ge 3$. The first constraint of the dual problem is $y_1 + 2y_2 \ge 2$. Therefore, option C is correct.
+D. This reverses the inequality and uses the wrong coefficients.
+E. This uses the coefficients from the objective function incorrectly.
+
+

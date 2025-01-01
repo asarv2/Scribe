@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 11:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 09:16
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -660,169 +660,30 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 75.
+(Font)              <10> on input line 76.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 75.
+(Font)              <7> on input line 76.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 75.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:76: Missing number, treated as zero.
-<to be read again> 
-                   C
-l.76 [C]
-         p. 297.
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:76: Illegal unit of measure (pt inserted).
-<to be read again> 
-                   C
-l.76 [C]
-         p. 297.
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
+(Font)              <5> on input line 76.
 
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:76: Package calc Error: `C' invalid at this point.
+-EconNetSimplex/notes.tex:77: LaTeX Error: Environment tikzpicture undefined.
 
-See the calc package documentation for explanation.
+See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.76 [C]
-         p. 297.
-I expected to see one of: + - * / )
+l.77 \begin{tikzpicture}
+                        [scale=0.8]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:76: Extra }, or forgotten \endgroup.
-\@gnewline ...\unskip \reserved@e {\reserved@f #1}
-                                                  \nobreak \hfil \break \fi 
-l.76 [C]
-         p. 297.
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/1.1.png, id=4, 792.9625pt x 481.8pt>
-File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--11-21-EconNetSimplex/figures/1.1.png Graphic file (type png)
-<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-11-21-EconNetSimplex/figures/1.1.png>
-Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-11-21-EconNetSimplex/figures/1.1.png  used on input line 85
-.
-(pdftex.def)             Requested size: 70.46037pt x 42.80875pt.
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:97: Missing $ inserted.
-<inserted text> 
-                $
-l.97 b_
-       i \bar{u} \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:102: Missing $ inserted.
-<inserted text> 
-                $
-l.102 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/2.1.png, id=5, 756.8275pt x 381.425pt>
-File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--11-21-EconNetSimplex/figures/2.1.png Graphic file (type png)
-<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-11-21-EconNetSimplex/figures/2.1.png>
-Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png  used on input line 10
-9.
-(pdftex.def)             Requested size: 70.46037pt x 35.50824pt.
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:121: Missing $ inserted.
-<inserted text> 
-                $
-l.121 b_
-        i \bar{u} \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:126: Missing $ inserted.
-<inserted text> 
-                $
-l.126 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/3.1.png, id=6, 803.0pt x 552.0625pt>
-File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--11-21-EconNetSimplex/figures/3.1.png Graphic file (type png)
-<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-11-21-EconNetSimplex/figures/3.1.png>
-Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png  used on input line 13
-3.
-(pdftex.def)             Requested size: 70.46037pt x 48.43675pt.
-
-Underfull \hbox (badness 3460) in paragraph at lines 134--134
-\T1/lmr/m/n/8 and edges, some
- []
-
-LaTeX Font Info:    Trying to load font information for OMS+lmr on input line 1
-46.
-(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
-File: omslmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 146.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:150: Missing $ inserted.
-<inserted text> 
-                $
-l.150 ... do in Florida. If the unit price is } y_
-                                                  i \text{ at a node } i \te...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:158: Missing $ inserted.
-<inserted text> 
-                $
-l.158 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:177: Missing $ inserted.
-<inserted text> 
-                $
-l.177 ...ance, we could buy at the node 2 for } y_
-                                                  2 = 23 \text{ and ship alo...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:181: Undefined control sequence.
-l.181 \text{i} \xdashedrightarrow
-                                 {z_{ij} < 0} \text{j} \\
+-EconNetSimplex/notes.tex:78: Undefined control sequence.
+l.78 \node
+          [circle, draw, inner sep=2pt, label=above:{$b_i \tilde{u}$}] (A) a...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -830,52 +691,1250 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:184: Missing $ inserted.
+-EconNetSimplex/notes.tex:79: Undefined control sequence.
+l.79 \node
+          [circle, draw, inner sep=2pt] (B) at (-1.5,0) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:80: Undefined control sequence.
+l.80 \node
+          [circle, draw, inner sep=2pt] (C) at (0,-1) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:81: Undefined control sequence.
+l.81 \node
+          [circle, draw, inner sep=2pt] (D) at (1.5,0) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:82: Undefined control sequence.
+l.82 \node
+          [circle, draw, inner sep=2pt, label=right:{$j \quad b_j$}] (E) at ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:83: Undefined control sequence.
+l.83 \node
+          [circle, draw, inner sep=2pt] (F) at (1.5,-1.5) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:84: Undefined control sequence.
+l.84 \node
+          [circle, draw, inner sep=2pt] (G) at (3,0.5) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:85: Undefined control sequence.
+l.85 \draw
+           (A) -- (B) -- (C) -- (A) -- (D) -- (E) -- (F) -- (C) -- (E) -- (D);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:86: Undefined control sequence.
+l.86 \draw
+           (A) -- (E);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:87: Undefined control sequence.
+l.87 \draw
+           (E) -- (G);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:88: Undefined control sequence.
+l.88 \node
+           at (0.5,0) {$c_{ij}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:89: LaTeX Error: \begin{document} ended by \end{tikzp
+icture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.89 \end{tikzpicture}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
+1-EconNetSimplex/figures/1.1.png, id=84, 772.8875pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-21-EconNetSimplex/figures/1.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-21-EconNetSimplex/figures/1.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-21-EconNetSimplex/figures/1.1.png  used on input line 98
+.
+(pdftex.def)             Requested size: 70.46037pt x 70.45316pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--99
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-drawn
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--99
+\T1/lmr/m/n/8 net-work graph
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--99
+\T1/lmr/m/n/8 with nodes and
+ []
+
+[1
+
+{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
+al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
+4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
+st/fonts/enc/dvips/lm/lm-rm.enc} </Users/ashoksaravanan/Coding/ScribeLec/server
+/output/MA 421/lectures/2024-11-21-EconNetSimplex/figures/1.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:110: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.110 \begin{tikzpicture}
+                         [scale=0.8]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:111: Undefined control sequence.
+l.111 \node
+           [circle, draw, inner sep=2pt, label=above:{$b_i \tilde{u}$}] (A) ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:112: Undefined control sequence.
+l.112 \node
+           [circle, draw, inner sep=2pt] (B) at (-1.5,0) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:113: Undefined control sequence.
+l.113 \node
+           [circle, draw, inner sep=2pt] (C) at (0,-1) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:114: Undefined control sequence.
+l.114 \node
+           [circle, draw, inner sep=2pt] (D) at (1.5,0) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:115: Undefined control sequence.
+l.115 \node
+           [circle, draw, inner sep=2pt, label=right:{$j \quad b_j$}] (E) at...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:116: Undefined control sequence.
+l.116 \node
+           [circle, draw, inner sep=2pt] (F) at (1.5,-1.5) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:117: Undefined control sequence.
+l.117 \node
+           [circle, draw, inner sep=2pt] (G) at (3,0.5) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:118: Undefined control sequence.
+l.118 \draw
+           [red!30, line width=2pt] (A) -- (B);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:119: Undefined control sequence.
+l.119 \draw
+           [red!30, line width=2pt] (A) -- (E);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:120: Undefined control sequence.
+l.120 \draw
+           [red!30, line width=2pt] (E) -- (D);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:121: Undefined control sequence.
+l.121 \draw
+           [red!30, line width=2pt] (E) -- (C);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:122: Undefined control sequence.
+l.122 \draw
+            (A) -- (C);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:123: Undefined control sequence.
+l.123 \draw
+            (B) -- (C);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:124: Undefined control sequence.
+l.124 \draw
+            (C) -- (D);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:125: Undefined control sequence.
+l.125 \draw
+            (C) -- (F);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:126: Undefined control sequence.
+l.126 \draw
+            (D) -- (E);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:127: Undefined control sequence.
+l.127 \draw
+            (E) -- (G);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:128: Undefined control sequence.
+l.128 \draw
+            (D) -- (F);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:129: Undefined control sequence.
+l.129 \node
+            at (0.5,0.2) {$c_{ij}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:130: LaTeX Error: \begin{document} ended by \end{tikz
+picture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.130 \end{tikzpicture}
+                        \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
+1-EconNetSimplex/figures/2.1.png, id=100, 772.8875pt x 572.1375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-21-EconNetSimplex/figures/2.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-21-EconNetSimplex/figures/2.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-21-EconNetSimplex/figures/2.1.png  used on input line 14
+0.
+(pdftex.def)             Requested size: 70.46037pt x 52.15364pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 141--141
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-drawn
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 141--141
+\T1/lmr/m/n/8 net-work graph
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 141--141
+\T1/lmr/m/n/8 with nodes and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 141--141
+\T1/lmr/m/n/8 edges la-beled.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 141--141
+\T1/lmr/m/n/8 Some edges are
+ []
+
+
+Underfull \hbox (badness 7851) in paragraph at lines 141--141
+\T1/lmr/m/n/8 high-lighted in a
+ []
+
+[2 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
+1-21-EconNetSimplex/figures/2.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:152: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.152 \begin{tikzpicture}
+                         [scale=0.8]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:153: Undefined control sequence.
+l.153 \node
+           [circle, draw, inner sep=2pt, label=above:{$b_i \tilde{u}$}] (A) ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:154: Undefined control sequence.
+l.154 \node
+           [circle, draw, inner sep=2pt] (B) at (-1.5,0) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:155: Undefined control sequence.
+l.155 \node
+           [circle, draw, inner sep=2pt] (C) at (0,-1) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:156: Undefined control sequence.
+l.156 \node
+           [circle, draw, inner sep=2pt] (D) at (1.5,0) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:157: Undefined control sequence.
+l.157 \node
+           [circle, draw, inner sep=2pt, label=right:{$j \quad b_j$}] (E) at...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:158: Undefined control sequence.
+l.158 \node
+           [circle, draw, inner sep=2pt] (F) at (1.5,-1.5) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:159: Undefined control sequence.
+l.159 \node
+           [circle, draw, inner sep=2pt] (G) at (3,0.5) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:160: Undefined control sequence.
+l.160 \draw
+           [red!30, line width=2pt] (A) -- (B);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:161: Undefined control sequence.
+l.161 \draw
+           [red!30, line width=2pt] (A) -- (E);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:162: Undefined control sequence.
+l.162 \draw
+           [red!30, line width=2pt] (E) -- (D);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:163: Undefined control sequence.
+l.163 \draw
+           [red!30, line width=2pt] (E) -- (C);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:164: Undefined control sequence.
+l.164 \draw
+            (A) -- (C);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:165: Undefined control sequence.
+l.165 \draw
+            (B) -- (C);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:166: Undefined control sequence.
+l.166 \draw
+            (C) -- (D);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:167: Undefined control sequence.
+l.167 \draw
+            (C) -- (F);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:168: Undefined control sequence.
+l.168 \draw
+            (D) -- (E);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:169: Undefined control sequence.
+l.169 \draw
+            (E) -- (G);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:170: Undefined control sequence.
+l.170 \draw
+            (D) -- (F);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:171: Undefined control sequence.
+l.171 \node
+            at (0.5,0.2) {$c_{ij}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:172: LaTeX Error: \begin{document} ended by \end{tikz
+picture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.172 \end{tikzpicture}
+                        \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
+1-EconNetSimplex/figures/3.1.png, id=106, 772.8875pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-21-EconNetSimplex/figures/3.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-21-EconNetSimplex/figures/3.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-21-EconNetSimplex/figures/3.1.png  used on input line 18
+2.
+(pdftex.def)             Requested size: 70.46037pt x 70.45316pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-drawn
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+\T1/lmr/m/n/8 net-work graph
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+\T1/lmr/m/n/8 with nodes and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+\T1/lmr/m/n/8 edges la-beled.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+\T1/lmr/m/n/8 Some edges are
+ []
+
+
+Underfull \hbox (badness 7851) in paragraph at lines 183--183
+\T1/lmr/m/n/8 high-lighted in a
+ []
+
+[3 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
+1-21-EconNetSimplex/figures/3.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
+1-EconNetSimplex/figures/4.1.png, id=112, 537.00626pt x 923.45pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-21-EconNetSimplex/figures/4.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-21-EconNetSimplex/figures/4.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-21-EconNetSimplex/figures/4.1.png  used on input line 20
+0.
+(pdftex.def)             Requested size: 70.46037pt x 121.16588pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 3271) in paragraph at lines 201--201
+\T1/lmr/m/n/8 the eco-nomic in-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 net-work sim-plex
+ []
+
+
+Underfull \hbox (badness 5893) in paragraph at lines 201--201
+\T1/lmr/m/n/8 method, fo-cus-ing
+ []
+
+
+Underfull \hbox (badness 1888) in paragraph at lines 201--201
+\T1/lmr/m/n/8 on the first step
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 of the sim-plex
+ []
+
+
+Underfull \hbox (badness 3407) in paragraph at lines 201--201
+\T1/lmr/m/n/8 al-go-rithm. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 a trans-porta-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 com-pany based
+ []
+
+
+Underfull \hbox (badness 1242) in paragraph at lines 201--201
+\T1/lmr/m/n/8 on ship-ping costs
+ []
+
+
+Underfull \hbox (badness 3019) in paragraph at lines 201--201
+\T1/lmr/m/n/8 at dif-fer-ent lo-ca-
+ []
+
+
+Underfull \hbox (badness 1215) in paragraph at lines 201--201
+\T1/lmr/m/n/8 tions. A cir-cled
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 201--201
+\T1/lmr/m/n/8 "1" in-di-cates this
+ []
+
+
+Underfull \hbox (badness 2376) in paragraph at lines 201--201
+\T1/lmr/m/n/8 is the first step.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 The equa-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 cen-tral to this
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 201--201
+\T1/lmr/m/n/8 step, where $\OML/lmm/m/it/8 y[]$
+ []
+
+
+Underfull \hbox (badness 3189) in paragraph at lines 201--201
+\T1/lmr/m/n/8 price at node $\OML/lmm/m/it/8 i$\T1/lmr/m/n/8 ,
+ []
+
+
+Underfull \hbox (badness 1087) in paragraph at lines 201--201
+\T1/lmr/m/n/8 cost from node $\OML/lmm/m/it/8 i$
+ []
+
+[4] [5 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-11-21-EconNetSimplex/figures/4.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:213: Undefined control sequence.
+<recently read> \circled 
+                         
+l.213 \circled
+              {2} \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:217: Missing $ inserted.
 <inserted text> 
                 $
-l.184 \subsection
+l.217 ...ance, we could buy at the node 2 for } y_
+                                                  2 = 23 \text{ and ship alo...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:222: Undefined control sequence.
+<recently read> \circled 
+                         
+l.222 \circled
+              {i} \text{----} z_{ij} < 0 \text{----} \overrightarrow{\circle...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:222: Undefined control sequence.
+<argument> \circled 
+                    {j}
+l.222 ... \text{----} \overrightarrow{\circled{j}}
+                                                   \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:222: Undefined control sequence.
+<argument> \circled 
+                    {j}
+l.222 ... \text{----} \overrightarrow{\circled{j}}
+                                                   \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:222: Undefined control sequence.
+<argument> \circled 
+                    {j}
+l.222 ... \text{----} \overrightarrow{\circled{j}}
+                                                   \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:222: Undefined control sequence.
+<argument> \circled 
+                    {j}
+l.222 ... \text{----} \overrightarrow{\circled{j}}
+                                                   \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:225: Missing $ inserted.
+<inserted text> 
+                $
+l.225 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/5.1.png, id=7, 471.7625pt x 220.825pt>
+1-EconNetSimplex/figures/5.1.png, id=126, 516.93124pt x 411.5375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -11-21-EconNetSimplex/figures/5.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 11-21-EconNetSimplex/figures/5.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png  used on input line 19
-1.
-(pdftex.def)             Requested size: 70.46037pt x 32.98079pt.
+A 421/lectures/2024-11-21-EconNetSimplex/figures/5.1.png  used on input line 23
+2.
+(pdftex.def)             Requested size: 70.46037pt x 56.08893pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 2111) in paragraph at lines 233--233
+\T1/lmr/m/n/8 the net-work sim-
+ []
+
+
+Underfull \hbox (badness 2521) in paragraph at lines 233--233
+\T1/lmr/m/n/8 node, ship it to
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 233--233
+\T1/lmr/m/n/8 an-other, and sell
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 and ship-ping
+ []
+
+
+Underfull \hbox (badness 1199) in paragraph at lines 233--233
+\T1/lmr/m/n/8 costs. A cir-cled
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 233--233
+\T1/lmr/m/n/8 "2" in-di-cates this
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 The in-equal-ity
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 cen-tral to this
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 step, where $\OML/lmm/m/it/8 y[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 rep-re-sents the
+ []
+
+
+Underfull \hbox (badness 3189) in paragraph at lines 233--233
+\T1/lmr/m/n/8 price at node $\OML/lmm/m/it/8 i$\T1/lmr/m/n/8 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 is also present,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+\T1/lmr/m/n/8 where $\OML/lmm/m/it/8 z[]$ \T1/lmr/m/n/8 is a
+ []
+
+
+Underfull \hbox (badness 1642) in paragraph at lines 233--233
+\T1/lmr/m/n/8 "i" and "j" likely
+ []
+
+[6{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
+[7 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
+1-21-EconNetSimplex/figures/5.1.png (PNG copy)>]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:210: Missing $ inserted.
+-EconNetSimplex/notes.tex:245: Undefined control sequence.
+<recently read> \circled 
+                         
+l.245 \circled
+              {3} \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:251: Package amsmath Error: \tilde allowed only in ma
+th mode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.251 \tilde{z}
+               _{ij} = 0, \quad i.e. \quad \tilde{y}_j - \tilde{y}_i = c_{ij...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:251: Missing $ inserted.
 <inserted text> 
                 $
-l.210 \widetilde{z}
-                   _{ij} = 0, \quad i.e. \quad \widetilde{y}_j - \widetilde{...
+l.251 \tilde{z}_
+                {ij} = 0, \quad i.e. \quad \tilde{y}_j - \tilde{y}_i = c_{ij...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
+
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:213: Missing $ inserted.
+-EconNetSimplex/notes.tex:252: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.252 \begin{tikzpicture}
+                         [scale=0.8]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:253: Undefined control sequence.
+l.253 \node
+           [circle, draw, inner sep=2pt] (A) at (0,0) {$\circled{i}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:253: Missing } inserted.
+<inserted text> 
+                }
+l.253 ...cle, draw, inner sep=2pt] (A) at (0,0) {$
+                                                  \circled{i}$};
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:253: Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.253 ...cle, draw, inner sep=2pt] (A) at (0,0) {$
+                                                  \circled{i}$};
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:253: Undefined control sequence.
+l.253 ...w, inner sep=2pt] (A) at (0,0) {$\circled
+                                                  {i}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:253: Extra }, or forgotten $.
+<recently read> }
+                 
+l.253 ...ner sep=2pt] (A) at (0,0) {$\circled{i}$}
+                                                  ;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:254: Undefined control sequence.
+l.254 \node
+           [circle, draw, inner sep=2pt] (B) at (2,0) {$\circled{j}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:254: Missing } inserted.
+<inserted text> 
+                }
+l.254 ...cle, draw, inner sep=2pt] (B) at (2,0) {$
+                                                  \circled{j}$};
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:254: Undefined control sequence.
+l.254 ...w, inner sep=2pt] (B) at (2,0) {$\circled
+                                                  {j}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:254: Extra }, or forgotten $.
+<recently read> }
+                 
+l.254 ...ner sep=2pt] (B) at (2,0) {$\circled{j}$}
+                                                  ;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:255: Undefined control sequence.
+l.255 \draw
+           [->] (A) -- (B) node[midway,above] {$flow = t$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:255: Missing } inserted.
+<inserted text> 
+                }
+l.255 \draw[->] (A) -- (B) node[midway,above] {$
+                                                flow = t$};
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:255: Extra }, or forgotten $.
+<recently read> }
+                 
+l.255 ...A) -- (B) node[midway,above] {$flow = t$}
+                                                  ;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:256: LaTeX Error: \begin{document} ended by \end{tikz
+picture}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.256 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:256: Missing $ inserted.
 <inserted text> 
                 $
-l.213 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+l.256 \end{tikzpicture}
+                       
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
+-EconNetSimplex/notes.tex:256: Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.256 \end{tikzpicture}
+                       
+Things are pretty mixed up, but I think the worst is over.
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-2
-1-EconNetSimplex/figures/6.1.png, id=8, 471.7625pt x 220.825pt>
+1-EconNetSimplex/figures/6.1.png, id=140, 537.00626pt x 772.8875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -11-21-EconNetSimplex/figures/6.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 11-21-EconNetSimplex/figures/6.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-11-21-EconNetSimplex/figures/6.1.png  used on input line 22
-0.
-(pdftex.def)             Requested size: 70.46037pt x 32.98079pt.
+A 421/lectures/2024-11-21-EconNetSimplex/figures/6.1.png  used on input line 26
+5.
+(pdftex.def)             Requested size: 70.46037pt x 101.41057pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 1194) in paragraph at lines 266--266
+\T1/lmr/m/n/8 the third step of
+ []
+
+
+Underfull \hbox (badness 2111) in paragraph at lines 266--266
+\T1/lmr/m/n/8 the net-work sim-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
+\T1/lmr/m/n/8 plan based on
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
+\T1/lmr/m/n/8 its com-peti-tor's
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
+\T1/lmr/m/n/8 or equiv-a-lently
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
+\T1/lmr/m/n/8 cen-tral to this
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
+\T1/lmr/m/n/8 step, where $[]$
+ []
+
+
+Underfull \hbox (badness 3364) in paragraph at lines 266--266
+\T1/lmr/m/n/8 and $[]$ rep-re-sent
+ []
+
+[8] [9 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-11-21-EconNetSimplex/figures/6.1.png (PNG copy)>]
 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/notes.aux)
@@ -883,33 +1942,44 @@ enddocument/afterlastpage: lastpage setting LastPage.
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-Package rerunfilecheck Info: File `notes.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-21
--EconNetSimplex/notes.tex:227: You can't use `\end' in internal vertical mode.
-\enddocument ...cument/end}\deadcycles \z@ \@@end 
-                                                  
-l.227 \end{document}
-                    
-Sorry, but I'm not programmed to handle this case;
-I'll just pretend that you didn't ask for it.
-If you're in the wrong mode, you might be able to
-return to the right one by typing `I}' or `I$' or `I\par'.
 
-)
-! Emergency stop.
-<*> ...ctures/2024-11-21-EconNetSimplex/notes.tex"
-                                                  
-*** (job aborted, no legal \end found)
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
- 
+
+Package rerunfilecheck Warning: File `notes.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `notes.out':
+(rerunfilecheck)             Before: 0413EA73DAD95EBF05D5CF5F82CD4FD0;1896
+(rerunfilecheck)             After:  6177A73D0F62B433E7968D6F05B5A4D2;2277.
+ ) 
 Here is how much of TeX's memory you used:
- 14437 strings out of 474116
- 235849 string characters out of 5743682
- 1948187 words of memory out of 5000000
- 36546 multiletter control sequences out of 15000+600000
- 616079 words of font info for 79 fonts, out of 8000000 for 9000
+ 14502 strings out of 474116
+ 237315 string characters out of 5743682
+ 1937187 words of memory out of 5000000
+ 36568 multiletter control sequences out of 15000+600000
+ 619074 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,14n,131p,1559b,740s stack positions out of 10000i,1000n,20000p,200000b,200000s
-!  ==> Fatal error occurred, no output PDF file produced!
+ 83i,14n,131p,1505b,681s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/lo
+cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texliv
+e/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2024/texm
+f-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fon
+ts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
+blic/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmm
+i8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></us
+r/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/tex
+live/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2024/t
+exmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fo
+nts/type1/public/lm/lmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
+blic/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lm
+sy8.pfb>
+Output written on _logs/notes.pdf (9 pages, 1299944 bytes).
+PDF statistics:
+ 234 PDF objects out of 1000 (max. 8388607)
+ 185 compressed objects within 2 object streams
+ 40 named destinations out of 1000 (max. 500000)
+ 191 words of extra memory for PDF output out of 10000 (max. 10000000)
+

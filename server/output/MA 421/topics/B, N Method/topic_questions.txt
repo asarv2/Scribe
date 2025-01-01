@@ -1,0 +1,180 @@
+QUESTION 1
+In the context of the B\&N method, what is the primary motivation for transforming a general linear program into a form with only equality constraints and non-negativity restrictions on the variables?
+A. To simplify the objective function.
+B. To facilitate the application of the simplex method directly.
+C. To make the problem easier to visualize geometrically.
+D. To ensure the existence of a feasible solution.
+E. To readily apply the Lagrangian method for deriving the dual problem.
+
+ANSWER: E
+
+EXPLANATION:
+A. While simplifying the objective function might be a beneficial side effect, it's not the primary motivation for the transformation. The focus is on the constraints.
+B. The simplex method can handle inequality constraints. The transformation is necessary for the Lagrangian approach, not for direct application of the simplex method.
+C. Geometric visualization is helpful, but the transformation's main purpose is algebraic, to facilitate the Lagrangian method.
+D. The transformation doesn't guarantee feasibility; feasibility is a property of the problem itself.
+E. The B\&N method uses the Lagrangian to derive the dual problem.  Transforming the primal problem into a form with only equality constraints and non-negativity makes the application of the Lagrangian straightforward and allows for a cleaner derivation of the dual.
+
+
+QUESTION 2
+In the B\&N method, why is the Lagrangian function introduced, and what role does it play in deriving the dual problem?
+A. The Lagrangian simplifies the objective function, making the optimization easier.
+B. The Lagrangian eliminates the need for non-negativity constraints.
+C. The Lagrangian transforms inequality constraints into equality constraints, simplifying the problem.
+D. The Lagrangian provides a way to incorporate the constraints into an unconstrained optimization problem, facilitating the derivation of the dual.
+E. The Lagrangian is used to find an initial feasible solution before applying the simplex method.
+
+ANSWER: D
+
+EXPLANATION:
+A. The Lagrangian doesn't primarily simplify the objective function; it handles the constraints.
+B. The Lagrangian doesn't eliminate non-negativity constraints; it incorporates them into the formulation.
+C. The B\&N method starts with equality constraints. The Lagrangian handles both equality and inequality constraints in the general case.
+D. The Lagrangian function is a key tool in the B\&N method. It allows us to convert the constrained optimization problem (the primal problem) into an unconstrained one, making it easier to derive the dual problem through maximization and minimization steps.
+E. The Lagrangian is not directly used to find an initial feasible solution; that's a separate step in the simplex method.
+
+
+QUESTION 3
+What is the significance of the weak duality theorem in the context of the B\&N method, and how does it relate to the optimal solutions of the primal and dual problems?
+A. It guarantees that the primal and dual problems always have the same optimal solution.
+B. It states that the optimal value of the primal problem is always greater than or equal to the optimal value of the dual problem.
+C. It provides a bound on the optimal solution of the primal problem using the feasible solutions of the dual problem.
+D. It ensures that the dual problem always has a feasible solution.
+E. It is irrelevant to the B\&N method, which focuses solely on the primal problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. Strong duality, not weak duality, guarantees that the optimal values are equal (under certain conditions).
+B. This is incorrect; weak duality states that the optimal value of the primal is less than or equal to the optimal value of the dual for maximization problems.
+C. The weak duality theorem is crucial. It establishes that the optimal value of the primal problem is always less than or equal to the optimal value of the dual problem, providing a bound that can be used to assess the quality of approximate solutions.
+D. Weak duality doesn't guarantee feasibility of the dual problem.
+E. Weak duality is fundamental to the B\&N method and its derivation of the dual problem.
+
+
+QUESTION 4
+In the final step of the B\&N method, how is the dual problem obtained from the Lagrangian, and what conditions must be satisfied for the dual objective function to be finite?
+A. The dual problem is obtained by minimizing the Lagrangian with respect to the primal variables.
+B. The dual problem is obtained by maximizing the Lagrangian with respect to the dual variables.
+C. The dual problem's objective function is the Lagrangian itself, with no additional conditions.
+D. The dual problem is obtained by setting the gradient of the Lagrangian with respect to the primal variables to zero, and the dual objective function is finite if this gradient is zero.
+E. The dual problem is obtained by setting the gradient of the Lagrangian with respect to the primal variables to zero, and the dual objective function is finite if this condition is satisfied.
+
+ANSWER: E
+
+EXPLANATION:
+A. Minimizing the Lagrangian with respect to primal variables is not how the dual is obtained in the B\&N method.
+B. Maximizing the Lagrangian with respect to dual variables is not the final step in obtaining the dual problem.
+C. The dual objective function is not simply the Lagrangian; it's derived from the Lagrangian under specific conditions.
+D. The condition for a finite dual objective function is not just that the gradient is zero; it's a specific condition involving the dual variables and the constraint matrices.
+E. The dual problem is derived by setting the gradient of the Lagrangian with respect to the primal variables to zero.  This condition ensures that the dual objective function is finite; otherwise, it's unbounded.
+
+
+QUESTION 5
+Explain the core idea behind the B\&N method for deriving the dual of a linear program, emphasizing the roles of equality constraints, the Lagrangian function, and the weak duality theorem.
+A. The B\&N method uses slack variables to convert inequality constraints into equalities, then applies the simplex method to solve the primal problem and its dual simultaneously.
+B. The B\&N method directly transforms the primal problem's objective function into the dual objective function using matrix operations, without considering constraints.
+C. The B\&N method first transforms the primal problem into a form with only equality constraints, then introduces a Lagrangian function to incorporate these constraints into an unconstrained problem. The dual problem is then derived by analyzing the properties of the Lagrangian and applying the weak duality theorem.
+D. The B\&N method uses the graphical method to visualize the feasible region of the primal problem and then geometrically constructs the dual problem's feasible region.
+E. The B\&N method is an iterative algorithm that alternates between solving the primal and dual problems until convergence, without explicitly using the Lagrangian.
+
+ANSWER: C
+
+EXPLANATION:
+A. The B\&N method does not directly use the simplex method to solve both primal and dual simultaneously.  It focuses on deriving the dual problem's structure from the primal problem's structure using the Lagrangian.
+B. The B\&N method does not simply transform the objective function.  It carefully considers the constraints and uses the Lagrangian to incorporate them into the derivation of the dual.
+C. The B\&N method, as described in the slides, focuses on transforming the primal problem into a form with only equality constraints.  The Lagrangian is then a crucial tool to handle these constraints, effectively converting the constrained optimization problem into an unconstrained one.  The weak duality theorem is then used to establish a relationship between the primal and dual problems, leading to the derivation of the dual.  This approach is fundamentally different from the other options.
+D. The B\&N method is an algebraic method, not a graphical one.  It relies on the Lagrangian and duality theorems, not geometric constructions.
+E. The B\&N method is not an iterative algorithm that alternates between solving the primal and dual. It's a method for deriving the dual problem's structure from the primal problem's structure.
+
+
+QUESTION 6
+In the B&N method, what is the primary reason for transforming a general linear program into a form with only equality constraints and non-negativity restrictions on the variables?
+A. To simplify the objective function.
+B. To facilitate the application of the Lagrangian method.
+C. To reduce the number of variables.
+D. To ensure the problem is feasible.
+E. To guarantee a unique solution.
+
+ANSWER: B
+
+EXPLANATION:
+A. While the Lagrangian can simplify calculations, the primary reason is to make the Lagrangian method applicable.
+B. The B&N method uses the Lagrangian to derive the dual problem.  The Lagrangian method is most easily applied when constraints are equalities.
+C. The number of variables might increase after transformation.
+D. Feasibility is a separate concern; the transformation doesn't guarantee feasibility.
+E. The transformation doesn't guarantee uniqueness; multiple solutions are possible.
+
+
+QUESTION 7
+In the B&N method, why is the Lagrangian function introduced, and what role does it play in deriving the dual problem?
+A. It simplifies the objective function.
+B. It converts inequality constraints into equality constraints.
+C. It incorporates the constraints into an unconstrained optimization problem.
+D. It guarantees the existence of a solution.
+E. It directly provides the dual objective function.
+
+ANSWER: C
+
+EXPLANATION:
+A. The Lagrangian doesn't directly simplify the objective function; it modifies it.
+B. The B&N method starts with equality constraints; the Lagrangian doesn't change constraint types.
+C. The Lagrangian incorporates the constraints into the objective function, allowing for unconstrained optimization to find the dual.
+D. The Lagrangian doesn't guarantee solution existence; that's a property of the primal problem.
+E. The Lagrangian is a tool; the dual objective function is derived from its properties.
+
+
+QUESTION 8
+What is the significance of the weak duality theorem in the context of the B&N method, and how does it relate to the optimal solutions of the primal and dual problems?
+A. It guarantees the primal and dual problems have the same optimal solution.
+B. It provides a bound on the optimal solution of the primal problem using the dual problem.
+C. It ensures the dual problem is always feasible.
+D. It simplifies the calculation of the Lagrangian.
+E. It is irrelevant to the B&N method.
+
+ANSWER: B
+
+EXPLANATION:
+A. Strong duality guarantees the same optimal value; weak duality only provides a bound.
+B. Weak duality states that the optimal value of the primal problem is less than or equal to the optimal value of the dual problem, providing a bound.
+C. Feasibility is a separate property; weak duality doesn't guarantee dual feasibility.
+D. Weak duality is a theoretical result; it doesn't simplify Lagrangian calculations.
+E. Weak duality is fundamental to the B&N method's derivation of the dual problem.
+
+
+QUESTION 9
+In the final step of the B&N method, how is the dual problem obtained from the Lagrangian, and what conditions must be satisfied for the dual objective function to be finite?
+A. The dual objective function is the Lagrangian itself.
+B. The dual objective function is obtained by minimizing the Lagrangian with respect to the primal variables.
+C. The dual objective function is obtained by maximizing the Lagrangian with respect to the primal variables.
+D. The dual objective function is obtained by setting the gradient of the Lagrangian with respect to the primal variables to zero.
+E. The dual objective function is obtained by setting the primal variables to zero.
+
+ANSWER: D
+
+EXPLANATION:
+A. The Lagrangian is a function of both primal and dual variables; the dual objective function is a function of dual variables only.
+B. Minimizing the Lagrangian with respect to primal variables would give the primal solution, not the dual objective function.
+C. Maximizing the Lagrangian with respect to primal variables is part of the process, but the dual objective function is obtained by considering the conditions for a finite maximum.
+D. Setting the gradient of the Lagrangian to zero gives the dual constraints; the dual objective function is the remaining part of the Lagrangian.
+E. Setting primal variables to zero is not how the dual problem is derived.
+
+
+QUESTION 10
+Consider the primal problem: Maximize $Z = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, $x_1, x_2 \ge 0$. Using the B\&N method, what is the Lagrangian function $L(x_1, x_2, y_1, y_2, y_3)$?
+A. $L(x_1, x_2, y_1, y_2, y_3) = 3x_1 + 2x_2 - y_1(-x_1 + 3x_2 - 12) - y_2(x_1 + x_2 - 8) - y_3(2x_1 - x_2 - 10)$
+B. $L(x_1, x_2, y_1, y_2, y_3) = 3x_1 + 2x_2 + y_1(-x_1 + 3x_2 - 12) + y_2(x_1 + x_2 - 8) + y_3(2x_1 - x_2 - 10)$
+C. $L(x_1, x_2, y_1, y_2, y_3) = 3x_1 + 2x_2 - y_1(-x_1 + 3x_2) - y_2(x_1 + x_2) - y_3(2x_1 - x_2)$
+D. $L(x_1, x_2, y_1, y_2, y_3) = 3x_1 + 2x_2 + y_1(-x_1 + 3x_2) + y_2(x_1 + x_2) + y_3(2x_1 - x_2)$
+E. $L(x_1, x_2, y_1, y_2, y_3) = 3x_1 + 2x_2 - y_1(-x_1 + 3x_2 - 12) - y_2(x_1 + x_2 - 8) - y_3(2x_1 - x_2 - 10) + y_4x_1 + y_5x_2$
+
+ANSWER: A
+
+EXPLANATION:
+A. The Lagrangian function correctly incorporates the objective function and constraints with Lagrange multipliers $y_i \ge 0$ for each constraint.  The negative signs ensure that when the constraints are satisfied, the Lagrangian equals the objective function.
+B. Incorrect signs on the constraint terms. The multipliers should be subtracted to ensure the Lagrangian equals the objective function when constraints are satisfied.
+C. The constant terms in the constraints (12, 8, 10) are missing. These are crucial for the correct formulation of the Lagrangian.
+D. Incorrect signs on the constraint terms. The multipliers should be subtracted to ensure the Lagrangian equals the objective function when constraints are satisfied.
+E. Unnecessary additional terms $y_4x_1$ and $y_5x_2$. The non-negativity constraints $x_1, x_2 \ge 0$ are already implicitly handled by the transformation to equality constraints in the B\&N method.
+
+

@@ -1,0 +1,7 @@
+This lecture provided an economic interpretation of the network simplex method used to solve linear programming problems, specifically those with network structures like transportation or assignment problems.  The method is presented as a three-step iterative process:
+
+* **Finding a feasible solution:** The algorithm initiates with a feasible solution represented by a spanning tree within the network, where each node represents a location and each edge represents a connection with an associated cost.
+
+* **Identifying profitable opportunities:**  The algorithm simulates a competitive market by evaluating whether shipping a commodity between nodes would yield a profit, based on the current prices at each node and the shipping costs between them.  A profitable opportunity exists if the cost of buying at node *i*, shipping to node *j*, is less than the selling price at node *j*.
+
+* **Adjusting the shipping plan:**  The algorithm models a company's response to identified profitable opportunities.  The company adjusts its shipping plan by introducing flow along a new arc (the entering arc) while maintaining feasibility by adjusting flows along existing arcs.  This adjustment ensures that the prices at each node reflect the shipping costs and maintain market equilibrium.

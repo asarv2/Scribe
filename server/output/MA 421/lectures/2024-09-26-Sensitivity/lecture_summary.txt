@@ -1,0 +1,8 @@
+This Linear Programming lecture explored sensitivity and parametric analysis, techniques used to understand how changes in a problem's parameters affect the optimal solution.
+
+* **Sensitivity analysis** determines the range of parameter changes that maintain the current optimal solution's optimality and feasibility.
+* **Parametric analysis** systematically investigates the impact of changes in specific parameters on the optimal solution.  This often involves introducing a parameter into the objective function or constraints and analyzing how the optimal solution changes as the parameter varies.
+* The lecture utilized a linear programming problem (maximizing a linear objective function subject to linear inequality constraints) as a running example to illustrate these concepts.
+* The optimal solution was expressed in terms of basic and non-basic variables, allowing for analysis of how changes in non-basic variables affect the objective function value and basic variable values.
+*  Conditions for maintaining optimality were derived, focusing on the non-negativity of reduced costs ($Z_N^* + \Delta Z_N^* \ge 0$) for changes in the objective function coefficients and the non-negativity of basic variables ($X_B^* + \Delta X_B^* \ge 0$) for changes in the right-hand side constants of the constraints.
+*  The analysis involved examining the impact of changes in both the objective function coefficients and the right-hand side constants of the constraints on the optimal solution.  This provided a comprehensive understanding of the sensitivity of the optimal solution to variations in the problem's parameters.

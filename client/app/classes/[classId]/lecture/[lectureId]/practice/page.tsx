@@ -33,7 +33,7 @@ export default function LecturePractice({ params }: { params: { classId: string,
 
     
     const { data: questions } = useQuery({
-        queryKey: ["questions", lectureId],
+        queryKey: ["lectureQuestions", lectureId],
         queryFn: () => getLectureQuestions(supabase, lectureId),
     });
     

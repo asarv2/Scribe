@@ -1,0 +1,179 @@
+QUESTION 1
+In sensitivity analysis, how does a change in the objective function coefficient of a non-basic variable affect the optimal solution and the optimal objective function value?
+A. It always changes the optimal solution and the optimal objective function value.
+B. It never changes the optimal solution or the optimal objective function value.
+C. It may change the optimal solution but never changes the optimal objective function value.
+D. It may change the optimal objective function value but never changes the optimal solution.
+E. It may change the optimal solution and/or the optimal objective function value, depending on the magnitude of the change and the current optimal solution.
+
+ANSWER: E
+
+EXPLANATION:
+A. Incorrect.  The optimal solution and objective function value only change if the change in the objective function coefficient is large enough to alter the optimality conditions.
+B. Incorrect. Changes in objective function coefficients can affect the optimal solution and objective function value, depending on the magnitude of the change and the current optimal solution.
+C. Incorrect.  A sufficiently large change can alter the optimal solution, which will also change the optimal objective function value.
+D. Incorrect. A sufficiently large change can alter the optimal solution, which will also change the optimal objective function value.
+E. A change in the objective function coefficient of a non-basic variable might or might not affect the optimal solution and the optimal objective function value.  If the change is small enough, the current optimal solution remains optimal, and the objective function value changes proportionally. However, a large enough change could cause a different solution to become optimal, altering both the solution and the objective function value.
+
+
+QUESTION 2
+How does sensitivity analysis help in assessing the robustness of an optimal solution to changes in the right-hand side (RHS) values of the constraints?
+A. Sensitivity analysis is not relevant to changes in RHS values.
+B. Sensitivity analysis directly provides the new optimal solution for any RHS change.
+C. Sensitivity analysis determines a range of RHS values for which the current optimal basis remains optimal.
+D. Sensitivity analysis only works for small changes in RHS values.
+E. Sensitivity analysis only considers changes to one RHS value at a time.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect. Sensitivity analysis is a crucial tool for evaluating the impact of changes in RHS values on the optimal solution.
+B. Incorrect. Sensitivity analysis provides a range, not the exact new solution for arbitrary RHS changes.  To find the new solution outside the range, a new simplex iteration is needed.
+C. Sensitivity analysis helps determine the range of RHS values within which the current optimal basis remains optimal.  Beyond this range, a different basis (and thus a different optimal solution) becomes optimal.
+D. Incorrect. While sensitivity analysis is often easier for small changes, it can theoretically handle larger changes, though the calculations become more complex.
+E. Incorrect. While often performed one RHS value at a time for simplicity, sensitivity analysis can, in principle, handle simultaneous changes to multiple RHS values.
+
+
+QUESTION 3
+What is the significance of shadow prices (dual variables) in sensitivity analysis, and how are they interpreted in the context of resource allocation?
+A. Shadow prices are irrelevant in sensitivity analysis.
+B. Shadow prices represent the exact cost of each resource.
+C. Shadow prices indicate the marginal increase in the objective function value for a one-unit increase in the corresponding resource.
+D. Shadow prices are only useful for resources that are fully utilized.
+E. Shadow prices are constant regardless of the amount of resource change.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect. Shadow prices are a central concept in sensitivity analysis, providing valuable information about resource allocation.
+B. Incorrect. Shadow prices represent the *marginal* increase in the objective function value, not the total cost of the resource.
+C. Shadow prices represent the marginal increase in the objective function value resulting from a one-unit increase in the corresponding resource.  They are useful for resource allocation decisions, indicating the value of obtaining more of a particular resource.
+D. Incorrect. Shadow prices are relevant even for resources that are not fully utilized, indicating the potential value of increasing their availability.
+E. Incorrect. Shadow prices are only valid within a certain range of resource changes.  Beyond that range, the shadow price changes.
+
+
+QUESTION 4
+Explain how sensitivity analysis helps in identifying the range of changes in a constraint's right-hand side (RHS) value that will not affect the optimal solution's basis.
+A. Sensitivity analysis cannot determine such a range.
+B. Sensitivity analysis directly provides the new optimal solution for any RHS change.
+C. Sensitivity analysis identifies a range of RHS values where the current optimal basis remains unchanged, indicating the robustness of the solution.
+D. Sensitivity analysis only works for small changes in RHS values.
+E. Sensitivity analysis only considers changes to one RHS value at a time.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect.  A key application of sensitivity analysis is determining the range of RHS values that maintain the current optimal basis.
+B. Incorrect. Sensitivity analysis provides a range, not the exact new solution for arbitrary RHS changes.  A new simplex iteration is needed outside this range.
+C. Sensitivity analysis determines the range of RHS values for which the current optimal basis remains optimal. This range indicates the robustness of the optimal solution to changes in the constraint's RHS value.
+D. Incorrect. While sensitivity analysis is often easier for small changes, it can theoretically handle larger changes, though the calculations become more complex.
+E. Incorrect. While often performed one RHS value at a time for simplicity, sensitivity analysis can, in principle, handle simultaneous changes to multiple RHS values.
+
+
+QUESTION 5
+Consider a standard form linear program (primal problem) and its corresponding dual problem.  Explain the relationship between the feasibility and boundedness of the primal and dual problems, covering all four possible scenarios.  For each scenario, describe the implications for the optimal objective function values of both problems.
+A. If the primal problem is feasible and bounded, the dual problem is infeasible.
+B. If the primal problem is infeasible, the dual problem is unbounded.
+C. If the primal problem is unbounded, the dual problem is infeasible; if the primal problem is infeasible, the dual problem is either unbounded or infeasible.
+D. If the primal problem is feasible and bounded, the dual problem is also feasible and bounded, and their optimal objective function values are equal. If the primal problem is infeasible, the dual problem is unbounded. If the primal problem is unbounded, the dual problem is infeasible.
+E. The feasibility and boundedness of the primal and dual problems are independent of each other; there is no guaranteed relationship between them.
+
+ANSWER: NO CORRECT ANSWER MARKED
+
+EXPLANATION:
+A. Answer A is incorrect. If the primal problem is feasible and bounded, the dual problem is also feasible and bounded, and their optimal objective function values are equal (strong duality).
+B. Answer B is incorrect. If the primal problem is infeasible, the dual problem is either unbounded or infeasible.
+D. Answer D is partially correct in stating the relationship when the primal problem is feasible and bounded. However, it incorrectly states that if the primal problem is infeasible, the dual problem is unbounded.  The dual problem could also be infeasible in this case.
+E. Answer E is incorrect. There is a strong relationship between the feasibility and boundedness of the primal and dual problems, as described by the duality theorems.
+
+
+QUESTION 6
+In sensitivity analysis, how does a change in the objective function coefficient of a basic variable affect the optimal solution and the optimal objective function value?
+A. It does not affect the optimal solution or the optimal objective function value.
+B. It may change the optimal solution but not the optimal objective function value.
+C. It may change the optimal objective function value but not the optimal solution.
+D. It may change both the optimal solution and the optimal objective function value.
+E. It always changes both the optimal solution and the optimal objective function value.
+
+ANSWER: D
+
+EXPLANATION:
+A. This is incorrect because changes in the objective function coefficients of basic variables can alter the optimal solution and the objective function value. The simplex method recalculates the reduced costs, potentially leading to a different optimal basis.
+B. This is incorrect because changes in the objective function coefficients of basic variables can affect the optimal objective function value. The change in the coefficient directly impacts the objective function calculation.
+C. This is incorrect because changes in the objective function coefficients of basic variables can affect the optimal solution. The change might cause a different basic variable to enter the basis, leading to a new optimal solution.
+D. A change in the objective function coefficient of a basic variable can affect both the optimal solution and the optimal objective function value.  The change might cause a different basic variable to enter the basis, leading to a new optimal solution and a different objective function value. The extent of the change depends on the magnitude of the alteration and the structure of the problem.
+E. This is incorrect because while it's possible for both the optimal solution and objective function value to change, it's not guaranteed. The change might be within the allowable range, leaving the optimal basis unchanged.
+
+
+QUESTION 7
+How does sensitivity analysis help in assessing the robustness of an optimal solution to changes in the right-hand side (RHS) values of the constraints?
+A. It provides no information about the robustness of the optimal solution.
+B. It identifies the range of changes in RHS values that will always change the optimal solution.
+C. It identifies the range of changes in RHS values that will never change the optimal solution's basis.
+D. It identifies the range of changes in RHS values that will always maintain the same optimal objective function value.
+E. It only determines the impact of changes on the optimal objective function value, not the solution.
+
+ANSWER: C
+
+EXPLANATION:
+A. Sensitivity analysis is specifically designed to assess the robustness of the optimal solution to changes in parameters, including RHS values.
+B. Sensitivity analysis identifies the range where the basis remains unchanged, not where it always changes.  Changes within the allowable range will not alter the optimal basis.
+C. Sensitivity analysis determines the range of changes in the RHS values that will not affect the optimal solution's basis.  Within this range, the optimal solution remains the same, indicating robustness. Outside this range, a different basis (and thus a different optimal solution) may be obtained.
+D. While the objective function value might remain the same within a certain range, the solution itself might change.  Sensitivity analysis focuses on the basis, which directly determines the solution.
+E. Sensitivity analysis considers both the optimal solution and the objective function value.  Changes in RHS values can affect both.
+
+
+QUESTION 8
+What is the significance of shadow prices (dual variables) in sensitivity analysis, and how are they interpreted in the context of resource allocation?
+A. Shadow prices are irrelevant in sensitivity analysis.
+B. Shadow prices indicate the change in the optimal objective function value for a unit increase in a constraint's RHS value.
+C. Shadow prices represent the cost of each decision variable.
+D. Shadow prices are only relevant for changes in the objective function coefficients.
+E. Shadow prices indicate the change in the optimal solution for a unit increase in a decision variable.
+
+ANSWER: B
+
+EXPLANATION:
+A. Shadow prices are a central component of sensitivity analysis, providing crucial information about the impact of changes in constraints.
+B. Shadow prices (dual variables) represent the marginal value of relaxing a constraint.  In resource allocation, they indicate how much the optimal objective function value would improve if one additional unit of the resource (represented by the constraint's RHS) were available.
+C. Shadow prices relate to constraints, not decision variables.  The cost of each decision variable is given by the objective function coefficients.
+D. Shadow prices are relevant for changes in constraint RHS values, not just objective function coefficients.
+E. Shadow prices relate to the objective function value, not the change in the optimal solution for a unit increase in a decision variable.
+
+
+QUESTION 9
+Explain how sensitivity analysis helps in identifying the range of changes in a constraint's right-hand side (RHS) value that will not affect the optimal solution's basis.
+A. Sensitivity analysis cannot identify such a range.
+B. Sensitivity analysis identifies this range by examining the reduced costs.
+C. Sensitivity analysis identifies this range by examining the shadow prices.
+D. Sensitivity analysis identifies this range by performing additional simplex iterations.
+E. Sensitivity analysis identifies this range by examining the optimal tableau and performing the minimum ratio test.
+
+ANSWER: E
+
+EXPLANATION:
+A. Sensitivity analysis is a core technique for determining the range of parameter changes that maintain the optimal basis.
+B. Reduced costs relate to changes in objective function coefficients, not RHS values.
+C. Shadow prices indicate the marginal value of relaxing a constraint, but they don't directly define the range of RHS changes that maintain the optimal basis.
+D. While additional simplex iterations might be needed to find the new optimal solution if the RHS changes are outside the allowable range, sensitivity analysis itself doesn't require additional iterations to determine the allowable range.
+E. By analyzing the optimal tableau, sensitivity analysis determines the allowable increase and decrease in each constraint's RHS value. The minimum ratio test, applied to the optimal tableau, helps determine the range where the current basis remains optimal.  Outside this range, a different basis (and thus a different optimal solution) will be obtained.
+
+
+QUESTION 10
+Consider the linear program presented on Slide 1: Maximize $5x_1 + 4x_2 + 3x_3$ subject to $2x_1 + 3x_2 + x_3 \le 5$, $4x_1 + x_2 + 2x_3 \le 11$, $3x_1 + 4x_2 + 2x_3 \le 8$, and $x_1, x_2, x_3 \ge 0$. Suppose the optimal solution is found to be $x_1 = 2$, $x_2 = 0$, $x_3 = 1$, with an objective function value of 13.  If we increase the right-hand side of the first constraint by $\Delta b_1 = 1$, what is the approximate change in the optimal objective function value, assuming the optimal basis remains unchanged?
+A. 0
+B. 1
+C. 2
+D. 3
+E. Cannot be determined without solving the modified problem
+
+ANSWER: E
+
+EXPLANATION:
+A. Incorrect.  A shadow price of 0 would imply no change, but we expect a change since the resource is being increased.
+B. Incorrect. While the change might seem intuitive, we need to consider the shadow price to determine the exact change.
+C. Incorrect. The change is directly related to the shadow price of the constraint, not an arbitrary value.
+D. Incorrect. The change is directly related to the shadow price of the constraint, not an arbitrary value.
+E. Correct.  To determine the approximate change, we need the shadow price (dual variable) associated with the first constraint.  The change in the objective function value is approximately the shadow price multiplied by the change in the right-hand side. Since we don't have the shadow price, we cannot determine the change.
+
+

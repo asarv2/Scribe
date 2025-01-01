@@ -1,0 +1,320 @@
+QUESTION 1
+Why do we introduce slack variables in linear programming problems?
+A. To increase the number of variables and make the problem more complex.
+B. To convert inequality constraints into equality constraints, allowing the use of the simplex method.
+C. To simplify the objective function and make it easier to solve.
+D. To reduce the number of constraints and make the problem easier to visualize.
+E. To ensure that the problem has a unique solution.
+
+ANSWER: B
+
+EXPLANATION:
+A. Introducing slack variables does not make the problem more complex; it transforms it into a form solvable by the simplex method.
+B. Slack variables are introduced to transform inequality constraints ($≤$) into equality constraints ($=$). This is a necessary step to apply the simplex method, which operates on systems of equations.
+C. Slack variables do not directly simplify the objective function; they modify the constraints.
+D. Slack variables do not reduce the number of constraints; they change their form.
+E. Slack variables do not guarantee a unique solution; linear programs can have multiple optimal solutions.
+
+
+QUESTION 2
+What is the geometric interpretation of a slack variable in a linear programming problem with two variables and one constraint?
+A. It represents the distance between the origin and the feasible region.
+B. It represents the distance between a point in the feasible region and the constraint line.
+C. It represents the slope of the constraint line.
+D. It represents the $y$-intercept of the constraint line.
+E. It represents the $x$-intercept of the constraint line.
+
+ANSWER: B
+
+EXPLANATION:
+A. The distance from the origin to the feasible region is not directly represented by a single slack variable.
+B. In a two-variable problem, a constraint like $ax + by \le c$ defines a half-plane. The slack variable $s = c - ax - by$ represents the vertical distance from a point $(x, y)$ to the line $ax + by = c$.
+C. The slope of the constraint line is determined by the coefficients $a$ and $b$, not the slack variable.
+D. The $y$-intercept is found by setting $x = 0$, which is not directly related to the slack variable.
+E. The $x$-intercept is found by setting $y = 0$, which is not directly related to the slack variable.
+
+
+QUESTION 3
+In a linear programming problem, if a constraint is of the form $ax + by \ge c$, what type of variable should be introduced to convert it into an equality?
+A. Slack variable
+B. Surplus variable
+C. Artificial variable
+D. Decision variable
+E. Objective variable
+
+ANSWER: B
+
+EXPLANATION:
+A. Slack variables are used for "less than or equal to" constraints, not "greater than or equal to" constraints.
+B. A surplus variable is subtracted from the left-hand side of the inequality to convert it into an equality.  A slack variable is used for "less than or equal to" constraints.
+C. Artificial variables are used in conjunction with the Big M method or two-phase simplex method to handle constraints with equalities or greater-than-or-equal-to inequalities.
+D. Decision variables are the original variables in the problem that we are trying to optimize.
+E. The objective variable is the variable we are trying to maximize or minimize in the objective function.
+
+
+QUESTION 4
+Suppose you have a linear programming problem where the origin (0,0) is not feasible.  What is a common technique used to find an initial feasible solution before applying the simplex method?
+A. The Big M method
+B. The two-phase simplex method
+C. The graphical method
+D. The revised simplex method
+E. The dual simplex method
+
+ANSWER: B
+
+EXPLANATION:
+A. The Big M method is another technique for handling infeasibility, but it's often less efficient than the two-phase method.
+B. The two-phase simplex method is specifically designed to handle cases where the origin is not feasible. Phase 1 finds a feasible solution, and Phase 2 optimizes the objective function.
+C. The graphical method is useful for visualizing small problems but is not practical for large-scale problems or those with many variables.
+D. The revised simplex method is an alternative implementation of the simplex method, not a method for finding an initial feasible solution.
+E. The dual simplex method starts with an infeasible solution and iteratively improves feasibility while maintaining optimality. It is not used to find an initial feasible solution.
+
+
+QUESTION 5
+Part A:
+Introduce slack variables $s_1$ and $s_2$ to convert the inequalities into equalities. What are the resulting equations?
+A. $x_1 + x_2 + s_1 = 5$; $2x_1 + x_2 + s_2 = 7$
+B. $x_1 + x_2 - s_1 = 5$; $2x_1 + x_2 - s_2 = 7$
+C. $x_1 + x_2 = 5$; $2x_1 + x_2 = 7$
+D. $x_1 + x_2 + s_1 = 0$; $2x_1 + x_2 + s_2 = 0$
+E. $x_1 + x_2 - s_1 = 0$; $2x_1 + x_2 - s_2 = 0$
+
+ANSWER: A
+
+EXPLANATION:
+A. Adding slack variables to less-than-or-equal-to constraints converts them to equalities.  The correct equations are $x_1 + x_2 + s_1 = 5$ and $2x_1 + x_2 + s_2 = 7$.
+B. Slack variables are added to convert inequalities to equalities, not subtracted.
+C. This removes the inequality constraints entirely.
+D. The right-hand side should be the constraint value, not zero.
+E. Slack variables are added to convert inequalities to equalities, not subtracted, and the right-hand side should be the constraint value, not zero.
+
+Part B:
+What is the initial basic feasible solution (IBFS) obtained by setting the non-basic variables to zero?
+A. $x_1 = 0, x_2 = 0, s_1 = 5, s_2 = 7$
+B. $x_1 = 5, x_2 = 7, s_1 = 0, s_2 = 0$
+C. $x_1 = 5, x_2 = 0, s_1 = 0, s_2 = -3$
+D. $x_1 = 0, x_2 = 5, s_1 = 0, s_2 = 2$
+E. $x_1 = 0, x_2 = 7, s_1 = -2, s_2 = 0$
+
+ANSWER: A
+
+EXPLANATION:
+A. Setting the non-basic variables ($x_1$ and $x_2$) to zero gives $s_1 = 5$ and $s_2 = 7$.
+B. This is not feasible because it violates the constraints.
+C. This is not feasible because $s_2$ is negative.
+D. This is not feasible because it violates the constraints.
+E. This is not feasible because $s_1$ is negative.
+
+Part C:
+What is the value of the objective function $Z$ at the IBFS?
+A. 12
+B. 0
+C. 7
+D. 5
+E. 25
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect; it's not the value of Z at the IBFS.
+B. At the IBFS ($x_1 = 0, x_2 = 0$), $Z = 2(0) + 3(0) = 0$.
+C. This is incorrect; it's not the value of Z at the IBFS.
+D. This is incorrect; it's not the value of Z at the IBFS.
+E. This is incorrect; it's not the value of Z at the IBFS.
+
+Part D:
+Which variable would enter the basis in the first iteration of the simplex method?
+A. $s_1$
+B. $s_2$
+C. $x_1$
+D. $x_2$
+E. None, the solution is optimal.
+
+ANSWER: D
+
+EXPLANATION:
+A. Slack variables leave the basis, not enter.
+B. Slack variables leave the basis, not enter.
+C. While $x_1$ has a positive coefficient, $x_2$ has a larger one.
+D. The simplex method selects the variable with the largest positive coefficient in the objective function to enter the basis.  This is $x_2$ (coefficient 3).
+E. The solution is not optimal; the objective function can be improved.
+
+Part E:
+What is the maximum value of $x_2$ allowed by the constraints, given that $x_1 = 0$?
+A. 7
+B. 5
+C. 2
+D. 0
+E. 12
+
+ANSWER: B
+
+EXPLANATION:
+A. This violates the first constraint.
+B. If $x_1 = 0$, the constraints become $x_2 \le 5$ and $x_2 \le 7$. The most restrictive constraint is $x_2 \le 5$.
+C. This is not the maximum allowed by the constraints.
+D. This is not the maximum allowed by the constraints.
+E. This is not the maximum allowed by the constraints.
+
+
+
+QUESTION 6
+Why are slack variables crucial in converting inequality constraints to equality constraints within the simplex method?
+A. Slack variables provide a way to visualize the feasible region graphically.
+B. Slack variables ensure that the objective function remains linear.
+C. Slack variables transform the problem into a standard form solvable by the simplex method.
+D. Slack variables guarantee the existence of a basic feasible solution.
+E. Slack variables simplify the calculation of the objective function's value.
+
+ANSWER: C
+
+EXPLANATION:
+A. While slack variables can aid in visualizing the feasible region, their primary role is not graphical representation but algebraic transformation of constraints.
+B. The linearity of the objective function is a characteristic of the problem itself, not a consequence of introducing slack variables.
+C. Slack variables are essential because they convert inequality constraints into equality constraints, which is the standard form required for the simplex method to operate.  The simplex method relies on the ability to represent the constraints as a system of linear equations, and slack variables provide the necessary mechanism to achieve this.
+D. While the introduction of slack variables often leads to a basic feasible solution, it's not a guaranteed outcome in all cases (e.g., if the origin is not feasible).
+E. Slack variables do not directly simplify the calculation of the objective function's value; their role is in transforming the constraints.
+
+
+QUESTION 7
+In a linear program, what is the geometric interpretation of a slack variable when it is equal to zero?
+A. The solution lies on the boundary of the feasible region defined by the corresponding constraint.
+B. The solution is at the origin.
+C. The solution is infeasible.
+D. The solution is unbounded.
+E. The solution is at a vertex of the feasible region.
+
+ANSWER: A
+
+EXPLANATION:
+A. When a slack variable is zero, it means the corresponding inequality constraint is binding; the solution lies exactly on the boundary of the feasible region defined by that constraint.  This is because the slack variable represents the difference between the left-hand side and right-hand side of the inequality, and a value of zero indicates equality.
+B. The solution being at the origin is only true if all slack variables are zero and the origin is feasible.
+C. A zero slack variable does not imply infeasibility; it simply means the constraint is active.
+D. Unboundedness is a property of the feasible region itself, not a direct consequence of a zero slack variable.
+E. While a zero slack variable can occur at a vertex, it can also occur at any point on the boundary of the feasible region defined by the corresponding constraint.
+
+
+QUESTION 8
+Part A:
+Introduce slack variables $s_1$ and $s_2$ to convert the inequalities into equalities. What are the resulting equations?
+A. $x_1 + x_2 + s_1 = 5$; $2x_1 + x_2 + s_2 = 7$
+B. $x_1 + x_2 - s_1 = 5$; $2x_1 + x_2 - s_2 = 7$
+C. $x_1 + x_2 = 5$; $2x_1 + x_2 = 7$
+D. $x_1 + x_2 + s_1 \le 5$; $2x_1 + x_2 + s_2 \le 7$
+E. $x_1 + x_2 - s_1 = 5$; $2x_1 + x_2 + s_2 = 7$
+
+ANSWER: A
+
+EXPLANATION:
+A. Adding slack variables converts inequalities to equalities.  The correct equations are $x_1 + x_2 + s_1 = 5$ and $2x_1 + x_2 + s_2 = 7$.
+B. Slack variables are added to the left-hand side, not subtracted.
+C. Inequalities are not converted to equalities by simply removing the inequality sign.
+D. This leaves the inequalities unchanged; slack variables should convert them to equalities.
+E. Only the first equation is incorrect; slack variables are added, not subtracted.
+
+Part B:
+What is the initial basic feasible solution (IBFS) obtained by setting the non-basic variables to zero?
+A. $x_1 = 0, x_2 = 0, s_1 = 5, s_2 = 7$
+B. $x_1 = 5, x_2 = 7, s_1 = 0, s_2 = 0$
+C. $x_1 = 0, x_2 = 5, s_1 = 0, s_2 = 2$
+D. $x_1 = 3.5, x_2 = 0, s_1 = 1.5, s_2 = 0$
+E. $x_1 = 0, x_2 = 0, s_1 = 0, s_2 = 0$
+
+ANSWER: A
+
+EXPLANATION:
+A. Setting the non-basic variables ($x_1, x_2$) to zero gives $s_1 = 5$ and $s_2 = 7$.
+B. This is not feasible as it violates the constraints.
+C. This is a feasible solution, but not the initial basic feasible solution.
+D. This is a feasible solution, but not the initial basic feasible solution.
+E. This is not feasible as it violates the constraints.
+
+Part C:
+What is the value of the objective function $Z$ at the IBFS?
+A. 12
+B. 0
+C. 7
+D. 5
+E. 35
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect; it's not the value of Z at the IBFS.
+B. At the IBFS ($x_1 = 0, x_2 = 0$), $Z = 2(0) + 3(0) = 0$.
+C. This is incorrect; it's not the value of Z at the IBFS.
+D. This is incorrect; it's not the value of Z at the IBFS.
+E. This is incorrect; it's not the value of Z at the IBFS.
+
+Part D:
+Which variable would enter the basis in the first iteration of the simplex method?
+A. $s_1$
+B. $s_2$
+C. $x_1$
+D. $x_2$
+E. None, the solution is optimal.
+
+ANSWER: D
+
+EXPLANATION:
+A. Slack variables leave the basis, not enter.
+B. Slack variables leave the basis, not enter.
+C. While $x_1$ has a positive coefficient, $x_2$'s is larger.
+D. The simplex method enters the variable with the largest positive coefficient in the objective function, which is $x_2$ (coefficient 3).
+E. The solution is not optimal at the IBFS.
+
+Part E:
+What is the maximum value of $x_2$ allowed by the constraints, given that $x_1 = 0$?
+A. 7
+B. 5
+C. 2
+D. 0
+E. 1
+
+ANSWER: B
+
+EXPLANATION:
+A. This violates the first constraint.
+B. If $x_1 = 0$, the constraints become $x_2 \le 5$ and $x_2 \le 7$. The most restrictive constraint is $x_2 \le 5$.
+C. This is not the maximum value allowed.
+D. This is not the maximum value allowed.
+E. This is not the maximum value allowed.
+
+
+
+QUESTION 9
+In a linear programming problem, what is the fundamental role of a slack variable, and how does it relate to the feasible region?
+A. Slack variables represent the distance from a point to the nearest constraint boundary.
+B. Slack variables convert inequality constraints into equality constraints, and their values represent the "unused resources" or "slack" in each constraint.
+C. Slack variables are used to find an initial feasible solution when the origin is not feasible.
+D. Slack variables determine the optimal solution by identifying the vertices of the feasible region.
+E. Slack variables are only necessary when dealing with problems involving more than two variables.
+
+ANSWER: B
+
+EXPLANATION:
+A. While the value of a slack variable can indirectly relate to distance, it doesn't directly represent the distance to the nearest constraint.  The geometric interpretation is more about whether a constraint is binding or not.
+B. Slack variables are added to inequality constraints ($≤$) to transform them into equalities (=).  The value of a slack variable indicates the difference between the left-hand side and right-hand side of the original inequality. A positive slack variable means there is unused capacity or slack in the constraint, while a zero slack variable indicates the constraint is binding (active).
+C. While the simplex method uses slack variables, finding an initial feasible solution when the origin is infeasible requires techniques like the two-phase simplex method or the big M method, which go beyond simply adding slack variables.
+D. The simplex method uses slack variables to move between vertices of the feasible region, but the optimal solution is not solely determined by the slack variables themselves.
+E. Slack variables are used in linear programming regardless of the number of variables. They are fundamental to converting inequalities to equalities, a necessary step for the simplex method.
+
+
+QUESTION 10
+In the linear program presented on Slide 1, after introducing slack variables $w_1, w_2, w_3$, what is the equation representing the constraint related to $w_1$?
+A. $w_1 = 12 - x_1 + 3x_2$
+B. $w_1 = 12 + x_1 - 3x_2$
+C. $w_1 = 8 - x_1 - x_2$
+D. $w_1 = 10 - 2x_1 + x_2$
+E. $w_1 = x_1 - 3x_2$
+
+ANSWER: B
+
+EXPLANATION:
+A. This equation incorrectly uses the wrong signs for $x_1$ and $3x_2$ in the constraint related to $w_1$.
+B. The slide explicitly states that $w_1 = 12 + x_1 - 3x_2$. This equation represents the first constraint after introducing the slack variable $w_1$ to convert the inequality $-x_1 + 3x_2 \le 12$ into an equality.
+C. This equation represents the constraint related to $w_2$, not $w_1$.
+D. This equation represents the constraint related to $w_3$, not $w_1$.
+E. This equation is missing the constant term 12 from the constraint related to $w_1$.
+
+

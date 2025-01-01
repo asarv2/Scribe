@@ -1,0 +1,156 @@
+SLIDE 1
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\text{maximize } 5x_1 + 4x_2 + 3x_3 \\
+\text{subject to } 2x_1 + 3x_2 + x_3 \le 5 \\
+4x_1 + x_2 + 2x_3 \le 11 \\
+3x_1 + 4x_2 + 2x_3 \le 8 \\
+x_1, x_2, x_3 \ge 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 400.0, 400.0]>Handwritten notes showing a linear programming problem. The objective function is to maximize $5x_1 + 4x_2 + 3x_3$, subject to three inequality constraints and non-negativity constraints on the variables $x_1$, $x_2$, and $x_3$.</FIGURE>
+
+<DESCRIPTION>Slide 1 of 11 in a Linear Programming course introduces the topic of sensitivity and parametric analysis. The slide presents a linear programming problem in standard form. The objective is to maximize the linear function $5x_1 + 4x_2 + 3x_3$, subject to three linear inequality constraints: $2x_1 + 3x_2 + x_3 \le 5$, $4x_1 + x_2 + 2x_3 \le 11$, and $3x_1 + 4x_2 + 2x_3 \le 8$.  Additionally, the variables $x_1$, $x_2$, and $x_3$ are constrained to be non-negative ($x_1, x_2, x_3 \ge 0$). This problem will likely be used as an example throughout the presentation to illustrate the concepts of sensitivity and parametric analysis, which are techniques used to study how changes in the problem's parameters (coefficients in the objective function or constraints) affect the optimal solution.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\text{opt.} \\
+\text{Did.} \\
+\xi = 13 - 3x_2 - 1x_4 - 1x_6 \\
+x_3 = 1 + x_2 + 3x_4 - 2x_6 \\
+x_1 = 2 - 2x_2 - 2x_4 + x_6 \\
+x_5 = 1 + 5x_2 + 2x_4
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing equations for sensitivity and parametric analysis in linear programming. The equations express the optimal value of the objective function ($\xi$) and the optimal values of some variables ($x_1, x_3, x_5$) in terms of other variables ($x_2, x_4, x_6$).</FIGURE>
+
+<DESCRIPTION>Slide 2 of 11 in a Linear Programming course shows the results of an optimal solution to a linear programming problem, presented in the context of sensitivity and parametric analysis.  The equations express the optimal objective function value ($\xi$) and the optimal values of variables $x_1$, $x_3$, and $x_5$ as functions of the non-basic variables $x_2$, $x_4$, and $x_6$.  This representation is typical of the simplex method's output, where the optimal solution is expressed in terms of non-basic variables.  The "opt. Did." likely indicates that these are the optimal values obtained after performing the simplex algorithm.  The equations allow for the analysis of how changes in the non-basic variables affect the optimal solution and the objective function value. This is a crucial step in sensitivity analysis, which examines the impact of changes in the problem's parameters (coefficients in the objective function or constraints) on the optimal solution.  The context of linear programming is essential because this slide presents the results of a linear programming optimization problem and sets the stage for sensitivity analysis.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\text{opt.} \\
+\text{Did.} \\
+\vec{x_B} = \begin{pmatrix} 3 \\ 1 \\ 1 \end{pmatrix} = (B^{-1})^T C_B - C_N, \quad X_N = \begin{pmatrix} x_2 \\ x_4 \\ x_6 \end{pmatrix} \\
+\xi = 13 - 3x_2 - 1x_4 - 1x_6 \\
+X_B = \begin{pmatrix} x_3 \\ x_1 \\ x_5 \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix} + \begin{pmatrix} 1 & 3 & -2 \\ -2 & -2 & 1 \\ 5 & 2 & 0 \end{pmatrix} \begin{pmatrix} x_2 \\ x_4 \\ x_6 \end{pmatrix} \\
+\vec{x_B} = \begin{pmatrix} 1 \\ 1 \end{pmatrix} = B^{-1} \vec{b} \quad -B^{-1}N = \begin{pmatrix} 1 & 3 & -2 \\ -2 & -2 & 1 \\ 5 & 2 & 0 \end{pmatrix}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing equations related to sensitivity and parametric analysis in linear programming. The equations express the optimal values of basic variables ($x_3, x_1, x_5$) as functions of non-basic variables ($x_2, x_4, x_6$), and the optimal objective function value ($\xi$) as a function of non-basic variables.  A matrix $-B^{-1}N$ is also shown.</FIGURE>
+
+<DESCRIPTION>Slide 3 of 11 in a Linear Programming course delves deeper into sensitivity and parametric analysis, presenting the optimal solution and its sensitivity to changes in non-basic variables. The slide shows the optimal solution vector $\vec{x_B} = \begin{pmatrix} 3 \\ 1 \\ 1 \end{pmatrix}$ for the basic variables $x_3$, $x_1$, and $x_5$.  The equation $\vec{x_B} = (B^{-1})^T C_B - C_N$ relates the optimal basic solution to the optimal basis $B$, the cost coefficients $C_B$ and $C_N$ of basic and non-basic variables respectively. The optimal objective function value is given by $\xi = 13 - 3x_2 - x_4 - x_6$, showing its dependence on the non-basic variables $x_2$, $x_4$, and $x_6$.  The matrix equation $X_B = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix} + \begin{pmatrix} 1 & 3 & -2 \\ -2 & -2 & 1 \\ 5 & 2 & 0 \end{pmatrix} \begin{pmatrix} x_2 \\ x_4 \\ x_6 \end{pmatrix}$ expresses the basic variables as functions of the non-basic variables. This allows for sensitivity analysis: determining how changes in the non-basic variables affect the optimal solution. Finally, the matrix $-B^{-1}N = \begin{pmatrix} 1 & 3 & -2 \\ -2 & -2 & 1 \\ 5 & 2 & 0 \end{pmatrix}$ is shown, which is crucial for performing parametric analysis and understanding the range of changes in the parameters that maintain the current optimal basis. The context of linear programming is crucial because this slide presents post-optimality analysis techniques used to assess the robustness of the optimal solution to changes in problem parameters.</DESCRIPTION>
+
+SLIDE 4
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\text{what if } (5+\epsilon) \\
+\text{maximize } 5x_1 + 4x_2 + 3x_3 \\
+\text{subject to } 2x_1 + 3x_2 + x_3 \le 5 \\
+4x_1 + x_2 + 2x_3 \le 11 \\
+3x_1 + 4x_2 + 2x_3 \le 8 \\
+x_1, x_2, x_3 \ge 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 400.0, 400.0]>Handwritten notes showing a linear programming problem with a parameter $\epsilon$ added to the coefficient of $x_1$ in the objective function. The objective is to maximize the linear function $(5+\epsilon)x_1 + 4x_2 + 3x_3$, subject to three linear inequality constraints: $2x_1 + 3x_2 + x_3 \le 5$, $4x_1 + x_2 + 2x_3 \le 11$, and $3x_1 + 4x_2 + 2x_3 \le 8$.  Additionally, the variables $x_1$, $x_2$, and $x_3$ are constrained to be non-negative ($x_1, x_2, x_3 \ge 0$).  The question "what if" is written above the modified objective function, indicating that this slide introduces parametric analysis by considering the effect of changing the parameter $\epsilon$.</FIGURE>
+
+<DESCRIPTION>Slide 4 of 11 in a Linear Programming course introduces parametric analysis.  It builds upon the previous slide by modifying the linear programming problem.  The original objective function, $5x_1 + 4x_2 + 3x_3$, is changed to $(5+\epsilon)x_1 + 4x_2 + 3x_3$, where $\epsilon$ is a parameter. The constraints remain the same. The question "what if" highlights the introduction of a parameter to study the sensitivity of the optimal solution to changes in the objective function's coefficient. This sets the stage for exploring how changes in $\epsilon$ affect the optimal solution and the optimal objective function value. The context of linear programming is crucial because this slide presents a modified linear programming problem designed to illustrate parametric analysis, a technique used to study how changes in the problem's parameters affect the optimal solution.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\text{\underline{Still optimal ?}} \\
+\xi = 13 - 3x_2 - 1x_4 - 1x_6 \\
+x_3 = 1 + x_2 + 3x_4 - 2x_6 \\
+x_1 = 2 - 2x_2 - 2x_4 + x_6 \\
+x_5 = 1 + 5x_2 + 2x_4
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing equations for sensitivity and parametric analysis in linear programming. The equations express the optimal value of the objective function ($\xi$) and the optimal values of some variables ($x_1, x_3, x_5$) in terms of other variables ($x_2, x_4, x_6$).  The question "Still optimal?" is written in red, suggesting an investigation into the robustness of the current optimal solution.</FIGURE>
+
+<DESCRIPTION>Slide 5 of 11 in a Linear Programming course continues the discussion of sensitivity and parametric analysis.  The slide presents the optimal solution to a linear programming problem, expressed in terms of the non-basic variables $x_2$, $x_4$, and $x_6$. The equations show how the objective function value ($\xi$) and the basic variables ($x_1$, $x_3$, $x_5$) change as the non-basic variables change. The crucial addition is the question "Still optimal?", written in red. This indicates that the slide is transitioning to a discussion of how changes in the non-basic variables might affect the optimality of the current solution.  The equations provide the foundation for determining the range of values for the non-basic variables that maintain the current optimal basis and solution. This is a key aspect of sensitivity analysis in linear programming.</DESCRIPTION>
+
+SLIDE 6
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\text{\underline{Still optimal ?}} \\
+\xi = 13 - 3x_2 - 1x_4 - 1x_6 \\
+x_3 = 1 + x_2 + 3x_4 - 2x_6 \\
+x_1 = 2 - 2x_2 - 2x_4 + x_6 \\
+x_5 = 1 + 5x_2 + 2x_4
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing equations for sensitivity and parametric analysis in linear programming. The equations express the optimal value of the objective function ($\xi$) and the optimal values of some variables ($x_1, x_3, x_5$) in terms of other variables ($x_2, x_4, x_6$).  The question "Still optimal?" is written in red, suggesting an investigation into the robustness of the current optimal solution.</FIGURE>
+
+<DESCRIPTION>Slide 6 of 11 in a Linear Programming course continues the discussion of sensitivity and parametric analysis.  The slide presents the optimal solution to a linear programming problem, expressed in terms of the non-basic variables $x_2$, $x_4$, and $x_6$. The equations show how the objective function value ($\xi$) and the basic variables ($x_1$, $x_3$, $x_5$) change as the non-basic variables change. The crucial addition is the question "Still optimal?", written in red. This indicates that the slide is transitioning to a discussion of how changes in the non-basic variables might affect the optimality of the current solution.  The equations provide the foundation for determining the range of values for the non-basic variables that maintain the current optimal basis and solution. This is a key aspect of sensitivity analysis in linear programming.  The boxed constants (1, 2, 1) represent the optimal values of $x_3$, $x_1$, and $x_5$ respectively when the non-basic variables are zero. The equations allow one to explore what happens when the non-basic variables are non-zero, and whether the current solution remains optimal.</DESCRIPTION>
+
+SLIDE 7
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\underline{X_B^* = B^{-1}b \ge 0 \quad \text{not changed}} \\
+Z_N^* = (B^{-1}N)^T c_B - c_N \\
+\Delta Z_N^* = (B^{-1}N)^T \Delta c_B - \Delta c_N \\
+\boxed{\text{We need } Z_N^* + \Delta Z_N^* \ge 0}
+</LATEX>
+
+<FIGURE [100.0, 50.0, 400.0, 400.0]>Handwritten notes showing equations related to sensitivity and parametric analysis in linear programming. The equations involve matrices $B$, $N$, $c_B$, $c_N$, and vectors $b$, $X_B$, $Z_N$, and $\Delta Z_N$.  The condition $Z_N^* + \Delta Z_N^* \ge 0$ is boxed in red, indicating its importance.</FIGURE>
+
+<DESCRIPTION>Slide 7 of 11 in a Linear Programming course focuses on sensitivity analysis.  Building upon previous slides, it presents equations to determine if a change in the cost vector ($c$) maintains the optimality of the current solution.  $X_B^*$ represents the optimal values of the basic variables, which are assumed to remain non-negative after the change.  $Z_N^*$ represents the reduced costs of the non-basic variables in the optimal solution.  $\Delta Z_N^*$ represents the change in the reduced costs due to changes in the cost vector ($\Delta c_B$ and $\Delta c_N$). The crucial condition, boxed in red, $Z_N^* + \Delta Z_N^* \ge 0$, states that the updated reduced costs must remain non-negative for the current optimal solution to remain optimal. This condition is a key result from the simplex method's optimality criteria. The superscript * denotes optimal values. The matrices $B$ and $N$ represent the basic and non-basic columns of the constraint matrix, respectively.  $c_B$ and $c_N$ are the cost coefficients associated with the basic and non-basic variables. The context of linear programming is essential because these equations are derived from the optimality conditions of the simplex method, a fundamental algorithm for solving linear programming problems.</DESCRIPTION>
+
+SLIDE 8
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\text{\underline{what if}} \\
+\text{maximize } 5x_1 + 4x_2 + 3x_3 \\
+\text{subject to } 2x_1 + 3x_2 + x_3 \le 5 + \Delta b_1 \\
+4x_1 + x_2 + 2x_3 \le 11 + \Delta b_2 \\
+3x_1 + 4x_2 + 2x_3 \le 8 + \Delta b_3 \\
+x_1, x_2, x_3 \ge 0
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing a linear programming problem. The objective function is to maximize $5x_1 + 4x_2 + 3x_3$, subject to three inequality constraints and non-negativity constraints on the variables $x_1, x_2, x_3$. The right-hand sides of the constraints include perturbations $\Delta b_1, \Delta b_2, \Delta b_3$. The question "what if" is written in red, suggesting an investigation into the effect of these perturbations on the optimal solution.</FIGURE>
+
+<DESCRIPTION>Slide 8 of 11 in a Linear Programming course introduces parametric analysis.  The slide presents a linear programming problem: maximize $5x_1 + 4x_2 + 3x_3$ subject to three constraints and non-negativity conditions.  The key feature is the addition of perturbations $\Delta b_1$, $\Delta b_2$, and $\Delta b_3$ to the right-hand side of the constraints.  The question "what if," written in red, highlights the focus of the slide: analyzing how changes in the right-hand side constants (the resources available) affect the optimal solution. This is a crucial aspect of parametric analysis, which explores how changes in the problem's parameters (in this case, the resource availability) affect the optimal solution and its value. The slide sets the stage for investigating the sensitivity of the optimal solution to changes in the resource levels.  The context of linear programming is essential because this type of analysis is fundamental to understanding the robustness and reliability of solutions obtained from linear programming models in real-world applications.</DESCRIPTION>
+
+SLIDE 9
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\underline{\text{Still optimal ?}} \\
+\xi = 13 - 3x_2 - 1x_4 - 1x_6 \\
+x_3 = 1 + x_2 + 3x_4 - 2x_6 \\
+x_1 = 2 - 2x_2 - 2x_4 + x_6 \\
+x_5 = 1 + 5x_2 + 2x_4
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing equations for sensitivity and parametric analysis in linear programming. The equations express the optimal value of the objective function ($\xi$) and the optimal values of some variables ($x_1, x_3, x_5$) in terms of other variables ($x_2, x_4, x_6$).  The question "Still optimal?" is written in red, suggesting an investigation into the robustness of the current optimal solution.</FIGURE>
+
+<DESCRIPTION>Slide 9 of 11 in a Linear Programming course continues the discussion of sensitivity and parametric analysis.  The slide presents the optimal solution to a linear programming problem, expressed in terms of the non-basic variables $x_2$, $x_4$, and $x_6$. The equations show how the objective function value ($\xi$) and the basic variables ($x_1$, $x_3$, $x_5$) change as the non-basic variables change. The crucial addition is the question "Still optimal?", written in red. This indicates that the slide is transitioning to a discussion of how changes in the non-basic variables might affect the optimality of the current solution.  The equations provide the foundation for determining the range of values for the non-basic variables that maintain the current optimal basis and solution. This is a key aspect of sensitivity analysis in linear programming.  The boxed constants (1, 2, 1) represent the optimal values of $x_3$, $x_1$, and $x_5$ respectively when the non-basic variables are zero. The equations allow one to explore what happens when the non-basic variables are non-zero, and whether the current solution remains optimal.  The slide builds upon the previous slide's discussion of sensitivity analysis by providing a concrete example of how to express the optimal solution in terms of non-basic variables, setting the stage for further analysis of the range of optimality.</DESCRIPTION>
+
+SLIDE 10
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\underline{\text{Still optimal ?}} \\
+\xi = 13 - 3x_2 - 1x_4 - 1x_6 \\
+x_3 = 1 + x_2 + 3x_4 - 2x_6 \\
+x_1 = 2 - 2x_2 - 2x_4 + x_6 \\
+x_5 = 1 + 5x_2 + 2x_4
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing equations for sensitivity and parametric analysis in linear programming. The equations express the optimal value of the objective function ($\xi$) and the optimal values of some variables ($x_1, x_3, x_5$) in terms of other variables ($x_2, x_4, x_6$).  The question "Still optimal?" is written in red, suggesting an investigation into the robustness of the current optimal solution.</FIGURE>
+
+<DESCRIPTION>Slide 10 of 11 in a Linear Programming course focuses on sensitivity analysis.  Building upon previous slides, it presents the optimal solution to a linear programming problem in terms of non-basic variables. The equation for $\xi$ gives the optimal objective function value as a function of non-basic variables $x_2$, $x_4$, and $x_6$. The equations for $x_1$, $x_3$, and $x_5$ (basic variables) express their values in terms of the non-basic variables. The question "Still optimal?", written in red, highlights the key question:  Does the current optimal solution remain optimal if the values of the non-basic variables change?  The constants 1, 2, and 1 on the right-hand side of the equations for $x_3$, $x_1$, and $x_5$ respectively represent the optimal values of these variables when the non-basic variables are zero. The slide sets the stage for determining the range of values for the non-basic variables that maintain the current optimal basis and solution. This is a key aspect of sensitivity analysis in linear programming, allowing one to assess the robustness of the optimal solution to changes in the problem's parameters. The context of linear programming is crucial because this type of analysis is fundamental to understanding the reliability of solutions obtained from linear programming models in real-world applications.</DESCRIPTION>
+
+SLIDE 11
+<LATEX>
+\text{Sensitivity and Parametric Analysis} \\
+\underline{Z_N^* = (B^{-1}N)^T C_B - C_N \ge 0} \text{ not changed} \\
+\underline{X_B^* = B^{-1}b} \\
+\underline{\Delta X_B^* = B^{-1} \Delta b} \qquad \vec{\Delta b} = \begin{pmatrix} \Delta b_1 \\ \Delta b_2 \\ \Delta b_3 \end{pmatrix} \\
+\boxed{\text{We need } X_B^* + \Delta X_B^* \ge 0}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing equations for sensitivity and parametric analysis in linear programming. The equations express the reduced costs ($Z_N^*$), the optimal values of basic variables ($X_B^*$), and the changes in the optimal values of basic variables ($\Delta X_B^*$) due to changes in the right-hand side constants ($\Delta b$). The condition $X_B^* + \Delta X_B^* \ge 0$ is boxed in red, indicating a necessary condition for the current optimal solution to remain feasible after the changes.</FIGURE>
+
+<DESCRIPTION>Slide 11 of 11 in a Linear Programming course concludes the discussion on sensitivity and parametric analysis. The slide presents key equations for assessing the impact of changes in the right-hand side constants (resources) of the constraints on the optimal solution.  $Z_N^*$ represents the reduced costs of the non-basic variables, which must be non-negative for optimality. The condition $Z_N^* \ge 0$ ensures that the current basis remains optimal. $X_B^*$ represents the optimal values of the basic variables, and $\Delta X_B^*$ represents the change in these values due to a change in the right-hand side vector $\Delta b$. The equation $\Delta X_B^* = B^{-1}\Delta b$ shows how these changes are related, where $B^{-1}$ is the inverse of the basis matrix. The crucial condition, boxed in red, is $X_B^* + \Delta X_B^* \ge 0$. This condition ensures that the new values of the basic variables remain non-negative (feasible) after the perturbation.  The slide summarizes the key equations and conditions needed to perform sensitivity analysis in linear programming, focusing on the impact of changes in the right-hand side constants on the feasibility and optimality of the solution. The context of linear programming is essential because this type of analysis is crucial for understanding the robustness of solutions obtained from linear programming models in real-world applications.</DESCRIPTION>
+

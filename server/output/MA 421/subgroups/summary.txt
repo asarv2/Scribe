@@ -1,0 +1,295 @@
+Simplex Method and its Variants
+  Simplex Method
+    slack variable
+    basic variable
+    non-basic variable
+    auxiliary problem
+    converting to slack variable form
+    simplex method iteration
+    optimality verification
+    solving auxiliary problems
+    simplex method
+    average case performance of simplex method
+    worst-case performance of simplex method
+    pivot rules
+    klee-minty problem
+    impact of pivot rules
+    empirical performance of simplex method
+    theoretical bounds on simplex method
+    simplex method efficiency
+    klee-minty with pivot rules
+    largest-increase rule
+    slack variables
+    basic and non-basic variables
+    simplex iterations in matrix form
+    simplex method iterations
+    primal and dual simplex methods
+    dual simplex method
+    b, n method
+    dual based phase i algorithm
+    simplex method in matrix form
+    entering variable
+    leaving variable
+    solving infeasible primal problems using dual simplex method
+    efficient basis matrix updates
+    determining entering and leaving variables in matrix simplex
+  Fundamentals of Linear Programming
+    feasible region
+    graphical representation of feasible region
+  Interior Point Methods and Alternatives
+    smoothed complexity
+    existence of polynomial-time algorithms
+    interior point method
+Duality Theory and Applications
+  Simplex Method
+    slack variable
+    basic variable
+    non-basic variable
+    auxiliary problem
+    converting to slack variable form
+    simplex method iteration
+    optimality verification
+    solving auxiliary problems
+    simplex method
+    average case performance of simplex method
+    worst-case performance of simplex method
+    pivot rules
+    klee-minty problem
+    impact of pivot rules
+    empirical performance of simplex method
+    theoretical bounds on simplex method
+    simplex method efficiency
+    klee-minty with pivot rules
+    largest-increase rule
+    slack variables
+    basic and non-basic variables
+    simplex iterations in matrix form
+    simplex method iterations
+    primal and dual simplex methods
+    dual simplex method
+    b, n method
+    dual based phase i algorithm
+    simplex method in matrix form
+    entering variable
+    leaving variable
+    solving infeasible primal problems using dual simplex method
+    efficient basis matrix updates
+    determining entering and leaving variables in matrix simplex
+  Fundamentals of Linear Programming
+    feasible region
+    graphical representation of feasible region
+  Interior Point Methods and Alternatives
+    smoothed complexity
+    existence of polynomial-time algorithms
+    interior point method
+  Duality Theory
+    primal problem
+    dual problem
+    weak duality
+    strong duality
+    complementary slackness
+    primal and dual problems
+    analyzing primal-dual relationships
+    negative transpose property
+    lagrangian function
+    lagrange multipliers
+    formulating the lagrangian for equality constraints
+    formulating the lagrangian for inequality constraints
+    deriving weak duality
+    deriving the dual problem from the lagrangian
+    presenting primal and dual linear programs
+    dual objective function
+    dual formulation of the diet problem
+    primal-dual relationship
+    interpreting duality
+    complementary variables
+    dual linear program
+    primal linear program
+    optimal dual solution
+  Specific Linear Programming Models
+    diet problem
+  Convex Analysis in Linear Programming
+    convex set
+    convex combination
+    convex hull
+Formulating and Solving Linear Programs
+  Simplex Method
+    slack variable
+    basic variable
+    non-basic variable
+    auxiliary problem
+    converting to slack variable form
+    simplex method iteration
+    optimality verification
+    solving auxiliary problems
+    simplex method
+    average case performance of simplex method
+    worst-case performance of simplex method
+    pivot rules
+    klee-minty problem
+    impact of pivot rules
+    empirical performance of simplex method
+    theoretical bounds on simplex method
+    simplex method efficiency
+    klee-minty with pivot rules
+    largest-increase rule
+    slack variables
+    basic and non-basic variables
+    simplex iterations in matrix form
+    simplex method iterations
+    primal and dual simplex methods
+    dual simplex method
+    b, n method
+    dual based phase i algorithm
+    simplex method in matrix form
+    entering variable
+    leaving variable
+    solving infeasible primal problems using dual simplex method
+    efficient basis matrix updates
+    determining entering and leaving variables in matrix simplex
+  Fundamentals of Linear Programming
+    feasible region
+    graphical representation of feasible region
+  Interior Point Methods and Alternatives
+    smoothed complexity
+    existence of polynomial-time algorithms
+    interior point method
+  Duality Theory
+    primal problem
+    dual problem
+    weak duality
+    strong duality
+    complementary slackness
+    primal and dual problems
+    analyzing primal-dual relationships
+    negative transpose property
+    lagrangian function
+    lagrange multipliers
+    formulating the lagrangian for equality constraints
+    formulating the lagrangian for inequality constraints
+    deriving weak duality
+    deriving the dual problem from the lagrangian
+    presenting primal and dual linear programs
+    dual objective function
+    dual formulation of the diet problem
+    primal-dual relationship
+    interpreting duality
+    complementary variables
+    dual linear program
+    primal linear program
+    optimal dual solution
+  Specific Linear Programming Models
+    diet problem
+  Convex Analysis in Linear Programming
+    convex set
+    convex combination
+    convex hull
+  Model Formulation and Representation
+    decision variable
+    unit price of pill
+    formulating the diet problem
+    tabular representation of linear programs
+    diet problem formulation
+    matrix notation of linear programs
+    converting to standard form
+    matrix representation of linear programs
+  Dual Problem Formulation
+    dual diet problem formulation
+Sensitivity and Parametric Analysis
+  Simplex Method
+    slack variable
+    basic variable
+    non-basic variable
+    auxiliary problem
+    converting to slack variable form
+    simplex method iteration
+    optimality verification
+    solving auxiliary problems
+    simplex method
+    average case performance of simplex method
+    worst-case performance of simplex method
+    pivot rules
+    klee-minty problem
+    impact of pivot rules
+    empirical performance of simplex method
+    theoretical bounds on simplex method
+    simplex method efficiency
+    klee-minty with pivot rules
+    largest-increase rule
+    slack variables
+    basic and non-basic variables
+    simplex iterations in matrix form
+    simplex method iterations
+    primal and dual simplex methods
+    dual simplex method
+    b, n method
+    dual based phase i algorithm
+    simplex method in matrix form
+    entering variable
+    leaving variable
+    solving infeasible primal problems using dual simplex method
+    efficient basis matrix updates
+    determining entering and leaving variables in matrix simplex
+  Fundamentals of Linear Programming
+    feasible region
+    graphical representation of feasible region
+  Interior Point Methods and Alternatives
+    smoothed complexity
+    existence of polynomial-time algorithms
+    interior point method
+  Duality Theory
+    primal problem
+    dual problem
+    weak duality
+    strong duality
+    complementary slackness
+    primal and dual problems
+    analyzing primal-dual relationships
+    negative transpose property
+    lagrangian function
+    lagrange multipliers
+    formulating the lagrangian for equality constraints
+    formulating the lagrangian for inequality constraints
+    deriving weak duality
+    deriving the dual problem from the lagrangian
+    presenting primal and dual linear programs
+    dual objective function
+    dual formulation of the diet problem
+    primal-dual relationship
+    interpreting duality
+    complementary variables
+    dual linear program
+    primal linear program
+    optimal dual solution
+  Specific Linear Programming Models
+    diet problem
+  Convex Analysis in Linear Programming
+    convex set
+    convex combination
+    convex hull
+  Model Formulation and Representation
+    decision variable
+    unit price of pill
+    formulating the diet problem
+    tabular representation of linear programs
+    diet problem formulation
+    matrix notation of linear programs
+    converting to standard form
+    matrix representation of linear programs
+  Dual Problem Formulation
+    dual diet problem formulation
+  Post-Optimality Analysis
+    sensitivity analysis
+    parametric analysis
+    reduced costs
+    range of optimality
+    shadow prices
+    maintaining optimality
+    maintaining feasibility
+    expressing optimal solution
+  Optimality and Feasibility Conditions
+    optimality condition
+    feasibility condition
+Specialized Linear Programs and Algorithms
+  $l^2$-regression
+  $l^1$-regression

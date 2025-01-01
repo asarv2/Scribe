@@ -1,0 +1,180 @@
+QUESTION 1
+In the integer programming problem presented in Slide 3, what is the optimal solution to the *relaxed* linear programming problem (i.e., ignoring the integrality constraints)?
+A. $x_1 = 4, x_2 = 0$
+B. $x_1 = 0, x_2 = 5$
+C. $x_1 = 5/3, x_2 = 10/3$
+D. $x_1 = 0, x_2 = 0$
+E. $x_1 = 2, x_2 = 3$
+
+ANSWER: C
+
+EXPLANATION:
+A. This is the optimal integer solution, but not the solution to the relaxed LP problem.
+B. This is a feasible integer solution, but not the optimal solution to the relaxed LP problem.
+C. The relaxed linear programming problem is obtained by removing the integrality constraints $x_1, x_2 \in \mathbb{Z}$. Solving this relaxed problem graphically or using the simplex method yields the optimal solution $x_1 = 5/3$ and $x_2 = 10/3$.
+D. This is a feasible solution to the relaxed LP problem, but not the optimal one.
+E. This is a feasible integer solution, but not the optimal solution to the relaxed LP problem.
+
+
+QUESTION 2
+In the context of integer programming, why is simply solving the relaxed linear program (ignoring the integrality constraints) and then rounding the solution not a reliable method?
+A. Rounding always yields an infeasible solution.
+B. Rounding is computationally expensive and impractical for large problems.
+C. The rounded solution may be infeasible, and the true optimal integer solution may be far from the rounded solution.
+D. Rounding introduces significant errors that cannot be corrected.
+E. Rounding only works for specific types of integer programming problems.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While rounding can lead to an infeasible solution, it's not guaranteed.  The rounded solution might be feasible but suboptimal.
+B. Answer B is incorrect. Rounding itself is a simple operation, but the problem lies in the fact that the rounded solution may not be optimal or even feasible.
+C. Answer C is correct.  Rounding the solution of the relaxed linear program can lead to a solution that violates the constraints (infeasible) and, more importantly, the optimal integer solution can be significantly different from the rounded solution, resulting in a suboptimal solution.
+D. Answer D is incorrect. While rounding can introduce errors, the primary issue is the potential for infeasibility and suboptimality, not just the magnitude of the error.
+E. Answer E is incorrect. Rounding is unreliable regardless of the specific type of integer programming problem.
+
+
+QUESTION 3
+In the branch-and-bound algorithm, what is the purpose of "branching," and how does it contribute to finding the optimal integer solution?
+A. Branching divides the problem into smaller, independent subproblems that can be solved in parallel.
+B. Branching systematically explores the feasible region by adding constraints that partition the solution space, eliminating non-integer solutions.
+C. Branching helps to improve the efficiency of the simplex method by reducing the number of iterations required.
+D. Branching is a heuristic technique that attempts to find a good, but not necessarily optimal, integer solution.
+E. Branching is used to convert an integer programming problem into a linear programming problem.
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect. While subproblems can be solved independently, the core purpose of branching is to systematically explore the solution space, not just to enable parallel processing.
+B. Answer B is correct. Branching creates subproblems by adding constraints that partition the feasible region, systematically exploring the solution space and eliminating regions that do not contain integer solutions. This process continues until an optimal integer solution is found.
+C. Answer C is incorrect. Branching doesn't directly improve the simplex method's efficiency; it's a technique used in conjunction with the simplex method (or other LP solvers) to solve integer programs.
+D. Answer D is incorrect. Branch-and-bound is an exact algorithm, guaranteeing an optimal integer solution (if one exists) given sufficient computational resources.
+E. Answer E is incorrect. Branching is used to solve integer programs, not to convert them into linear programs.  It works with the linear programming relaxation.
+
+
+QUESTION 4
+In the Gomory cut method, how does the generation of a cut help in finding an integer optimal solution, and what is the key property of the cut that ensures it doesn't eliminate any feasible integer solutions?
+A. The cut is a hyperplane that separates the current non-integer optimal solution from the convex hull of integer feasible solutions.
+B. The cut is a random hyperplane that is likely to eliminate non-integer solutions while preserving integer solutions.
+C. The cut is a heuristic that attempts to eliminate non-integer solutions, but it may also eliminate some integer solutions.
+D. The cut is derived from the dual problem and helps to improve the dual feasibility of the relaxed linear program.
+E. The cut is a constraint that is only added if the current solution is already integer feasible.
+
+ANSWER: A
+
+EXPLANATION:
+A. Answer A is correct.  Gomory cuts are carefully constructed to cut off the current non-integer optimal solution of the relaxed LP problem while preserving all integer feasible solutions.  The cut is a hyperplane that separates the non-integer solution from the convex hull of integer feasible solutions.
+B. Answer B is incorrect. Gomory cuts are not random; they are systematically derived from the fractional parts of the optimal solution to the relaxed linear program.
+C. Answer C is incorrect. Gomory cuts are not heuristic; they are designed to guarantee that no feasible integer solutions are eliminated.
+D. Answer D is incorrect. Gomory cuts are derived from the primal problem's optimal simplex tableau, not the dual problem.
+E. Answer E is incorrect. Gomory cuts are added precisely when the current solution is not integer feasible.
+
+
+QUESTION 5
+Consider the integer programming problem presented in Slide 3:  Maximize $17x_1 + 12x_2$ subject to $10x_1 + 7x_2 \le 40$, $x_1 + x_2 \le 5$, $x_1, x_2 \ge 0$, and $x_1, x_2 \in \mathbb{Z}$.  Why is simply solving the relaxed linear programming problem (ignoring the integrality constraints) and then rounding the solution not a reliable method for finding the optimal integer solution?
+A. Rounding always yields a feasible integer solution, but it may not be optimal.
+B. Rounding may yield an infeasible solution, or the optimal integer solution may be far from the rounded solution.
+C. The relaxed linear programming problem is computationally more expensive than directly solving the integer programming problem.
+D. Rounding introduces significant numerical errors that make the solution unreliable.
+E. The relaxed linear programming problem does not provide any useful information about the integer programming problem.
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect. Rounding does not guarantee a feasible solution, and even if feasible, it may be far from optimal.
+B. Answer B is correct.  Rounding the solution of the relaxed linear program may result in a solution that violates the constraints ($Ax \le b$), making it infeasible.  Furthermore, even if the rounded solution is feasible, the true optimal integer solution might be significantly different, leading to a suboptimal result.  Slides 2 and 4 illustrate this point.
+C. Answer C is incorrect. The relaxed linear programming problem is significantly easier to solve than the integer programming problem, and its solution provides valuable information for methods like branch and bound.
+D. Answer D is incorrect. While rounding can introduce errors, the primary reason for its unreliability is the potential for infeasibility and suboptimality.
+E. Answer E is incorrect. The solution to the relaxed linear programming problem provides a valuable upper bound (for maximization problems) and is crucial for algorithms like branch and bound.
+
+
+QUESTION 6
+In the integer programming problem presented in Slide 3, what is the optimal solution to the relaxed linear programming problem (i.e., ignoring the integrality constraints)?
+A. $x_1 = 2, x_2 = 3$
+B. $x_1 = 5/3, x_2 = 10/3$
+C. $x_1 = 4, x_2 = 0$
+D. $x_1 = 0, x_2 = 5$
+E. $x_1 = 0, x_2 = 0$
+
+ANSWER: B
+
+EXPLANATION:
+A. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+B. The relaxed linear program is obtained by removing the integrality constraints. Solving the relaxed problem graphically or using the simplex method yields the solution $x_1 = 5/3$ and $x_2 = 10/3$.
+C. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+D. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+E. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+
+
+QUESTION 7
+In the branch-and-bound algorithm, what is the purpose of "branching," and how does it contribute to finding the optimal integer solution?
+A. Branching eliminates infeasible solutions.
+B. Branching partitions the feasible region to create subproblems with tighter bounds.
+C. Branching improves the objective function value iteratively.
+D. Branching identifies integer feasible solutions.
+E. Branching simplifies the problem by reducing the number of variables.
+
+ANSWER: B
+
+EXPLANATION:
+A. While branching indirectly helps eliminate infeasible regions, its primary purpose is not direct elimination.
+B. Branching systematically divides the feasible region into smaller subregions, creating subproblems with tighter bounds on the variables. This process helps to systematically explore the integer feasible region and find the optimal integer solution.
+C. Branching doesn't directly improve the objective function; it creates subproblems that are then solved to potentially improve the objective function.
+D. Branching helps to find integer feasible solutions, but it's not its sole purpose; it also helps to eliminate regions that cannot contain the optimal integer solution.
+E. Branching does not reduce the number of variables; it adds constraints to create subproblems.
+
+
+QUESTION 8
+In the Gomory cut method, how does the generation of a cut help in finding an integer optimal solution, and what is the key property of the cut that ensures it doesn't eliminate any feasible integer solutions?
+A. A cut eliminates fractional solutions while preserving all integer solutions.
+B. A cut improves the objective function value iteratively.
+C. A cut reduces the number of variables in the problem.
+D. A cut simplifies the constraints of the problem.
+E. A cut identifies integer feasible solutions.
+
+ANSWER: A
+
+EXPLANATION:
+A. Gomory cuts are designed to cut off parts of the feasible region containing non-integer solutions without removing any integer feasible solutions.  This is achieved by exploiting the fractional parts of the non-integer solution.
+B. While cuts indirectly lead to improved objective function values by eliminating non-integer solutions, their primary purpose is not direct improvement.
+C. Cuts do not reduce the number of variables; they add new constraints.
+D. Cuts do not simplify constraints; they add new constraints to the problem.
+E. Cuts help to find integer feasible solutions, but their primary purpose is to eliminate non-integer solutions from the feasible region.
+
+
+QUESTION 9
+Consider the integer programming problem presented in Slide 3: Maximize $17x_1 + 12x_2$ subject to $10x_1 + 7x_2 \le 40$, $x_1 + x_2 \le 5$, $x_1, x_2 \ge 0$, and $x_1, x_2 \in \mathbb{Z}$.  What is the optimal integer solution, and what is its objective function value?
+A. $x_1 = 2, x_2 = 2$; $\zeta = 50$
+B. $x_1 = 3, x_2 = 2$; $\zeta = 75$
+C. $x_1 = 4, x_2 = 0$; $\zeta = 68$
+D. $x_1 = 0, x_2 = 5$; $\zeta = 60$
+E. $x_1 = 5/3, x_2 = 10/3$; $\zeta \approx 68.33$
+
+ANSWER: C
+
+EXPLANATION:
+A. This is a feasible integer solution, but not the optimal one.
+B. This is a feasible integer solution, but not the optimal one.
+C. The optimal integer solution is found through the branch-and-bound method or other integer programming techniques.  The optimal integer solution is $x_1 = 4, x_2 = 0$, which yields an objective function value of $\zeta = 17(4) + 12(0) = 68$.
+D. This is a feasible integer solution, but not the optimal one.
+E. This is the optimal solution to the *relaxed* linear program (ignoring integrality constraints), but it's not an integer solution.
+
+
+QUESTION 10
+In the integer programming problem presented in Slide 3, what is the optimal solution to the relaxed linear programming problem (i.e., ignoring the integrality constraints)?
+A. $x_1 = 2, x_2 = 3$
+B. $x_1 = 3, x_2 = 2$
+C. $x_1 = 5/3, x_2 = 10/3$
+D. $x_1 = 4, x_2 = 0$
+E. $x_1 = 0, x_2 = 4$
+
+ANSWER: C
+
+EXPLANATION:
+A. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+B. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+C. The relaxed linear programming problem ignores the integer constraints. Solving the linear program $\max 17x_1 + 12x_2$ subject to $10x_1 + 7x_2 \le 40$, $x_1 + x_2 \le 5$, $x_1, x_2 \ge 0$ yields the optimal solution $x_1 = 5/3, x_2 = 10/3$.
+D. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+E. This is a feasible integer solution, but not the optimal solution to the relaxed linear program.
+
+

@@ -1,0 +1,180 @@
+QUESTION 1
+Based on Slide 1, under Dantzig's conditions ($m < 50$ and $m + n < 200$), what is the typical upper bound on the number of iterations in the simplex method?
+A. $m$
+B. $3m$
+C. $\frac{3m}{2}$
+D. $m^2$
+E. $2^m$
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While $m$ might be a rough estimate, Slide 1 provides a more precise upper bound.
+B. Answer B is incorrect.  Slide 1 indicates that $\frac{3m}{2}$ is the typical upper bound, with $3m$ being a rare upper bound.
+C. Answer C is correct. Slide 1 states that under Dantzig's conditions, the number of iterations is typically bounded above by $\frac{3m}{2}$.
+D. Answer D is incorrect. This is not the bound given under Dantzig's conditions.
+E. Answer E is incorrect. This represents exponential growth, not the typical bound under Dantzig's conditions.
+
+
+QUESTION 2
+Referring to Slide 6, what alternative pivoting rule is mentioned that, while often requiring fewer iterations than the largest-coefficient rule, can still exhibit exponential worst-case behavior?
+A. Lexicographic Rule
+B. Bland's Rule
+C. Largest-Increase Rule
+D. Steepest Edge Rule
+E. Smallest Coefficient Rule
+
+ANSWER: C
+
+EXPLANATION:
+A. The lexicographic rule is mentioned in Slide 10 in the context of a randomized pivot rule, but not in Slide 6.
+B. Bland's rule is mentioned in Slide 10, but not in Slide 6 as an alternative with exponential worst-case behavior.
+C. The largest-increase rule is explicitly mentioned in Slide 6 as an alternative that often performs better than the largest-coefficient rule in terms of iterations but still has exponential worst-case behavior.
+D. The steepest edge rule is mentioned in Slide 6 as one of several alternative rules, but its worst-case behavior is not explicitly discussed.
+E. The smallest coefficient rule is mentioned in Slide 3 as an example that performs well on the Klee-Minty problem, but not in Slide 6.
+
+
+QUESTION 3
+Based on Slide 7, which pivoting rule is typically faster in terms of total computation time, even if it might require more iterations than the other?
+A. Largest-Increase Rule
+B. Largest-Coefficient Rule
+C. Bland's Rule
+D. Steepest Edge Rule
+E. Lexicographic Rule
+
+ANSWER: B
+
+EXPLANATION:
+A. The largest-increase rule is generally slower in total computation time, even if it uses fewer iterations.
+B. Slide 7 explicitly states that the largest-coefficient rule, despite potentially needing more iterations, is usually faster in terms of total computation time due to its lower execution time per iteration.
+C. Bland's rule is not directly compared in Slide 7.
+D. The steepest edge rule is not directly compared in Slide 7.
+E. The lexicographic rule is not directly compared in Slide 7.
+
+
+QUESTION 4
+In the context of the simplex method, what is the primary reason for the difficulty in establishing a precise theoretical analysis of its average-case performance?
+A. The exponential worst-case complexity of the method.
+B. The difficulty in defining a realistic probability distribution for real-world linear programming problems.
+C. The dependence of the method's performance on the specific pivot rule used.
+D. The high dimensionality of many practical linear programming problems.
+E. The lack of efficient algorithms for generating random linear programming problems.
+
+ANSWER: B
+
+EXPLANATION:
+A. While the worst-case complexity is a concern, it doesn't directly explain the difficulty in average-case analysis.
+B. Slide 11 and other slides allude to the difficulty in modeling real-world problem instances with a probability distribution that accurately reflects their characteristics. This makes average-case analysis challenging.
+C. The pivot rule affects the number of iterations, but it doesn't fully explain the difficulty in average-case analysis.
+D. High dimensionality is a challenge in practice, but it doesn't directly explain the difficulty in theoretical average-case analysis.
+E. The lack of efficient algorithms for generating random problems is not the primary reason for the difficulty in average-case analysis.
+
+
+QUESTION 5
+Based on Slide 1, under Dantzig's conditions ($m < 50$ and $m + n < 200$), what is the typical upper bound on the number of iterations in the simplex method, and what is the significance of this bound in relation to the practical applicability of the simplex method?
+A. The upper bound is $m$, and this indicates that the simplex method is highly efficient for small problems.
+B. The upper bound is $3m$, and this suggests that the simplex method is practically applicable for problems meeting Dantzig's conditions.
+C. The upper bound is $\frac{3m}{2}$, and this implies that the simplex method is only suitable for very small problems.
+D. The upper bound is $m^2$, and this shows that the simplex method's efficiency is limited by the square of the number of constraints.
+E. There is no typical upper bound under Dantzig's conditions.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While $m$ might be a rough estimate in some cases, Slide 1 explicitly states a tighter bound of $\frac{3m}{2}$
+B. Answer B is incorrect.  While $3m$ is mentioned as a possible upper bound in rare cases, the typical upper bound is $\frac{3m}{2}$ according to Slide 1.
+C. Answer C is correct. Slide 1 states that the average number of iterations is usually bounded above by $\frac{3m}{2}$ under Dantzig's conditions. This relatively small bound contributes to the practical applicability of the simplex method for problems of moderate size.
+D. Answer D is incorrect. The slide does not mention an upper bound of $m^2$.
+E. Answer E is incorrect. Slide 1 explicitly provides a typical upper bound under Dantzig's conditions.
+
+
+QUESTION 6
+In the context of the diet problem, what does a non-negative slack variable represent?
+A. The amount by which a nutrient constraint is violated.
+B. The cost of a single unit of food.
+C. The amount of a nutrient that is in excess of the minimum requirement.
+D. The total cost of the diet plan.
+E. The number of units of a particular food in the diet.
+
+ANSWER: C
+
+EXPLANATION:
+A. A negative slack variable would indicate a violation of the constraint.  Slack variables are always non-negative.
+B. The cost of a single unit of food is represented by a coefficient in the objective function, not a slack variable.
+C. A non-negative slack variable in a diet problem represents the surplus of a nutrient beyond the minimum requirement.  If the slack variable is zero, the minimum requirement is exactly met; if it's positive, there's an excess.
+D. The total cost of the diet plan is the value of the objective function at the optimal solution.
+E. The number of units of a particular food is represented by a decision variable, not a slack variable.
+
+
+QUESTION 7
+Based on Slide 1, under Dantzig's conditions ($m < 50$ and $m + n < 200$), what is the typical upper bound on the number of iterations in the simplex method?
+A. $m$
+B. $2m$
+C. $\frac{3m}{2}$
+D. $3m$
+E. $m^2$
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While $m$ might be a rough estimate, Slide 1 provides a more precise upper bound.
+B. Answer B is incorrect. This is close but not the precise upper bound given in Slide 1.
+C. Answer C is correct. Slide 1 states that the number of iterations is usually bounded above by $\frac{3m}{2}$ under Dantzig's conditions.
+D. Answer D is incorrect. This is an upper bound that might be approached in rare cases, but $\frac{3m}{2}$ is the typical upper bound.
+E. Answer E is incorrect. This is not the bound given in Slide 1 for Dantzig's conditions.
+
+
+QUESTION 8
+In the Klee-Minty problem (Slide 2), what is the coefficient of $x_1$ in the third constraint?
+A. 4
+B. 8
+C. 20
+D. 200
+E. 100
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect. This is the coefficient of $x_1$ in the second constraint.
+B. Answer B is correct. The third constraint in Slide 2 is $8x_1 + 4x_2 + x_3 \le 10000$, so the coefficient of $x_1$ is 8.
+C. Answer C is incorrect. This is not the coefficient of $x_1$ in the third constraint of the Klee-Minty problem as presented on Slide 2.
+D. Answer D is incorrect. This is not the coefficient of $x_1$ in the third constraint of the Klee-Minty problem as presented on Slide 2.
+E. Answer E is incorrect. This is not the coefficient of $x_1$ in the third constraint of the Klee-Minty problem as presented on Slide 2.
+
+
+QUESTION 9
+Based on Slide 1, under Dantzig's conditions ($m < 50$ and $m + n < 200$), what is the typical upper bound on the number of iterations in the simplex method, and what is the significance of this bound in relation to the practical applicability of the simplex method?
+A. The upper bound is $m$, and this indicates that the simplex method is highly efficient for small problems.
+B. The upper bound is $3m$, and this suggests that the simplex method is generally efficient for problems meeting Dantzig's conditions.
+C. The upper bound is $\frac{3m}{2}$, and this implies that the simplex method is practically efficient for problems within Dantzig's constraints.
+D. The upper bound is $m^2$, and this shows that the simplex method's efficiency is limited by the square of the number of constraints.
+E. There is no typical upper bound under Dantzig's conditions, as the number of iterations can vary greatly.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While $m$ might be a rough estimate in some cases, Slide 1 explicitly states a tighter bound of $\frac{3m}{2}$ as the typical upper limit.
+B. Answer B is incorrect.  While $3m$ is a possible upper bound in rare cases, the slide indicates that $\frac{3m}{2}$ is the more typical upper bound.
+C. Answer C is correct. Slide 1 states that the number of iterations is usually bounded above by $\frac{3m}{2}$ under Dantzig's conditions. This relatively small bound contributes to the practical efficiency of the simplex method for problems of moderate size.
+D. Answer D is incorrect. The slide does not suggest a quadratic upper bound. The bound is linear with respect to $m$.
+E. Answer E is incorrect. Slide 1 explicitly provides a typical upper bound under Dantzig's conditions.
+
+
+QUESTION 10
+In the context of the Diet Problem (Slide 7), what does the variable $Y_i$ represent, and what are its units?
+A. The amount of nutrient $i$ in one unit of food $j$; units are unspecified.
+B. The minimum monthly intake of nutrient $i$; units are unspecified.
+C. The unit price of a pill providing nutrient $i$; units are currency per unit of nutrient.
+D. The cost of food $j$; units are currency per unit of food.
+E. The amount of food $j$ consumed; units are units of food.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. This describes the variable $a_{ij}$ in the original diet problem formulation.
+B. Answer B is incorrect. This describes the variable $b_i$ in the original diet problem formulation.
+C. Answer C is correct.  $Y_i$ represents the unit price of a pill providing nutrient $i$. The units are currency (e.g., dollars, euros) per unit of nutrient.
+D. Answer D is incorrect. This describes the variable $c_j$ in the original diet problem formulation.
+E. Answer E is incorrect. This describes the variable $x_j$ in the original diet problem formulation.
+
+

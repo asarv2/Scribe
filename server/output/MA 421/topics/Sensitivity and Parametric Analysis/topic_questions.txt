@@ -1,0 +1,180 @@
+QUESTION 1
+In sensitivity analysis, how does a change in the objective function coefficient of a basic variable affect the optimal solution and the optimal objective function value?
+A. It will always cause a change in the optimal solution and the optimal objective function value.
+B. It may cause a change in the optimal solution, but the optimal objective function value will remain unchanged.
+C. It may cause a change in the optimal objective function value, but the optimal solution will remain unchanged within a certain range.
+D. It will not affect the optimal solution or the optimal objective function value.
+E. It will only affect the optimal solution if the change is sufficiently large.
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect because there is a range of optimality for the objective function coefficients of basic variables.  Small changes may not alter the optimal solution.
+B. This is incorrect because changes in the objective function coefficient of a basic variable can affect both the optimal solution and the objective function value.
+C. A change in the objective function coefficient of a basic variable can affect the optimal objective function value. However, the optimal solution (the values of the decision variables) may remain unchanged within a certain range, known as the range of optimality.  Outside this range, the optimal solution will change.
+D. This is incorrect because changes in the objective function coefficients of basic variables can affect the optimal solution and objective function value.
+E. This is incorrect because the range of optimality determines whether a change affects the optimal solution, not just the magnitude of the change.
+
+
+QUESTION 2
+How does sensitivity analysis help in assessing the robustness of an optimal solution to changes in the right-hand side (RHS) values of the constraints?
+A. Sensitivity analysis does not provide information about the robustness of the optimal solution to RHS changes.
+B. Sensitivity analysis identifies the exact change in the optimal solution for any change in the RHS values.
+C. Sensitivity analysis determines the range of RHS values for which the optimal solution's basis remains unchanged.
+D. Sensitivity analysis only considers changes in the RHS values of non-binding constraints.
+E. Sensitivity analysis is only useful for small changes in the RHS values.
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect; sensitivity analysis directly addresses the robustness of the optimal solution to changes in RHS values.
+B. This is incorrect; sensitivity analysis provides a range, not the exact change for any arbitrary RHS change.
+C. Sensitivity analysis determines the range of RHS values for which the optimal solution's basis remains unchanged. This range indicates the robustness of the solution to changes in resource availability or constraint limits.
+D. This is incorrect; sensitivity analysis considers changes in the RHS values of all constraints, both binding and non-binding.
+E. This is incorrect; while sensitivity analysis is often used for small changes, the ranges it provides can be used to assess the impact of larger changes as well.
+
+
+QUESTION 3
+What is the significance of shadow prices (dual variables) in sensitivity analysis, and how are they interpreted in the context of resource allocation?
+A. Shadow prices are irrelevant in sensitivity analysis.
+B. Shadow prices indicate the change in the optimal objective function value for a one-unit increase in the corresponding resource.
+C. Shadow prices represent the cost of acquiring additional units of the corresponding resource.
+D. Shadow prices only apply to binding constraints.
+E. Shadow prices are always positive.
+
+ANSWER: B
+
+EXPLANATION:
+A. Shadow prices are central to sensitivity analysis, providing crucial information about the value of resources.
+B. Shadow prices (dual variables) represent the marginal value of a resource.  In sensitivity analysis, they indicate the approximate change in the optimal objective function value for a one-unit increase in the corresponding resource.  This helps in resource allocation decisions.
+C. While shadow prices relate to the cost of resources, they specifically represent the *increase* in the objective function value, not the direct cost of acquisition.
+D. Shadow prices are associated with all constraints, not just binding ones.  However, the shadow price is zero for non-binding constraints.
+E. Shadow prices can be positive or zero (for non-binding constraints) in a maximization problem.
+
+
+QUESTION 4
+Explain how sensitivity analysis helps in identifying the range of changes in a constraint's right-hand side (RHS) value that will not affect the optimal solution's basis.
+A. Sensitivity analysis cannot identify such a range.
+B. Sensitivity analysis identifies this range by calculating the exact change in the optimal solution for any change in the RHS values.
+C. Sensitivity analysis identifies this range through the minimum ratio test.
+D. Sensitivity analysis identifies this range by examining the shadow prices of the constraints.
+E. Sensitivity analysis identifies this range by analyzing the changes in the optimal solution's basis resulting from changes in the RHS values.
+
+ANSWER: E
+
+EXPLANATION:
+A. Sensitivity analysis directly addresses this question by determining the range of feasibility.
+B. Sensitivity analysis provides a range, not the exact change for any arbitrary RHS change. The minimum ratio test is used within a simplex iteration, not for sensitivity analysis.
+C. The minimum ratio test is part of the simplex method, not sensitivity analysis.  Sensitivity analysis examines the impact of changes in the RHS values on the optimal solution.
+D. Shadow prices provide information about the marginal value of resources, but they don't directly determine the range of RHS values that maintain the optimal basis.
+E. Sensitivity analysis determines the range of RHS values for which the optimal solution's basis remains unchanged. This is done by systematically changing the RHS values and observing when the optimal basis changes. This range is called the range of feasibility.
+
+
+QUESTION 5
+Consider a linear programming problem where sensitivity analysis reveals that the shadow price for a particular constraint is zero. What does this imply about the optimal solution and the resource associated with that constraint?
+A. The optimal solution is unaffected by changes in the resource level associated with that constraint.
+B. The optimal solution is highly sensitive to changes in the resource level associated with that constraint.
+C. The resource is fully utilized in the optimal solution.
+D. The resource is not fully utilized in the optimal solution, and increasing it would improve the objective function value.
+E. The resource is not fully utilized in the optimal solution, and decreasing it would improve the objective function value.
+
+ANSWER: A
+
+EXPLANATION:
+A. A shadow price of zero indicates that the resource is not fully utilized in the optimal solution.  Small changes in the resource level will not affect the optimal solution or the objective function value.  The optimal solution is insensitive to changes in this resource.
+B. A shadow price of zero indicates insensitivity, not high sensitivity.
+C. A shadow price of zero implies the resource is *not* fully utilized.
+D. A positive shadow price indicates that increasing the resource would improve the objective function value. A zero shadow price indicates no such improvement.
+E. A negative shadow price would indicate that decreasing the resource would improve the objective function value. A zero shadow price indicates no such improvement.
+
+
+QUESTION 6
+In sensitivity analysis, how does a change in the objective function coefficient of a non-basic variable affect the optimal solution and the optimal objective function value, and what condition must be met for the optimal solution to remain unchanged?
+A. The optimal solution remains unchanged as long as the change is small; the optimal objective function value changes proportionally to the change in the coefficient.
+B. The optimal solution remains unchanged; the optimal objective function value remains unchanged.
+C. The optimal solution remains unchanged as long as the change does not cause the reduced cost of the non-basic variable to become positive (for maximization) or negative (for minimization); the optimal objective function value remains unchanged.
+D. The optimal solution changes; the optimal objective function value changes proportionally to the change in the coefficient.
+E. The optimal solution changes; the optimal objective function value remains unchanged.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect because the optimal solution does not necessarily remain unchanged for any small change. The change must not violate the optimality condition.
+B. Answer B is incorrect because the optimal solution can change if the change in the coefficient is large enough to violate the optimality condition.
+C. Answer C is correct.  The optimal solution will remain unchanged as long as the change in the objective function coefficient does not violate the optimality condition.  For a maximization problem, this means the reduced cost must remain non-positive. The objective function value will only change if the optimal solution changes.
+D. Answer D is incorrect because the optimal solution does not necessarily change.  The change must be large enough to violate the optimality condition.
+E. Answer E is incorrect because the objective function value can change if the optimal solution changes.
+
+
+QUESTION 7
+In parametric analysis, how does varying a parameter in the right-hand side of a constraint affect the optimal solution and the optimal objective function value, and how is the range of the parameter for which the optimal basis remains unchanged determined?
+A. The optimal solution changes proportionally to the parameter change; the optimal objective function value changes proportionally to the parameter change. The range is determined by the shadow price.
+B. The optimal solution remains unchanged; the optimal objective function value changes proportionally to the parameter change. The range is determined by the reduced costs.
+C. The optimal solution changes; the optimal objective function value changes proportionally to the parameter change. The range is determined by the minimum ratio test.
+D. The optimal solution remains unchanged within a certain range of the parameter; the optimal objective function value changes proportionally to the parameter change within that range. The range is determined by examining the feasibility of the current basis.
+E. The optimal solution remains unchanged within a certain range of the parameter; the optimal objective function value changes proportionally to the parameter change within that range. The range is determined by the shadow price and the current basis.
+
+ANSWER: E
+
+EXPLANATION:
+A. Answer A is incorrect because the optimal solution does not always change proportionally to the parameter change. The change in the optimal solution depends on the shadow price and the current basis.
+B. Answer B is incorrect because the range is not determined by the reduced costs. Reduced costs relate to changes in the objective function coefficients, not the RHS of constraints.
+C. Answer C is incorrect because the minimum ratio test is used to determine the leaving variable in the simplex method, not the range of a parameter in parametric analysis.
+D. Answer D is incorrect because while the optimal solution remains unchanged within a range, the range is not solely determined by examining the feasibility of the current basis. The shadow price plays a crucial role.
+E. Answer E is correct.  Changing the RHS of a constraint affects the feasible region. The range of the parameter for which the optimal basis remains unchanged is determined by finding the values of the parameter that would cause a basic variable to become zero or negative, thus changing the basis. This is directly related to the shadow price and the current basis.
+
+
+QUESTION 8
+In sensitivity analysis, how does a change in the objective function coefficient of a basic variable affect the optimal solution and the optimal objective function value?  Explain the conditions under which the optimal solution remains unchanged.
+A. A change in the objective function coefficient of a basic variable always changes the optimal solution and the optimal objective function value.
+B. A change in the objective function coefficient of a basic variable may change the optimal solution, but the optimal objective function value remains unchanged.
+C. A change in the objective function coefficient of a basic variable may change the optimal objective function value, but the optimal solution remains unchanged, provided the change falls within a certain range.
+D. A change in the objective function coefficient of a basic variable never changes the optimal solution, but it always changes the optimal objective function value.
+E. A change in the objective function coefficient of a basic variable never affects either the optimal solution or the optimal objective function value.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect.  The optimal solution and objective function value are not guaranteed to change. The change depends on the magnitude of the change and the structure of the problem.
+B. Incorrect. The optimal objective function value will generally change as well.  The change in the objective function coefficient directly impacts the objective function value.
+C. Correct. The optimal solution may remain unchanged if the change in the objective function coefficient of a basic variable falls within its range of optimality.  Outside this range, the optimal solution will change.
+D. Incorrect. The optimal solution can change depending on the magnitude of the change in the objective function coefficient.
+E. Incorrect. Changes in objective function coefficients directly affect the objective function value and can indirectly affect the optimal solution.
+
+
+QUESTION 9
+In parametric analysis, how does varying a parameter in the objective function affect the optimal solution and the optimal objective function value? Describe how the range of the parameter for which the optimal basis remains unchanged is determined.
+A. Varying a parameter in the objective function always changes both the optimal solution and the optimal objective function value.
+B. Varying a parameter in the objective function may change the optimal solution, but the optimal objective function value remains unchanged.
+C. Varying a parameter in the objective function may change the optimal objective function value, but the optimal solution remains unchanged, provided the change falls within a certain range.
+D. Varying a parameter in the objective function never changes the optimal solution, but it always changes the optimal objective function value.
+E. Varying a parameter in the objective function never affects either the optimal solution or the optimal objective function value.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect. The optimal solution and objective function value are not guaranteed to change for all parameter variations. The change depends on the magnitude of the change and the structure of the problem.
+B. Incorrect. The optimal objective function value will generally change as well. The parameter change directly impacts the objective function.
+C. Correct. The optimal solution and basis may remain unchanged if the parameter variation falls within a certain range (range of optimality).  Outside this range, the optimal solution and basis will change.
+D. Incorrect. The optimal solution can change depending on the parameter variation.
+E. Incorrect. Changes in objective function parameters directly affect the objective function and can indirectly affect the optimal solution.
+
+
+QUESTION 10
+Consider the primal problem: Maximize $Z = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, $x_1, x_2 \ge 0$. Suppose the optimal solution is $x_1 = 4, x_2 = 4$ with $Z = 20$. The corresponding dual problem has an optimal solution $y_1 = 1, y_2 = 1, y_3 = 0$.  If we increase the right-hand side of the first constraint by $\Delta b_1 = 2$, what is the approximate change in the optimal objective function value, assuming the optimal basis remains unchanged?
+A. 2
+B. 4
+C. 6
+D. 8
+E. 10
+
+ANSWER: A
+
+EXPLANATION:
+A. The shadow price for the first constraint is $y_1 = 1$.  Since we are increasing the right-hand side by 2 units, the approximate change in the optimal objective function value is $1 \times 2 = 2$.
+B. This answer incorrectly uses the shadow price of the second constraint.
+C. This answer is incorrect. It does not correctly use the shadow price.
+D. This answer is incorrect. It does not correctly use the shadow price.
+E. This answer is incorrect. It does not correctly use the shadow price.
+
+

@@ -1,0 +1,180 @@
+QUESTION 1
+In the ice cream production planning problem (Slide 5), what is the coefficient of $S_i$ in the objective function, and what does it represent?
+A. 50; the cost of changing production levels between months
+B. 20; the cost of storing surplus ice cream
+C. 1; the number of 3m rolls used
+D. 0; there is no cost associated with storage
+E. 50; the cost of producing one ton of ice cream
+
+ANSWER: B
+
+EXPLANATION:
+A. The coefficient 50 is associated with the variables $y_i$ and $z_i$, representing the cost of changing production levels.
+B. The coefficient of $S_i$ in the objective function is 20, representing the cost of storing surplus ice cream.
+C. The coefficient 1 is not present in this objective function; it appears in other linear programming problems.
+D. The problem explicitly includes a storage cost of 20 per unit.
+E. The cost of producing ice cream is not directly represented in this objective function.
+
+
+QUESTION 2
+In the ice cream production planning problem (Slide 5), what is the coefficient of $S_i$ in the objective function, and what does it represent?
+A. 50; the cost of changing production levels between months.
+B. 20; the cost of storing surplus ice cream.
+C. 1; the number of 3m rolls used.
+D. 0; there is no cost associated with storage.
+E. 50; the cost of producing ice cream in month $i$.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is the coefficient of the terms representing changes in production levels between consecutive months.
+B. The coefficient of $S_i$ in the objective function is 20, and it represents the cost of storing surplus ice cream at the end of month $i$.
+C. This is related to the total number of 3m rolls used in the cutting stock problem, not the ice cream production problem.
+D. The problem explicitly includes a storage cost of 20 per unit of surplus ice cream.
+E. The cost of producing ice cream is not directly represented by the $S_i$ variable.
+
+
+QUESTION 3
+In the sales force planning problem (Slide 8), what is the purpose of introducing the auxiliary variable $y_i$, and how does it help linearize the problem?
+A. It represents the number of regular employees needed in month $i$.
+B. It represents the number of hours of labor handled by regular employees.
+C. It represents the number of temporary employees needed in month $i$.
+D. It represents the number of hours of labor handled by temporary employees in month $i$.
+E. It is a redundant variable and does not affect the linearization.
+
+ANSWER: D
+
+EXPLANATION:
+A. The number of regular employees is represented by the variable $x$.
+B. The number of hours of labor handled by regular employees is represented by the variable $x$.
+C. The number of temporary employees is not directly represented by $y_i$; $y_i$ represents the number of *hours* of temporary labor.
+D. The auxiliary variable $y_i$ represents the number of hours of labor handled by temporary employees in month $i$.  By introducing this variable, the $\max(a_i - x, 0)$ term, which is non-linear, is replaced by a linear constraint $a_i - x \le y_i$, effectively linearizing the problem.
+E. The variable $y_i$ is crucial for linearizing the objective function, making it solvable using linear programming techniques.
+
+
+QUESTION 4
+In the Markowitz portfolio selection model (Slide 12), how is the non-linear variance term handled to obtain a linear programming formulation, and what is the significance of the newly introduced variable?
+A. The variance term is ignored to simplify the problem.
+B. The variance is approximated using a linear function of the returns.
+C. A new variable is introduced to represent the absolute deviation from the expected return, linearizing the variance term.
+D. The problem is reformulated as a quadratic program, not a linear program.
+E. The variance term is replaced by the standard deviation.
+
+ANSWER: C
+
+EXPLANATION:
+A. Ignoring the variance term would significantly simplify the problem but would not accurately reflect the risk associated with the portfolio.
+B. While approximations are sometimes used, this specific formulation uses absolute deviations to linearize the problem.
+C. The non-linear variance term is linearized by introducing a new variable, $y_t$, which represents the absolute deviation from the expected return at time $t$. This allows the quadratic programming problem to be approximated as a linear program.
+D. The slide explicitly shows a linear programming (LP) formulation.
+E. Replacing the variance with the standard deviation would still result in a non-linear problem.
+
+
+QUESTION 5
+In the ice cream production planning problem (Slides 1-6), what is the economic interpretation of the two components in the objective function: $50 \sum_{i=1}^{12} (y_i + z_i)$ and $20 \sum_{i=1}^{12} S_i$?  Explain how these costs influence the optimal production plan.
+A. The first term represents the cost of raw materials, and the second term represents the cost of labor.
+B. The first term represents the cost of changing production levels between months, and the second term represents the cost of storing surplus ice cream.
+C. The first term represents the fixed costs of production, and the second term represents the variable costs of production.
+D. The first term represents the cost of transportation, and the second term represents the cost of spoilage.
+E. The first term represents the profit from sales, and the second term represents the loss from unsold ice cream.
+
+ANSWER: B
+
+EXPLANATION:
+A. Raw materials and labor costs are important in production planning, but they are not directly represented by these terms in the given objective function.  The objective function focuses on the costs associated with production changes and storage.
+B. The first term, $50 \sum_{i=1}^{12} (y_i + z_i)$, represents the cost associated with changing production levels from one month to the next.  The variables $y_i$ and $z_i$ are introduced to linearize the absolute value of the change in production.  A higher cost (50 per unit change) incentivizes a more stable production plan. The second term, $20 \sum_{i=1}^{12} S_i$, represents the cost of storing surplus ice cream.  The variable $S_i$ represents the surplus inventory at the end of month $i$. A higher storage cost (20 per unit) incentivizes producing closer to demand to avoid excess inventory.  These costs together influence the optimal production plan by balancing the trade-off between stable production (minimizing changes) and minimizing storage costs. The optimal plan will find a balance between these two competing objectives.
+C. While fixed and variable costs are relevant in production, the given objective function does not explicitly separate them. The costs are related to changes in production and storage, not fixed versus variable costs.
+D. Transportation and spoilage costs are relevant in production planning, but they are not explicitly included in the given objective function. The model focuses on the costs of production changes and storage.
+E. The objective function aims to minimize costs, not maximize profits.  While unsold ice cream represents a loss, it is already incorporated into the storage cost term.
+
+
+QUESTION 6
+In the ice cream production planning problem (Slide 5), what is the economic interpretation of the term $50 \sum_{i=1}^{12} (y_i + z_i)$ in the objective function?
+A. The cost of storing surplus ice cream.
+B. The cost of changing production levels between consecutive months.
+C. The total demand for ice cream over the year.
+D. The average production level of ice cream per month.
+E. The total profit from selling ice cream.
+
+ANSWER: B
+
+EXPLANATION:
+A. The cost of storing surplus ice cream is represented by a different term in the objective function: $20 \sum_{i=1}^{12} S_i$.
+B. This term represents the cost associated with changes in production from one month to the next.  The coefficient 50 represents the cost per unit of change in production.
+C. The total demand is represented by the $d_i$ values in the constraints, not in the objective function.
+D. The average production level is not directly represented in the objective function.
+E. The objective function minimizes cost, not profit.
+
+
+QUESTION 7
+In the ice cream production planning problem (Slide 5), what is the economic interpretation of the term $20 \sum_{i=1}^{12} S_i$ in the objective function?
+A. The cost of producing ice cream each month.
+B. The total revenue from ice cream sales.
+C. The cost of storing surplus ice cream.
+D. The cost of changing production levels between months.
+E. The total demand for ice cream over the year.
+
+ANSWER: C
+
+EXPLANATION:
+A. The cost of producing ice cream is not explicitly included in this model; it's assumed to be constant.
+B. The total revenue is not part of the objective function, which focuses on minimizing costs.
+C. This term represents the total cost of storing surplus ice cream throughout the year. The coefficient 20 represents the storage cost per unit of surplus ice cream.
+D. The cost of changing production levels is represented by a different term: $50 \sum_{i=1}^{12} (y_i + z_i)$.
+E. The total demand is represented by the $d_i$ values in the constraints, not the objective function.
+
+
+QUESTION 8
+In the sales force planning problem (Slide 8), what is the purpose of introducing the auxiliary variable $y_i$?
+A. To represent the number of regular employees.
+B. To linearize the non-linear term $\max(a_i - x, 0)$.
+C. To represent the total labor hours needed in month $i$.
+D. To represent the cost of hiring temporary employees.
+E. To represent the number of hours worked by regular employees.
+
+ANSWER: B
+
+EXPLANATION:
+A. The number of regular employees is represented by the variable $x$.
+B. The auxiliary variable $y_i$ is introduced to linearize the non-linear max function in the original objective function, making the problem solvable as a linear program.
+C. The total labor hours needed in month $i$ are represented by $a_i$.
+D. The cost of hiring temporary employees is already represented in the objective function as $25y_i$.  $y_i$ represents the number of hours, not the cost.
+E. The number of hours worked by regular employees is represented by $x$.
+
+
+QUESTION 9
+In the Markowitz portfolio selection model (Slide 12), how is the non-linear variance term handled to obtain a linear programming formulation?
+A. By using a logarithmic transformation.
+B. By approximating the variance using a Taylor series expansion.
+C. By introducing a new variable to represent the absolute deviation from the expected return.
+D. By ignoring the variance term altogether.
+E. By using a quadratic programming solver.
+
+ANSWER: C
+
+EXPLANATION:
+A. Logarithmic transformations are not used in this linearization technique.
+B. Taylor series expansions are not employed in this specific linearization.
+C. A new variable ($y_t$) is introduced to represent the absolute deviation from the expected return at each time period. This linearizes the problem, allowing it to be formulated as a linear program.
+D. The variance term is crucial for risk management in the portfolio; it's not ignored.
+E. While a quadratic program is a more accurate representation, the slide describes a linearization technique to obtain a linear program.
+
+
+QUESTION 10
+In the ice cream production planning problem (Slide 5), what is the economic interpretation of the term $50 \sum_{i=1}^{12} (y_i + z_i)$ in the objective function?
+A. The cost of storing surplus ice cream each month.
+B. The cost of producing ice cream each month.
+C. The cost of changing production levels between consecutive months.
+D. The total demand for ice cream over the year.
+E. The average production level of ice cream over the year.
+
+ANSWER: C
+
+EXPLANATION:
+A. The cost of storing surplus ice cream is represented by the term $20 \sum_{i=1}^{12} S_i$, not $50 \sum_{i=1}^{12} (y_i + z_i)$.
+B. The cost of producing ice cream is not directly represented in this term. The model focuses on the cost of changes in production and storage.
+C. The term $50 \sum_{i=1}^{12} (y_i + z_i)$ represents the cost associated with changes in production levels between consecutive months.  The variables $y_i$ and $z_i$ are introduced to linearize the absolute value of the difference in production between consecutive months. The coefficient 50 represents the cost per unit change in production.
+D. The total demand is represented by the $d_i$ values in the constraints, not in the objective function's cost term.
+E. The average production level is not directly represented by this term. The model aims to optimize the production plan, not just find the average.
+
+

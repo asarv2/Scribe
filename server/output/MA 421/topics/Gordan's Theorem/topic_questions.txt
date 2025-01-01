@@ -1,0 +1,90 @@
+QUESTION 1
+Gordan's Theorem establishes a fundamental relationship between the solvability of a system of linear inequalities and the existence of a solution to a related system.  Which of the following best describes the core idea of Gordan's Theorem?
+A. A system of linear inequalities $Ax \le 0$ has a solution if and only if the system $A^T y = 0$, $y \ge 0$ has no solution.
+B. A system of linear inequalities $Ax < 0$ has a solution if and only if the system $A^T y = 0$, $y \ge 0$ has a solution.
+C. A system of linear inequalities $Ax \le 0$ has a solution if and only if the system $A^T y = 0$, $y > 0$ has a solution.
+D. A system of linear inequalities $Ax < 0$ has a solution if and only if the system $A^T y = 0$, $y \ge 0$ has no solution.
+E. A system of linear inequalities $Ax \le 0$ has no solution if and only if the system $A^T y = 0$, $y > 0$ has a solution.
+
+ANSWER: A
+
+EXPLANATION:
+A. Gordan's Theorem states that exactly one of the following systems has a solution: $Ax \le 0$ with $x \ne 0$ or $A^T y = 0$ with $y > 0$.  Option A correctly reflects this by stating that if one system has a solution, the other does not. The strict inequality $y>0$ is relaxed to $y \ge 0$ and $x \ne 0$ to $x \le 0$ in some formulations.
+B. This option incorrectly reverses the relationship between the two systems.  If $Ax < 0$ has a solution, it does not imply that $A^T y = 0$, $y \ge 0$ necessarily has a solution.
+C. This option introduces a strict inequality ($y > 0$) in the second system, which is not the standard formulation of Gordan's Theorem.
+D. This option incorrectly states that if $Ax < 0$ has a solution, then $A^T y = 0$, $y \ge 0$ has no solution.  This is not true in general.
+E. This option is close but not quite correct.  The correct statement involves $y > 0$ in the second system, not $y \ge 0$.
+
+
+QUESTION 2
+Gordan's Theorem is a fundamental result in linear algebra with significant implications for linear programming.  What is the key implication of Gordan's Theorem regarding the feasibility of a linear program?
+A. It guarantees the existence of an optimal solution for every linear program.
+B. It provides a condition for determining whether a system of linear inequalities defining a linear program's feasible region is consistent (has a solution).
+C. It establishes a direct relationship between the primal and dual objective function values.
+D. It determines the uniqueness of the optimal solution to a linear program.
+E. It provides a method for finding the optimal solution to a linear program.
+
+ANSWER: B
+
+EXPLANATION:
+A. Gordan's Theorem does not guarantee the existence of an optimal solution; a linear program may be infeasible or unbounded.
+B. Gordan's Theorem directly addresses the consistency of a system of linear inequalities.  In linear programming, the feasible region is defined by such a system, so the theorem helps determine if the feasible region is non-empty.
+C. Gordan's Theorem does not directly relate to the primal and dual objective function values; that's the domain of strong and weak duality theorems.
+D. Gordan's Theorem doesn't address the uniqueness of the optimal solution; multiple optimal solutions are possible in linear programming.
+E. Gordan's Theorem is a theoretical result; it doesn't provide a method for finding the solution.
+
+
+QUESTION 3
+Consider the system of linear inequalities $Ax \le 0$.  How does Gordan's Theorem relate the existence of a non-trivial solution ($x \ne 0$) to this system and the existence of a solution to another related system?
+A. If $Ax \le 0$ has a non-trivial solution, then $A^T y = 0, y \ge 0$ must also have a non-trivial solution.
+B. If $Ax \le 0$ has no non-trivial solution, then $A^T y = 0, y > 0$ must have a solution.
+C. If $Ax \le 0$ has a non-trivial solution, then $A^T y = 0, y > 0$ must have no solution.
+D. If $Ax \le 0$ has no non-trivial solution, then $A^T y = 0, y \ge 0$ must have a solution.
+E. The two systems are independent; the existence of a solution to one does not imply anything about the other.
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect; the existence of a solution to one system does not guarantee a solution to the other in this way.
+B. This is incorrect; the condition is $y > 0$, not $y \ge 0$.
+C. Gordan's Theorem states that exactly one of the systems has a solution: either $Ax \le 0$ with $x \ne 0$ or $A^T y = 0$ with $y > 0$.  Therefore, if the first system has a non-trivial solution, the second must have no solution.
+D. This is incorrect; the condition is $y > 0$, not $y \ge 0$.
+E. This is incorrect; Gordan's Theorem explicitly establishes a relationship between the two systems.
+
+
+QUESTION 4
+Gordan's Theorem is often used to prove other fundamental theorems in linear programming.  Which of the following theorems is most directly related to and often proven using Gordan's Theorem?
+A. Strong Duality Theorem
+B. Weak Duality Theorem
+C. Farkas' Lemma
+D. Carathéodory's Theorem
+E. Separation Theorem
+
+ANSWER: C
+
+EXPLANATION:
+A. While related to duality, the Strong Duality Theorem is not directly proven using Gordan's Theorem.
+B. The Weak Duality Theorem is a simpler result and doesn't typically rely on Gordan's Theorem for its proof.
+C. Farkas' Lemma is closely related to Gordan's Theorem and is often proven using it. Both theorems deal with the solvability of systems of linear inequalities and their implications.
+D. Carathéodory's Theorem deals with convex hulls and is not directly related to Gordan's Theorem.
+E. The Separation Theorem deals with separating hyperplanes and is not directly proven using Gordan's Theorem.
+
+
+QUESTION 5
+Gordan's Theorem establishes a fundamental relationship between two systems of linear inequalities.  Explain the core idea of Gordan's Theorem and its implications for the feasibility of a linear program.
+A. Gordan's Theorem states that if a system of homogeneous linear inequalities $Ax \le 0$ has a non-trivial solution, then the system $A^T y = 0$, $y > 0$ has no solution, and vice versa. This implies that a linear program is either feasible or its dual is feasible, but not both simultaneously.
+B. Gordan's Theorem states that if a system of linear inequalities $Ax \le b$ has a solution, then the system $A^T y = 0$, $b^T y > 0$ has no solution, and vice versa. This implies that a linear program is feasible if and only if its dual is infeasible.
+C. Gordan's Theorem states that if a system of homogeneous linear equations $Ax = 0$ has a non-trivial solution, then the system $A^T y = 0$ has only the trivial solution, and vice versa. This has no direct implication for the feasibility of a linear program.
+D. Gordan's Theorem states that if a system of linear inequalities $Ax \le b$ has a solution, then the system $A^T y = c$ has a solution, and vice versa. This implies that a linear program is feasible if and only if its dual is feasible.
+E. Gordan's Theorem states that if a system of linear equations $Ax = b$ has a solution, then the system $A^T y = 0$ has only the trivial solution, and vice versa. This has no direct implication for the feasibility of a linear program.
+
+ANSWER: A
+
+EXPLANATION:
+A. Gordan's Theorem directly addresses the feasibility of a system of homogeneous inequalities.  If one system has a non-trivial solution, the other has no solution, highlighting a fundamental duality relationship crucial in linear programming. The statement about a linear program and its dual being either feasible or infeasible is incorrect; both can be infeasible.
+B. This option incorrectly mixes homogeneous and inhomogeneous systems. Gordan's Theorem deals with homogeneous systems ($Ax \le 0$).  Also, a linear program can be infeasible even if its dual is infeasible.
+C. This option describes a different theorem related to the existence of solutions to homogeneous systems, not Gordan's Theorem.
+D. This option incorrectly states that the feasibility of a linear program implies the feasibility of its dual, which is not always true.  Both can be infeasible.
+E. This option describes a different theorem related to the existence of solutions to linear systems, not Gordan's Theorem.
+
+

@@ -1,0 +1,180 @@
+QUESTION 1
+In the context of the cutting stock problem, explain the trade-off between minimizing the number of rolls used and the complexity of generating cutting patterns. How does this trade-off influence the choice of algorithms and solution approaches?
+A. Minimizing rolls always prioritizes simplicity in cutting patterns, regardless of problem size.
+B. Increased pattern complexity always leads to fewer rolls used, making it the optimal strategy.
+C. There's a trade-off: simpler patterns are easier to generate but might use more rolls, while complex patterns might save rolls but are computationally expensive to find.
+D. The number of rolls and pattern complexity are independent factors; optimizing one doesn't affect the other.
+E. The trade-off is insignificant in practice, as efficient algorithms easily find optimal solutions regardless of complexity.
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect; minimizing rolls often requires exploring more complex patterns.
+B. This is incorrect; while more complex patterns can reduce rolls, the computational cost to find them can outweigh the benefit.
+C. This option correctly identifies the core challenge in the cutting stock problem.  Simpler patterns are easier to find but may not be optimal in terms of roll usage. More complex patterns can lead to better roll utilization but require more computational effort to discover.
+D. This is incorrect; there is a direct relationship between pattern complexity and the number of rolls used.
+E. This is incorrect; large-scale cutting stock problems are computationally challenging, and finding the optimal solution is often intractable.
+
+
+QUESTION 2
+In the Markowitz portfolio optimization model, explain how the risk aversion parameter influences the optimal portfolio composition. How does changing this parameter affect the balance between risk and return in the resulting portfolio?
+A. The risk aversion parameter has no effect on portfolio composition; only expected returns and variances matter.
+B. Increasing risk aversion always leads to a portfolio with higher risk and higher expected return.
+C. Increasing risk aversion leads to a portfolio with lower risk and potentially lower expected return.
+D. The risk aversion parameter only affects the expected return, not the risk of the portfolio.
+E. The risk aversion parameter only affects the risk, not the expected return of the portfolio.
+
+ANSWER: C
+
+EXPLANATION:
+A. The risk aversion parameter is a crucial component of the objective function, directly influencing the portfolio's composition.
+B. This is incorrect; increasing risk aversion leads to a less risky portfolio, potentially sacrificing some return.
+C. A higher risk aversion parameter implies the investor is more averse to risk. The model will then prioritize minimizing risk, even if it means accepting a lower expected return.
+D. The risk aversion parameter directly impacts both risk and return by weighting them differently in the objective function.
+E. Similar to D, the risk aversion parameter affects both risk and return in the optimization.
+
+
+QUESTION 3
+Describe the key differences between $L^1$, $L^2$, and $L^\infty$ regression in terms of their sensitivity to outliers and the computational challenges associated with each.  Which method is generally considered most robust to outliers?
+A. $L^1$, $L^2$, and $L^\infty$ are equally sensitive to outliers.
+B. $L^2$ is most robust to outliers, followed by $L^1$, then $L^\infty$.
+C. $L^1$ is most robust to outliers, followed by $L^2$, then $L^\infty$.
+D. $L^\infty$ is most robust to outliers, followed by $L^1$, then $L^2$.
+E. $L^2$ and $L^1$ are equally robust to outliers, and $L^\infty$ is the least robust.
+
+ANSWER: C
+
+EXPLANATION:
+A. Different norms have vastly different sensitivities to outliers.
+B. This order of robustness is incorrect.
+C. The $L^1$ norm is less sensitive to outliers than the $L^2$ norm, and the $L^\infty$ norm is the most sensitive.  Computationally, $L^2$ is easiest, followed by $L^1$ (linear programming), and $L^\infty$ is the most challenging.
+D. This order of robustness is incorrect.
+E. While $L^2$ and $L^1$ are both less sensitive than $L^\infty$, $L^1$ is generally considered more robust to outliers.
+
+
+QUESTION 4
+In the context of the diet problem, explain how the dual problem provides insights into the economic value of nutrients. How can this information be used to make better decisions about the formulation of the diet?
+A. The dual problem is irrelevant to the diet problem; only the primal problem matters.
+B. The dual problem provides information about the cost of each food item.
+C. The dual variables (shadow prices) in the dual problem represent the marginal value of each nutrient, indicating how much the minimum cost would increase if the requirement for that nutrient were increased slightly.
+D. The dual problem only provides information about the optimal quantities of each food to include in the diet.
+E. The dual problem is computationally more complex than the primal problem and is therefore not useful in practice.
+
+ANSWER: C
+
+EXPLANATION:
+A. The dual problem provides valuable economic insights complementary to the primal problem's solution.
+B. The dual problem provides information about the marginal value of nutrients, not the cost of food items (though the primal problem does).
+C. The dual variables in the diet problem represent the marginal value of each nutrient.  This is crucial for understanding the cost-effectiveness of different nutrient combinations and making informed decisions about the diet's composition.
+D. The dual problem provides economic insights, not just the optimal quantities of food.
+E. While the dual problem can be computationally more complex to solve directly, its solution provides valuable economic information.
+
+
+QUESTION 5
+In the context of specialized linear programs and algorithms, explain the core differences between the cutting stock problem and the bin packing problem.  How do their objectives, constraints, and typical solution approaches differ?
+A. Both problems are identical, focusing on minimizing waste when packing items into containers.
+B. The cutting stock problem focuses on cutting items from larger stock, while bin packing focuses on fitting items into pre-existing bins, with different objective functions and constraints.
+C. The cutting stock problem uses a greedy approach, while bin packing uses linear programming.
+D. Bin packing is a special case of the cutting stock problem where the bin sizes are fixed.
+E. Both problems are NP-hard, so there's no practical difference in their solution approaches.
+
+ANSWER: B
+
+EXPLANATION:
+A. The problems have distinct objectives and constraints, leading to different solution strategies.
+B. The cutting stock problem aims to minimize the number of rolls of material needed to fulfill orders of various lengths, while bin packing aims to minimize the number of bins needed to pack items of various sizes.  Cutting stock often uses linear programming with column generation, while bin packing frequently employs heuristics or approximation algorithms due to its NP-hard nature.  The constraints also differ significantly, reflecting the different ways items are packed or cut.
+C. While heuristics are common for bin packing, linear programming is a common approach for cutting stock, and neither is exclusive to one problem.
+D. While bin packing can be viewed as a restricted version of cutting stock, the core differences in objectives and solution approaches remain.
+E. While both are NP-hard, this doesn't negate the significant differences in their formulations and solution strategies.
+
+
+QUESTION 6
+In the bin packing problem, what is the primary objective of the optimization process, and how does this objective relate to the efficient use of containers?
+A. To minimize the number of bins used to pack a set of items.
+B. To maximize the total value of items packed into a fixed number of bins.
+C. To minimize the total weight of items packed into a fixed number of bins.
+D. To maximize the number of items packed into a single bin.
+E. To minimize the total volume of bins used to pack a set of items.
+
+ANSWER: A
+
+EXPLANATION:
+A. The bin packing problem aims to minimize the number of bins needed to pack a given set of items. This directly relates to efficient resource utilization.
+B. This describes a knapsack problem, not bin packing.
+C. This is a variation of bin packing, but the primary objective is usually the number of bins.
+D. This focuses on a single bin, not the overall efficiency of packing all items.
+E. While minimizing volume is related, the primary focus is on the number of bins used.
+
+
+QUESTION 7
+In formulating the bin packing problem as a linear program, what do the decision variables typically represent, and how are these variables used to determine the optimal packing arrangement?
+A. The weight of each item in each bin.
+B. The volume of each item in each bin.
+C. A binary variable indicating whether item $i$ is placed in bin $j$.
+D. The number of bins used.
+E. The total weight of items in each bin.
+
+ANSWER: C
+
+EXPLANATION:
+A. Weight is a parameter, not a decision variable.
+B. Similar to weight, volume is a parameter.
+C. Binary variables are commonly used to represent whether an item is in a specific bin, allowing for the determination of the optimal packing.
+D. The number of bins is the objective, not a decision variable.
+E. This is a parameter, not a decision variable.
+
+
+QUESTION 8
+How are the constraints in a linear programming formulation of the bin packing problem structured to ensure that the capacity of each bin is not exceeded, and how do these constraints relate to the packing arrangement and the items' sizes?
+A. Each item's size must be less than the bin capacity.
+B. The sum of the sizes of items in each bin must be less than or equal to the bin capacity.
+C. The total number of items in each bin must be less than or equal to the bin capacity.
+D. Each bin must contain at least one item.
+E. The sum of the weights of items in each bin must be less than or equal to the bin capacity.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is a necessary condition but not a constraint in the LP formulation.
+B. Constraints ensure that the total size of items in each bin does not exceed the bin's capacity, directly reflecting the packing arrangement and item sizes.
+C. This constraint is not relevant to the bin packing problem.
+D. This is not a requirement in bin packing.
+E. Weight is not always the relevant measure; size or volume is often used.
+
+
+QUESTION 9
+What is a significant challenge in solving large-scale bin packing problems using linear programming, and how does this challenge relate to the number of possible packing arrangements and the size of the problem?
+A. The number of decision variables grows exponentially with the number of items and bins.
+B. The objective function becomes non-linear for large problems.
+C. The constraints become too complex to handle efficiently.
+D. Linear programming is inherently inefficient for combinatorial problems.
+E. The simplex method does not converge for large bin packing problems.
+
+ANSWER: A
+
+EXPLANATION:
+A. The exponential growth of decision variables makes solving large-scale bin packing problems computationally intractable using standard linear programming techniques.
+B. The objective function remains linear.
+C. While constraints are numerous, the complexity is primarily due to the number of variables.
+D. Linear programming is suitable, but the problem's size is the issue.
+E. The simplex method can be applied, but the computational cost is prohibitive.
+
+
+QUESTION 10
+In the bin packing problem, we aim to pack a set of items with varying sizes into the minimum number of bins of a fixed capacity.  Suppose we have items with sizes 2, 3, 4, and 5, and bins with a capacity of 10.  One possible packing arrangement is to place items of size 2 and 5 in one bin (total size 7), and items of size 3 and 4 in another bin (total size 7).  How many bins are used in this arrangement?
+A. 1
+B. 2
+C. 3
+D. 4
+E. 5
+
+ANSWER: B
+
+EXPLANATION:
+A. Incorrect. This arrangement requires more than one bin.
+B. The arrangement uses two bins, one with items totaling size 7 and another with items totaling size 7.  Therefore, two bins are needed.
+C. Incorrect. This arrangement requires fewer than three bins.
+D. Incorrect. This arrangement requires fewer than four bins.
+E. Incorrect. This arrangement requires fewer than five bins.
+
+

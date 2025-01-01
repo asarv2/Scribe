@@ -1,0 +1,162 @@
+QUESTION 1
+In the context of Fredholm Alternatives, what is the significance of the condition that the matrix $A$ in the system $Ax = b$ has full column rank?
+A. It guarantees the existence of a unique solution for any vector $b$.
+B. It ensures that the system $Ax = b$ is consistent if and only if $b$ is orthogonal to the null space of $A^T$.
+C. It implies that the system $Ax = b$ is always inconsistent.
+D. It is irrelevant to the Fredholm Alternatives; the theorem applies regardless of the rank of $A$.
+E. It guarantees the existence of a solution, but not necessarily a unique one.
+
+ANSWER: B
+
+EXPLANATION:
+A. A matrix with full column rank does not guarantee a unique solution for any $b$.  The system $Ax = b$ might be inconsistent (no solution).
+B. The Fredholm Alternatives state that for a system $Ax = b$, either there exists a unique solution or there are infinitely many solutions.  If $A$ has full column rank, then the system is consistent if and only if $b$ is orthogonal to the null space of $A^T$. This is a direct consequence of the Fredholm Alternatives.
+C. A matrix with full column rank does not imply that the system $Ax = b$ is always inconsistent.  It can be consistent for certain vectors $b$.
+D. The rank of $A$ is crucial in the Fredholm Alternatives. The theorem's statement differs depending on whether $A$ has full column rank or not.
+E. A matrix with full column rank does not guarantee a solution for any $b$. The system $Ax = b$ might be inconsistent (no solution).
+
+
+QUESTION 2
+Explain how the Fredholm Alternatives relate to the solvability of a linear system $Ax = b$ and its corresponding normal equations $A^T A x = A^T b$.
+A. The Fredholm Alternatives are unrelated to the normal equations; they only concern the original system $Ax = b$.
+B. If $Ax = b$ has a solution, then $A^T A x = A^T b$ always has a solution, but the converse is not always true.
+C. The Fredholm Alternatives state that $Ax = b$ has a solution if and only if $A^T A x = A^T b$ has a solution.
+D. If $A^T A x = A^T b$ has a solution, then $Ax = b$ always has a solution, but the converse is not always true.
+E. Neither system has a solution unless $A$ is invertible.
+
+ANSWER: D
+
+EXPLANATION:
+A. The Fredholm Alternatives are directly relevant to the normal equations because the normal equations are a way to find a least-squares solution to $Ax=b$, which is a key concept in the Fredholm Alternatives.
+B. If $Ax = b$ has a solution, then $A^T A x = A^T b$ always has the same solution. The converse is only true if $A$ has full column rank.
+C. The Fredholm Alternatives do not state that $Ax = b$ has a solution if and only if $A^T A x = A^T b$ has a solution. The normal equations always have a solution if $A^T$ has full row rank, even if $Ax=b$ does not have a solution.
+D. The normal equations $A^T A x = A^T b$ always have a solution if $Ax = b$ has a solution. However, the converse is not true.  The Fredholm Alternatives provide conditions under which $Ax = b$ has a solution, and these conditions are related to the solvability of the normal equations.
+E. The systems can have solutions even if $A$ is not invertible.  The Fredholm Alternatives address solvability even in cases where $A$ is singular.
+
+
+QUESTION 3
+In the context of Fredholm Alternatives, how does the concept of orthogonality play a role in determining the solvability of a linear system $Ax = b$?
+A. Orthogonality is irrelevant to the solvability of $Ax = b$ in the Fredholm Alternatives.
+B. If $b$ is orthogonal to the null space of $A^T$, then $Ax = b$ has at least one solution.
+C. If $b$ is orthogonal to the column space of $A$, then $Ax = b$ has a unique solution.
+D. If $b$ is orthogonal to the row space of $A$, then $Ax = b$ has no solution.
+E. Orthogonality only plays a role if $A$ is a symmetric matrix.
+
+ANSWER: B
+
+EXPLANATION:
+A. Orthogonality is central to the Fredholm Alternatives, specifically concerning the relationship between $b$ and the null space of $A^T$.
+B. A key part of the Fredholm Alternatives is that $Ax = b$ is solvable if and only if $b$ is orthogonal to the null space of $A^T$. This orthogonality condition is essential for determining solvability.
+C. If $b$ is orthogonal to the column space of $A$, then $Ax = b$ has no solution.  The condition in the Fredholm Alternatives involves orthogonality to the null space of $A^T$, not the column space of $A$.
+D. If $b$ is orthogonal to the row space of $A$, then $Ax = b$ has a solution. The condition in the Fredholm Alternatives involves orthogonality to the null space of $A^T$, which is the orthogonal complement of the row space of $A$.
+E. The orthogonality condition in the Fredholm Alternatives applies to any matrix $A$, not just symmetric matrices.
+
+
+QUESTION 4
+Consider the system $Ax = b$, where $A$ is an $m \times n$ matrix.  How do the Fredholm Alternatives distinguish between the cases where $A$ has full column rank and where it does not?
+A. The Fredholm Alternatives only apply when $A$ has full column rank.
+B. The Fredholm Alternatives only apply when $A$ does not have full column rank.
+C. When $A$ has full column rank, $Ax = b$ has a unique solution if it is consistent; otherwise, it has no solution. When $A$ does not have full column rank, $Ax = b$ either has infinitely many solutions or no solution.
+D. The Fredholm Alternatives make no distinction between these cases; the same conditions apply regardless of the rank of $A$.
+E. When $A$ has full column rank, $Ax = b$ always has a solution; when it does not, $Ax = b$ has no solution.
+
+ANSWER: C
+
+EXPLANATION:
+A. The Fredholm Alternatives apply to both cases: when $A$ has full column rank and when it does not. The statements of the alternatives differ in these two cases.
+B. The Fredholm Alternatives apply to both cases: when $A$ has full column rank and when it does not. The statements of the alternatives differ in these two cases.
+C. The Fredholm Alternatives provide different conditions for solvability depending on the rank of $A$.  If $A$ has full column rank, consistency is the only condition for a solution. If $A$ does not have full column rank, the condition involves orthogonality to the null space of $A^T$.
+D. The Fredholm Alternatives explicitly distinguish between the cases where $A$ has full column rank and where it does not. The conditions for solvability are different in these two scenarios.
+E. When $A$ has full column rank, $Ax = b$ may or may not have a solution. When $A$ does not have full column rank, $Ax = b$ may have infinitely many solutions or no solution.
+
+
+QUESTION 5
+Consider the linear program presented on Slide 1. Explain the significance of converting the inequality constraints into equality constraints using slack variables, and discuss the implications for applying the simplex method.
+A. The conversion simplifies the problem's structure, allowing for direct application of the simplex method's iterative process, which operates on equality constraints.
+B. The conversion is unnecessary; the simplex method can directly handle inequality constraints.
+C. The conversion introduces additional variables, increasing the problem's complexity and making it harder to solve.
+D. The conversion changes the feasible region, leading to a different optimal solution.
+E. The conversion is only necessary for problems with more than two variables.
+
+ANSWER: A
+
+EXPLANATION:
+A. The conversion to equality constraints using slack variables is crucial because the simplex method, in its standard form, operates on systems of linear equations.  By introducing slack variables, we transform the inequalities into equalities, allowing the simplex algorithm to proceed systematically.
+B. The simplex method, in its standard tableau form, requires equality constraints.  Inequality constraints are handled by introducing slack or surplus variables to transform them into equalities.
+C. While introducing slack variables does add variables, it simplifies the problem's structure, making it amenable to the simplex algorithm.  The increased number of variables is manageable within the simplex framework.
+D. Introducing slack variables does not change the feasible region; it simply provides a way to represent the boundaries of the feasible region algebraically within the simplex method.
+E. The need to convert inequalities to equalities using slack variables applies to linear programs regardless of the number of variables.  The simplex method's fundamental structure relies on this conversion.
+
+
+QUESTION 6
+In the context of Fredholm Alternatives, if the system $Ax = b$ has a solution, what can be said about the vector $b$ in relation to the column space of matrix $A$?
+A. The vector $b$ must be orthogonal to the column space of $A$.
+B. The vector $b$ must be linearly independent of all columns of $A$.
+C. The vector $b$ must lie in the column space of $A$.
+D. The vector $b$ must have a norm greater than the norm of any column of $A$.
+E. The vector $b$ must be the zero vector.
+
+ANSWER: C
+
+EXPLANATION:
+A. If $b$ were orthogonal to the column space of $A$, then $A^T b = 0$, implying that the normal equations $A^T A x = A^T b$ would have only the trivial solution $x = 0$, which is not necessarily the case if $Ax = b$ has a solution.
+B. Linear independence between $b$ and the columns of $A$ is not a requirement for the existence of a solution to $Ax = b$.  $b$ can be a linear combination of the columns of $A$.
+C. The vector $b$ must lie in the column space of $A$.  This is a direct consequence of the definition of a solution to $Ax = b$. If a solution exists, it means that $b$ can be expressed as a linear combination of the columns of $A$.
+D. There is no such condition on the norm of $b$ relative to the norms of the columns of $A$ for the existence of a solution to $Ax = b$.
+E. The zero vector is a special case, but $Ax = b$ can have a solution for non-zero vectors $b$.
+
+
+QUESTION 7
+According to the Fredholm Alternatives, if the system $Ax = b$ has no solution, what condition must be satisfied by the vector $b$ and the null space of $A^T$?
+A. $b$ must be linearly independent of the null space of $A^T$.
+B. $b$ must be orthogonal to the null space of $A^T$.
+C. $b$ must lie in the null space of $A^T$.
+D. $b$ must have a non-zero projection onto the null space of $A^T$.
+E. There is no specific condition on $b$ in this case.
+
+ANSWER: D
+
+EXPLANATION:
+A. Linear independence is not the relevant condition here. The Fredholm Alternatives focus on orthogonality.
+B. If $b$ were orthogonal to the null space of $A^T$, then $Ax = b$ would have a solution.
+C. If $b$ were in the null space of $A^T$, then $A^T b = 0$, which would imply a solution to the normal equations, and thus a solution to $Ax = b$ (if $A$ has full column rank).
+D. If $Ax = b$ has no solution, then $b$ must have a non-zero projection onto the null space of $A^T$. This means that $b$ is not orthogonal to the null space of $A^T$.
+E. The Fredholm Alternatives provide a precise condition for the case where $Ax = b$ has no solution.
+
+
+QUESTION 8
+Consider the system $Ax = b$, where $A$ is an $m \times n$ matrix with $m > n$ and full column rank.  According to the Fredholm Alternatives, which statement is always true?
+A. The system $Ax = b$ always has a unique solution.
+B. The system $Ax = b$ always has at least one solution.
+C. The system $Ax = b$ has a solution if and only if $b$ is orthogonal to the null space of $A^T$.
+D. The system $Ax = b$ has a solution if and only if $b$ is in the column space of $A$.
+E. The system $Ax = b$ has no solution.
+
+ANSWER: D
+
+EXPLANATION:
+A. A system with more equations than unknowns ($m > n$) does not guarantee a unique solution, even with full column rank.  There might be no solution or infinitely many solutions.
+B. The system does not always have a solution.  It depends on whether $b$ is in the column space of $A$.
+C. This condition is true if $A$ does not have full column rank.  If $A$ has full column rank, then the null space of $A^T$ is trivial, and the condition is always satisfied.
+D. Since $A$ has full column rank, the columns are linearly independent, and the column space has dimension $n$.  The Fredholm Alternatives state that $Ax = b$ has a solution if and only if $b$ is in the column space of $A$.
+E. The system may or may not have a solution, depending on whether $b$ is in the column space of $A$.
+
+
+QUESTION 9
+Suppose the system $Ax = b$ has no solution.  According to the Fredholm Alternatives, what is the relationship between $b$ and the left null space of $A$?
+A. $b$ is in the left null space of $A$.
+B. $b$ is orthogonal to the left null space of $A$.
+C. $b$ is linearly independent of the vectors in the left null space of $A$.
+D. $b$ has a non-zero projection onto the left null space of $A$.
+E. There is no specific relationship between $b$ and the left null space of $A$ when $Ax = b$ has no solution.
+
+ANSWER: D
+
+EXPLANATION:
+A. If $b$ were in the left null space of $A$, then $A^T b = 0$, which would imply a solution to the normal equations and, consequently, a solution to $Ax = b$ (if $A$ has full column rank).
+B. If $b$ were orthogonal to the left null space of $A$, then $Ax = b$ would have a solution.
+C. Linear independence is not the relevant condition; orthogonality is key in the Fredholm Alternatives.
+D. The left null space of $A$ is the null space of $A^T$.  If $Ax = b$ has no solution, then $b$ is not orthogonal to the null space of $A^T$, meaning it has a non-zero projection onto the left null space of $A$.
+E. The Fredholm Alternatives explicitly define the relationship between $b$ and the left null space of $A$ when $Ax = b$ has no solution.
+
+

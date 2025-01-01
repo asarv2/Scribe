@@ -524,7 +524,7 @@ class SlideProcessor(BaseProcessor):
                         
                         while True:
                             try:
-                                model = self.llm_gemini_pro if self.handwritten else self.llm_gemini_flash8b # use gemini pro to parse handwritten notes, and extract figures.
+                                model = self.llm_gemini_flash if self.handwritten else self.llm_gemini_flash8b # use gemini pro to parse handwritten notes, and extract figures.
                                 response = model.generate([self.conversation_history[-4:]]) # only use past 4 messages, one is the prompt and the other are the last 3 slides.
                                 current_response = response.generations[0][0].text
                                 
@@ -543,10 +543,6 @@ class SlideProcessor(BaseProcessor):
                                 
                                 # save outputs
                                 self.save_notes_json(self.json_output_file)
-                                self.save_notes_text(self.lectures_output_dir)
-                                self.save_figures_png(self.lectures_output_dir)
-                                self.save_notes_pdf(self.lectures_output_dir) # after figures are saved
-
                                 print(f"\nProcessed Slide {page_number}: {response[:200]}")
                                 
                                 break  # Exit the loop if successful
@@ -564,7 +560,7 @@ class SlideProcessor(BaseProcessor):
                                     import traceback
                                     traceback.print_exc()
                                     break  # Exit the loop on non-size-related errors
-                            
+                                
                     print(f"Processed {pdf_file}.")
                     
                 except Exception as e:
@@ -577,6 +573,10 @@ class SlideProcessor(BaseProcessor):
             except Exception as e:
                 print(f"Error reading {pdf_file}: {str(e)}")
                 continue
+            
+        self.save_notes_text(self.lectures_output_dir)
+        self.save_figures_png(self.lectures_output_dir)
+        self.save_notes_pdf(self.lectures_output_dir) # after figures are saved
 
         return responses
     
@@ -657,7 +657,7 @@ class SlideProcessor(BaseProcessor):
         """
         for lecture_name in self.notes.keys():
             note_number = sorted(self.notes.keys()).index(lecture_name) + 1
-            self.supabase.table("slides").insert({
+            self.supabase.table("lectures").insert({
                 "name": lecture_name,
                 "note_number": note_number,
                 "class": self.class_id

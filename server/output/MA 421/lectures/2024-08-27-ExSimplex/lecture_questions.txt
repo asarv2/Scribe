@@ -1,0 +1,250 @@
+QUESTION 1
+Why is it necessary to introduce slack variables in the simplex method when dealing with inequality constraints?
+A. To ensure the problem is bounded.
+B. To convert inequality constraints into equality constraints, allowing for the application of the simplex algorithm.
+C. To simplify the objective function.
+D. To guarantee the existence of a feasible solution.
+E. To reduce the number of variables in the problem.
+
+ANSWER: B
+
+EXPLANATION:
+A. Boundedness is a property of the problem itself, not something ensured by slack variables.  The simplex method can handle both bounded and unbounded problems.
+B. Slack variables transform inequality constraints ($≤$) into equality constraints ($=$), a requirement for the simplex method's iterative process of moving between vertices of the feasible region.  The algorithm relies on this equality form to systematically explore the solution space.
+C. Slack variables do not directly simplify the objective function; they modify the constraints.
+D. Slack variables don't guarantee feasibility; they are a tool used *after* the problem is formulated to make it solvable by the simplex method.  Feasibility is a property of the constraints themselves.
+E. Slack variables *increase* the number of variables in the problem, not reduce them.
+
+
+QUESTION 2
+In the simplex method, what is the significance of the objective function's coefficients in determining the pivot column?
+A. They determine the feasibility of the solution.
+B. They indicate the direction of movement in the feasible region to improve the objective function.
+C. They determine the optimal solution directly.
+D. They are irrelevant to the pivot column selection.
+E. They determine the number of iterations required.
+
+ANSWER: B
+
+EXPLANATION:
+A. Feasibility is determined by the constraints, not the objective function coefficients.
+B. The coefficients in the objective function guide the selection of the pivot column.  The column with the most positive coefficient (in maximization problems) indicates the variable whose increase will lead to the greatest improvement in the objective function value. This directs the algorithm's movement towards a better solution within the feasible region.
+C. The coefficients contribute to finding the optimal solution, but they don't determine it directly; the simplex method iteratively improves the solution.
+D. The coefficients are crucial for selecting the pivot column, which is a fundamental step in the simplex method.
+E. The number of iterations depends on the problem's structure and the algorithm's path, not solely on the objective function coefficients.
+
+
+QUESTION 3
+What is the role of the ratio test in the simplex method?
+A. To determine the entering variable.
+B. To determine the leaving variable.
+C. To check for unboundedness.
+D. To ensure feasibility.
+E. To calculate the optimal value of the objective function.
+
+ANSWER: B
+
+EXPLANATION:
+A. The entering variable is selected based on the objective function coefficients (in maximization problems, the most positive coefficient).
+B. The ratio test identifies the leaving variable.  It determines which basic variable will become zero first as the entering variable increases, ensuring that the solution remains feasible (within the constraints) during each iteration.
+C. While the ratio test can indirectly help detect unboundedness (if no positive ratios exist), its primary purpose is to find the leaving variable.
+D. Feasibility is maintained by the ratio test, but it's not the test's sole purpose; it's about selecting the leaving variable to maintain feasibility.
+E. The optimal value is determined only after the simplex method has completed all iterations.
+
+
+QUESTION 4
+When using the simplex method, how does one determine if the current solution is optimal?
+A. All basic variables are positive.
+B. All non-basic variables are zero.
+C. All coefficients of the non-basic variables in the objective function are non-positive (in a maximization problem).
+D. The objective function value is greater than zero.
+E. The constraints are all satisfied.
+
+ANSWER: C
+
+EXPLANATION:
+A. Positive basic variables are a requirement for feasibility, but not optimality.
+B. Non-basic variables being zero is true for any basic feasible solution, not just the optimal one.
+C. In a maximization problem, optimality is reached when all coefficients of the non-basic variables in the objective function are non-positive. This indicates that increasing any non-basic variable would not improve the objective function value, meaning the current solution is optimal.
+D. A positive objective function value is not sufficient for optimality; it only indicates a feasible solution.
+E. Constraint satisfaction is a requirement for feasibility, not optimality.
+
+
+QUESTION 5
+In the given linear program (Slide 1), what are the basic variables in the initial step of the simplex method where $x_1 = x_2 = 0$?
+A. $x_1, x_2$
+B. $w_1, w_2, w_3$
+C. $x_1, w_2, w_3$
+D. $w_1, x_2, w_3$
+E. $x_1, x_2, w_3$
+
+ANSWER: B
+
+EXPLANATION:
+A. These are the non-basic variables; they are set to zero in the initial step.
+B. The basic variables are those on the left-hand side of the equations after introducing slack variables.  When $x_1 = x_2 = 0$, $w_1 = 12$, $w_2 = 8$, and $w_3 = 10$.
+C. This is incorrect because $x_1$ is a non-basic variable.
+D. This is incorrect because $x_2$ is a non-basic variable.
+E. This is incorrect because $x_1$ and $x_2$ are non-basic variables.
+
+
+QUESTION 6
+After the first iteration of the simplex method (Slide 8), what is the value of the objective function $\zeta$ at vertex A?
+A. 0
+B. 8
+C. 15
+D. 22
+E. 12
+
+ANSWER: C
+
+EXPLANATION:
+A. This is the value of $\zeta$ at the origin (O).
+B. This is incorrect; it's related to one of the constraints.
+C. At vertex A ($x_1 = 5, x_2 = 0$), $\zeta = 3(5) + 2(0) = 15$.
+D. This is the optimal value of $\zeta$ at vertex B.
+E. This is incorrect; it's not directly related to the objective function value at vertex A.
+
+
+QUESTION 7
+In Slide 9, which variable leaves the basis and which variable enters the basis during the pivot operation?
+A. $x_1$ leaves, $w_3$ enters
+B. $w_3$ leaves, $x_1$ enters
+C. $x_2$ leaves, $w_1$ enters
+D. $w_1$ leaves, $x_2$ enters
+E. $w_2$ leaves, $x_1$ enters
+
+ANSWER: B
+
+EXPLANATION:
+A. This is the reverse of the correct pivot operation.
+B. The slide explicitly states that $w_3$ leaves the basis and $x_1$ enters.
+C. This is an incorrect variable interchange.
+D. This is an incorrect variable interchange.
+E. This is an incorrect variable interchange.
+
+
+QUESTION 8
+In the auxiliary problem (Slide 33), what is the value of $w_2$ when $x_0 = x_1 = x_2 = 0$?
+A. 1
+B. -1
+C. 0
+D. 3
+E. -2
+
+ANSWER: E
+
+EXPLANATION:
+A. This is the value of $w_3$ in the same scenario.
+B. This is the value of $w_1$ in the same scenario.
+C. This is not the correct value; $w_2$ is negative in this case.
+D. This is the value of $w_3$ after the first pivot in the auxiliary problem.
+E. Substituting $x_0 = x_1 = x_2 = 0$ into the equation for $w_2$ gives $w_2 = -2 + 0 + 0 + 0 = -2$.
+
+
+QUESTION 9
+Part A:
+What are the values of the slack variables $w_1, w_2, w_3$ at the initial vertex O (0,0)?
+A. $w_1 = 12, w_2 = 8, w_3 = 10$
+B. $w_1 = 0, w_2 = 0, w_3 = 0$
+C. $w_1 = -12, w_2 = -8, w_3 = -10$
+D. $w_1 = 1, w_2 = 1, w_3 = 1$
+E. $w_1 = 3, w_2 = 2, w_3 = 1$
+
+ANSWER: A
+
+EXPLANATION:
+A. At the origin (0,0), substituting $x_1 = 0$ and $x_2 = 0$ into the slack variable equations gives $w_1 = 12$, $w_2 = 8$, and $w_3 = 10$.
+B. This would imply that all constraints are binding at the origin, which is not the case.
+C. Negative slack variables indicate infeasibility at the origin.
+D. There's no basis for these values.
+E. There's no basis for these values.
+
+Part B:
+In the first iteration, we increase $x_1$ while keeping $x_2 = 0$. Which constraint becomes binding first, and at what value of $x_1$?
+A. $x_1 + x_2 \le 8$ at $x_1 = 8$
+B. $-x_1 + 3x_2 \le 12$ at $x_1 = -12$
+C. $2x_1 - x_2 \le 10$ at $x_1 = 5$
+D. $x_1 + x_2 \le 8$ at $x_1 = 0$
+E. $2x_1 - x_2 \le 10$ at $x_1 = 10$
+
+ANSWER: C
+
+EXPLANATION:
+A. This constraint is less restrictive than $2x_1 \le 10$.
+B. A negative value of $x_1$ is not feasible.
+C. With $x_2 = 0$, the constraints become $x_1 \le 12$, $x_1 \le 8$, and $2x_1 \le 10$. The most restrictive constraint is $2x_1 \le 10$, which gives $x_1 = 5$.
+D. This is the starting point, not the binding constraint.
+E. This is incorrect; it uses the right-hand side value directly without considering $x_2 = 0$.
+
+Part C:
+After the first iteration (vertex A), what is the value of the objective function $\zeta$?
+A. 0
+B. 10
+C. 15
+D. 22
+E. 8
+
+ANSWER: C
+
+EXPLANATION:
+A. This is the value at the origin.
+B. Incorrect calculation.
+C. At vertex A, $x_1 = 5$ and $x_2 = 0$, so $\zeta = 3(5) + 2(0) = 15$.
+D. This is the optimal value, reached later.
+E. Incorrect calculation.
+
+Part D:
+Which variable enters the basis and which variable leaves the basis in the second iteration (moving from vertex A to vertex B)?
+A. $x_1$ enters, $w_1$ leaves
+B. $x_2$ enters, $w_3$ leaves
+C. $x_2$ enters, $w_2$ leaves
+D. $w_3$ enters, $x_1$ leaves
+E. $w_2$ enters, $x_2$ leaves
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect variable leaving the basis.
+B. Incorrect variable leaving the basis.
+C. In the second iteration, $x_2$ enters the basis, and $w_2$ leaves the basis.
+D. Incorrect variables entering and leaving.
+E. Incorrect variables entering and leaving.
+
+Part E:
+What is the optimal value of the objective function $\zeta$?
+A. 10
+B. 15
+C. 22
+D. 25
+E. 30
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect value.
+B. This is the value at vertex A.
+C. The optimal value of $\zeta$ is 22, as determined by the simplex method.
+D. Incorrect value.
+E. Incorrect value.
+
+
+
+QUESTION 10
+In Slide 19, after setting $x_1 = \frac{5}{2}$, which slack variable becomes zero, and what is the implication for the next step in the simplex method?
+A. $w_2 = 0$; $x_2$ enters the basis.
+B. $w_1 = 0$; $x_1$ leaves the basis and $w_1$ enters.
+C. $w_3 = 0$; $x_3$ enters the basis.
+D. $w_1 = 0$; $x_1$ enters the basis and $w_1$ leaves.
+E. $w_2 = 0$; $x_3$ enters the basis.
+
+ANSWER: D
+
+EXPLANATION:
+A. Answer A is incorrect. While setting $x_1 = 5/2$ does affect $w_2$, it does not become zero. The pivot operation involves the variable that becomes zero.
+B. Answer B is incorrect.  $x_1$ enters the basis, not leaves. The variable with the largest coefficient in the objective function enters the basis.
+C. Answer C is incorrect. $w_3$ does not become zero when $x_1 = 5/2$. The pivot operation involves the variable that becomes zero.
+D. Answer D is correct.  Setting $x_1 = \frac{5}{2}$ makes $w_1 = 5 - 2(\frac{5}{2}) - 3(0) - 0 = 0$. This means $w_1$ leaves the basis, and since $x_1$ has the largest positive coefficient in the objective function, $x_1$ enters the basis.
+E. Answer E is incorrect.  $w_2$ does not become zero when $x_1 = 5/2$.  The pivot operation involves the variable that becomes zero, and $x_3$ is not necessarily the entering variable.
+
+

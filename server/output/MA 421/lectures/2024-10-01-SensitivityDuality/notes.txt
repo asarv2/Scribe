@@ -1,0 +1,256 @@
+SLIDE 1
+<LATEX>
+\text{[CJ] p.67} \\
+\text{max. } \zeta = 40x_1 + 70x_2 \\
+\text{(P) s.t. } \begin{cases}
+x_1 + x_2 \le 100 \\
+10x_1 + 30x_2 \le 4000 \\
+x_1, x_2 \ge 0
+\end{cases} \\
+\text{Opt. solution: } x_1^* = 25, x_2^* = 75, \zeta^* = 40(25) + 70(75) = 6250 \\
+\text{Q.} \\
+\text{(1) Check optimality.} \\
+\text{(2) What if } \underline{4000} \text{ is changed to } \underline{4000 + t} \\
+\text{How would } x_1, x_2, \zeta \text{ be changed?} \\
+\text{How large can } t \text{ be?}
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 1 of 15 presents a linear programming problem (P). The objective function is to maximize $\zeta = 40x_1 + 70x_2$, subject to the constraints $x_1 + x_2 \le 100$, $10x_1 + 30x_2 \le 4000$, and $x_1, x_2 \ge 0$.  The optimal solution is given as $x_1^* = 25$, $x_2^* = 75$, resulting in an optimal objective function value $\zeta^* = 6250$.  The questions (Q) ask to (1) check the optimality of this solution (likely using techniques like the simplex method or duality theory) and (2) analyze the sensitivity of the solution to a change in the right-hand side of the second constraint. Specifically, it asks how the optimal solution ($x_1$, $x_2$, $\zeta$) would change if the constraint $10x_1 + 30x_2 \le 4000$ were modified to $10x_1 + 30x_2 \le 4000 + t$, and what the largest possible value of $t$ is before the current optimal solution becomes infeasible or non-optimal. The underlining highlights the parameter being changed (4000) and its replacement (4000+t). The context is linear programming; this slide introduces a problem that will be analyzed using sensitivity analysis techniques throughout the course.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+A (1) (find $y_1^\ast, y_2^\ast$ and check validity of) \\
+Strong duality. \\
+($y_1^\ast = 32.5$, $y_2^\ast = 0.75$, given in [CJ]) \\
+(D) $\min \quad 100y_1 + 4000y_2$ \\
+s.t. $\begin{cases}
+y_1 + 10y_2 \ge 40 \\
+y_1 + 50y_2 \ge 70 \\
+y_1, y_2 \ge 0
+\end{cases}$
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 2 of 15 presents a linear programming problem (D), which is the dual of a primal problem (likely presented in a previous slide). The objective is to minimize $100y_1 + 4000y_2$ subject to the constraints $y_1 + 10y_2 \ge 40$, $y_1 + 50y_2 \ge 70$, and $y_1, y_2 \ge 0$.  The slide also states that an optimal solution to this dual problem is given as $y_1^\ast = 32.5$ and $y_2^\ast = 0.75$ (from a source denoted as [CJ]). The problem asks to check the validity of strong duality, which means verifying whether the optimal objective function value of the primal problem equals the optimal objective function value of the dual problem.  The context is linear programming; this slide introduces the dual problem and sets up the task of verifying strong duality, a fundamental concept in linear programming that relates the optimal solutions of primal and dual problems.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+\left( \text{Use complementary} \right) x_1 > 0 \implies z_1 = 0 \implies y_1 + 10y_2 = 40 \\
+\text{slackness} \quad x_2 > 0 \implies z_2 = 0 \implies y_1 + 50y_2 = 70 \\
+\underline{y_1 = 32.5, \quad y_2 = 0.75} \\
+\left( \text{Check:} \right) \\
+\zeta^* = 40(25) + 70(75) = 100(32.5) + 4000(0.75) = \zeta^* \\
+= 6250
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 3 of 15 verifies the optimality of the solution found in slide 1 using complementary slackness.  The primal problem's optimal solution is $x_1^* = 25$ and $x_2^* = 75$.  Since both $x_1^*$ and $x_2^*$ are strictly positive, the corresponding dual slack variables $z_1$ and $z_2$ must be zero by complementary slackness. This leads to the equations $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$, where $y_1$ and $y_2$ are the dual variables. Solving this system of equations yields $y_1 = 32.5$ and $y_2 = 0.75$. The slide then checks strong duality by calculating the objective function value of the primal problem using the optimal primal solution ($40(25) + 70(75) = 6250$) and comparing it to the objective function value of the dual problem using the optimal dual solution ($100(32.5) + 4000(0.75) = 6250$). The equality confirms strong duality, thus verifying the optimality of the primal solution. The underlining highlights the values of the dual variables obtained from the complementary slackness conditions. The context is linear programming; this slide demonstrates the application of complementary slackness and strong duality to verify the optimality of a linear programming solution.</DESCRIPTION>
+
+SLIDE 4
+<LATEX>
+A(2) Use B, N method \\
+$\zeta = c_B^T B^{-1} b - ((B^{-1}N)^T c_B - c_N)^T x_N$ \\
+$x_B = B^{-1} b - (B^{-1}N) x_N$ \\
+$[A \quad I] = \begin{bmatrix} 1 & 1 & 1 & 0 \\ 10 & 50 & 0 & 1 \end{bmatrix}$ \\
+\begin{matrix} x_1 & x_2 & x_3 & x_4 \\ (w_1) & (w_2) \end{matrix}
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 4 of 15 presents formulas related to the B, N method in linear programming.  The slide shows two key equations: one for calculating the objective function value ($\zeta$) and another for calculating the basic variables ($x_B$).  The notation is standard for linear programming: $B$ represents the basis matrix, $N$ represents the non-basis matrix, $c_B$ and $c_N$ are the cost vectors for basic and non-basic variables respectively, $b$ is the right-hand side vector, and $x_B$ and $x_N$ are the vectors of basic and non-basic variables. The superscript $T$ denotes the transpose. The equation for $x_B$ shows how the basic variables are updated based on the non-basic variables and the current solution. The equation for $\zeta$ shows how the objective function value is updated. The matrix $[A \quad I]$ is presented, likely representing the augmented matrix of the constraints in the linear programming problem. The columns are labeled with variables $x_1, x_2, x_3, x_4$, and the last two are identified as slack variables ($w_1, w_2$).  The context is linear programming; this slide presents the formulas used in the B, N method, a technique for solving linear programming problems iteratively.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\text{Start} \\
+\begin{array}{c|cc}
+\mathbb{P} & x_1 & x_2 \\
+\hline
+0 & 40 & 70 \\
+x_3 (w_1) & 100 & -1 & -1 \\
+x_{cf} (w_2) & 4000 & -10 & -50
+\end{array}
+\begin{array}{c|cc}
+\mathbb{D} & z_1 & z_2 \\
+\hline
+0 & -100 & -4000 \\
+z_1 & 1 & 10 \\
+z_2 & 1 & 50
+\end{array} \\
+\text{End (Opt)} \\
+\begin{array}{c|cc}
+\mathbb{P} & x_3 & x_4 \\
+\hline
+6250 & -32.5 & -0.75 \\
+x_1 & 25 & \\
+x_2 & 70 &
+\end{array}
+\begin{array}{c|cc}
+\mathbb{D} & z_1 & z_2 \\
+\hline
+-6250 & -25 & -70 \\
+y_1 & 32.5 & \\
+y_2 & 0.75 &
+\end{array}
+\begin{array}{c}
+-B^{-1}N \\
+(B^{-1}N)^T
+\end{array}
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 5 of 15 shows the initial and final tableaux for both the primal ($\mathbb{P}$) and dual ($\mathbb{D}$) linear programming problems.  The initial tableau for the primal problem shows the initial values of the variables and the objective function. The initial tableau for the dual problem shows the initial values of the dual variables and the dual objective function. The final tableau for the primal problem shows the optimal solution ($x_1 = 25$, $x_2 = 70$) and the optimal objective function value (6250). The final tableau for the dual problem shows the optimal dual solution ($y_1 = 32.5$, $y_2 = 0.75$) and the optimal dual objective function value (-6250). The negative sign in the dual objective function is standard for the dual problem. The matrix $-B^{-1}N$ and its transpose $(B^{-1}N)^T$ are indicated, representing the changes in the primal and dual tableaux during the simplex iterations.  The subscripts $w_1$ and $w_2$ indicate slack variables in the primal problem. The notation $\mathbb{P}$ and $\mathbb{D}$ clearly distinguish the primal and dual problems. The context is linear programming; this slide presents the simplex method's application to both the primal and dual problems, showing the optimal solutions and verifying strong duality (the optimal objective function values of the primal and dual problems are equal in magnitude but opposite in sign).</DESCRIPTION>
+
+SLIDE 6
+<LATEX>
+B = \{1, 2\}, \quad N = \{3, 4\} \\
+B = \begin{bmatrix} 1 & 1 \\ 10 & 50 \end{bmatrix}, \quad N = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} = I \\
+B^{-1} = \frac{1}{40} \begin{pmatrix} 50 & -1 \\ -10 & 1 \end{pmatrix} = \begin{pmatrix} 5/4 & -1/40 \\ -1/4 & 1/40 \end{pmatrix} \\
+\text{End (Opt)} \\
+\begin{array}{c|cc}
+\mathbb{P} & x_3 & x_4 \\
+\hline
+6250 & -32.5 & -0.75 \\
+x_1 & 25 & -5/4 & 1/40 \\
+x_2 & 70 & 1/4 & -1/40
+\end{array}
+\begin{array}{c|cc}
+\mathbb{D} & z_1 & z_2 \\
+\hline
+-6250 & -25 & -70 \\
+y_1 & 32.5 & 5/4 & -1/4 \\
+y_2 & 0.75 & -1/40 & 1/40
+\end{array}
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 6 of 15 shows the final optimal tableaux for both the primal ($\mathbb{P}$) and dual ($\mathbb{D}$) linear programming problems, along with the calculations leading to the inverse of the basis matrix ($B^{-1}$). The sets $B$ and $N$ represent the indices of basic and non-basic variables, respectively. The matrix $B$ is the basis matrix, and $N$ is the non-basis matrix. The inverse of the basis matrix, $B^{-1}$, is calculated and shown explicitly. The final tableaux for both primal and dual problems are presented, showing the optimal values of the variables and the objective function values.  The primal tableau shows the optimal solution ($x_1 = 25$, $x_2 = 70$) and the optimal objective function value (6250). The dual tableau shows the optimal dual solution ($y_1 = 32.5$, $y_2 = 0.75$) and the optimal dual objective function value (-6250). The entries $-B^{-1}N$ are shown in the primal tableau and $(B^{-1}N)^T$ in the dual tableau, representing the updated values after the simplex iterations. The context is linear programming; this slide presents the final results of the simplex method applied to both the primal and dual problems, showing the optimal solutions and verifying strong duality. The notation $\mathbb{P}$ and $\mathbb{D}$ clearly distinguish the primal and dual problems.</DESCRIPTION>
+
+SLIDE 7
+<LATEX>
+\zeta = c_B^T B^{-1} b - ((B^{-1}N)^T c_B - c_N)^T x_N \\
+x_B = B^{-1} b - (B^{-1}N) x_N \\
+\text{Changed to } B^{-1} \begin{pmatrix} b \\ 0 \\ t \end{pmatrix} \\
+= \begin{pmatrix} 5/4 & -1/40 \\ -1/4 & 1/40 \end{pmatrix} \begin{pmatrix} 100 \\ 4000 + t \end{pmatrix} = \begin{pmatrix} 25 - t/40 \\ 75 + t/40 \end{pmatrix} \ge 0 \\
+x_1^* \to 25 - t/40, \quad x_2^* \to 75 + t/40 \\
+-3000 \le t \le 1000
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 7 of 15 shows the calculation of the optimal solution for a linear programming problem using the B, N method.  The slide starts with the standard formulas for calculating the objective function value ($\zeta$) and the basic variables ($x_B$).  The notation is consistent with previous slides: $B$ is the basis matrix, $N$ is the non-basis matrix, $c_B$ and $c_N$ are cost vectors, $b$ is the right-hand side vector, and $x_B$ and $x_N$ are vectors of basic and non-basic variables. The superscript $T$ denotes the transpose. The core of the slide shows how the basic variables are updated ($x_B$) by substituting a modified right-hand side vector $\begin{pmatrix} b \\ 0 \\ t \end{pmatrix}$ into the equation $x_B = B^{-1}b - (B^{-1}N)x_N$. The inverse of the basis matrix $B^{-1}$ is applied to this modified vector, resulting in expressions for $x_1^*$ and $x_2^*$ in terms of a parameter $t$. The constraint $-3000 \le t \le 1000$ is given, indicating bounds on the parameter $t$ to maintain feasibility. The context is linear programming; this slide demonstrates the sensitivity analysis of the optimal solution with respect to changes in the right-hand side vector, showing how the optimal solution changes as a function of the parameter $t$. The circled $B^{-1}b$ in the original equations highlights the part that is modified.</DESCRIPTION>
+
+SLIDE 8
+<LATEX></LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 8 of 15 demonstrates two methods (M1 and M2) for calculating the optimal objective function value ($\zeta^*$) of a linear programming problem after a change in the right-hand side vector.  Method M1 directly substitutes the optimal solutions $x_1^*$ and $x_2^*$ (expressed in terms of parameter $t$ from the previous slide) into the objective function. Method M2 uses the formula $\zeta^* = c_B^T B^{-1}(b + \begin{pmatrix} 0 \\ t \end{pmatrix})$, where $c_B$ is the cost vector of basic variables, $B^{-1}$ is the inverse of the basis matrix, $b$ is the original right-hand side vector, and $t$ represents the change.  Both methods yield the same result: $\zeta^* = 6250 + 0.75t$. The underlined $0.75t$ highlights the change in the optimal objective function value due to the parameter $t$. The arrow points to the optimal dual solution $(y_1^*, y_2^*) = (32.5, 0.75)$, which is used in method M2. The notation "no accident" suggests that the agreement between the two methods is not coincidental but a consequence of the duality theorem. The context is sensitivity analysis in linear programming, showing how changes in the right-hand side affect the optimal objective function value.</DESCRIPTION>
+
+SLIDE 9
+<LATEX>
+\text{M3} \quad \zeta^* = 40x_1^* + 70x_2^* \\
+\text{new} \quad \approx (y_1^* + 10y_2^*)x_1^* + (y_1^* + 50y_2^*)x_2^* \\
+= y_1^*(x_1^* + x_2^*) + y_2^*(10x_1^* + 50x_2^*) \\
+\approx y_1^*(100) + y_2^*(4000 + t) \\
+= 100y_1^* + 4000y_2^* + y_2^*t \\
+\underbrace{100y_1^* + 4000y_2^*}_{\text{old}} \quad \underbrace{y_2^*t}_{\text{change}} \\
+= 0.75t
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 9 of 15 presents a third method (M3) for calculating the change in the optimal objective function value ($\zeta^*$) due to a perturbation in the right-hand side vector of a linear programming problem.  The method starts by expressing the objective function in terms of the optimal primal variables ($x_1^*$ and $x_2^*$).  It then substitutes the expressions for $x_1^*$ and $x_2^*$ from the previous slide (which are functions of a parameter $t$) into the objective function.  The approximation symbol ($\approx$) indicates that the substitution is based on the optimal solution obtained before the perturbation.  The optimal dual variables ($y_1^*$ and $y_2^*$) are then introduced, leveraging the duality theorem.  The expression is simplified, separating the original optimal objective function value (labeled "old") from the change caused by the perturbation (labeled "change").  The final result shows that the change in the optimal objective function value is equal to $0.75t$, which is consistent with the result obtained using other methods in previous slides. The circled approximations highlight the steps where approximations are made. The context is sensitivity analysis in linear programming, demonstrating a third approach to calculating the change in the optimal objective function value due to changes in the right-hand side.</DESCRIPTION>
+
+SLIDE 10
+<LATEX>
+\text{Note:} \quad \zeta^* = c_B^T B^{-1} b = b^T B^{-T} c_B \\
+\Delta \zeta^* = (\Delta b)^T \underbrace{(B^{-1} c_B)}_{y^*} \\
+\text{In fact} \quad \zeta_{new}^* = \zeta_{old}^* + (\Delta b)^T y_{old}^* \\
+\text{(if non-degenerate, } |\Delta b| << 1) \\
+(\Delta b)^T y_{old}^* = (\Delta b)_1 y_1^* + (\Delta b)_2 y_2^* + \dots + (\Delta b)_m y_m^* \\
+\text{(shadow price)}
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 10 of 15 discusses the sensitivity analysis of the optimal objective function value ($\zeta^*$) in linear programming.  The slide begins by noting that the optimal objective function value can be expressed as $c_B^T B^{-1} b$, where $c_B$ is the cost vector of basic variables, $B$ is the basis matrix, and $b$ is the right-hand side vector. The change in the optimal objective function value ($\Delta \zeta^*$) is then shown to be equal to $(\Delta b)^T (B^{-1} c_B)$, where $\Delta b$ represents a change in the right-hand side vector.  The term $(B^{-1} c_B)$ is identified as the optimal dual solution ($y^*$).  The core of the slide is the equation $\zeta_{new}^* = \zeta_{old}^* + (\Delta b)^T y_{old}^*$, which states that the new optimal objective function value ($\zeta_{new}^*$) is equal to the old optimal objective function value ($\zeta_{old}^*$) plus the change in the right-hand side vector ($\Delta b$) multiplied by the transpose of the old optimal dual solution ($y_{old}^*$). This equation holds under the assumption of non-degeneracy and small changes in $b$ ($|\Delta b| << 1$). The final part expands the term $(\Delta b)^T y_{old}^*$ to show that the change in the objective function is a linear combination of the changes in the right-hand side vector components, weighted by the corresponding dual variables (shadow prices). The reference "[c]p.66 Thm 55" likely refers to a theorem in a textbook or course material that justifies this result. The arrows highlight the relationships between different terms and the overall flow of the argument. The context is sensitivity analysis in linear programming, showing how small changes in the right-hand side affect the optimal objective function value.</DESCRIPTION>
+
+SLIDE 11
+<LATEX>
+pf \quad (P) \quad \max \quad \zeta = c^T x \\
+s.t. \quad Ax \le b \\
+\quad x \ge 0 \\
+at \quad Opt: \\
+(P) \quad \zeta = \zeta^* - z_N^T x_N \\
+x_B = x_B^* - (B^{-1} N) x_N \\
+z_N^* = (B^{-1} N)^T c_B - c_N \ge 0 \\
+x_B^* = B^{-1} b \ge 0 \\
+\zeta^* = c_B^T B^{-1} b = c_B^T x_B^* = b^T B^{-T} c_B
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 11 of 15 presents the optimal solution of a linear programming problem in matrix notation.  The primal problem (P) is defined as maximizing $\zeta = c^T x$ subject to $Ax \le b$ and $x \ge 0$. At the optimum, the objective function value $\zeta$ is expressed as $\zeta^* - z_N^T x_N$, where $\zeta^*$ is the optimal objective function value, $z_N$ is the vector of reduced costs for non-basic variables, and $x_N$ is the vector of non-basic variables. The optimal values of the basic variables ($x_B$) are given by $x_B^* - (B^{-1}N)x_N$, where $x_B^*$ are the optimal basic variables, $B^{-1}$ is the inverse of the basis matrix, and $N$ is the matrix of non-basic columns. The optimality condition $z_N^* = (B^{-1}N)^T c_B - c_N \ge 0$ is shown, where $c_B$ and $c_N$ are the cost vectors for basic and non-basic variables respectively. The feasibility condition $x_B^* = B^{-1}b \ge 0$ is also shown. Finally, the optimal objective function value is expressed as $\zeta^* = c_B^T B^{-1} b = c_B^T x_B^* = b^T B^{-T} c_B$. The notation "pf" likely stands for "proof" or "problem formulation". The context is sensitivity analysis in linear programming, providing the mathematical foundation for analyzing changes in the optimal solution due to perturbations in the problem data.</DESCRIPTION>
+
+SLIDE 12
+<LATEX>
+\text{(D)} \quad \min \quad \xi = b^T y \\
+\text{s.t.} \quad A^T y \ge c \\
+\quad y \ge 0 \\
+\text{At Opt.} \quad -\xi = -\xi^* + (x_B^*)^T z_B \\
+Z_N = Z_N^* + (B^{-1}N)^T z_B \\
+\text{Compare:} \quad \xi^* = c^T x^* = \xi^* = b^T y^* \\
+= b^T B^{-T} c_B
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 12 of 15 shows the dual problem (D) of a linear programming problem, which is to minimize $\xi = b^T y$ subject to $A^T y \ge c$ and $y \ge 0$.  At the optimum, the change in the objective function value is expressed as $-\xi = -\xi^* + (x_B^*)^T z_B$, where $\xi^*$ is the optimal objective function value of the dual problem, $x_B^*$ is the vector of optimal basic variables from the primal problem, and $z_B$ is a vector related to the primal problem's optimality conditions.  Similarly, the reduced costs for non-basic variables ($Z_N$) are updated as $Z_N^* + (B^{-1}N)^T z_B$, where $Z_N^*$ are the optimal reduced costs. The slide then compares the optimal objective function values of the primal and dual problems, showing that $\xi^* = c^T x^* = \xi^* = b^T y^* = b^T B^{-T} c_B$, highlighting the strong duality theorem. The red curved arrow emphasizes the relationship between the primal and dual optimal objective function values. The context is sensitivity analysis in linear programming, specifically demonstrating the relationship between the primal and dual solutions at optimality and how changes in one problem affect the other.</DESCRIPTION>
+
+SLIDE 13
+<LATEX>
+\text{Guess/Prove} \quad y^* = B^{-T} c_B \\
+(1) \quad B^{-T} c_B \text{ does gives opt. objective value} \\
+(2) \quad \text{Check for feasibility of } B^{-T} c_B \\
+A^T (B^{-T} c_B) \ge c \quad ? \\
+B^{-T} c_B \ge 0 \quad ?
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 13 of 15 presents a method for finding the optimal dual solution ($y^*$) in linear programming.  The slide suggests a "guess/prove" approach where the optimal dual solution is hypothesized to be $y^* = B^{-T} c_B$, where $B^{-T}$ is the transpose of the inverse of the basis matrix and $c_B$ is the cost vector of the basic variables.  The slide then outlines two steps to verify this guess: (1) Check if this solution yields the optimal objective function value of the dual problem, and (2) Check the feasibility of this solution by verifying if it satisfies the constraints of the dual problem: $A^T y^* \ge c$ and $y^* \ge 0$. Question marks indicate that these conditions need to be verified. The red box highlights the proposed solution for $y^*$. The context is sensitivity analysis in linear programming, specifically focusing on finding the optimal dual solution, which is crucial for sensitivity analysis because it provides the shadow prices.</DESCRIPTION>
+
+SLIDE 14
+<LATEX>
+\text{We need} \quad A^T y \ge c \iff y^T A \ge c^T \\
+y \ge 0 \iff y^T \ge 0^T \\
+y^T [A \quad I] \ge [c^T \quad 0^T] \\
+y^T [B \quad N] \ge [c_B^T \quad c_N^T] \\
+y^T B \ge c_B^T \\
+? \\
+y^T N \ge c_N^T \\
+?
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 14 of 15 focuses on deriving the conditions for the feasibility of the dual problem in linear programming.  It starts with the dual problem's constraints: $A^T y \ge c$ and $y \ge 0$. These are rewritten in matrix form as $y^T A \ge c^T$ and $y^T \ge 0^T$.  The matrix $A$ is partitioned into basic ($B$) and non-basic ($N$) columns, leading to the inequality $y^T [B \quad N] \ge [c_B^T \quad c_N^T]$, where $c_B$ and $c_N$ are the cost vectors corresponding to the basic and non-basic variables, respectively. This inequality is then separated into two inequalities: $y^T B \ge c_B^T$ and $y^T N \ge c_N^T$. Question marks indicate that the feasibility of these inequalities needs further investigation. The red arrows and circled area highlight the transformations and relationships between the different forms of the constraints. The context is sensitivity analysis in linear programming, specifically focusing on the dual problem's feasibility conditions, which are essential for understanding the shadow prices and the range of optimality.</DESCRIPTION>
+
+SLIDE 15
+<LATEX>
+y = B^{-T} c_B, \quad y^T B = c_B^T B^{-1} B = c_B^T \ge c_B^T \\
+y^T N = c_B^T B^{-1} N \ge c_N \\
+\text{Optimality condition} \\
+z_N^* = (B^{-1} N)^T c_B - c_N \ge 0
+</LATEX>
+
+<FIGURE [0.0, 0.0, 0.0, 0.0]> </FIGURE>
+
+<DESCRIPTION>Slide 15 of 15 presents the optimality conditions for a linear programming problem, building upon the previous slides' discussion of primal and dual solutions.  It shows that the optimal dual solution is given by $y = B^{-T} c_B$, where $B^{-T}$ is the transpose of the inverse of the basis matrix and $c_B$ is the cost vector of the basic variables.  The slide then verifies this solution by showing that $y^T B = c_B^T$ and $y^T N = c_B^T B^{-1} N \ge c_N$, where $N$ is the matrix of non-basic columns. The inequality $y^T N \ge c_N$ represents the optimality condition. Finally, the reduced costs for the non-basic variables at optimality are given by $z_N^* = (B^{-1} N)^T c_B - c_N \ge 0$.  The red circle highlights this final optimality condition, which states that the reduced costs of non-basic variables must be non-negative at the optimal solution. The context is sensitivity analysis in linear programming, specifically demonstrating the conditions that must hold at the optimal solution, which are crucial for performing sensitivity analysis.</DESCRIPTION>
+

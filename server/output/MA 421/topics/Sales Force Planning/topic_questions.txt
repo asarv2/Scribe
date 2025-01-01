@@ -1,0 +1,162 @@
+QUESTION 1
+In a sales force planning problem, what does the objective function typically aim to optimize, and how are the decision variables defined in relation to the allocation of sales representatives to different territories?
+A. Minimize the total cost of sales representatives' salaries, with decision variables representing the number of sales representatives assigned to each territory.
+B. Maximize the total sales revenue generated across all territories, with decision variables representing the sales potential of each territory.
+C. Maximize the total number of sales representatives employed, with decision variables representing the number of sales representatives assigned to each territory.
+D. Minimize the total number of sales representatives employed while meeting sales targets, with decision variables representing the number of sales representatives assigned to each territory.
+E. Maximize a weighted combination of sales revenue and cost minimization, with decision variables representing the number of sales representatives assigned to each territory.
+
+ANSWER: E
+
+EXPLANATION:
+A. Answer A is incorrect because while cost minimization is a factor, it's usually balanced against revenue maximization.
+B. Answer B is incorrect because while maximizing revenue is a goal, it needs to be considered alongside the cost of employing sales representatives.
+C. Answer C is incorrect because maximizing the number of sales representatives without considering costs or sales targets is not a realistic objective.
+D. Answer D is incorrect because while minimizing the number of representatives is a cost-saving measure, it must be balanced against achieving sales targets.
+E. Answer E is correct.  A typical sales force planning problem seeks to balance maximizing sales revenue with minimizing costs. The decision variables directly represent the allocation of sales representatives to territories, influencing both revenue and cost.
+
+
+QUESTION 2
+In a sales force planning problem, how are the constraints typically formulated to reflect the limitations on the available resources, such as the total number of sales representatives or the budget allocated for salaries?
+A. Constraints are formulated as inequalities representing the maximum number of sales representatives allowed in each territory.
+B. Constraints are formulated as equalities representing the exact number of sales representatives required to meet sales targets in each territory.
+C. Constraints are formulated as inequalities representing the total number of sales representatives available and the total budget allocated for salaries.
+D. Constraints are formulated as equalities representing the exact sales revenue required from each territory.
+E. Constraints are formulated as a combination of inequalities and equalities, reflecting both resource limitations and sales targets.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect because it only considers territorial limits, not the overall resource constraints.
+B. Answer B is incorrect because it's unrealistic to precisely determine the number of representatives needed for each territory beforehand.
+C. Answer C is correct.  Resource constraints in sales force planning typically involve upper bounds on the total number of sales representatives and the total budget. These are naturally expressed as inequalities.
+D. Answer D is incorrect because it focuses on sales revenue targets, which are not direct resource constraints.
+E. Answer E is partially correct in that some problems might include sales targets, but the primary resource constraints are usually on the total number of representatives and the budget.
+
+
+QUESTION 3
+In a sales force planning problem, what economic interpretation can be given to the dual variables (shadow prices) associated with the resource constraints, such as the total number of sales representatives or the budget?
+A. The shadow prices represent the marginal increase in sales revenue for each additional sales representative or each additional dollar in the budget.
+B. The shadow prices represent the marginal cost of hiring an additional sales representative or increasing the budget by one dollar.
+C. The shadow prices represent the minimum sales revenue required per sales representative or per dollar of budget.
+D. The shadow prices represent the maximum number of sales representatives or the maximum budget that can be used without affecting the optimal solution.
+E. The shadow prices represent the opportunity cost of not allocating additional resources to the sales force.
+
+ANSWER: A
+
+EXPLANATION:
+A. Answer A is correct. Shadow prices indicate the increase in the objective function (sales revenue) for a marginal increase in the constrained resource.
+B. Answer B is incorrect. Shadow prices relate to the increase in the objective function, not the direct cost of resources.
+C. Answer C is incorrect. Shadow prices are not minimum requirements but rather marginal increases in the objective function.
+D. Answer D is incorrect.  This describes ranges of optimality, not shadow prices.
+E. Answer E is partially correct in that it reflects the value of additional resources, but the shadow price is a more precise measure of this value.
+
+
+QUESTION 4
+Suppose a sales force planning problem has been solved, and the optimal solution indicates that a particular territory receives no sales representatives. What information can be obtained from the reduced costs associated with this territory, and how can this information be used to improve the sales force allocation?
+A. The reduced cost indicates the minimum sales revenue that must be generated in that territory to justify assigning a sales representative.
+B. The reduced cost indicates the maximum amount that can be spent on additional resources in that territory without affecting the optimal solution.
+C. The reduced cost indicates the marginal increase in total sales revenue if a sales representative were assigned to that territory.
+D. The reduced cost indicates the decrease in total sales revenue if a sales representative were assigned to that territory.
+E. The reduced cost indicates the marginal cost of assigning a sales representative to that territory.
+
+ANSWER: A
+
+EXPLANATION:
+A. Answer A is correct. A positive reduced cost for a non-basic variable (territory with no representatives) indicates the minimum improvement needed in that territory's contribution to justify assigning a representative.
+B. Answer B is incorrect. This describes the range of optimality, not reduced costs.
+C. Answer C is incorrect. This describes shadow prices, not reduced costs.
+D. Answer D is incorrect. Reduced costs are always non-negative for maximization problems.
+E. Answer E is incorrect. Reduced costs represent the improvement needed in the objective function to justify making a variable basic, not the direct cost.
+
+
+QUESTION 5
+In a sales force planning problem, a company aims to optimize the allocation of its sales representatives across different territories to maximize overall sales.  Considering the constraints and the objective function, explain how the dual problem provides valuable insights into the economic value of additional resources, such as hiring more sales representatives or increasing the marketing budget.
+A. The dual problem provides information on the marginal increase in sales for each additional sales representative or marketing dollar spent, allowing for informed decisions on resource allocation.
+B. The dual problem identifies the territories that should receive the most sales representatives, regardless of resource limitations.
+C. The dual problem helps determine the minimum number of sales representatives needed to achieve a target sales level, ignoring the cost of hiring.
+D. The dual problem focuses solely on minimizing the cost of the sales force, without considering sales maximization.
+E. The dual problem is irrelevant in sales force planning as it only deals with resource allocation in production problems.
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual problem in sales force planning provides shadow prices (dual variables) for each constraint. These shadow prices represent the marginal increase in the objective function (total sales) for a one-unit increase in the constrained resource (e.g., number of sales representatives or marketing budget).  This information is crucial for determining the economic value of allocating additional resources. A high shadow price indicates that increasing that resource would significantly improve sales.
+B. The dual problem does not directly dictate the allocation of sales representatives to specific territories.  It provides information on the value of additional resources, which can then inform the allocation decisions.
+C. While the dual problem can indirectly help determine the minimum resources needed, it does so by considering the cost-benefit trade-off, not ignoring cost.
+D. The dual problem is not solely focused on cost minimization. It provides insights into the value of additional resources in relation to the objective of maximizing sales.
+E. The dual problem is a fundamental concept in linear programming and is applicable to various optimization problems, including sales force planning, not just production problems.
+
+
+QUESTION 6
+A sales team is to be allocated across five territories. Each territory has a different sales potential, and each salesperson has a different level of experience and effectiveness. The company wants to maximize total sales revenue.  The decision variables represent the number of salespeople assigned to each territory. What type of linear programming problem is this?
+A. A transportation problem
+B. An assignment problem
+C. A diet problem
+D. A production planning problem
+E. A network flow problem
+
+ANSWER: A
+
+EXPLANATION:
+A. This is a resource allocation problem, specifically a type of transportation problem where salespeople are the resources being transported to different territories (destinations).  The objective is to maximize total sales revenue.
+B. An assignment problem involves assigning tasks to individuals, with each task assigned to exactly one individual. This problem involves allocating multiple salespeople to each territory.
+C. A diet problem focuses on minimizing cost while meeting nutritional requirements. This problem aims to maximize sales revenue.
+D. A production planning problem deals with optimizing production quantities given resource constraints. This problem focuses on allocating salespeople.
+E. Network flow problems involve optimizing the flow of goods or resources through a network. While there's a flow of salespeople, the problem doesn't explicitly model a network structure.
+
+
+QUESTION 7
+A company has 10 sales representatives to allocate across three regions.  Let $x_i$ represent the number of sales representatives assigned to region $i$, where $i = 1, 2, 3$.  The total sales revenue is estimated as $Z = 100x_1 + 150x_2 + 200x_3$. What constraint ensures that all 10 sales representatives are used?
+A. $x_1 + x_2 + x_3 \le 10$
+B. $x_1 + x_2 + x_3 \ge 10$
+C. $x_1 + x_2 + x_3 = 10$
+D. $100x_1 + 150x_2 + 200x_3 \le 10$
+E. $100x_1 + 150x_2 + 200x_3 = 10$
+
+ANSWER: C
+
+EXPLANATION:
+A. This constraint allows for fewer than 10 sales representatives to be used.
+B. This constraint allows for more than 10 sales representatives to be used, which is not possible.
+C. The constraint $x_1 + x_2 + x_3 = 10$ ensures that the total number of sales representatives assigned to the three regions equals the total number of available representatives (10).
+D. This constraint relates to the sales revenue, not the number of sales representatives.
+E. This constraint incorrectly equates sales revenue to the number of sales representatives.
+
+
+QUESTION 8
+In a sales force planning problem, the dual variable associated with the constraint limiting the total number of sales representatives represents the shadow price of additional salespeople.  What does this shadow price economically signify?
+A. The cost of hiring an additional salesperson
+B. The increase in total sales revenue from hiring one additional salesperson
+C. The decrease in total sales revenue from hiring one additional salesperson
+D. The number of additional sales generated per salesperson
+E. The average sales revenue per salesperson
+
+ANSWER: B
+
+EXPLANATION:
+A. While related, the shadow price doesn't directly represent the hiring cost. It represents the *additional revenue* generated.
+B. The shadow price indicates the marginal increase in the objective function (total sales revenue) if one more unit of the constrained resource (salesperson) were available.  It represents the value of adding one more salesperson.
+C. A positive shadow price indicates an *increase* in revenue, not a decrease.
+D. This describes the productivity of a salesperson, not the economic value of adding another.
+E. This is the average sales revenue per salesperson, not the marginal increase from adding one more.
+
+
+QUESTION 9
+A sales force optimization model determines that a particular territory should not receive any sales representatives in the optimal solution. The reduced cost for this territory is -\$5000. What does this negative reduced cost indicate?
+A. Assigning a salesperson to this territory would decrease total sales by $5000.
+B. Assigning a salesperson to this territory would increase total sales by $5000.
+C. The territory is unprofitable and should be abandoned.
+D. The model is incorrect; this territory should have at least one salesperson.
+E. The reduced cost is irrelevant in this context.
+
+ANSWER: B
+
+EXPLANATION:
+A. A negative reduced cost indicates an *increase* in the objective function value, not a decrease.
+B. A negative reduced cost for a non-basic variable (no salespeople assigned) in a maximization problem means that bringing that variable into the basis (assigning a salesperson) would improve the objective function (increase total sales) by the magnitude of the reduced cost.  In this case, assigning one salesperson would increase sales by $5000.
+C. The reduced cost indicates the potential for improvement, not the inherent profitability of the territory.
+D. The model is not necessarily incorrect. The reduced cost shows the potential benefit of assigning a salesperson, but other constraints might prevent it.
+E. The reduced cost is crucial for interpreting the sensitivity of the solution and identifying potential improvements.
+
+

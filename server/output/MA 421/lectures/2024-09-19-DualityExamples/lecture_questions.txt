@@ -1,0 +1,180 @@
+QUESTION 1
+Given the primal problem from Slide 1: $\max \quad \xi(x) = c^T x$ subject to $Ax \le b, x \ge 0$, and its dual problem: $\min \quad \xi(y) = b^T y$ subject to $A^T y \ge c, y \ge 0$. If $b = \begin{pmatrix} 5 \\ 6 \end{pmatrix}$ and $y = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$, what is the value of the dual objective function $\xi(y)$?
+A. 11
+B. 5
+C. 6
+D. 7
+E. 10
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual objective function is given by $\xi(y) = b^T y$. Substituting the given values, we get $\xi(y) = \begin{pmatrix} 5 & 6 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \end{pmatrix} = 5(1) + 6(1) = 11$. Therefore, the value of the dual objective function is 11.
+B. This is incorrect. It only considers the first element of the vector $b$.
+C. This is incorrect. It only considers the second element of the vector $b$.
+D. This is incorrect. There's a calculation error.
+E. This is incorrect. There's a calculation error.
+
+
+QUESTION 2
+In the context of the Diet Problem (Slides 2-8), what is the economic interpretation of the dual problem's objective function and constraints?
+A. The dual problem minimizes the cost of nutrients, subject to constraints on the maximum amount of each food that can be consumed.
+B. The dual problem maximizes the profit from selling pills that replace nutrients, subject to constraints ensuring the pill cost is less than the food cost.
+C. The dual problem minimizes the total cost of food, subject to constraints on the minimum intake of each nutrient.
+D. The dual problem maximizes the total amount of nutrients consumed, subject to constraints on the cost of each food.
+E. The dual problem finds the optimal combination of foods to minimize cost, while satisfying minimum nutrient requirements.
+
+ANSWER: B
+
+EXPLANATION:
+A. This describes the primal problem, not the dual. The primal problem minimizes the cost of food, subject to minimum nutrient intake requirements.
+B. The dual problem, as presented in Slides 7 and 8, is interpreted as a profit maximization problem.  The objective function $\sum_i b_i y_i$ represents the total profit from selling pills (where $y_i$ is the price of a pill for nutrient $i$ and $b_i$ is the minimum required intake of nutrient $i$). The constraints $\sum_i y_i a_{ij} \le c_j$ ensure that the cost of pills to replace the nutrients in food $j$ is less than or equal to the cost of food $j$ itself. This makes economic sense because no one would buy the pills if they cost more than the food.
+C. This is a description of the primal problem, which aims to minimize the total cost of food while meeting minimum nutrient requirements.
+D. This is not the correct interpretation of either the primal or dual problem. The dual problem focuses on profit maximization, not nutrient maximization.
+E. This is a description of the primal problem, which aims to find the optimal food combination to minimize cost while meeting nutrient requirements.
+
+
+QUESTION 3
+Considering the primal (diet) problem and its dual (pill-selling) problem, what is the significance of the Weak Duality Theorem in this context?
+A. The Weak Duality Theorem guarantees that the optimal cost of the diet will always be less than the maximum profit from selling pills.
+B. The Weak Duality Theorem states that the optimal solution to the primal problem is always equal to the optimal solution to the dual problem.
+C. The Weak Duality Theorem is irrelevant to the diet problem and its dual because they are not related.
+D. The Weak Duality Theorem guarantees that the optimal cost of the diet will always be greater than or equal to the maximum profit from selling pills.
+E. The Weak Duality Theorem only applies to problems with equality constraints, not inequality constraints like the diet problem.
+
+ANSWER: D
+
+EXPLANATION:
+A. This statement is incorrect. The Weak Duality Theorem states that the primal objective function value is less than or equal to the dual objective function value for any feasible solutions.
+B. This describes the Strong Duality Theorem, which states that the optimal objective function values of the primal and dual problems are equal if both problems have optimal solutions. The Weak Duality Theorem is a weaker statement that applies to any feasible solutions.
+C. The Weak Duality Theorem is fundamental to duality theory and applies directly to the relationship between the primal diet problem and its dual pill-selling problem.
+D. The Weak Duality Theorem states that the objective function value of any feasible solution to the primal problem is always less than or equal to the objective function value of any feasible solution to the dual problem. In the context of the diet problem, this means the minimum cost of the diet will always be greater than or equal to the maximum profit from selling the equivalent pills. This relationship holds for any feasible solutions, not just the optimal ones.
+E. The Weak Duality Theorem applies to problems with both equality and inequality constraints.  The diet problem has inequality constraints, and the theorem still holds.
+
+
+QUESTION 4
+How does the concept of duality provide an alternative interpretation of the Diet Problem and its solution?
+A. Duality provides no alternative interpretation; it simply offers a different mathematical formulation.
+B. Duality allows us to view the problem from the perspective of a manufacturer selling nutrient pills, maximizing profit based on nutrient prices.
+C. Duality transforms the minimization problem into a maximization problem without changing the underlying economic meaning.
+D. Duality simplifies the calculations required to solve the diet problem, making it computationally easier.
+E. Duality provides a way to check the accuracy of the solution to the primal problem by comparing it to the solution of the dual problem.
+
+ANSWER: B
+
+EXPLANATION:
+A. Duality offers not only a different mathematical formulation but also a significantly different economic interpretation of the problem and its solution.
+B. The dual problem provides a completely different economic interpretation. Instead of a consumer minimizing the cost of a diet, the dual problem can be viewed as a manufacturer maximizing profit by selling pills that provide the necessary nutrients. The dual variables represent the prices of these pills, and the constraints ensure that the cost of pills to replace the nutrients in a food is less than or equal to the cost of the food itself. This provides a valuable alternative perspective on the original problem.
+C. While duality does transform the minimization problem into a maximization problem, it also fundamentally changes the economic interpretation. The primal problem focuses on minimizing the cost of food, while the dual problem focuses on maximizing the profit from selling nutrient pills.
+D. Duality does not inherently simplify the calculations. While solving the dual problem might offer computational advantages in some cases, it's not the primary purpose of duality.
+E. While the Strong Duality Theorem states that the optimal values of the primal and dual problems are equal, this is a consequence of duality, not its primary interpretation.  The alternative economic perspective is the key contribution of duality.
+
+
+QUESTION 5
+In the context of the Diet Problem (Slides 2-8), explain the economic interpretation of the dual problem's objective function and constraints.  Then, considering the primal (diet) problem and its dual (pill-selling) problem, explain the significance of the Weak Duality Theorem in this context. Finally, describe how the concept of duality provides an alternative interpretation of the Diet Problem and its solution.
+A. The dual objective function represents the maximum profit achievable by selling nutrient pills, while the constraints ensure that the cost of pills to replace the nutrients in each food is less than the food's cost. The Weak Duality Theorem states that the optimal cost of the diet is always less than or equal to the maximum profit from selling pills. Duality provides a complementary perspective, showing the relationship between the cheapest diet and the most profitable pill-selling strategy.
+B. The dual objective function represents the minimum cost of the diet, while the constraints ensure that the nutrient requirements are met. The Weak Duality Theorem states that the optimal cost of the diet is always greater than or equal to the maximum profit from selling pills. Duality offers no alternative interpretation; it simply provides a different mathematical formulation of the same problem.
+C. The dual objective function represents the minimum cost of the diet, and the constraints are irrelevant to the economic interpretation. The Weak Duality Theorem is not applicable in this context. Duality offers no additional insight into the Diet Problem.
+D. The dual objective function represents the maximum profit from selling foods, while the constraints ensure that the profit from each food is greater than its cost. The Weak Duality Theorem states that the optimal cost of the diet is always equal to the maximum profit from selling pills. Duality provides a completely unrelated problem with no connection to the Diet Problem.
+E. The dual objective function is meaningless in an economic context, and the constraints are arbitrary. The Weak Duality Theorem is irrelevant. Duality has no bearing on the Diet Problem.
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual problem in the Diet Problem context represents a "pill-selling" problem. The objective function, $\sum_i b_i y_i$, represents the maximum profit that can be obtained by selling pills that provide the necessary nutrients.  Each $y_i$ represents the price of a pill providing nutrient $i$, and $b_i$ is the minimum required amount of nutrient $i$. The constraints, $\sum_i y_i a_{ij} \le c_j$, ensure that the cost of the pills needed to replace the nutrients in food $j$ is less than or equal to the cost of food $j$ itself.  The Weak Duality Theorem states that the optimal value of the primal problem (minimum cost of the diet) is always less than or equal to the optimal value of the dual problem (maximum profit from selling pills). This theorem provides a valuable bound on the optimal solution of the primal problem.  Duality offers a powerful alternative interpretation: the minimum cost of a healthy diet is equal to the maximum profit that can be made by selling nutrient pills. This connection provides economic insight into the problem and its solution.
+B. This option incorrectly states that the dual objective function represents the minimum cost of the diet, which is the primal problem's objective.  It also misinterprets the Weak Duality Theorem.
+C. This option incorrectly states that the dual constraints are irrelevant and that the Weak Duality Theorem is inapplicable.  It completely misses the economic interpretation of the dual problem.
+D. This option incorrectly states that the dual objective function represents the maximum profit from selling foods and misinterprets the Weak Duality Theorem.
+E. This option incorrectly dismisses the economic significance of the dual problem and the relevance of the Weak Duality Theorem.
+
+
+QUESTION 6
+Consider the Diet Problem presented in Slides 2-8.  If we have 3 nutrients ($m=3$) and 2 foods ($n=2$), and the minimum required intake for each nutrient is $b = \begin{pmatrix} 10 \\ 15 \\ 20 \end{pmatrix}$, and the cost of each food is $c = \begin{pmatrix} 2 \\ 3 \end{pmatrix}$, what is the objective function of the primal problem (minimizing cost)? Assume the nutrient content matrix is $A = \begin{pmatrix} 1 & 2 \\ 3 & 1 \\ 2 & 3 \end{pmatrix}$
+A. Minimize $2x_1 + 3x_2$
+B. Minimize $10x_1 + 15x_2 + 20x_3$
+C. Maximize $10y_1 + 15y_2 + 20y_3$
+D. Minimize $x_1 + x_2$
+E. Maximize $2y_1 + 3y_2$
+
+ANSWER: A
+
+EXPLANATION:
+A. The primal problem aims to minimize the total cost of the foods.  The cost of food 1 is 2 per unit, and the cost of food 2 is 3 per unit.  Therefore, the objective function is to minimize $2x_1 + 3x_2$, where $x_1$ and $x_2$ represent the amounts of food 1 and food 2 consumed, respectively.
+B. This objective function uses the minimum nutrient intake values ($b_i$) instead of the food costs ($c_j$).  The primal problem minimizes cost, not nutrient intake.
+C. This is the objective function of the dual problem (maximizing profit from selling pills), not the primal problem.
+D. This objective function incorrectly sums the amounts of food consumed without considering their respective costs.
+E. This is the objective function of the dual problem, where $y_1$ and $y_2$ represent the prices of pills for nutrients.
+
+
+QUESTION 7
+In the context of the Diet Problem (Slides 2-8), what is the economic interpretation of the dual problem's objective function, $\sum_i b_i y_i$, where $b_i$ represents the minimum required intake of nutrient $i$ and $y_i$ is the unit price of a pill providing nutrient $i$?
+A. The total cost of the diet.
+B. The minimum profit from selling pills.
+C. The maximum profit from selling pills.
+D. The total amount of nutrients consumed.
+E. The minimum amount of nutrients required.
+
+ANSWER: C
+
+EXPLANATION:
+A. This is the interpretation of the primal problem's objective function.
+B. The dual problem aims to maximize profit, not minimize it.
+C. The dual problem's objective function represents the total revenue obtained from selling pills that provide the necessary nutrients.  Since $y_i$ is the price per unit of nutrient $i$ and $b_i$ is the minimum required amount of nutrient $i$, the sum $\sum_i b_i y_i$ represents the maximum profit achievable by selling these pills.
+D. This describes the total nutrient intake in the primal problem.
+E. This describes the minimum nutrient requirements, which are constraints in both the primal and dual problems.
+
+
+QUESTION 8
+Referring to Slide 7, if one unit of food $F_1$ contains $a_{11} = 1$ unit of $N_1$, $a_{21} = 3$ units of $N_2$, and $a_{31} = 2$ units of $N_3$, and the unit prices of pills for nutrients $N_1, N_2, N_3$ are $y_1 = 1, y_2 = 2, y_3 = 3$ respectively, what is the price/value of one unit of food $F_1$?
+A. 1
+B. 6
+C. 13
+D. 3
+E. 2
+
+ANSWER: C
+
+EXPLANATION:
+A. This is only the value of $y_1 a_{11}$
+B. This is incorrect calculation.
+C. The price/value of one unit of food $F_1$ is calculated as $\sum_i y_i a_{i1} = y_1 a_{11} + y_2 a_{21} + y_3 a_{31} = (1)(1) + (2)(3) + (3)(2) = 1 + 6 + 6 = 13$.
+D. This is only the value of $a_{21}$
+E. This is only the value of $a_{31}$
+
+
+QUESTION 9
+Given the dual problem from Slide 8: $\max \sum_i b_i y_i$ subject to $\sum_i y_i a_{ij} \le c_j$ and $y_i \ge 0$. If we have $b = \begin{pmatrix} 10 \\ 15 \\ 20 \end{pmatrix}$, $c = \begin{pmatrix} 2 \\ 3 \end{pmatrix}$, and $A = \begin{pmatrix} 1 & 2 \\ 3 & 1 \\ 2 & 3 \end{pmatrix}$, what is the objective function of the dual problem (maximizing profit)?
+A. Maximize $2y_1 + 3y_2$
+B. Maximize $10y_1 + 15y_2 + 20y_3$
+C. Minimize $10x_1 + 15x_2 + 20x_3$
+D. Maximize $y_1 + y_2 + y_3$
+E. Minimize $2x_1 + 3x_2$
+
+ANSWER: B
+
+EXPLANATION:
+A. This is the objective function of the primal problem.
+B. The objective function of the dual problem is to maximize the total profit from selling pills, which is given by $\sum_i b_i y_i = 10y_1 + 15y_2 + 20y_3$.
+C. This is the objective function of the primal problem.
+D. This incorrectly sums the dual variables without considering the minimum nutrient requirements.
+E. This is the objective function of the primal problem.
+
+
+QUESTION 10
+Write the dual problem (D) explicitly, substituting the given values of A, b, and c.
+A. $\min \quad \xi(y) = 5y_1 + 6y_2$ subject to $y_1 + 3y_2 \ge 2$, $2y_1 + y_2 \ge 3$, $y_1, y_2 \ge 0$
+B. $\min \quad \xi(y) = 6y_1 + 5y_2$ subject to $y_1 + 3y_2 \ge 3$, $2y_1 + y_2 \ge 2$, $y_1, y_2 \ge 0$
+C. $\max \quad \xi(y) = 5y_1 + 6y_2$ subject to $y_1 + 3y_2 \ge 2$, $2y_1 + y_2 \ge 3$, $y_1, y_2 \ge 0$
+D. $\max \quad \xi(y) = 6y_1 + 5y_2$ subject to $y_1 + 3y_2 \ge 3$, $2y_1 + y_2 \ge 2$, $y_1, y_2 \ge 0$
+E. $\min \quad \xi(y) = 5y_1 + 6y_2$ subject to $y_1 + 3y_2 \le 2$, $2y_1 + y_2 \le 3$, $y_1, y_2 \ge 0$
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual problem is correctly formulated by substituting the given values into the general dual problem form. The objective function is $\min \xi(y) = b^T y = \begin{pmatrix} 5 & 6 \end{pmatrix} \begin{pmatrix} y_1 \\ y_2 \end{pmatrix} = 5y_1 + 6y_2$. The constraints are derived from $A^T y \ge c$, which gives $\begin{pmatrix} 1 & 3 \\ 2 & 1 \end{pmatrix} \begin{pmatrix} y_1 \\ y_2 \end{pmatrix} \ge \begin{pmatrix} 2 \\ 3 \end{pmatrix}$, resulting in $y_1 + 3y_2 \ge 2$ and $2y_1 + y_2 \ge 3$.  The non-negativity constraints $y_1, y_2 \ge 0$ are also included.
+B. This option incorrectly swaps the components of vector $b$ in the objective function.
+C. This option incorrectly uses maximization instead of minimization for the dual problem.
+D. This option incorrectly swaps the components of vector $b$ in the objective function and uses maximization instead of minimization.
+E. This option incorrectly uses $\le$ instead of $\ge$ in the constraints.
+
+

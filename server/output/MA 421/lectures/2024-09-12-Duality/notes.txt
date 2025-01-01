@@ -1,0 +1,534 @@
+SLIDE 1
+<LATEX>
+\underline{\text{Primal and Dual Problems}}
+
+(P) \quad \max \quad \xi(x) = c^T x \\
+\text{subject to} \quad Ax \leq b \\
+\quad x \geq 0
+
+(D) \quad \min \quad \xi(y) = b^T y \\
+\text{subject to} \quad A^T y \geq c \\
+\quad y \geq 0
+\iff
+\quad \max \quad \overline{\xi}(y) = -b^T y \\
+\text{subject to} \quad (-A)^T y \leq -c \\
+\quad y \geq 0
+</LATEX>
+
+<FIGURE [100.0, 100.0, 250.0, 450.0]>(P) Primal problem definition</FIGURE>
+<FIGURE [300.0, 100.0, 450.0, 450.0]>(D) Dual problem definition</FIGURE>
+<FIGURE [450.0, 450.0, 600.0, 600.0]>Equivalence arrow between dual problem formulations</FIGURE>
+<FIGURE [450.0, 450.0, 600.0, 750.0]>(D) Alternative dual problem formulation</FIGURE>
+
+<DESCRIPTION>Slide 1 of 24 introduces the primal and dual problems in linear programming.  The primal problem (P) is a maximization problem: maximize $\xi(x) = c^T x$ subject to $Ax \leq b$ and $x \geq 0$. The dual problem (D) is a minimization problem: minimize $\xi(y) = b^T y$ subject to $A^T y \geq c$ and $y \geq 0$.  The slide also shows an equivalent formulation of the dual problem, maximizing $\overline{\xi}(y) = -b^T y$ subject to $(-A)^T y \leq -c$ and $y \geq 0$. The double-headed arrow indicates the equivalence between the two forms of the dual problem. The notation is standard in linear programming: $x$ and $y$ are vectors of variables, $A$ is the constraint matrix, $b$ and $c$ are vectors of constants. The context of the course (Linear Programming) is crucial for understanding the relationship between primal and dual problems and their applications in optimization.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\underline{\text{Primal and Dual Problems}}
+
+(P) \quad \max \quad \xi(x) = c^T x \approx \sum_j c_j x_j \\
+\text{subject to} \quad Ax \leq b \\
+\quad x \geq 0
+
+\sum_i y_i \left( \sum_j a_{ij} x_j \leq b_i \right), \quad y_i \geq 0 \\
+\sum_j \left( \sum_i a_{ij} y_i \right) x_j \leq \sum_i b_i y_i \\
+c_j \leq \underbrace{\sum_i a_{ij} y_i}_{\text{Dual Constraint}}
+
+\text{Thm 5.1 | Weak Duality} \\
+\xi(x) = \sum_j c_j x_j \leq \sum_i b_i y_i = \xi(y)
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>(P) Primal problem definition</FIGURE>
+<FIGURE [100.0, 400.0, 400.0, 700.0]>Derivation of weak duality</FIGURE>
+<FIGURE [400.0, 100.0, 700.0, 700.0]>Statement of Theorem 5.1 (Weak Duality)</FIGURE>
+
+<DESCRIPTION>Slide 2 of 24 in a Linear Programming course introduces the primal problem (P) and derives the weak duality theorem. The primal problem is defined as maximizing $\xi(x) = c^T x$ subject to $Ax \le b$ and $x \ge 0$.  The slide then shows a derivation of weak duality. It starts by multiplying each constraint in the primal problem by a non-negative dual variable $y_i$ and summing over all constraints.  After rearranging the terms, it arrives at the inequality $\sum_j (\sum_i a_{ij} y_i) x_j \le \sum_i b_i y_i$.  The slide highlights that for weak duality to hold, the dual constraint $\sum_i a_{ij} y_i \ge c_j$ must be satisfied. Finally, the slide states Theorem 5.1 (Weak Duality): $\xi(x) \le \xi(y)$, meaning the objective function value of any feasible solution to the primal problem is less than or equal to the objective function value of any feasible solution to the dual problem.  The approximation symbol ($\approx$) indicates that the objective function is expressed in both vector and summation notation. The underlining and highlighting emphasize key steps and conclusions in the derivation and statement of the theorem. The context of the course is crucial for understanding the significance of weak duality in linear programming.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+\underline{\text{Matrix Representations}}
+
+(P) \quad \max \quad \xi(x) = \xi_0 + c^T x \\
+\quad W = b - Ax \geq 0 \\
+\quad x \geq 0
+
+\begin{pmatrix} w_1 \\ w_2 \\ \vdots \\ w_m \end{pmatrix}
+
+(D) \quad \max \quad -\xi(y) = -\xi_0 - b^T y \\
+\quad Z = -c + A^T y \geq 0 \\
+\quad y \geq 0
+
+\begin{pmatrix} z_1 \\ z_2 \\ \vdots \\ z_n \end{pmatrix}
+
+\begin{array}{|c|cccc|}
+\hline
+\xi_0 & c_1 & c_2 & \cdots & c_n \\
+\hline
+b_1 & -a_{11} & -a_{12} & \cdots & -a_{1n} \\
+b_2 & -a_{21} & -a_{22} & \cdots & -a_{2n} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+b_m & -a_{m1} & -a_{m2} & \cdots & -a_{mn} \\
+\hline
+\end{array}
+
+\begin{array}{|c|cccc|}
+\hline
+\xi_0 & -b_1 & -b_2 & \cdots & -b_m \\
+\hline
+-c_1 & a_{11} & a_{21} & \cdots & a_{m1} \\
+-c_2 & a_{12} & a_{22} & \cdots & a_{m2} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+-c_n & a_{1n} & a_{2n} & \cdots & a_{mn} \\
+\hline
+\end{array}
+</LATEX>
+
+<FIGURE [200.0, 450.0, 450.0, 700.0]>Matrix representation of the primal problem.</FIGURE>
+<FIGURE [200.0, 700.0, 450.0, 950.0]>Matrix representation of the dual problem.</FIGURE>
+<FIGURE [50.0, 50.0, 200.0, 200.0]>Vector of slack variables for the primal problem.</FIGURE>
+<FIGURE [50.0, 550.0, 200.0, 700.0]>Vector of slack variables for the dual problem.</FIGURE>
+
+<DESCRIPTION>Slide 3 of 24 presents matrix representations of the primal and dual linear programming problems. The primal problem (P) is written as: maximize $\xi(x) = \xi_0 + c^Tx$ subject to $b - Ax \ge 0$ and $x \ge 0$, where $\xi_0$ is a constant.  The dual problem (D) is written as: maximize $-\xi(y) = -\xi_0 - b^Ty$ subject to $-c + A^Ty \ge 0$ and $y \ge 0$.  The slide also shows two tableaux representing the primal and dual problems in matrix form. The top tableau represents the primal problem, with the objective function coefficients ($c_i$) and the constraint coefficients ($-a_{ij}$) and the right-hand side ($b_i$). The bottom tableau represents the dual problem, with the objective function coefficients ($-b_i$) and the constraint coefficients ($a_{ji}$) and the right-hand side ($-c_i$). The vectors $W$ and $Z$ represent the slack variables for the primal and dual problems, respectively.  The notation is standard in linear programming, with $x$ and $y$ representing the primal and dual variables, $A$ the constraint matrix, $b$ and $c$ vectors of constants, and $\xi_0$ a constant term in the objective function. The context of the course (Linear Programming) is crucial for understanding the relationship between the primal and dual problems and their matrix representations.</DESCRIPTION>
+
+SLIDE 4
+<LATEX>
+\underline{\text{Matrix Representations}}
+
+(P) \quad \max \quad \xi(x) = \xi_0 + c^T x \\
+\quad W = b - Ax \geq 0 \\
+\quad x \geq 0
+
+\begin{pmatrix} w_1 \\ w_2 \\ \vdots \\ w_m \end{pmatrix}
+
+(D) \quad \max \quad -\xi(y) = -\xi_0 - b^T y \\
+\quad Z = -c + A^T y \geq 0 \\
+\quad y \geq 0
+
+\begin{pmatrix} z_1 \\ z_2 \\ \vdots \\ z_n \end{pmatrix}
+
+\begin{array}{|c|cccc|}
+\hline
+\xi_0 & c^T \\
+\hline
+b & -A \\
+\hline
+\end{array}
+
+\begin{array}{|c|cccc|}
+\hline
+-\xi_0 & -b^T \\
+\hline
+-c & A^T \\
+\hline
+\end{array}
+</LATEX>
+
+<FIGURE [100.0, 50.0, 250.0, 200.0]>(P) Primal problem definition and slack variable vector</FIGURE>
+<FIGURE [300.0, 50.0, 450.0, 200.0]>(D) Dual problem definition and slack variable vector</FIGURE>
+<FIGURE [200.0, 250.0, 450.0, 450.0]>Matrix representation of the primal problem</FIGURE>
+<FIGURE [200.0, 450.0, 450.0, 650.0]>Matrix representation of the dual problem</FIGURE>
+
+<DESCRIPTION>Slide 4 of 24 in a Linear Programming course presents matrix representations of the primal and dual linear programming problems. The primal problem (P) is written as: maximize $\xi(x) = \xi_0 + c^Tx$ subject to $b - Ax \ge 0$ and $x \ge 0$, where $\xi_0$ is a constant. The dual problem (D) is written as: maximize $-\xi(y) = -\xi_0 - b^Ty$ subject to $-c + A^Ty \ge 0$ and $y \ge 0$. The slide then shows two tableaux representing the primal and dual problems in matrix form. The top tableau represents the primal problem, with the objective function coefficients ($c^T$) and the constraint coefficients ($-A$) and the right-hand side ($b$). The bottom tableau represents the dual problem, with the objective function coefficients ($-b^T$) and the constraint coefficients ($A^T$) and the right-hand side ($-c$). The vectors $W$ and $Z$ represent the slack variables for the primal and dual problems, respectively. The notation is standard in linear programming, with $x$ and $y$ representing the primal and dual variables, $A$ the constraint matrix, $b$ and $c$ vectors of constants, and $\xi_0$ a constant term in the objective function.  The handwritten note "negative transpose" clarifies the relationship between the matrices in the primal and dual problem formulations. The context of the course (Linear Programming) is crucial for understanding the relationship between the primal and dual problems and their matrix representations.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\underline{\text{Complementary Variables}}
+
+$(x_1, x_2, \dots, x_n, w_1, w_2, \dots, w_m)$
+$y_i \sim w_i \qquad x_j \sim z_j$
+$(y_1, y_2, \dots, y_m, z_1, z_2, \dots, z_n)$
+
+(P) \quad $x_j$ enter (leaves), $w_i$ enter (leaves)
+
+$\Updownarrow$
+
+(D) \quad $z_j$ leave (enters), $y_i$ leave (enters)
+</LATEX>
+
+<FIGURE [100.0, 50.0, 200.0, 450.0]>(x1, x2,...,xn, w1, w2,...,wm) and (y1, y2,...,ym, z1, z2,...,zn)</FIGURE>
+<FIGURE [100.0, 450.0, 200.0, 750.0]>(P) and (D) with their corresponding variable changes</FIGURE>
+<FIGURE [200.0, 200.0, 300.0, 400.0]>Complementary relationship between yi and wi, xj and zj</FIGURE>
+<FIGURE [200.0, 400.0, 300.0, 700.0]>Relationship between primal and dual variable changes</FIGURE>
+
+<DESCRIPTION>Slide 5 of 24 in a Linear Programming course discusses complementary variables. The slide introduces two sets of variables: $(x_1, x_2, \dots, x_n, w_1, w_2, \dots, w_m)$ representing primal variables and slack variables, and $(y_1, y_2, \dots, y_m, z_1, z_2, \dots, z_n)$ representing dual variables and slack variables.  A key concept is the complementary relationship between primal and dual slack variables: $y_i \sim w_i$ and $x_j \sim z_j$, indicating that when one variable is non-zero, the other is zero. The slide then shows how these variables behave in the primal (P) and dual (D) problems during the simplex method. In the primal problem, if a primal variable $x_j$ enters the basis, the corresponding dual slack variable $z_j$ leaves the basis, and vice-versa. Similarly, if a primal slack variable $w_i$ enters the basis, the corresponding dual variable $y_i$ leaves the basis, and vice-versa. The double arrow ($\Updownarrow$) indicates the complementary relationship between the changes in the primal and dual problems. The context of the course is crucial for understanding the complementary slackness theorem and its implications for solving linear programming problems using the simplex method.</DESCRIPTION>
+
+SLIDE 6
+<LATEX>
+\underline{\text{Neg. Transpose Property is Preserved}} \\
+\underline{\text{in each Simplex Step}} \\
+\text{[V] p.64}
+
+\begin{array}{c|c}
+\text{(P)} & \xi = +4x_1 + 1x_2 + 3x_3 \\
+\hline
+ & w_1 = 1 - x_1 - 4x_2 \\
+ & w_2 = 3 - 3x_1 + x_2 - x_3
+\end{array}
+
+\begin{array}{c|c}
+\text{(D)} & -\xi = -1y_1 - 3y_2 \\
+\hline
+ & z_1 = -4 + y_1 + 3y_2 \\
+ & z_2 = -1 + 4y_1 - y_2 \\
+ & z_3 = -3 + y_2
+\end{array}
+
+x_3 \text{ enters, } w_2 \text{ leaves} \\
+\text{(greatest increase rule)}
+
+\curvearrowright
+
+\text{neg. transpose}
+
+z_3 \text{ leaves, } y_2 \text{ enters}
+</LATEX>
+
+<FIGURE [100.0, 150.0, 250.0, 350.0]>(P) Primal problem tableau</FIGURE>
+<FIGURE [100.0, 400.0, 250.0, 500.0]>(D) Dual problem tableau</FIGURE>
+<FIGURE [300.0, 300.0, 400.0, 400.0]>Curved arrow indicating negative transpose relationship</FIGURE>
+
+<DESCRIPTION>Slide 6 of 24 in a Linear Programming course demonstrates the negative transpose property.  Two tableaux are presented, one for the primal problem (P) and one for the dual problem (D).  The primal problem is: maximize $\xi = 4x_1 + x_2 + 3x_3$ subject to $1 - x_1 - 4x_2 \ge 0$ and $3 - 3x_1 + x_2 - x_3 \ge 0$, and $x_i \ge 0$. The dual problem is: maximize $-\xi = -y_1 - 3y_2$ subject to $-4 + y_1 + 3y_2 \ge 0$, $-1 + 4y_1 - y_2 \ge 0$, $-3 + y_2 \ge 0$, and $y_i \ge 0$. The slide highlights that the negative transpose of the primal problem's matrix is the dual problem's matrix.  The text "[V] p.64" likely refers to a page number in a textbook. The annotations show a simplex iteration: $x_3$ enters the basis in the primal problem (based on the greatest increase rule), and consequently, $w_2$ leaves.  The dual problem shows the complementary change: $z_3$ leaves the basis, and $y_2$ enters.  The curved arrow emphasizes the negative transpose relationship between the primal and dual simplex iterations.  The context of the course is crucial for understanding the duality theorem and its implications for solving linear programming problems efficiently.</DESCRIPTION>
+
+SLIDE 7
+<LATEX>
+\underline{\text{Neg. Transpose Property is Preserved}} \\
+\underline{\text{in each Simplex Step}} \\
+\text{[V] p.64}
+
+\begin{array}{c|cccc}
+\text{(P)} & & & & \\
+\zeta = & 9 & -5 & x_1 & +4x_2 - 3x_3 \\
+\hline
+w_1 = & 1 & -1 & x_1 & -4x_2 \\
+x_3 = & 3 & -3 & x_1 & +x_2
+\end{array}
+
+\begin{array}{c|cccc}
+\text{(D)} & & & & \\
+-\zeta = & -9 & -1y_1 & -3y_2 & -3x_3 \\
+\hline
+z_1 = & 5 & +y_1 & +3y_2 & \\
+z_2 = & -4 & +4y_1 & -y_2 & \\
+y_2 = & 3 & & + &
+\end{array}
+
+x_2 \text{ enters, } w_1 \text{ leaves}
+
+\curvearrowright
+
+\text{neg. transpose}
+
+z_2 \text{ leaves, } y_1 \text{ enters}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 200.0, 300.0]>(P) Primal problem tableau</FIGURE>
+<FIGURE [100.0, 350.0, 200.0, 550.0]>(D) Dual problem tableau</FIGURE>
+<FIGURE [250.0, 250.0, 350.0, 400.0]>Curved arrow indicating negative transpose relationship</FIGURE>
+
+<DESCRIPTION>Slide 7 of 24 in a Linear Programming course continues to illustrate the negative transpose property preserved in each simplex step.  Two tableaux are shown, one for the primal problem (P) and one for the dual problem (D). The primal problem is a maximization problem with objective function $\zeta = 9 - 5x_1 + 4x_2 - 3x_3$ and constraints $1 - x_1 - 4x_2 \ge 0$ and $3 - 3x_1 + x_2 - x_3 \ge 0$. The dual problem is a maximization problem with objective function $-\zeta = -9 - y_1 - 3y_2 - 3x_3$ and constraints $5 + y_1 + 3y_2 \ge 0$, $-4 + 4y_1 - y_2 \ge 0$, and $3 + y_2 \ge 0$.  The slide demonstrates a simplex iteration: in the primal problem, $x_2$ enters the basis, and $w_1$ leaves. The dual problem shows the complementary change: $z_2$ leaves the basis, and $y_1$ enters. The curved arrow emphasizes the negative transpose relationship between the primal and dual simplex iterations. The reference "[V] p.64" likely points to a page in a textbook. The numbers "2" next to (P) and (D) might indicate a problem number or iteration number. The context of the course is crucial for understanding the duality theorem and its implications for efficient solution of linear programming problems.</DESCRIPTION>
+
+SLIDE 8
+<LATEX>
+\underline{\text{Neg. Transpose Property is Preserved}} \\
+\underline{\text{in each Simplex Step}} \\
+\text{[V] p.64}
+
+\begin{array}{c|cccc}
+\text{(P)} & & & & \\
+\zeta = & 10 & -6 & x_1 & \\
+\hline
+x_2 = & 0.25 & -0.25 & x_1 & -0.25 w_1 \\
+x_3 = & 3.25 & -3.25 & x_1 & -0.25 w_1 - w_2
+\end{array}
+
+\begin{array}{c|cccc}
+\text{(D)} & & & & \\
+-\zeta = & -10 & -0.25 z_2 & -3.25 z_3 & \\
+\hline
+z_1 = & 6 & +0.25 z_2 & +3.25 z_3 & \\
+y_1 = & 1 & +0.25 z_2 & +0.25 z_3 & \\
+y_2 = & 3 & & +1 z_3 &
+\end{array}
+
+\end{array}
+\xrightarrow{\text{Optimal for (P)}}
+\curvearrowright
+\text{neg. transpose}
+\xleftarrow{\text{Optimal for (D)}}
+
+\text{Optimal values for } y_1, y_2 \quad (z_2, z_3 = 0, \quad y_1 = 1, y_2 = 3, z_1 = 0)
+</LATEX>
+
+<FIGURE [100.0, 200.0, 200.0, 400.0]>(P) Primal problem tableau</FIGURE>
+<FIGURE [100.0, 450.0, 200.0, 650.0]>(D) Dual problem tableau</FIGURE>
+<FIGURE [250.0, 250.0, 350.0, 400.0]>Curved arrow indicating negative transpose relationship</FIGURE>
+<FIGURE [250.0, 600.0, 350.0, 750.0]>Optimal values for y1, y2</FIGURE>
+
+<DESCRIPTION>Slide 8 of 24 in a Linear Programming course illustrates the negative transpose property and its connection to optimality in primal and dual problems.  Two tableaux are presented, one for the primal problem (P) and one for the dual problem (D). The primal problem is a maximization problem with objective function $\zeta = 10 - 6x_1$ and constraints $0.25 - 0.25x_1 - 0.25w_1 \ge 0$ and $3.25 - 3.25x_1 - 0.25w_1 - w_2 \ge 0$. The dual problem is a minimization problem with objective function $-\zeta = -10 - 0.25z_2 - 3.25z_3$ and constraints $6 + 0.25z_2 + 3.25z_3 \ge 0$, $1 + 0.25z_2 + 0.25z_3 \ge 0$, and $3 + z_3 \ge 0$. The slide shows that when the primal problem reaches its optimal solution (indicated by the arrow), the dual problem also reaches its optimal solution (indicated by the arrow). The curved arrow emphasizes the negative transpose relationship between the primal and dual problems. The optimal values for the dual variables $y_1$ and $y_2$ are given as $y_1 = 1$ and $y_2 = 3$, with $z_2 = z_3 = 0$ and $z_1 = 0$. The reference "[V] p.64" likely points to a page in a textbook. The context of the course is crucial for understanding the duality theorem and its implications for solving linear programming problems efficiently.  The highlighted values in the tableaux likely represent the optimal solution.</DESCRIPTION>
+
+SLIDE 9
+<LATEX>
+\underline{\text{Neg. Transpose Property is Preserved}} \\
+\underline{\text{in each Simplex Step}} \\
+\text{at Optimal:}
+
+\begin{array}{|c|cccc|}
+\hline
+\xi^* & c_1^* & c_2^* & \cdots & c_n^* \\
+\hline
+b_1^* & -a_{11}^* & -a_{12}^* & \cdots & -a_{1n}^* \\
+b_2^* &  &  &  &  \\
+\vdots &  & -a_{ij}^* &  &  \\
+b_m^* & -a_{m1}^* & -a_{m2}^* & \cdots & -a_{mn}^* \\
+\hline
+\end{array}
+
+b_i^* \ge 0 \quad \xrightarrow{\text{ }} \quad c_j^* \le 0
+</LATEX>
+
+<FIGURE [150.0, 100.0, 450.0, 450.0]>Tableau representing the primal problem at optimality.</FIGURE>
+
+<DESCRIPTION>Slide 9 of 24 in a Linear Programming course shows a tableau representing the primal problem (P) at its optimal solution. The tableau displays the optimal objective function value $\xi^*$ and the optimal values of the basic variables $b_i^*$. The coefficients $c_j^*$ represent the reduced costs of the non-basic variables. The entries $-a_{ij}^*$ are the coefficients of the constraints in the optimal tableau. The conditions $b_i^* \ge 0$ and $c_j^* \le 0$ are necessary for optimality in a primal simplex method. The slide emphasizes that the negative transpose property is preserved even at the optimal solution. The arrow indicates that the non-negativity of the $b_i^*$ implies the non-positivity of the $c_j^*$. The asterisk (*) superscript indicates optimal values. The context of the course is crucial for understanding the duality theorem and its implications for solving linear programming problems efficiently.</DESCRIPTION>
+
+SLIDE 10
+<LATEX>
+\underline{\text{Neg. Transpose Property is Preserved}} \\
+\underline{\text{in each Simplex Step}} \\
+\text{at Optimal:}
+
+\begin{array}{|c|cccc|}
+\hline
+-\zeta^* & -b_1^* & -b_2^* & \cdots & -b_m^* \\
+\hline
+-c_1^* & a_{11}^* & a_{12}^* & \cdots & a_{1m}^* \\
+-c_2^* & a_{21}^* & a_{22}^* & \cdots & a_{2m}^* \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+-c_n^* & a_{n1}^* & a_{n2}^* & \cdots & a_{nm}^* \\
+\hline
+\end{array}
+
+-b_i^* \le 0 \quad \xrightarrow{\text{ }} \quad -c_j^* \ge 0
+\end{array}
+\text{Strong Duality}
+</LATEX>
+
+<FIGURE [100.0, 200.0, 400.0, 500.0]>Tableau representing the dual problem at optimality.</FIGURE>
+
+<DESCRIPTION>Slide 10 of 24 in a Linear Programming course shows a tableau representing the dual problem (D) at its optimal solution.  The tableau displays the optimal objective function value $-\zeta^*$ and the optimal values of the dual slack variables $-b_i^*$. The coefficients $-c_j^*$ represent the negative of the reduced costs of the dual variables. The entries $a_{ij}^*$ are the coefficients of the constraints in the optimal dual tableau. The conditions $-b_i^* \le 0$ and $-c_j^* \ge 0$ are necessary for optimality in a dual simplex method. The slide emphasizes that the negative transpose property is preserved even at the optimal solution. The arrow indicates that the non-positivity of the $-b_i^*$ implies the non-negativity of the $-c_j^*$. The asterisk (*) superscript indicates optimal values. The text "Strong Duality" is written next to an arrow pointing to the $-\zeta^*$ entry, highlighting the connection between the optimal values of the primal and dual problems. The context of the course is crucial for understanding the duality theorem and its implications for solving linear programming problems efficiently.  The tableau shown is the dual tableau, not the primal tableau as in slide 9.</DESCRIPTION>
+
+SLIDE 11
+<LATEX>
+\underline{\text{Strong Duality Theorem}} \\
+\text{If (P) has an optimal solution } (x_j^*) \\
+\text{then (D) also has an optimal solution } (y_i^*) \\
+\text{and} \\
+(\zeta^* = ) \sum_j c_j x_j^* = \sum_i b_i y_i^* ( = \zeta^*) \\
+\underline{\text{i.e. duality gap = 0}} \\
+\text{(The proof gives a formula for } y_i^*)
+</LATEX>
+
+<FIGURE [50.0, 50.0, 400.0, 450.0]>Statement of the Strong Duality Theorem.</FIGURE>
+
+<DESCRIPTION>Slide 11 of 24 in a Linear Programming course states the Strong Duality Theorem.  The theorem asserts that if a primal linear programming problem (P) has an optimal solution $x_j^*$, then its corresponding dual problem (D) also has an optimal solution $y_i^*$.  Furthermore, the optimal objective function values of both problems are equal; that is, $\sum_j c_j x_j^* = \sum_i b_i y_i^* = \zeta^*$, where $\zeta^*$ represents the optimal objective function value. This equality is also referred to as the duality gap being zero. The slide notes that the proof of the theorem provides a method for calculating the optimal dual solution $y_i^*$ given the optimal primal solution $x_j^*$. The underlining highlights the key components of the theorem. The context of the course is crucial for understanding the relationship between primal and dual linear programming problems and the implications of strong duality for solving these problems efficiently.</DESCRIPTION>
+
+SLIDE 12
+<LATEX>
+\underline{\text{Strong Duality Theorem}} \\
+\text{Pf} \quad (\mathcal{N} : \text{ non-basic vars}) \\
+\quad (\mathcal{B} : \text{ basic vars}) \\
+\textcircled{0} \quad \zeta = \sum_{j \in \mathcal{N}} c_j x_j + \sum_{i \in \mathcal{B}} 0 \cdot w_i \quad \text{(original formulation)}
+</LATEX>
+
+<FIGURE [100.0, 50.0, 400.0, 700.0]>Statement of the Strong Duality Theorem and its proof setup.</FIGURE>
+
+<DESCRIPTION>Slide 12 of 24 in a Linear Programming course presents the Strong Duality Theorem and initiates its proof. The theorem's statement is underlined. The proof begins by defining $\mathcal{N}$ as the set of indices for non-basic variables and $\mathcal{B}$ as the set of indices for basic variables. The objective function $\zeta$ is expressed as a sum of terms involving non-basic variables ($x_j$) and basic variables ($w_i$). The coefficients $c_j$ are associated with the non-basic variables, while the basic variables have coefficients of 0. The notation \textcircled{0} highlights the initial formulation of the objective function. The parenthetical "(original formulation)" clarifies that this is the starting point of the proof. The context of the course is crucial for understanding the duality theorem and its proof within the framework of linear programming.</DESCRIPTION>
+
+SLIDE 13
+<LATEX>
+\underline{\text{Strong Duality Theorem}} \\
+Pf \quad \textcircled{2} \quad \text{at (P)'s optimal} \\
+\zeta = \zeta^* + \sum_j \bar{c}_j \bar{x}_j + \sum_i 0 \cdot \bar{w}_i \\
+\quad (\bar{x}_1, \bar{x}_2, \dots, \bar{x}_n, \bar{w}_1, \dots, \bar{w}_m) \\
+= \zeta^* + \sum_j \bar{c}_j^* \bar{x}_j + \sum_i \bar{d}_i^* \bar{w}_i \\
+\quad (\bar{c}_j^* \le 0) \quad (\bar{d}_i^* \le 0) \\
+= \zeta^* + \sum_j \bar{c}_j^* \bar{x}_j + \sum_i \bar{d}_i^* (b_i - \sum_j a_{ij} \bar{x}_j)
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Proof of the Strong Duality Theorem.</FIGURE>
+
+<DESCRIPTION>Slide 13 of 24 in a Linear Programming course presents the proof of the Strong Duality Theorem. The proof starts at the optimal solution of the primal problem (P). The objective function $\zeta$ is expressed in terms of the optimal objective function value $\zeta^*$, reduced costs $\bar{c}_j$, non-basic variables $\bar{x}_j$, and slack variables $\bar{w}_i$.  The notation $\bar{x}_j$ and $\bar{w}_i$ indicates values at the optimal solution. The second line simplifies the expression by substituting the optimal reduced costs $\bar{c}_j^*$ and dual slack variables $\bar{d}_i^*$. The conditions $\bar{c}_j^* \le 0$ and $\bar{d}_i^* \le 0$ are noted, indicating that the reduced costs and dual slacks are non-positive at optimality. The third line substitutes the expression for the slack variables $\bar{w}_i$ in terms of the primal variables $\bar{x}_j$ and the constraint coefficients $a_{ij}$ and $b_i$. The circled "2" likely indicates a step in a multi-step proof. The red arrows indicate the flow of the argument. The context of the course is crucial for understanding the proof's steps and the implications of strong duality for linear programming.</DESCRIPTION>
+
+SLIDE 14
+<LATEX>
+\underline{\text{Strong Duality Theorem}} \\
+Pf \quad \textcircled{2} \quad \text{at (P)'s optimal} \\
+\zeta = \zeta^* + \sum_j c_j^* x_j + \sum_i d_i^* (b_i - \sum_j a_{ij} x_j) \\
+= \left( \zeta^* + \sum_i d_i^* b_i \right) \\
++ \sum_j \left( c_j^* - \sum_i a_{ij} d_i^* \right) x_j
+</LATEX>
+
+<FIGURE [50.0, 50.0, 400.0, 450.0]>Proof of the Strong Duality Theorem.</FIGURE>
+
+<DESCRIPTION>Slide 14 of 24 in a Linear Programming course continues the proof of the Strong Duality Theorem, picking up from the previous slide.  The proof is at step (2), evaluating at the primal problem (P)'s optimal solution. The objective function $\zeta$ is expressed as a sum involving the optimal objective function value $\zeta^*$, optimal dual variables $d_i^*$, primal variables $x_j$, and constraint coefficients $a_{ij}$ and $b_i$. The equation is then rearranged to group terms, highlighting the optimal dual objective function value ($\zeta^* + \sum_i d_i^* b_i$) and the terms involving the primal variables $x_j$ and their associated coefficients ($c_j^* - \sum_i a_{ij} d_i^*$). The circled "2" indicates this is the second step in the proof. The context of the course is crucial for understanding the manipulations of the objective function and the derivation of the dual solution within the proof of the strong duality theorem.</DESCRIPTION>
+
+SLIDE 15
+<LATEX>
+\underline{\text{Strong Duality Theorem}} \\
+Pf \quad \text{Compare } \textcircled{1} \text{ and } \textcircled{2} \\
+\underline{\text{Const term:}} \quad 0 = \zeta^* + \sum_i d_i^* b_i \\
+\underline{x_j:} \quad c_j = c_j^* - \sum_i a_{ij} d_i^* \\
+\text{Let } \underline{y_i^* = -d_i^* \quad (\ge 0)}. \quad \text{Then} \\
+\boxed{\zeta^* = \sum_i b_i y_i^*}
+</LATEX>
+
+<FIGURE [100.0, 50.0, 400.0, 700.0]>Proof of the Strong Duality Theorem.</FIGURE>
+
+<DESCRIPTION>Slide 15 of 24 in a Linear Programming course continues the proof of the Strong Duality Theorem.  The proof compares two previously derived equations (labeled \textcircled{1} and \textcircled{2} on the previous slides). The constant term of the objective function is shown to be equal to $0 = \zeta^* + \sum_i d_i^* b_i$, where $\zeta^*$ is the optimal objective function value and $d_i^*$ are the optimal dual slack variables. The coefficients of the non-basic variables $x_j$ are given by $c_j = c_j^* - \sum_i a_{ij} d_i^*$, where $c_j$ are the original objective function coefficients, $c_j^*$ are the reduced costs, and $a_{ij}$ are the constraint coefficients.  A new variable $y_i^*$ is defined as $y_i^* = -d_i^*$, with the constraint $y_i^* \ge 0$. Finally, the optimal objective function value is expressed as $\zeta^* = \sum_i b_i y_i^*$, where $b_i$ are the right-hand side constants of the primal constraints. The underlining highlights key equations and definitions. The boxed equation is a crucial result derived from comparing the two equations. The context of the course is essential for understanding the notation and the steps involved in proving strong duality.</DESCRIPTION>
+
+SLIDE 16
+<LATEX>
+\underline{\text{Strong Duality Theorem}} \\
+Pf \quad \text{Compare } \textcircled{1} \text{ and } \textcircled{2} \\
+\underline{\text{Const term:}} \quad 0 = \zeta^* + \sum_i d_i^* b_i \\
+\underline{x_j:} \quad c_j = c_j^* - \sum_i a_{ij} d_i^* \\
+c_j = c_j^* + \sum_i a_{ij} y_i^* \le \sum_i a_{ij} y_i^* \\
+(c_j^* \le 0)
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Proof of the Strong Duality Theorem.</FIGURE>
+
+<DESCRIPTION>Slide 16 of 24 in a Linear Programming course continues the proof of the Strong Duality Theorem. It compares two previously derived equations (labeled \textcircled{1} and \textcircled{2} on previous slides). The constant term of the objective function is shown to be $0 = \zeta^* + \sum_i d_i^* b_i$, where $\zeta^*$ is the optimal objective function value and $d_i^*$ are the optimal dual slack variables. The coefficients of the primal variables $x_j$ are given by $c_j = c_j^* - \sum_i a_{ij} d_i^*$, where $c_j$ are the original objective function coefficients, $c_j^*$ are the reduced costs, and $a_{ij}$ are the constraint coefficients.  A further inequality is derived: $c_j = c_j^* + \sum_i a_{ij} y_i^* \le \sum_i a_{ij} y_i^*$, where $y_i^* = -d_i^*$. The condition $c_j^* \le 0$ is noted.  The underlining highlights key equations and the boxed inequality is a crucial result derived from comparing the two equations and substituting $y_i^* = -d_i^*$. The context of the course is essential for understanding the notation and the steps involved in proving strong duality.</DESCRIPTION>
+
+SLIDE 17
+<LATEX>
+\underline{\text{Strong Duality Theorem}} \\
+Pf \quad \text{Hence there exists an } y^* \text{ s.t.} \\
+\boxed{\zeta^* = \zeta(x^*) = \xi(y^*)} \\
+\leftarrow \text{This must be opt. for (D)} \\
+\text{(By Weak Duality,} \\
+\zeta(x^*) \le \xi(y^*))
+</LATEX>
+
+<FIGURE [100.0, 100.0, 250.0, 400.0]>Equation showing strong duality.</FIGURE>
+
+<DESCRIPTION>Slide 17 of 24 in a Linear Programming course presents a step in the proof of the Strong Duality Theorem.  The proof asserts the existence of an optimal dual solution $y^*$ such that the optimal objective function value of the primal problem, $\zeta^*$, is equal to the optimal objective function value of the dual problem, $\xi(y^*)$, and also equal to the primal objective function evaluated at the optimal primal solution $x^*$: $\zeta^* = \zeta(x^*) = \xi(y^*)$. This equality is highlighted by a red box.  An arrow points to this equation, indicating that this must be the optimal solution for the dual problem (D). This is justified by the Weak Duality Theorem, which states that $\zeta(x^*) \le \xi(y^*)$ for any feasible primal and dual solutions. The context of the course is crucial for understanding the notation ($\zeta$, $\xi$, $x^*$, $y^*$) and the implications of the Strong Duality Theorem in linear programming.</DESCRIPTION>
+
+SLIDE 18
+<LATEX>
+\text{Four and Only Four Possibilities} \\
+\textcircled{1} \quad (P) \text{ has an optimal solution} \\
+\implies (D) \text{ also has an optimal solution} \\
+\zeta^* = \xi^*, \quad \text{duality gap} = 0 \\
+\textcircled{2} \quad (P) \text{ is feasible but unbounded} \\
+\implies (D) \text{ must be infeasible} \\
+\zeta(x) \le \xi(y) \\
+\rightarrow +\infty \quad \zeta^* = \xi^* = +\infty \\
+(\text{min empty set} = +\infty)
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Four possibilities for primal and dual linear programs.</FIGURE>
+
+<DESCRIPTION>Slide 18 of 24 in a Linear Programming course outlines four possible scenarios regarding the solutions of a primal linear program (P) and its corresponding dual linear program (D).  The slide is titled "Four and Only Four Possibilities".
+
+The first scenario (\textcircled{1}) states that if (P) has an optimal solution, then (D) also has an optimal solution, and the optimal objective function values of both problems are equal ($\zeta^* = \xi^*$), resulting in a zero duality gap.
+
+The second scenario (\textcircled{2}) states that if (P) is feasible but unbounded (meaning its objective function can be made arbitrarily large), then (D) must be infeasible (meaning it has no feasible solution).  This is because the weak duality theorem ($\zeta(x) \le \xi(y)$ for all feasible $x$ and $y$) implies that if $\zeta(x)$ can be arbitrarily large, then $\xi(y)$ must be unbounded above, which is impossible for a feasible dual problem.  The notation $\zeta^* = \xi^* = +\infty$ indicates that both objective functions tend to infinity, and the parenthetical comment clarifies that the minimum of an empty set is conventionally defined as $+\infty$.  The arrows indicate the implications between the primal and dual problem's solution status. The context of the course is crucial for understanding the relationship between primal and dual linear programs and the implications of their feasibility and boundedness.</DESCRIPTION>
+
+SLIDE 19
+<LATEX>
+\text{Four and Only Four Possibilities} \\
+\textcircled{3} \quad \text{(D) is feasible but unbounded} \\
+\implies \text{(P) must be infeasible} \\
+\zeta(x) \le \xi(y) \\
+\rightarrow -\infty \\
+\left( \zeta^* = \xi^* = -\infty \right) \quad (\text{max empty set} = -\infty) \\
+\textcircled{4} \quad \text{Both (P) and (D) are infeasible} \\
+\implies \zeta^* = -\infty, \quad \xi^* = +\infty \\
+(\text{duality gap} = +\infty)
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Four possibilities for primal and dual linear programs.</FIGURE>
+
+<DESCRIPTION>Slide 19 of 24 in a Linear Programming course continues the discussion of the four possible scenarios regarding the solutions of a primal linear program (P) and its dual (D), started in slide 18.  The slide is titled "Four and Only Four Possibilities".
+
+The third scenario (\textcircled{3}) states that if the dual problem (D) is feasible but unbounded (its objective function can be made arbitrarily small in a minimization problem), then the primal problem (P) must be infeasible (it has no feasible solution). This is a consequence of weak duality ($\zeta(x) \le \xi(y)$), which implies that if $\xi(y)$ can be arbitrarily small, then $\zeta(x)$ must be unbounded below, which is impossible for a feasible primal problem. The notation $\zeta^* = \xi^* = -\infty$ indicates that both objective functions tend to negative infinity, and the parenthetical comment clarifies that the maximum of an empty set is conventionally defined as $-\infty$.
+
+The fourth scenario (\textcircled{4}) states that if both (P) and (D) are infeasible, then the optimal objective function value of (P) is $-\infty$ and that of (D) is $+\infty$, resulting in an infinite duality gap.  The arrows indicate the implications between the primal and dual problem's solution status. The context of the course is crucial for understanding the relationship between primal and dual linear programs and the implications of their feasibility and boundedness.</DESCRIPTION>
+
+SLIDE 20
+<LATEX>
+\text{Four and Only Four Possibilities} \\
+\text{[Vi,p69]} \\
+\text{(P)} \quad \text{maximize } 2x_1 - x_2 \\
+\text{subject to } x_1 - x_2 \le 1 \leftarrow \text{inconsistent} \\
+\quad \quad \quad -x_1 + x_2 \le -2 \leftarrow \text{inconsistent} \\
+\quad \quad \quad x_1, x_2 \ge 0. \\
+\text{(D)} \quad \text{min } y_1 - 2y_2 \\
+\text{subject to } y_1 - y_2 \ge 2 \leftarrow \text{inconsistent} \\
+\quad \quad \quad -y_1 + y_2 \ge -1 \leftarrow \text{inconsistent} \\
+\quad \quad \quad y_1, y_2 \ge 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Primal and dual linear programs that are both infeasible.</FIGURE>
+
+<DESCRIPTION>Slide 20 of 24 in a Linear Programming course presents an example illustrating the fourth possibility from the Strong Duality Theorem: both the primal (P) and dual (D) problems are infeasible.  The primal problem is a maximization problem with two variables ($x_1$, $x_2$) and two constraints. The dual problem is a minimization problem with two variables ($y_1$, $y_2$) and two constraints.  The constraints in both problems are shown to be inconsistent, meaning there are no values of $x_1, x_2$ or $y_1, y_2$ that satisfy all the constraints simultaneously.  The arrows point to the inconsistent constraints, highlighting the infeasibility of both problems. The notation "[Vi,p69]" likely refers to a reference to a specific textbook or source. The context of the course is crucial for understanding the implications of infeasibility in linear programming and its relationship to duality theory.</DESCRIPTION>
+
+SLIDE 21
+<LATEX>
+\text{Complementary Slackness} \\
+\text{[P]} \\
+\text{THEOREM 5.3. Suppose that } x = (x_1, x_2, \dots, x_n) \text{ is primal feasible and that} \\
+y = (y_1, y_2, \dots, y_m) \text{ is dual feasible. Let } (w_1, w_2, \dots, w_m) \text{ denote the corresponding} \\
+\text{primal slack variables, and let } (z_1, z_2, \dots, z_n) \text{ denote the corresponding dual slack} \\
+\text{variables. Then } x \text{ and } y \text{ are optimal for their respective problems if and only if} \\
+(5.7) \quad x_j z_j = 0, \quad \text{for } j = 1, 2, \dots, n, \\
+\quad w_i y_i = 0, \quad \text{for } i = 1, 2, \dots, m. \\
+\xrightarrow{\text{(pairing of variables)}} \\
+\text{i.e., either } x_j \text{ or } z_j = 0 \quad j = 1, \dots, n \\
+\text{and either } y_i \text{ or } w_i = 0 \quad i = 1, \dots, m
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Theorem 5.3 on Complementary Slackness.</FIGURE>
+
+<DESCRIPTION>Slide 21 of 24 in a Linear Programming course presents Theorem 5.3, which describes the concept of Complementary Slackness.  The theorem states that for a primal feasible solution $x = (x_1, x_2, \dots, x_n)$ and a dual feasible solution $y = (y_1, y_2, \dots, y_m)$, the solutions are optimal if and only if the following conditions hold: $x_j z_j = 0$ for all $j = 1, \dots, n$ and $w_i y_i = 0$ for all $i = 1, \dots, m$. Here, $z_j$ and $w_i$ represent the dual and primal slack variables, respectively.  The implication is that for each pair of primal and dual variables, at least one must be zero at optimality. This is represented by the handwritten note "pairing of variables" and the subsequent explanation: either $x_j$ or $z_j$ must be zero, and similarly, either $y_i$ or $w_i$ must be zero. The equation numbers (5.7) indicate that this is equation 5.7 in the textbook or lecture notes. The context of the course is crucial for understanding the relationship between primal and dual problems and the conditions for optimality.</DESCRIPTION>
+
+SLIDE 22
+<LATEX>
+\text{Complementary Slackness} \\
+\underline{\text{pf}} \quad \sum_j c_j x_j \le \sum_j \left( \sum_i a_{ij} y_i \right) x_j \\
+\quad \quad \quad = \sum_i \left( \sum_j a_{ij} x_j \right) y_i \le \sum_i b_i y_i \\
+\sum_j c_j x_j \le \sum_j \left( \sum_i a_{ij} y_i \right) x_j \\
+\quad \quad \quad = \sum_i \left( \sum_j a_{ij} x_j \right) y_i \le \sum_i b_i y_i
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Proof of Complementary Slackness.</FIGURE>
+
+<DESCRIPTION>Slide 22 of 24 in a Linear Programming course presents a proof of complementary slackness. The slide begins with the title "Complementary Slackness" and then shows a proof ("pf"). The proof starts with the inequality $\sum_j c_j x_j \le \sum_j \left( \sum_i a_{ij} y_i \right) x_j$, which is derived from the primal and dual linear programs.  The summation is then rearranged to obtain $\sum_i \left( \sum_j a_{ij} x_j \right) y_i \le \sum_i b_i y_i$. The red arrows and equality signs indicate the steps in the proof, showing the manipulation of summations. The circled numbers (1) and (2) likely highlight specific steps or intermediate results within the proof. The context of the course is crucial for understanding the mathematical manipulations and the significance of complementary slackness in linear programming optimization.</DESCRIPTION>
+
+SLIDE 23
+<LATEX>
+\text{Complementary Slackness} \\
+\underline{pf} \quad \sum_j c_j x_j \stackrel{\textcircled{1}}{=} \sum_j \left( \sum_i a_{ij} y_i \right) x_j \\
+\quad \quad 0 = \sum_j \left( \sum_i a_{ij} y_i - c_j \right) x_j \\
+\quad \quad = \sum_j z_j x_j \ge 0 \\
+\implies z_j x_j = 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Proof of Complementary Slackness.</FIGURE>
+
+<DESCRIPTION>Slide 23 of 24 in a Linear Programming course shows a proof of complementary slackness. The proof starts with the equation $\sum_j c_j x_j = \sum_j \left( \sum_i a_{ij} y_i \right) x_j$, which is a consequence of primal and dual feasibility and strong duality.  The circled "1" likely indicates a step or assumption from a previous slide or part of the proof.  Subtracting the left side from the right side yields $0 = \sum_j \left( \sum_i a_{ij} y_i - c_j \right) x_j$. The expression $\sum_i a_{ij} y_i - c_j$ is identified as the dual slack variable $z_j$. This leads to the equation $0 = \sum_j z_j x_j$. Since both $z_j$ and $x_j$ are non-negative, the only way for their sum to be zero is if each term $z_j x_j = 0$ for all $j$. This is the complementary slackness condition. The implication arrow ($\implies$) indicates the conclusion of the proof. The context of the course is crucial for understanding the mathematical manipulations and the significance of complementary slackness in linear programming optimization.</DESCRIPTION>
+
+SLIDE 24
+<LATEX>
+\text{Complementary Slackness} \\
+\underline{\text{pf}} \quad \sum_i \left( \sum_j a_{ij} x_j \right) y_i \stackrel{\textcircled{2}}{=} \sum_i b_i y_i \\
+0 = \sum_i \left( b_i - \sum_j a_{ij} x_j \right) y_i \\
+\underbrace{w_i}_{} \\
+= \sum_i w_i y_i \ge 0 \\
+\implies w_i y_i = 0
+</LATEX>
+
+<FIGURE [100.0, 50.0, 800.0, 700.0]>Proof of Complementary Slackness.</FIGURE>
+
+<DESCRIPTION>Slide 24 of 24 in a Linear Programming course completes the proof of complementary slackness, focusing on the dual side.  The proof starts from the equation $\sum_i \left( \sum_j a_{ij} x_j \right) y_i = \sum_i b_i y_i$, which is derived from the primal and dual problems and the strong duality theorem. The circled "2" likely refers to a previous step or equation. Subtracting the left side from the right side gives $0 = \sum_i \left( b_i - \sum_j a_{ij} x_j \right) y_i$. The term $\left( b_i - \sum_j a_{ij} x_j \right)$ is identified as the primal slack variable $w_i$, resulting in $\sum_i w_i y_i = 0$. Since both $w_i$ and $y_i$ are non-negative, the only way for their sum to be zero is if each term $w_i y_i = 0$ for all $i$. This is the complementary slackness condition for the dual variables. The implication arrow ($\implies$) indicates the conclusion of the proof. The context of the course is crucial for understanding the mathematical manipulations and the significance of complementary slackness in linear programming optimization.</DESCRIPTION>
+

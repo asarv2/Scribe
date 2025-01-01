@@ -1,0 +1,320 @@
+QUESTION 1
+In the context of sensitivity analysis for the linear program presented in Slide 1, what condition must be met to ensure that the current optimal solution remains optimal after a change in the objective function coefficients?
+A. The change in the objective function coefficients must be less than the absolute value of the reduced costs of the non-basic variables.
+B. The updated reduced costs of all non-basic variables must remain non-negative.
+C. The change in the objective function coefficients must not affect the feasibility of the current solution.
+D. The optimal values of the basic variables must remain unchanged.
+E. The objective function value must increase after the change in coefficients.
+
+ANSWER: B
+
+EXPLANATION:
+A. While the magnitude of the reduced costs is relevant, this statement is not a complete or accurate condition for maintaining optimality. The correct condition involves the updated reduced costs, not just the original ones.
+B. The condition $Z_N^* + \Delta Z_N^* \ge 0$, as shown in Slide 7, ensures that the updated reduced costs remain non-negative, which is a necessary condition for the current optimal solution to remain optimal after a change in the objective function coefficients.  If any reduced cost becomes negative, then the current solution is no longer optimal.
+C. Feasibility is a separate condition.  The change in objective function coefficients might not affect feasibility, but it could still change the optimality of the solution.
+D. The optimal values of the basic variables may change, but the current solution remains optimal as long as the updated reduced costs of the non-basic variables remain non-negative.
+E. While an increase in the objective function value is desirable, it is not a sufficient condition for maintaining optimality. The solution might improve, but a different solution might yield an even better objective function value.
+
+
+QUESTION 2
+In the parametric analysis of the linear program (Slide 1), how do we determine the range of changes in the right-hand side constants ($\Delta b_i$) that maintain the feasibility of the current optimal solution?
+A. By ensuring that the change in the objective function value remains positive.
+B. By checking if the updated reduced costs of the non-basic variables remain non-negative.
+C. By verifying that the updated values of the basic variables remain non-negative.
+D. By calculating the inverse of the basis matrix and checking its determinant.
+E. By solving the dual problem with the modified right-hand side constants.
+
+ANSWER: C
+
+EXPLANATION:
+A. The change in the objective function value is related to optimality, not feasibility.
+B. The reduced costs are related to optimality, not feasibility.  Feasibility is determined by the non-negativity of the basic variables.
+C. As shown in Slide 11, the condition $X_B^* + \Delta X_B^* \ge 0$ ensures that the updated values of the basic variables remain non-negative, which is necessary for the solution to remain feasible.  The equation $\Delta X_B^* = B^{-1} \Delta b$ allows us to calculate the change in basic variables given a change in the right-hand side constants.
+D. While the inverse of the basis matrix is used in the calculation, checking its determinant is not sufficient to determine feasibility.
+E. Solving the dual problem is not necessary to determine the range of changes in the right-hand side constants that maintain feasibility.
+
+
+QUESTION 3
+What is the primary difference between sensitivity analysis and parametric analysis in the context of linear programming, as illustrated by the slides?
+A. Sensitivity analysis considers changes in multiple parameters simultaneously, while parametric analysis focuses on one parameter at a time.
+B. Sensitivity analysis examines the impact of small changes in parameters, while parametric analysis studies the effect of larger, systematic changes.
+C. Sensitivity analysis focuses on the objective function, while parametric analysis focuses on the constraints.
+D. Sensitivity analysis uses the dual simplex method, while parametric analysis uses the primal simplex method.
+E. Sensitivity analysis is qualitative, while parametric analysis is quantitative.
+
+ANSWER: B
+
+EXPLANATION:
+A. Both sensitivity and parametric analysis can handle multiple parameters, although parametric analysis often focuses on one at a time for clarity.
+B. Sensitivity analysis typically investigates the impact of small changes in parameters to determine the robustness of the optimal solution. Parametric analysis, on the other hand, systematically studies the effect of larger, controlled changes in one or more parameters, often by introducing a parameter into the model and analyzing the solution as the parameter varies over a range of values.
+C. Both sensitivity and parametric analysis can examine changes in both the objective function and the constraints.
+D. Both sensitivity and parametric analysis can utilize either the primal or dual simplex method, depending on the specific analysis being performed.
+E. Both sensitivity and parametric analysis are quantitative methods; they involve numerical calculations and analysis.
+
+
+QUESTION 4
+Suppose, after performing sensitivity analysis on the linear program in Slide 1, we find that increasing the coefficient of $x_1$ in the objective function by a small amount $\epsilon$ does not change the optimal solution. What does this imply about the reduced cost of $x_1$ in the original optimal solution?
+A. The reduced cost of $x_1$ is negative.
+B. The reduced cost of $x_1$ is zero.
+C. The reduced cost of $x_1$ is positive.
+D. The reduced cost of $x_1$ is undefined.
+E. The reduced cost of $x_1$ is equal to $\epsilon$.
+
+ANSWER: B
+
+EXPLANATION:
+A. A negative reduced cost would imply that the current solution is not optimal.
+B. If increasing the coefficient of $x_1$ by a small amount does not change the optimal solution, it means that $x_1$ is already in the optimal basis.  The reduced cost of a basic variable in the optimal solution is always zero.  A positive reduced cost would indicate that increasing the coefficient would improve the solution, while a negative reduced cost would indicate that the current solution is not optimal.
+C. A positive reduced cost would imply that increasing the coefficient would improve the solution.
+D. The reduced cost is always defined for all variables.
+E. The reduced cost is independent of $\epsilon$. It reflects the marginal improvement in the objective function if the variable were to enter the basis.
+
+
+QUESTION 5
+Part A:
+Consider the linear program presented in Slide 1.  Explain the concept of sensitivity analysis in this context, and describe how it helps us understand the robustness of the optimal solution.
+A. Sensitivity analysis determines the range of changes in the objective function coefficients that maintain the current optimal solution.
+B. Sensitivity analysis determines the range of changes in the right-hand side constants that maintain the feasibility of the current optimal solution.
+C. Sensitivity analysis examines how changes in the problem's parameters (objective function coefficients and right-hand side constants) affect the optimal solution and its value.
+D. Sensitivity analysis is a graphical method used to visualize the feasible region and identify the optimal solution.
+E. Sensitivity analysis is only applicable to linear programs with two variables.
+
+ANSWER: C
+
+EXPLANATION:
+A. While this is a part of sensitivity analysis, it's not the complete picture. Sensitivity analysis also considers changes in the right-hand side constants.
+B. Similar to A, this is only one aspect of sensitivity analysis.  It doesn't encompass changes to the objective function coefficients.
+C. Sensitivity analysis, as applied to the linear program in Slide 1, investigates how alterations in the problem's parameters (objective function coefficients and right-hand side constants) impact the optimal solution and its corresponding value. It assesses the robustness of the optimal solution by determining the range of parameter changes that preserve the optimality and feasibility of the solution.
+D. Sensitivity analysis is not a graphical method; it's a mathematical analysis based on the simplex tableau or other optimization results.
+E. Sensitivity analysis is applicable to linear programs with any number of variables.
+
+Part B:
+Referring to Slide 2, explain how the equations provided allow for the analysis of changes in the non-basic variables and their impact on the optimal solution and objective function value.
+A. The equations show that changes in non-basic variables have no effect on the optimal solution.
+B. The equations directly provide the range of values for non-basic variables that maintain optimality.
+C. The equations express the optimal objective function value and basic variable values as functions of the non-basic variables, allowing us to see how changes in the non-basic variables affect the optimal solution and objective function value.
+D. The equations are only useful for determining the optimal solution, not for sensitivity analysis.
+E. The equations are irrelevant to sensitivity analysis because they only show the optimal solution.
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect; changes in non-basic variables do affect the optimal solution, as shown by the equations.
+B. The equations themselves don't directly give the range; further analysis is needed to determine the allowable ranges of non-basic variables that maintain optimality.
+C. The equations on Slide 2 express the optimal objective function value ($\xi$) and the optimal values of the basic variables ($x_1$, $x_3$, $x_5$) as functions of the non-basic variables ($x_2$, $x_4$, $x_6$).  By substituting different values for the non-basic variables, we can observe how these changes propagate to the objective function value and the basic variable values, thus allowing for the analysis of their impact on the optimal solution.
+D. The equations are fundamental to sensitivity analysis; they provide the basis for determining how changes in non-basic variables affect the optimal solution.
+E. The equations are crucial for sensitivity analysis; they show the relationship between the optimal solution and the non-basic variables.
+
+Part C:
+Slide 7 introduces the condition $Z_N^* + \Delta Z_N^* \ge 0$. Explain the significance of this condition in the context of sensitivity analysis concerning changes in the objective function coefficients.
+A. This condition ensures that the current solution remains feasible after changes in the objective function coefficients.
+B. This condition ensures that the current solution remains optimal after changes in the objective function coefficients.
+C. This condition is irrelevant to sensitivity analysis.
+D. This condition is only applicable to changes in the right-hand side constants.
+E. This condition guarantees that the simplex method will converge to a solution.
+
+ANSWER: B
+
+EXPLANATION:
+A. This condition relates to optimality, not feasibility. Feasibility is determined by the non-negativity of the basic variables.
+B. The condition $Z_N^* + \Delta Z_N^* \ge 0$ is crucial for maintaining the optimality of the current solution after changes in the objective function coefficients.  $Z_N^*$ represents the reduced costs of the non-basic variables in the optimal solution, and $\Delta Z_N^*$ represents the change in these reduced costs due to the changes in the objective function coefficients.  If the updated reduced costs remain non-negative, the current optimal solution remains optimal.
+C. This condition is the core of sensitivity analysis regarding objective function coefficients.
+D. This condition applies to changes in the objective function coefficients, not the right-hand side constants.
+E. This condition is about the optimality of a solution, not the convergence of the simplex method.
+
+Part D:
+Slide 11 presents the condition $X_B^* + \Delta X_B^* \ge 0$. Explain the significance of this condition in the context of sensitivity analysis concerning changes in the right-hand side constants.
+A. This condition ensures that the current solution remains optimal after changes in the right-hand side constants.
+B. This condition ensures that the current solution remains feasible after changes in the right-hand side constants.
+C. This condition is only relevant for changes in the objective function coefficients.
+D. This condition is irrelevant to sensitivity analysis.
+E. This condition guarantees that the simplex method will find a solution.
+
+ANSWER: B
+
+EXPLANATION:
+A. This condition relates to feasibility, not optimality. Optimality is determined by the non-negativity of the reduced costs.
+B. The condition $X_B^* + \Delta X_B^* \ge 0$ is essential for maintaining the feasibility of the current solution after changes in the right-hand side constants. $X_B^*$ represents the optimal values of the basic variables, and $\Delta X_B^*$ represents the change in these values due to changes in the right-hand side constants.  If the updated values of the basic variables remain non-negative, the solution remains feasible.
+C. This condition applies to changes in the right-hand side constants, not the objective function coefficients.
+D. This condition is fundamental to sensitivity analysis concerning right-hand side changes.
+E. This condition is about the feasibility of a solution, not the convergence of the simplex method.
+
+Part E:
+What is the primary difference between sensitivity analysis and parametric analysis as discussed in the context of the slides?
+A. Sensitivity analysis considers multiple parameter changes simultaneously, while parametric analysis considers only one parameter change at a time.
+B. Sensitivity analysis focuses on determining the range of parameter changes that maintain the optimal solution, while parametric analysis studies how the optimal solution changes as a parameter varies continuously.
+C. Sensitivity analysis is a graphical method, while parametric analysis is an algebraic method.
+D. Sensitivity analysis is only applicable to linear programs, while parametric analysis can be applied to nonlinear programs.
+E. There is no significant difference between sensitivity analysis and parametric analysis.
+
+ANSWER: B
+
+EXPLANATION:
+A. Both can handle multiple changes, but parametric analysis often focuses on one parameter at a time for clearer analysis.
+B. Sensitivity analysis primarily focuses on identifying the range of parameter changes (either in objective function coefficients or right-hand side constants) that preserve the optimality or feasibility of the current optimal solution.  Parametric analysis, on the other hand, examines how the optimal solution and its value evolve as a specific parameter varies continuously over a range of values.  Sensitivity analysis is more about finding allowable ranges, while parametric analysis is about tracking changes as a parameter varies.
+C. Both are mathematical methods; neither is inherently graphical.
+D. Both are applicable to linear programs; parametric analysis is more challenging to apply to nonlinear programs.
+E. There is a significant difference in their approach and goals.
+
+
+
+QUESTION 6
+In Slide 2, the optimal objective function value is given by $\xi = 13 - 3x_2 - x_4 - x_6$. If we increase $x_2$ by 1 unit, while keeping $x_4$ and $x_6$ at 0, what is the new objective function value?
+A. 10
+B. 14
+C. 16
+D. 12
+E. 13
+
+ANSWER: A
+
+EXPLANATION:
+A. The new objective function value is $13 - 3(1) - 0 - 0 = 10$.
+B. This answer incorrectly adds 3 to the original objective function value.
+C. This answer incorrectly adds 3 to the original objective function value and then adds 1.
+D. This answer incorrectly subtracts 1 from the original objective function value.
+E. This answer is the original objective function value, ignoring the change in $x_2$.
+
+
+QUESTION 7
+According to Slide 3, the optimal values of the basic variables are given by $X_B = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix} + \begin{pmatrix} 1 & 3 & -2 \\ -2 & -2 & 1 \\ 5 & 2 & 0 \end{pmatrix} \begin{pmatrix} x_2 \\ x_4 \\ x_6 \end{pmatrix}$. If $x_2 = 1$, $x_4 = 0$, and $x_6 = 0$, what is the new value of $x_1$?
+A. 0
+B. 1
+C. 2
+D. 3
+E. 4
+
+ANSWER: A
+
+EXPLANATION:
+A. Substituting the values into the equation for $x_1$, we get $x_1 = 2 - 2(1) - 2(0) + 0 = 0$.
+B. This answer is incorrect; it does not account for the change in $x_2$.
+C. This is the original value of $x_1$ before any changes.
+D. This answer is incorrect; it does not correctly apply the matrix multiplication.
+E. This answer is incorrect; it does not correctly apply the matrix multiplication.
+
+
+QUESTION 8
+Slide 7 states the condition $Z_N^* + \Delta Z_N^* \ge 0$ must be met for the current optimal solution to remain optimal after a change in the objective function coefficients.  If $Z_N^* = \begin{pmatrix} 3 \\ 1 \\ 1 \end{pmatrix}$ and $\Delta Z_N^* = \begin{pmatrix} -1 \\ 0 \\ 0 \end{pmatrix}$, is the condition satisfied?
+A. Yes
+B. No
+C. It depends on the values of $c_B$ and $c_N$
+D. More information is needed about the basis matrix $B$
+E. The condition is irrelevant in this case
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect; the condition is not satisfied for all elements.
+B. No, because $Z_N^* + \Delta Z_N^* = \begin{pmatrix} 2 \\ 1 \\ 1 \end{pmatrix}$, and the first element is not greater than or equal to 0.
+C. The condition is independent of $c_B$ and $c_N$ given the values of $Z_N^*$ and $\Delta Z_N^*$.
+D. The basis matrix is not needed to evaluate the given condition.
+E. The condition is crucial for determining if the solution remains optimal.
+
+
+QUESTION 9
+In Slide 11, the condition $X_B^* + \Delta X_B^* \ge 0$ must hold for the current optimal solution to remain feasible after a change in the right-hand side constants. Given $X_B^* = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix}$ and $\Delta X_B^* = \begin{pmatrix} -0.5 \\ 0.5 \\ -1 \end{pmatrix}$, is the condition satisfied?
+A. Yes
+B. No
+C. More information is needed about the matrix $B^{-1}$
+D. The condition is irrelevant in this case
+E. It depends on the values of $\Delta b_1$, $\Delta b_2$, and $\Delta b_3$
+
+ANSWER: B
+
+EXPLANATION:
+A. Incorrect; the condition is not satisfied for all elements.
+B. No, because $X_B^* + \Delta X_B^* = \begin{pmatrix} 0.5 \\ 2.5 \\ 0 \end{pmatrix}$, which is non-negative, but the third element is 0, not strictly greater than 0.
+C. The matrix $B^{-1}$ is not needed to evaluate the given condition.
+D. The condition is crucial for determining if the solution remains feasible.
+E. The values of $\Delta b_i$ are not needed to evaluate the given condition, as $\Delta X_B^*$ is already provided.
+
+
+QUESTION 10
+Part A:
+What are the original reduced costs $Z_N^*$ for $x_2$, $x_4$, and $x_6$?
+A. $Z_N^* = \begin{pmatrix} 3 \\ 1 \\ 1 \end{pmatrix}$
+B. $Z_N^* = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix}$
+C. $Z_N^* = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$
+D. $Z_N^* = \begin{pmatrix} -3 \\ -1 \\ -1 \end{pmatrix}$
+E. $Z_N^* = \begin{pmatrix} 2 \\ 3 \\ 1 \end{pmatrix}$
+
+ANSWER: A
+
+EXPLANATION:
+A. The equations on Slide 3 directly give the reduced costs as $Z_N^* = \begin{pmatrix} 3 \\ 1 \\ 1 \end{pmatrix}$
+B. These values are the optimal values of the basic variables, not the reduced costs.
+C. This would indicate an already optimal solution with zero reduced costs for all non-basic variables.
+D. These are the negative of the reduced costs.
+E. These values are not consistent with the information provided in Slide 3.
+
+Part B:
+What is $\Delta c_B$ and $\Delta c_N$ resulting from increasing the coefficient of $x_1$ by $\epsilon = 1$?
+A. $\Delta c_B = \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}$, $\Delta c_N = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$
+B. $\Delta c_B = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$, $\Delta c_N = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}$
+C. $\Delta c_B = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}$, $\Delta c_N = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$
+D. $\Delta c_B = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$, $\Delta c_N = \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}$
+E. $\Delta c_B = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$, $\Delta c_N = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$
+
+ANSWER: A
+
+EXPLANATION:
+A. Since $x_1$ is a basic variable, the change in its coefficient affects $\Delta c_B$.  The change is only in the coefficient of $x_1$, which is the second element in $c_B$. Therefore, $\Delta c_B = \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}$ and $\Delta c_N = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$
+B. The change is in the coefficient of a basic variable ($x_1$), so it affects $\Delta c_B$, not $\Delta c_N$.
+C. The order of the basic variables is $x_3, x_1, x_5$, so the change in $x_1$'s coefficient is in the second position of $\Delta c_B$.
+D. The change is in the coefficient of $x_1$, which is a basic variable, not a non-basic variable.
+E. This is incorrect; the change only affects the coefficient of $x_1$.
+
+Part C:
+Calculate $\Delta Z_N^*$ using the formula from Slide 7 and the matrix from Slide 3.
+A. $\Delta Z_N^* = \begin{pmatrix} 2 \\ 2 \\ -1 \end{pmatrix}$
+B. $\Delta Z_N^* = \begin{pmatrix} -2 \\ -2 \\ 1 \end{pmatrix}$
+C. $\Delta Z_N^* = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$
+D. $\Delta Z_N^* = \begin{pmatrix} 2 \\ -2 \\ 0 \end{pmatrix}$
+E. $\Delta Z_N^* = \begin{pmatrix} -2 \\ 2 \\ 0 \end{pmatrix}$
+
+ANSWER: A
+
+EXPLANATION:
+A. From Slide 7, $\Delta Z_N^* = (B^{-1}N)^T \Delta c_B - \Delta c_N$. Substituting the values, we get $\Delta Z_N^* = \begin{pmatrix} 1 & -2 & 5 \\ 3 & -2 & 2 \\ -2 & 1 & 0 \end{pmatrix} \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix} = \begin{pmatrix} -2 \\ -2 \\ 1 \end{pmatrix}$
+B. There's a sign error in the calculation.
+C. This would imply no change in the reduced costs, which is not the case.
+D. This is an incorrect calculation of the matrix multiplication.
+E. This is an incorrect calculation of the matrix multiplication.
+
+Part D:
+Determine if the condition $Z_N^* + \Delta Z_N^* \ge 0$ is satisfied. Does the optimal solution remain optimal?
+A. Yes, the condition is satisfied; the optimal solution remains optimal.
+B. No, the condition is not satisfied; the optimal solution does not remain optimal.
+C. The condition is indeterminate; more information is needed.
+D. The condition is irrelevant in this case.
+E. The calculation of $\Delta Z_N^*$ is incorrect, so the condition cannot be determined.
+
+ANSWER: B
+
+EXPLANATION:
+A. The condition $Z_N^* + \Delta Z_N^* \ge 0$ is not satisfied.
+B. Adding the original reduced costs and the change, we get $Z_N^* + \Delta Z_N^* = \begin{pmatrix} 3 \\ 1 \\ 1 \end{pmatrix} + \begin{pmatrix} -2 \\ -2 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \\ -1 \\ 2 \end{pmatrix}$. Since one element is negative, the condition is not satisfied, and the optimal solution does not remain optimal.
+C. All necessary information is available to determine if the condition is satisfied.
+D. The condition is fundamental to determining if the optimal solution remains optimal after a change in the objective function coefficients.
+E. The calculation of $\Delta Z_N^*$ is correct.
+
+Part E:
+What is the next step to find the new optimal solution after determining that the current solution is no longer optimal?
+A. Perform another iteration of the simplex method.
+B. Check the feasibility of the current solution.
+C. Calculate the dual problem.
+D. Increase $\epsilon$ further.
+E. Decrease $\epsilon$ to find a new optimal solution.
+
+ANSWER: A
+
+EXPLANATION:
+A. Since the current solution is no longer optimal, we need to perform another iteration of the simplex method to find the new optimal solution.
+B. Feasibility has already been checked; the issue is optimality.
+C. The dual problem is not directly relevant to finding the new optimal solution.
+D. Increasing $\epsilon$ further might not lead to a new optimal solution.
+E. Decreasing $\epsilon$ might not lead to a new optimal solution.
+
+
+

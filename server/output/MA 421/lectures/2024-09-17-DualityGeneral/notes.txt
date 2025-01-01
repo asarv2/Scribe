@@ -1,0 +1,372 @@
+SLIDE 1
+<LATEX>
+\text{Duality (General Form)} \\
+\boxed{
+\begin{array}{rcl}
+\text{maximize} & \zeta = f_0(x) & \\
+x \in \mathbb{R}^d & & \\
+\text{subject to} & f_i(x) \le 0 & i = 1, \dots, m \\
+& g_j(x) = 0 & j = 1, \dots, n
+\end{array}
+}
+\quad \leftarrow \mathcal{C} \\
+\boxed{
+\begin{array}{rcl}
+\text{maximize} & \zeta = f_0(x) & \\
+x \in \mathbb{R}^d & & \\
+\text{subject to} & g_j(x) = 0 & j = 1, \dots, n
+\end{array}
+}
+\quad \leftarrow \mathcal{C}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Two boxed linear programming problems. The top one includes inequality and equality constraints, while the bottom one only includes equality constraints. Both problems are maximization problems with the same objective function $f_0(x)$.  A red arrow points to the letter $\mathcal{C}$ next to each box.</FIGURE>
+<FIGURE [100.0, 450.0, 400.0, 700.0]>Second boxed linear programming problem.  A red arrow points to the letter $\mathcal{C}$ next to the box.</FIGURE>
+
+<DESCRIPTION>Slide 1 of 22 introduces the general form of duality in linear programming.  It presents two primal problems. The top box shows a general primal problem in linear programming, where the objective is to maximize a function $f_0(x)$ subject to $m$ inequality constraints ($f_i(x) \le 0$) and $n$ equality constraints ($g_j(x) = 0$). The bottom box shows a simplified primal problem with only equality constraints.  Both problems are labeled with a red arrow pointing to a $\mathcal{C}$, likely representing the feasible region or constraint set. The context of linear programming is essential to understand that these are two variations of a primal problem, and the slide sets the stage for introducing the concept of duality, where a dual problem is formulated from the primal problem to find an optimal solution.</DESCRIPTION>
+
+SLIDE 2
+<LATEX>
+\text{Equality Constraints} \\
+\boxed{
+\begin{array}{rcl}
+\text{maximize} & \zeta = f_0(x) & \\
+x \in \mathbb{R}^d & & \\
+\text{subject to} & g_j(x) = 0 & j = 1, \dots, n
+\end{array}
+}
+\quad \xrightarrow{\mathcal{C}} \\
+\text{Lagrange Multiplier ($\mu$) \& Lagrangian ($L$)} \\
+\boxed{
+\begin{array}{rcl}
+\text{maximize} & L(x, \mu) = f_0(x) - \sum_{j=1}^n \mu_j g_j(x) & \\
+x, \mu_1, \dots, \mu_n & &
+\end{array}
+}
+\quad \xleftarrow{\text{no constraints}}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 200.0, 450.0]>First boxed linear programming problem. A red arrow points to the letter $\mathcal{C}$ next to the box.</FIGURE>
+<FIGURE [300.0, 100.0, 400.0, 450.0]>Second boxed linear programming problem. A red arrow points to the words "no constraints" next to the box.</FIGURE>
+
+<DESCRIPTION>Slide 2 of 22 introduces the Lagrangian method for solving linear programming problems with equality constraints. The top box shows a primal problem where the objective is to maximize $f_0(x)$ subject to $n$ equality constraints $g_j(x) = 0$.  The red arrow points to $\mathcal{C}$, likely representing the constraint set. The bottom box introduces the Lagrangian function $L(x, \mu) = f_0(x) - \sum_{j=1}^n \mu_j g_j(x)$, where $\mu_j$ are the Lagrange multipliers.  Maximizing this Lagrangian function is equivalent to the original constrained problem, but without explicit constraints. The red arrow points to "no constraints" to emphasize this point. The slide explains how to transform a constrained optimization problem into an unconstrained one using the method of Lagrange multipliers. This is a crucial step in solving linear programming problems, especially when dealing with equality constraints. The context of linear programming is essential to understand the significance of the Lagrangian method in finding optimal solutions.</DESCRIPTION>
+
+SLIDE 3
+<LATEX>
+\text{Equality Constraints} \\
+\text{Compare } \max f_0 \text{ with constraints} \\
+\text{4} \\
+\text{max } L \text{ with no constraints} \\
+\text{Let } x \in \mathcal{C}. \text{ i.e. } g_j(x) = 0 \\
+\underline{f_0(x) = f_0(x) - \sum_j \mu_j g_j(x) = 0} \\
+\le \max_x \left[ f_0(x) - \sum_j \mu_j g_j(x) \right] \\
+= \max_x L(x, \mu) := \xi(\mu)
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes comparing the maximization of a function $f_0$ with constraints to the maximization of a Lagrangian function $L$ without constraints.  The Lagrangian is defined as $L(x, \mu) = f_0(x) - \sum_j \mu_j g_j(x)$, where $\mu_j$ are Lagrange multipliers. The notes show that the maximum of $f_0$ subject to constraints is less than or equal to the maximum of the Lagrangian function. The final line defines $\xi(\mu) = \max_x L(x, \mu)$. A red underline highlights the key equation $f_0(x) = f_0(x) - \sum_j \mu_j g_j(x)$.</FIGURE>
+
+<DESCRIPTION>Slide 3 of 22 continues the discussion of equality constraints from slide 2. It compares maximizing the objective function $f_0(x)$ subject to equality constraints $g_j(x) = 0$ with maximizing the Lagrangian function $L(x, \mu) = f_0(x) - \sum_j \mu_j g_j(x)$ without constraints. The notation $\mathcal{C}$ represents the feasible region defined by the equality constraints. The key step is showing that the maximum value of $f_0(x)$ under the constraints is less than or equal to the maximum value of the Lagrangian $L(x, \mu)$. This inequality is a crucial step in deriving the dual problem. The final line defines a function $\xi(\mu) = \max_x L(x, \mu)$, which will play a significant role in the subsequent development of the dual problem. The red underline emphasizes the substitution of $f_0(x)$ with the Lagrangian expression, which is valid only when $x$ satisfies the constraints $g_j(x) = 0$.</DESCRIPTION>
+
+SLIDE 4
+<LATEX>
+\text{Equality Constraints} \\
+\underline{\text{Compare } \max f_0 \text{ with constraints}} \\
+\text{4} \\
+\underline{\text{max } L \text{ with no constraints}} \\
+\underline{\text{Let } x \in \mathcal{C}. \text{ i.e. } g_j(x) = 0} \\
+\xi(x) = f_0(x) \le \xi(\mu) \\
+\text{any } x \text{ satisfies constraint} \qquad \text{no constraint for } \mu \\
+\boxed{\zeta^* = \max_{x \in \mathcal{C}} \xi(x) \le \min_\mu \xi(\mu) = \xi^*}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes comparing the maximization of $f_0$ with constraints to the maximization of $L$ without constraints.  The notes show that the maximum of $f_0$ subject to constraints is less than or equal to the minimum of $\xi(\mu)$, where $\xi(\mu) = \max_x L(x, \mu)$.  The final boxed equation shows the weak duality theorem: $\zeta^* \le \xi^*$. Red underlines highlight key phrases and equations.</FIGURE>
+
+<DESCRIPTION>Slide 4 of 22 builds upon the previous slides by establishing a relationship between the maximum of the objective function $f_0(x)$ subject to equality constraints and the minimum of the function $\xi(\mu) = \max_x L(x, \mu)$, where $L(x, \mu)$ is the Lagrangian.  The slide shows that for any $x$ satisfying the constraints ($x \in \mathcal{C}$), $f_0(x) \le \xi(\mu)$. This inequality holds because the Lagrangian relaxes the constraints.  The slide then concludes with the weak duality theorem, stating that the optimal value of the primal problem ($\zeta^*$) is less than or equal to the optimal value of the dual problem ($\xi^*$). This is a fundamental result in optimization theory, showing the relationship between the primal and dual problems. The boxed equation highlights the key result. The red underlines emphasize the comparison between the constrained and unconstrained problems and the definition of the feasible region $\mathcal{C}$.</DESCRIPTION>
+
+SLIDE 5
+<LATEX>
+\text{Equality Constraints} \\
+\underline{\text{Compare } \max f_0 \text{ with constraints}} \\
+\text{4} \\
+\underline{\text{max } L \text{ with no constraints}} \\
+\underline{\text{Let } x \in \mathcal{C}. \text{ i.e. } g_j(x) = 0} \\
+\xi(x) = f_0(x) \le \xi(\mu) \\
+\text{any } x \text{ satisfies constraint} \qquad \text{no constraint for } \mu \\
+\boxed{\zeta^* \le \xi^* \text{ (Weak Duality)}}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes comparing the maximization of $f_0$ with constraints to the maximization of $L$ without constraints. The notes show that the maximum of $f_0$ subject to constraints is less than or equal to the minimum of $\xi(\mu)$, where $\xi(\mu) = \max_x L(x, \mu)$. The final boxed equation shows the weak duality theorem: $\zeta^* \le \xi^*$. Red underlines highlight key phrases and equations.</FIGURE>
+
+<DESCRIPTION>Slide 5 of 22 presents the weak duality theorem in the context of linear programming with equality constraints. Building on the previous slides, it compares maximizing the objective function $f_0(x)$ subject to constraints with maximizing the Lagrangian function $L(x,\mu)$ without constraints.  The notation $\mathcal{C}$ represents the feasible region defined by the equality constraints $g_j(x) = 0$. The inequality $\xi(x) = f_0(x) \le \xi(\mu)$ shows that the maximum value of $f_0(x)$ under constraints is less than or equal to the maximum value of the Lagrangian for any $\mu$.  This is because the Lagrangian relaxes the constraints. The final boxed equation, $\zeta^* \le \xi^*$, formally states the weak duality theorem: the optimal value of the primal problem ($\zeta^*$) is less than or equal to the optimal value of the dual problem ($\xi^*$).  The red underlines highlight the comparison between the constrained and unconstrained problems, the constraint condition, and the weak duality theorem itself. The red box emphasizes the key result of weak duality.</DESCRIPTION>
+
+SLIDE 6
+<LATEX>
+\text{Equality Constraints} \\
+\text{(P)} \quad \max_x \xi(x) = f_0(x) \quad 6 \\
+\text{s.t. } g_j(x) = 0 \quad j = 1, 2, \dots, n \\
+\text{(D)} \quad \min_\mu \xi(\mu) \xrightarrow{\text{no constraint}} L(x, \mu) \\
+\text{where } \xi(\mu) = \max_x \left[ f_0(x) - \sum_j \mu_j g_j(x) \right] \xrightarrow{\text{no constraint}} \\
+\boxed{\text{Weak Duality } \quad \xi^* = \max_{x \in \mathcal{C}} \xi(x) \le \min_\mu \xi(\mu) = \xi^*}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes describing the primal (P) and dual (D) problems in linear programming with equality constraints. The primal problem maximizes $\xi(x) = f_0(x)$ subject to equality constraints $g_j(x) = 0$. The dual problem minimizes $\xi(\mu)$, where $\xi(\mu)$ is defined as the maximum of the Lagrangian function $L(x, \mu) = f_0(x) - \sum_j \mu_j g_j(x)$ over $x$. The Lagrangian is introduced as a way to handle the equality constraints. The final boxed equation states the weak duality theorem: the optimal value of the primal problem ($\xi^*$) is less than or equal to the optimal value of the dual problem ($\xi^*$).  Arrows indicate the relationships between the primal, dual, and Lagrangian functions.  The notation $\mathcal{C}$ is implicitly defined as the feasible region of the primal problem.</FIGURE>
+
+<DESCRIPTION>Slide 6 of 22 formally introduces the primal (P) and dual (D) problems in the context of linear programming with equality constraints. The primal problem (P) aims to maximize the objective function $\xi(x) = f_0(x)$ subject to the equality constraints $g_j(x) = 0$ for $j = 1, \dots, n$. The dual problem (D) minimizes $\xi(\mu)$, where $\xi(\mu)$ is defined as the maximum value of the Lagrangian function $L(x, \mu) = f_0(x) - \sum_j \mu_j g_j(x)$ with respect to $x$, without any constraints on $\mu$.  The Lagrangian is introduced as a means to incorporate the equality constraints into an unconstrained optimization problem. The key result, highlighted in a red box, is the weak duality theorem, which states that the optimal value of the primal problem ($\xi^*$) is less than or equal to the optimal value of the dual problem ($\xi^*$). The arrows visually connect the primal problem, the dual problem, and the Lagrangian function, illustrating their relationships. The notation $\mathcal{C}$ implicitly represents the feasible region defined by the equality constraints in the primal problem.  The number 6 likely refers to the slide number or a section number in the lecture notes.</DESCRIPTION>
+
+SLIDE 7
+<LATEX>
+\text{Inequality Constraints} \\
+\boxed{
+\begin{array}{rcl}
+\text{maximize } \xi & = & f_0(x) \\
+x \in \mathbb{R}^d \\
+\text{subject to } & & f_i(x) \le 0 \quad i = 1, \dots, m \\
+& & g_j(x) = 0 \quad j = 1, \dots, n
+\end{array}
+}
+\xrightarrow{\text{6}} \\
+L(x, \lambda, \mu) = f_0(x) - \sum_{i=1}^m \lambda_i f_i(x) - \sum_{j=1}^n \mu_j g_j(x) \\
+\xrightarrow{\text{Lagrangian } fct} \quad \lambda_i \ge 0
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes describing a linear programming problem with inequality and equality constraints. The primal problem is to maximize $f_0(x)$ subject to $m$ inequality constraints $f_i(x) \le 0$ and $n$ equality constraints $g_j(x) = 0$. The Lagrangian function $L(x, \lambda, \mu)$ is introduced to handle the constraints, where $\lambda_i$ are the Lagrange multipliers associated with the inequality constraints and $\mu_j$ are the Lagrange multipliers associated with the equality constraints. The constraint $\lambda_i \ge 0$ is explicitly stated.  Arrows point to the Lagrangian and the primal problem, indicating their relationship. The number 6 likely refers to the slide number or a section number in the lecture notes.</FIGURE>
+
+<DESCRIPTION>Slide 7 of 22 introduces inequality constraints into the linear programming framework.  The slide presents a primal problem (boxed) where the objective is to maximize $f_0(x)$ over $x \in \mathbb{R}^d$ subject to $m$ inequality constraints, $f_i(x) \le 0$ for $i = 1, \dots, m$, and $n$ equality constraints, $g_j(x) = 0$ for $j = 1, \dots, n$.  The Lagrangian function, $L(x, \lambda, \mu) = f_0(x) - \sum_{i=1}^m \lambda_i f_i(x) - \sum_{j=1}^n \mu_j g_j(x)$, is introduced as a tool to handle these constraints.  The Lagrange multipliers $\lambda_i$ correspond to the inequality constraints and are constrained to be non-negative ($\lambda_i \ge 0$), while $\mu_j$ correspond to the equality constraints.  The arrows indicate the relationship between the primal problem and the Lagrangian function. The number 6 likely indicates the slide number or a section number within the lecture notes. The context of linear programming is crucial here, as the slide lays the groundwork for solving optimization problems with both equality and inequality constraints using the Lagrangian method.</DESCRIPTION>
+
+SLIDE 8
+<LATEX>
+\text{Inequality Constraints} \\
+\text{Let } \tilde{x} \in \mathcal{C}, \text{ i.e. constraints are satisfied.} \\
+\lambda \ge 0 \\
+f_0(\tilde{x}) \le f_0(x) - \sum_i \lambda_i f_i(x) - \sum_j \mu_j g_j(x) \\
+\underbrace{\ge 0}_{\lambda \ge 0} \quad \underbrace{\le 0}_{f_i(x) \le 0} \quad \underbrace{= 0}_{g_j(x) = 0} \\
+= L(\tilde{x}, \lambda, \mu) \\
+\le \max_x L(x, \lambda, \mu) = \xi(\lambda, \mu) \\
+\text{(no constraint)} \quad (\lambda \ge 0)
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of a key inequality for inequality constraints in linear programming. The notes start by assuming that $\tilde{x}$ satisfies the constraints.  The Lagrangian is introduced, and an inequality is derived relating the objective function at $\tilde{x}$ to the Lagrangian.  The inequality is then used to show that the objective function at $\tilde{x}$ is less than or equal to the maximum of the Lagrangian over $x$ (without constraints).  The conditions $\lambda \ge 0$, $f_i(x) \le 0$, and $g_j(x) = 0$ are explicitly noted under the summation terms in the Lagrangian. The final inequality is highlighted with a red underline, and the condition $\lambda \ge 0$ is also highlighted.</FIGURE>
+
+<DESCRIPTION>Slide 8 of 22 extends the Lagrangian approach to handle inequality constraints in linear programming.  It begins by assuming $\tilde{x}$ is a feasible solution, meaning it satisfies the constraints. The Lagrangian $L(x, \lambda, \mu) = f_0(x) - \sum_i \lambda_i f_i(x) - \sum_j \mu_j g_j(x)$ is introduced, where $\lambda_i \ge 0$ are Lagrange multipliers for inequality constraints $f_i(x) \le 0$, and $\mu_j$ are Lagrange multipliers for equality constraints $g_j(x) = 0$.  The core of the slide is the inequality $f_0(\tilde{x}) \le L(\tilde{x}, \lambda, \mu) \le \max_x L(x, \lambda, \mu) = \xi(\lambda, \mu)$. This shows that the objective function value at a feasible point $\tilde{x}$ is bounded above by the maximum of the Lagrangian, which is denoted as $\xi(\lambda, \mu)$. The conditions on $\lambda$, $f_i(x)$, and $g_j(x)$ are explicitly indicated under the summation terms to clarify the derivation. The red underlines highlight the key inequality and the non-negativity constraint on $\lambda$.  The notation $\mathcal{C}$ represents the feasible region defined by the constraints. The slide lays the groundwork for deriving duality results for problems with both equality and inequality constraints.</DESCRIPTION>
+
+SLIDE 9
+<LATEX>
+\text{Inequality Constraints} \\
+\text{Let } \tilde{x} \in \mathcal{C}, \text{ i.e. constraints are satisfied.} \\
+\lambda \ge 0 \\
+f_0(\tilde{x}) \le \xi(\lambda, \mu) \quad \lambda \ge 0 \\
+\xrightarrow{\tilde{x} \in \mathcal{C}} \\
+\max_{x \in \mathcal{C}} f_0(x) \le \min_{\lambda \ge 0, \mu} \xi(\lambda, \mu) \\
+\boxed{\xi^* \le \xi^*} \quad \text{Weak Duality}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of weak duality for inequality constraints in linear programming. The notes start by assuming that $\tilde{x}$ satisfies the constraints.  An inequality is derived relating the objective function at $\tilde{x}$ to $\xi(\lambda, \mu)$.  This inequality is then used to show that the maximum of the objective function over the feasible region is less than or equal to the minimum of $\xi(\lambda, \mu)$ over the Lagrange multipliers.  The final inequality is boxed and labeled "Weak Duality". The condition $\lambda \ge 0$ is explicitly noted. Arrows indicate the direction of the inequalities and the relationship between the primal and dual problems. The notation $\mathcal{C}$ represents the feasible region.</FIGURE>
+
+<DESCRIPTION>Slide 9 of 22 presents the weak duality theorem for linear programming problems with inequality constraints.  It starts by assuming $\tilde{x}$ is a feasible solution ($\tilde{x} \in \mathcal{C}$), satisfying all constraints.  The core argument is that $f_0(\tilde{x}) \le \xi(\lambda, \mu)$ for $\lambda \ge 0$, where $\xi(\lambda, \mu)$ represents the dual objective function.  This inequality is then extended to show that the maximum of the primal objective function over the feasible region $\mathcal{C}$ ($\max_{x \in \mathcal{C}} f_0(x)$) is less than or equal to the minimum of the dual objective function over the non-negative Lagrange multipliers ($\min_{\lambda \ge 0, \mu} \xi(\lambda, \mu)$). This result is formally stated as $\xi^* \le \xi^*$, where $\xi^*$ and $\xi^*$ represent the optimal values of the primal and dual problems, respectively.  This inequality is boxed and labeled "Weak Duality," highlighting its importance. The arrows visually guide the reader through the derivation, showing the relationships between the primal and dual problems. The notation $\mathcal{C}$ represents the feasible region defined by the inequality constraints.  The slide builds upon the previous slides by applying the Lagrangian and demonstrating a fundamental result in duality theory.</DESCRIPTION>
+
+SLIDE 10
+<LATEX>
+\text{Inequality Constraints} \\
+\boxed{
+\begin{array}{rcl}
+\text{(P)} & \text{max } \xi(x) = f_0(x) & \\
+& \text{s.t. } & f_i(x) \le 0 \quad i = 1, 2, \dots, m \\
+& & g_j(x) = 0 \quad j = 1, 2, \dots, n
+\end{array}
+}
+\quad 6 \\
+\boxed{
+\begin{array}{rcl}
+\text{(D)} & \text{min}_{\lambda \ge 0, \mu} \xi(\lambda, \mu) & \\
+& \xi(\lambda, \mu) = \max_x \left[ f_0(x) - \sum_i \lambda_i f_i(x) - \sum_j \mu_j g_j(x) \right] &
+\end{array}
+} \\
+\text{Weak Duality: } \quad \xi^* = \max_{x \in \mathcal{C}} \xi(x) \le \min_{\lambda \ge 0, \mu} \xi(\lambda, \mu) = \xi^*
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes describing the primal and dual problems in linear programming with inequality constraints. The primal problem (P) is to maximize $\xi(x) = f_0(x)$ subject to $m$ inequality constraints $f_i(x) \le 0$ and $n$ equality constraints $g_j(x) = 0$. The dual problem (D) is to minimize $\xi(\lambda, \mu)$ over $\lambda \ge 0$ and $\mu$, where $\xi(\lambda, \mu)$ is defined as the maximum of the Lagrangian over $x$. The Lagrangian is explicitly shown. The weak duality theorem is stated: the optimal value of the primal problem is less than or equal to the optimal value of the dual problem. The number 6 is written next to the primal problem, likely indicating a slide number or section number.</FIGURE>
+
+<DESCRIPTION>Slide 10 of 22 formally introduces the primal (P) and dual (D) problems in the context of linear programming with inequality constraints. The primal problem aims to maximize the objective function $\xi(x) = f_0(x)$ subject to $m$ inequality constraints ($f_i(x) \le 0$) and $n$ equality constraints ($g_j(x) = 0$). The dual problem is formulated using the Lagrangian, minimizing $\xi(\lambda, \mu)$ over the Lagrange multipliers $\lambda$ (constrained to be non-negative) and $\mu$. The Lagrangian is explicitly shown as $L(x, \lambda, \mu) = f_0(x) - \sum_i \lambda_i f_i(x) - \sum_j \mu_j g_j(x)$, and the dual objective function is defined as the maximum of the Lagrangian over $x$ without constraints.  The key result, weak duality ($\xi^* \le \xi^*$), is presented, stating that the optimal value of the primal problem ($\xi^*$) is always less than or equal to the optimal value of the dual problem ($\xi^*$). The number 6 likely refers to a slide number or section in the lecture notes. The notation $\mathcal{C}$ represents the feasible region defined by the constraints.  The slide summarizes the key concepts developed in the previous slides and sets the stage for further discussion of duality theory in linear programming.</DESCRIPTION>
+
+SLIDE 11
+<LATEX>
+\text{Duality for General LP} \\
+\max \quad \xi(x) = m^T x \\
+\text{s.t.} \quad Ax \le b \\
+\quad Bx = c \quad \left\{ \begin{array}{c} \text{inequality} \\ \text{equality} \end{array} \right. \\
+L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c) \\
+\underbrace{\lambda \ge 0, \mu}_{\text{constraints on } \lambda, \mu} \\
+\xi(\lambda, \mu) = \max_x L(x, \lambda, \mu) \\
+\text{no constraint}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of the dual problem for a general linear program. The primal problem is to maximize $m^Tx$ subject to $Ax \le b$ and $Bx = c$. The Lagrangian is introduced, and the dual function $\xi(\lambda, \mu)$ is defined as the maximum of the Lagrangian over $x$ without constraints. The conditions $\lambda \ge 0$ and $\mu$ are explicitly noted. The notation $\xi(x)$ represents the primal objective function, and $\xi(\lambda, \mu)$ represents the dual objective function.</FIGURE>
+
+<DESCRIPTION>Slide 11 of 22 introduces duality for a general linear program (LP).  The primal problem is defined as maximizing the objective function $\xi(x) = m^T x$ subject to a set of inequality constraints ($Ax \le b$) and equality constraints ($Bx = c$). The Lagrangian $L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c)$ is formed, incorporating Lagrange multipliers $\lambda$ and $\mu$ for the inequality and equality constraints, respectively.  Crucially, the non-negativity constraint $\lambda \ge 0$ is explicitly stated. The dual function $\xi(\lambda, \mu)$ is then defined as the maximum of the Lagrangian over $x$ without any constraints. This sets the stage for further exploration of duality theory and its application to solving linear programming problems. The curly brace notation next to the constraints clarifies that the problem includes both inequality and equality constraints. The slide builds upon the previous slides by extending the Lagrangian approach to a more general linear programming formulation.</DESCRIPTION>
+
+SLIDE 12
+<LATEX>
+\text{Duality for General LP} \\
+\max \quad \xi(x) = m^T x \\
+\text{s.t.} \quad Ax \le b \\
+\quad Bx = c \quad \left\{ \begin{array}{c} \text{inequality} \\ \text{equality} \end{array} \right. \\
+L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c) \\
+\underbrace{\lambda \ge 0, \mu}_{\text{constraints on } \lambda, \mu} \\
+x \in \mathcal{C} \quad \boxed{\xi(x) \le \xi(\lambda, \mu)} \quad \lambda \ge 0
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of the dual problem for a general linear program. The primal problem is to maximize $m^Tx$ subject to $Ax \le b$ and $Bx = c$. The Lagrangian is introduced, and an inequality is derived relating the primal objective function to the dual objective function. The conditions $\lambda \ge 0$ and $\mu$ are explicitly noted. The notation $\xi(x)$ represents the primal objective function, and $\xi(\lambda, \mu)$ represents the dual objective function. The feasible region is denoted by $\mathcal{C}$</FIGURE>
+
+<DESCRIPTION>Slide 12 of 22 continues the discussion of duality in linear programming, focusing on a general linear program. The primal problem is stated as maximizing $\xi(x) = m^T x$ subject to inequality constraints ($Ax \le b$) and equality constraints ($Bx = c$). The Lagrangian is constructed as $L(x, \lambda, \mu) = m^T x - \lambda^T(Ax - b) - \mu^T(Bx - c)$, where $\lambda$ and $\mu$ are the Lagrange multipliers associated with the inequality and equality constraints, respectively.  The non-negativity constraint on $\lambda$ ($\lambda \ge 0$) is explicitly highlighted.  The slide then presents a key inequality: $\xi(x) \le \xi(\lambda, \mu)$ for $x \in \mathcal{C}$ and $\lambda \ge 0$, where $\mathcal{C}$ represents the feasible region. This inequality is boxed, emphasizing its importance in establishing weak duality.  The slide builds upon the previous slide by showing a direct application of the Lagrangian to derive a relationship between the primal and dual objective functions. The curly brace notation next to the constraints clarifies that the problem includes both inequality and equality constraints.</DESCRIPTION>
+
+SLIDE 13
+<LATEX>
+\text{Duality for General LP} \\
+\max \quad \xi(x) = m^T x \\
+\text{s.t.} \quad Ax \le b \\
+\quad Bx = c \quad \left\{ \begin{array}{c} \text{inequality} \\ \text{equality} \end{array} \right. \\
+L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c) \\
+\underbrace{\lambda \ge 0, \mu}_{\text{constraints on } \lambda, \mu} \\
+x \in \mathcal{C} \quad \boxed{\xi(x) \le \xi(\lambda, \mu)} \quad \lambda \ge 0
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of the dual problem for a general linear program. The primal problem is to maximize $m^Tx$ subject to $Ax \le b$ and $Bx = c$. The Lagrangian is introduced, and an inequality is derived relating the primal objective function to the dual objective function. The conditions $\lambda \ge 0$ and $\mu$ are explicitly noted. The notation $\xi(x)$ represents the primal objective function, and $\xi(\lambda, \mu)$ represents the dual objective function. The feasible region is denoted by $\mathcal{C}$</FIGURE>
+
+<DESCRIPTION>Slide 13 of 22 continues the development of duality theory for general linear programs (LPs).  Building on the previous slide, it presents the primal problem: maximize $\xi(x) = m^T x$ subject to $Ax \le b$ (inequality constraints) and $Bx = c$ (equality constraints). The Lagrangian is constructed as $L(x, \lambda, \mu) = m^T x - \lambda^T(Ax - b) - \mu^T(Bx - c)$, with Lagrange multipliers $\lambda$ and $\mu$ for the inequality and equality constraints, respectively. The non-negativity constraint $\lambda \ge 0$ is explicitly stated.  The core result of the slide is the boxed inequality: $\xi(x) \le \xi(\lambda, \mu)$ for $x$ in the feasible region $\mathcal{C}$ and $\lambda \ge 0$. This inequality establishes a relationship between the primal objective function $\xi(x)$ and the dual objective function $\xi(\lambda, \mu)$, forming the basis for weak duality. The curly brace notation next to the constraints clarifies that the problem includes both inequality and equality constraints.  The slide emphasizes the importance of the non-negativity constraint on $\lambda$ in the context of duality theory.</DESCRIPTION>
+
+SLIDE 14
+<LATEX>
+\text{Duality for General LP} \\
+L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c) \\
+\underbrace{\lambda \ge 0, \mu}_{\lambda \ge 0, \mu} \\
+= (m^T - \lambda^T A - \mu^T B) x + \lambda^T b + \mu^T c \\
+\xrightarrow{\text{no constraint}} \\
+\text{If } m^T - \lambda^T A - \mu^T B \ne 0 \\
+\underline{\max_x L(x, \lambda, \mu) = +\infty}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of the dual problem for a general linear program. The Lagrangian is introduced and simplified. A condition is given for when the maximum of the Lagrangian over x is unbounded. The conditions $\lambda \ge 0$ and $\mu$ are explicitly noted. The notation $L(x, \lambda, \mu)$ represents the Lagrangian.</FIGURE>
+
+<DESCRIPTION>Slide 14 of 22 continues the exploration of duality in linear programming.  It starts with the Lagrangian $L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c)$ from the previous slides, where $m^T x$ is the primal objective function, $Ax \le b$ are the inequality constraints, $Bx = c$ are the equality constraints, and $\lambda$ and $\mu$ are the corresponding Lagrange multipliers. The non-negativity constraint $\lambda \ge 0$ is explicitly stated. The Lagrangian is then rewritten as $L(x, \lambda, \mu) = (m^T - \lambda^T A - \mu^T B)x + \lambda^T b + \mu^T c$.  The slide then states that if the vector $(m^T - \lambda^T A - \mu^T B)$ is non-zero, then the maximum of the Lagrangian over $x$ is unbounded ($\max_x L(x, \lambda, \mu) = +\infty$). This condition is crucial because it indicates a situation where the dual problem is unbounded, providing insight into the relationship between the primal and dual problems. The arrow indicates that this conclusion is reached when there are no constraints on $x$. The underlining highlights the key conclusion of the slide.</DESCRIPTION>
+
+SLIDE 15
+<LATEX>
+\text{Duality for General LP} \\
+L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c) \\
+\underbrace{\lambda \ge 0, \mu}_{\lambda \ge 0, \mu} \\
+= (m^T - \lambda^T A - \mu^T B) x + \lambda^T b + \mu^T c \\
+\xrightarrow{\text{no constraint}} \\
+\text{If } m^T - \lambda^T A - \mu^T B \ne 0 \\
+\underline{\max_x L(x, \lambda, \mu) = \lambda^T b + \mu^T c}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of the dual problem for a general linear program. The Lagrangian is introduced and simplified. A condition is given for when the maximum of the Lagrangian over x is unbounded. The conditions $\lambda \ge 0$ and $\mu$ are explicitly noted. The notation $L(x, \lambda, \mu)$ represents the Lagrangian.</FIGURE>
+
+<DESCRIPTION>Slide 15 of 22 continues the derivation of the dual problem for a general linear program. It begins with the Lagrangian from the previous slide: $L(x, \lambda, \mu) = m^T x - \lambda^T(Ax - b) - \mu^T(Bx - c)$, where $m^T x$ is the primal objective function, $Ax \le b$ and $Bx = c$ are the constraints, and $\lambda$ and $\mu$ are the Lagrange multipliers. The non-negativity constraint $\lambda \ge 0$ is explicitly shown.  The Lagrangian is then simplified to $L(x, \lambda, \mu) = (m^T - \lambda^T A - \mu^T B)x + \lambda^T b + \mu^T c$. The slide then focuses on the case where the vector $(m^T - \lambda^T A - \mu^T B)$ is not equal to zero.  In this case, and assuming there are no constraints on $x$, the maximum of the Lagrangian with respect to $x$ is unbounded. However, the handwritten notes incorrectly state that the maximum is $\lambda^T b + \mu^T c$.  The correct conclusion is that the maximum is $+\infty$. The arrow indicates that this conclusion is reached when there are no constraints on $x$. The underlining highlights the key conclusion of the slide, which is incorrect in its final form as written.</DESCRIPTION>
+
+SLIDE 16
+<LATEX>
+\text{Duality for General LP} \\
+L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c) \\
+\underbrace{\lambda \ge 0, \mu}_{\lambda \ge 0, \mu} \\
+= (m^T - \lambda^T A - \mu^T B) x + \lambda^T b + \mu^T c \\
+\xrightarrow{\text{no constraint}} \\
+\xi(\lambda, \mu) = \begin{cases} \lambda^T b + \mu^T c & \text{if } \lambda^T A + \mu^T B = m^T \\ +\infty & \text{if } \lambda^T A + \mu^T B \ne m^T \end{cases}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of the dual problem for a general linear program. The Lagrangian is introduced and simplified. A piecewise function is defined for the dual objective function, depending on whether a condition involving the Lagrange multipliers is satisfied. The conditions $\lambda \ge 0$ and $\mu$ are explicitly noted. The notation $L(x, \lambda, \mu)$ represents the Lagrangian, and $\xi(\lambda, \mu)$ represents the dual objective function.</FIGURE>
+
+<DESCRIPTION>Slide 16 of 22 presents the final step in deriving the dual problem for a general linear program (LP). It builds upon the previous slides by starting with the Lagrangian $L(x, \lambda, \mu) = m^T x - \lambda^T(Ax - b) - \mu^T(Bx - c)$, where $m^T x$ is the primal objective function, $Ax \le b$ and $Bx = c$ are the constraints, and $\lambda$ and $\mu$ are the Lagrange multipliers. The non-negativity constraint $\lambda \ge 0$ is explicitly shown. The Lagrangian is simplified to $L(x, \lambda, \mu) = (m^T - \lambda^T A - \mu^T B)x + \lambda^T b + \mu^T c$.  The key result is the definition of the dual objective function $\xi(\lambda, \mu)$, which is a piecewise function. If the condition $\lambda^T A + \mu^T B = m^T$ holds, then $\xi(\lambda, \mu) = \lambda^T b + \mu^T c$. Otherwise, if $\lambda^T A + \mu^T B \ne m^T$, the dual objective function is unbounded, $\xi(\lambda, \mu) = +\infty$. This piecewise definition of the dual objective function is a crucial result in duality theory, highlighting the relationship between the primal and dual problems. The arrow indicates that this conclusion is reached when there are no constraints on $x$. The boxed equation highlights the key result of the slide.</DESCRIPTION>
+
+SLIDE 17
+<LATEX>
+\text{Duality for General LP} \\
+L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c) \\
+\underbrace{\lambda \ge 0, \mu}_{\lambda \ge 0, \mu} \\
+= (m^T - \lambda^T A - \mu^T B) x + \lambda^T b + \mu^T c \\
+\xrightarrow{\text{no constraint}} \\
+\xi(\lambda, \mu) = \begin{cases} \lambda^T b + \mu^T c & \text{if } A^T \lambda + B^T \mu = m \\ +\infty & \text{if } A^T \lambda + B^T \mu \ne m \end{cases}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 500.0, 500.0]>Handwritten notes showing the derivation of the dual problem for a general linear program. The Lagrangian is introduced and simplified. A piecewise function is defined for the dual objective function, depending on whether a condition involving the Lagrange multipliers is satisfied. The conditions $\lambda \ge 0$ and $\mu$ are explicitly noted. The notation $L(x, \lambda, \mu)$ represents the Lagrangian, and $\xi(\lambda, \mu)$ represents the dual objective function.</FIGURE>
+
+<DESCRIPTION>Slide 17 of 22 concludes the derivation of the dual problem for a general linear program (GLP). It starts with the Lagrangian $L(x, \lambda, \mu) = m^T x - \lambda^T (Ax - b) - \mu^T (Bx - c)$, where $m^T x$ is the primal objective function, $Ax \le b$ are the inequality constraints, $Bx = c$ are the equality constraints, and $\lambda$ and $\mu$ are the Lagrange multipliers.  The non-negativity constraint $\lambda \ge 0$ is explicitly stated. The Lagrangian is simplified to $L(x, \lambda, \mu) = (m^T - \lambda^T A - \mu^T B)x + \lambda^T b + \mu^T c$.  The slide then defines the dual objective function $\xi(\lambda, \mu)$ as a piecewise function.  If $A^T \lambda + B^T \mu = m$, then $\xi(\lambda, \mu) = \lambda^T b + \mu^T c$. Otherwise, if $A^T \lambda + B^T \mu \ne m$, then $\xi(\lambda, \mu) = +\infty$. This piecewise function represents the dual objective function, which is unbounded if the condition $A^T \lambda + B^T \mu = m$ is not met. The arrow indicates that this conclusion is reached when there are no constraints on $x$. The boxed equation highlights the final form of the dual objective function.  The superscript T denotes the transpose of a matrix or vector. The context of the course (Linear Programming) is crucial for understanding the significance of this result in duality theory.</DESCRIPTION>
+
+SLIDE 18
+<LATEX>
+\text{Duality for General LP} \\
+\boxed{\begin{array}{rl}
+\text{(P)} \quad \max_x & \xi(x) = m^T x \\
+\text{s.t.} & Ax \le b \\
+& Bx = c
+\end{array}} \\
+\boxed{\begin{array}{rl}
+\text{(D)} \quad \min_{\lambda \ge 0, \mu} & \xi(\lambda, \mu) = b^T \lambda + c^T \mu \\
+\text{s.t.} & A^T \lambda + B^T \mu = m
+\end{array}}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing the primal (P) and dual (D) linear programs. The primal problem maximizes a linear objective function subject to inequality and equality constraints. The dual problem minimizes a linear objective function subject to an equality constraint and non-negativity constraints on the Lagrange multipliers.</FIGURE>
+
+<DESCRIPTION>Slide 18 of 22 presents the primal and dual linear programs for a general linear program (GLP). The primal problem (P) is a maximization problem: $\max_x \xi(x) = m^T x$ subject to the constraints $Ax \le b$ and $Bx = c$.  The dual problem (D) is a minimization problem: $\min_{\lambda \ge 0, \mu} \xi(\lambda, \mu) = b^T \lambda + c^T \mu$ subject to the constraint $A^T \lambda + B^T \mu = m$, where $\lambda \ge 0$.  The notation is consistent with previous slides, with $m$, $x$, $A$, $b$, $B$, $c$, $\lambda$, and $\mu$ representing the objective function vector, decision variables, constraint matrices, constraint vectors, and Lagrange multipliers, respectively. The superscript T denotes the transpose. The boxes highlight the primal and dual formulations. The context of the course (Linear Programming) is crucial for understanding the relationship between the primal and dual problems and their applications in optimization.</DESCRIPTION>
+
+SLIDE 19
+<LATEX>
+\text{Duality for ``Traditional'' LP} \\
+\boxed{\begin{array}{rl}
+\text{(P)} \quad \max_x & \xi(x) = c^T x \\
+\text{s.t.} & Ax \le b \\
+& x \ge 0
+\end{array}} \\
+L(x, y, \lambda) = c^T x - y^T (Ax - b) - \lambda^T (-x) \\
+\underbrace{y, \lambda \ge 0}_{y, \lambda \ge 0} \\
+= (c^T - y^T A + \lambda^T) x + y^T b
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing the primal (P) linear program and the Lagrangian. The primal problem maximizes a linear objective function subject to inequality constraints and non-negativity constraints. The Lagrangian is introduced and simplified. The conditions $y \ge 0$ and $\lambda \ge 0$ are explicitly noted.</FIGURE>
+
+<DESCRIPTION>Slide 19 of 22 introduces the duality concept for a "traditional" linear program (LP) in the context of linear programming.  It begins by defining the primal problem (P) as a maximization problem: $\max_x \xi(x) = c^T x$ subject to $Ax \le b$ and $x \ge 0$. The notation is standard in linear programming: $c$ is the cost vector, $x$ is the vector of decision variables, $A$ is the constraint matrix, and $b$ is the constraint vector. The inequality $x \ge 0$ represents non-negativity constraints on the decision variables.  The equivalence $-x \le 0$ is also shown, highlighting the transformation of the non-negativity constraint into a standard inequality form. The slide then introduces the Lagrangian $L(x, y, \lambda) = c^T x - y^T(Ax - b) - \lambda^T(-x)$, where $y$ and $\lambda$ are the Lagrange multipliers associated with the inequality constraints $Ax \le b$ and $x \ge 0$, respectively. The non-negativity constraints $y \ge 0$ and $\lambda \ge 0$ are explicitly stated. The Lagrangian is then simplified to $L(x, y, \lambda) = (c^T - y^T A + \lambda^T)x + y^T b$. This sets the stage for deriving the dual problem in subsequent slides. The boxed equation highlights the primal problem formulation.</DESCRIPTION>
+
+SLIDE 20
+<LATEX>
+\text{Duality for ``Traditional'' LP} \\
+L(x, y, \lambda) = c^T x - y^T (Ax - b) - \lambda^T (-x) \\
+\xrightarrow{y, \lambda \ge 0} \\
+= (c^T - y^T A + \lambda^T) x + y^T b \\
+\max_x L(x, y, \lambda) = \begin{cases} y^T b & \text{if } c^T - y^T A + \lambda^T = 0 \\ +\infty & \text{if } c^T - y^T A + \lambda^T \ne 0 \end{cases} \\
+\xrightarrow{\text{no constraint}}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing the derivation of the dual problem for a traditional linear program. The Lagrangian is introduced and simplified. A piecewise function is defined for the dual objective function, depending on whether a condition involving the Lagrange multipliers is satisfied. The conditions $y \ge 0$ and $\lambda \ge 0$ are explicitly noted. The notation $L(x, y, \lambda)$ represents the Lagrangian. The arrow indicates that this conclusion is reached when there are no constraints on $x$.</FIGURE>
+
+<DESCRIPTION>Slide 20 of 22 continues the derivation of the dual problem for a "traditional" linear program (LP), building upon slide 19.  It starts with the Lagrangian $L(x, y, \lambda) = c^T x - y^T(Ax - b) - \lambda^T(-x)$ from the previous slide, where $c^T x$ is the primal objective function, $Ax \le b$ are the inequality constraints, $x \ge 0$ are the non-negativity constraints, and $y$ and $\lambda$ are the Lagrange multipliers. The non-negativity constraints $y \ge 0$ and $\lambda \ge 0$ are explicitly shown with an arrow indicating their application. The Lagrangian is simplified to $L(x, y, \lambda) = (c^T - y^T A + \lambda^T)x + y^T b$.  The slide then defines the dual objective function as a piecewise function resulting from maximizing the Lagrangian with respect to $x$. If $c^T - y^T A + \lambda^T = 0$, then the maximum value is $y^T b$. Otherwise, if $c^T - y^T A + \lambda^T \ne 0$, the maximum is $+\infty$. The arrow indicates that this result is obtained when there are no constraints on $x$.  The context of the course (Linear Programming) is crucial for understanding the derivation of the dual problem from the primal problem using the Lagrangian method.</DESCRIPTION>
+
+SLIDE 21
+<LATEX>
+\text{Duality for ``Traditional'' LP} \\
+L(x, y, \lambda) = c^T x - y^T (Ax - b) - \lambda^T (-x) \\
+\xrightarrow{y, \lambda \ge 0} \\
+= (c^T - y^T A + \lambda^T) x + y^T b \\
+\max_x L(x, y, \lambda) = \begin{cases} y^T b & \text{if } c^T - A^T y + \lambda = 0 \\ +\infty & \text{if } c^T - A^T y + \lambda \ne 0 \end{cases} \\
+\xrightarrow{\text{no constraint}}
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing the derivation of the dual problem for a traditional linear program. The Lagrangian is introduced and simplified. A piecewise function is defined for the dual objective function, depending on whether a condition involving the Lagrange multipliers is satisfied. The conditions $y \ge 0$ and $\lambda \ge 0$ are explicitly noted. The notation $L(x, y, \lambda)$ represents the Lagrangian. The arrow indicates that this conclusion is reached when there are no constraints on $x$.</FIGURE>
+
+<DESCRIPTION>Slide 21 of 22 continues the derivation of the dual problem for a "traditional" linear program (LP), building upon slide 20. It starts with the Lagrangian $L(x, y, \lambda) = c^T x - y^T(Ax - b) - \lambda^T(-x)$ from the previous slide, where $c^T x$ is the primal objective function, $Ax \le b$ are the inequality constraints, $x \ge 0$ are the non-negativity constraints, and $y$ and $\lambda$ are the Lagrange multipliers. The non-negativity constraints $y \ge 0$ and $\lambda \ge 0$ are explicitly shown with an arrow indicating their application. The Lagrangian is simplified to $L(x, y, \lambda) = (c^T - y^T A + \lambda^T)x + y^T b$. The slide then defines the dual objective function as a piecewise function resulting from maximizing the Lagrangian with respect to $x$. If $c^T - A^T y + \lambda = 0$, then the maximum value is $y^T b$. Otherwise, if $c^T - A^T y + \lambda \ne 0$, the maximum is $+\infty$. The arrow indicates that this result is obtained when there are no constraints on $x$. The context of the course (Linear Programming) is crucial for understanding the derivation of the dual problem from the primal problem using the Lagrangian method.  Note that there's a slight error in the handwritten notes; the condition should be $c^T - A^T y + \lambda = 0$ instead of $c - A^T y + \lambda = 0$.</DESCRIPTION>
+
+SLIDE 22
+<LATEX>
+\text{Duality for ``Traditional'' LP} \\
+\boxed{\begin{array}{rl}
+\text{(D)} \quad \min_y & \xi(y) = b^T y \\
+\text{s.t.} & c - A^T y + \lambda = 0, \quad y, \lambda \ge 0
+\end{array}} \\
+\iff A^T y = c + \lambda, \quad y, \lambda \ge 0 \\
+\iff A^T y \ge c, \quad y \ge 0
+</LATEX>
+
+<FIGURE [100.0, 100.0, 400.0, 400.0]>Handwritten notes showing the derivation of the dual problem (D) for a traditional linear program. The dual problem minimizes a linear objective function subject to equality constraints and non-negativity constraints. The equivalence between the equality constraint and the inequality constraint is shown using double-headed arrows. The notation $\xi(y)$ represents the dual objective function, $b$ is the constraint vector from the primal problem, $A^T$ is the transpose of the constraint matrix from the primal problem, $y$ is the vector of dual variables, and $\lambda$ is a vector of slack variables.</FIGURE>
+
+<DESCRIPTION>Slide 22 of 22 presents the dual linear program (D) derived from the primal problem (P) shown in previous slides.  The dual problem is formulated as a minimization problem: $\min_y \xi(y) = b^T y$, where $b$ is the vector of constraints from the primal problem and $y$ is the vector of dual variables. The constraint $c - A^T y + \lambda = 0$ with $y, \lambda \ge 0$ is shown.  This constraint is then equivalently rewritten as $A^T y = c + \lambda$ with $y, \lambda \ge 0$, and finally simplified to $A^T y \ge c$ with $y \ge 0$. The double-headed arrows ($\iff$) indicate the equivalence between these different representations of the constraints. The boxed equation highlights the dual problem formulation. The context of the course (Linear Programming) is crucial for understanding the relationship between the primal and dual problems and their applications in optimization.</DESCRIPTION>
+

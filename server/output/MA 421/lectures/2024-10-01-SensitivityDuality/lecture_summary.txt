@@ -1,0 +1,13 @@
+This lecture on Linear Programming explored sensitivity analysis and duality theory.  The core concept is understanding how changes in a linear program's parameters affect its optimal solution and objective function value.
+
+* **Primal and Dual Problems:** The lecture introduced primal and dual linear programming problems, demonstrating their interconnectedness through strong duality, where the optimal objective function values are equal but opposite in sign.
+
+* **Complementary Slackness:**  Complementary slackness conditions were used to verify the optimality of a solution by relating the primal and dual variables.
+
+* **Sensitivity Analysis:** The lecture focused on analyzing the sensitivity of the optimal solution to changes in the right-hand side of the constraints, using the B, N method and matrix manipulations.
+
+* **Shadow Prices:** The optimal dual variables were interpreted as shadow prices, representing the rate of change in the optimal objective function value with respect to changes in the right-hand side constraints.
+
+* **Range of Optimality:**  The lecture determined the range of changes to the right-hand side for which the current optimal basis remains optimal.  This was achieved by analyzing the impact of changes on both primal and dual feasibility.
+
+* **Matrix Methods:**  Matrix notation and operations, including the inverse of the basis matrix, were extensively used to efficiently analyze the sensitivity of the optimal solution and objective function value.

@@ -1,0 +1,180 @@
+QUESTION 1
+Given the primal problem (P) $\max \quad \zeta = c^T x$ subject to $Ax \le b$ and $x \ge 0$, and its dual problem (D) $\min \quad \xi = b^T y$ subject to $A^T y \ge c$ and $y \ge 0$, as shown in Slide 1, what is the expression for the Lagrangian function $L(x, y)$ used in the derivation of the dual problem?
+A. $L(x, y) = c^T x + y^T (Ax - b)$
+B. $L(x, y) = c^T x - y^T (Ax - b)$
+C. $L(x, y) = c^T x + y^T (b - Ax)$
+D. $L(x, y) = b^T y - x^T (A^T y - c)$
+E. $L(x, y) = b^T y + x^T (A^T y - c)$
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect. The signs are reversed in the constraint term. The Lagrangian should be minimized when the constraints are satisfied.
+B. The correct expression for the Lagrangian function is $L(x, y) = c^T x - y^T (Ax - b)$.  The Lagrangian incorporates the objective function and the constraints, with $y$ as Lagrange multipliers for the inequality constraints $Ax \le b$. The negative sign ensures that the Lagrangian is minimized when the constraints are satisfied.
+C. This is incorrect. The signs are reversed in the constraint term. The Lagrangian should be minimized when the constraints are satisfied.
+D. This is incorrect. This expression represents a Lagrangian related to the dual problem, not the primal problem.
+E. This is incorrect. This expression represents a Lagrangian related to the dual problem, not the primal problem, and the signs are reversed.
+
+
+QUESTION 2
+Explain the significance of introducing the variables $x^+$ and $x^-$ in Slide 2 when transforming the general linear program (MI).
+A. To ensure the objective function remains linear.
+B. To handle unbounded variables and guarantee the existence of a solution.
+C. To simplify the constraint matrix A and make the problem easier to solve.
+D. To convert inequality constraints into equality constraints.
+E. To allow the use of the simplex method directly without further transformations.
+
+ANSWER: B
+
+EXPLANATION:
+A. While the transformation maintains linearity of the objective function, it's not the primary significance. The main purpose is to handle variables without inherent non-negativity constraints.
+B. The introduction of $x^+ = \max(x, 0)$ and $x^- = \max(-x, 0)$ allows us to represent any real-valued variable $x$ as the difference of two non-negative variables ($x = x^+ - x^-$). This is crucial because the standard form of a linear program requires non-negativity constraints.  Without this transformation, the duality theory presented in the subsequent slides would not directly apply to the general linear program (MI) which does not have the non-negativity constraint on $x$.
+C. The transformation doesn't directly simplify the constraint matrix A. The focus is on the variables, not the matrix itself.
+D. The transformation doesn't directly convert inequality constraints to equality constraints. That happens later in the derivation of the dual.
+E. The transformation is a necessary step before applying duality theory and the simplex method, not a direct application of the simplex method itself.
+
+
+QUESTION 3
+In Slide 3, the derivation leads to the condition $A^T y + z \ge c$ and $A^T y + z \le c$.  Explain why this ultimately simplifies to $A^T y + z = c$ in the dual problem (D).
+A. It's a mathematical simplification to reduce the number of constraints.
+B. It's a consequence of the non-negativity constraints on $x^+$ and $x^-$.
+C. It's an assumption made to ensure the dual problem is feasible.
+D. It's a result of minimizing the Lagrangian function with respect to $x$.
+E. It's necessary to ensure strong duality holds between the primal and dual problems.
+
+ANSWER: D
+
+EXPLANATION:
+A. While it simplifies the constraints, the simplification is a direct consequence of the minimization process, not an arbitrary reduction.
+B. The non-negativity constraints are important, but the equality arises from the minimization of the Lagrangian, not directly from the non-negativity of $x^+$ and $x^-$.
+C. It's not an assumption; it's a direct consequence of the mathematical derivation and the minimization of the Lagrangian.
+D. The derivation in Slide 3 involves minimizing the Lagrangian function.  The condition $A^T y + z \ge c$ arises from the coefficient of $x^+$ and $A^T y + z \le c$ from the coefficient of $x^-$.  To minimize the Lagrangian, the coefficient of $x$ must be zero, which implies $c^T - Y^T A - Z^T = 0$, leading to the equality constraint $A^T y + z = c$ in the dual problem.  If the coefficient were non-zero, the Lagrangian would be unbounded.
+E. While strong duality is related, the equality constraint is a direct result of the minimization process, not a requirement for strong duality to hold.
+
+
+QUESTION 4
+In Slide 6, the minimization of the Lagrangian leads to a piecewise function. Explain the significance of the condition $c^T - Y^T A - Z^T = 0$ and its implication for the dual problem.
+A. It ensures the dual problem is always feasible.
+B. It guarantees the existence of a finite optimal solution for the dual problem.
+C. It simplifies the calculation of the dual objective function.
+D. It is a necessary condition for weak duality to hold.
+E. It is a sufficient condition for strong duality to hold.
+
+ANSWER: B
+
+EXPLANATION:
+A. Feasibility is related, but the condition primarily ensures a finite optimal solution, not necessarily feasibility.
+B. If $c^T - Y^T A - Z^T \ne 0$, then the Lagrangian is unbounded below, meaning the dual problem is unbounded.  Therefore, the condition $c^T - Y^T A - Z^T = 0$ is crucial for the dual problem to have a finite optimal solution. This condition directly leads to the constraints of the dual problem, ensuring that the dual objective function is finite and the dual problem is well-defined.
+C. While it simplifies the objective function, the main significance is in ensuring a finite optimal solution.
+D. Weak duality holds regardless of this condition; this condition is about the boundedness of the dual problem.
+E. This is a necessary condition for strong duality, but not sufficient on its own.  Feasibility of both primal and dual problems is also required.
+
+
+QUESTION 5
+Explain the significance of introducing the variables $x^+$ and $x^-$ in Slide 2 when transforming the general linear program (MI).
+A. To ensure the objective function remains linear.
+B. To handle unbounded variables in the primal problem.
+C. To simplify the derivation of the dual problem.
+D. To convert inequality constraints into equality constraints.
+E. To guarantee the feasibility of the primal problem.
+
+ANSWER: B
+
+EXPLANATION:
+A. While the transformation maintains linearity in the objective function, it's not the primary reason for introducing $x^+$ and $x^-$. The main purpose is to handle potentially negative values of $x$.
+B. The introduction of $x^+$ and $x^-$ allows us to represent any real-valued variable $x$ as the difference of two non-negative variables. This is crucial because the standard form of a linear program requires non-negative variables, and the original problem (MI) does not necessarily have this constraint.  By expressing $x = x^+ - x^-$, where $x^+, x^- \ge 0$, we can handle variables that might take on negative values in the original formulation.
+C. The transformation simplifies the derivation, but the core reason is to handle the absence of non-negativity constraints in the original problem.
+D. Slack variables are used to convert inequalities to equalities, but $x^+$ and $x^-$ are used to handle the sign of the variables.
+E. The transformation doesn't guarantee feasibility; it allows us to work with a problem that can be more easily analyzed using duality theory.
+
+
+QUESTION 6
+Given the general linear program (MI) in Slide 2, $\max \quad c^T x$ subject to $Ax \le b$ and $x \le u$, what is the objective function of the transformed problem after introducing the variables $x^+$ and $x^-$?
+A. $c^T x^+$
+B. $c^T x^-$
+C. $c^T (x^+ + x^-)$
+D. $c^T (x^+ - x^-)$
+E. $c^T (x^- - x^+)$
+
+ANSWER: D
+
+EXPLANATION:
+A. This only considers the positive part of x.
+B. This only considers the negative part of x.
+C. This uses the sum instead of the difference.
+D. The transformation in Slide 2 replaces $x$ with $x^+ - x^-$. Therefore, the objective function becomes $c^T(x^+ - x^-)$.
+E. This uses the opposite difference.
+
+
+QUESTION 7
+In Slide 3, the derivation of the dual problem involves the inequalities $(y^T A + z^T)x^+ + (-y^T A - z^T)x^- \le y^T b + z^T u$.  What condition is ultimately imposed to simplify the constraints of the dual problem?
+A. $y^T A + z^T \ge 0$
+B. $y^T A + z^T \le 0$
+C. $A^T y + z \ge c$
+D. $A^T y + z = c$
+E. $y^T b + z^T u = 0$
+
+ANSWER: D
+
+EXPLANATION:
+A. This is a condition on the coefficients, not the final constraint.
+B. This is a condition on the coefficients, not the final constraint.
+C. This is one of the intermediate inequalities, not the final simplification.
+D. The slide shows that the condition $A^T y + z \le c$ and $A^T y + z \ge c$ are combined to yield $A^T y + z = c$, simplifying the dual problem's constraints.
+E. This is a condition on the objective function, not the constraints.
+
+
+QUESTION 8
+Referring to Slide 4, what is the Lagrangian function, $L(x, y, z)$, for the linear program (M2) given by $\max \quad c^T x$ subject to $Ax \le b$ and $x \le u$?
+A. $L(x, y, z) = c^T x + y^T (Ax - b) + z^T (x - u)$
+B. $L(x, y, z) = c^T x - y^T (Ax - b) - z^T (x - u)$
+C. $L(x, y, z) = c^T x + y^T (Ax + b) + z^T (x + u)$
+D. $L(x, y, z) = c^T x - y^T (Ax + b) - z^T (x + u)$
+E. $L(x, y, z) = y^T (Ax - b) + z^T (x - u)$
+
+ANSWER: B
+
+EXPLANATION:
+A. Incorrect signs for the constraints in the Lagrangian.
+B. The Lagrangian function correctly incorporates the objective function and constraints with Lagrange multipliers $y$ and $z$.
+C. Incorrect signs for the constraints and b and u.
+D. Incorrect signs for the constraints and b and u.
+E. Missing the objective function.
+
+
+QUESTION 9
+In Slide 6, the minimization of the Lagrangian leads to a piecewise function. What condition must be satisfied for the minimum value of the Lagrangian to be finite (not $+\infty$)?
+A. $c^T - Y^T A - Z^T > 0$
+B. $c^T - Y^T A - Z^T < 0$
+C. $c^T - Y^T A - Z^T = 0$
+D. $Y^T b + Z^T u > 0$
+E. $Y^T b + Z^T u < 0$
+
+ANSWER: C
+
+EXPLANATION:
+A. This condition leads to an unbounded solution.
+B. This condition leads to an unbounded solution.
+C. Only when $c^T - Y^T A - Z^T = 0$ does the minimum value become $Y^T b + Z^T u$; otherwise, it's unbounded.
+D. This is a condition on the objective function value, not the constraint for finiteness.
+E. This is a condition on the objective function value, not the constraint for finiteness.
+
+
+QUESTION 10
+Given the general linear program (MI) in Slide 2, $\max \quad c^T x$ subject to $Ax \le b$ and $x \le u$, what is the objective function of the transformed problem after introducing the variables $x^+$ and $x^-$?
+A. $c^T x^+$
+B. $c^T x^-$
+C. $c^T (x^+ + x^-)$
+D. $c^T (x^+ - x^-)$
+E. $c^T (x^- - x^+)$
+
+ANSWER: D
+
+EXPLANATION:
+A. Answer A is incorrect. This only considers the positive part of x, ignoring the negative part.
+B. Answer B is incorrect. This only considers the negative part of x, ignoring the positive part.
+C. Answer C is incorrect. This sums the positive and negative parts, which is not the correct transformation.
+D. Answer D is correct.  The transformation in Slide 2 replaces $x$ with $x^+ - x^-$, directly substituting this into the original objective function $c^T x$ yields $c^T (x^+ - x^-)$.
+E. Answer E is incorrect. This subtracts the positive part from the negative part, reversing the correct transformation.
+
+

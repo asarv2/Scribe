@@ -1,0 +1,179 @@
+QUESTION 1
+In the primal problem presented on Slide 1, what is the significance of the slack variables $w_1, w_2, w_3$ in relation to the constraints and the feasible region?
+A. The slack variables represent the distance from a point in the feasible region to the origin.
+B. The slack variables represent the amount by which each constraint is satisfied at a given point.
+C. The slack variables represent the amount by which each constraint is violated at a given point.
+D. The slack variables represent the coordinates of the vertices of the feasible region.
+E. The slack variables represent the coefficients of the objective function.
+
+ANSWER: B
+
+EXPLANATION:
+A. The distance from a point to the origin is not directly represented by the slack variables.  Slack variables are related to the satisfaction of individual constraints.
+B. Slack variables represent the difference between the left-hand side and the right-hand side of each constraint.  A positive slack variable indicates that the constraint is satisfied, while a slack variable of zero means the constraint is binding (active).
+C. Slack variables do not represent constraint violations.  Negative slack variables would indicate a violation, but the introduction of slack variables ensures non-negativity.
+D. The vertices of the feasible region are determined by the intersection of constraints, but the slack variables themselves do not represent the coordinates.
+E. Slack variables are introduced to convert inequality constraints to equalities; they are not related to the objective function's coefficients.
+
+
+QUESTION 2
+Considering the graphical representation of the feasible region on Slide 5, how does the simplex method's iterative process relate to the geometry of the feasible region?
+A. The simplex method randomly explores points within the feasible region.
+B. The simplex method systematically moves from vertex to vertex along the edges of the feasible region.
+C. The simplex method directly calculates the optimal solution without considering the feasible region's geometry.
+D. The simplex method identifies the centroid of the feasible region as the optimal solution.
+E. The simplex method only considers the interior points of the feasible region.
+
+ANSWER: B
+
+EXPLANATION:
+A. The simplex method is not random; it follows a deterministic path through the vertices.
+B. The simplex method is a vertex-following algorithm. It starts at a vertex of the feasible region and iteratively moves to an adjacent vertex that improves the objective function until the optimal vertex is found.
+C. The simplex method heavily relies on the geometry of the feasible region; the optimal solution is always at a vertex.
+D. The centroid is not necessarily the optimal solution; the optimal solution is always at a vertex of the feasible region.
+E. The simplex method focuses on the vertices of the feasible region, not the interior points.
+
+
+QUESTION 3
+In the context of the primal problem (Slide 1), explain the concept of a basic feasible solution (BFS) and its relationship to the vertices of the feasible region.
+A. A BFS is any point within the feasible region.
+B. A BFS is a solution where all variables are strictly positive.
+C. A BFS is a solution where all constraints are strictly satisfied.
+D. A BFS is a solution that corresponds to a vertex of the feasible region.
+E. A BFS is a solution that violates at least one constraint.
+
+ANSWER: D
+
+EXPLANATION:
+A. A BFS is not any point; it's a specific type of solution corresponding to a vertex.
+B. A BFS can have zero values for some variables (non-basic variables).
+C. A BFS satisfies all constraints; it doesn't need to strictly satisfy them (equality is allowed).
+D. A BFS corresponds to a vertex of the feasible region.  In a BFS, $n$ variables are set to zero (non-basic variables), and the remaining $m$ variables (basic variables) are determined by solving the system of equations.
+E. A BFS is a feasible solution; it does not violate any constraints.
+
+
+QUESTION 4
+On Slide 1, the primal problem is presented in standard form and then converted to slack variable form.  What is the primary advantage of using the slack variable form when applying the simplex method?
+A. The slack variable form simplifies the objective function.
+B. The slack variable form reduces the number of constraints.
+C. The slack variable form converts inequality constraints into equality constraints, making it easier to apply the simplex method.
+D. The slack variable form eliminates the need for non-negativity constraints.
+E. The slack variable form allows for the direct use of the graphical method.
+
+ANSWER: C
+
+EXPLANATION:
+A. The slack variable form does not simplify the objective function; it remains the same.
+B. The slack variable form does not reduce the number of constraints; it adds slack variables to convert inequalities to equalities.
+C. The simplex method, in its standard form, works with equality constraints.  Introducing slack variables transforms inequality constraints into equalities, making the problem directly solvable by the simplex algorithm.
+D. Non-negativity constraints are still necessary in the slack variable form to ensure feasibility.
+E. The slack variable form is used for algebraic solution via the simplex method, not the graphical method.
+
+
+QUESTION 5
+Consider the primal problem presented on Slide 1:  Maximize $\zeta = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, and $x_1, x_2 \ge 0$.  Explain the significance of the slack variables $w_1, w_2, w_3$ introduced in the slack variable form of the problem, and how they relate to the feasible region graphically represented in Slide 5.
+A. The slack variables represent the distance from a point in the feasible region to the corresponding constraint boundary.  When a slack variable is zero, the corresponding constraint is binding (active).
+B. The slack variables are arbitrary values added to make the simplex method work; they have no geometric interpretation.
+C. The slack variables represent the surplus of resources available for each constraint.  A negative slack variable indicates that the constraint is violated.
+D. The slack variables are used only for algebraic manipulation and have no direct relationship to the feasible region.
+E. The slack variables represent the amount by which the objective function value exceeds the optimal value for each constraint.
+
+ANSWER: A
+
+EXPLANATION:
+A. The slack variables represent the difference between the left-hand side and the right-hand side of each inequality constraint. Geometrically, this represents the perpendicular distance from a point within the feasible region to the corresponding constraint line.  A zero slack variable indicates that the point lies on the constraint line, meaning the constraint is binding (active) at that point.  In Slide 5, the vertices of the feasible region are defined by the intersection of constraint lines, where at least two slack variables are zero.
+B. Incorrect. Slack variables have a crucial geometric interpretation related to the distance from a point to the constraint boundaries.
+C. Incorrect.  A negative slack variable would indicate a violation of the constraint, which is not possible within the feasible region. Slack variables represent the difference between the left and right sides of a $\le$ constraint.
+D. Incorrect. Slack variables are fundamental to the simplex method and have a direct geometric interpretation within the feasible region.
+E. Incorrect. Slack variables are related to constraints, not the objective function's value relative to the optimum.
+
+
+QUESTION 6
+In the primal problem presented on Slide 1, what are the values of the slack variables $w_1$, $w_2$, and $w_3$ when $x_1 = 0$ and $x_2 = 0$?
+A. $w_1 = 12, w_2 = 8, w_3 = 10$
+B. $w_1 = 0, w_2 = 0, w_3 = 0$
+C. $w_1 = -12, w_2 = -8, w_3 = -10$
+D. $w_1 = 1, w_2 = 1, w_3 = 1$
+E. $w_1 = -1, w_2 = -1, w_3 = -1$
+
+ANSWER: A
+
+EXPLANATION:
+A. Substituting $x_1 = 0$ and $x_2 = 0$ into the equations for $w_1$, $w_2$, and $w_3$ on Slide 1 gives $w_1 = 12$, $w_2 = 8$, and $w_3 = 10$.
+B. This is incorrect.  The slack variables represent the difference between the left and right sides of the constraints. When $x_1 = x_2 = 0$, these differences are not zero.
+C. This is incorrect. Slack variables must be non-negative.
+D. This is incorrect. There is no basis for these values.
+E. This is incorrect. Slack variables must be non-negative.
+
+
+QUESTION 7
+On Slide 8, we increase $x_1$ while keeping $x_2 = 0$. Which constraint determines the maximum feasible value of $x_1$?
+A. $w_1 \ge 0$
+B. $w_2 \ge 0$
+C. $w_3 \ge 0$
+D. $x_1 \ge 0$
+E. $x_2 \ge 0$
+
+ANSWER: C
+
+EXPLANATION:
+A. This constraint does not impose a limit on $x_1$ when $x_2 = 0$.
+B. This constraint gives $x_1 \le 8$, which is less restrictive than $x_1 \le 5$ from $w_3 \ge 0$.
+C. The constraints $w_2 \ge 0$ and $w_3 \ge 0$ give $x_1 \le 8$ and $x_1 \le 5$ respectively. The most restrictive constraint is $w_3 \ge 0$, which sets the upper bound on $x_1$ to 5.
+D. This constraint is always satisfied since we are increasing $x_1$ from 0.
+E. This constraint is already satisfied since $x_2$ is kept at 0.
+
+
+QUESTION 8
+On Slide 11, what is the maximum value of $x_2$ allowed by the constraints, given that $w_3 = 0$?
+A. 6.8
+B. 8
+C. 10
+D. 2
+E. 12
+
+ANSWER: D
+
+EXPLANATION:
+A. This is the upper bound from $w_1 \ge 0$, but $w_2 \ge 0$ is more restrictive.
+B. This value is not directly related to the constraints on $x_2$ when $w_3 = 0$.
+C. This value is not directly related to the constraints on $x_2$ when $w_3 = 0$.
+D. The constraints $w_1 \ge 0$ and $w_2 \ge 0$ give $x_2 \le 6.8$ and $x_2 \le 2$ respectively. The most restrictive constraint is $w_2 \ge 0$, which sets the upper bound on $x_2$ to 2.
+E. This value is not directly related to the constraints on $x_2$ when $w_3 = 0$.
+
+
+QUESTION 9
+In the initial basic feasible solution (IBFS) obtained by setting the non-basic variables ($x_1, x_2$) to zero in the primal problem (Slide 1), what are the values of the basic variables $w_1$, $w_2$, and $w_3$?
+A. $w_1 = 0, w_2 = 0, w_3 = 0$
+B. $w_1 = 12, w_2 = 8, w_3 = 10$
+C. $w_1 = 8, w_2 = 12, w_3 = 10$
+D. $w_1 = 10, w_2 = 8, w_3 = 12$
+E. $w_1 = -12, w_2 = -8, w_3 = -10$
+
+ANSWER: B
+
+EXPLANATION:
+A. Incorrect.  The slack variables represent the difference between the left and right sides of the constraints; these differences are not zero when $x_1 = x_2 = 0$.
+B. Setting $x_1 = 0$ and $x_2 = 0$ in the equations on Slide 1 yields $w_1 = 12$, $w_2 = 8$, and $w_3 = 10$.
+C. Incorrect. This is a random permutation of the correct values.
+D. Incorrect. This is a random permutation of the correct values.
+E. Incorrect. Slack variables must be non-negative.
+
+
+QUESTION 10
+In the primal problem presented on Slide 1, what are the values of the slack variables $w_1$, $w_2$, and $w_3$ when $x_1 = 2$ and $x_2 = 2$?
+A. $w_1 = 4, w_2 = 4, w_3 = 4$
+B. $w_1 = 8, w_2 = 4, w_3 = 6$
+C. $w_1 = 4, w_2 = 4, w_3 = 6$
+D. $w_1 = 8, w_2 = 4, w_3 = 4$
+E. $w_1 = 6, w_2 = 4, w_3 = 6$
+
+ANSWER: NO CORRECT ANSWER MARKED
+
+EXPLANATION:
+A. Incorrect. This answer does not correctly substitute the values of $x_1$ and $x_2$ into the equations for the slack variables.
+B. Incorrect. This answer does not correctly substitute the values of $x_1$ and $x_2$ into the equations for the slack variables.
+D. Incorrect. This answer does not correctly substitute the values of $x_1$ and $x_2$ into the equations for the slack variables.
+E. Incorrect. This answer does not correctly substitute the values of $x_1$ and $x_2$ into the equations for the slack variables.
+
+

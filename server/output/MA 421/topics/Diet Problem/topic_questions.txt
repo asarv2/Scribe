@@ -1,0 +1,233 @@
+QUESTION 1
+In the context of the diet problem, what does a non-negative slack variable represent?
+A. The amount by which a nutrient constraint is exceeded.
+B. The cost of the optimal diet.
+C. The minimum amount of a nutrient required.
+D. The amount by which a nutrient constraint is not met.
+E. The price of a food item.
+
+ANSWER: A
+
+EXPLANATION:
+A. A non-negative slack variable in a diet problem represents the surplus of a particular nutrient in the optimal diet, meaning the amount by which the nutrient constraint is exceeded.
+B. The cost of the optimal diet is represented by the objective function value, not a slack variable.
+C. The minimum amount of a nutrient is part of the constraint, not the slack variable.
+D. A non-negative slack variable represents the surplus, not the shortfall.  A shortfall would be represented by a surplus variable (which would be non-positive).
+E. The price of a food item is a coefficient in the objective function or constraints, not a slack variable.
+
+
+QUESTION 2
+In a diet problem, what does the objective function typically represent?
+A. The total amount of nutrients consumed.
+B. The total number of food items consumed.
+C. The minimum cost of the diet that satisfies the nutritional requirements.
+D. The maximum amount of a specific nutrient allowed.
+E. The number of constraints in the problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. The total amount of nutrients is considered in the constraints, not the objective function.
+B. The number of food items is a variable in the problem, not the objective.
+C. The objective function in a diet problem usually aims to minimize the total cost of the diet while meeting all nutritional requirements.
+D. Maximum nutrient amounts are part of the constraints, not the objective function.
+E. The number of constraints is a characteristic of the problem's structure, not the objective function.
+
+
+QUESTION 3
+What type of linear programming problem is the diet problem typically formulated as?
+A. A maximization problem
+B. A minimization problem
+C. An equality problem
+D. An unconstrained problem
+E. A non-linear problem
+
+ANSWER: B
+
+EXPLANATION:
+A. Minimizing cost, not maximizing, is the goal of a typical diet problem.
+B. The diet problem is usually formulated as a minimization problem, aiming to minimize the cost of the diet while satisfying nutritional constraints.
+C. The diet problem involves inequality constraints (nutritional requirements must be met or exceeded).
+D. The diet problem has constraints (nutritional requirements and non-negativity of food quantities).
+E. The diet problem is a linear programming problem, meaning the objective function and constraints are linear.
+
+
+QUESTION 4
+In the formulation of a diet problem, what do the decision variables typically represent?
+A. The types of nutrients needed.
+B. The amounts of each food item to include in the diet.
+C. The cost per unit of each food item.
+D. The minimum daily requirement of each nutrient.
+E. The total cost of the diet.
+
+ANSWER: B
+
+EXPLANATION:
+A. The types of nutrients are parameters in the constraints, not decision variables.
+B. The decision variables in a diet problem represent the quantities of each food item to be included in the optimal diet.
+C. The cost per unit of each food item is a parameter in the objective function and constraints.
+D. The minimum daily requirements are parameters in the constraints, not decision variables.
+E. The total cost of the diet is the objective function value, not a decision variable.
+
+
+QUESTION 5
+Part A:
+What type of linear programming problem is the diet problem typically formulated as?
+A. A maximization problem
+B. A minimization problem
+C. An equality problem
+D. A non-linear programming problem
+E. An integer programming problem
+
+ANSWER: B
+
+EXPLANATION:
+A. While some formulations might involve maximizing certain nutrients, the core diet problem focuses on minimizing cost.
+B. The diet problem aims to minimize the cost, making it a minimization problem.
+C. The diet problem involves inequalities representing nutritional constraints.
+D. The diet problem is inherently linear in its objective function and constraints.
+E. Unless specific quantities must be whole numbers, the diet problem doesn't require integer programming.
+
+Part B:
+In the formulation of a diet problem, what do the decision variables typically represent?
+A. The cost of each food item
+B. The nutritional content of each food item
+C. The amount of each food item to include in the diet
+D. The minimum daily requirement of each nutrient
+E. The total cost of the diet
+
+ANSWER: C
+
+EXPLANATION:
+A. Costs are parameters, not decision variables.
+B. Nutritional content is also a parameter.
+C. Decision variables represent the quantities of each food item to be consumed.
+D. Minimum daily requirements are parameters defining the constraints.
+E. The total cost is the objective function, not a decision variable.
+
+Part C:
+In the context of the diet problem, what does a non-negative slack variable represent?
+A. The amount by which a nutritional requirement is exceeded
+B. The amount by which a nutritional requirement is unmet
+C. The cost of exceeding a nutritional requirement
+D. The cost of not meeting a nutritional requirement
+E. The total amount of food consumed
+
+ANSWER: A
+
+EXPLANATION:
+A. Slack variables represent the surplus of nutrients above the minimum requirement.
+B. A surplus is represented by a slack variable; unmet requirements are represented by surplus variables.
+C. Costs are part of the objective function, not slack variables.
+D. Penalties for unmet requirements would be part of the objective function, not slack variables.
+E. The total amount of food is related to the decision variables, not slack variables.
+
+Part D:
+In a diet problem, what does the objective function typically represent?
+A. The total amount of nutrients consumed
+B. The total number of food items consumed
+C. The total cost of the diet
+D. The minimum daily requirement of nutrients
+E. The nutritional balance of the diet
+
+ANSWER: C
+
+EXPLANATION:
+A. Nutrient amounts are considered in the constraints.
+B. The number of food items is not directly part of the objective function.
+C. The objective is to minimize the total cost of the diet.
+D. Minimum requirements are parameters in the constraints.
+E. Nutritional balance is implicitly addressed through the constraints.
+
+
+
+QUESTION 6
+A dietician is designing a meal plan to minimize cost while meeting certain nutritional requirements.  The meal plan consists of various foods, each with different costs and nutritional values. The dietician wants to determine the optimal quantities of each food to include in the meal plan. What type of linear programming problem is this?
+A. A maximization problem
+B. A transportation problem
+C. An assignment problem
+D. A minimization problem
+E. A network flow problem
+
+ANSWER: D
+
+EXPLANATION:
+A. While some linear programming problems involve maximization, the diet problem focuses on minimizing cost.
+B. Transportation problems involve optimizing the flow of goods between sources and destinations. This is not the focus of the diet problem.
+C. Assignment problems involve assigning tasks to agents in an optimal way. This is not directly related to the diet problem.
+D. The diet problem aims to minimize the cost, making it a minimization problem.
+E. Network flow problems deal with optimizing flow through a network. The diet problem does not have a network structure.
+
+
+QUESTION 7
+In a diet problem, the objective function typically represents what?
+A. The total number of foods in the diet
+B. The total amount of nutrients consumed
+C. The total cost of the diet
+D. The number of constraints
+E. The total weight of the food
+
+ANSWER: C
+
+EXPLANATION:
+A. The number of foods is a constraint, not the objective.
+B. Nutrient intake is a constraint, not the objective.
+C. The primary goal in a diet problem is to minimize the cost of the diet.
+D. The number of constraints is a characteristic of the problem, not the objective.
+E. The total weight of food might be a constraint, but not the objective.
+
+
+QUESTION 8
+Suppose a diet problem includes a constraint that the daily intake of Vitamin C must be at least 500mg.  A slack variable, $s_1$, is introduced to convert this inequality constraint into an equality. What does $s_1$ represent in this context?
+A. The amount of Vitamin C exceeding the minimum requirement
+B. The amount of Vitamin C below the minimum requirement
+C. The total cost of Vitamin C
+D. The total amount of Vitamin C consumed
+E. The price of Vitamin C per mg
+
+ANSWER: A
+
+EXPLANATION:
+A. The slack variable represents the surplus of Vitamin C above the minimum requirement.
+B. If the amount of Vitamin C is below the minimum, the slack variable would be negative, which is not allowed in standard form.
+C. The cost of Vitamin C is part of the objective function, not a slack variable.
+D. The total amount of Vitamin C is a constraint, not a slack variable.
+E. The price of Vitamin C is a parameter in the problem, not a slack variable.
+
+
+QUESTION 9
+A dietician is formulating a diet plan using two foods, Food A and Food B. Food A costs $2 per unit and contains 10 units of nutrient X and 5 units of nutrient Y. Food B costs $3 per unit and contains 6 units of nutrient X and 12 units of nutrient Y. The minimum daily requirements are 60 units of nutrient X and 60 units of nutrient Y. Let $x_A$ and $x_B$ represent the number of units of Food A and Food B, respectively. What is the objective function for minimizing the cost of the diet?
+A. Minimize $Z = 10x_A + 6x_B$
+B. Minimize $Z = 5x_A + 12x_B$
+C. Minimize $Z = 2x_A + 3x_B$
+D. Minimize $Z = 60x_A + 60x_B$
+E. Minimize $Z = 15x_A + 18x_B$
+
+ANSWER: C
+
+EXPLANATION:
+A. This represents the total units of nutrient X.
+B. This represents the total units of nutrient Y.
+C. The objective function represents the total cost, which is $2x_A + 3x_B$.
+D. This is incorrect; it uses the minimum requirements, not the costs.
+E. This is incorrect; it is not related to the cost of the foods.
+
+
+QUESTION 10
+A dietician is designing a meal plan to minimize cost while meeting certain nutritional requirements. The meal plan consists of various foods, each with different costs and nutritional values. The dietician wants to determine the optimal quantities of each food to include in the meal plan. What type of linear programming problem is this?
+A. A maximization problem
+B. A transportation problem
+C. An assignment problem
+D. A minimization problem
+E. A network flow problem
+
+ANSWER: D
+
+EXPLANATION:
+A. Answer A is incorrect because the objective is to minimize cost, not maximize it.
+B. Answer B is incorrect because transportation problems involve transporting goods between sources and destinations, which is not the case here.
+C. Answer C is incorrect because assignment problems involve assigning tasks to individuals, which is not relevant to this scenario.
+D. Answer D is correct because the goal is to minimize the cost of the meal plan, making it a minimization problem.
+E. Answer E is incorrect because network flow problems deal with flows in networks, which is not directly applicable to this diet planning problem.
+
+

@@ -1,0 +1,179 @@
+QUESTION 1
+In the context of the primal problem (Slide 1), explain the concept of a basic feasible solution (BFS) and its relationship to the vertices of the feasible region.
+A. A BFS is any feasible solution to the primal problem, and it corresponds to a point within the feasible region.
+B. A BFS is a feasible solution where the number of non-zero variables is equal to the number of constraints, and it corresponds to a vertex of the feasible region.
+C. A BFS is a solution that satisfies all constraints but may not maximize the objective function, and it can be any point within the feasible region.
+D. A BFS is a feasible solution where all variables are non-negative, and it corresponds to a point on the boundary of the feasible region.
+E. A BFS is any solution that maximizes the objective function, regardless of whether it satisfies all constraints, and it corresponds to a vertex of the feasible region.
+
+ANSWER: B
+
+EXPLANATION:
+A. This definition is too broad. A BFS is a specific type of feasible solution, not just any feasible solution.
+B. A basic feasible solution (BFS) is a feasible solution where the number of non-zero variables is at most equal to the number of constraints.  In a geometric interpretation, these solutions correspond to the vertices (corner points) of the feasible region.  If the number of non-zero variables is strictly less than the number of constraints, it is a degenerate BFS.
+C. A BFS must satisfy all constraints and is a candidate for the optimal solution, but it doesn't necessarily maximize the objective function.
+D. While a BFS has non-negative variables, it doesn't necessarily lie on the boundary; it specifically corresponds to vertices.
+E. A BFS is not necessarily an optimal solution; optimality is determined by the objective function value.
+
+
+QUESTION 2
+On Slide 1, the primal problem is presented in standard form and then converted to slack variable form. What is the primary advantage of using the slack variable form when applying the simplex method?
+A. The slack variable form simplifies the objective function, making it easier to calculate the optimal solution.
+B. The slack variable form eliminates the need for considering non-negativity constraints on the variables.
+C. The slack variable form converts inequality constraints into equality constraints, allowing the use of matrix algebra and simplifying the simplex algorithm.
+D. The slack variable form reduces the number of variables in the problem, making it computationally less expensive.
+E. The slack variable form provides a more intuitive geometric representation of the feasible region.
+
+ANSWER: C
+
+EXPLANATION:
+A. The slack variable form does not directly simplify the objective function; it simplifies the constraints.
+B. The slack variable form does not eliminate non-negativity constraints; it adds new non-negative variables.
+C. The primary advantage of using the slack variable form is that it transforms inequality constraints into equality constraints. This allows for the direct application of the simplex method, which relies on systems of linear equations.  Matrix algebra can then be used to efficiently manage the calculations involved in the simplex algorithm.
+D. The slack variable form actually increases the number of variables in the problem.
+E. While the slack variable form can aid in visualization, it's not the primary advantage for the simplex method.
+
+
+QUESTION 3
+Consider the primal problem presented on Slide 1: Maximize $\zeta = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, and $x_1, x_2 \ge 0$. Explain the significance of the slack variables $w_1, w_2, w_3$ introduced in the slack variable form of the problem, and how they relate to the feasible region graphically represented in Slide 5.
+A. The slack variables represent the distance of a feasible solution from the origin.
+B. The slack variables represent the amount by which each constraint is satisfied; a value of zero indicates the solution lies on the constraint boundary.
+C. The slack variables represent the amount by which each constraint is violated; a positive value indicates infeasibility.
+D. The slack variables represent the surplus resources available after satisfying the constraints.
+E. The slack variables are arbitrary variables added to make the problem solvable; they have no direct relation to the feasible region.
+
+ANSWER: B
+
+EXPLANATION:
+A. Slack variables do not represent the distance from the origin; they represent the slack in each constraint.
+B. The slack variables $w_1, w_2, w_3$ represent the difference between the left-hand side and the right-hand side of each constraint.  If $w_i = 0$, the corresponding constraint is binding (the solution lies on the constraint boundary).  If $w_i > 0$, the constraint is non-binding (the solution is within the feasible region, away from the constraint boundary).
+C. A positive slack variable indicates that the constraint is satisfied, not violated.  A negative slack variable would indicate a violation.
+D. Slack variables represent the unused resources, not the surplus resources.
+E. Slack variables are crucial for converting inequalities to equalities, which is essential for the simplex method.
+
+
+QUESTION 4
+Using Slide 1, formulate the dual problem for the primal problem: Maximize $Z = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, $x_1, x_2 \ge 0$. What is the objective function of the dual problem?
+A. Minimize $W = 12y_1 + 8y_2 + 10y_3$
+B. Maximize $W = 12y_1 + 8y_2 + 10y_3$
+C. Minimize $W = 3y_1 + 2y_2 + 10y_3$
+D. Maximize $W = -12y_1 - 8y_2 - 10y_3$
+E. Minimize $W = -3y_1 - 2y_2 - 10y_3$
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual problem is a minimization problem. The objective function coefficients in the dual problem are the right-hand side values of the constraints in the primal problem. Therefore, the objective function of the dual problem is Minimize $W = 12y_1 + 8y_2 + 10y_3$.
+B. The dual of a maximization problem is a minimization problem.
+C. The coefficients are incorrect; they should be the right-hand side values from the primal constraints.
+D. While the dual is a minimization problem, this option negates the right-hand side values.
+E. This option negates both the right-hand side values and the objective function coefficients.
+
+
+QUESTION 5
+Consider the primal linear program (P) and its dual (D) as defined on Slide 1.  Explain the relationship between the feasibility and boundedness of the primal and dual problems, covering all four possible scenarios. For each scenario, describe the implications for the optimal objective function values of both problems.
+A. If the primal problem (P) is feasible and bounded, the dual problem (D) is infeasible.
+B. If the primal problem (P) is infeasible, the dual problem (D) is unbounded.
+C. If the primal problem (P) is unbounded, the dual problem (D) is infeasible, and vice versa.
+D. If the primal problem (P) is infeasible, the dual problem (D) can be either infeasible or unbounded.
+E. If both the primal problem (P) and the dual problem (D) are feasible, then both must have optimal solutions with equal objective function values.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. If the primal problem is feasible and bounded, the dual problem is also feasible and bounded, and their optimal objective function values are equal.
+B. Answer B is incorrect. If the primal problem is infeasible, the dual problem is either infeasible or unbounded.
+C. Answer C is correct.  The strong duality theorem states that if one problem is feasible and bounded, the other is also feasible and bounded, and their optimal objective function values are equal. If one problem is infeasible, the other is either infeasible or unbounded.  This covers all four possibilities: (1) both feasible and bounded, (2) primal feasible and unbounded, dual infeasible, (3) dual feasible and unbounded, primal infeasible, (4) both infeasible.
+D. Answer D is incorrect.  If the primal is infeasible, the dual is either infeasible or unbounded, but not both.  The dual cannot be both infeasible and unbounded simultaneously.
+E. Answer E is incorrect. While it's true that if both are feasible and bounded, they have equal optimal objective function values, this doesn't cover all possibilities.  One or both problems could be infeasible or unbounded.
+
+
+QUESTION 6
+Given the primal problem (P) on Slide 1: $\max \xi(x) = c^T x$ subject to $Ax \le b$, $x \ge 0$, what is the objective function of its dual problem (D)?
+A. $\min \xi(y) = c^T y$
+B. $\min \xi(y) = b^T x$
+C. $\min \xi(y) = b^T y$
+D. $\max \xi(y) = b^T y$
+E. $\max \xi(y) = c^T y$
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. This uses the vector $c$ instead of $b$ in the objective function.
+B. Answer B is incorrect. This uses the primal variable vector $x$ instead of the dual variable vector $y$.
+C. Answer C is correct. The dual problem (D) is a minimization problem, and its objective function is given by the transpose of the vector $b$ multiplied by the vector of dual variables $y$.
+D. Answer D is incorrect. This is a maximization problem, while the dual of a maximization problem is a minimization problem.
+E. Answer E is incorrect. This uses the vector $c$ instead of $b$ in the objective function.
+
+
+QUESTION 7
+Referring to Slide 2, which inequality always holds true between the objective function value of any feasible solution to the primal problem ($\xi(x)$) and the objective function value of any feasible solution to the dual problem ($\xi(y)$)?
+A. $\xi(x) \ge \xi(y)$
+B. $\xi(x) = \xi(y)$
+C. $\xi(x) < \xi(y)$
+D. $\xi(x) > \xi(y)$
+E. $\xi(x) \le \xi(y)$
+
+ANSWER: E
+
+EXPLANATION:
+A. Answer A is incorrect. This inequality is only true at optimality (strong duality) for maximization primal problems.
+B. Answer B is incorrect. This equality is only true at optimality (strong duality).
+C. Answer C is incorrect. This inequality is not generally true; it's the opposite of weak duality.
+D. Answer D is incorrect. This inequality is not generally true; it's the opposite of weak duality.
+E. Answer E is correct. This inequality represents weak duality.  For any feasible solutions to the primal and dual problems, the primal objective function value is always less than or equal to the dual objective function value.
+
+
+QUESTION 8
+On Slide 3, the primal and dual problems are presented in matrix notation. What is the relationship between the constraint matrices in the primal and dual problems?
+A. They are identical.
+B. One is the transpose of the other.
+C. One is the inverse of the other.
+D. They are negative transposes of each other.
+E. There is no specific relationship.
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect.  The matrices are related, but not identical.
+B. Answer B is correct. The constraint matrix in the dual problem is the transpose of the constraint matrix in the primal problem.
+C. Answer C is incorrect. The matrices are related, but not inverses of each other.
+D. Answer D is incorrect. While the negative transpose plays a role in the relationship between the primal and dual problems, it's not the direct relationship between the constraint matrices themselves.
+E. Answer E is incorrect. There is a fundamental relationship between the constraint matrices of the primal and dual problems.
+
+
+QUESTION 9
+Slides 6, 7, and 8 demonstrate the negative transpose property during simplex iterations. What crucial concept does this property highlight regarding the relationship between the primal and dual simplex methods?
+A. The primal and dual solutions are always identical.
+B. The primal and dual objective functions are unrelated.
+C. A simplex iteration on the primal problem corresponds to a related iteration on the dual problem.
+D. The dual simplex method is always faster than the primal simplex method.
+E. The primal and dual problems are always infeasible.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. The primal and dual solutions are related, but not always identical. They are identical only at optimality (strong duality).
+B. Answer B is incorrect. The primal and dual objective functions are fundamentally related through duality theory.
+C. Answer C is correct. The negative transpose property shows that a step in the primal simplex method has a corresponding, related step in the dual simplex method. This connection is fundamental to duality theory.
+D. Answer D is incorrect. The relative efficiency of the primal and dual simplex methods depends on the specific problem.
+E. Answer E is incorrect. The feasibility of the primal and dual problems is related, but not necessarily both infeasible.
+
+
+QUESTION 10
+In the primal problem presented on Slide 1, what are the values of the slack variables $w_1$, $w_2$, and $w_3$ when $x_1 = 0$ and $x_2 = 0$?
+A. $w_1 = 12, w_2 = 8, w_3 = 10$
+B. $w_1 = 0, w_2 = 0, w_3 = 0$
+C. $w_1 = -12, w_2 = -8, w_3 = -10$
+D. $w_1 = 12, w_2 = 0, w_3 = 10$
+E. $w_1 = -12, w_2 = -8, w_3 = 0$
+
+ANSWER: NO CORRECT ANSWER MARKED
+
+EXPLANATION:
+B. This is incorrect because the slack variables represent the difference between the left-hand side and right-hand side of the constraints.  When $x_1 = x_2 = 0$, this difference is not zero for the given constraints.
+C. The slack variables must be non-negative.  Negative values indicate that the constraints are violated.
+D. This is a partially correct assignment of slack variables, but it does not account for all constraints.
+E. This is a partially correct assignment of slack variables, but it does not account for all constraints and includes negative values for slack variables.
+
+

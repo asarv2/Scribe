@@ -1,0 +1,5492 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 13:43
+entering extended mode
+ \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11
+-07-NetSimplex/notes.tex"
+
+(/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/notes.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count188
+\c@section=\count189
+\c@subsection=\count190
+\c@subsubsection=\count191
+\c@paragraph=\count192
+\c@subparagraph=\count193
+\c@figure=\count194
+\c@table=\count195
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lastpage/lastpage.sty
+Package: lastpage 2023/10/14 v2.0e lastpage: 2.09 or 2e? (HMM)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lastpage/lastpage2e.sty
+Package: lastpage2e 2023/10/14 v2.0e Decide which 2e lastpage version to use (H
+MM)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lastpage/lastpagemodern.sty
+Package: lastpagemodern 2023-10-14 v2.0e Refers to last page's name (HMM; JPG)
+\c@lastpagecount=\count196
+) 
+)) (/usr/local/texlive/2024/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks19
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count197
+\Gm@cntv=\count198
+\c@Gm@tempcnt=\count199
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks20
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2024-01-20 v7.01h Hypertext links for LaTeX
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2023-11-26 v2.56 Cross-referencing by name of section
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count266
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count267
+)
+\@linkdim=\dimen149
+\Hy@linkcounter=\count268
+\Hy@pagecounter=\count269
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2024-01-20 v7.01h Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+(/usr/local/texlive/2024/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count270
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2024-01-20 v7.01h Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4179.
+Package hyperref Info: Link nesting OFF on input line 4184.
+Package hyperref Info: Hyper index ON on input line 4187.
+Package hyperref Info: Plain pages OFF on input line 4194.
+Package hyperref Info: Backreferencing OFF on input line 4199.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4446.
+\c@Hy@tempcnt=\count271
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4784.
+\XeTeXLinkMargin=\dimen150
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count272
+\Field@Width=\dimen151
+\Fld@charsize=\dimen152
+Package hyperref Info: Hyper figures OFF on input line 6063.
+Package hyperref Info: Link nesting OFF on input line 6068.
+Package hyperref Info: Hyper index ON on input line 6071.
+Package hyperref Info: backreferencing OFF on input line 6078.
+Package hyperref Info: Link coloring OFF on input line 6083.
+Package hyperref Info: Link coloring with OCG OFF on input line 6088.
+Package hyperref Info: PDF/A mode OFF on input line 6093.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count273
+\c@Item=\count274
+\c@Hfootnote=\count275
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2024-01-20 v7.01h Hyperref driver for pdfTeX
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
+kage
+with kernel methods
+)
+\Fld@listcount=\count276
+\c@bookmark@seq@number=\count277
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+85.
+)
+\Hy@SectionHShift=\skip50
+) (/usr/local/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip51
+\enit@outerparindent=\dimen153
+\enit@toks=\toks21
+\enit@inbox=\box51
+\enit@count@id=\count278
+\enitdp@description=\count279
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2022/11/09 v4.1 Extensive control of page headers and footers
+
+\f@nch@headwidth=\skip52
+\f@nch@O@elh=\skip53
+\f@nch@O@erh=\skip54
+\f@nch@O@olh=\skip55
+\f@nch@O@orh=\skip56
+\f@nch@O@elf=\skip57
+\f@nch@O@erf=\skip58
+\f@nch@O@olf=\skip59
+\f@nch@O@orf=\skip60
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1350.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1354.
+Package xcolor Info: Model `RGB' extended on input line 1366.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1368.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1372.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1373.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/breakurl/breakurl.sty
+Package: breakurl 2013/04/10 v1.40 Breakable hyperref URLs
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+
+(/usr/local/texlive/2024/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2024/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks22
+\XKV@tempa@toks=\toks23
+)
+\XKV@depth=\count280
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+(/usr/local/texlive/2024/texmf-dist/tex/generic/iftex/ifpdf.sty
+Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
+)
+
+Package breakurl Warning: You are using breakurl while processing via pdflatex.
+
+(breakurl)                \burl will be just a synonym of \url.
+(breakurl)                 on input line 48.
+
+) (/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2023/05/13 v2.17o AMS math features
+\@mathmargin=\skip61
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks24
+\ex@=\dimen154
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen155
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count281
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count282
+\leftroot@=\count283
+LaTeX Info: Redefining \overline on input line 399.
+LaTeX Info: Redefining \colon on input line 410.
+\classnum@=\count284
+\DOTSCASE@=\count285
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box52
+\strutbox@=\box53
+LaTeX Info: Redefining \big on input line 722.
+LaTeX Info: Redefining \Big on input line 723.
+LaTeX Info: Redefining \bigg on input line 724.
+LaTeX Info: Redefining \Bigg on input line 725.
+\big@size=\dimen156
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count286
+LaTeX Info: Redefining \bmod on input line 905.
+LaTeX Info: Redefining \pmod on input line 910.
+LaTeX Info: Redefining \smash on input line 940.
+LaTeX Info: Redefining \relbar on input line 970.
+LaTeX Info: Redefining \Relbar on input line 971.
+\c@MaxMatrixCols=\count287
+\dotsspace@=\muskip17
+\c@parentequation=\count288
+\dspbrk@lvl=\count289
+\tag@help=\toks25
+\row@=\count290
+\column@=\count291
+\maxfields@=\count292
+\andhelp@=\toks26
+\eqnshift@=\dimen157
+\alignsep@=\dimen158
+\tagshift@=\dimen159
+\tagwidth@=\dimen160
+\totwidth@=\dimen161
+\lineht@=\dimen162
+\@envbody=\toks27
+\multlinegap=\skip62
+\multlinetaggap=\skip63
+\mathdisplay@stack=\toks28
+LaTeX Info: Redefining \[ on input line 2953.
+LaTeX Info: Redefining \] on input line 2954.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/mathtools/mathtools.sty
+Package: mathtools 2024/03/11 v1.30 mathematical typesetting tools
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2023/07/08 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count293
+\calc@Bcount=\count294
+\calc@Adimen=\dimen163
+\calc@Bdimen=\dimen164
+\calc@Askip=\skip64
+\calc@Bskip=\skip65
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count295
+\calc@Cskip=\skip66
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/mathtools/mhsetup.sty
+Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
+)
+\g_MT_multlinerow_int=\count296
+\l_MT_multwidth_dim=\dimen165
+\origjot=\skip67
+\l_MT_shortvdotswithinadjustabove_dim=\dimen166
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen167
+\l_MT_above_intertext_sep=\dimen168
+\l_MT_below_intertext_sep=\dimen169
+\l_MT_above_shortintertext_sep=\dimen170
+\l_MT_below_shortintertext_sep=\dimen171
+\xmathstrut@box=\box54
+\xmathstrut@dim=\dimen172
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty
+Package: amsthm 2020/05/29 v2.20.6
+\thm@style=\toks29
+\thm@bodyfont=\toks30
+\thm@headfont=\toks31
+\thm@notefont=\toks32
+\thm@headpunct=\toks33
+\thm@preskip=\skip68
+\thm@postskip=\skip69
+\thm@headsep=\skip70
+\dth@everypar=\toks34
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thmtools.sty
+Package: thmtools 2023/05/04 v0.76
+\thmt@toks=\toks35
+\c@thmt@dummyctr=\count297
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-patch.sty
+Package: thm-patch 2023/05/04 v0.76
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/parseargs.sty
+Package: parseargs 2023/05/04 v0.76
+\@parsespec=\toks36
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-kv.sty
+Package: thm-kv 2023/05/04 v0.76
+Package thm-kv Info: Theorem names will be uppercased on input line 42.
+Package thm-kv Info: kvsetkeys patch (v1.16 or later) on input line 158.
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-autoref.sty
+Package: thm-autoref 2023/05/04 v0.76
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/aliasctr.sty
+Package: aliasctr 2023/05/04 v0.76
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-listof.sty
+Package: thm-listof 2023/05/04 v0.76
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-restate.sty
+Package: thm-restate 2023/05/04 v0.76
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/thmtools/thm-amsthm.sty
+Package: thm-amsthm 2023/05/04 v0.76
+\thmt@style@headstyle=\toks37
+))
+(/usr/local/texlive/2024/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count298
+\float@exts=\toks38
+\float@box=\box55
+\@float@everytoks=\toks39
+\@floatcapt=\box56
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen173
+\captionmargin=\dimen174
+\caption@leftmargin=\dimen175
+\caption@rightmargin=\dimen176
+\caption@width=\dimen177
+\caption@indent=\dimen178
+\caption@parindent=\dimen179
+\caption@hangindent=\dimen180
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count299
+\c@continuedfloat=\count300
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count301
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count302
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 33.
+Package hyperref Info: Option `breaklinks' set `true' on input line 33.
+
+
+Package hyperref Warning: Option `bookmarks' has already been used,
+(hyperref)                setting the option has no effect on input line 33.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/newunicodechar/newunicodechar.sty
+Package: newunicodechar 2018/04/08 v1.2 Defining Unicode characters
+)
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 68
+.
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count303
+\l__pdf_internal_box=\box57
+)
+(_logs/notes.aux)
+\openout1 = `notes.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-39.0pt
+* \headheight=14.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package hyperref Info: Link coloring ON on input line 68.
+(_logs/notes.out) (_logs/notes.out)
+\@outlinefile=\write3
+\openout3 = `notes.out'.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count304
+\scratchdimen=\dimen181
+\scratchbox=\box58
+\nofMPsegments=\count305
+\nofMParguments=\count306
+\everyMPshowfont=\toks40
+\MPscratchCnt=\count307
+\MPscratchDim=\dimen182
+\MPnumerator=\count308
+\makeMPintoPDFobject=\count309
+\everyMPtoPDFconversion=\toks41
+) (/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+)
+\Gin@req@height=\dimen183
+\Gin@req@width=\dimen184
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 7
+1.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
+1.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+71.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+71.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 71.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 71.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 71.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 71.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
+
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 75.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 75.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 75.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:76: LaTeX Error: \mathcal allowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.76 \underline{\text{Network }} (N, \mathcal
+                                             {A}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:77: Package amsmath Error: \tilde allowed only in math mo
+de.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.77 ...anning Tree }} T = (N, \tilde{\mathcal{A}}
+                                                  ), \text{ connected, acycl...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/1.1.png, id=711, 471.7625pt x 170.6375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/1.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/1.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/1.1.png  used on input line 87.
+(pdftex.def)             Requested size: 70.46037pt x 25.48515pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+\T1/lmr/m/n/8 The def-i-ni-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+\T1/lmr/m/n/8 of Net-work and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+\T1/lmr/m/n/8 also un-der-lined.
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 88--88
+\T1/lmr/m/n/8 The text "(Very
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+\T1/lmr/m/n/8 easy to find a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+\T1/lmr/m/n/8 span-ning tree:
+ []
+
+
+Underfull \hbox (badness 1038) in paragraph at lines 88--88
+\T1/lmr/m/n/8 [VJ] p. 253 Ex
+ []
+
+
+Underfull \hbox (badness 5105) in paragraph at lines 88--88
+\T1/lmr/m/n/8 14.4)" is writ-ten
+ []
+
+
+Underfull \hbox (badness 2790) in paragraph at lines 88--88
+\T1/lmr/m/n/8 be-low the def-i-ni-
+ []
+
+
+Underfull \hbox (badness 3029) in paragraph at lines 88--88
+\T1/lmr/m/n/8 tion of Span-ning
+ []
+
+[1
+
+{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
+al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
+4/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/f
+onts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
+vips/lm/lm-mathsy.enc} </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA
+ 421/lectures/2024-11-07-NetSimplex/figures/1.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:99: LaTeX Error: \mathcal allowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.99 \underline{\text{Network }} (N, \mathcal
+                                             {A}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:100: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.100 ...nning Tree }} T = (N, \tilde{\mathcal{A}}
+                                                  ), \text{ connected, acycl...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:103: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.103 \underline{B \tilde{x}_B = \tilde{b}}
+                                           , \quad x_{ij} = 0, \quad (i, j) ...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:103: Missing $ inserted.
+<inserted text> 
+                $
+l.103 \underline{B \tilde{x}_B = \tilde{b}}
+                                           , \quad x_{ij} = 0, \quad (i, j) ...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:103: Extra }, or forgotten $.
+\underline  ...{#1}\else $\@@underline {\hbox {#1}
+                                                  }\m@th $\relax \fi 
+l.103 \underline{B \tilde{x}_B = \tilde{b}}
+                                           , \quad x_{ij} = 0, \quad (i, j) ...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:103: Extra }, or forgotten $.
+\underline  ...#1}\else $\@@underline {\hbox {#1}}
+                                                  \m@th $\relax \fi 
+l.103 \underline{B \tilde{x}_B = \tilde{b}}
+                                           , \quad x_{ij} = 0, \quad (i, j) ...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:103: Missing $ inserted.
+<inserted text> 
+                $
+l.103 ...line{B \tilde{x}_B = \tilde{b}}, \quad x_
+                                                  {ij} = 0, \quad (i, j) \in...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:107: Missing $ inserted.
+<inserted text> 
+                $
+l.107 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:107: LaTeX Error: Something's wrong--perhaps a missing \i
+tem.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.107 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:107: LaTeX Error: Something's wrong--perhaps a missing \i
+tem.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.107 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:107: Missing } inserted.
+<inserted text> 
+                }
+l.107 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:107: Missing $ inserted.
+<inserted text> 
+                $
+l.107 \subsection{Description}
+                              %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:107: Missing } inserted.
+<inserted text> 
+                }
+l.107 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (87.6966pt too wide) in paragraph at lines 98--107
+[]$ 
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/2.1.png, id=727, 471.7625pt x 471.7625pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/2.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/2.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/2.1.png  used on input line 114.
+(pdftex.def)             Requested size: 70.46037pt x 70.45897pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 The def-i-ni-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 of Net-work and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 also un-der-lined.
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 115--115
+\T1/lmr/m/n/8 The text "(Very
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 easy to find a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 span-ning tree:
+ []
+
+
+Underfull \hbox (badness 1038) in paragraph at lines 115--115
+\T1/lmr/m/n/8 [VJ] p. 253 Ex
+ []
+
+
+Underfull \hbox (badness 5105) in paragraph at lines 115--115
+\T1/lmr/m/n/8 14.4)" is writ-ten
+ []
+
+
+Underfull \hbox (badness 2790) in paragraph at lines 115--115
+\T1/lmr/m/n/8 be-low the def-i-ni-
+ []
+
+
+Underfull \hbox (badness 3029) in paragraph at lines 115--115
+\T1/lmr/m/n/8 tion of Span-ning
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 ment of pri-mal
+ []
+
+
+Underfull \hbox (badness 5622) in paragraph at lines 115--115
+\T1/lmr/m/n/8 flow ex-is-tence is
+ []
+
+
+Underfull \hbox (badness 4341) in paragraph at lines 115--115
+\T1/lmr/m/n/8 un-der-lined, along
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 and con-di-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 for $\OML/lmm/m/it/8 x[]$\T1/lmr/m/n/8 . The
+ []
+
+
+Underfull \hbox (badness 1107) in paragraph at lines 115--115
+\T1/lmr/m/n/8 fi-nal par-en-thet-i-cal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+\T1/lmr/m/n/8 state-ment about
+ []
+
+[2] [3 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-11-07-NetSimplex/figures/2.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:126: LaTeX Error: \mathcal allowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.126 \underline{\text{Network }} (N, \mathcal
+                                              {A}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:127: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.127 ...nning Tree }} T = (N, \tilde{\mathcal{A}}
+                                                  ), \text{ connected, acycl...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:130: Missing $ inserted.
+<inserted text> 
+                $
+l.130 (i,j) \in
+                \mathcal{A}: \quad \boxed{y_j - y_i + z_{ij} = c_{ij}} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:135: Missing $ inserted.
+<inserted text> 
+                $
+l.135 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:136: LaTeX Error: Unicode character ∈ (U+2208)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 ...responding to a different case: (i,j) ∈
+                                                   A (all arcs), (i,j) ∈ T...
+
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:136: LaTeX Error: Unicode character ∈ (U+2208)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 ...t case: (i,j) ∈ A (all arcs), (i,j) ∈
+                                                   T (arcs in the spanning t...
+
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:136: LaTeX Error: Unicode character ∈ (U+2208)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 ...arcs in the spanning tree), and (i,j) ∈
+                                                   A \ T (arcs not in the sp...
+
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/3.1.png, id=740, 371.3875pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/3.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/3.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/3.1.png  used on input line 142.
+(pdftex.def)             Requested size: 70.46037pt x 70.45668pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 Net-work Sim-plex
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 Method. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 The def-i-ni-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 of Net-work and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 also un-der-lined.
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 143--143
+\T1/lmr/m/n/8 The text "(Very
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 143--143
+\T1/lmr/m/n/8 253 Ex 14.4)" is
+ []
+
+
+Underfull \hbox (badness 1668) in paragraph at lines 143--143
+\T1/lmr/m/n/8 ning Tree. The
+ []
+
+
+Underfull \hbox (badness 5622) in paragraph at lines 143--143
+\T1/lmr/m/n/8 flow ex-is-tence is
+ []
+
+
+Underfull \hbox (badness 4341) in paragraph at lines 143--143
+\T1/lmr/m/n/8 un-der-lined, along
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 of (i,j). The
+ []
+
+
+Underfull \hbox (badness 1107) in paragraph at lines 143--143
+\T1/lmr/m/n/8 fi-nal par-en-thet-i-cal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 state-ment about
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 in-fea-si-bil-ity is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 also un-der-lined.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 A red box is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 drawn around
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+\T1/lmr/m/n/8 the equa-tion
+ []
+
+[4] [5 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-11-07-NetSimplex/figures/3.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:154: LaTeX Error: \mathcal allowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.154 \underline{\text{Network }} (N, \mathcal
+                                              {A}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:155: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.155 ...nning Tree }} T = (N, \tilde{\mathcal{A}}
+                                                  ), \text{ connected, acycl...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:157: Missing $ inserted.
+<inserted text> 
+                $
+l.157 ...ne arc} \implies \text{there is a cycle}}
+                                                   \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:157: Extra }, or forgotten $.
+\underline  ...{#1}\else $\@@underline {\hbox {#1}
+                                                  }\m@th $\relax \fi 
+l.157 ...ne arc} \implies \text{there is a cycle}}
+                                                   \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:157: Extra }, or forgotten $.
+\underline  ...#1}\else $\@@underline {\hbox {#1}}
+                                                  \m@th $\relax \fi 
+l.157 ...ne arc} \implies \text{there is a cycle}}
+                                                   \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:158: Missing $ inserted.
+<inserted text> 
+                $
+l.158 ...implies \text{tree becomes disconnected}}
+                                                   \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:158: Extra }, or forgotten $.
+\underline  ...{#1}\else $\@@underline {\hbox {#1}
+                                                  }\m@th $\relax \fi 
+l.158 ...implies \text{tree becomes disconnected}}
+                                                   \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:158: Extra }, or forgotten $.
+\underline  ...#1}\else $\@@underline {\hbox {#1}}
+                                                  \m@th $\relax \fi 
+l.158 ...implies \text{tree becomes disconnected}}
+                                                   \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: LaTeX Error: Something's wrong--perhaps a missing \i
+tem.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.161 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: LaTeX Error: Something's wrong--perhaps a missing \i
+tem.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.161 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: Missing } inserted.
+<inserted text> 
+                }
+l.161 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: Missing $ inserted.
+<inserted text> 
+                $
+l.161 \subsection{Description}
+                              %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: Missing } inserted.
+<inserted text> 
+                }
+l.161 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: Missing } inserted.
+<inserted text> 
+                }
+l.161 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: Missing $ inserted.
+<inserted text> 
+                $
+l.161 \subsection{Description}
+                              %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:161: Missing } inserted.
+<inserted text> 
+                }
+l.161 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (181.64578pt too wide) in paragraph at lines 153--161
+\T1/lmr/m/n/10 (3) $[]$ 
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/4.1.png, id=752, 471.7625pt x 260.975pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/4.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/4.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/4.1.png  used on input line 168.
+(pdftex.def)             Requested size: 70.46037pt x 38.97731pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 1112) in paragraph at lines 169--169
+\T1/lmr/m/n/8 ning trees in the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 Net-work Sim-plex
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 Method. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 The def-i-ni-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 of Net-work and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 also un-der-lined.
+ []
+
+
+Underfull \hbox (badness 6691) in paragraph at lines 169--169
+\T1/lmr/m/n/8 The text "(Very
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 169--169
+\T1/lmr/m/n/8 253 Ex 14.4)" is
+ []
+
+
+Underfull \hbox (badness 1668) in paragraph at lines 169--169
+\T1/lmr/m/n/8 ning Tree. The
+ []
+
+
+Underfull \hbox (badness 8132) in paragraph at lines 169--169
+\T1/lmr/m/n/8 state-ments about
+ []
+
+
+Underfull \hbox (badness 1314) in paragraph at lines 169--169
+\T1/lmr/m/n/8 adding or re-mov-
+ []
+
+
+Underfull \hbox (badness 2903) in paragraph at lines 169--169
+\T1/lmr/m/n/8 ing an arc from
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 are un-der-lined.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 The ref-er-ence
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+\T1/lmr/m/n/8 to Bertsimas-
+ []
+
+[6 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
+1-07-NetSimplex/figures/4.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/5.1.png, id=758, 752.8125pt x 687.56876pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/5.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/5.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/5.1.png  used on input line 188.
+(pdftex.def)             Requested size: 70.46037pt x 64.344pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 189--189
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 189--189
+\T1/lmr/m/n/8 nodes la-beled a
+ []
+
+
+Underfull \hbox (badness 1442) in paragraph at lines 189--189
+\T1/lmr/m/n/8 have weights and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 189--189
+\T1/lmr/m/n/8 di-rec-tions in-di-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 189--189
+\T1/lmr/m/n/8 are col-ored red,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 189--189
+\T1/lmr/m/n/8 oth-ers are tan.
+ []
+
+
+Underfull \hbox (badness 6893) in paragraph at lines 189--189
+\T1/lmr/m/n/8 Node val-ues are
+ []
+
+
+Underfull \hbox (badness 1590) in paragraph at lines 189--189
+\T1/lmr/m/n/8 node. The text
+ []
+
+
+Underfull \hbox (badness 1817) in paragraph at lines 189--189
+\T1/lmr/m/n/8 "Not Op-tional as
+ []
+
+[7 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
+1-07-NetSimplex/figures/5.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:201: Missing $ inserted.
+<inserted text> 
+                $
+l.201 z_
+        {ij} < 0 \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:208: Missing $ inserted.
+<inserted text> 
+                $
+l.208 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/6.1.png, id=765, 752.8125pt x 687.56876pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/6.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/6.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/6.1.png  used on input line 215.
+(pdftex.def)             Requested size: 70.46037pt x 64.344pt.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:216: Missing $ inserted.
+<inserted text> 
+                $
+l.216 ... and "(2) update primal and dual flows".}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:216: Missing $ inserted.
+<inserted text> 
+                $
+l.216 ... and "(2) update primal and dual flows".}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:216: Missing $ inserted.
+<inserted text> 
+                $
+l.216 ... and "(2) update primal and dual flows".}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:216: Missing $ inserted.
+<inserted text> 
+                $
+l.216 ... and "(2) update primal and dual flows".}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 2671) in paragraph at lines 216--216
+\T1/lmr/m/n/8 nodes rep-re-sented
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 lines con-nect-ing
+ []
+
+
+Underfull \hbox (badness 8189) in paragraph at lines 216--216
+\T1/lmr/m/n/8 arcs are col-ored
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 red, oth-ers are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 tan, and one
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 is light blue.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 A pur-ple loop
+ []
+
+
+Underfull \hbox (badness 1038) in paragraph at lines 216--216
+\T1/lmr/m/n/8 high-lights a cy-cle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 in the net-work.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 Ar-rows in-di-cate
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--216
+\T1/lmr/m/n/8 the di-rec-tion of
+ []
+
+
+Underfull \hbox (badness 2744) in paragraph at lines 216--216
+\T1/lmr/m/n/8 flow. The text
+ []
+
+
+Underfull \hbox (badness 1590) in paragraph at lines 216--216
+\T1/lmr/m/n/8 ing arc", "z$[] \OML/lmm/m/it/8 <
+ []
+
+
+Overfull \hbox (421.42596pt too wide) in paragraph at lines 216--216
+\OT1/lmr/m/n/8 0"\OML/lmm/m/it/8 ; \OT1/lmr/m/n/8 "\OML/lmm/m/it/8 acycle\OT1/l
+mr/m/n/8 "\OML/lmm/m/it/8 ; and\OT1/lmr/m/n/8 "\OML/lmm/m/it/8 leavingarc\OT1/l
+mr/m/n/8 "\OML/lmm/m/it/8 arewrittenneartherelevantpartsofthediagram:Thetext\OT
+1/lmr/m/n/8 "\OML/lmm/m/it/8 Modificationof\OT1/lmr/m/n/8 (\OML/lmm/m/it/8 span
+ning\OT1/lmr/m/n/8 )\OML/lmm/m/it/8 treeandvariables \OT1/lmr/m/n/8 :
+ []
+
+
+Overfull \hbox (101.7629pt too wide) in paragraph at lines 216--216
+\OT1/lmr/m/n/8 "\OML/lmm/m/it/8 isunderlined; followedbytwonumberedsteps \OT1/l
+mr/m/n/8 :
+ []
+
+
+Overfull \hbox (202.57457pt too wide) in paragraph at lines 216--216
+\OT1/lmr/m/n/8 "(1)\OML/lmm/m/it/8 chooseenteringandleavingarcs\OT1/lmr/m/n/8 "
+\OML/lmm/m/it/8 and\OT1/lmr/m/n/8 "(2)\OML/lmm/m/it/8 updateprimalanddualflows\
+OT1/lmr/m/n/8 "\OML/lmm/m/it/8 :$ 
+ []
+
+[8] [9 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-11-07-NetSimplex/figures/6.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/7.1.png, id=776, 752.8125pt x 687.56876pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/7.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/7.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/7.1.png  used on input line 236.
+(pdftex.def)             Requested size: 70.46037pt x 64.344pt.
+
+Underfull \hbox (badness 5403) in paragraph at lines 237--237
+\T1/lmr/m/n/8 ing two net-work
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 flow di-a-grams.
+ []
+
+
+Underfull \hbox (badness 2150) in paragraph at lines 237--237
+\T1/lmr/m/n/8 The left di-a-gram
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 237--237
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 weights la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 with ex-pres-sions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 in-volv-ing the
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 237--237
+\T1/lmr/m/n/8 (c,b) has weight
+ []
+
+
+Underfull \hbox (badness 3780) in paragraph at lines 237--237
+\OT1/lmr/m/n/8 6 \OMS/lmsy/m/n/8   \OML/lmm/m/it/8 t$\T1/lmr/m/n/8 , (f,c) has
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 (a,f) has weight
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 curve high-lights
+ []
+
+
+Underfull \hbox (badness 4660) in paragraph at lines 237--237
+\T1/lmr/m/n/8 the cy-cle. An
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 ar-row points to
+ []
+
+
+Underfull \hbox (badness 2582) in paragraph at lines 237--237
+\T1/lmr/m/n/8 the cy-cle and is
+ []
+
+
+Underfull \hbox (badness 1735) in paragraph at lines 237--237
+\T1/lmr/m/n/8 la-beled "a cy-cle".
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 shows the same
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 net-work af-ter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 the flow $\OML/lmm/m/it/8 t$ \T1/lmr/m/n/8 has
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 in-creased to 3.
+ []
+
+
+Underfull \hbox (badness 3735) in paragraph at lines 237--237
+\T1/lmr/m/n/8 weight 0 and is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--237
+\T1/lmr/m/n/8 la-beled "leav-ing
+ []
+
+[10] [11 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/7.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/8.1.png, id=786, 752.8125pt x 687.56876pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/8.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/8.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/8.1.png  used on input line 269.
+(pdftex.def)             Requested size: 70.46037pt x 64.344pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--270
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A slide
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--270
+\T1/lmr/m/n/8 con-tain-ing text
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--270
+\T1/lmr/m/n/8 de-scrib-ing the
+ []
+
+
+Underfull \hbox (badness 2961) in paragraph at lines 270--270
+\T1/lmr/m/n/8 se-lec-tion rule for
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--270
+\T1/lmr/m/n/8 the leav-ing arc
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--270
+\T1/lmr/m/n/8 and the pri-mal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--270
+\T1/lmr/m/n/8 Pri-mal Net-work
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--270
+\T1/lmr/m/n/8 Sim-plex method.
+ []
+
+[12 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/8.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:283: Missing $ inserted.
+<inserted text> 
+                $
+l.283 = (6+t) C_
+                {fa} + C_{ac} + (6+t) C_{bc} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:289: Missing $ inserted.
+<inserted text> 
+                $
+l.289 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/9.1.png, id=792, 752.8125pt x 687.56876pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/9.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/9.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/9.1.png  used on input line 296.
+(pdftex.def)             Requested size: 70.46037pt x 64.344pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
+ []
+
+
+Underfull \hbox (badness 5403) in paragraph at lines 297--297
+\T1/lmr/m/n/8 are la-beled with
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 297--297
+\T1/lmr/m/n/8 their flow val-ues,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
+\T1/lmr/m/n/8 which are func-
+ []
+
+
+Underfull \hbox (badness 3792) in paragraph at lines 297--297
+\T1/lmr/m/n/8 (a,c), (c,b), and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
+\T1/lmr/m/n/8 (f,b) have flows
+ []
+
+
+Underfull \hbox (badness 1571) in paragraph at lines 297--297
+\T1/lmr/m/n/8 6+t, t, 6-t, and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
+\T1/lmr/m/n/8 3-t re-spec-tively.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
+\T1/lmr/m/n/8 Ar-rows in-di-cate
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
+\T1/lmr/m/n/8 the di-rec-tion of
+ []
+
+
+Underfull \hbox (badness 2744) in paragraph at lines 297--297
+\T1/lmr/m/n/8 flow. The text
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 297--297
+\T1/lmr/m/n/8 "old cost" and
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 297--297
+\T1/lmr/m/n/8 writ-ten near the
+ []
+
+
+Underfull \hbox (badness 4024) in paragraph at lines 297--297
+\T1/lmr/m/n/8 rel-e-vant parts of
+ []
+
+
+Underfull \hbox (badness 4569) in paragraph at lines 297--297
+\T1/lmr/m/n/8 text "New Cost"
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 297--297
+\T1/lmr/m/n/8 is writ-ten above
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 297--297
+\T1/lmr/m/n/8 cost is equal to
+ []
+
+[13] [14 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/9.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:309: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.309 \begin{tikzpicture}
+                         [scale=0.8]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:310: Undefined control sequence.
+l.310 \node
+           [circle,draw] (a) at (0,2) {a};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:311: Undefined control sequence.
+l.311 \node
+           [circle,draw] (b) at (4,1) {b};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:312: Undefined control sequence.
+l.312 \node
+           [circle,draw] (c) at (2,1) {c};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:313: Undefined control sequence.
+l.313 \node
+           [circle,draw] (f) at (0,0) {f};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:314: Undefined control sequence.
+l.314 \draw
+           [->,red,thick] (f) -- node[left]{6+t} (a);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:315: Undefined control sequence.
+l.315 \draw
+           [->,red,thick] (a) -- node[above]{t} (c);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:316: Undefined control sequence.
+l.316 \draw
+           [->,red,thick] (c) -- node[above]{6-t} (b);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:317: Undefined control sequence.
+l.317 \draw
+           [->,red,thick] (f) -- node[below]{3-t} (b);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:318: LaTeX Error: \begin{document} ended by \end{tikzpict
+ure}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.318 \end{tikzpicture}
+                        \\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:319: Missing $ inserted.
+<inserted text> 
+                $
+l.319 +t(C_
+           {fa} + C_{ac} - C_{bc} - C_{fb}) \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:326: Missing $ inserted.
+<inserted text> 
+                $
+l.326 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/10.1.png, id=803, 772.8875pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/10.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/10.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/10.1.png  used on input line 333.
+(pdftex.def)             Requested size: 70.46037pt x 70.45316pt.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:334: Missing $ inserted.
+<inserted text> 
+                $
+l.334 ...rate the proof that the cost is reduced.}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:334: Missing $ inserted.
+<inserted text> 
+                $
+l.334 ...rate the proof that the cost is reduced.}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:334: Missing $ inserted.
+<inserted text> 
+                $
+l.334 ...rate the proof that the cost is reduced.}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:334: Missing $ inserted.
+<inserted text> 
+                $
+l.334 ...rate the proof that the cost is reduced.}
+                                                  %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
+ []
+
+
+Underfull \hbox (badness 5403) in paragraph at lines 334--334
+\T1/lmr/m/n/8 are la-beled with
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 334--334
+\T1/lmr/m/n/8 their flow val-ues,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+\T1/lmr/m/n/8 which are func-
+ []
+
+
+Underfull \hbox (badness 3792) in paragraph at lines 334--334
+\T1/lmr/m/n/8 (a,c), (c,b), and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+\T1/lmr/m/n/8 (f,b) have flows
+ []
+
+
+Underfull \hbox (badness 1571) in paragraph at lines 334--334
+\T1/lmr/m/n/8 6+t, t, 6-t, and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+\T1/lmr/m/n/8 3-t re-spec-tively.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+\T1/lmr/m/n/8 Ar-rows in-di-cate
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+\T1/lmr/m/n/8 the di-rec-tion of
+ []
+
+
+Underfull \hbox (badness 2744) in paragraph at lines 334--334
+\T1/lmr/m/n/8 flow. The text
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 334--334
+\T1/lmr/m/n/8 writ-ten near the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+\T1/lmr/m/n/8 rel-e-vant part of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+\T1/lmr/m/n/8 equa-tion shows
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 334--334
+\T1/lmr/m/n/8 cost is equal to
+ []
+
+
+Underfull \hbox (badness 6445) in paragraph at lines 334--334
+\T1/lmr/m/n/8 t times a term
+ []
+
+
+Underfull \hbox (badness 4660) in paragraph at lines 334--334
+\T1/lmr/m/n/8 that de-pends on
+ []
+
+
+Overfull \hbox (120.25534pt too wide) in paragraph at lines 334--334
+\T1/lmr/m/n/8 (y$[]\OT1/lmr/m/n/8 )\OML/lmm/m/it/8 andarccosts\OT1/lmr/m/n/8 (\
+OML/lmm/m/it/8 C[]j\OT1/lmr/m/n/8 )\OML/lmm/m/it/8 :Theequationissimplifiedtot 
+\OMS/lmsy/m/n/8 
+ []
+
+
+Overfull \hbox (317.82263pt too wide) in paragraph at lines 334--334
+\OML/lmm/m/it/8 Z[]c; whereZ[]cisthereducedcostofarc\OT1/lmr/m/n/8 (\OML/lmm/m/
+it/8 a; c\OT1/lmr/m/n/8 )\OML/lmm/m/it/8 :Thediagramisusedtoillustratetheprooft
+hatthecostisreduced:$ 
+ []
+
+[15] [16 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/10.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/11.1.png, id=813, 672.5125pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/11.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/11.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/11.1.png  used on input line 354.
+(pdftex.def)             Requested size: 70.46037pt x 80.97278pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--355
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--355
+\T1/lmr/m/n/8 show-ing a net-
+ []
+
+
+Underfull \hbox (badness 2556) in paragraph at lines 355--355
+\T1/lmr/m/n/8 work flow graph.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--355
+\T1/lmr/m/n/8 The graph is
+ []
+
+
+Underfull \hbox (badness 2744) in paragraph at lines 355--355
+\T1/lmr/m/n/8 com-posed of two
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--355
+\T1/lmr/m/n/8 con-nected by a
+ []
+
+
+Underfull \hbox (badness 1132) in paragraph at lines 355--355
+\T1/lmr/m/n/8 and II. The root
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--355
+\T1/lmr/m/n/8 node is la-beled
+ []
+
+[17 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/11.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:367: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.367 \begin{tikzpicture}
+                         [scale=0.8]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:368: Undefined control sequence.
+l.368 \draw
+           [green!60!black, thick] (0,0) circle (1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:369: Undefined control sequence.
+l.369 \draw
+           [green!60!black, thick] (4,0) circle (1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:370: Undefined control sequence.
+l.370 \node
+            at (0,0) {$p.$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:371: Undefined control sequence.
+l.371 \node
+            at (4,0) {$q.$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:372: Undefined control sequence.
+l.372 \node
+           [circle,fill,inner sep=1pt] (a) at (1.2,0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:373: Undefined control sequence.
+l.373 \node
+           [circle,fill,inner sep=1pt] (b) at (2.8,0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:374: Undefined control sequence.
+l.374 \node
+           [circle,fill,inner sep=1pt] (c) at (1.2,-0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:375: Undefined control sequence.
+l.375 \node
+           [circle,fill,inner sep=1pt] (d) at (2.8,-0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:376: Undefined control sequence.
+l.376 \node
+           [above] at (a) {$a$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:377: Undefined control sequence.
+l.377 \node
+           [above] at (b) {$b$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:378: Undefined control sequence.
+l.378 \node
+           [below] at (c) {$c$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:379: Undefined control sequence.
+l.379 \node
+           [below] at (d) {$d$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:380: Undefined control sequence.
+l.380 \draw
+           [dashed] (a) -- node[above]{$X_{ab}=0$} node[below]{$Z_{ab}<0$} (b);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:381: Undefined control sequence.
+l.381 \draw
+           [red] (c) -- node[below]{$X_{cd}>0$} node[above]{$Z_{cd}=0$} (d);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:382: Undefined control sequence.
+l.382 \node
+            at (0,-1.8) {$\mathbb{II}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:383: Undefined control sequence.
+l.383 \node
+            at (4,-1.8) {$\mathbb{I}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:384: Undefined control sequence.
+l.384 \node
+           [circle,fill,inner sep=1pt] (r) at (4.5, -0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:385: Undefined control sequence.
+l.385 \node
+           [left] at (r) {$r$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:386: Undefined control sequence.
+l.386 \node
+           [above] at (4.5, -0.3) {$y=0$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:387: Undefined control sequence.
+l.387 \draw
+            (r) -- (5,-0.7);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:388: Undefined control sequence.
+l.388 \draw
+            (5,-0.7) -- (5,-0.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:389: Undefined control sequence.
+l.389 \draw
+            (5,-0.7) -- (5,-0.9);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:390: LaTeX Error: \begin{document} ended by \end{tikzpict
+ure}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.390 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/12.1.png, id=819, 772.8875pt x 722.7pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/12.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/12.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/12.1.png  used on input line 399.
+(pdftex.def)             Requested size: 70.46037pt x 65.87828pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 400--400
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 400--400
+\T1/lmr/m/n/8 cir-cles rep-re-sent-
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 400--400
+\T1/lmr/m/n/8 ing two trees in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 400--400
+\T1/lmr/m/n/8 a net-work flow
+ []
+
+
+Underfull \hbox (badness 5403) in paragraph at lines 400--400
+\T1/lmr/m/n/8 are la-beled with
+ []
+
+
+Underfull \hbox (badness 1960) in paragraph at lines 400--400
+\T1/lmr/m/n/8 are con-nected by
+ []
+
+
+Underfull \hbox (badness 3039) in paragraph at lines 400--400
+\T1/lmr/m/n/8 a solid red line.
+ []
+
+
+Underfull \hbox (badness 6477) in paragraph at lines 400--400
+\T1/lmr/m/n/8 The dashed line
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 400--400
+\T1/lmr/m/n/8 is la-beled with
+ []
+
+
+Underfull \hbox (badness 5622) in paragraph at lines 400--400
+\OML/lmm/m/it/8 X[] \OT1/lmr/m/n/8 = 0$ \T1/lmr/m/n/8 and
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 400--400
+\T1/lmr/m/n/8 with $\OML/lmm/m/it/8 X[] > \OT1/lmr/m/n/8 0$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 400--400
+\T1/lmr/m/n/8 line seg-ment at
+ []
+
+
+Underfull \hbox (badness 2351) in paragraph at lines 400--400
+\T1/lmr/m/n/8 the bot-tom right
+ []
+
+[18] [19 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/12.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:412: LaTeX Error: Environment tikzpicture undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.412 \begin{tikzpicture}
+                         [scale=0.8]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:413: Undefined control sequence.
+l.413 \draw
+           [green!60!black, thick] (0,0) circle (1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:414: Undefined control sequence.
+l.414 \draw
+           [green!60!black, thick] (4,0) circle (1.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:415: Undefined control sequence.
+l.415 \node
+            at (0,0) {$p.$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:416: Undefined control sequence.
+l.416 \node
+            at (4,0) {$q.$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:417: Undefined control sequence.
+l.417 \node
+           [circle,fill,inner sep=1pt] (a) at (1.2,0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:418: Undefined control sequence.
+l.418 \node
+           [circle,fill,inner sep=1pt] (b) at (2.8,0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:419: Undefined control sequence.
+l.419 \node
+           [circle,fill,inner sep=1pt] (c) at (1.2,-0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:420: Undefined control sequence.
+l.420 \node
+           [circle,fill,inner sep=1pt] (d) at (2.8,-0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:421: Undefined control sequence.
+l.421 \node
+           [above] at (a) {$a$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:422: Undefined control sequence.
+l.422 \node
+           [above] at (b) {$b$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:423: Undefined control sequence.
+l.423 \node
+           [below] at (c) {$c$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:424: Undefined control sequence.
+l.424 \node
+           [below] at (d) {$d$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:425: Undefined control sequence.
+l.425 \draw
+           [red] (a) -- node[above]{$\tilde{X}_{ab} \ge 0$} node[below]{$\ti...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:426: Undefined control sequence.
+l.426 \draw
+           [dashed] (c) -- node[below]{$\tilde{X}_{cd} = 0$} node[above]{$\t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:427: Undefined control sequence.
+l.427 \node
+            at (0,-1.8) {$\mathbb{II}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:428: Undefined control sequence.
+l.428 \node
+            at (4,-1.8) {$\mathbb{I}$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:429: Undefined control sequence.
+l.429 \node
+           [circle,fill,inner sep=1pt] (r) at (4.5, -0.7) {};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:430: Undefined control sequence.
+l.430 \node
+           [left] at (r) {$r$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:431: Undefined control sequence.
+l.431 \node
+           [above] at (4.5, -0.3) {$\tilde{y} = 0$};
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:432: Undefined control sequence.
+l.432 \draw
+            (r) -- (5,-0.7);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:433: Undefined control sequence.
+l.433 \draw
+            (5,-0.7) -- (5,-0.5);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:434: Undefined control sequence.
+l.434 \draw
+            (5,-0.7) -- (5,-0.9);
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:435: LaTeX Error: \begin{document} ended by \end{tikzpict
+ure}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.435 \end{tikzpicture}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/13.1.png, id=831, 772.8875pt x 722.7pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/13.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/13.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/13.1.png  used on input line 444.
+(pdftex.def)             Requested size: 70.46037pt x 65.87828pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
+\T1/lmr/m/n/8 cir-cles rep-re-sent-
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 445--445
+\T1/lmr/m/n/8 ing two trees in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
+\T1/lmr/m/n/8 a net-work flow
+ []
+
+
+Underfull \hbox (badness 5403) in paragraph at lines 445--445
+\T1/lmr/m/n/8 are la-beled with
+ []
+
+
+Underfull \hbox (badness 1960) in paragraph at lines 445--445
+\T1/lmr/m/n/8 are con-nected by
+ []
+
+
+Underfull \hbox (badness 4967) in paragraph at lines 445--445
+\T1/lmr/m/n/8 a solid red line
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
+\T1/lmr/m/n/8 and a dashed
+ []
+
+
+Underfull \hbox (badness 2495) in paragraph at lines 445--445
+\T1/lmr/m/n/8 line. The solid
+ []
+
+
+Underfull \hbox (badness 3815) in paragraph at lines 445--445
+\T1/lmr/m/n/8 with $[] \OMS/lmsy/m/n/8  \OT1/lmr/m/n/8 0$
+ []
+
+
+Underfull \hbox (badness 4846) in paragraph at lines 445--445
+\T1/lmr/m/n/8 and $[] \OT1/lmr/m/n/8 = 0$\T1/lmr/m/n/8 .
+ []
+
+
+Underfull \hbox (badness 6477) in paragraph at lines 445--445
+\T1/lmr/m/n/8 The dashed line
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
+\T1/lmr/m/n/8 is la-beled with
+ []
+
+
+Underfull \hbox (badness 5711) in paragraph at lines 445--445
+[] \OT1/lmr/m/n/8 = 0$ \T1/lmr/m/n/8 and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
+\T1/lmr/m/n/8 line seg-ment at
+ []
+
+
+Underfull \hbox (badness 2351) in paragraph at lines 445--445
+\T1/lmr/m/n/8 the bot-tom right
+ []
+
+[20] [21 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/13.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:459: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.459 \tilde{y}
+               _i = y_i \quad g \in \mathbb{I} \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:459: Missing $ inserted.
+<inserted text> 
+                $
+l.459 \tilde{y}_
+                i = y_i \quad g \in \mathbb{I} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:462: Missing $ inserted.
+<inserted text> 
+                $
+l.462 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/14.1.png, id=841, 672.5125pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/14.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/14.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/14.1.png  used on input line 469.
+(pdftex.def)             Requested size: 70.46037pt x 80.97278pt.
+[22 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/14.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:483: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.483 \tilde{y}
+               _b - \tilde{y}_a = c_{ab} \implies \tilde{y}_a = \tilde{y}_b ...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:483: Missing $ inserted.
+<inserted text> 
+                $
+l.483 \tilde{y}_
+                b - \tilde{y}_a = c_{ab} \implies \tilde{y}_a = \tilde{y}_b ...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:488: Missing $ inserted.
+<inserted text> 
+                $
+l.488 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/15.1.png, id=847, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/15.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/15.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/15.1.png  used on input line 495.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[23 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/15.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:509: Missing $ inserted.
+<inserted text> 
+                $
+l.509 \underline{(i,j) \in \mathbb{II}}
+                                        \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:509: Extra }, or forgotten $.
+\underline  ...{#1}\else $\@@underline {\hbox {#1}
+                                                  }\m@th $\relax \fi 
+l.509 \underline{(i,j) \in \mathbb{II}}
+                                        \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:509: Extra }, or forgotten $.
+\underline  ...#1}\else $\@@underline {\hbox {#1}}
+                                                  \m@th $\relax \fi 
+l.509 \underline{(i,j) \in \mathbb{II}}
+                                        \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:510: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.510 \tilde{y}
+               _j - \tilde{y}_i + \tilde{z}_{ij} = c_{ij} \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:510: Missing $ inserted.
+<inserted text> 
+                $
+l.510 \tilde{y}_
+                j - \tilde{y}_i + \tilde{z}_{ij} = c_{ij} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:514: Missing $ inserted.
+<inserted text> 
+                $
+l.514 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:514: LaTeX Error: Something's wrong--perhaps a missing \i
+tem.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.514 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:514: LaTeX Error: Something's wrong--perhaps a missing \i
+tem.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.514 \subsection
+                 {Description}%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:514: Missing } inserted.
+<inserted text> 
+                }
+l.514 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:514: Missing $ inserted.
+<inserted text> 
+                $
+l.514 \subsection{Description}
+                              %
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:514: Missing } inserted.
+<inserted text> 
+                }
+l.514 \subsection{Description}
+                              %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/16.1.png, id=853, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/16.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/16.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/16.1.png  used on input line 521.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[24 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/16.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:535: Missing $ inserted.
+<inserted text> 
+                $
+l.535 i \in
+            \mathbb{II}, \quad j \in \mathbb{I} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:541: Missing $ inserted.
+<inserted text> 
+                $
+l.541 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/17.1.png, id=860, 672.5125pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/17.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/17.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/17.1.png  used on input line 548.
+(pdftex.def)             Requested size: 70.46037pt x 80.97278pt.
+[25 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/17.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:562: Missing $ inserted.
+<inserted text> 
+                $
+l.562 i \in
+            \mathbb{I}, \quad j \in \mathbb{II} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:568: Missing $ inserted.
+<inserted text> 
+                $
+l.568 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/18.1.png, id=867, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/18.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/18.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/18.1.png  used on input line 575.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[26 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/18.1.png (PNG copy)>]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:589: Package amsmath Error: \tilde allowed only in math m
+ode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.589 \tilde{y}
+               _a - \tilde{y}_b = c_{ba} \implies \tilde{y}_a = \tilde{y}_b ...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:589: Missing $ inserted.
+<inserted text> 
+                $
+l.589 \tilde{y}_
+                a - \tilde{y}_b = c_{ba} \implies \tilde{y}_a = \tilde{y}_b ...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:594: Missing $ inserted.
+<inserted text> 
+                $
+l.594 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/19.1.png, id=873, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/19.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/19.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/19.1.png  used on input line 601.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[27 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/19.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:615: Missing $ inserted.
+<inserted text> 
+                $
+l.615 (ij) \in
+               \mathbb{I} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:620: Missing $ inserted.
+<inserted text> 
+                $
+l.620 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/20.1.png, id=879, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/20.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/20.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/20.1.png  used on input line 627.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[28 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/20.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:641: Missing $ inserted.
+<inserted text> 
+                $
+l.641 i \in
+            \mathbb{II}, \quad j \in \mathbb{I} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:647: Missing $ inserted.
+<inserted text> 
+                $
+l.647 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/21.1.png, id=885, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/21.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/21.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/21.1.png  used on input line 654.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[29 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/21.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:668: Missing $ inserted.
+<inserted text> 
+                $
+l.668 i \in
+            \mathbb{I}, \quad j \in \mathbb{II} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:674: Missing $ inserted.
+<inserted text> 
+                $
+l.674 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/22.1.png, id=891, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/22.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/22.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/22.1.png  used on input line 681.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[30 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/22.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:695: Missing $ inserted.
+<inserted text> 
+                $
+l.695 \bullet
+              \text{ If the entering arc crosses from the root-containing tr...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07
+-NetSimplex/notes.tex:707: Missing $ inserted.
+<inserted text> 
+                $
+l.707 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/23.1.png, id=897, 722.7pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/23.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/23.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/23.1.png  used on input line 725.
+(pdftex.def)             Requested size: 70.46037pt x 75.34738pt.
+[31 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/23.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/24.1.png, id=904, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/24.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/24.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/24.1.png  used on input line 746.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 7540) in paragraph at lines 747--747
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Fig-ure 14.8
+ []
+
+
+Underfull \hbox (badness 2932) in paragraph at lines 747--747
+\T1/lmr/m/n/8 show-ing two dis-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 747--747
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 747--747
+\T1/lmr/m/n/8 that re-mained
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 747--747
+\T1/lmr/m/n/8 un-changed are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 747--747
+\T1/lmr/m/n/8 shown, whereas
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 747--747
+\T1/lmr/m/n/8 those that need
+ []
+
+[32 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/24.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/25.1.png, id=910, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/25.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/25.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/25.1.png  used on input line 769.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 1178) in paragraph at lines 770--770
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Fig-ure show-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 ing two dis-joint
+ []
+
+
+Underfull \hbox (badness 5681) in paragraph at lines 770--770
+\T1/lmr/m/n/8 trees be-fore and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 af-ter up-dat-ing
+ []
+
+
+Underfull \hbox (badness 1087) in paragraph at lines 770--770
+\T1/lmr/m/n/8 dual flows. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 left tree shows
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 770--770
+\T1/lmr/m/n/8 the ini-tial state,
+ []
+
+
+Underfull \hbox (badness 4048) in paragraph at lines 770--770
+\T1/lmr/m/n/8 with dual val-ues
+ []
+
+
+Underfull \hbox (badness 6364) in paragraph at lines 770--770
+\T1/lmr/m/n/8 right tree shows
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 af-ter mod-i-fy-ing
+ []
+
+
+Underfull \hbox (badness 2080) in paragraph at lines 770--770
+\T1/lmr/m/n/8 some dual val-ues
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 up-dated and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 oth-ers re-main-ing
+ []
+
+
+Underfull \hbox (badness 1400) in paragraph at lines 770--770
+\T1/lmr/m/n/8 un-changed. The
+ []
+
+
+Underfull \hbox (badness 6063) in paragraph at lines 770--770
+\T1/lmr/m/n/8 en-ter-ing arc has
+ []
+
+
+Underfull \hbox (badness 2980) in paragraph at lines 770--770
+\T1/lmr/m/n/8 shown above the
+ []
+
+
+Underfull \hbox (badness 5403) in paragraph at lines 770--770
+\T1/lmr/m/n/8 are la-beled with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 their flows and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 770--770
+\T1/lmr/m/n/8 are la-beled a
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 770--770
+\T1/lmr/m/n/8 through g. The
+ []
+
+[33] [34 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/25.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/26.1.png, id=920, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/26.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/26.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/26.1.png  used on input line 793.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 1178) in paragraph at lines 794--794
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Fig-ure show-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 ing two dis-joint
+ []
+
+
+Underfull \hbox (badness 5681) in paragraph at lines 794--794
+\T1/lmr/m/n/8 trees be-fore and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 af-ter up-dat-ing
+ []
+
+
+Underfull \hbox (badness 1087) in paragraph at lines 794--794
+\T1/lmr/m/n/8 dual flows. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 left tree shows
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 794--794
+\T1/lmr/m/n/8 the ini-tial state,
+ []
+
+
+Underfull \hbox (badness 4048) in paragraph at lines 794--794
+\T1/lmr/m/n/8 with dual val-ues
+ []
+
+
+Underfull \hbox (badness 6364) in paragraph at lines 794--794
+\T1/lmr/m/n/8 right tree shows
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 af-ter mod-i-fy-ing
+ []
+
+
+Underfull \hbox (badness 2080) in paragraph at lines 794--794
+\T1/lmr/m/n/8 some dual val-ues
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 up-dated and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 oth-ers re-main-ing
+ []
+
+
+Underfull \hbox (badness 1400) in paragraph at lines 794--794
+\T1/lmr/m/n/8 un-changed. The
+ []
+
+
+Underfull \hbox (badness 6063) in paragraph at lines 794--794
+\T1/lmr/m/n/8 en-ter-ing arc has
+ []
+
+
+Underfull \hbox (badness 2980) in paragraph at lines 794--794
+\T1/lmr/m/n/8 shown above the
+ []
+
+
+Underfull \hbox (badness 5403) in paragraph at lines 794--794
+\T1/lmr/m/n/8 are la-beled with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 their flows and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 794--794
+\T1/lmr/m/n/8 are la-beled a
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 794--794
+\T1/lmr/m/n/8 through g. The
+ []
+
+[35] [36 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/26.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/27.1.png, id=930, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/27.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/27.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/27.1.png  used on input line 814.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 815--815
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 815--815
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 815--815
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 815--815
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 815--815
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 815--815
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 815--815
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 815--815
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 815--815
+\T1/lmr/m/n/8 di-rec-tion of flow
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 815--815
+\T1/lmr/m/n/8 dual val-ues are
+ []
+
+[37 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/27.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/28.1.png, id=937, 521.95pt x 449.68pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/28.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/28.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/28.1.png  used on input line 835.
+(pdftex.def)             Requested size: 70.46037pt x 60.70418pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 836--836
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 836--836
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 836--836
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 836--836
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 836--836
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 836--836
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 836--836
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 836--836
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 836--836
+\T1/lmr/m/n/8 di-rec-tion of flow
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 836--836
+\T1/lmr/m/n/8 dual val-ues are
+ []
+
+
+Underfull \hbox (badness 1466) in paragraph at lines 836--836
+\T1/lmr/m/n/8 the net-work with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 836--836
+\T1/lmr/m/n/8 flow ad-just-ments
+ []
+
+
+Underfull \hbox (badness 6542) in paragraph at lines 836--836
+\T1/lmr/m/n/8 in-di-cated by ar-
+ []
+
+
+Underfull \hbox (badness 5622) in paragraph at lines 836--836
+\T1/lmr/m/n/8 rows and la-bels,
+ []
+
+
+Underfull \hbox (badness 8189) in paragraph at lines 836--836
+\T1/lmr/m/n/8 in-clud-ing "en-ter",
+ []
+
+[38 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/28.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/29.1.png, id=944, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/29.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/29.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/29.1.png  used on input line 856.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 857--857
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 857--857
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 857--857
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 857--857
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 857--857
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 857--857
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 ar-rows in-di-cate
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 the di-rec-tion of
+ []
+
+
+Underfull \hbox (badness 1009) in paragraph at lines 857--857
+\T1/lmr/m/n/8 arcs. Some arcs
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 are high-lighted
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 in yel-low/orange.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 dual val-ues are
+ []
+
+
+Underfull \hbox (badness 1466) in paragraph at lines 857--857
+\T1/lmr/m/n/8 the net-work with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 flow ad-just-ments
+ []
+
+
+Underfull \hbox (badness 6542) in paragraph at lines 857--857
+\T1/lmr/m/n/8 in-di-cated by ar-
+ []
+
+
+Underfull \hbox (badness 5622) in paragraph at lines 857--857
+\T1/lmr/m/n/8 rows and la-bels,
+ []
+
+
+Underfull \hbox (badness 8189) in paragraph at lines 857--857
+\T1/lmr/m/n/8 in-clud-ing "en-ter",
+ []
+
+
+Underfull \hbox (badness 5260) in paragraph at lines 857--857
+\T1/lmr/m/n/8 shows a tri-an-gle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 857--857
+\T1/lmr/m/n/8 with flows 3+t,
+ []
+
+
+Underfull \hbox (badness 1552) in paragraph at lines 857--857
+\T1/lmr/m/n/8 3-t, and 3, with
+ []
+
+[39] [40 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/29.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/30.1.png, id=954, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/30.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/30.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/30.1.png  used on input line 877.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 878--878
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 878--878
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 878--878
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 878--878
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 878--878
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 878--878
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 878--878
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 878--878
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 878--878
+\T1/lmr/m/n/8 di-rec-tion of flow
+ []
+
+[41 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/30.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/31.1.png, id=960, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/31.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/31.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/31.1.png  used on input line 898.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 899--899
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 899--899
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 899--899
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 899--899
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 899--899
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 899--899
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 899--899
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 899--899
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 899--899
+\T1/lmr/m/n/8 di-rec-tion of flow
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 899--899
+\T1/lmr/m/n/8 The flows are 6,
+ []
+
+
+Underfull \hbox (badness 6893) in paragraph at lines 899--899
+\T1/lmr/m/n/8 The dual val-ues
+ []
+
+
+Underfull \hbox (badness 2744) in paragraph at lines 899--899
+\T1/lmr/m/n/8 loop high-lights a
+ []
+
+
+Underfull \hbox (badness 4341) in paragraph at lines 899--899
+\T1/lmr/m/n/8 The node val-ues
+ []
+
+
+Underfull \hbox (badness 1817) in paragraph at lines 899--899
+\T1/lmr/m/n/8 cir-cle to the left
+ []
+
+
+Underfull \hbox (badness 1838) in paragraph at lines 899--899
+\T1/lmr/m/n/8 arc from c to a
+ []
+
+
+Underfull \hbox (badness 3579) in paragraph at lines 899--899
+\T1/lmr/m/n/8 The arc from b
+ []
+
+[42] [43]
+Overfull \vbox (238.59859pt too high) has occurred while \output is active []
+
+
+[44 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/31.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/32.1.png, id=975, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/32.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/32.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/32.1.png  used on input line 919.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 920--920
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 920--920
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 920--920
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 920--920
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 920--920
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 920--920
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 920--920
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 920--920
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 920--920
+\T1/lmr/m/n/8 di-rec-tion of flow
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 920--920
+\T1/lmr/m/n/8 The flows are 6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 920--920
+\T1/lmr/m/n/8 dual val-ues are
+ []
+
+[45 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/32.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/33.1.png, id=981, 369.38pt x 313.17pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/33.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/33.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/33.1.png  used on input line 939.
+(pdftex.def)             Requested size: 70.46037pt x 59.73706pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 940--940
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 940--940
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 940--940
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 940--940
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 940--940
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 940--940
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 940--940
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 940--940
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 940--940
+\T1/lmr/m/n/8 di-rec-tion of flow
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 940--940
+\T1/lmr/m/n/8 The flows are 6,
+ []
+
+
+Underfull \hbox (badness 5417) in paragraph at lines 940--940
+\T1/lmr/m/n/8 struc-ture. The
+ []
+
+
+Underfull \hbox (badness 3068) in paragraph at lines 940--940
+\T1/lmr/m/n/8 dual value of 5.
+ []
+
+
+Underfull \hbox (badness 3068) in paragraph at lines 940--940
+\T1/lmr/m/n/8 dual value of 5.
+ []
+
+
+Underfull \hbox (badness 3068) in paragraph at lines 940--940
+\T1/lmr/m/n/8 dual value of 5.
+ []
+
+[46] [47]
+Overfull \vbox (704.09859pt too high) has occurred while \output is active []
+
+
+[48 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/33.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/34.1.png, id=995, 377.41pt x 453.695pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/34.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/34.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/34.1.png  used on input line 959.
+(pdftex.def)             Requested size: 70.46037pt x 84.70068pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 960--960
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 960--960
+\T1/lmr/m/n/8 nodes a, b, c,
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 960--960
+\T1/lmr/m/n/8 la-beled with flow
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 960--960
+\T1/lmr/m/n/8 val-ues (in black)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 960--960
+\T1/lmr/m/n/8 and dual val-ues
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 960--960
+\T1/lmr/m/n/8 (in blue). Node
+ []
+
+
+Underfull \hbox (badness 2269) in paragraph at lines 960--960
+\T1/lmr/m/n/8 val-ues are shown
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 960--960
+\T1/lmr/m/n/8 in blue. Red
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 960--960
+\T1/lmr/m/n/8 ar-rows in-di-cate
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 960--960
+\T1/lmr/m/n/8 the di-rec-tion of
+ []
+
+
+Underfull \hbox (badness 1259) in paragraph at lines 960--960
+\T1/lmr/m/n/8 are la-beled a, b,
+ []
+
+
+Underfull \hbox (badness 2080) in paragraph at lines 960--960
+\T1/lmr/m/n/8 con-nects nodes a
+ []
+
+
+Underfull \hbox (badness 2080) in paragraph at lines 960--960
+\T1/lmr/m/n/8 con-nects nodes a
+ []
+
+
+Underfull \hbox (badness 2478) in paragraph at lines 960--960
+\T1/lmr/m/n/8 con-nects nodes c
+ []
+
+
+Underfull \hbox (badness 1721) in paragraph at lines 960--960
+\T1/lmr/m/n/8 con-nects nodes b
+ []
+
+
+Underfull \hbox (badness 3701) in paragraph at lines 960--960
+\T1/lmr/m/n/8 con-nects nodes f
+ []
+
+
+Underfull \hbox (badness 3701) in paragraph at lines 960--960
+\T1/lmr/m/n/8 con-nects nodes f
+ []
+
+
+Underfull \hbox (badness 1715) in paragraph at lines 960--960
+\T1/lmr/m/n/8 The graph shows
+ []
+
+
+Underfull \hbox (badness 7740) in paragraph at lines 960--960
+\T1/lmr/m/n/8 fig-ure is la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 960--960
+\T1/lmr/m/n/8 "FIG-URE 14.14.
+ []
+
+
+Underfull \hbox (badness 1264) in paragraph at lines 960--960
+\T1/lmr/m/n/8 The two sub-trees
+ []
+
+[49] [50 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/34.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/35.1.png, id=1006, 810.02625pt x 863.225pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/35.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/35.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/35.1.png  used on input line 994.
+(pdftex.def)             Requested size: 70.46037pt x 75.07889pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 Sim-plex method,
+ []
+
+
+Underfull \hbox (badness 6944) in paragraph at lines 995--995
+\T1/lmr/m/n/8 the en-ter-ing arc
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 sub-trees cre-ated
+ []
+
+
+Underfull \hbox (badness 4403) in paragraph at lines 995--995
+\T1/lmr/m/n/8 by re-mov-ing the
+ []
+
+
+Underfull \hbox (badness 2343) in paragraph at lines 995--995
+\T1/lmr/m/n/8 op-po-site di-rec-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 Ad-di-tion-ally, it
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 must have the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 small-est dual
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 slack among all
+ []
+
+
+Underfull \hbox (badness 2165) in paragraph at lines 995--995
+\T1/lmr/m/n/8 such arcs. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 995--995
+\T1/lmr/m/n/8 high-light key
+ []
+
+[51] [52 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/35.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/36.1.png, id=1017, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/36.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/36.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/36.1.png  used on input line 1014.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 6510) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 graph il-lus-trat-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 Sim-plex method.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 The graph con-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 Node po-ten-tials
+ []
+
+
+Underfull \hbox (badness 2846) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 Red ar-rows in-di-
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 of flow. Nodes
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 g form an-other
+ []
+
+
+Underfull \hbox (badness 1087) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 sub-tree. A pur-
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 ple arc con-nects
+ []
+
+
+Underfull \hbox (badness 6188) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 nodes e and g,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 high-light-ing the
+ []
+
+
+Underfull \hbox (badness 2302) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 (6,6), a-d (6,73),
+ []
+
+
+Underfull \hbox (badness 7291) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 c-b (10,10), b-g
+ []
+
+
+Underfull \hbox (badness 3098) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 (5,5), d-b (2,-5),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 A hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1015
+\T1/lmr/m/n/8 note in-di-cates
+ []
+
+[53] [54 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/36.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/37.1.png, id=1027, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/37.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/37.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/37.1.png  used on input line 1034.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 show-ing a tree
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 struc-ture with
+ []
+
+
+Underfull \hbox (badness 2080) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 nodes and edges.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 lines con-nect-ing
+ []
+
+
+Underfull \hbox (badness 1354) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 the nodes. One
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 edge is la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 with an ar-row
+ []
+
+
+Underfull \hbox (badness 5331) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 are also la-beled.
+ []
+
+
+Underfull \hbox (badness 4582) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 ture re-sem-bles a
+ []
+
+
+Underfull \hbox (badness 3209) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 tree with sev-eral
+ []
+
+
+Underfull \hbox (badness 6708) in paragraph at lines 1035--1035
+\T1/lmr/m/n/8 branches. The
+ []
+
+[55 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/37.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/38.1.png, id=1035, 616.3025pt x 742.775pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/38.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/38.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/38.1.png  used on input line 1054.
+
+(pdftex.def)             Requested size: 70.46037pt x 84.91296pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1055--1055
+\T1/lmr/m/n/8 net-work flow
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1055--1055
+\T1/lmr/m/n/8 dis-joint sub-trees,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1055--1055
+\T1/lmr/m/n/8 con-nected by a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1055--1055
+\T1/lmr/m/n/8 arc is la-beled
+ []
+
+
+Underfull \hbox (badness 4647) in paragraph at lines 1055--1055
+\T1/lmr/m/n/8 each sub-tree are
+ []
+
+
+Underfull \hbox (badness 1616) in paragraph at lines 1055--1055
+\T1/lmr/m/n/8 con-nected by red
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1055--1055
+\T1/lmr/m/n/8 are en-closed in
+ []
+
+[56 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/38.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/39.1.png, id=1041, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/39.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/39.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/39.1.png  used on input line 1074.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 net-work flow
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 dis-joint sub-trees,
+ []
+
+
+Underfull \hbox (badness 1590) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 en-closed in green
+ []
+
+
+Underfull \hbox (badness 1270) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 ovals. The sub-
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 by a pur-ple arc
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 Nodes within
+ []
+
+
+Underfull \hbox (badness 4647) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 each sub-tree are
+ []
+
+
+Underfull \hbox (badness 1616) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 con-nected by red
+ []
+
+
+Underfull \hbox (badness 1824) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 lines. A pur-ple
+ []
+
+
+Underfull \hbox (badness 1603) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 tree A, with the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 hand-writ-ten text
+ []
+
+
+Underfull \hbox (badness 7012) in paragraph at lines 1075--1075
+\T1/lmr/m/n/8 "Choose the arc
+ []
+
+[57 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/39.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/40.1.png, id=1047, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/40.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/40.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/40.1.png  used on input line 1094.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 by edges. Node
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 value 88, d has
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 19, f has value
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 ad=64, ae=31,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 bc=10, bd=9,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 be=21, cd=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 ce=-6, de=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 Edges af, ab,
+ []
+
+
+Underfull \hbox (badness 6944) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 bc, be, eg are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 high-lighted in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 red, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 4120) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 flow. Edge cd
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 has a neg-a-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 value, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 7740) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 fig-ure is la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 "FIG-URE 14.15.
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 The tree so-lu-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1095--1095
+\T1/lmr/m/n/8 af-ter the first
+ []
+
+[58 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/40.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/41.1.png, id=1053, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/41.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/41.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/41.1.png  used on input line 1114.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 by edges. Node
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 value 88, d has
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 19, f has value
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 ad=64, ae=31,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 bc=10, bd=9,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 be=21, cd=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 ce=-6, de=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 Edges af, ab,
+ []
+
+
+Underfull \hbox (badness 6944) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 bc, be, eg are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 high-lighted in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 red, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 4120) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 flow. Edge cd
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 has a neg-a-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 value, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 7740) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 fig-ure is la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 "FIG-URE 14.15.
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 The tree so-lu-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1115--1115
+\T1/lmr/m/n/8 af-ter the first
+ []
+
+[59 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/41.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/42.1.png, id=1059, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/42.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/42.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/42.1.png  used on input line 1134.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 by edges. Node
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 value 88, d has
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 19, f has value
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 ad=64, ae=31,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 bc=10, bd=9,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 be=21, cd=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 ce=-6, de=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 Edges af, ab,
+ []
+
+
+Underfull \hbox (badness 6944) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 bc, be, eg are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 high-lighted in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 red, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 4120) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 flow. Edge cd
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 has a neg-a-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 value, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 5203) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 in-fea-si-bil-ity. A
+ []
+
+
+Underfull \hbox (badness 3460) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 red ar-row points
+ []
+
+
+Underfull \hbox (badness 1215) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 the left with the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 hand-writ-ten text
+ []
+
+
+Underfull \hbox (badness 7740) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 fig-ure is la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 "FIG-URE 14.15.
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 The tree so-lu-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1135
+\T1/lmr/m/n/8 af-ter the first
+ []
+
+[60] [61 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/42.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/43.1.png, id=1070, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/43.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/43.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/43.1.png  used on input line 1154.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 by edges. Node
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 value 88, d has
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 19, f has value
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 ad=64, ae=31,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 bc=10, bd=9,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 be=21, cd=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 ce=-6, de=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 Edges af, ab,
+ []
+
+
+Underfull \hbox (badness 6944) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 bc, be, eg are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 high-lighted in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 red, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 4120) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 flow. Edge cd
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 has a neg-a-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 value, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 5203) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 in-fea-si-bil-ity. A
+ []
+
+
+Underfull \hbox (badness 3460) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 red ar-row points
+ []
+
+
+Underfull \hbox (badness 1215) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 the left with the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 hand-writ-ten text
+ []
+
+
+Underfull \hbox (badness 7740) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 fig-ure is la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 "FIG-URE 14.15.
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 The tree so-lu-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1155
+\T1/lmr/m/n/8 af-ter the first
+ []
+
+[62] [63 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-11-07-NetSimplex/figures/43.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/44.1.png, id=1080, 742.775pt x 616.3025pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/44.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/44.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/44.1.png  used on input line 1174.
+
+(pdftex.def)             Requested size: 70.46037pt x 58.45529pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A net-work
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 by edges. Node
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 value 88, d has
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 19, f has value
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 ad=64, ae=31,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 bc=10, bd=9,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 be=21, cd=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 ce=-6, de=-6,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 Edges af, ab,
+ []
+
+
+Underfull \hbox (badness 6944) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 bc, be, eg are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 in-di-cat-ing flow.
+ []
+
+
+Underfull \hbox (badness 8038) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 Edge cd has a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 neg-a-tive value,
+ []
+
+
+Underfull \hbox (badness 3281) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 in-di-cat-ing in-fea-si-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 the hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 4108) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 ce have neg-a-tive
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 in pur-ple. The
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 edges ad, ae, be
+ []
+
+
+Underfull \hbox (badness 6477) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 have val-ues (64,
+ []
+
+
+Underfull \hbox (badness 4660) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 in black. The
+ []
+
+
+Underfull \hbox (badness 4660) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 in black. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 -15, 0) writ-ten
+ []
+
+
+Underfull \hbox (badness 2735) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 in blue. There
+ []
+
+
+Underfull \hbox (badness 3746) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 is a hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 1596) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 ple in the up-per
+ []
+
+
+Underfull \hbox (badness 7740) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 fig-ure is la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 "FIG-URE 14.15.
+ []
+
+
+Underfull \hbox (badness 1292) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 The tree so-lu-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+\T1/lmr/m/n/8 af-ter the first
+ []
+
+[64] [65]
+Overfull \vbox (47.31682pt too high) has occurred while \output is active []
+
+
+[66 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/44.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-0
+7-NetSimplex/figures/45.1.png, id=1094, 973.6375pt x 973.6375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-11-07-NetSimplex/figures/45.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/45.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-11-07-NetSimplex/figures/45.1.png  used on input line 1202.
+
+(pdftex.def)             Requested size: 70.46037pt x 70.44948pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1203--1203
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Text de-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1203--1203
+\T1/lmr/m/n/8 scrib-ing dif-fer-ent
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1203--1203
+\T1/lmr/m/n/8 vari-ants of the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1203--1203
+\T1/lmr/m/n/8 sim-plex method
+ []
+
+
+Underfull \hbox (badness 1424) in paragraph at lines 1203--1203
+\T1/lmr/m/n/8 flows. The text
+ []
+
+
+Underfull \hbox (badness 3471) in paragraph at lines 1203--1203
+\T1/lmr/m/n/8 is or-ga-nized into
+ []
+
+
+Underfull \hbox (badness 7869) in paragraph at lines 1203--1203
+\T1/lmr/m/n/8 para-graphs, with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1203--1203
+\T1/lmr/m/n/8 lighted im-plic-itly
+ []
+
+[67 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+11-07-NetSimplex/figures/45.1.png (PNG copy)>]
+
+enddocument/afterlastpage: lastpage setting LastPage.
+(_logs/notes.aux)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+ ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `notes.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `notes.out':
+(rerunfilecheck)             Before: C28CCB6EB061BA2605639EFCA758995A;17252
+(rerunfilecheck)             After:  61F7B1A30C328E6ACFFBF6C579771E5E;17649.
+ ) 
+Here is how much of TeX's memory you used:
+ 15223 strings out of 474116
+ 274340 string characters out of 5743682
+ 1939187 words of memory out of 5000000
+ 37036 multiletter control sequences out of 15000+600000
+ 619074 words of font info for 80 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 83i,11n,131p,2642b,681s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/lo
+cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texliv
+e/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2024/texm
+f-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fon
+ts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
+blic/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmm
+i8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></us
+r/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/tex
+live/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2024/t
+exmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2024/texmf-dist/fo
+nts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/
+public/lm/lmsy8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsf
+onts/symbols/msbm10.pfb>
+Output written on _logs/notes.pdf (67 pages, 7284823 bytes).
+PDF statistics:
+ 1240 PDF objects out of 1440 (max. 8388607)
+ 1085 compressed objects within 11 object streams
+ 293 named destinations out of 1000 (max. 500000)
+ 1634 words of extra memory for PDF output out of 10000 (max. 10000000)
+

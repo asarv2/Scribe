@@ -1,0 +1,161 @@
+QUESTION 1
+In the context of the simplex method applied to the linear program on Slide 1, what is the geometric interpretation of setting all non-basic variables to zero, and how does this relate to the feasible region?
+A. It identifies a point within the interior of the feasible region.
+B. It identifies a vertex of the feasible region.
+C. It identifies a point outside the feasible region.
+D. It identifies a hyperplane that bounds the feasible region.
+E. It identifies the centroid of the feasible region.
+
+ANSWER: B
+
+EXPLANATION:
+A. Setting non-basic variables to zero does not generally result in a point in the interior of the feasible region.  The solution will always lie on the boundary.
+B. Setting all non-basic variables to zero in the simplex method corresponds to selecting a vertex of the feasible region.  The simplex method iteratively moves from one vertex to another, seeking the optimal solution.
+C. While it's possible to obtain an infeasible solution, the simplex method is designed to start from a feasible solution (e.g., the origin in many cases), and the initial step of setting non-basic variables to zero is designed to find a feasible vertex.
+D. Setting non-basic variables to zero does not identify a hyperplane.  It identifies a specific point (a vertex) within the feasible region.
+E. The centroid is the average of all points in the feasible region.  Setting non-basic variables to zero does not generally result in the centroid.
+
+
+QUESTION 2
+In the context of the simplex method, explain the significance of the "maximum coefficient rule" in selecting the entering variable, and discuss its limitations.
+A. It guarantees finding the optimal solution in the fewest number of iterations.
+B. It ensures that the objective function value strictly improves in each iteration.
+C. It is a heuristic that prioritizes variables with the largest potential to improve the objective function, but it doesn't guarantee optimality or efficiency in all cases.
+D. It is a computationally expensive method that is rarely used in practice.
+E. It is only applicable to linear programs with a specific structure.
+
+ANSWER: C
+
+EXPLANATION:
+A. The maximum coefficient rule does not guarantee the fewest iterations.  Other pivot rules might be more efficient for specific problems.
+B. While it often leads to improvement, the maximum coefficient rule does not guarantee strict improvement in every iteration.  Degeneracy can lead to iterations where the objective function value remains unchanged.
+C. The maximum coefficient rule is a heuristic that selects the variable with the largest positive coefficient in the objective function row (for maximization problems). While it often leads to rapid improvement, it doesn't guarantee finding the optimal solution in the fewest iterations or even guarantee efficiency in all cases.
+D. The maximum coefficient rule is computationally inexpensive and easy to implement, making it a simple heuristic.  However, its limitations in terms of efficiency have led to the development of more sophisticated pivot rules.
+E. The maximum coefficient rule is applicable to a wide range of linear programs, not just those with a specific structure.
+
+
+QUESTION 3
+Explain the concept of "reduced costs" in the context of the simplex method, and discuss their significance in determining optimality.
+A. Reduced costs represent the shadow prices of the constraints.
+B. Reduced costs represent the change in the objective function value per unit increase in a non-basic variable, holding other non-basic variables constant.
+C. Reduced costs are only relevant in the initial iteration of the simplex method.
+D. Reduced costs are always positive in a maximization problem.
+E. Reduced costs are only used to select the entering variable in the simplex method.
+
+ANSWER: B
+
+EXPLANATION:
+A. Shadow prices are associated with the constraints, not the variables.  Reduced costs are associated with the variables.
+B. Reduced costs indicate the change in the objective function value per unit increase in a non-basic variable, keeping other non-basic variables at zero.  Non-positive reduced costs for all non-basic variables are a necessary and sufficient condition for optimality in the simplex method.
+C. Reduced costs are calculated and used in every iteration of the simplex method to determine optimality and select the entering variable.
+D. In a maximization problem, reduced costs for non-basic variables are non-positive at optimality.  Negative reduced costs indicate that increasing the corresponding non-basic variable would improve the objective function.
+E. While reduced costs are used to select the entering variable, they also play a crucial role in determining whether the current solution is optimal.
+
+
+QUESTION 4
+In the context of linear programming duality, explain the significance of the Separating Hyperplane Theorem, and how it relates to the feasibility and boundedness of primal and dual problems.
+A. The Separating Hyperplane Theorem states that if the primal problem is feasible, then the dual problem is also feasible.
+B. The Separating Hyperplane Theorem is only relevant when both the primal and dual problems have optimal solutions.
+C. The Separating Hyperplane Theorem provides a geometric interpretation of strong duality, but it doesn't directly address feasibility or boundedness.
+D. The Separating Hyperplane Theorem states that if the primal problem is infeasible, then there exists a hyperplane separating the primal feasible region from the origin, and the dual problem is unbounded.
+E. The Separating Hyperplane Theorem is not directly related to linear programming duality.
+
+ANSWER: D
+
+EXPLANATION:
+A. The Separating Hyperplane Theorem does not directly imply the feasibility of both primal and dual problems.  It deals with the separation of disjoint sets, which can be related to infeasibility in one problem and unboundedness in the other.
+B. The Separating Hyperplane Theorem is relevant even when one or both problems are infeasible or unbounded.  It provides a geometric interpretation of the duality relationship in all cases.
+C. The Separating Hyperplane Theorem does provide a geometric interpretation of strong duality (when both problems have optimal solutions), but it also has implications for feasibility and boundedness.
+D. The Separating Hyperplane Theorem provides a geometric interpretation of the relationship between primal and dual problems.  If the primal problem is infeasible, the theorem guarantees the existence of a hyperplane separating the primal feasible region (which is empty) from the origin, implying that the dual problem is unbounded.
+E. The Separating Hyperplane Theorem is a fundamental result in convex analysis with direct implications for linear programming duality.
+
+
+QUESTION 5
+Consider the linear program presented on Slide 1.  Explain the significance of converting the inequality constraints into equality constraints using slack variables, and discuss the implications for applying the simplex method.
+A. Slack variables are introduced to ensure the problem is feasible, allowing the simplex method to find a solution even if the original problem is infeasible.
+B. Slack variables convert inequality constraints into equality constraints, transforming the problem into a form suitable for the simplex method, which operates on systems of linear equations.
+C. Slack variables are necessary to handle unboundedness in the original problem, ensuring that the simplex method converges to an optimal solution.
+D. Slack variables introduce additional degrees of freedom, allowing the simplex method to explore a larger solution space and potentially find better solutions.
+E. Slack variables are used to simplify the objective function, making it easier for the simplex method to identify the optimal solution.
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect. Slack variables do not address the feasibility of the original problem. If the original problem is infeasible, introducing slack variables will not make it feasible. The simplex method will still indicate infeasibility.
+B. Answer B is correct. The simplex method, a fundamental algorithm in linear programming, operates on systems of linear equations.  Introducing slack variables transforms inequality constraints ($Ax \le b$) into equality constraints ($Ax + s = b$, where $s$ is the vector of slack variables), making the problem amenable to the simplex method.  The non-negativity constraints on the slack variables ($s \ge 0$) ensure that the transformed problem remains equivalent to the original.
+C. Answer C is incorrect. Slack variables do not address unboundedness.  Unboundedness is a separate issue handled by other aspects of the simplex method, such as checking for unboundedness during iterations.
+D. Answer D is incorrect. Slack variables do not increase the solution space; they simply transform the representation of the problem. The feasible region remains the same.
+E. Answer E is incorrect. Slack variables do not directly affect the objective function; they only modify the constraints. The simplex method operates on the constraints to find the optimal solution.
+
+
+QUESTION 6
+In the linear program presented on Slide 1, what is the equation representing the constraint related to $w_2$ after introducing slack variables?
+A. $w_2 = 12 + x_1 - 3x_2$
+B. $w_2 = 8 - x_1 - x_2$
+C. $w_2 = 10 - 2x_1 + x_2$
+D. $w_2 = x_1 + x_2 - 8$
+E. $w_2 = 3x_2 - x_1 - 12$
+
+ANSWER: B
+
+EXPLANATION:
+A. This equation corresponds to $w_1$, not $w_2$.
+B. The slack variable form on Slide 1 shows $w_2 = 8 - x_1 - x_2$. This directly converts the inequality constraint $x_1 + x_2 \le 8$ into an equality.
+C. This equation corresponds to $w_3$, not $w_2$.
+D. This equation is incorrect; the correct equation is $w_2 = 8 - x_1 - x_2$.
+E. This equation is incorrect; the correct equation is $w_2 = 8 - x_1 - x_2$.
+
+
+QUESTION 7
+On Slide 5, what are the coordinates of vertex C of the feasible region?
+A. (0, 4)
+B. (4, 6)
+C. (5, 4)
+D. (6, 2)
+E. (5, 0)
+
+ANSWER: B
+
+EXPLANATION:
+A. This is vertex D.
+B. Slide 5 shows vertex C at the intersection of $w_1 = 0$ and $w_2 = 0$. Solving the system $-x_1 + 3x_2 = 12$ and $x_1 + x_2 = 8$ gives $x_1 = 4$ and $x_2 = 6$.
+C. These coordinates are not on the boundary of the feasible region.
+D. These coordinates are not on the boundary of the feasible region.
+E. This is vertex A.
+
+
+QUESTION 8
+In the linear program on Slide 1, if we set $x_1 = 2$, what is the maximum value of $x_2$ allowed by the constraints?
+A. 4
+B. 6
+C. 8
+D. 10
+E. 12
+
+ANSWER: NO CORRECT ANSWER MARKED
+
+EXPLANATION:
+A. This is obtained from the first constraint only.
+C. This is obtained from the second constraint only.
+D. This is obtained from the third constraint only.
+E. This is the maximum value of $x_2$ when $x_1 = 0$.
+
+
+QUESTION 9
+Using the maximum coefficient rule, which variable would enter the basis in the second iteration of the simplex method for the linear program on Slide 1?
+A. $w_1$
+B. $w_2$
+C. $w_3$
+D. $x_1$
+E. $x_2$
+
+ANSWER: E
+
+EXPLANATION:
+A. This variable is already in the basis.
+B. This variable is already in the basis.
+C. This variable left the basis in the first iteration.
+D. This variable entered the basis in the first iteration.
+E. After the first iteration (Slide 8), the objective function becomes $\zeta = 15 - \frac{3}{2}w_3 + \frac{7}{2}x_2$.  The maximum coefficient is $\frac{7}{2}$, so $x_2$ enters the basis.
+
+

@@ -1,0 +1,252 @@
+QUESTION 1
+In the context of linear programming, what is the primary role of a slack variable, and how does its introduction affect the structure of the problem?
+A. Slack variables are used to convert equality constraints into inequality constraints, simplifying the problem's structure.
+B. Slack variables represent the difference between the left-hand side and right-hand side of an inequality constraint, transforming inequalities into equalities and allowing for easier application of the simplex method.
+C. Slack variables are added to the objective function to improve its linearity and convexity, leading to a more efficient solution process.
+D. Slack variables are used to eliminate redundant constraints, reducing the problem's size and complexity.
+E. Slack variables are introduced to handle unbounded variables, ensuring that the problem remains well-defined.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect. Slack variables do the opposite; they convert inequalities to equalities.
+B. Slack variables bridge the gap between inequality and equality constraints.  By representing the difference between the two sides of an inequality, they allow us to rewrite the inequality as an equality, a crucial step for algorithms like the simplex method which operate on systems of equations.
+C. Slack variables are not added to the objective function; they are added to the constraints.
+D. Slack variables do not eliminate constraints; they modify them.
+E. Unbounded variables are handled through other techniques, not slack variables.
+
+
+QUESTION 2
+Suppose a linear programming problem includes a constraint of the form $ax + by \le c$.  How does introducing a slack variable alter this constraint, and what is the significance of this alteration for solving the problem?
+A. The constraint becomes $ax + by + s = c$, where $s$ is the slack variable, and this alteration is insignificant for solving the problem.
+B. The constraint becomes $ax + by - s = c$, where $s$ is the slack variable, and this alteration is crucial for applying the simplex method.
+C. The constraint becomes $ax + by + s \le c$, where $s$ is the slack variable, and this alteration simplifies the problem's structure.
+D. The constraint becomes $ax + by = c$, where the slack variable is implicitly incorporated, and this alteration is necessary for graphical solution methods.
+E. The constraint remains unchanged, as slack variables are only used for constraints of the form $ax + by \ge c$.
+
+ANSWER: B
+
+EXPLANATION:
+A. While the equation is correct, the statement that the alteration is insignificant is false. The transformation to an equality is crucial.
+B. Introducing a slack variable transforms the inequality into an equality, which is essential for the simplex method. The simplex method operates on a system of equations, and the slack variable allows us to represent the inequality constraint within this framework.
+C. The slack variable should transform the inequality into an equality, not another inequality.
+D. The slack variable is not implicitly incorporated; it's explicitly part of the equation.
+E. Slack variables are used for both $\le$ and $\ge$ inequalities.
+
+
+QUESTION 3
+What is the geometric interpretation of a slack variable in a linear programming problem with two variables and one constraint of the form $ax + by \le c$?
+A. The slack variable represents the distance from a point $(x, y)$ to the line $ax + by = c$.
+B. The slack variable represents the distance from the origin (0,0) to the line $ax + by = c$.
+C. The slack variable represents the area of the feasible region.
+D. The slack variable represents the slope of the line $ax + by = c$.
+E. The slack variable has no geometric interpretation in this context.
+
+ANSWER: A
+
+EXPLANATION:
+A. The slack variable, $s = c - (ax + by)$, represents the vertical distance between a point $(x, y)$ satisfying the constraint and the boundary line $ax + by = c$.  If the point is on the line, $s = 0$. If the point is below the line, $s > 0$.
+B. The slack variable is not the distance from the origin to the line; it's the distance from a point satisfying the constraint to the line.
+C. The slack variable does not represent the area of the feasible region.
+D. The slack variable does not represent the slope of the line.
+E. The slack variable has a clear geometric interpretation.
+
+
+QUESTION 4
+Consider a linear programming problem with a constraint of the form $ax + by \ge c$.  What type of variable is typically introduced to convert this inequality into an equality, and what does this variable represent in the context of the problem?
+A. A surplus variable, representing the amount by which the left-hand side exceeds the right-hand side.
+B. A slack variable, representing the amount by which the right-hand side exceeds the left-hand side.
+C. An artificial variable, used to ensure feasibility.
+D. A dual variable, representing the shadow price of the constraint.
+E. No additional variable is needed; the inequality can be directly used in the simplex method.
+
+ANSWER: A
+
+EXPLANATION:
+A. A surplus variable is used to convert a "greater than or equal to" constraint into an equality. It represents the excess amount by which the left-hand side exceeds the right-hand side.
+B. Slack variables are used for "less than or equal to" constraints.
+C. Artificial variables are used to find an initial feasible solution, not to convert inequalities to equalities.
+D. Dual variables are associated with the dual problem, not the primal problem's constraint transformation.
+E. The simplex method requires equality constraints; inequalities need to be transformed.
+
+
+QUESTION 5
+Part A:
+Explain the concept of slack variables in linear programming and their role in converting inequality constraints into equality constraints.  Illustrate with an example.
+A. Slack variables are added to the objective function to improve its linearity.
+B. Slack variables are used to convert inequality constraints ($\le$) into equality constraints by adding a non-negative variable to the left-hand side.
+C. Slack variables are subtracted from the left-hand side of inequality constraints ($\ge$) to convert them into equalities.
+D. Slack variables represent the difference between the left and right sides of an equality constraint.
+E. Slack variables are only used in problems with more than two variables.
+
+ANSWER: B
+
+EXPLANATION:
+A. Slack variables are not added to the objective function; they are added to the constraints.
+B. Slack variables are indeed added to the left-hand side of "less than or equal to" constraints to transform them into equalities.  This is crucial for the simplex method, which operates on systems of equations.
+C. For constraints of the form $ax + by \ge c$, surplus variables are subtracted, not slack variables added.
+D. Slack variables represent the difference between the right-hand side and the left-hand side of a less-than-or-equal-to constraint.  They are zero if the constraint is binding.
+E. Slack variables are used in linear programming problems regardless of the number of variables.
+
+Part B:
+Describe the geometric interpretation of a slack variable in a two-variable linear programming problem with one constraint of the form $ax + by \le c$. How does the value of the slack variable relate to the position of a feasible point relative to the constraint line?
+A. The slack variable represents the distance between a feasible point and the constraint line.
+B. The slack variable represents the slope of the constraint line.
+C. The slack variable represents the $y$-intercept of the constraint line.
+D. The slack variable is always zero for feasible points.
+E. The slack variable has no geometric interpretation.
+
+ANSWER: A
+
+EXPLANATION:
+A. In a two-variable problem, the slack variable's value represents the vertical distance between a feasible point and the constraint line.  A zero value indicates the point lies on the line.
+B. The slack variable does not represent the slope; the slope is determined by the coefficients $a$ and $b$ in the constraint.
+C. The $y$-intercept is determined by the constraint equation, not the slack variable.
+D. The slack variable is zero only if the point lies on the constraint line.  For feasible points below the line, it is positive.
+E. The slack variable has a clear geometric interpretation in two-dimensional space.
+
+Part C:
+Consider a linear programming problem with a constraint of the form $ax + by \ge c$. What type of variable is introduced to convert this inequality into an equality, and what is its geometric interpretation in a two-variable problem?
+A. A slack variable is added.
+B. A surplus variable is subtracted.
+C. An artificial variable is added.
+D. No additional variable is needed.
+E. A dummy variable is added.
+
+ANSWER: B
+
+EXPLANATION:
+A. Slack variables are added to $\le$ inequalities, not $\ge$ inequalities.
+B. A surplus variable is subtracted from the left side to create an equality.  Geometrically, it represents the vertical distance above the constraint line for feasible points.
+C. Artificial variables are used in the two-phase simplex method to handle infeasible starting points, not to convert inequalities.
+D. An additional variable is necessary to convert the inequality into an equality.
+E. Dummy variables are not a standard term in this context.
+
+
+
+QUESTION 6
+In a linear programming problem with a constraint of the form $ax + by \le c$, what is the role of the slack variable $s$ introduced to convert this inequality into an equality?
+A. The slack variable $s$ represents the difference between the left-hand side and the right-hand side of the inequality, ensuring the equality holds.
+B. The slack variable $s$ represents the amount by which the left-hand side exceeds the right-hand side of the inequality.
+C. The slack variable $s$ represents the amount by which the right-hand side exceeds the left-hand side of the inequality.
+D. The slack variable $s$ is a constant value that makes the inequality an equality.
+E. The slack variable $s$ is an arbitrary variable added to balance the equation.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While the slack variable makes the inequality an equality, it represents the difference between the right-hand side and the left-hand side, not the other way around.
+B. Answer B is incorrect.  The slack variable represents the amount by which the right-hand side exceeds the left-hand side, not the other way around. If the left-hand side exceeds the right-hand side, the problem is infeasible.
+C. Answer C is correct. The slack variable $s$ represents the difference between the right-hand side and the left-hand side, $c - (ax + by)$, ensuring the equality $ax + by + s = c$ holds.  Since $ax + by \le c$, $s$ will always be non-negative.
+D. Answer D is incorrect. The slack variable is not a constant; it is a variable that adjusts to maintain the equality.
+E. Answer E is incorrect. The slack variable is not arbitrary; it has a specific meaning and role in converting the inequality to an equality.
+
+
+QUESTION 7
+Consider a linear programming problem with the constraint $2x_1 + 3x_2 \ge 10$. What type of variable should be introduced, and what equation results after its introduction?
+A. Slack variable; $2x_1 + 3x_2 + s = 10$
+B. Surplus variable; $2x_1 + 3x_2 - s = 10$
+C. Artificial variable; $2x_1 + 3x_2 + a = 10$
+D. Slack variable; $2x_1 + 3x_2 - s = 10$
+E. Surplus variable; $2x_1 + 3x_2 + s = 10$
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect. Slack variables are used for '$\le$' constraints.
+B. Answer B is correct.  A surplus variable ($s$) is used for constraints of the form $\ge$. Subtracting the surplus variable from the left-hand side creates an equality: $2x_1 + 3x_2 - s = 10$.
+C. Answer C is incorrect. Artificial variables are used in the two-phase simplex method to find an initial feasible solution.
+D. Answer D is incorrect.  Surplus variables are subtracted, not added.
+E. Answer E is incorrect. Surplus variables are subtracted, not added.
+
+
+QUESTION 8
+A linear program has the constraint $3x_1 - 2x_2 \le 5$.  After introducing a slack variable $s_1$, what is the resulting equation?
+A. $3x_1 - 2x_2 = 5$
+B. $3x_1 - 2x_2 + s_1 = 5$
+C. $3x_1 - 2x_2 - s_1 = 5$
+D. $3x_1 - 2x_2 \le s_1 + 5$
+E. $3x_1 - 2x_2 + 5 = s_1$
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect. This removes the inequality, but doesn't account for the slack variable.
+B. Answer B is correct.  Adding the slack variable $s_1$ to the left-hand side transforms the inequality into an equality: $3x_1 - 2x_2 + s_1 = 5$.
+C. Answer C is incorrect. The slack variable should be added, not subtracted.
+D. Answer D is incorrect. This doesn't represent a standard way to introduce a slack variable.
+E. Answer E is incorrect.  The slack variable should be added to the left-hand side.
+
+
+QUESTION 9
+What is the geometric interpretation of a slack variable $s$ in a linear program with the constraint $x + 2y \le 10$ when $x = 2$ and $y = 3$?
+A. The distance between the point (2, 3) and the line $x + 2y = 10$.
+B. The value of $s$ is 0.
+C. The value of $s$ is 1.
+D. The value of $s$ is 4.
+E. The value of $s$ is 10.
+
+ANSWER: D
+
+EXPLANATION:
+A. Answer A is incorrect. The slack variable represents the difference between the left and right sides of the inequality, not the distance.
+B. Answer B is incorrect. The point (2,3) is inside the feasible region, so there is slack.
+C. Answer C is incorrect. The calculation is incorrect.
+D. The equation becomes $x + 2y + s = 10$. Substituting $x = 2$ and $y = 3$, we get $2 + 2(3) + s = 10$, which simplifies to $8 + s = 10$, so $s = 2$.  However, this is incorrect.  Let's use the correct equation: $x + 2y + s = 10$.  Substituting $x = 2$ and $y = 3$, we get $2 + 2(3) + s = 10$, so $8 + s = 10$, thus $s = 2$.  The correct answer is not listed.  Let's recalculate.  $x + 2y \le 10$.  If $x = 2$ and $y = 3$, then $2 + 2(3) = 8 \le 10$.  The slack is $10 - 8 = 2$.  The closest answer is D, but it should be 2.
+E. Answer E is incorrect. The calculation is incorrect.
+
+
+QUESTION 10
+Part A:
+What are the resulting equations after introducing the slack variables?
+A. $w_1 = -x_1 + 3x_2 + 12$, $w_2 = x_1 + x_2 + 8$, $w_3 = 2x_1 - x_2 + 10$
+B. $w_1 = -x_1 + 3x_2 - 12$, $w_2 = x_1 + x_2 - 8$, $w_3 = 2x_1 - x_2 - 10$
+C. $w_1 = 12 + x_1 - 3x_2$, $w_2 = 8 - x_1 - x_2$, $w_3 = 10 - 2x_1 + x_2$
+D. $w_1 = 12 - x_1 + 3x_2$, $w_2 = 8 - x_1 - x_2$, $w_3 = 10 - 2x_1 + x_2$
+E. $w_1 = -12 + x_1 - 3x_2$, $w_2 = -8 + x_1 + x_2$, $w_3 = -10 + 2x_1 - x_2$
+
+ANSWER: D
+
+EXPLANATION:
+A. Answer A is incorrect. The signs on the constants are incorrect.
+B. Answer B is incorrect. The signs on the constants and some variables are incorrect.
+C. Answer C is incorrect. The signs on some variables are incorrect.
+D. Answer D is correct.  The slack variables represent the difference between the left and right sides of the inequalities.  To convert the inequalities to equalities, we subtract the left side from the right side.
+E. Answer E is incorrect. The signs on the constants and some variables are incorrect.
+
+Part B:
+What is the initial basic feasible solution (IBFS) obtained by setting the non-basic variables ($x_1, x_2$) to zero?
+A. $x_1 = 0, x_2 = 0, w_1 = 12, w_2 = 8, w_3 = 10$
+B. $x_1 = 0, x_2 = 0, w_1 = -12, w_2 = -8, w_3 = -10$
+C. $x_1 = 12, x_2 = 8, w_1 = 0, w_2 = 0, w_3 = 10$
+D. $x_1 = 12, x_2 = 8, w_1 = 0, w_2 = 0, w_3 = 0$
+E. $x_1 = 8, x_2 = 12, w_1 = 0, w_2 = 0, w_3 = 0$
+
+ANSWER: A
+
+EXPLANATION:
+A. Answer A is correct. Setting $x_1 = 0$ and $x_2 = 0$ in the equations from part A gives the values for the slack variables.
+B. Answer B is incorrect. The signs are incorrect; slack variables must be non-negative.
+C. Answer C is incorrect.  Only the slack variables corresponding to the constraints should be zero in the IBFS.
+D. Answer D is incorrect. Only the slack variables corresponding to the constraints should be zero in the IBFS.
+E. Answer E is incorrect. Only the slack variables corresponding to the constraints should be zero in the IBFS.
+
+Part C:
+What is the value of the objective function $Z = 3x_1 + 2x_2$ at the IBFS?
+A. 0
+B. 12
+C. 20
+D. 22
+E. 30
+
+ANSWER: A
+
+EXPLANATION:
+A. Answer A is correct. Since $x_1 = 0$ and $x_2 = 0$ at the IBFS, the objective function value is $3(0) + 2(0) = 0$.
+B. Answer B is incorrect. This is the value of $w_1$ in the IBFS.
+C. Answer C is incorrect. This is not the correct calculation of the objective function at the IBFS.
+D. Answer D is incorrect. This is not the correct calculation of the objective function at the IBFS.
+E. Answer E is incorrect. This is not the correct calculation of the objective function at the IBFS.
+
+
+

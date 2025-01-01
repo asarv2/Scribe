@@ -1,0 +1,179 @@
+QUESTION 1
+In the context of $L^2$-regression, what is the primary objective of the optimization problem, and how does this objective relate to the concept of minimizing the sum of squared errors?
+A. To maximize the correlation between the predicted and actual values.
+B. To minimize the sum of absolute differences between the predicted and actual values.
+C. To minimize the sum of squared differences between the predicted and actual values.
+D. To find the line of best fit that passes through all data points.
+E. To maximize the $R^2$ value, regardless of the model's complexity.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While a good $L^2$-regression model will have a high correlation, maximizing correlation is not the primary objective. The focus is on minimizing the sum of squared errors.
+B. Answer B is incorrect. Minimizing the sum of absolute differences is the objective of $L^1$-regression, not $L^2$-regression.
+C. Answer C is correct. The primary objective in $L^2$-regression is to minimize the sum of squared differences (errors) between the predicted values and the actual values. This is the core principle behind the method, leading to the least squares solution.
+D. Answer D is incorrect.  Unless the data points are perfectly collinear, a line of best fit will not pass through all data points. $L^2$-regression aims to find the line that minimizes the sum of squared errors.
+E. Answer E is incorrect. While a high $R^2$ value is desirable, maximizing $R^2$ without considering model complexity can lead to overfitting. $L^2$-regression aims to find a balance between goodness of fit and model simplicity.
+
+
+QUESTION 2
+Explain the relationship between the normal equations and the solution to the $L^2$-regression problem.  How are the normal equations derived, and what do they represent in the context of minimizing the sum of squared errors?
+A. The normal equations are an alternative method to gradient descent, offering a faster solution but only for linear models.
+B. The normal equations provide a direct solution to the $L^2$-regression problem by setting the gradient of the error function to zero.
+C. The normal equations are a set of linear inequalities that define the feasible region for the $L^2$-regression problem.
+D. The normal equations are derived from the Hessian matrix of the error function and represent the curvature of the error surface.
+E. The normal equations are only applicable to non-linear regression problems and provide an approximate solution.
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect. While the normal equations can be faster than iterative methods like gradient descent, they are applicable to linear and polynomial models, not just linear ones.
+B. Answer B is correct. The normal equations are derived by taking the gradient of the sum of squared errors (the objective function) and setting it to zero.  Solving this system of linear equations directly yields the least squares solution to the $L^2$-regression problem.
+C. Answer C is incorrect. The normal equations are a set of linear equations, not inequalities. They represent the conditions for the minimum of the error function.
+D. Answer D is incorrect. The normal equations are derived from the gradient, not the Hessian matrix. The Hessian would be relevant for analyzing the curvature of the error surface, but not directly for finding the solution.
+E. Answer E is incorrect. The normal equations are primarily used for linear and polynomial regression problems, providing an exact solution (in the linear case).
+
+
+QUESTION 3
+In $L^2$-regression, how does the choice of the loss function (sum of squared errors) influence the sensitivity of the model to outliers in the dataset?  Compare this to other potential loss functions.
+A. The sum of squared errors is insensitive to outliers, making $L^2$-regression robust to noisy data.
+B. The sum of squared errors is highly sensitive to outliers, as large errors are squared, amplifying their effect.
+C. The sum of squared errors is equally sensitive to all data points, regardless of their distance from the fitted model.
+D. The sum of squared errors is only sensitive to outliers if they are clustered together.
+E. The choice of loss function has no impact on the sensitivity to outliers.
+
+ANSWER: B
+
+EXPLANATION:
+A. Answer A is incorrect.  $L^2$-regression is not robust to outliers; outliers significantly influence the fitted model due to the squaring of the errors.
+B. Answer B is correct.  The squared nature of the $L^2$ loss function means that outliers (data points far from the fitted model) have a disproportionately large influence on the model's parameters.  This is in contrast to, for example, the $L^1$ loss function which is less sensitive to outliers.
+C. Answer C is incorrect. While all data points contribute to the loss, outliers have a much larger impact due to the squaring.
+D. Answer D is incorrect. The sensitivity to outliers is independent of their clustering; a single outlier can significantly affect the model.
+E. Answer E is incorrect. The choice of loss function directly impacts the model's sensitivity to outliers.
+
+
+QUESTION 4
+Describe the geometric interpretation of the $L^2$-regression solution in terms of orthogonal projections. How does this interpretation relate to the concept of minimizing the distance between data points and the fitted model?
+A. The solution represents the point in the data space closest to the origin.
+B. The solution is the line that minimizes the sum of distances between the data points and the line.
+C. The solution is the orthogonal projection of the data points onto the subspace spanned by the predictor variables.
+D. The solution is the point that maximizes the distance between the data points and the fitted model.
+E. The geometric interpretation is not relevant to the solution of the $L^2$-regression problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. The solution is not necessarily the closest point to the origin; it's the projection onto the subspace defined by the predictor variables.
+B. Answer B is incorrect.  Minimizing the sum of distances is not the same as minimizing the sum of squared distances.  $L^2$-regression minimizes the sum of squared distances.
+C. Answer C is correct.  The $L^2$-regression solution can be interpreted geometrically as the orthogonal projection of the response vector onto the column space of the design matrix. This projection minimizes the Euclidean distance between the data points and the fitted model.
+D. Answer D is incorrect. The solution minimizes, not maximizes, the distance between the data points and the fitted model.
+E. Answer E is incorrect. The geometric interpretation provides valuable insight into the nature of the $L^2$-regression solution.
+
+
+QUESTION 5
+In the context of $L^2$-regression, explain the geometric interpretation of the solution in terms of orthogonal projections. How does this interpretation relate to the concept of minimizing the distance between data points and the fitted model?
+A. The solution represents the point in the column space of the design matrix that is closest to the vector of observed responses. This is achieved by orthogonally projecting the response vector onto the column space.
+B. The solution minimizes the sum of squared distances between the data points and the origin.
+C. The solution finds the line that passes through the most data points.
+D. The solution minimizes the sum of absolute distances between the data points and the fitted model.
+E. The solution is the average of the data points.
+
+ANSWER: A
+
+EXPLANATION:
+A. The $L^2$-regression solution is the orthogonal projection of the response vector onto the column space of the design matrix.  This projection minimizes the Euclidean distance between the response vector and the column space, which is equivalent to minimizing the sum of squared errors.  Geometrically, it's the point in the subspace spanned by the predictor variables that is closest to the observed data.
+B. This describes minimizing the sum of squared distances to the origin, not to the fitted model.
+C. This is incorrect; $L^2$-regression aims to find the best-fitting line (or hyperplane) in terms of minimizing squared error, not necessarily passing through the most points.
+D. This describes $L^1$-regression, which minimizes the sum of absolute errors, not squared errors.
+E. The average of the data points is only relevant in simple cases and doesn't generally represent the $L^2$-regression solution.
+
+
+QUESTION 6
+In the context of $L^2$-regression, what is the geometric interpretation of the solution in terms of orthogonal projections?
+A. The solution is the point in the data space that minimizes the sum of distances to all data points.
+B. The solution is the point that lies closest to the origin in the data space.
+C. The solution is the orthogonal projection of the vector of response variables onto the subspace spanned by the predictor variables.
+D. The solution is the average of all data points in the data space.
+E. The solution is the point that maximizes the distance to the origin in the data space.
+
+ANSWER: C
+
+EXPLANATION:
+A. This describes a different optimization problem, not $L^2$-regression.  Minimizing the sum of distances (without squaring) leads to a different solution.
+B. This is incorrect. The solution is related to the data, not simply the origin.
+C. The solution to the $L^2$-regression problem is the orthogonal projection of the response vector onto the column space of the design matrix. This minimizes the sum of squared errors, which is geometrically equivalent to minimizing the Euclidean distance between the observed response values and their predicted values.
+D. This is incorrect. The solution is not simply the average of the data points.
+E. This is incorrect. The solution minimizes, not maximizes, the distance in a specific sense.
+
+
+QUESTION 7
+Explain the relationship between the normal equations and the solution to the $L^2$-regression problem. How are the normal equations derived, and what do they represent in the context of minimizing the sum of squared errors?
+A. The normal equations are derived by setting the gradient of the loss function to zero and represent a system of linear equations whose solution minimizes the sum of absolute errors.
+B. The normal equations are derived by setting the Hessian of the loss function to zero and represent a system of non-linear equations whose solution minimizes the sum of squared errors.
+C. The normal equations are derived by setting the gradient of the loss function to zero and represent a system of linear equations whose solution minimizes the sum of squared errors.
+D. The normal equations are derived by setting the loss function to zero and represent a single equation whose solution minimizes the sum of squared errors.
+E. The normal equations are not directly related to the solution of the $L^2$-regression problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. The normal equations minimize the sum of *squared* errors, not absolute errors.  The gradient is set to zero, not the Hessian.
+B. The Hessian is the matrix of second derivatives.  The normal equations are derived by setting the gradient (first derivatives) to zero.
+C. The normal equations are derived by taking the gradient of the sum of squared errors loss function with respect to the regression coefficients and setting it to zero. This results in a system of linear equations that, when solved, provide the least squares solution that minimizes the sum of squared errors.
+D. The loss function is never set to zero; it is minimized. The normal equations form a system of equations, not a single equation.
+E. The normal equations are fundamental to solving the $L^2$-regression problem.
+
+
+QUESTION 8
+In $L^2$-regression, how does the choice of the loss function (sum of squared errors) influence the sensitivity of the model to outliers in the dataset? Compare this to other potential loss functions.
+A. The sum of squared errors loss function is insensitive to outliers, making it robust to noisy data.
+B. The sum of squared errors loss function is highly sensitive to outliers, as outliers have a disproportionately large influence on the squared error.
+C. The sum of squared errors loss function is moderately sensitive to outliers, but less so than the absolute error loss function.
+D. The choice of loss function has no impact on the sensitivity to outliers.
+E. The sum of squared errors loss function is less sensitive to outliers than the Huber loss function.
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect; the $L^2$ loss is highly sensitive to outliers.
+B. The sum of squared errors loss function is highly sensitive to outliers because squaring the error amplifies the effect of large errors.  Other loss functions, such as absolute error or Huber loss, are less sensitive to outliers.
+C. This is incorrect; the $L^2$ loss is more sensitive to outliers than the $L^1$ loss.
+D. The choice of loss function significantly impacts the sensitivity to outliers.
+E. The Huber loss is designed to be less sensitive to outliers than the $L^2$ loss.
+
+
+QUESTION 9
+Consider a simple linear regression problem with one predictor variable.  The data points are (1, 2), (2, 4), (3, 5).  Using the normal equations, find the slope of the least squares regression line. (Round your answer to one decimal place).
+A. 1.0
+B. 1.5
+C. 2.0
+D. 2.5
+E. 3.0
+
+ANSWER: B
+
+EXPLANATION:
+A. Incorrect calculation of the slope.
+B. Let $x = [1, 2, 3]^T$ and $y = [2, 4, 5]^T$. The normal equations are given by $X^TX\beta = X^Ty$, where $X = [1_n, x]$, $1_n$ is a vector of ones, and $\beta = [intercept, slope]^T$.  Solving this system gives the slope.  $X^TX = \begin{bmatrix} 3 & 6 \\ 6 & 14 \end{bmatrix}$ and $X^Ty = \begin{bmatrix} 11 \\ 26 \end{bmatrix}$. Solving the system gives the slope approximately 1.5.
+C. Incorrect calculation of the slope.
+D. Incorrect calculation of the slope.
+E. Incorrect calculation of the slope.
+
+
+QUESTION 10
+Consider a simple linear regression problem with one predictor variable. The data points are (1, 2), (2, 4), (3, 5). Using the normal equations, find the slope of the least squares regression line. (Round your answer to one decimal place).
+A. 1.0
+B. 1.4
+C. 1.7
+D. 2.0
+E. 2.3
+
+ANSWER: NO CORRECT ANSWER MARKED
+
+EXPLANATION:
+A. Incorrect calculation of the slope using the normal equations.
+C. Incorrect calculation of the slope using the normal equations.
+D. Incorrect calculation of the slope using the normal equations.
+E. Incorrect calculation of the slope using the normal equations.
+
+

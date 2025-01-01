@@ -1,0 +1,9 @@
+This lecture on Integer Programming, a topic within Linear Programming, explores methods for solving optimization problems where decision variables are restricted to integer values.  Unlike linear programming, simply solving the relaxed problem (ignoring integer constraints) and rounding the solution is unreliable, as the rounded solution may be infeasible or significantly suboptimal.
+
+*   **Integer Programming:**  Integer programming problems involve maximizing or minimizing a linear objective function subject to linear constraints, with the added constraint that all decision variables must be integers.
+
+*   **Branch-and-Bound:** This algorithm solves integer programs by recursively partitioning the feasible region into subproblems, solving the linear programming relaxation of each subproblem, and pruning branches based on the best integer solution found so far. Depth-first search is generally preferred for its efficiency and ease of implementation.
+
+*   **Gomory Cuts:** This method iteratively adds linear constraints (cuts) to the linear programming relaxation of an integer program.  These cuts are designed to eliminate non-integer solutions while preserving all integer feasible solutions, leading to an optimal integer solution.  The cuts are derived from the fractional parts of the optimal solution to the relaxed linear program.
+
+The lecture demonstrates both branch-and-bound and Gomory cuts through graphical and algebraic examples, highlighting the complexities and algorithmic approaches required to solve integer programming problems compared to their linear programming counterparts.  The efficiency of both methods is discussed, emphasizing the advantages of depth-first search in branch-and-bound and the iterative nature of Gomory cuts.

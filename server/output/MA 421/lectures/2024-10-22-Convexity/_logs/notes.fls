@@ -231,6 +231,7 @@ INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr12.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/rm-lmr10.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/rm-lmr7.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/rm-lmr5.tfm
@@ -246,8 +247,6 @@ INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr7.tfm
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.1.png
@@ -261,23 +260,54 @@ INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.2.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.2.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.2.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/1.4.png
 INPUT /usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/2.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/3.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/4.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/4.1.png
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr7.tfm
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/5.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/5.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/5.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/5.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/5.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/6.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/6.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/6.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/6.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/6.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/7.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/7.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/7.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/7.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/7.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/8.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/8.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/8.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/8.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/8.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/9.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/9.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/9.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/9.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/9.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/10.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/10.1.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/10.1.png
@@ -298,22 +328,26 @@ INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.2.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.2.png
 INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.2.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.3.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.4.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.5.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.5.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.5.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.5.png
-INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/11.5.png
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/ec-lmri10.tfm
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/12.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/12.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/12.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/12.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/12.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/13.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/13.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/13.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/13.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/13.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/14.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/14.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/14.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/14.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/14.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/15.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/15.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/15.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/15.1.png
+INPUT /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22-Convexity/figures/15.1.png
 INPUT _logs/notes.aux
 INPUT _logs/notes.out
 INPUT _logs/notes.out
@@ -322,15 +356,14 @@ INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi6.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi8.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr6.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr8.pfb
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy8.pfb

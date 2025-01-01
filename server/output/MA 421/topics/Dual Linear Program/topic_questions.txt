@@ -1,0 +1,180 @@
+QUESTION 1
+Given a primal linear programming problem (P) and its corresponding dual problem (D), as defined on Slide 1, if the primal problem (P) is feasible and has a bounded optimal solution, what can be definitively stated about the dual problem (D)?
+A. The dual problem (D) is infeasible.
+B. The dual problem (D) is unbounded.
+C. The dual problem (D) is also feasible and has a bounded optimal solution.
+D. The dual problem (D) may be either feasible or infeasible, but if feasible, it is unbounded.
+E. There is no definitive statement that can be made about the dual problem (D).
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect.  If the primal problem has an optimal solution, the dual problem must also have an optimal solution (Strong Duality).
+B. This is incorrect.  If the primal problem has a bounded optimal solution, the dual problem cannot be unbounded (Strong Duality).
+C. The Strong Duality Theorem states that if the primal problem has an optimal solution, then the dual problem also has an optimal solution, and their optimal objective function values are equal.  Since (P) is feasible and bounded, it has an optimal solution, thus guaranteeing (D) also has a bounded optimal solution.
+D. This is incorrect.  The dual problem must also have a bounded optimal solution (Strong Duality).
+E. This is incorrect. The Strong Duality Theorem provides a definitive statement about the dual problem's solution status when the primal problem has a bounded optimal solution.
+
+
+QUESTION 2
+Referring to Slide 2, which inequality always holds true between the objective function value of any feasible solution to the primal problem ($\xi(x)$) and the objective function value of any feasible solution to the dual problem ($\xi(y)$)?  This inequality forms the basis of what fundamental theorem in linear programming?
+A. $\xi(x) \ge \xi(y)$
+B. $\xi(x) = \xi(y)$
+C. $\xi(x) < \xi(y)$
+D. $\xi(x) > \xi(y)$
+E. $\xi(x) \le \xi(y)$
+
+ANSWER: E
+
+EXPLANATION:
+A. This is incorrect. This inequality is the reverse of the weak duality inequality.
+B. This is incorrect. This equality only holds at optimality (Strong Duality).
+C. This is incorrect. This inequality is not generally true; it only holds under specific conditions.
+D. This is incorrect. This inequality is the reverse of the weak duality inequality.
+E. The inequality $\xi(x) \le \xi(y)$ is the statement of Weak Duality.  This theorem states that the objective function value of any feasible solution to the primal problem is less than or equal to the objective function value of any feasible solution to the dual problem.
+
+
+QUESTION 3
+On Slide 3, the primal and dual problems are presented in matrix notation.  What is the relationship between the constraint matrices in the primal and dual problems, and how does this relationship simplify the formulation and analysis of the dual problem?
+A. The constraint matrices are identical.
+B. The constraint matrix in the dual problem is the transpose of the constraint matrix in the primal problem.
+C. The constraint matrix in the dual problem is the negative transpose of the constraint matrix in the primal problem.
+D. There is no direct relationship between the constraint matrices.
+E. The constraint matrix in the dual problem is the inverse of the constraint matrix in the primal problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect. The matrices are related, but not identical.
+B. Incorrect.  It's the negative transpose, not just the transpose.
+C. The constraint matrix in the dual problem is the negative transpose of the constraint matrix in the primal problem. This elegant relationship simplifies the formulation and analysis of the dual problem, as it directly derives the dual constraints from the primal constraints.
+D. Incorrect. There is a fundamental relationship between the primal and dual constraint matrices.
+E. Incorrect. The relationship is not an inverse; it's a negative transpose.
+
+
+QUESTION 4
+Slides 6, 7, and 8 demonstrate the negative transpose property during simplex iterations. What crucial concept does this property highlight regarding the relationship between the primal and dual simplex methods, and how does this impact the efficiency of solving linear programming problems?
+A. The primal and dual simplex methods are completely independent.
+B. The primal and dual simplex methods are mirror images of each other, with the dual method's steps directly reflecting the primal method's steps.
+C. The primal and dual simplex methods are related, but the dual method's steps are not directly predictable from the primal method's steps.
+D. The primal simplex method is always more efficient than the dual simplex method.
+E. The dual simplex method is always more efficient than the primal simplex method.
+
+ANSWER: B
+
+EXPLANATION:
+A. Incorrect. The negative transpose property demonstrates a strong relationship.
+B. The negative transpose property shows that the primal and dual simplex methods are intimately linked.  Each step in the primal simplex method has a corresponding, directly predictable step in the dual simplex method, and vice-versa. This interconnectedness can be exploited to improve the efficiency of solving linear programming problems, potentially switching between primal and dual methods depending on which is more advantageous at a given stage.
+C. Incorrect. The dual steps are directly predictable from the primal steps due to the negative transpose property.
+D. Incorrect. The efficiency depends on the specific problem and the starting point.
+E. Incorrect. The efficiency depends on the specific problem and the starting point.
+
+
+QUESTION 5
+Given the primal problem: Maximize $Z = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, $x_1, x_2 \ge 0$. What is the objective function of its dual problem?
+A. Minimize $W = 12y_1 + 8y_2 + 10y_3$
+B. Maximize $W = 12y_1 + 8y_2 + 10y_3$
+C. Minimize $W = -12y_1 - 8y_2 - 10y_3$
+D. Maximize $W = -12y_1 - 8y_2 - 10y_3$
+E. Minimize $W = 3y_1 + 2y_2$
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual problem is a minimization problem. The objective function coefficients in the dual problem are the right-hand side values of the primal constraints.
+B. The dual problem is a minimization problem, not a maximization problem.
+C. The dual problem is a minimization problem, but the signs of the coefficients are incorrect.
+D. The dual problem is a minimization problem, not a maximization problem, and the signs of the coefficients are incorrect.
+E. These coefficients are from the primal objective function, not the dual objective function.
+
+
+QUESTION 6
+For the primal problem: Maximize $Z = 3x_1 + 2x_2$ subject to $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, $x_1, x_2 \ge 0$, what are the constraints of its dual problem?
+A. $y_1 + 2y_2 \le 3$, $y_1 - y_2 \le 2$, $y_1, y_2 \ge 0$
+B. $y_1 + 2y_2 \ge 3$, $y_1 - y_2 \ge 2$, $y_1, y_2 \ge 0$
+C. $y_1 + y_2 \le 3$, $2y_1 - y_2 \le 2$, $y_1, y_2 \ge 0$
+D. $y_1 + y_2 \ge 3$, $2y_1 - y_2 \ge 2$, $y_1, y_2 \ge 0$
+E. $y_1 \ge 3$, $y_2 \ge 2$, $y_1, y_2 \ge 0$
+
+ANSWER: B
+
+EXPLANATION:
+A. The inequalities are incorrect; they should be greater than or equal to.
+B. The constraints in the dual problem are derived from the coefficients of the primal variables in the primal constraints, and the inequality is reversed.  The dual variables must be non-negative.
+C. The coefficients are transposed incorrectly.
+D. The inequalities are incorrect; they should be greater than or equal to.
+E. These constraints are not derived correctly from the primal constraints.
+
+
+QUESTION 7
+Given the primal problem: Maximize $Z = c_1x_1 + c_2x_2$ subject to $a_{11}x_1 + a_{12}x_2 \le b_1$, $a_{21}x_1 + a_{22}x_2 \le b_2$, $x_1, x_2 \ge 0$. What is the correct expression for the dual problem's objective function?
+A. Minimize $W = b_1y_1 + b_2y_2$
+B. Maximize $W = b_1y_1 + b_2y_2$
+C. Minimize $W = a_{11}y_1 + a_{21}y_2$
+D. Maximize $W = a_{11}y_1 + a_{21}y_2$
+E. Minimize $W = c_1y_1 + c_2y_2$
+
+ANSWER: A
+
+EXPLANATION:
+A. The dual problem is a minimization problem, and the objective function coefficients are the right-hand side values of the primal constraints.
+B. The dual problem is a minimization problem, not a maximization problem.
+C. These coefficients are from the primal constraints, not the dual objective function.
+D. These coefficients are from the primal constraints, not the dual objective function, and the dual problem is a minimization problem.
+E. These coefficients are from the primal objective function, not the dual objective function.
+
+
+QUESTION 8
+Formulate the dual problem for the primal problem: Maximize $Z = 2x_1 + 5x_2$ subject to $x_1 + 2x_2 \le 10$, $x_1 + x_2 \le 6$, $x_1, x_2 \ge 0$. What is the constraint related to the variable $y_1$ in the dual problem?
+A. $y_1 \le 2$
+B. $y_1 \ge 2$
+C. $y_1 + y_2 \le 2$
+D. $y_1 + y_2 \ge 2$
+E. $y_1 + 2y_2 \ge 2$
+
+ANSWER: E
+
+EXPLANATION:
+A. This constraint is incorrect; it should be greater than or equal to.
+B. This constraint is incorrect; it should include $y_2$.
+C. This constraint is incorrect; it should be greater than or equal to.
+D. This constraint is incorrect; it should include the coefficients from the primal constraints correctly.
+E. The dual constraint related to $y_1$ is formed using the coefficients of $x_1$ from the primal constraints and the coefficient of $x_1$ from the primal objective function. The inequality is reversed.
+
+
+QUESTION 9
+In the context of the slides, what is the fundamental difference in the approach to deriving the dual linear program (D) when starting from a general linear program (as opposed to a standard linear program with $x \ge 0$)?
+A. The general linear program requires the introduction of artificial variables.
+B. The general linear program necessitates the use of the two-phase simplex method.
+C. The general linear program requires expressing the primal variable $x$ as the difference of two non-negative variables ($x = x^+ - x^-$).
+D. The general linear program necessitates the use of the big-M method.
+E. The general linear program requires the introduction of surplus variables.
+
+ANSWER: C
+
+EXPLANATION:
+A. Answer A is incorrect. While artificial variables are sometimes used in linear programming, they are not directly related to the derivation of the dual from a general linear program as shown in the slides.
+B. Answer B is incorrect. The two-phase simplex method is a technique for solving linear programs, but it's not directly involved in the derivation of the dual problem as presented in the slides.
+C. Answer C is correct.  The slides explicitly show the transformation of a general linear program (which may not have $x \ge 0$) into a form where the variable $x$ is represented as the difference of two non-negative variables, $x^+ - x^-$. This transformation is crucial for applying the Lagrangian method and deriving the dual problem correctly.
+D. Answer D is incorrect. The big-M method is another technique for solving linear programs, but it's not directly relevant to the derivation of the dual from a general linear program as shown in the slides.
+E. Answer E is incorrect. Surplus variables are used to convert greater-than-or-equal-to constraints into equalities, but this is not the key difference in deriving the dual from a general linear program as shown in the slides.
+
+
+QUESTION 10
+Given the primal problem (P) on Slide 1: $\max \xi(x) = c^T x$ subject to $Ax \le b$, $x \ge 0$, and the transformation shown on Slide 2, what is the objective function of its dual problem (D) as derived on Slide 7?
+A. $\min \xi(y) = b^T y$
+B. $\min \xi(y, z) = b^T y + u^T z$
+C. $\max \xi(y, z) = b^T y + u^T z$
+D. $\min \xi(x) = c^T x$
+E. $\max \xi(x) = c^T x$
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect. While $b^T y$ is part of the dual objective function, it's incomplete because it doesn't account for the upper bound constraints on $x$ introduced in Slide 2.
+B. The dual problem (D), as derived on Slide 7, is a minimization problem with the objective function $\min \xi(y, z) = b^T y + u^T z$. This arises from the Lagrangian formulation and the subsequent minimization process detailed in Slides 4-6.
+C. This is incorrect. The dual problem derived from a maximization primal problem is a minimization problem.
+D. This is incorrect. This is the objective function of the primal problem (P).
+E. This is incorrect. This is the objective function of the primal problem (P).
+
+

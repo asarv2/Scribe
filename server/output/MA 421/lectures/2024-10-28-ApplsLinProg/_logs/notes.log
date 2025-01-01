@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  18 DEC 2024 11:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 09:36
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -659,234 +659,112 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 75.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 75.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 75.
-
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
 -ApplsLinProg/notes.tex:85: Missing $ inserted.
 <inserted text> 
                 $
-l.85 ...\text{Monthly Demands } d_i, i=1,\dots,12}
-                                                  
+l.85 ...[tons]} \quad \textbf{Monthly demands } d_
+                                                  i, i=1,\dots,12
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:85: Extra }, or forgotten $.
-\underline  ...{#1}\else $\@@underline {\hbox {#1}
-                                                  }\m@th $\relax \fi 
-l.85 ...\text{Monthly Demands } d_i, i=1,\dots,12}
-                                                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:85: Extra }, or forgotten $.
-\underline  ...#1}\else $\@@underline {\hbox {#1}}
-                                                  \m@th $\relax \fi 
-l.85 ...\text{Monthly Demands } d_i, i=1,\dots,12}
-                                                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:87: LaTeX Error: Something's wrong--perhaps a missing \
-item.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.87 \subsection
-                {Description}%
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:87: LaTeX Error: Something's wrong--perhaps a missing \
-item.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.87 \subsection
-                {Description}%
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:87: Missing } inserted.
-<inserted text> 
-                }
-l.87 \subsection{Description}
-                             %
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 85.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 85.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 85.
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
 -ApplsLinProg/notes.tex:87: Missing $ inserted.
 <inserted text> 
                 $
-l.87 \subsection{Description}
-                             %
+l.87 \subsection
+                {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:87: Missing } inserted.
-<inserted text> 
-                }
-l.87 \subsection{Description}
-                             %
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/1.1.png, id=309, 843.15pt x 421.575pt>
+8-ApplsLinProg/figures/1.1.png, id=132, 692.5875pt x 652.4375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/1.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/1.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png  used on input line 94.
-(pdftex.def)             Requested size: 70.46037pt x 35.22551pt.
+(pdftex.def)             Requested size: 70.46037pt x 66.37253pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 95--95
-[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Bar graph
+Underfull \hbox (badness 1642) in paragraph at lines 95--95
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bar chart
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 95--95
-\T1/lmr/m/n/8 show-ing monthly
+\T1/lmr/m/n/8 show-ing the
+ []
+
+
+Underfull \hbox (badness 2790) in paragraph at lines 95--95
+\T1/lmr/m/n/8 monthly de-mands
+ []
+
+
+Underfull \hbox (badness 1043) in paragraph at lines 95--95
+\T1/lmr/m/n/8 for ice cream (in
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 95--95
-\T1/lmr/m/n/8 ice cream sales
+\T1/lmr/m/n/8 y-axis rep-re-sents
+ []
+
+
+Underfull \hbox (badness 3735) in paragraph at lines 95--95
+\T1/lmr/m/n/8 the x-axis rep-re-
+ []
+
+
+Underfull \hbox (badness 1859) in paragraph at lines 95--95
+\T1/lmr/m/n/8 sents the months
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 95--95
+\T1/lmr/m/n/8 de-mand through-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 95--95
+\T1/lmr/m/n/8 out the year,
  []
 
 [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/f
-onts/enc/dvips/lm/lm-mathit.enc} </Users/ashoksaravanan/Coding/ScribeLec/server
-/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png (PNG copy)>]
+4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
+st/fonts/enc/dvips/lm/lm-rm.enc}] [2 </Users/ashoksaravanan/Coding/ScribeLec/se
+rver/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/1.1.png (PNG copy)>
+]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
 -ApplsLinProg/notes.tex:115: Missing $ inserted.
 <inserted text> 
                 $
-l.115 ...text{Monthly Demands } d_i, i=1,\dots,12}
-                                                  
+l.115 ...tons]} \quad \textbf{Monthly demands } d_
+                                                  i, i=1,\dots,12
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:115: Extra }, or forgotten $.
-\underline  ...{#1}\else $\@@underline {\hbox {#1}
-                                                  }\m@th $\relax \fi 
-l.115 ...text{Monthly Demands } d_i, i=1,\dots,12}
-                                                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:115: Extra }, or forgotten $.
-\underline  ...#1}\else $\@@underline {\hbox {#1}}
-                                                  \m@th $\relax \fi 
-l.115 ...text{Monthly Demands } d_i, i=1,\dots,12}
-                                                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:117: LaTeX Error: Something's wrong--perhaps a missing 
-\item.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.117 \subsection
-                 {Description}%
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:117: LaTeX Error: Something's wrong--perhaps a missing 
-\item.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.117 \subsection
-                 {Description}%
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:117: Missing } inserted.
-<inserted text> 
-                }
-l.117 \subsection{Description}
-                              %
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
 -ApplsLinProg/notes.tex:117: Missing $ inserted.
 <inserted text> 
                 $
-l.117 \subsection{Description}
-                              %
+l.117 \subsection
+                 {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:117: Missing } inserted.
-<inserted text> 
-                }
-l.117 \subsection{Description}
-                              %
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/2.1.png, id=326, 642.4pt x 572.1375pt>
+8-ApplsLinProg/figures/2.1.png, id=154, 692.5875pt x 692.5875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/2.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
@@ -894,30 +772,95 @@ File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
 A 421/lectures/2024-10-28-ApplsLinProg/figures/2.1.png  used on input line 124.
 
-(pdftex.def)             Requested size: 70.46037pt x 62.75198pt.
+(pdftex.def)             Requested size: 70.46037pt x 70.45699pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 125--125
-[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Bar graph
+Underfull \hbox (badness 1642) in paragraph at lines 125--125
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bar chart
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 125--125
-\T1/lmr/m/n/8 show-ing monthly
+\T1/lmr/m/n/8 show-ing the
+ []
+
+
+Underfull \hbox (badness 2790) in paragraph at lines 125--125
+\T1/lmr/m/n/8 monthly de-mands
+ []
+
+
+Underfull \hbox (badness 1043) in paragraph at lines 125--125
+\T1/lmr/m/n/8 for ice cream (in
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 125--125
-\T1/lmr/m/n/8 ice cream sales
+\T1/lmr/m/n/8 y-axis rep-re-sents
  []
 
-[2 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
-0-28-ApplsLinProg/figures/2.1.png (PNG copy)>]
+
+Underfull \hbox (badness 3735) in paragraph at lines 125--125
+\T1/lmr/m/n/8 the x-axis rep-re-
+ []
+
+
+Underfull \hbox (badness 1859) in paragraph at lines 125--125
+\T1/lmr/m/n/8 sents the months
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+\T1/lmr/m/n/8 de-mand through-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+\T1/lmr/m/n/8 out the year,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+\T1/lmr/m/n/8 sum-mer months.
+ []
+
+
+Underfull \hbox (badness 3815) in paragraph at lines 125--125
+\T1/lmr/m/n/8 A red hor-i-zon-tal
+ []
+
+
+Underfull \hbox (badness 4341) in paragraph at lines 125--125
+\T1/lmr/m/n/8 line in-di-cates an
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+\T1/lmr/m/n/8 av-er-age de-mand,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--125
+\T1/lmr/m/n/8 and the word
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 125--125
+\T1/lmr/m/n/8 "av-er-age de-mand"
+ []
+
+
+Underfull \hbox (badness 1472) in paragraph at lines 125--125
+\T1/lmr/m/n/8 is writ-ten in red
+ []
+
+[3] [4 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-10-28-ApplsLinProg/figures/2.1.png (PNG copy)>]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:137: Missing $ inserted.
+-ApplsLinProg/notes.tex:141: Missing $ inserted.
 <inserted text> 
                 $
-l.137 \text{(1)} \quad X_
-                         i - \text{production at month } i \\
+l.141 ...brace{\text{Cost of changing production}}
+                                                  _{\text{Cost of storage}}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -930,306 +873,1122 @@ l.143 \subsection
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-[3{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
-cal/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:158: Missing $ inserted.
-<inserted text> 
-                $
-l.158 \text{(1)} \quad X_
-                         i - \text{production at month } i \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:165: Missing $ inserted.
-<inserted text> 
-                $
-l.165 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-[4]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:180: Missing $ inserted.
-<inserted text> 
-                $
-l.180 \min
-           50 \sum_{i=1}^{12} (y_i + z_i) + 20 \sum_{i=1}^{12} S_i \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:189: Missing $ inserted.
-<inserted text> 
-                $
-l.189 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-92.
-(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/6.1.png, id=352, 692.5875pt x 398.48875pt>
+8-ApplsLinProg/figures/3.1.png, id=164, 772.8875pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/3.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/3.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/3.1.png  used on input line 150.
+
+(pdftex.def)             Requested size: 70.46037pt x 70.45316pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 a lin-ear pro-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 gram-ming model
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 for pro-duc-tion
+ []
+
+
+Underfull \hbox (badness 7047) in paragraph at lines 151--151
+\T1/lmr/m/n/8 plan-ning. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 notes de-fine $\OML/lmm/m/it/8 X[]$
+ []
+
+
+Underfull \hbox (badness 3547) in paragraph at lines 151--151
+\T1/lmr/m/n/8 at month $\OML/lmm/m/it/8 i$ \T1/lmr/m/n/8 and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 at the end of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 straint equa-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 is given, where
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\OML/lmm/m/it/8 d[]$ \T1/lmr/m/n/8 rep-re-sents
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 the de-mand in
+ []
+
+
+Underfull \hbox (badness 4454) in paragraph at lines 151--151
+\T1/lmr/m/n/8 month $\OML/lmm/m/it/8 i$\T1/lmr/m/n/8 . The
+ []
+
+
+Underfull \hbox (badness 2435) in paragraph at lines 151--151
+\T1/lmr/m/n/8 ob-jec-tive func-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 is to min-i-mize
+ []
+
+
+Underfull \hbox (badness 5681) in paragraph at lines 151--151
+\T1/lmr/m/n/8 the sum of the
+ []
+
+
+Underfull \hbox (badness 4995) in paragraph at lines 151--151
+\T1/lmr/m/n/8 cost of chang-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 pro-duc-tion and
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 151--151
+\T1/lmr/m/n/8 the cost of stor-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 age, rep-re-sented
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--151
+\T1/lmr/m/n/8 by $[] \OT1/lmr/m/n/8 50\OMS/lmsy/m/n/8 j\OML/lmm/m/it/8 X[] \OMS
+/lmsy/m/n/8  
+ []
+
+[5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
+cal/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}] [6 </Users/ashok
+saravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinPro
+g/figures/3.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/4.1.png, id=185, 873.2625pt x 873.2625pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/4.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/4.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/4.1.png  used on input line 177.
+
+(pdftex.def)             Requested size: 70.46037pt x 70.44872pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 a lin-ear pro-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 gram-ming model
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 for pro-duc-tion
+ []
+
+
+Underfull \hbox (badness 7047) in paragraph at lines 178--178
+\T1/lmr/m/n/8 plan-ning. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 notes de-fine $\OML/lmm/m/it/8 X[]$
+ []
+
+
+Underfull \hbox (badness 3547) in paragraph at lines 178--178
+\T1/lmr/m/n/8 at month $\OML/lmm/m/it/8 i$ \T1/lmr/m/n/8 and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 at the end of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 straint equa-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 is given, where
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\OML/lmm/m/it/8 d[]$ \T1/lmr/m/n/8 rep-re-sents
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 the de-mand in
+ []
+
+
+Underfull \hbox (badness 4454) in paragraph at lines 178--178
+\T1/lmr/m/n/8 month $\OML/lmm/m/it/8 i$\T1/lmr/m/n/8 . The
+ []
+
+
+Underfull \hbox (badness 2435) in paragraph at lines 178--178
+\T1/lmr/m/n/8 ob-jec-tive func-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 is to min-i-mize
+ []
+
+
+Underfull \hbox (badness 5681) in paragraph at lines 178--178
+\T1/lmr/m/n/8 the sum of the
+ []
+
+
+Underfull \hbox (badness 4995) in paragraph at lines 178--178
+\T1/lmr/m/n/8 cost of chang-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 pro-duc-tion and
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 178--178
+\T1/lmr/m/n/8 the cost of stor-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 age, rep-re-sented
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 by $[] \OT1/lmr/m/n/8 50\OMS/lmsy/m/n/8 j\OML/lmm/m/it/8 X[] \OMS
+/lmsy/m/n/8  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 in the ob-jec-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 func-tion is lin-
+ []
+
+
+Underfull \hbox (badness 1038) in paragraph at lines 178--178
+\T1/lmr/m/n/8 earized us-ing two
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 new vari-ables
+ []
+
+
+Underfull \hbox (badness 3364) in paragraph at lines 178--178
+\OML/lmm/m/it/8 y[]$ \T1/lmr/m/n/8 and $\OML/lmm/m/it/8 z[]$\T1/lmr/m/n/8 , wit
+h
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\T1/lmr/m/n/8 the con-straints
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+\OML/lmm/m/it/8 y[] \OT1/lmr/m/n/8 + \OML/lmm/m/it/8 z[]$\T1/lmr/m/n/8 , where
+ []
+
+[7] [8 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/20
+24-10-28-ApplsLinProg/figures/4.1.png (PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:190: Missing $ inserted.
+<inserted text> 
+                $
+l.190 \text{min } 50 \sum
+                         _{i=1}^{12} (y_i + z_i) + 20 \sum_{i=1}^{12} S_i \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:198: Missing $ inserted.
+<inserted text> 
+                $
+l.198 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/5.1.png, id=197, 873.2625pt x 873.2625pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/5.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/5.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/5.1.png  used on input line 205.
+
+(pdftex.def)             Requested size: 70.46037pt x 70.44872pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 a lin-ear pro-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 gram-ming model
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 for pro-duc-tion
+ []
+
+
+Underfull \hbox (badness 7047) in paragraph at lines 206--206
+\T1/lmr/m/n/8 plan-ning. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 notes de-fine $\OML/lmm/m/it/8 X[]$
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 206--206
+\T1/lmr/m/n/8 vari-ables used in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 the lin-eariza-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 of the ab-so-lute
+ []
+
+
+Underfull \hbox (badness 2213) in paragraph at lines 206--206
+\T1/lmr/m/n/8 value. The ob-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 jec-tive func-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 is to min-i-mize
+ []
+
+
+Underfull \hbox (badness 5681) in paragraph at lines 206--206
+\T1/lmr/m/n/8 the sum of the
+ []
+
+
+Underfull \hbox (badness 4995) in paragraph at lines 206--206
+\T1/lmr/m/n/8 cost of chang-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 pro-duc-tion and
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 206--206
+\T1/lmr/m/n/8 the cost of stor-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 age, rep-re-sented
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 by $\OT1/lmr/m/n/8 50 [](\OML/lmm/m/it/8 y[] \OT1/lmr/m/n/8 +
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\OML/lmm/m/it/8 z[]\OT1/lmr/m/n/8 ) + 20 [] \OML/lmm/m/it/8 S[]$\T1/lmr/m/n/8 .
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 The con-straints
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 in-clude a mass
+ []
+
+
+Underfull \hbox (badness 3271) in paragraph at lines 206--206
+\OML/lmm/m/it/8 d[]$\T1/lmr/m/n/8 ), a con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 for lin-eariza-tion
+ []
+
+
+Underfull \hbox (badness 7613) in paragraph at lines 206--206
+\T1/lmr/m/n/8 ($\OML/lmm/m/it/8 X[] \OMS/lmsy/m/n/8   \OML/lmm/m/it/8 X[] \OT1/
+lmr/m/n/8 =
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\OML/lmm/m/it/8 y[] \OMS/lmsy/m/n/8   \OML/lmm/m/it/8 z[]$\T1/lmr/m/n/8 ), and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 bound-ary con-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 di-tions for the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 first and last
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 Non-negativity
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 con-straints are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 im-posed on all
+ []
+
+
+Underfull \hbox (badness 6708) in paragraph at lines 206--206
+\T1/lmr/m/n/8 vari-ables. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 in-dex $\OML/lmm/m/it/8 i$ \T1/lmr/m/n/8 ranges
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 from 1 to 12,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--206
+\T1/lmr/m/n/8 rep-re-sent-ing the
+ []
+
+[9] [10 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2
+024-10-28-ApplsLinProg/figures/5.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/6.1.png, id=207, 772.8875pt x 772.8875pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/6.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/6.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/6.1.png  used on input line 221.
+A 421/lectures/2024-10-28-ApplsLinProg/figures/6.1.png  used on input line 226.
 
-(pdftex.def)             Requested size: 70.46037pt x 40.5383pt.
+(pdftex.def)             Requested size: 70.46037pt x 70.45316pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 222--222
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
 \T1/lmr/m/n/8 show-ing pro-duc-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 222--222
-\T1/lmr/m/n/8 tion lev-els with
+Underfull \hbox (badness 1189) in paragraph at lines 227--227
+\T1/lmr/m/n/8 while the bot-tom
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+\T1/lmr/m/n/8 chart shows a
+ []
+
+
+Underfull \hbox (badness 3746) in paragraph at lines 227--227
+\T1/lmr/m/n/8 sce-nario with no
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+\T1/lmr/m/n/8 y-axis rep-re-sents
+ []
+
+
+Underfull \hbox (badness 1028) in paragraph at lines 227--227
+\T1/lmr/m/n/8 700. The x-axis
+ []
+
+
+Underfull \hbox (badness 1715) in paragraph at lines 227--227
+\T1/lmr/m/n/8 rep-re-sents the 12
+ []
+
+
+Underfull \hbox (badness 5802) in paragraph at lines 227--227
+\T1/lmr/m/n/8 months. Black
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+\T1/lmr/m/n/8 bars rep-re-sent
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+\T1/lmr/m/n/8 pro-duc-tion, and
+ []
+
+
+Underfull \hbox (badness 1515) in paragraph at lines 227--227
+\T1/lmr/m/n/8 de-mand. A red
+ []
+
+
+Underfull \hbox (badness 1320) in paragraph at lines 227--227
+\T1/lmr/m/n/8 the bot-tom chart
+ []
+
+[11 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/6.1.png (PNG copy)>]
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/7.1.png, id=213, 137.51375pt x 110.4125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/7.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/7.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/7.1.png  used on input line 261.
+
+(pdftex.def)             Requested size: 70.46037pt x 56.5758pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 262--262
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
  []
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/6.2.png, id=353, 692.5875pt x 398.48875pt>
+8-ApplsLinProg/figures/7.2.png, id=214, 137.51375pt x 57.21375pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
--10-28-ApplsLinProg/figures/6.2.png Graphic file (type png)
+-10-28-ApplsLinProg/figures/7.2.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-28-ApplsLinProg/figures/6.2.png>
+10-28-ApplsLinProg/figures/7.2.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/6.2.png  used on input line 227.
+A 421/lectures/2024-10-28-ApplsLinProg/figures/7.2.png  used on input line 267.
 
-(pdftex.def)             Requested size: 70.46037pt x 40.5383pt.
+(pdftex.def)             Requested size: 70.46037pt x 29.31654pt.
+[12 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/7.1.png (PNG copy)> </Users/ashoksaravanan/Coding/Sc
+ribeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/7.2.png (
+PNG copy)>]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:278: Missing $ inserted.
+<inserted text> 
+                $
+l.278 \text{min } 25 \sum
+                         _{i=1}^{12} y_i + (17.5 \times 12) x \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
 
-Underfull \hbox (badness 4429) in paragraph at lines 228--228
-[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 Bot-tom bar
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:284: Missing $ inserted.
+<inserted text> 
+                $
+l.284 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/8.1.png, id=220, 371.3875pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/8.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/8.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/8.1.png  used on input line 291.
+
+(pdftex.def)             Requested size: 70.46037pt x 70.45668pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 228--228
-\T1/lmr/m/n/8 graph show-ing
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 notes de-scrib-ing
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 228--228
-\T1/lmr/m/n/8 pro-duc-tion lev-els
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 the num-ber of
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 228--228
-\T1/lmr/m/n/8 with-out stor-age
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 em-ploy-ees, and
  []
 
-[6 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-1
-0-28-ApplsLinProg/figures/6.1.png (PNG copy)> </Users/ashoksaravanan/Coding/Scr
-ibeLec/server/output/MA 421/lectures/2024-10-28-ApplsLinProg/figures/6.2.png (P
-NG copy)>]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:240: Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.240 Jan & 390 & May & 310 &
-                              Sep & 550 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:241: Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.241 Feb & 420 & Jun & 590 &
-                              Oct & 360 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:242: Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.242 Mar & 340 & Jul & 340 &
-                              Nov & 420 \\
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:243: Extra alignment tab has been changed to \cr.
-<recently read> \endtemplate 
-                             
-l.243 Apr & 320 & Aug & 580 &
-                              Dec & 600
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:247: Missing $ inserted.
-<inserted text> 
-                $
-l.247 minimize \sum
-                   _i (25 \max(a_i - x, 0) + 17.50x) \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:252: Missing $ inserted.
-<inserted text> 
-                $
-l.252 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-
-Overfull \hbox (109.68288pt too wide) in paragraph at lines 253--254
-\T1/lmr/m/n/10 needs. The com-pany uses two types of sales-per-sons: reg-u-lar 
-em-ploy-ees (cost-ing $\OT1/lmr/m/n/10 17\OML/lmm/m/it/10 :\OT1/lmr/m/n/10 50\O
-ML/lmm/m/it/10 =hour\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 andtemporaryemployees\OT1
-/lmr/m/n/10 (\OML/lmm/m/it/10 costing$\T1/lmr/m/n/10 25/hour).
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 vari-able. The
  []
 
-[7]
+
+Underfull \hbox (badness 2435) in paragraph at lines 292--292
+\T1/lmr/m/n/8 ob-jec-tive func-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 is to min-i-mize
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 the to-tal la-bor
+ []
+
+
+Underfull \hbox (badness 2111) in paragraph at lines 292--292
+\T1/lmr/m/n/8 costs, rep-re-sented
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 by $\OT1/lmr/m/n/8 25 [] \OML/lmm/m/it/8 y[] \OT1/lmr/m/n/8 +
+ []
+
+
+Underfull \hbox (badness 6445) in paragraph at lines 292--292
+\OML/lmm/m/it/8 a[] \OMS/lmsy/m/n/8   \OML/lmm/m/it/8 x \OMS/lmsy/m/n/8  \OML/
+lmm/m/it/8 y[]$\T1/lmr/m/n/8 ,
+ []
+
+
+Underfull \hbox (badness 1028) in paragraph at lines 292--292
+\T1/lmr/m/n/8 ranges from 1 to
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+\T1/lmr/m/n/8 12, rep-re-sent-ing
+ []
+
+[13] [14 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/
+2024-10-28-ApplsLinProg/figures/8.1.png (PNG copy)>]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:265: Missing $ inserted.
+-ApplsLinProg/notes.tex:303: Missing number, treated as zero.
+<to be read again> 
+                   v
+l.303 [v]
+         ch. 13 \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:303: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   v
+l.303 [v]
+         ch. 13 \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:303: Package calc Error: `v' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 [v]
+         ch. 13 \\
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:303: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.303 [v]
+         ch. 13 \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:304: LaTeX Error: Unicode character ① (U+2460)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.304 ①
+          $R_i$ - (annual) return of $i^{th}$ investment \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:306: LaTeX Error: Unicode character ② (U+2461)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.306 ②
+          $x_j$ - proportion of investment in $i$ \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:311: Missing $ inserted.
 <inserted text> 
                 $
-l.265 \min
-           25 \sum_{i=1}^{12} y_i + (17.5 \times 12)x \\
+l.311 \underbrace{\qquad \qquad}
+                                _{average \text{ } return}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:272: Missing $ inserted.
+-ApplsLinProg/notes.tex:313: Missing $ inserted.
 <inserted text> 
                 $
-l.272 \subsection
+l.313 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-[8]
-LaTeX Font Info:    Trying to load font information for OMS+lmr on input line 2
-93.
- (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
-File: omslmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 293.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/9.1.png, id=231, 772.8875pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/9.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/9.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/9.1.png  used on input line 320.
+
+(pdftex.def)             Requested size: 70.46037pt x 70.45316pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 2781) in paragraph at lines 321--321
+\T1/lmr/m/n/8 port-fo-lio se-lec-tion
+ []
+
+
+Underfull \hbox (badness 1852) in paragraph at lines 321--321
+\T1/lmr/m/n/8 de-fine $\OML/lmm/m/it/8 R[]$ \T1/lmr/m/n/8 as the
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 321--321
+\T1/lmr/m/n/8 an-nual re-turn of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+\T1/lmr/m/n/8 the $\OML/lmm/m/it/8 i$\T1/lmr/m/n/8 -th in-vest-
+ []
+
+
+Underfull \hbox (badness 4713) in paragraph at lines 321--321
+\T1/lmr/m/n/8 ment (a ran-dom
+ []
+
+
+Underfull \hbox (badness 4441) in paragraph at lines 321--321
+\T1/lmr/m/n/8 vari-able) and $\OML/lmm/m/it/8 x[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+\T1/lmr/m/n/8 of in-vest-ment
+ []
+
+
+Underfull \hbox (badness 3557) in paragraph at lines 321--321
+\T1/lmr/m/n/8 in $\OML/lmm/m/it/8 i$ \T1/lmr/m/n/8 ($\OML/lmm/m/it/8 x[] \OMS/l
+msy/m/n/8  \OT1/lmr/m/n/8 0$\T1/lmr/m/n/8 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+[] \OML/lmm/m/it/8 x[] \OT1/lmr/m/n/8 = 1$\T1/lmr/m/n/8 ).
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+\T1/lmr/m/n/8 The ob-jec-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+\T1/lmr/m/n/8 is to max-i-mize
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 321--321
+\T1/lmr/m/n/8 the to-tal re-turn,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+\T1/lmr/m/n/8 rep-re-sented by
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+[] \OML/lmm/m/it/8 x[]R[]$ \T1/lmr/m/n/8 (where
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+\T1/lmr/m/n/8 ar-row points to
+ []
+
+
+Underfull \hbox (badness 2753) in paragraph at lines 321--321
+\T1/lmr/m/n/8 and a wavy un-
+ []
+
+
+Underfull \hbox (badness 3746) in paragraph at lines 321--321
+\T1/lmr/m/n/8 der-line points to
+ []
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:293: Missing $ inserted.
+-ApplsLinProg/notes.tex:332: Missing number, treated as zero.
+<to be read again> 
+                   v
+l.332 [v]
+         ch. 13 \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:332: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   v
+l.332 [v]
+         ch. 13 \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:332: Package calc Error: `v' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.332 [v]
+         ch. 13 \\
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:332: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.332 [v]
+         ch. 13 \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:333: LaTeX Error: Unicode character ① (U+2460)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.333 ①
+          $R_i$ - (annual) return of $i^{th}$ investment \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:335: LaTeX Error: Unicode character ② (U+2461)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.335 ②
+          $x_j$ - proportion of investment in $i$ \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/10.1.png, id=232, 262.9825pt x 262.9825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/10.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/10.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/10.1.png  used on input line 348
+.
+(pdftex.def)             Requested size: 70.46037pt x 70.46048pt.
+
+Underfull \hbox (badness 2088) in paragraph at lines 349--349
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Port-fo-lio Se-
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/10.2.png, id=233, 321.2pt x 262.9825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/10.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/10.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/10.2.png  used on input line 354
+.
+(pdftex.def)             Requested size: 70.46037pt x 57.68777pt.
+
+Underfull \hbox (badness 1629) in paragraph at lines 355--355
+[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 Def-i-ni-tion of
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/10.3.png, id=234, 262.9825pt x 271.0125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/10.3.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/10.3.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/10.3.png  used on input line 360
+.
+(pdftex.def)             Requested size: 70.46037pt x 72.61194pt.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/10.4.png, id=235, 513.92pt x 271.0125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/10.4.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/10.4.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/10.4.png  used on input line 366
+.
+(pdftex.def)             Requested size: 70.46037pt x 37.15578pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 367--367
+[]\T1/lmr/bx/n/8 (d) |\T1/lmr/m/n/8 Ob-jec-tive
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/10.5.png, id=236, 321.2pt x 170.6375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/10.5.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/10.5.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/10.5.png  used on input line 372
+.
+(pdftex.def)             Requested size: 70.46037pt x 37.431pt.
+
+Underfull \hbox (badness 2310) in paragraph at lines 373--373
+[]\T1/lmr/bx/n/8 (e) |\T1/lmr/m/n/8 Def-i-ni-tion of
+ []
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:384: Missing number, treated as zero.
+<to be read again> 
+                   v
+l.384 [v]
+         ch. 13 \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:384: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   v
+l.384 [v]
+         ch. 13 \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:384: Package calc Error: `v' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.384 [v]
+         ch. 13 \\
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:384: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.384 [v]
+         ch. 13 \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:385: Missing $ inserted.
 <inserted text> 
                 $
-l.293 \textcircled{1} \; R_
-                           i - (annual) \; return \; of \; i^{th} \; investm...
+l.385 \text{Estimation of } ER_
+                               j \text{ and } E \left[ \sum_j x_j \tilde{R}_...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-LaTeX Warning: Command \textcircled invalid in math mode on input line 295.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:387: LaTeX Error: Unicode character ① (U+2460)
+               not set up for use with LaTeX.
 
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.387 ①
+          \quad ER_j = \frac{1}{T} \sum_{t=1}^T R_j(t) = \bar{r}_j \\
+You may provide a definition with
+\DeclareUnicodeCharacter 
 
-LaTeX Warning: Command \textcircled invalid in math mode on input line 295.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:302: Missing $ inserted.
-<inserted text> 
-                $
-l.302 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+-ApplsLinProg/notes.tex:388: LaTeX Error: Unicode character ② (U+2461)
+               not set up for use with LaTeX.
 
-[9]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:317: Missing $ inserted.
-<inserted text> 
-                $
-l.317 \textcircled{1} \; R_
-                           i - (annual) \; return \; of \; i^{th} \; investm...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.388 ②
+          \quad E \left[ \sum_j x_j \tilde{R}_j \right] = \frac{1}{T} \sum_{...
 
-
-LaTeX Warning: Command \textcircled invalid in math mode on input line 319.
-
-
-LaTeX Warning: Command \textcircled invalid in math mode on input line 319.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:325: Missing $ inserted.
-<inserted text> 
-                $
-l.325 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-[10]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:339: Missing $ inserted.
-<inserted text> 
-                $
-l.339 ...[V] Ch. 13} \quad Estimation \; of \; ER_
-                                                  j \; and \; E \left| \sum_...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-
-LaTeX Warning: Command \textcircled invalid in math mode on input line 341.
-
-
-LaTeX Warning: Command \textcircled invalid in math mode on input line 341.
-
-
-LaTeX Warning: Command \textcircled invalid in math mode on input line 342.
-
-
-LaTeX Warning: Command \textcircled invalid in math mode on input line 342.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:344: Missing $ inserted.
-<inserted text> 
-                $
-l.344 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-[11]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:359: Missing $ inserted.
-<inserted text> 
-                $
-l.359 \max
-           \mu \sum_j x_j r_j - \frac{1}{T} \sum_{t=1}^T \left| \sum_j x_j (...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:369: Missing $ inserted.
-<inserted text> 
-                $
-l.369 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-[12]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:384: Missing $ inserted.
-<inserted text> 
-                $
-l.384 \max
-           \mu \sum_j x_j ER_j - E \left( \sum_j x_j \widetilde{R}_j \right)...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+You may provide a definition with
+\DeclareUnicodeCharacter 
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
 -ApplsLinProg/notes.tex:390: Missing $ inserted.
@@ -1240,68 +1999,446 @@ l.390 \subsection
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-[13]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:405: Missing $ inserted.
-<inserted text> 
-                $
-l.405 \max
-           \mu \sum_j x_j ER_j - E \left( \sum_j x_j \widetilde{R}_j \right)...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/11.1.png, id=237, 371.3875pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/11.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/11.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/11.1.png  used on input line 397
+.
+(pdftex.def)             Requested size: 70.46037pt x 70.45668pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 1755) in paragraph at lines 398--398
+\T1/lmr/m/n/8 the es-ti-ma-tion of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 ex-pected re-turn
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 and vari-ance in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 the Markowitz
+ []
+
+
+Underfull \hbox (badness 2781) in paragraph at lines 398--398
+\T1/lmr/m/n/8 port-fo-lio se-lec-tion
+ []
+
+
+Underfull \hbox (badness 1308) in paragraph at lines 398--398
+\T1/lmr/m/n/8 re-turn of as-set $\OML/lmm/m/it/8 j$
+ []
+
+
+Underfull \hbox (badness 1259) in paragraph at lines 398--398
+\T1/lmr/m/n/8 at time $\OML/lmm/m/it/8 t$\T1/lmr/m/n/8 , where
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 ex-pected re-turn
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 of the weighted
+ []
+
+
+Overfull \hbox (10.80052pt too wide) in paragraph at lines 398--398
+[] []\OT1/lmr/m/n/8 [[] \OML/lmm/m/it/8 x[]\OT1/lmr/m/n/8 (\OML/lmm/m/it/8 R[]\
+OT1/lmr/m/n/8 (\OML/lmm/m/it/8 t\OT1/lmr/m/n/8 ) \OMS/lmsy/m/n/8  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 points from the
+ []
+
+
+Underfull \hbox (badness 5331) in paragraph at lines 398--398
+\T1/lmr/m/n/8 first equa-tion to
+ []
+
+
+Underfull \hbox (badness 2521) in paragraph at lines 398--398
+\T1/lmr/m/n/8 the sec-ond equa-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 tion, in-di-cat-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+\T1/lmr/m/n/8 a re-la-tion-ship
+ []
+
+
+Underfull \hbox (badness 4096) in paragraph at lines 398--398
+\T1/lmr/m/n/8 be-tween the two
+ []
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:412: Missing $ inserted.
-<inserted text> 
-                $
-l.412 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-[14]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:433: Missing $ inserted.
-<inserted text> 
-                $
-l.433 \color{red}{\text{quadratic fct} \leftarrow
-                                                 }
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+-ApplsLinProg/notes.tex:409: Missing number, treated as zero.
+<to be read again> 
+                   v
+l.409 [v]
+         ch. 13 \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:433: Extra }, or forgotten $.
-l.433 \color{red}{\text{quadratic fct} \leftarrow}
+-ApplsLinProg/notes.tex:409: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   v
+l.409 [v]
+         ch. 13 \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:409: Package calc Error: `v' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
                                                   
+l.409 [v]
+         ch. 13 \\
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:409: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.409 [v]
+         ch. 13 \\
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:435: Missing $ inserted.
-<inserted text> 
-                $
-l.435 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/12.1.png, id=238, 371.3875pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/12.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/12.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/12.1.png  used on input line 423
+.
+(pdftex.def)             Requested size: 70.46037pt x 70.45668pt.
 
-[15]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:456: Missing $ inserted.
-<inserted text> 
-                $
-l.456 \color{red}{\leftarrow
-                             \text{quadratic fct}} \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 the Markowitz
+ []
+
+
+Underfull \hbox (badness 2781) in paragraph at lines 424--424
+\T1/lmr/m/n/8 port-fo-lio se-lec-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 model re-for-mu-
+ []
+
+
+Underfull \hbox (badness 1688) in paragraph at lines 424--424
+\T1/lmr/m/n/8 lated as a lin-ear
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 pro-gram. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 notes show the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 orig-i-nal ob-jec-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 func-tion, which
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 in-volves the ex-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 vari-ance of the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 a re-for-mu-lated
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 lin-ear pro-gram-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 ming ver-sion.
+ []
+
+
+Underfull \hbox (badness 6675) in paragraph at lines 424--424
+\T1/lmr/m/n/8 The re-for-mu-lated
+ []
+
+
+Underfull \hbox (badness 1253) in paragraph at lines 424--424
+\T1/lmr/m/n/8 ver-sion in-tro-duces
+ []
+
+
+Underfull \hbox (badness 6859) in paragraph at lines 424--424
+\T1/lmr/m/n/8 to rep-re-sent the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 ex-pected re-turn
+ []
+
+
+Underfull \hbox (badness 1342) in paragraph at lines 424--424
+\T1/lmr/m/n/8 at time $\OML/lmm/m/it/8 t$\T1/lmr/m/n/8 . The
+ []
+
+
+Underfull \hbox (badness 1484) in paragraph at lines 424--424
+\T1/lmr/m/n/8 con-straints en-sure
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 The no-ta-tion is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 con-sis-tent with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 pre-vi-ous slides,
+ []
+
+
+Underfull \hbox (badness 5345) in paragraph at lines 424--424
+\T1/lmr/m/n/8 of in-vest-ment in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 as-set $\OML/lmm/m/it/8 j$\T1/lmr/m/n/8 , $\OML/lmm/m/it/8 R[]\OT
+1/lmr/m/n/8 (\OML/lmm/m/it/8 t\OT1/lmr/m/n/8 )$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 rep-re-sent-ing the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 re-turn of as-set
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\OML/lmm/m/it/8 r[]$ \T1/lmr/m/n/8 rep-re-sent-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 the av-er-age re-
+ []
+
+
+Underfull \hbox (badness 4168) in paragraph at lines 424--424
+\T1/lmr/m/n/8 turn of as-set $\OML/lmm/m/it/8 j$\T1/lmr/m/n/8 .
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 The pa-ram-e-ter
+ []
+
+
+Underfull \hbox (badness 5374) in paragraph at lines 424--424
+\OML/lmm/m/it/8 $ \T1/lmr/m/n/8 rep-re-sents the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 risk aver-sion
+ []
+
+
+Underfull \hbox (badness 2753) in paragraph at lines 424--424
+\T1/lmr/m/n/8 co-ef-fi-cient. The
+ []
+
+
+Underfull \hbox (badness 1303) in paragraph at lines 424--424
+\T1/lmr/m/n/8 an-no-ta-tion "(LP)"
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 in-di-cates that
+ []
+
+
+Underfull \hbox (badness 6927) in paragraph at lines 424--424
+\T1/lmr/m/n/8 this is a lin-ear
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--424
+\T1/lmr/m/n/8 pro-gram-ming
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/13.1.png, id=239, 262.9825pt x 262.9825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/13.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/13.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/13.1.png  used on input line 441
+.
+(pdftex.def)             Requested size: 70.46037pt x 70.46048pt.
+
+Underfull \hbox (badness 2088) in paragraph at lines 442--442
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Port-fo-lio Se-
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/13.2.png, id=240, 321.2pt x 262.9825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/13.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/13.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/13.2.png  used on input line 447
+.
+(pdftex.def)             Requested size: 70.46037pt x 57.68777pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 448--448
+[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 Ob-jec-tive
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/13.3.png, id=241, 321.2pt x 271.0125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/13.3.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/13.3.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/13.3.png  used on input line 453
+.
+(pdftex.def)             Requested size: 70.46037pt x 59.44925pt.
+
+Underfull \hbox (badness 2717) in paragraph at lines 454--454
+[]\T1/lmr/bx/n/8 (c) |\T1/lmr/m/n/8 Vari-ance ex-
+ []
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:456: Extra }, or forgotten $.
-l.456 \color{red}{\leftarrow \text{quadratic fct}}
-                                                   \\
+-ApplsLinProg/notes.tex:465: Missing number, treated as zero.
+<to be read again> 
+                   v
+l.465 [v]
+         ch. 24 \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:465: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   v
+l.465 [v]
+         ch. 24 \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:465: Package calc Error: `v' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.465 [v]
+         ch. 24 \\
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:465: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.465 [v]
+         ch. 24 \\
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1312,153 +2449,1800 @@ deleted material, e.g., by typing `I$}'.
 -ApplsLinProg/notes.tex:466: Missing $ inserted.
 <inserted text> 
                 $
-l.466 \subsection
+l.466 max \quad \mu
+                    \sum_j x_j ER_j - E \left( \sum_j x_j \tilde{R}_j \right...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:472: Missing $ inserted.
+<inserted text> 
+                $
+l.472 \subsection
                  {Description}%
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-[16]
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/17.1.png, id=414, 521.95pt x 356.33125pt>
+8-ApplsLinProg/figures/14.1.png, id=242, 262.9825pt x 262.9825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/14.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/14.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/14.1.png  used on input line 479
+.
+(pdftex.def)             Requested size: 70.46037pt x 70.46048pt.
+
+Underfull \hbox (badness 2088) in paragraph at lines 480--480
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Port-fo-lio Se-
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/14.2.png, id=243, 321.2pt x 262.9825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/14.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/14.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/14.2.png  used on input line 485
+.
+(pdftex.def)             Requested size: 70.46037pt x 57.68777pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 486--486
+[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 Ob-jec-tive
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/14.3.png, id=244, 321.2pt x 271.0125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/14.3.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/14.3.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/14.3.png  used on input line 491
+.
+(pdftex.def)             Requested size: 70.46037pt x 59.44925pt.
+
+Underfull \hbox (badness 2717) in paragraph at lines 492--492
+[]\T1/lmr/bx/n/8 (c) |\T1/lmr/m/n/8 Vari-ance ex-
+ []
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:503: Missing number, treated as zero.
+<to be read again> 
+                   v
+l.503 [v]
+         ch. 24 \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:503: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   v
+l.503 [v]
+         ch. 24 \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:503: Package calc Error: `v' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.503 [v]
+         ch. 24 \\
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:503: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.503 [v]
+         ch. 24 \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:504: Missing $ inserted.
+<inserted text> 
+                $
+l.504 max \quad \mu
+                    \sum_j x_j r_j - \sum_{i,j} x_i x_j C_{ij} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:507: Missing $ inserted.
+<inserted text> 
+                $
+l.507 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/15.1.png, id=245, 371.3875pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/15.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/15.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/15.1.png  used on input line 514
+.
+(pdftex.def)             Requested size: 70.46037pt x 70.45668pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 notes de-scrib-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 the Markowitz
+ []
+
+
+Underfull \hbox (badness 2781) in paragraph at lines 515--515
+\T1/lmr/m/n/8 port-fo-lio se-lec-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 func-tion, which
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 in-volves max-i-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 miz-ing a lin-ear
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 com-bi-na-tion of
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 515--515
+\T1/lmr/m/n/8 re-turns mi-nus a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 quadratic term
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 rep-re-sent-ing the
+ []
+
+
+Underfull \hbox (badness 1102) in paragraph at lines 515--515
+\T1/lmr/m/n/8 port-fo-lio vari-ance.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 The con-straints
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 en-sure that the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 in-vest-ment pro-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 por-tions ($\OML/lmm/m/it/8 x[]$\T1/lmr/m/n/8 )
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 are non-negative
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 and sum to 1.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 The an-no-ta-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 "quadratic fct"
+ []
+
+
+Underfull \hbox (badness 2435) in paragraph at lines 515--515
+\T1/lmr/m/n/8 ob-jec-tive func-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 515--515
+\T1/lmr/m/n/8 is a quadratic
+ []
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:526: Missing number, treated as zero.
+<to be read again> 
+                   v
+l.526 [v]
+         ch. 24 \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:526: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   v
+l.526 [v]
+         ch. 24 \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:526: Package calc Error: `v' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.526 [v]
+         ch. 24 \\
+I expected to see one of: + - * / )
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:526: Extra }, or forgotten \endgroup.
+\@gnewline ...\unskip \reserved@e {\reserved@f #1}
+                                                  \nobreak \hfil \break \fi 
+l.526 [v]
+         ch. 24 \\
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:527: Missing $ inserted.
+<inserted text> 
+                $
+l.527 \max
+           \quad \mu \sum_j x_j r_j - \sum_{i,j} x_i x_j C_{ij} \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:534: Missing $ inserted.
+<inserted text> 
+                $
+l.534 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/16.1.png, id=246, 471.7625pt x 220.825pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/16.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/16.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/16.1.png  used on input line 541
+.
+(pdftex.def)             Requested size: 70.46037pt x 32.98079pt.
+
+Underfull \hbox (badness 2088) in paragraph at lines 542--542
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Port-fo-lio Se-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 Model) for-mu-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 la-tion. The
+ []
+
+
+Underfull \hbox (badness 2435) in paragraph at lines 542--542
+\T1/lmr/m/n/8 ob-jec-tive func-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 com-bi-na-tion of
+ []
+
+
+Underfull \hbox (badness 7649) in paragraph at lines 542--542
+\T1/lmr/m/n/8 re-turns mi-nus a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 quadratic term
+ []
+
+
+Underfull \hbox (badness 1939) in paragraph at lines 542--542
+\T1/lmr/m/n/8 rep-re-sent-ing port-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 fo-lio vari-ance.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 Con-straints en-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 sure in-vest-ment
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 pro-por-tions are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 542--542
+\T1/lmr/m/n/8 non-negative and
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/16.2.png, id=247, 471.7625pt x 271.0125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/16.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/16.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/16.2.png  used on input line 547
+.
+(pdftex.def)             Requested size: 70.46037pt x 40.47643pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+[]\T1/lmr/bx/n/8 (b) |\T1/lmr/m/n/8 Quadratic
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+\T1/lmr/m/n/8 Pro-gram-ming
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+\T1/lmr/m/n/8 ob-jec-tive func-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+\T1/lmr/m/n/8 tion min-i-mizes
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+\T1/lmr/m/n/8 a lin-ear term
+ []
+
+
+Underfull \hbox (badness 4647) in paragraph at lines 548--548
+\T1/lmr/m/n/8 plus a quadratic
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+\T1/lmr/m/n/8 in-volve ma-trix
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+\T1/lmr/m/n/8 in-equal-ity and
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/17.1.png, id=248, 521.95pt x 351.3125pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/17.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/17.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/17.1.png  used on input line 490
+A 421/lectures/2024-10-28-ApplsLinProg/figures/17.1.png  used on input line 570
 .
-(pdftex.def)             Requested size: 70.46037pt x 48.10263pt.
+(pdftex.def)             Requested size: 70.46037pt x 47.42513pt.
 
-Underfull \hbox (badness 1968) in paragraph at lines 491--491
-[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A cir-cle en-
+Underfull \hbox (badness 10000) in paragraph at lines 571--571
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
  []
 
-[17 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-28-ApplsLinProg/figures/17.1.png (PNG copy)>] [18]
+
+Underfull \hbox (badness 6876) in paragraph at lines 571--571
+\T1/lmr/m/n/8 show-ing a cir-cle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 571--571
+\T1/lmr/m/n/8 en-clos-ing sev-eral
+ []
+
+
+Underfull \hbox (badness 3250) in paragraph at lines 571--571
+\T1/lmr/m/n/8 The cir-cle rep-re-
+ []
+
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/19.1.png, id=426, 531.9875pt x 572.1375pt>
+8-ApplsLinProg/figures/18.1.png, id=249, 521.95pt x 572.1375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/18.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/18.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/18.1.png  used on input line 602
+.
+(pdftex.def)             Requested size: 70.46037pt x 77.23523pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 603--603
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Hand-writ-ten
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 603--603
+\T1/lmr/m/n/8 notes de-scrib-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 603--603
+\T1/lmr/m/n/8 ing a the-o-rem
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 603--603
+\T1/lmr/m/n/8 about find-ing
+ []
+
+
+Underfull \hbox (badness 3701) in paragraph at lines 603--603
+\T1/lmr/m/n/8 the small-est ball
+ []
+
+
+Underfull \hbox (badness 6893) in paragraph at lines 603--603
+\T1/lmr/m/n/8 con-tain-ing a set
+ []
+
+
+Underfull \hbox (badness 2837) in paragraph at lines 603--603
+\T1/lmr/m/n/8 of points. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 603--603
+\T1/lmr/m/n/8 the-o-rem in-volves
+ []
+
+
+Underfull \hbox (badness 2150) in paragraph at lines 603--603
+\T1/lmr/m/n/8 a quadratic op-ti-
+ []
+
+
+Underfull \hbox (badness 5189) in paragraph at lines 603--603
+\T1/lmr/m/n/8 miza-tion prob-lem
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 603--603
+\T1/lmr/m/n/8 op-ti-mal so-lu-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 603--603
+\T1/lmr/m/n/8 cor-re-sponds to
+ []
+
+
+Underfull \hbox (badness 2608) in paragraph at lines 603--603
+\T1/lmr/m/n/8 small-est en-clos-ing
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/19.1.png, id=250, 471.7625pt x 471.7625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/19.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/19.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/19.1.png  used on input line 537
+A 421/lectures/2024-10-28-ApplsLinProg/figures/19.1.png  used on input line 623
 .
-(pdftex.def)             Requested size: 70.46037pt x 75.7773pt.
+(pdftex.def)             Requested size: 70.46037pt x 70.45897pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 538--538
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
 []\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bi-par-tite
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 538--538
-\T1/lmr/m/n/8 po-ten-tial job
+Underfull \hbox (badness 4036) in paragraph at lines 624--624
+\T1/lmr/m/n/8 graph show-ing a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 538--538
-\T1/lmr/m/n/8 as-sign-ments and
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 max-i-mum weight
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 538--538
-\T1/lmr/m/n/8 their as-so-ci-ated
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 The nodes on
  []
 
-[19 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-28-ApplsLinProg/figures/19.1.png (PNG copy)>]
+
+Underfull \hbox (badness 1584) in paragraph at lines 624--624
+\T1/lmr/m/n/8 the left rep-re-sent
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 sec-re-tary, trend
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 re-tary, va-ca-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 spe-cial-ist, web-
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 624--624
+\T1/lmr/m/n/8 mas-ter), and the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 rep-re-sent names
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 (Amos, Boris,
+ []
+
+
+Underfull \hbox (badness 3240) in paragraph at lines 624--624
+\T1/lmr/m/n/8 Co-lette, De-v-datt,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 Eleanor, For-tu-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 nato, Gu-drun).
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 624--624
+\T1/lmr/m/n/8 ti-tles to names,
+ []
+
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/20.1.png, id=434, 592.2125pt x 642.4pt>
+8-ApplsLinProg/figures/20.1.png, id=251, 471.7625pt x 471.7625pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/20.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/20.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/20.1.png  used on input line 558
+A 421/lectures/2024-10-28-ApplsLinProg/figures/20.1.png  used on input line 644
 .
-(pdftex.def)             Requested size: 70.46037pt x 76.42792pt.
+(pdftex.def)             Requested size: 70.46037pt x 70.45897pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
 []\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bi-par-tite
  []
 
 
-Underfull \hbox (badness 5050) in paragraph at lines 559--559
-\T1/lmr/m/n/8 graph with edge
+Underfull \hbox (badness 4036) in paragraph at lines 645--645
+\T1/lmr/m/n/8 graph show-ing a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
-\T1/lmr/m/n/8 ing a max-i-mum
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 max-i-mum weight
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
-\T1/lmr/m/n/8 weight match-ing
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 The nodes on
  []
 
-[20 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-28-ApplsLinProg/figures/20.1.png (PNG copy)>]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:571: Missing $ inserted.
-<inserted text> 
-                $
-l.571 \max
-           \sum_e w_e x_e \\
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--ApplsLinProg/notes.tex:576: Missing $ inserted.
-<inserted text> 
-                $
-l.576 \subsection
-                 {Description}%
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+Underfull \hbox (badness 1584) in paragraph at lines 645--645
+\T1/lmr/m/n/8 the left rep-re-sent
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 sec-re-tary, trend
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 re-tary, va-ca-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 spe-cial-ist, web-
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 645--645
+\T1/lmr/m/n/8 mas-ter), and the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 rep-re-sent names
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 (Amos, Boris,
+ []
+
+
+Underfull \hbox (badness 3240) in paragraph at lines 645--645
+\T1/lmr/m/n/8 Co-lette, De-v-datt,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 Eleanor, For-tu-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 nato, Gu-drun).
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 645--645
+\T1/lmr/m/n/8 ti-tles to names,
+ []
 
 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
-8-ApplsLinProg/figures/21.1.png, id=444, 451.6875pt x 632.3625pt>
+8-ApplsLinProg/figures/21.1.png, id=252, 571.13374pt x 571.13374pt>
 File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
 -10-28-ApplsLinProg/figures/21.1.png Graphic file (type png)
 <use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
 10-28-ApplsLinProg/figures/21.1.png>
 Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
-A 421/lectures/2024-10-28-ApplsLinProg/figures/21.1.png  used on input line 583
+A 421/lectures/2024-10-28-ApplsLinProg/figures/21.1.png  used on input line 665
 .
-(pdftex.def)             Requested size: 70.46037pt x 98.64236pt.
+(pdftex.def)             Requested size: 70.46037pt x 70.45906pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 584--584
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
 []\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A bi-par-tite
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 584--584
-\T1/lmr/m/n/8 graph with a
+Underfull \hbox (badness 4036) in paragraph at lines 666--666
+\T1/lmr/m/n/8 graph show-ing a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 584--584
-\T1/lmr/m/n/8 high-lighted edge
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 max-i-mum weight
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 584--584
-\T1/lmr/m/n/8 i-cal for-mu-la-tion
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 The nodes on
  []
 
 
-Underfull \hbox (badness 3536) in paragraph at lines 584--584
-\T1/lmr/m/n/8 of the max-i-mum
+Underfull \hbox (badness 1584) in paragraph at lines 666--666
+\T1/lmr/m/n/8 the left rep-re-sent
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 584--584
-\T1/lmr/m/n/8 weight match-ing
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 sec-re-tary, trend
  []
 
-[21 </Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
-10-28-ApplsLinProg/figures/21.1.png (PNG copy)>]
+
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 re-tary, va-ca-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 spe-cial-ist, web-
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 666--666
+\T1/lmr/m/n/8 mas-ter), and the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 rep-re-sent names
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 (Amos, Boris,
+ []
+
+
+Underfull \hbox (badness 3240) in paragraph at lines 666--666
+\T1/lmr/m/n/8 Co-lette, De-v-datt,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 Eleanor, For-tu-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 nato, Gu-drun).
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 666--666
+\T1/lmr/m/n/8 ti-tles to names,
+ []
+
+
+Underfull \hbox (badness 1590) in paragraph at lines 666--666
+\T1/lmr/m/n/8 blue shaded edge
+ []
+
+
+Underfull \hbox (badness 4454) in paragraph at lines 666--666
+\T1/lmr/m/n/8 "e edge". The
+ []
+
+
+Underfull \hbox (badness 6961) in paragraph at lines 666--666
+\T1/lmr/m/n/8 line and la-beled
+ []
+
+
+Underfull \hbox (badness 1231) in paragraph at lines 666--666
+\T1/lmr/m/n/8 "ver-tices, v". A
+ []
+
+
+Underfull \hbox (badness 4582) in paragraph at lines 666--666
+\T1/lmr/m/n/8 red box en-closes
+ []
+
+
+Underfull \hbox (badness 5203) in paragraph at lines 666--666
+\T1/lmr/m/n/8 the math-e-mat-i-cal
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/21.2.png, id=253, 271.0125pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/21.2.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/21.2.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/21.2.png  used on input line 671
+.
+(pdftex.def)             Requested size: 70.46037pt x 96.5528pt.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.679 }
+       %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Missing } inserted.
+<inserted text> 
+                }
+l.679 }
+       %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.679 }
+       %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Missing } inserted.
+<inserted text> 
+                }
+l.679 }
+       %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (54.88316pt too wide) detected at line 679
+[]
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: LaTeX Error: \begin{subfigure} on input line 669 e
+nded by \end{align*}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.679 }
+       %
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Missing $ inserted.
+<inserted text> 
+                $
+l.679 }
+       %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.679 }
+       %
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Extra }, or forgotten \endgroup.
+<argument> ... \strutbox \fi }{}\caption@textend }
+                                                  
+l.679 }
+       %
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Extra }, or forgotten \endgroup.
+\sbox  ...box {\color@setgroup #2\color@endgroup }
+                                                  
+l.679 }
+       %
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:679: Missing } inserted.
+<inserted text> 
+                }
+l.679 }
+       %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:680: Undefined control sequence.
+\subcaption@endminipage ...ption@endminipage@hook 
+                                                  \endminipage 
+l.680 \end{subfigure}
+                     %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:680: Missing } inserted.
+<inserted text> 
+                }
+l.680 \end{subfigure}
+                     %
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:680: Undefined control sequence.
+\endminipage ...\expandafter \@iiiparbox \@mpargs 
+                                                  {\unvbox \@tempboxa }
+l.680 \end{subfigure}
+                     %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:693: Missing number, treated as zero.
+<to be read again> 
+                   P
+l.693 ...on each machine.  The reference "[MEJ] P.
+                                                   148" likely refers to a p...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:693: Illegal unit of measure (pt inserted).
+<to be read again> 
+                   P
+l.693 ...on each machine.  The reference "[MEJ] P.
+                                                   148" likely refers to a p...
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:693: Package calc Error: `P' invalid at this point.
+
+See the calc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.693 ...on each machine.  The reference "[MEJ] P.
+                                                   148" likely refers to a p...
+
+I expected to see one of: + - * / )
+
+Runaway argument?
+{\@checkend {subfigure}\expandafter \endgroup \if@endpe \@doendpe \fi \ETC.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:693: Paragraph ended before \calc@assign@generic was co
+mplete.
+<to be read again> 
+                   \par 
+l.693 ...on each machine.  The reference "[MEJ] P.
+                                                   148" likely refers to a p...
+I suspect you've forgotten a `}', causing me to apply this
+control sequence to too much text. How can we recover?
+My plan is to forget the whole thing and hope for the best.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:693: Misplaced alignment tab character &.
+<argument> ...three different machines: "Single B&
+                                                  W," "Duplex B&W," and "Dup...
+l.693 ...on each machine.  The reference "[MEJ] P.
+                                                   148" likely refers to a p...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:693: Misplaced alignment tab character &.
+<argument> ...t machines: "Single B&W," "Duplex B&
+                                                  W," and "Duplex Color." Ea...
+l.693 ...on each machine.  The reference "[MEJ] P.
+                                                   148" likely refers to a p...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:693: Extra }, or forgotten \endgroup.
+\@iiiparbox ... #2\else \setlength \@tempdimb {#2}
+                                                  \edef \@parboxto {to\the \...
+l.693 ...on each machine.  The reference "[MEJ] P.
+                                                   148" likely refers to a p...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+LaTeX Warning: Unexpected alignment MEJ on input line 693.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/22.1.png, id=254, 853.1875pt x 607.26875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/22.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/22.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/22.1.png  used on input line 699
+.
+(pdftex.def)             Requested size: 70.46037pt x 50.14847pt.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:700: Misplaced alignment tab character &.
+<argument> ... three different machines: Single B&
+                                                  W, Duplex B&W, and Duplex ...
+l.700 ...e required for each job on each machine.}
+                                                  %
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:700: Misplaced alignment tab character &.
+<argument> ...rent machines: Single B&W, Duplex B&
+                                                  W, and Duplex Color. The r...
+l.700 ...e required for each job on each machine.}
+                                                  %
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:700: Misplaced alignment tab character &.
+<argument> ... three different machines: Single B&
+                                                  W, Duplex B&W, and Duplex ...
+l.700 ...e required for each job on each machine.}
+                                                  %
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:700: Misplaced alignment tab character &.
+<argument> ...rent machines: Single B&W, Duplex B&
+                                                  W, and Duplex Color. The r...
+l.700 ...e required for each job on each machine.}
+                                                  %
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 700--700
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A ta-ble
+ []
+
+
+Underfull \hbox (badness 1442) in paragraph at lines 700--700
+\T1/lmr/m/n/8 show-ing the time
+ []
+
+
+Underfull \hbox (badness 2970) in paragraph at lines 700--700
+\T1/lmr/m/n/8 ent print-ing jobs
+ []
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 700--700
+\T1/lmr/m/n/8 on three dif-fer-ent
+ []
+
+
+Underfull \hbox (badness 2521) in paragraph at lines 700--700
+\T1/lmr/m/n/8 ma-chines: Sin-gle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 700--700
+\T1/lmr/m/n/8 dif-fer-ent jobs
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 700--700
+\T1/lmr/m/n/8 whether they
+ []
+
+
+Underfull \hbox (badness 6445) in paragraph at lines 700--700
+\T1/lmr/m/n/8 are one-sided or
+ []
+
+
+Underfull \hbox (badness 4595) in paragraph at lines 700--700
+\T1/lmr/m/n/8 The ta-ble shows
+ []
+
+
+Underfull \hbox (badness 4353) in paragraph at lines 700--700
+\T1/lmr/m/n/8 for each job on
+ []
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:714: Missing $ inserted.
+<inserted text> 
+                $
+l.714 d_
+        {ij} = \text{running time of job } j \text{ in machine } i \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:724: Missing $ inserted.
+<inserted text> 
+                $
+l.724 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/23.1.png, id=255, 853.1875pt x 592.2125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/23.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/23.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/23.1.png  used on input line 743
+.
+(pdftex.def)             Requested size: 70.46037pt x 48.90512pt.
+
+Underfull \hbox (badness 6016) in paragraph at lines 744--744
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A red box
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 mat-i-cal for-mu-la-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 schedul-ing prob-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 re-sents the set
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 of ma-chines, J
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 rep-re-sents the
+ []
+
+
+Underfull \hbox (badness 2626) in paragraph at lines 744--744
+\T1/lmr/m/n/8 set of jobs, and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 run-ning time of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 func-tion is to
+ []
+
+
+Underfull \hbox (badness 1484) in paragraph at lines 744--744
+\T1/lmr/m/n/8 con-straints en-sure
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 744--744
+\T1/lmr/m/n/8 that each job is
+ []
+
+
+Underfull \hbox (badness 2150) in paragraph at lines 744--744
+\T1/lmr/m/n/8 one ma-chine and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\T1/lmr/m/n/8 that the to-tal
+ []
+
+
+Underfull \hbox (badness 5050) in paragraph at lines 744--744
+\T1/lmr/m/n/8 run-ning time on
+ []
+
+
+Underfull \hbox (badness 7203) in paragraph at lines 744--744
+\T1/lmr/m/n/8 de-ci-sion vari-ables
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 744--744
+\OML/lmm/m/it/8 x[]$ \T1/lmr/m/n/8 are bi-nary,
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/24.1.png, id=256, 938.50626pt x 923.45pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/24.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/24.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/24.1.png  used on input line 764
+.
+(pdftex.def)             Requested size: 70.46037pt x 69.3262pt.
+
+Underfull \hbox (badness 2119) in paragraph at lines 765--765
+\T1/lmr/m/n/8 ing the knap-sack
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 prob-lem for-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 mu-lated as an
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 in-te-ger pro-gram-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 ming prob-lem.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 The prob-lem
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 is de-scribed in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 words and then
+ []
+
+
+Underfull \hbox (badness 5189) in paragraph at lines 765--765
+\T1/lmr/m/n/8 for-mu-lated math-
+ []
+
+
+Underfull \hbox (badness 2460) in paragraph at lines 765--765
+\T1/lmr/m/n/8 e-mat-i-cally. The
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 top sec-tion de-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 in-volv-ing a pic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 nicker choos-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 en-joy-ment while
+ []
+
+
+Underfull \hbox (badness 4995) in paragraph at lines 765--765
+\T1/lmr/m/n/8 stay-ing within a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 bot-tom sec-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 shows the stan-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 for-mu-la-tion of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 the knap-sack
+ []
+
+
+Underfull \hbox (badness 5592) in paragraph at lines 765--765
+\T1/lmr/m/n/8 prob-lem. Page
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 num-bers (P.413
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 and P.201) are
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 The math-e-mat-i-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 cal for-mu-la-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 use sum-ma-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 no-ta-tion and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--765
+\T1/lmr/m/n/8 con-straints to
+ []
+
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 7
+83.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+Underfull \hbox (badness 10000) in paragraph at lines 775--783
+
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/25.1.png, id=257, 301.125pt x 150.5625pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/25.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/25.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/25.1.png  used on input line 796
+.
+(pdftex.def)             Requested size: 70.46037pt x 35.23056pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 797--797
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 807--815
+
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/26.1.png, id=258, 451.6875pt x 291.0875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/26.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/26.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/26.1.png  used on input line 829
+.
+(pdftex.def)             Requested size: 70.46037pt x 45.4068pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 830--830
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 A di-a-gram
+ []
+
+
+Underfull \hbox (badness 1297) in paragraph at lines 830--830
+\T1/lmr/m/n/8 roll of pa-per cut
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 830--830
+\T1/lmr/m/n/8 into sec-tions of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 830--830
+\T1/lmr/m/n/8 135cm, 108cm,
+ []
+
+
+Underfull \hbox (badness 1142) in paragraph at lines 830--830
+\T1/lmr/m/n/8 42cm, with 15cm
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/27.1.png, id=259, 471.7625pt x 572.1375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/27.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/27.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/27.1.png  used on input line 872
+.
+(pdftex.def)             Requested size: 70.46037pt x 85.45026pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 873--873
+\T1/lmr/m/n/8 ting pos-si-bil-i-ties
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 873--873
+\T1/lmr/m/n/8 (P1-P12) and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 873--873
+\T1/lmr/m/n/8 a math-e-mat-i-cal
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/28.1.png, id=260, 853.1875pt x 592.2125pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/28.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/28.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/28.1.png  used on input line 916
+.
+(pdftex.def)             Requested size: 70.46037pt x 48.90512pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 917--917
+\T1/lmr/m/n/8 ting pos-si-bil-i-ties
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 917--917
+\T1/lmr/m/n/8 (P1-P12) and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 917--917
+\T1/lmr/m/n/8 a math-e-mat-i-cal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 917--917
+\T1/lmr/m/n/8 for-mu-la-tion of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 917--917
+\T1/lmr/m/n/8 the op-ti-miza-tion
+ []
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:933: Missing $ inserted.
+<inserted text> 
+                $
+l.933 \begin{array}{ll}
+                       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:940: Missing $ inserted.
+<inserted text> 
+                $
+l.940 \end{array}
+                 
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:941: Missing $ inserted.
+<inserted text> 
+                $
+l.941 \begin{array}{ll}
+                       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:948: Missing $ inserted.
+<inserted text> 
+                $
+l.948 \end{array}
+                  \\
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:949: Missing $ inserted.
+<inserted text> 
+                $
+l.949 2X_
+         1 + X_2 + X_3 + X_4 \ge 97 \\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:954: Missing $ inserted.
+<inserted text> 
+                $
+l.954 \subsection
+                 {Description}%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/29.1.png, id=261, 853.1875pt x 652.4375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/29.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/29.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/29.1.png  used on input line 961
+.
+(pdftex.def)             Requested size: 70.46037pt x 53.87852pt.
+
+Underfull \hbox (badness 1838) in paragraph at lines 962--962
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Cut-ting pat-
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 962--962
+\T1/lmr/m/n/8 the re-sult-ing in-
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/30.1.png, id=262, 873.2625pt x 170.6375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/30.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/30.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/30.1.png  used on input line 987
+.
+(pdftex.def)             Requested size: 70.46037pt x 13.76584pt.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/31.1.png, id=263, 923.45pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/31.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/31.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/31.1.png  used on input line 102
+1.
+(pdftex.def)             Requested size: 70.46037pt x 28.33453pt.
+
+Underfull \hbox (badness 4713) in paragraph at lines 1022--1022
+\T1/lmr/m/n/8 ment and re-cov-
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/32.1.png, id=264, 923.45pt x 572.1375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/32.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/32.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/32.1.png  used on input line 105
+2.
+(pdftex.def)             Requested size: 70.46037pt x 43.65051pt.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/33.1.png, id=265, 973.6375pt x 772.8875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/33.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/33.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/33.1.png  used on input line 108
+7.
+(pdftex.def)             Requested size: 70.46037pt x 55.92381pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Prob-lem
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
+\T1/lmr/m/n/8 state-ment and
+ []
+
+
+Underfull \hbox (badness 8113) in paragraph at lines 1088--1088
+\T1/lmr/m/n/8 data com-pres-sion
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/34.1.png, id=266, 973.6375pt x 421.575pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/34.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/34.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/34.1.png  used on input line 111
+7.
+(pdftex.def)             Requested size: 70.46037pt x 30.50389pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1118--1118
+[]\T1/lmr/bx/n/8 (a) |\T1/lmr/m/n/8 Prob-lem
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1118--1118
+\T1/lmr/m/n/8 state-ment and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1118--1118
+\T1/lmr/m/n/8 op-ti-miza-tion for-
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/35.1.png, id=267, 973.6375pt x 973.6375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/35.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/35.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/35.1.png  used on input line 115
+2.
+(pdftex.def)             Requested size: 70.46037pt x 70.44948pt.
+
+Underfull \hbox (badness 2875) in paragraph at lines 1153--1153
+\T1/lmr/m/n/8 miza-tion for-mu-la-
+ []
+
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/36.1.png, id=268, 722.7pt x 707.64375pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/36.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/36.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/36.1.png  used on input line 117
+3.
+(pdftex.def)             Requested size: 70.46037pt x 68.98688pt.
+</Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-2
+8-ApplsLinProg/figures/37.1.png, id=269, 371.3875pt x 371.3875pt>
+File: /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024
+-10-28-ApplsLinProg/figures/37.1.png Graphic file (type png)
+<use /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-
+10-28-ApplsLinProg/figures/37.1.png>
+Package pdftex.def Info: /Users/ashoksaravanan/Coding/ScribeLec/server/output/M
+A 421/lectures/2024-10-28-ApplsLinProg/figures/37.1.png  used on input line 119
+5.
+(pdftex.def)             Requested size: 70.46037pt x 70.45668pt.
+
+Underfull \hbox (badness 2903) in paragraph at lines 1196--1196
+\T1/lmr/m/n/8 ing a line in-ter-
+ []
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:1202: LaTeX Error: \begin{figure} on input line 661 end
+ed by \end{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1202 \end{document}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/notes.aux)
@@ -1466,50 +4250,48 @@ enddocument/afterlastpage: lastpage setting LastPage.
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
+Package rerunfilecheck Info: File `notes.out' has not changed.
+(rerunfilecheck)             Checksum: 1789D183052E0E7D7EF42D56F012DF6A;3039.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:1202: You can't use `\end' in internal vertical mode.
+\enddocument ...cument/end}\deadcycles \z@ \@@end 
+                                                  
+l.1202 \end{document}
+                     
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
+-ApplsLinProg/notes.tex:1202: LaTeX Error: \begin{figure} on input line 661 end
+ed by \end{document}.
 
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1202 \end{document}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
 
-Package rerunfilecheck Warning: File `notes.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
+)
+! Emergency stop.
+<*> ...lectures/2024-10-28-ApplsLinProg/notes.tex"
+                                                  
+*** (job aborted, no legal \end found)
 
-Package rerunfilecheck Info: Checksums for `notes.out':
-(rerunfilecheck)             Before: C91C57F0CE4CC36F945E80D21A9F7A14;7350
-(rerunfilecheck)             After:  392988E59AF721E7D1CE7BB0E15F561B;8136.
- )
-(\end occurred inside a group at level 2)
-
-### simple group (level 2) entered at line 456 ({)
-### simple group (level 1) entered at line 433 ({)
-### bottom level 
+ 
 Here is how much of TeX's memory you used:
- 14731 strings out of 474116
- 242377 string characters out of 5743682
- 1936187 words of memory out of 5000000
- 36701 multiletter control sequences out of 15000+600000
- 619439 words of font info for 81 fonts, out of 8000000 for 9000
+ 14883 strings out of 474116
+ 272983 string characters out of 5743682
+ 2058187 words of memory out of 5000000
+ 36925 multiletter control sequences out of 15000+600000
+ 632669 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,11n,131p,1472b,762s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx1
-0.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></us
-r/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/tex
-live/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/
-texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist
-/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type
-1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm
-/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb>
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local
-/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/202
-4/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2024/texmf-dist
-/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/typ
-e1/public/lm/lmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/a
-msfonts/symbols/msbm10.pfb>
-Output written on _logs/notes.pdf (21 pages, 1152603 bytes).
-PDF statistics:
- 559 PDF objects out of 1000 (max. 8388607)
- 490 compressed objects within 5 object streams
- 127 named destinations out of 1000 (max. 500000)
- 649 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+ 83i,30n,131p,1579b,1223s stack positions out of 10000i,1000n,20000p,200000b,200000s
+!  ==> Fatal error occurred, no output PDF file produced!

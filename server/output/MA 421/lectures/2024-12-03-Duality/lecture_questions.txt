@@ -1,0 +1,144 @@
+QUESTION 1
+What is the fundamental economic interpretation of the dual variables ($y_i$) in the context of the primal problem (P) presented in Slide 1?
+A. They represent the optimal values of the primal variables.
+B. They represent the shadow prices, indicating the marginal increase in the objective function value for a unit increase in the corresponding resource constraint.
+C. They represent the slack variables in the primal problem.
+D. They represent the reduced costs associated with the primal variables.
+E. They are arbitrary multipliers with no specific economic meaning.
+
+ANSWER: B
+
+EXPLANATION:
+A. The dual variables are not the optimal values of the primal variables; those are represented by $x_i$.
+B. The dual variables represent the shadow prices.  In the context of resource allocation, they indicate how much the optimal objective function value would increase if one unit more of the corresponding resource were available. This is a crucial concept in sensitivity analysis.
+C. Slack variables are associated with the primal problem's constraints, not the dual variables.
+D. Reduced costs are associated with the primal variables, indicating how much the objective function would change if a non-basic variable were to enter the basis.
+E. Dual variables have a significant economic interpretation as shadow prices.
+
+
+QUESTION 2
+In the derivation of the dual problem (D) from the primal problem (P) in Slide 1, what is the crucial role played by the non-negativity constraint ($y \ge 0$) on the dual variables?
+A. It ensures the dual problem is always feasible.
+B. It guarantees the dual problem has a unique solution.
+C. It allows us to multiply the primal constraints by the dual variables without changing the direction of the inequalities.
+D. It ensures strong duality holds between the primal and dual problems.
+E. It is not essential for the derivation of the dual problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. Feasibility of the dual problem depends on the relationship between $A$ and $c$, not solely on $y \ge 0$.
+B. The dual problem may have multiple optimal solutions, even with the non-negativity constraint.
+C. The non-negativity constraint on $y$ is crucial because it allows us to multiply the primal inequality constraints ($Ax \le b$) by $y^T$ without reversing the direction of the inequality.  If $y$ could be negative, this multiplication would reverse the inequality, leading to an incorrect dual formulation.
+D. Strong duality is a consequence of both primal and dual feasibility and boundedness, not solely the non-negativity of $y$.
+E. The non-negativity constraint is fundamental to the correct derivation of the dual problem.
+
+
+QUESTION 3
+Explain the significance of complementary slackness (Slide 2) in the context of finding optimal solutions for both the primal and dual linear programs.
+A. Complementary slackness guarantees that the primal and dual problems have the same optimal objective function value.
+B. Complementary slackness provides a necessary and sufficient condition for optimality, linking the primal and dual solutions through the relationships between primal variables and dual slack variables, and dual variables and primal slack variables.
+C. Complementary slackness ensures that the primal problem is feasible if and only if the dual problem is feasible.
+D. Complementary slackness is only relevant for primal problems with equality constraints.
+E. Complementary slackness is a purely mathematical concept with no practical implications for solving linear programs.
+
+ANSWER: B
+
+EXPLANATION:
+A. While complementary slackness implies equal objective function values at optimality, it doesn't guarantee it on its own.  Feasibility and boundedness are also required.
+B. Complementary slackness states that at optimality, for each constraint in the primal problem, either the corresponding dual variable is zero, or the constraint is binding (slack variable is zero).  Similarly, for each variable in the primal problem, either the variable is zero, or the corresponding dual constraint is binding (reduced cost is zero). This interdependency provides a powerful tool for verifying optimality and identifying optimal solutions.
+C. Complementary slackness does not directly address the feasibility of the primal and dual problems independently; it relates the solutions when both are optimal.
+D. Complementary slackness applies to both inequality and equality constraints in linear programs.
+E. Complementary slackness is a fundamental concept with significant practical implications for solving and verifying solutions to linear programs.
+
+
+QUESTION 4
+How does the graphical method (Slides 3 and 4) illustrate the concept of duality in linear programming, and what insights does it offer into the relationship between the primal and dual problems?
+A. The graphical method directly solves the dual problem without reference to the primal problem.
+B. The graphical method shows that the optimal solution to the primal problem always lies at a vertex of the feasible region, while the dual problem's solution is unrelated to the primal feasible region.
+C. The graphical method visually demonstrates that the optimal objective function values of the primal and dual problems are equal, and it highlights the relationship between binding constraints in the primal problem and non-zero dual variables.
+D. The graphical method is only applicable to primal problems with two variables and cannot be extended to illustrate duality in higher dimensions.
+E. The graphical method does not provide any insights into the relationship between the primal and dual problems.
+
+ANSWER: C
+
+EXPLANATION:
+A. The graphical method implicitly uses the primal problem to find the dual solution through the interpretation of shadow prices.
+B. The dual solution is directly related to the primal feasible region through the concept of shadow prices and complementary slackness.
+C. The graphical method visually represents the feasible region of the primal problem. The optimal solution is found at a vertex.  The dual variables correspond to the constraints of the primal problem.  A binding constraint in the primal problem (a constraint that holds with equality at the optimal solution) corresponds to a non-zero dual variable (shadow price).  The optimal objective function values of the primal and dual problems are equal, a key aspect of strong duality.
+D. While the graphical method is easily visualized in two dimensions, the concept of duality extends to higher dimensions, although visualization becomes more challenging.
+E. The graphical method provides valuable insights into the relationship between primal and dual problems, particularly regarding complementary slackness and strong duality.
+
+
+QUESTION 5
+Given the primal problem (P) from Slide 1: $\max \quad c^T x$ subject to $Ax \le b, x \ge 0$, and its dual problem (D): $\min \quad b^T y$ subject to $A^T y \ge c, y \ge 0$, what is the expression for the Lagrangian function $L(x, y)$ that is used in the derivation of the dual problem?
+A. $L(x, y) = c^T x + y^T(b - Ax)$
+B. $L(x, y) = c^T x - y^T(b - Ax)$
+C. $L(x, y) = c^T x + y^T(Ax - b)$
+D. $L(x, y) = b^T y + x^T(A^T y - c)$
+E. $L(x, y) = b^T y - x^T(A^T y - c)$
+
+ANSWER: C
+
+EXPLANATION:
+A. This is incorrect because the sign of the constraint term is wrong. The constraint is $Ax \le b$, so the term should be $y^T(Ax - b)$ to penalize violations of the constraint.
+B. This is incorrect because the sign of the constraint term is wrong. The constraint is $Ax \le b$, so the term should be $y^T(Ax - b)$ to penalize violations of the constraint.
+C. The Lagrangian function is formed by adding the constraints multiplied by their respective Lagrange multipliers to the objective function. In this case, it's $L(x, y) = c^T x + y^T(Ax - b)$, where $y$ is the vector of Lagrange multipliers.
+D. This uses the dual objective function and constraints, not the primal.
+E. This uses the dual objective function and constraints, and has the wrong sign on the constraint term.
+
+
+QUESTION 6
+In Slide 2, the complementary slackness conditions are given as $x_j z_j = 0$ and $y_i w_i = 0$.  Explain the economic interpretation of these conditions in the context of an optimization problem.
+A. If a resource is not fully utilized ($w_i > 0$), then its shadow price ($y_i$) must be zero.
+B. If a variable is positive ($x_j > 0$), then its reduced cost ($z_j$) must be positive.
+C. If a resource is fully utilized ($w_i = 0$), then its shadow price ($y_i$) must be positive.
+D. If a variable is zero ($x_j = 0$), then its reduced cost ($z_j$) must be zero.
+E. Both A and B are correct.
+
+ANSWER: A
+
+EXPLANATION:
+A. The condition $y_i w_i = 0$ means that if there's slack in a constraint ($w_i > 0$), the associated dual variable (shadow price) $y_i$ must be zero.  This makes economic sense: if a resource isn't fully used, its marginal value is zero.
+B. This is incorrect. If a variable is positive ($x_j > 0$), its reduced cost ($z_j$) must be zero for optimality. A positive reduced cost indicates that increasing the variable would improve the objective function.
+C. This is incorrect. While it's true that if a resource is fully utilized, its shadow price might be positive, it's not a necessary condition. The shadow price could be zero if there are other constraints that are binding.
+D. This is incorrect. If a variable is zero, its reduced cost can be positive (meaning it's not optimal to use that variable) or zero (meaning it's optimal to use that variable at zero level).
+E. Both A is correct, but B is incorrect.
+
+
+QUESTION 7
+In Slide 3, a graphical method is used to solve a linear program. What is the key advantage of using a graphical method for solving linear programs?
+A. It can handle a large number of variables and constraints efficiently.
+B. It provides a visual representation of the feasible region and optimal solution.
+C. It is computationally faster than the simplex method for large problems.
+D. It is more accurate than the simplex method.
+E. It is easier to implement than the simplex method.
+
+ANSWER: B
+
+EXPLANATION:
+A. Graphical methods are limited to problems with two variables.  They become impractical for higher dimensions.
+B. The graphical method's main advantage is its visual nature. It allows for easy visualization of the feasible region and the optimal solution by plotting the constraints and objective function.
+C. The simplex method is generally more efficient for larger problems. Graphical methods are only suitable for small problems.
+D. Both methods can be equally accurate, provided calculations are done correctly.  The graphical method might introduce slight inaccuracies due to visual estimations.
+E. While conceptually simpler, implementing a graphical method for solving linear programs requires careful plotting and analysis, which can be time-consuming.
+
+
+QUESTION 8
+Slides 5-8 show the derivation of the dual problem from a primal problem.  What is the fundamental relationship between the optimal objective function values of the primal and dual problems, assuming both are feasible and bounded?
+A. The optimal objective function value of the primal problem is less than or equal to the optimal objective function value of the dual problem.
+B. The optimal objective function value of the primal problem is greater than or equal to the optimal objective function value of the dual problem.
+C. The optimal objective function values of the primal and dual problems are equal.
+D. There is no relationship between the optimal objective function values of the primal and dual problems.
+E. The optimal objective function value of the primal problem is the negative of the optimal objective function value of the dual problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. This describes weak duality, which holds even if the problems are unbounded or infeasible.  Strong duality requires both problems to be feasible and bounded.
+B. This is the reverse of weak duality. Strong duality states that the optimal values are equal.
+C. This is the statement of strong duality:  If both the primal and dual problems are feasible and bounded, their optimal objective function values are equal.
+D. This is incorrect.  The fundamental theorem of duality establishes a strong relationship between the optimal values.
+E. There's no such relationship between the optimal values.  They are equal, not negatives of each other.
+
+

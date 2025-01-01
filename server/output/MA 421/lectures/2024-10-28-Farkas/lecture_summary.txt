@@ -1,0 +1,15 @@
+Farkas' Lemma is a fundamental theorem in linear programming that establishes relationships between the feasibility of a system of linear inequalities and the existence of solutions to a related dual system.  The lecture explored various formulations of this lemma, highlighting its versatility in analyzing linear programs.
+
+*   **Farkas' Lemma:** A system of linear inequalities, Ax ≤ b, has no solution if and only if there exists a non-negative vector y such that Aᵀy = 0 and bᵀy < 0.
+
+*   **Alternative Formulations:**  The lemma can be expressed using equality constraints (Ax = b) and non-negativity constraints on x, leading to alternative conditions for solvability involving a dual system in y.
+
+*   **Three Variants:**  The lecture presented three equivalent variants of Farkas' Lemma, each addressing the solvability of systems with different combinations of equality and inequality constraints, and non-negativity conditions on the solution vector x.
+
+*   **Connection to Fredholm Alternatives:** The lecture highlighted the relationship between Farkas' Lemma and the Fredholm Alternatives, demonstrating its broader mathematical significance beyond linear programming.
+
+*   **Conditions for Non-Existence of Solutions:**  Several slides provided conditions under which the primal systems (Ax ≤ b or Ax = b) have no solution, expressed in terms of the existence of a solution to a corresponding dual system.
+
+*   **Geometric Interpretation:** The proof of Farkas' Lemma was outlined using a geometric approach, involving the projection of a point onto a cone defined by the matrix A.
+
+*   **Related Theorems:** The lecture included a problem requiring the derivation of several theorems (Gordan, Farkas, Stiemke, Ville, and Tucker) closely related to Farkas' Lemma, showcasing its wide-ranging applications in mathematical analysis.

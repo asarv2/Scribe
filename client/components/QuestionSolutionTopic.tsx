@@ -60,6 +60,11 @@ export default function QuestionSolutionTopic({ topic, topicQuestions }: Questio
                                 (question, index) => (
                                     <Box key={index}>
                                         <h3><Latex>{`${index + 1}. ${question.question}`}</Latex></h3>
+                                        <h4><Latex>{`A. ${question.option_a || ""}`}</Latex></h4>
+                                        <h4><Latex>{`B. ${question.option_b || ""}`}</Latex></h4>
+                                        <h4><Latex>{`C. ${question.option_c || ""}`}</Latex></h4>
+                                        <h4><Latex>{`D. ${question.option_d || ""}`}</Latex></h4>
+                                        <h4><Latex>{`E. ${question.option_e || ""}`}</Latex></h4>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No questions found.</Text></Box>}
@@ -71,7 +76,11 @@ export default function QuestionSolutionTopic({ topic, topicQuestions }: Questio
                                 (question, index) => (
                                     <Box key={index}>
                                         <h3><Latex>{`${index + 1}. ${question.question}`}</Latex></h3>
-                                        <Text c="red" size="lg" fw={500}><Latex>{question.solution}</Latex></Text>
+                                        <h4 style={{ color: question.solution === "A" ? "red" : "black" }}><Latex>{`A. ${question.explanation_a || ""}`}</Latex></h4>
+                                        <h4 style={{ color: question.solution === "B" ? "red" : "black" }}><Latex>{`B. ${question.explanation_b || ""}`}</Latex></h4>
+                                        <h4 style={{ color: question.solution === "C" ? "red" : "black" }}><Latex>{`C. ${question.explanation_c || ""}`}</Latex></h4>
+                                        <h4 style={{ color: question.solution === "D" ? "red" : "black" }}><Latex>{`D. ${question.explanation_d || ""}`}</Latex></h4>
+                                        <h4 style={{ color: question.solution === "E" ? "red" : "black" }}><Latex>{`E. ${question.explanation_e || ""}`}</Latex></h4>
                                     </Box>
                                 )
                             ) : <Box p={"lg"}><Text>No solutions found.</Text></Box>}

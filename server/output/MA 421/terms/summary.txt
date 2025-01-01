@@ -1,36 +1,182 @@
+slack variable
+feasible region
+basic variable
+non-basic variable
+auxiliary problem
+converting to slack variable form
+graphical representation of feasible region
+simplex method iteration
+optimality verification
+solving auxiliary problems
+simplex method
+average case performance of simplex method
+worst-case performance of simplex method
+pivot rules
+klee-minty problem
+smoothed complexity
+impact of pivot rules
+empirical performance of simplex method
+theoretical bounds on simplex method
+existence of polynomial-time algorithms
+simplex method efficiency
+klee-minty with pivot rules
+largest-increase rule
+interior point method
+primal problem
+dual problem
+weak duality
+strong duality
+complementary slackness
+primal and dual problems
+analyzing primal-dual relationships
+negative transpose property
+lagrangian function
+lagrange multipliers
+formulating the lagrangian for equality constraints
+formulating the lagrangian for inequality constraints
+deriving weak duality
+deriving the dual problem from the lagrangian
+presenting primal and dual linear programs
+dual objective function
+diet problem
+decision variable
+unit price of pill
+formulating the diet problem
+dual formulation of the diet problem
+primal-dual relationship
+tabular representation of linear programs
+interpreting duality
+diet problem formulation
+dual diet problem formulation
+matrix notation of linear programs
+slack variables
+basic and non-basic variables
+simplex iterations in matrix form
+complementary variables
+converting to standard form
+simplex method iterations
+primal and dual simplex methods
+matrix representation of linear programs
+dual simplex method
+sensitivity analysis
+parametric analysis
+reduced costs
+range of optimality
+shadow prices
+maintaining optimality
+maintaining feasibility
+expressing optimal solution
+optimality condition
+feasibility condition
+dual linear program
+primal linear program
+b, n method
+optimal dual solution
+dual based phase i algorithm
+simplex method in matrix form
+entering variable
+leaving variable
+solving infeasible primal problems using dual simplex method
+efficient basis matrix updates
+determining entering and leaving variables in matrix simplex
 convex set
 convex combination
 convex hull
-carathéodory theorem
+caratheodory's theorem
+separation theorem
+convexity properties
 farkas' lemma
-feasibility of linear inequalities
-convex hull representation
-convex combination representation
-separating polyhedra
-carathéodory's theorem application
-convex set definition
-carathéodory's theorem
+theorem 10.1
+$l^2$-regression
+$l^1$-regression
+$l^\infty$-regression
+separating hyperplane
+smallest ball problem
+regression
+binary classification
+maximum inscribed circle
 production planning
-surplus
-production change cost
-risk aversion parameter
-maximum weight matching
 sales force planning
-portfolio selection with absolute deviation
-portfolio selection with variance
-smallest enclosing ball
-production change cost linearization
-sales force planning linearization
-portfolio selection with absolute deviation linearization
-smallest enclosing ball quadratic program
-maximum weight matching integer program
+portfolio selection
+cutting stock problem
+linearization of absolute value
+linearization of max function
+markowitz portfolio selection
+smallest ball problem formulation
+sparse solution via $l_1$ minimization
+fredholm alternatives
+gordan's theorem
+stiemke's theorem
+ville's theorem
+alternative formulations of farkas' lemma
+fredholm alternatives and farkas' lemma
+proof of farkas' lemma
+deriving related theorems from farkas' lemma
+farkas lemma
+network flow problem formulation
+incidence matrix and network structure
+primal and dual network flow problems
+spanning trees and bases
+optimality conditions for network flows
+incidence matrix
+primal-dual formulation
+spanning tree and basis
+dual flow computation
+network
 spanning tree
+primal flow
+dual flow
+network simplex method
+primal network simplex
+dual network simplex
+updating dual variables
+variants of network simplex methods
+dual variables update
+entering arc selection
+two-phased network simplex method
+transportation problem
+dummy node
+upper bounded transshipment problem
+shortest path problem
+bellman's equation
+handling inequality constraints
+transportation problem with dummy node
+converting inequalities to equalities
+max flow min cut
+ford-fulkerson algorithm
+augmenting path
+cut
+lp formulation of max flow
+max flow problem
+max flow min cut theorem
+linear programming formulation of max flow
+proof using linear programming duality
+complementary slackness conditions
+proof of max flow = min cut
+economic interpretation
 fair prices
-reduced cost
 entering arc
-adjusted flow
-finding fair prices
-identifying profitable arcs
-adjusting flows
-finding an initial feasible solution
-economic interpretation of reduced costs
+economic interpretation of network simplex
+determining fair prices in a network
+identifying profitable shipping opportunities
+adjusting shipping plans to maintain feasibility
+finding a feasible solution on a spanning tree
+duality
+graphic method
+formulating dual problems
+deriving the dual lp problem
+transforming general lps for duality
+demonstrating weak duality
+deriving the dual objective and constraints
+presenting the dual linear program
+lagrangian duality
+transformation to standard form
+derivation of dual problem
+verifying strong duality
+optimal dual solution derivation
+integer programming
+branch-and-bound
+gomory cuts
+relaxed problem
+solving relaxed problems
+dual simplex method application
