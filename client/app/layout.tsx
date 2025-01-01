@@ -13,7 +13,7 @@ import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: "Scribe",
-  description: "The groundbreaking lecture summarization tool",
+  description: "A mission to build a groundbreaking lecture summarization tool",
 };
 
 export default function RootLayout({
