@@ -5,6 +5,7 @@ export async function getTopicLectures(client: TypedSupabaseClient, lectureIds: 
         .from("lectures")
         .select("*")
         .in("id", lectureIds)
+        .order("note_number", { ascending: true })
 
     if (error) {
         throw new Error(error.message);

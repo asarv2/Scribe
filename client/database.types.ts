@@ -82,7 +82,8 @@ export type Database = {
       }
       questions: {
         Row: {
-          created_at: string | null
+          conceptual: boolean
+          created_at: string
           explanation_a: string | null
           explanation_b: string | null
           explanation_c: string | null
@@ -90,6 +91,8 @@ export type Database = {
           explanation_e: string | null
           id: string
           lecture: string | null
+          mcq: boolean
+          multipart: string | null
           option_a: string | null
           option_b: string | null
           option_c: string | null
@@ -100,7 +103,8 @@ export type Database = {
           topic: string | null
         }
         Insert: {
-          created_at?: string | null
+          conceptual?: boolean
+          created_at?: string
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
@@ -108,6 +112,8 @@ export type Database = {
           explanation_e?: string | null
           id?: string
           lecture?: string | null
+          mcq?: boolean
+          multipart?: string | null
           option_a?: string | null
           option_b?: string | null
           option_c?: string | null
@@ -118,7 +124,8 @@ export type Database = {
           topic?: string | null
         }
         Update: {
-          created_at?: string | null
+          conceptual?: boolean
+          created_at?: string
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
@@ -126,6 +133,8 @@ export type Database = {
           explanation_e?: string | null
           id?: string
           lecture?: string | null
+          mcq?: boolean
+          multipart?: string | null
           option_a?: string | null
           option_b?: string | null
           option_c?: string | null
