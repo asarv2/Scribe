@@ -342,12 +342,12 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 				nodesConnectable={false}
 			>
 				<Controls showInteractive={false} showZoom={true} showFitView={true} orientation='horizontal'>
-					<ControlButton onClick={handleCenter}>
+					{/* <ControlButton onClick={handleCenter}>
 						<TargetIcon />
-					</ControlButton>
-					<ControlButton onClick={openDownload}>
+					</ControlButton> */}
+					{/* <ControlButton onClick={openDownload}>
 						<DownloadIcon />
-					</ControlButton>
+					</ControlButton> */}
 					{isProfessor(user, classId) && <ControlButton onClick={openReset}>
 						<ReloadIcon />
 					</ControlButton>}

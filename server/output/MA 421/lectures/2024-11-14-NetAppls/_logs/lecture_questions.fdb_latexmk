@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1735698921.77408 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-14-NetAppls/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735698922.27361 0
-  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-14-NetAppls/lecture_questions.tex" 1735698921.12304 24571 91757e329ccd28f931ce33b5dee59593 ""
+["pdflatex"] 1735921622.60597 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-14-NetAppls/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735921623.21039 0
+  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-14-NetAppls/lecture_questions.tex" 1735921621.88292 23849 c88c9a0e13d0e4fcc212f3d11412c67d ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -101,9 +101,9 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1733257442.02404 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1733257414 8221420 9fe73b124419eb36a2edd6f23a82e5ea ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "_logs/lecture_questions.aux" 1735698922.21649 585 db194f7f84e4e6473981c80a7e9726fb "pdflatex"
-  "_logs/lecture_questions.out" 1735698922.21683 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
-  "lecture_questions.tex" 1735698921.12304 24571 91757e329ccd28f931ce33b5dee59593 ""
+  "_logs/lecture_questions.aux" 1735921623.15064 585 35deface4b9e9f873ee3ecc109628f1c "pdflatex"
+  "_logs/lecture_questions.out" 1735921623.1512 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
+  "lecture_questions.tex" 1735921621.88292 23849 c88c9a0e13d0e4fcc212f3d11412c67d ""
   (generated)
   "_logs/lecture_questions.aux"
   "_logs/lecture_questions.log"

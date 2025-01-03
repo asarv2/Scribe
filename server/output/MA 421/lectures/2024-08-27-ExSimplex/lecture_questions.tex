@@ -45,135 +45,174 @@
 \section{Questions}%
 \label{sec:Questions}%
 \begin{enumerate}%
-\item Why is it necessary to introduce slack variables in the simplex method when dealing with inequality constraints?%
+\item In the simplex method, when the origin is not feasible, what auxiliary problem is introduced to find a feasible starting point, and what is the condition for the original problem to be feasible?%
 \begin{enumerate}%
-\item To ensure the problem is bounded.%
-\item To convert inequality constraints into equality constraints, allowing for the application of the simplex algorithm.%
-\item To simplify the objective function.%
-\item To guarantee the existence of a feasible solution.%
-\item To reduce the number of variables in the problem.%
+\item An auxiliary problem with an objective function to minimize $x_0$, where the original problem is feasible if and only if the minimum value of $x_0$ is 0.%
+\item An auxiliary problem with an objective function to maximize $x_0$, where the original problem is feasible if and only if the maximum value of $x_0$ is greater than 0.%
+\item An auxiliary problem with an objective function to minimize $x_0$, where the original problem is feasible if and only if the minimum value of $x_0$ is less than 0.%
+\item An auxiliary problem with an objective function to maximize $-x_0$, where the original problem is feasible if and only if the maximum value of $-x_0$ is 0.%
+\item An auxiliary problem with an objective function to minimize $-x_0$, where the original problem is feasible if and only if the minimum value of $-x_0$ is less than 0.%
 \end{enumerate}%
 \vspace{1em}%
-\item In the simplex method, what is the significance of the objective function's coefficients in determining the pivot column?%
+\item Explain the concept of "basic" and "non-basic" variables in the context of the simplex method and how they relate to the vertices of the feasible region.%
 \begin{enumerate}%
-\item They determine the feasibility of the solution.%
-\item They indicate the direction of movement in the feasible region to improve the objective function.%
-\item They determine the optimal solution directly.%
-\item They are irrelevant to the pivot column selection.%
-\item They determine the number of iterations required.%
+\item Basic variables are those with zero values, and non-basic variables are those with non-zero values at a vertex.  The simplex method iteratively changes the values of basic variables to move between vertices.%
+\item Basic variables are those with non-zero values, and non-basic variables are those with zero values at a vertex. The simplex method iteratively interchanges basic and non-basic variables to move from one vertex to another, improving the objective function.%
+\item Basic variables are the slack variables, and non-basic variables are the decision variables. The simplex method only changes the values of non-basic variables.%
+\item Basic and non-basic variables are randomly assigned at each iteration of the simplex method. Their values determine the movement between vertices.%
+\item Basic variables are those with positive coefficients in the objective function, and non-basic variables are those with negative or zero coefficients. The simplex method only changes the values of non-basic variables.%
 \end{enumerate}%
 \vspace{1em}%
-\item What is the role of the ratio test in the simplex method?%
+\item In the graphical method for solving linear programs, how does the optimal solution relate to the feasible region and the objective function?%
 \begin{enumerate}%
-\item To determine the entering variable.%
-\item To determine the leaving variable.%
-\item To check for unboundedness.%
-\item To ensure feasibility.%
-\item To calculate the optimal value of the objective function.%
+\item The optimal solution is always at the origin (0,0).%
+\item The optimal solution is the point in the feasible region that is closest to the origin.%
+\item The optimal solution is any point within the feasible region.%
+\item The optimal solution is at a vertex of the feasible region where the objective function line is tangent to the feasible region (for maximization problems).%
+\item The optimal solution is at the center of the feasible region.%
 \end{enumerate}%
 \vspace{1em}%
-\item When using the simplex method, how does one determine if the current solution is optimal?%
+\item Describe the process of pivoting in the simplex method and its geometric interpretation.%
 \begin{enumerate}%
-\item All basic variables are positive.%
-\item All non-basic variables are zero.%
-\item All coefficients of the non-basic variables in the objective function are non-positive (in a maximization problem).%
-\item The objective function value is greater than zero.%
-\item The constraints are all satisfied.%
-\end{enumerate}%
-\vspace{1em}%
-\item In the given linear program (Slide 1), what are the basic variables in the initial step of the simplex method where $x_1 = x_2 = 0$?%
-\begin{enumerate}%
-\item $x_1, x_2$%
-\item $w_1, w_2, w_3$%
-\item $x_1, w_2, w_3$%
-\item $w_1, x_2, w_3$%
-\item $x_1, x_2, w_3$%
-\end{enumerate}%
-\vspace{1em}%
-\item After the first iteration of the simplex method (Slide 8), what is the value of the objective function $\zeta$ at vertex A?%
-\begin{enumerate}%
-\item 0%
-\item 8%
-\item 15%
-\item 22%
-\item 12%
-\end{enumerate}%
-\vspace{1em}%
-\item In Slide 9, which variable leaves the basis and which variable enters the basis during the pivot operation?%
-\begin{enumerate}%
-\item $x_1$ leaves, $w_3$ enters%
-\item $w_3$ leaves, $x_1$ enters%
-\item $x_2$ leaves, $w_1$ enters%
-\item $w_1$ leaves, $x_2$ enters%
-\item $w_2$ leaves, $x_1$ enters%
-\end{enumerate}%
-\vspace{1em}%
-\item In the auxiliary problem (Slide 33), what is the value of $w_2$ when $x_0 = x_1 = x_2 = 0$?%
-\begin{enumerate}%
-\item 1%
-\item -1%
-\item 0%
-\item 3%
-\item -2%
+\item Pivoting involves randomly selecting a new variable to enter the basis at each iteration.%
+\item Pivoting involves selecting a variable to leave the basis and a variable to enter the basis based on the objective function coefficients. Geometrically, it corresponds to moving from one vertex of the feasible region to another.%
+\item Pivoting involves solving the system of equations for all variables simultaneously.%
+\item Pivoting is only necessary when the origin is not feasible.%
+\item Pivoting involves calculating the inverse of the coefficient matrix.%
 \end{enumerate}%
 \vspace{1em}%
 \item%
 \begin{enumerate}%
-\item What are the values of the slack variables $w_1, w_2, w_3$ at the initial vertex O (0,0)?%
+\item Consider the linear program presented in Slide 1: Maximize $\zeta = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, and $x_1, x_2 \ge 0$.  After introducing slack variables and setting $x_1 = 0$ and $x_2 = 0$ as an initial guess (Slide 7), which variable should be increased first according to the maximum coefficient rule, and why?%
 \begin{enumerate}%
-\item $w_1 = 12, w_2 = 8, w_3 = 10$%
-\item $w_1 = 0, w_2 = 0, w_3 = 0$%
-\item $w_1 = -12, w_2 = -8, w_3 = -10$%
-\item $w_1 = 1, w_2 = 1, w_3 = 1$%
-\item $w_1 = 3, w_2 = 2, w_3 = 1$%
+\item $x_1$ because it has the largest coefficient in the objective function.%
+\item $x_2$ because it has a positive coefficient in the objective function.%
+\item $w_1$ because it represents the slack in the first constraint.%
+\item $w_2$ because it represents the slack in the second constraint.%
+\item $w_3$ because it represents the slack in the third constraint.%
 \end{enumerate}%
 \vspace{0.5em}%
-\item In the first iteration, we increase $x_1$ while keeping $x_2 = 0$. Which constraint becomes binding first, and at what value of $x_1$?%
+\item Referring to the graphical representation of the feasible region in Slide 5, explain how the simplex method's iterative process of moving from vertex to vertex relates to the algebraic steps of changing basic and non-basic variables (Slide 6).%
 \begin{enumerate}%
-\item $x_1 + x_2 \le 8$ at $x_1 = 8$%
-\item $-x_1 + 3x_2 \le 12$ at $x_1 = -12$%
-\item $2x_1 - x_2 \le 10$ at $x_1 = 5$%
-\item $x_1 + x_2 \le 8$ at $x_1 = 0$%
-\item $2x_1 - x_2 \le 10$ at $x_1 = 10$%
+\item Each vertex corresponds to a unique set of basic variables, and moving to a new vertex involves changing the set of basic variables.%
+\item The simplex method randomly jumps between vertices, unrelated to the algebraic steps.%
+\item Vertices represent infeasible solutions, while algebraic steps find feasible solutions.%
+\item The algebraic steps are independent of the geometry of the feasible region.%
+\item Only some vertices correspond to basic feasible solutions; the simplex method ignores others.%
 \end{enumerate}%
 \vspace{0.5em}%
-\item After the first iteration (vertex A), what is the value of the objective function $\zeta$?%
+\item In the example problem (Slides 1-15), the simplex method reaches an optimal solution at vertex B (Slide 14).  Explain how the negative coefficients of the non-basic variables ($w_2$ and $w_3$) in the final objective function confirm the optimality of this solution.%
+\begin{enumerate}%
+\item Negative coefficients indicate that increasing the non-basic variables would decrease the objective function.%
+\item Negative coefficients indicate that the solution is infeasible.%
+\item Negative coefficients indicate that the problem is unbounded.%
+\item Negative coefficients are irrelevant to optimality; only the value of the objective function matters.%
+\item Negative coefficients indicate that the simplex method has not converged.%
+\end{enumerate}%
+\vspace{0.5em}%
+\item Consider the linear program in Slide 31, where the origin is not feasible. Explain why the auxiliary problem (Slide 32) is introduced, and how the condition $\text{max } \xi = 0$ relates to the feasibility of the original problem.%
+\begin{enumerate}%
+\item The auxiliary problem finds a feasible starting point for the simplex method, and $\text{max } \xi = 0$ indicates that the original problem is feasible.%
+\item The auxiliary problem is used to check for unboundedness, and $\text{max } \xi = 0$ indicates an unbounded solution.%
+\item The auxiliary problem is an alternative method to solve the problem directly, and $\text{max } \xi = 0$ is the optimal solution.%
+\item The auxiliary problem is used to find the dual problem, and $\text{max } \xi = 0$ indicates that the dual problem is feasible.%
+\item The auxiliary problem is used to check for infeasibility, and $\text{max } \xi = 0$ indicates that the original problem is infeasible.%
+\end{enumerate}%
+\vspace{0.5em}%
+\item In the solution of the auxiliary problem (Slides 31-42), explain the significance of the final objective function value $\text{max } \xi = 0$ and how this leads to a feasible solution for the original problem.%
+\begin{enumerate}%
+\item A value of 0 indicates feasibility; the solution to the auxiliary problem provides a feasible starting point for the original problem.%
+\item A value of 0 indicates infeasibility; the original problem has no solution.%
+\item A value of 0 is arbitrary; any value would lead to a feasible solution for the original problem.%
+\item A value of 0 indicates unboundedness; the original problem has an unbounded solution.%
+\item A value of 0 is an error; the auxiliary problem must have a positive objective function value.%
+\end{enumerate}%
+\vspace{0.5em}%
+\end{enumerate}%
+\item Consider the linear program from Slide 1: Maximize $ \zeta = 3x_1 + 2x_2 $ subject to $ -x_1 + 3x_2 \le 12 $, $ x_1 + x_2 \le 8 $, $ 2x_1 - x_2 \le 10 $, and $ x_1, x_2 \ge 0 $. After introducing slack variables (Slide 1) and reaching vertex A (Slide 9) with $ x_1 = 5, x_2 = 0 $, what is the value of the objective function $ \zeta $ at this vertex?%
 \begin{enumerate}%
 \item 0%
-\item 10%
 \item 15%
 \item 22%
 \item 8%
-\end{enumerate}%
-\vspace{0.5em}%
-\item Which variable enters the basis and which variable leaves the basis in the second iteration (moving from vertex A to vertex B)?%
-\begin{enumerate}%
-\item $x_1$ enters, $w_1$ leaves%
-\item $x_2$ enters, $w_3$ leaves%
-\item $x_2$ enters, $w_2$ leaves%
-\item $w_3$ enters, $x_1$ leaves%
-\item $w_2$ enters, $x_2$ leaves%
-\end{enumerate}%
-\vspace{0.5em}%
-\item What is the optimal value of the objective function $\zeta$?%
-\begin{enumerate}%
-\item 10%
-\item 15%
-\item 22%
-\item 25%
-\item 30%
-\end{enumerate}%
-\vspace{0.5em}%
-\end{enumerate}%
-\item In Slide 19, after setting $x_1 = \frac{5}{2}$, which slack variable becomes zero, and what is the implication for the next step in the simplex method?%
-\begin{enumerate}%
-\item $w_2 = 0$; $x_2$ enters the basis.%
-\item $w_1 = 0$; $x_1$ leaves the basis and $w_1$ enters.%
-\item $w_3 = 0$; $x_3$ enters the basis.%
-\item $w_1 = 0$; $x_1$ enters the basis and $w_1$ leaves.%
-\item $w_2 = 0$; $x_3$ enters the basis.%
+\item 12%
 \end{enumerate}%
 \vspace{1em}%
+\item In the linear program from Slide 17, we have: Maximize $ \zeta = 5x_1 + 4x_2 + 3x_3 $ subject to $ 2x_1 + 3x_2 + x_3 \le 5 $, $ 4x_1 + x_2 + 2x_3 \le 11 $, $ 3x_1 + 4x_2 + 2x_3 \le 8 $, and $ x_1, x_2, x_3 \ge 0 $.  After introducing slack variables $ w_1, w_2, w_3 $ (Slide 17) and setting $ x_1 = x_2 = x_3 = 0 $ as the initial guess, which variable should enter the basis first according to the maximum coefficient rule, and what is its initial value?%
+\begin{enumerate}%
+\item $ x_2 = 0 $%
+\item $ x_1 = 5/2 $%
+\item $ x_3 = 1 $%
+\item $ x_1 = 8/3 $%
+\item $ x_3 = 11/2 $%
+\end{enumerate}%
+\vspace{1em}%
+\item Referring to Slide 31, the linear program has an infeasible origin.  After introducing the auxiliary variable $ x_0 $ (Slide 32) and solving the auxiliary problem, what condition on the optimal value of the auxiliary objective function $ \xi $ indicates that the original problem is feasible?%
+\begin{enumerate}%
+\item $ \xi > 0 $%
+\item $ \xi < 0 $%
+\item $ \xi = 0 $%
+\item $ \xi $ is unbounded%
+\item The auxiliary problem is always infeasible.%
+\end{enumerate}%
+\vspace{1em}%
+\item In the auxiliary problem (Slides 31-42), the final objective function is $ \xi = -x_0 $.  After solving the auxiliary problem using the simplex method, we obtain $ x_1 = \frac{4}{3}, x_2 = \frac{1}{3}, x_0 = 0 $. What is the significance of the value $ x_0 = 0 $ in relation to the feasibility of the original problem (Slide 31)?%
+\begin{enumerate}%
+\item $ x_0 = 0 $ indicates the auxiliary problem is infeasible.%
+\item $ x_0 = 0 $ indicates the original problem is infeasible.%
+\item $ x_0 = 0 $ is a necessary but not sufficient condition for the original problem's feasibility.%
+\item $ x_0 = 0 $ indicates the original problem is feasible, and $ x_1 = \frac{4}{3}, x_2 = \frac{1}{3} $ is a feasible solution.%
+\item $ x_0 = 0 $ is irrelevant to the feasibility of the original problem.%
+\end{enumerate}%
+\vspace{1em}%
+\item%
+\begin{enumerate}%
+\item Consider the linear program presented in Slide 1: Maximize $ \zeta = 3x_1 + 2x_2 $ subject to $ -x_1 + 3x_2 \le 12 $, $ x_1 + x_2 \le 8 $, $ 2x_1 - x_2 \le 10 $, and $ x_1, x_2 \ge 0 $.  After introducing slack variables $ w_1, w_2, w_3 $ (Slide 1), what is the initial basic feasible solution, and what is the corresponding value of the objective function $ \zeta $?%
+\begin{enumerate}%
+\item $ x_1 = 0, x_2 = 0, w_1 = 12, w_2 = 8, w_3 = 10; \zeta = 0 $%
+\item $ x_1 = 12, x_2 = 8, w_1 = 0, w_2 = 0, w_3 = 0; \zeta = 52 $%
+\item $ x_1 = 5, x_2 = 0, w_1 = 17, w_2 = 3, w_3 = 0; \zeta = 15 $%
+\item $ x_1 = 6, x_2 = 2, w_1 = 0, w_2 = 0, w_3 = 0; \zeta = 22 $%
+\item $ x_1 = 0, x_2 = 4, w_1 = 0, w_2 = 4, w_3 = 14; \zeta = 8 $%
+\end{enumerate}%
+\vspace{0.5em}%
+\item In Slide 8, the simplex method suggests increasing $ x_1 $ while keeping $ x_2 = 0 $.  Explain the rationale behind this choice, and determine the maximum value of $ x_1 $ that maintains feasibility.%
+\begin{enumerate}%
+\item The rationale is based on the minimum ratio test; the maximum value of $ x_1 $ is 12.%
+\item The rationale is based on the maximum coefficient rule; the maximum value of $ x_1 $ is 5.%
+\item The rationale is based on the minimum ratio test; the maximum value of $ x_1 $ is 8.%
+\item The rationale is based on the maximum coefficient rule; the maximum value of $ x_1 $ is 10.%
+\item The rationale is based on the Bland's rule; the maximum value of $ x_1 $ is 5.%
+\end{enumerate}%
+\vspace{0.5em}%
+\item After reaching vertex A (Slide 9), the simplex method proceeds to vertex B (Slide 14). Describe the sequence of variable interchanges that occur during this transition, and state the values of $ x_1 $ and $ x_2 $ at vertex B.%
+\begin{enumerate}%
+\item $ w_3 $ leaves, $ x_1 $ enters; then $ w_2 $ leaves, $ x_2 $ enters; $ x_1 = 5, x_2 = 0 $%
+\item $ w_3 $ leaves, $ x_1 $ enters; then $ w_2 $ leaves, $ x_2 $ enters; $ x_1 = 6, x_2 = 2 $%
+\item $ x_1 $ leaves, $ w_3 $ enters; then $ x_2 $ leaves, $ w_2 $ enters; $ x_1 = 0, x_2 = 4 $%
+\item $ w_2 $ leaves, $ x_2 $ enters; then $ w_3 $ leaves, $ x_1 $ enters; $ x_1 = 5, x_2 = 3 $%
+\item $ x_2 $ leaves, $ w_2 $ enters; then $ x_1 $ leaves, $ w_3 $ enters; $ x_1 = 0, x_2 = 0 $%
+\end{enumerate}%
+\vspace{0.5em}%
+\item In Slide 14, how do the negative coefficients of the non-basic variables ($ w_2 $ and $ w_3 $) in the final objective function confirm the optimality of the solution at vertex B?%
+\begin{enumerate}%
+\item Positive coefficients indicate optimality; negative coefficients indicate infeasibility.%
+\item Negative coefficients indicate that increasing the non-basic variables would decrease the objective function value.%
+\item Negative coefficients indicate that the solution is unbounded.%
+\item Negative coefficients indicate that the simplex method has not converged to a solution.%
+\item The coefficients of the non-basic variables are irrelevant to the optimality of the solution.%
+\end{enumerate}%
+\vspace{0.5em}%
+\item Referring to Slide 31, the origin is not feasible for the given linear program. Explain why the auxiliary problem (Slide 32) is introduced, and what condition on the optimal value of the auxiliary objective function $ \xi $ indicates that the original problem is feasible?%
+\begin{enumerate}%
+\item The auxiliary problem is introduced to find a better starting point; feasibility is indicated by $ \xi > 0 $.%
+\item The auxiliary problem is introduced to handle unboundedness; feasibility is indicated by $ \xi < 0 $.%
+\item The auxiliary problem is introduced to find a feasible starting point; feasibility is indicated by $ \xi = 0 $.%
+\item The auxiliary problem is introduced to eliminate redundant constraints; feasibility is indicated by $ \xi = 1 $.%
+\item The auxiliary problem is not necessary if the origin is infeasible.%
+\end{enumerate}%
+\vspace{0.5em}%
+\end{enumerate}%
 \end{enumerate}
 
 %
@@ -181,135 +220,174 @@
 \section{Answers}%
 \label{sec:Answers}%
 \begin{enumerate}%
-\item Why is it necessary to introduce slack variables in the simplex method when dealing with inequality constraints?%
+\item In the simplex method, when the origin is not feasible, what auxiliary problem is introduced to find a feasible starting point, and what is the condition for the original problem to be feasible?%
 \begin{enumerate}%
-\item \incorrect{Boundedness is a property of the problem itself, not something ensured by slack variables.  The simplex method can handle both bounded and unbounded problems.}%
-\item Slack variables transform inequality constraints ($≤$) into equality constraints ($=$), a requirement for the simplex method's iterative process of moving between vertices of the feasible region.  The algorithm relies on this equality form to systematically explore the solution space.%
-\item \incorrect{Slack variables do not directly simplify the objective function; they modify the constraints.}%
-\item \incorrect{Slack variables don't guarantee feasibility; they are a tool used *after* the problem is formulated to make it solvable by the simplex method.  Feasibility is a property of the constraints themselves.}%
-\item \incorrect{Slack variables *increase* the number of variables in the problem, not reduce them.}%
+\item \incorrect{Incorrect. The objective is to maximize $-x_0$, not minimize it.  A minimum of 0 for $x_0$ would not necessarily imply feasibility of the original problem.}%
+\item \incorrect{Incorrect. The objective is to maximize $-x_0$, not $x_0$.  A maximum value of $x_0$ greater than 0 would indicate infeasibility of the original problem.}%
+\item \incorrect{Incorrect. The objective is to maximize $-x_0$, not minimize it. A minimum value of $x_0$ less than 0 is not possible since $x_0 \ge 0$.}%
+\item The correct answer is D.  When the origin is not feasible, an auxiliary problem is introduced with an objective function to maximize $-x_0$, where $x_0$ is a new non-negative variable added to the constraints to make them feasible. The original problem is feasible if and only if the maximum value of $-x_0$ is 0, meaning $x_0$ is 0 in the optimal solution of the auxiliary problem. This indicates that the original constraints are satisfied without the need for the auxiliary variable $x_0$.%
+\item \incorrect{Incorrect. The objective is to maximize $-x_0$, not minimize it.  A minimum value of $-x_0$ less than 0 is not possible since $x_0 \ge 0$.}%
 \end{enumerate}%
 \vspace{1em}%
-\item In the simplex method, what is the significance of the objective function's coefficients in determining the pivot column?%
+\item Explain the concept of "basic" and "non-basic" variables in the context of the simplex method and how they relate to the vertices of the feasible region.%
 \begin{enumerate}%
-\item \incorrect{Feasibility is determined by the constraints, not the objective function coefficients.}%
-\item The coefficients in the objective function guide the selection of the pivot column.  The column with the most positive coefficient (in maximization problems) indicates the variable whose increase will lead to the greatest improvement in the objective function value. This directs the algorithm's movement towards a better solution within the feasible region.%
-\item \incorrect{The coefficients contribute to finding the optimal solution, but they don't determine it directly; the simplex method iteratively improves the solution.}%
-\item \incorrect{The coefficients are crucial for selecting the pivot column, which is a fundamental step in the simplex method.}%
-\item \incorrect{The number of iterations depends on the problem's structure and the algorithm's path, not solely on the objective function coefficients.}%
+\item \incorrect{Incorrect.  At a vertex, non-basic variables are set to zero, not basic variables.}%
+\item The correct answer is B. In the simplex method, at each vertex of the feasible region, a subset of variables (the basic variables) have non-zero values, while the remaining variables (the non-basic variables) are set to zero.  The simplex method iteratively interchanges one basic and one non-basic variable to move to an adjacent vertex, improving the objective function value. This process continues until an optimal solution is found.%
+\item \incorrect{Incorrect. The classification of basic and non-basic variables is not solely based on whether they are slack or decision variables.  The simplex method iteratively changes both basic and non-basic variables (by changing the basis).}%
+\item \incorrect{Incorrect. The assignment of basic and non-basic variables is not random; it is determined by the current basis and the pivot operation at each iteration.}%
+\item \incorrect{Incorrect. The classification of basic and non-basic variables is not based on the coefficients in the objective function. It is determined by the current basis in the simplex tableau.}%
 \end{enumerate}%
 \vspace{1em}%
-\item What is the role of the ratio test in the simplex method?%
+\item In the graphical method for solving linear programs, how does the optimal solution relate to the feasible region and the objective function?%
 \begin{enumerate}%
-\item \incorrect{The entering variable is selected based on the objective function coefficients (in maximization problems, the most positive coefficient).}%
-\item The ratio test identifies the leaving variable.  It determines which basic variable will become zero first as the entering variable increases, ensuring that the solution remains feasible (within the constraints) during each iteration.%
-\item \incorrect{While the ratio test can indirectly help detect unboundedness (if no positive ratios exist), its primary purpose is to find the leaving variable.}%
-\item \incorrect{Feasibility is maintained by the ratio test, but it's not the test's sole purpose; it's about selecting the leaving variable to maintain feasibility.}%
-\item \incorrect{The optimal value is determined only after the simplex method has completed all iterations.}%
+\item \incorrect{Incorrect. The optimal solution is not necessarily at the origin; the origin may not even be in the feasible region.}%
+\item \incorrect{Incorrect. The optimal solution is not necessarily the point closest to the origin; it is the point that maximizes (or minimizes) the objective function within the feasible region.}%
+\item \incorrect{Incorrect. The optimal solution is not any point within the feasible region; it is a specific point, usually a vertex, that optimizes the objective function.}%
+\item The correct answer is D. For maximization problems, the optimal solution lies at a vertex of the feasible region where the objective function line is furthest from the origin in the direction of the objective function's gradient.  This corresponds to the point where the objective function line is tangent to the feasible region.%
+\item \incorrect{Incorrect. The optimal solution is not at the center of the feasible region; it is at a vertex.}%
 \end{enumerate}%
 \vspace{1em}%
-\item When using the simplex method, how does one determine if the current solution is optimal?%
+\item Describe the process of pivoting in the simplex method and its geometric interpretation.%
 \begin{enumerate}%
-\item \incorrect{Positive basic variables are a requirement for feasibility, but not optimality.}%
-\item \incorrect{Non-basic variables being zero is true for any basic feasible solution, not just the optimal one.}%
-\item In a maximization problem, optimality is reached when all coefficients of the non-basic variables in the objective function are non-positive. This indicates that increasing any non-basic variable would not improve the objective function value, meaning the current solution is optimal.%
-\item \incorrect{A positive objective function value is not sufficient for optimality; it only indicates a feasible solution.}%
-\item \incorrect{Constraint satisfaction is a requirement for feasibility, not optimality.}%
-\end{enumerate}%
-\vspace{1em}%
-\item In the given linear program (Slide 1), what are the basic variables in the initial step of the simplex method where $x_1 = x_2 = 0$?%
-\begin{enumerate}%
-\item \incorrect{These are the non-basic variables; they are set to zero in the initial step.}%
-\item The basic variables are those on the left-hand side of the equations after introducing slack variables.  When $x_1 = x_2 = 0$, $w_1 = 12$, $w_2 = 8$, and $w_3 = 10$.%
-\item \incorrect{This is incorrect because $x_1$ is a non-basic variable.}%
-\item \incorrect{This is incorrect because $x_2$ is a non-basic variable.}%
-\item \incorrect{This is incorrect because $x_1$ and $x_2$ are non-basic variables.}%
-\end{enumerate}%
-\vspace{1em}%
-\item After the first iteration of the simplex method (Slide 8), what is the value of the objective function $\zeta$ at vertex A?%
-\begin{enumerate}%
-\item \incorrect{This is the value of $\zeta$ at the origin (O).}%
-\item \incorrect{This is incorrect; it's related to one of the constraints.}%
-\item At vertex A ($x_1 = 5, x_2 = 0$), $\zeta = 3(5) + 2(0) = 15$.%
-\item \incorrect{This is the optimal value of $\zeta$ at vertex B.}%
-\item \incorrect{This is incorrect; it's not directly related to the objective function value at vertex A.}%
-\end{enumerate}%
-\vspace{1em}%
-\item In Slide 9, which variable leaves the basis and which variable enters the basis during the pivot operation?%
-\begin{enumerate}%
-\item \incorrect{This is the reverse of the correct pivot operation.}%
-\item The slide explicitly states that $w_3$ leaves the basis and $x_1$ enters.%
-\item \incorrect{This is an incorrect variable interchange.}%
-\item \incorrect{This is an incorrect variable interchange.}%
-\item \incorrect{This is an incorrect variable interchange.}%
-\end{enumerate}%
-\vspace{1em}%
-\item In the auxiliary problem (Slide 33), what is the value of $w_2$ when $x_0 = x_1 = x_2 = 0$?%
-\begin{enumerate}%
-\item \incorrect{This is the value of $w_3$ in the same scenario.}%
-\item \incorrect{This is the value of $w_1$ in the same scenario.}%
-\item \incorrect{This is not the correct value; $w_2$ is negative in this case.}%
-\item \incorrect{This is the value of $w_3$ after the first pivot in the auxiliary problem.}%
-\item Substituting $x_0 = x_1 = x_2 = 0$ into the equation for $w_2$ gives $w_2 = -2 + 0 + 0 + 0 = -2$.%
+\item \incorrect{Incorrect. The selection of the entering and leaving variables is not random; it follows specific rules to ensure improvement in the objective function.}%
+\item The correct answer is B. Pivoting is the core operation in the simplex method. It involves selecting a non-basic variable (the entering variable) to become basic and a basic variable (the leaving variable) to become non-basic. This is done based on specific rules to improve the objective function. Geometrically, this corresponds to moving from one vertex of the feasible region to an adjacent vertex.%
+\item \incorrect{Incorrect. Pivoting does not involve solving the entire system of equations simultaneously; it involves a systematic substitution of variables.}%
+\item \incorrect{Incorrect. Pivoting is a fundamental step in the simplex method regardless of whether the origin is feasible or not.}%
+\item \incorrect{Incorrect. While matrix inversion is related to solving linear systems, pivoting in the simplex method does not explicitly involve calculating the inverse of the coefficient matrix.}%
 \end{enumerate}%
 \vspace{1em}%
 \item%
 \begin{enumerate}%
-\item What are the values of the slack variables $w_1, w_2, w_3$ at the initial vertex O (0,0)?%
+\item Consider the linear program presented in Slide 1: Maximize $\zeta = 3x_1 + 2x_2$ subject to $-x_1 + 3x_2 \le 12$, $x_1 + x_2 \le 8$, $2x_1 - x_2 \le 10$, and $x_1, x_2 \ge 0$.  After introducing slack variables and setting $x_1 = 0$ and $x_2 = 0$ as an initial guess (Slide 7), which variable should be increased first according to the maximum coefficient rule, and why?%
 \begin{enumerate}%
-\item At the origin (0,0), substituting $x_1 = 0$ and $x_2 = 0$ into the slack variable equations gives $w_1 = 12$, $w_2 = 8$, and $w_3 = 10$.%
-\item \incorrect{This would imply that all constraints are binding at the origin, which is not the case.}%
-\item \incorrect{Negative slack variables indicate infeasibility at the origin.}%
-\item \incorrect{There's no basis for these values.}%
-\item \incorrect{There's no basis for these values.}%
+\item The maximum coefficient rule dictates that we increase the variable with the largest coefficient in the objective function. In this case, $x_1$ has a coefficient of 3, which is larger than the coefficient of $x_2$ (2). Therefore, we should increase $x_1$ first.%
+\item \incorrect{While $x_2$ has a positive coefficient, it is smaller than the coefficient of $x_1$. The maximum coefficient rule prioritizes the variable with the largest coefficient.}%
+\item \incorrect{Slack variables are not considered in the maximum coefficient rule for choosing the entering variable. The rule focuses on the decision variables in the objective function.}%
+\item \incorrect{Similar to option C, slack variables are not directly considered in the maximum coefficient rule.}%
+\item \incorrect{Similar to options C and D, slack variables are not directly considered in the maximum coefficient rule.}%
 \end{enumerate}%
 \vspace{0.5em}%
-\item In the first iteration, we increase $x_1$ while keeping $x_2 = 0$. Which constraint becomes binding first, and at what value of $x_1$?%
+\item Referring to the graphical representation of the feasible region in Slide 5, explain how the simplex method's iterative process of moving from vertex to vertex relates to the algebraic steps of changing basic and non-basic variables (Slide 6).%
 \begin{enumerate}%
-\item \incorrect{This constraint is less restrictive than $2x_1 \le 10$.}%
-\item \incorrect{A negative value of $x_1$ is not feasible.}%
-\item With $x_2 = 0$, the constraints become $x_1 \le 12$, $x_1 \le 8$, and $2x_1 \le 10$. The most restrictive constraint is $2x_1 \le 10$, which gives $x_1 = 5$.%
-\item \incorrect{This is the starting point, not the binding constraint.}%
-\item \incorrect{This is incorrect; it uses the right-hand side value directly without considering $x_2 = 0$.}%
+\item Each vertex of the feasible region corresponds to a unique set of basic variables (those with non-zero values).  The simplex method's iterative process of moving from one vertex to another is directly mirrored by the algebraic steps of changing which variables are basic and which are non-basic.  Setting non-basic variables to zero defines the vertex.%
+\item \incorrect{The simplex method systematically moves from one vertex to another, following a specific algorithm to improve the objective function.  The movement is directly related to the algebraic steps.}%
+\item \incorrect{Vertices represent basic feasible solutions (extreme points of the feasible region). The algebraic steps of the simplex method are designed to find these feasible solutions.}%
+\item \incorrect{The algebraic steps are intrinsically linked to the geometry of the feasible region. Each algebraic step corresponds to moving from one vertex to an adjacent vertex.}%
+\item \incorrect{Every vertex of the feasible region corresponds to a basic feasible solution. The simplex method systematically explores these vertices.}%
 \end{enumerate}%
 \vspace{0.5em}%
-\item After the first iteration (vertex A), what is the value of the objective function $\zeta$?%
+\item In the example problem (Slides 1-15), the simplex method reaches an optimal solution at vertex B (Slide 14).  Explain how the negative coefficients of the non-basic variables ($w_2$ and $w_3$) in the final objective function confirm the optimality of this solution.%
 \begin{enumerate}%
-\item \incorrect{This is the value at the origin.}%
-\item \incorrect{Incorrect calculation.}%
-\item At vertex A, $x_1 = 5$ and $x_2 = 0$, so $\zeta = 3(5) + 2(0) = 15$.%
-\item \incorrect{This is the optimal value, reached later.}%
-\item \incorrect{Incorrect calculation.}%
+\item The negative coefficients of $w_2$ and $w_3$ in the final objective function mean that increasing either of these non-basic variables would decrease the value of the objective function $\zeta$. Since we are maximizing $\zeta$, this confirms that the current solution is optimal; no further improvement is possible.%
+\item \incorrect{Negative coefficients in the objective function do not indicate infeasibility.  Infeasibility means there is no solution that satisfies all constraints.}%
+\item \incorrect{Negative coefficients in the objective function do not indicate an unbounded problem. An unbounded problem has a solution where the objective function can be made arbitrarily large.}%
+\item \incorrect{The coefficients of the non-basic variables are crucial in determining optimality.  Negative coefficients indicate that the current solution is optimal.}%
+\item \incorrect{Negative coefficients in the final objective function indicate that the simplex method has converged to an optimal solution.}%
 \end{enumerate}%
 \vspace{0.5em}%
-\item Which variable enters the basis and which variable leaves the basis in the second iteration (moving from vertex A to vertex B)?%
+\item Consider the linear program in Slide 31, where the origin is not feasible. Explain why the auxiliary problem (Slide 32) is introduced, and how the condition $\text{max } \xi = 0$ relates to the feasibility of the original problem.%
 \begin{enumerate}%
-\item \incorrect{Incorrect variable leaving the basis.}%
-\item \incorrect{Incorrect variable leaving the basis.}%
-\item In the second iteration, $x_2$ enters the basis, and $w_2$ leaves the basis.%
-\item \incorrect{Incorrect variables entering and leaving.}%
-\item \incorrect{Incorrect variables entering and leaving.}%
+\item The standard simplex method starts at the origin. If the origin is not feasible (as in Slide 31), the auxiliary problem is introduced to find a feasible starting point.  If the maximum value of the auxiliary problem's objective function $\xi$ is 0, it means a feasible solution to the original problem exists, allowing the simplex method to proceed.%
+\item \incorrect{The auxiliary problem is not used to check for unboundedness.  Unboundedness is a different property of linear programs.}%
+\item \incorrect{The auxiliary problem is not a direct alternative method to solve the original problem. It's a tool to find a feasible starting point for the simplex method applied to the original problem.}%
+\item \incorrect{The auxiliary problem is not related to finding the dual problem. The dual problem is a different concept in linear programming.}%
+\item \incorrect{If $\text{max } \xi = 0$, it indicates that the original problem is feasible, not infeasible.}%
 \end{enumerate}%
 \vspace{0.5em}%
-\item What is the optimal value of the objective function $\zeta$?%
+\item In the solution of the auxiliary problem (Slides 31-42), explain the significance of the final objective function value $\text{max } \xi = 0$ and how this leads to a feasible solution for the original problem.%
 \begin{enumerate}%
-\item \incorrect{Incorrect value.}%
-\item \incorrect{This is the value at vertex A.}%
-\item The optimal value of $\zeta$ is 22, as determined by the simplex method.%
-\item \incorrect{Incorrect value.}%
-\item \incorrect{Incorrect value.}%
+\item The auxiliary problem is designed such that if a feasible solution to the original problem exists, the optimal value of the auxiliary problem's objective function $\xi$ will be 0.  This is because the auxiliary variable $x_0$ can be set to 0 in this case.  The solution obtained for the other variables at $\xi = 0$ provides a feasible starting point for solving the original problem using the simplex method.%
+\item \incorrect{A value of 0 for $\text{max } \xi$ indicates feasibility, not infeasibility.}%
+\item \incorrect{The value of 0 is not arbitrary. It has a specific meaning related to the feasibility of the original problem.}%
+\item \incorrect{A value of 0 for $\text{max } \xi$ does not indicate unboundedness. Unboundedness is a different property of linear programs.}%
+\item \incorrect{The auxiliary problem is designed to have a maximum objective function value of 0 if the original problem is feasible.}%
 \end{enumerate}%
 \vspace{0.5em}%
 \end{enumerate}%
-\item In Slide 19, after setting $x_1 = \frac{5}{2}$, which slack variable becomes zero, and what is the implication for the next step in the simplex method?%
+\item Consider the linear program from Slide 1: Maximize $ \zeta = 3x_1 + 2x_2 $ subject to $ -x_1 + 3x_2 \le 12 $, $ x_1 + x_2 \le 8 $, $ 2x_1 - x_2 \le 10 $, and $ x_1, x_2 \ge 0 $. After introducing slack variables (Slide 1) and reaching vertex A (Slide 9) with $ x_1 = 5, x_2 = 0 $, what is the value of the objective function $ \zeta $ at this vertex?%
 \begin{enumerate}%
-\item \incorrect{Answer A is incorrect. While setting $x_1 = 5/2$ does affect $w_2$, it does not become zero. The pivot operation involves the variable that becomes zero.}%
-\item \incorrect{Answer B is incorrect.  $x_1$ enters the basis, not leaves. The variable with the largest coefficient in the objective function enters the basis.}%
-\item \incorrect{Answer C is incorrect. $w_3$ does not become zero when $x_1 = 5/2$. The pivot operation involves the variable that becomes zero.}%
-\item Answer D is correct.  Setting $x_1 = \frac{5}{2}$ makes $w_1 = 5 - 2(\frac{5}{2}) - 3(0) - 0 = 0$. This means $w_1$ leaves the basis, and since $x_1$ has the largest positive coefficient in the objective function, $x_1$ enters the basis.%
-\item \incorrect{Answer E is incorrect.  $w_2$ does not become zero when $x_1 = 5/2$.  The pivot operation involves the variable that becomes zero, and $x_3$ is not necessarily the entering variable.}%
+\item \incorrect{Incorrect. This is the value of the objective function at the origin (0,0).}%
+\item The correct answer is 15. At vertex A, $ x_1 = 5 $ and $ x_2 = 0 $. Substituting these values into the objective function $ \zeta = 3x_1 + 2x_2 $, we get $ \zeta = 3(5) + 2(0) = 15 $.%
+\item \incorrect{Incorrect. This is the optimal value of the objective function at vertex B.}%
+\item \incorrect{Incorrect. This value is unrelated to the objective function at vertex A.}%
+\item \incorrect{Incorrect. This value is one of the constraint values, not the objective function value at vertex A.}%
 \end{enumerate}%
 \vspace{1em}%
+\item In the linear program from Slide 17, we have: Maximize $ \zeta = 5x_1 + 4x_2 + 3x_3 $ subject to $ 2x_1 + 3x_2 + x_3 \le 5 $, $ 4x_1 + x_2 + 2x_3 \le 11 $, $ 3x_1 + 4x_2 + 2x_3 \le 8 $, and $ x_1, x_2, x_3 \ge 0 $.  After introducing slack variables $ w_1, w_2, w_3 $ (Slide 17) and setting $ x_1 = x_2 = x_3 = 0 $ as the initial guess, which variable should enter the basis first according to the maximum coefficient rule, and what is its initial value?%
+\begin{enumerate}%
+\item \incorrect{Incorrect. While $ x_2 $ has a coefficient of 4, $ x_1 $ has a larger coefficient (5).}%
+\item The correct answer is B. The maximum coefficient rule dictates that we increase the variable with the largest coefficient in the objective function. In this case, it's $ x_1 $ (coefficient 5).  The constraints, after introducing slack variables, become: $ w_1 = 5 - 2x_1 - 3x_2 - x_3 $, $ w_2 = 11 - 4x_1 - x_2 - 2x_3 $, $ w_3 = 8 - 3x_1 - 4x_2 - 2x_3 $. Setting $ x_2 = x_3 = 0 $, we find the maximum feasible value of $ x_1 $ by ensuring $ w_1, w_2, w_3 \ge 0 $. The most restrictive constraint is $ w_1 \ge 0 $, which gives $ 5 - 2x_1 \ge 0 $, so $ x_1 \le 5/2 $.%
+\item \incorrect{Incorrect. $ x_3 $ has a smaller coefficient (3) than $ x_1 $.}%
+\item \incorrect{Incorrect. This value comes from the constraint $ w_3 \ge 0 $, but $ w_1 \ge 0 $ is more restrictive.}%
+\item \incorrect{Incorrect. This value is not derived from any of the constraints.}%
+\end{enumerate}%
+\vspace{1em}%
+\item Referring to Slide 31, the linear program has an infeasible origin.  After introducing the auxiliary variable $ x_0 $ (Slide 32) and solving the auxiliary problem, what condition on the optimal value of the auxiliary objective function $ \xi $ indicates that the original problem is feasible?%
+\begin{enumerate}%
+\item \incorrect{Incorrect. A positive value for $ \xi $ is not possible in the auxiliary problem.}%
+\item \incorrect{Incorrect. A negative value for $ \xi $ indicates that the original problem is infeasible.}%
+\item The original problem is feasible if and only if the optimal value of the auxiliary objective function $ \xi $ is 0.  If a feasible solution to the original problem exists, we can set $ x_0 = 0 $ in the auxiliary problem, making $ \xi = 0 $. Conversely, if the optimal $ \xi = 0 $, it means a feasible solution to the original problem has been found.%
+\item \incorrect{Incorrect. An unbounded $ \xi $ would also indicate infeasibility in the original problem.}%
+\item \incorrect{Incorrect. The auxiliary problem is constructed to be feasible.}%
+\end{enumerate}%
+\vspace{1em}%
+\item In the auxiliary problem (Slides 31-42), the final objective function is $ \xi = -x_0 $.  After solving the auxiliary problem using the simplex method, we obtain $ x_1 = \frac{4}{3}, x_2 = \frac{1}{3}, x_0 = 0 $. What is the significance of the value $ x_0 = 0 $ in relation to the feasibility of the original problem (Slide 31)?%
+\begin{enumerate}%
+\item \incorrect{Incorrect. $ x_0 = 0 $ indicates feasibility, not infeasibility.}%
+\item \incorrect{Incorrect. $ x_0 = 0 $ indicates feasibility, not infeasibility.}%
+\item \incorrect{Incorrect. $ x_0 = 0 $ is both necessary and sufficient for the original problem's feasibility.}%
+\item The value $ x_0 = 0 $ is crucial.  The auxiliary problem is designed such that if the original problem is feasible, there exists a solution where $ x_0 = 0 $.  Since we found a solution with $ x_0 = 0 $, it means we have found a feasible solution ($ x_1 = \frac{4}{3}, x_2 = \frac{1}{3} $) for the original problem.  This solution satisfies all constraints of the original problem.%
+\item \incorrect{Incorrect. The entire purpose of the auxiliary problem is to determine the feasibility of the original problem.}%
+\end{enumerate}%
+\vspace{1em}%
+\item%
+\begin{enumerate}%
+\item Consider the linear program presented in Slide 1: Maximize $ \zeta = 3x_1 + 2x_2 $ subject to $ -x_1 + 3x_2 \le 12 $, $ x_1 + x_2 \le 8 $, $ 2x_1 - x_2 \le 10 $, and $ x_1, x_2 \ge 0 $.  After introducing slack variables $ w_1, w_2, w_3 $ (Slide 1), what is the initial basic feasible solution, and what is the corresponding value of the objective function $ \zeta $?%
+\begin{enumerate}%
+\item The initial basic feasible solution is obtained by setting the non-basic variables $ x_1 $ and $ x_2 $ to zero. Substituting this into the constraints gives $ w_1 = 12, w_2 = 8, w_3 = 10 $. The corresponding value of the objective function is $ \zeta = 3(0) + 2(0) = 0 $.%
+\item \incorrect{This solution is the optimal solution, not the initial basic feasible solution.}%
+\item \incorrect{This solution corresponds to vertex A in the feasible region.}%
+\item \incorrect{This solution corresponds to the optimal vertex B in the feasible region.}%
+\item \incorrect{This is a feasible solution, but not the initial basic feasible solution.}%
+\end{enumerate}%
+\vspace{0.5em}%
+\item In Slide 8, the simplex method suggests increasing $ x_1 $ while keeping $ x_2 = 0 $.  Explain the rationale behind this choice, and determine the maximum value of $ x_1 $ that maintains feasibility.%
+\begin{enumerate}%
+\item \incorrect{The minimum ratio test is used to determine the leaving variable, not the entering variable.  The maximum value of $ x_1 $ is not 12.}%
+\item The rationale is based on the maximum coefficient rule, which prioritizes increasing the variable with the largest coefficient in the objective function. In this case, $ x_1 $ has a coefficient of 3, larger than $ x_2 $'s coefficient of 2.  To maintain feasibility, we must ensure that all slack variables remain non-negative.  The constraints $ w_2 = 8 - x_1 $ and $ w_3 = 10 - 2x_1 $ imply $ x_1 \le 8 $ and $ x_1 \le 5 $ respectively. The most restrictive constraint is $ x_1 \le 5 $, so the maximum feasible value of $ x_1 $ is 5.%
+\item \incorrect{The minimum ratio test is used to determine the leaving variable, not the entering variable. The maximum value of $ x_1 $ is not 8.}%
+\item \incorrect{The maximum coefficient rule is used, but the maximum value of $ x_1 $ is not 10.}%
+\item \incorrect{Bland's rule is used to prevent cycling, but it is not the rationale for choosing the entering variable in this case.}%
+\end{enumerate}%
+\vspace{0.5em}%
+\item After reaching vertex A (Slide 9), the simplex method proceeds to vertex B (Slide 14). Describe the sequence of variable interchanges that occur during this transition, and state the values of $ x_1 $ and $ x_2 $ at vertex B.%
+\begin{enumerate}%
+\item \incorrect{The variable interchange is correct, but the final values of $ x_1 $ and $ x_2 $ are incorrect.}%
+\item From vertex A, $ w_3 $ leaves the basis and $ x_1 $ enters.  Then, from the resulting tableau, $ w_2 $ leaves and $ x_2 $ enters, leading to vertex B. At vertex B, $ x_1 = 6 $ and $ x_2 = 2 $.%
+\item \incorrect{This describes the reverse process.}%
+\item \incorrect{The order of variable interchanges is incorrect.}%
+\item \incorrect{This describes a move away from the optimal solution.}%
+\end{enumerate}%
+\vspace{0.5em}%
+\item In Slide 14, how do the negative coefficients of the non-basic variables ($ w_2 $ and $ w_3 $) in the final objective function confirm the optimality of the solution at vertex B?%
+\begin{enumerate}%
+\item \incorrect{Positive coefficients in the objective function of non-basic variables indicate that the solution is not optimal.}%
+\item The negative coefficients of $ w_2 $ and $ w_3 $ in the final objective function, $ \zeta = 22 - \frac{1}{3}w_3 - \frac{7}{3}w_2 $, indicate that increasing either $ w_2 $ or $ w_3 $ (i.e., moving away from vertex B) would decrease the objective function value $ \zeta $. Since no feasible direction leads to an improvement in $ \zeta $, the current solution at vertex B is optimal.%
+\item \incorrect{Negative coefficients do not indicate an unbounded solution. An unbounded solution occurs when the objective function can be increased indefinitely without violating any constraints.}%
+\item \incorrect{Negative coefficients do not indicate that the simplex method has not converged. The simplex method converges when all coefficients of non-basic variables in the objective function are non-positive.}%
+\item \incorrect{The coefficients of the non-basic variables are crucial for determining optimality in the simplex method.}%
+\end{enumerate}%
+\vspace{0.5em}%
+\item Referring to Slide 31, the origin is not feasible for the given linear program. Explain why the auxiliary problem (Slide 32) is introduced, and what condition on the optimal value of the auxiliary objective function $ \xi $ indicates that the original problem is feasible?%
+\begin{enumerate}%
+\item \incorrect{The auxiliary problem does not aim to find a better starting point in the sense of improving the objective function value.  Feasibility is indicated by $ \xi = 0 $, not $ \xi > 0 $.}%
+\item \incorrect{The auxiliary problem is not introduced to handle unboundedness.  Feasibility is indicated by $ \xi = 0 $, not $ \xi < 0 $.}%
+\item The auxiliary problem is introduced because the standard simplex method requires a feasible starting point, which is the origin in most cases.  If the origin is infeasible, the auxiliary problem creates a modified problem that is guaranteed to have a feasible solution. The condition $ \xi = 0 $ at the optimum of the auxiliary problem indicates that the original problem is feasible.  A value of $ \xi = 0 $ implies that the auxiliary variable $ x_0 $ is zero in the optimal solution, meaning that a feasible solution to the original problem exists.%
+\item \incorrect{The auxiliary problem does not eliminate redundant constraints.  Feasibility is indicated by $ \xi = 0 $, not $ \xi = 1 $.}%
+\item \incorrect{The auxiliary problem is a crucial technique when the origin is infeasible.}%
+\end{enumerate}%
+\vspace{0.5em}%
+\end{enumerate}%
 \end{enumerate}
 
 %

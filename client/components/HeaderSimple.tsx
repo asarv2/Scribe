@@ -5,54 +5,156 @@
  * 09.01.2024
  */
 
-import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box } from '@mantine/core';
+import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { IconChevronDown, IconUser } from '@tabler/icons-react';
+import { getUser } from '@/utils/queries/get-user';
+import { useQuery } from '@tanstack/react-query';
+import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
+import type { User } from '@supabase/supabase-js';
 
-
-const links = [
-    { link: '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b', label: 'MA 421' },
-    // { link: '/classes/c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
-    // { link: '/login', label: 'Professor' },
+const classNav = [
+    { id: '3236bffb-cfa4-47b8-a0a2-44427df57e3b', label: 'MA 421' },
+    // { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
 ];
 
 export function HeaderSimple() {
+    const supabase = useSupabaseBrowser();
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const pathname = usePathname();
 
-    const items = links.map((link) => (
+    // Get current class from URL
+    const currentClassId = pathname.split('/classes/')[1]?.split('/')[0];
+    const currentClass = classNav.find(c => c.id === currentClassId);
+    const displayText = currentClass ? currentClass.label : 'Select Class';
+
+    // Modify navigation links to be dynamic based on current class
+    const navigationLinks = [
+        { 
+            link: currentClassId 
+                ? `/classes/${currentClassId}` 
+                : '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b', // default class
+            label: 'Topics' 
+        },
+        { 
+            link: currentClassId 
+                ? `/classes/${currentClassId}/lecture` 
+                : '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b/lecture',
+            label: 'Lectures' 
+        },
+        { 
+            link: currentClassId 
+                ? `/classes/${currentClassId}/generate` 
+                : '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b/generate',
+            label: 'Generate' 
+        },
+    ];
+
+    const navigationItems = navigationLinks.map((link) => (
         <Box p={2} key={link.label}>
             <Link
-                key={link.label}
                 href={link.link}
                 className={classes.link}
-                data-active={pathname.includes(link.link) || undefined}
+                data-active={pathname === link.link || undefined}
             >
                 {link.label}
             </Link>
         </Box>
     ));
 
+    const { data: user } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
     return (
         <>
             <header className={classes.header}>
                 <Container size="md" className={classes.inner}>
-                    <Link href="/">
-                        <Image
-                            src="/images/logo.png"
-                            alt="Logo"
-                            width={100}
-                            height={20}
-                        />
-                    </Link>
-                    <Group gap={5} visibleFrom="xs">
-                        {items}
-                    </Group>
+                    <Group justify="space-between" style={{ width: '100%' }}>
+                        <Group>
+                            <Link href="/">
+                                <Image
+                                    src="/images/logo.png"
+                                    alt="Logo"
+                                    width={100}
+                                    height={20}
+                                />
+                            </Link>
 
-                    <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="xs" size="sm" />
+                            <Menu shadow="md" width={200}>
+                                <Menu.Target>
+                                    <button className={classes.classSelector}>
+                                        {displayText} <IconChevronDown size={16} />
+                                    </button>
+                                </Menu.Target>
+
+                                <Menu.Dropdown>
+                                    {classNav.map((classItem) => (
+                                        <Menu.Item
+                                            key={classItem.id}
+                                            component={Link}
+                                            href={`/classes/${classItem.id}`}
+                                        >
+                                            {classItem.label}
+                                        </Menu.Item>
+                                    ))}
+                                </Menu.Dropdown>
+                            </Menu>
+                        </Group>
+
+                        <Group gap={5} visibleFrom="xs">
+                            {navigationItems}
+                        </Group>
+
+                        <Group gap={5} visibleFrom="xs">
+                            {user ? (
+                                <Menu shadow="md" width={200}>
+                                    <Menu.Target>
+                                        <button className={classes.profileButton}>
+                                            <IconUser size={20} />
+                                        </button>
+                                    </Menu.Target>
+
+                                    <Menu.Dropdown>
+                                        <Menu.Label>{user.email}</Menu.Label>
+                                        {/* <Menu.Item component={Link} href="/profile">
+                                            Profile
+                                        </Menu.Item>
+                                        <Menu.Item component={Link} href="/settings">
+                                            Settings
+                                        </Menu.Item> */}
+                                        <Menu.Divider />
+                                        <Menu.Item
+                                            color="red"
+                                            onClick={async () => {
+                                                await supabase.auth.signOut();
+                                                window.location.reload();
+                                            }}
+                                        >
+                                            Logout
+                                        </Menu.Item>
+                                    </Menu.Dropdown>
+                                </Menu>
+                            ) : (
+                                <Box p={2}>
+                                    <Link
+                                        href="/login"
+                                        className={classes.link}
+                                        data-active={pathname.includes('/login') || undefined}
+                                    >
+                                        Login
+                                    </Link>
+                                </Box>
+                            )}
+                        </Group>
+
+                        <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="xs" size="sm" />
+                    </Group>
                 </Container>
             </header>
 
@@ -82,7 +184,7 @@ export function HeaderSimple() {
                     <Drawer.Body>
                         <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md" p={4}>
                             <Divider my="sm" />
-                            {items}
+                            {navigationItems}
                         </ScrollArea>
                     </Drawer.Body>
                 </Drawer.Content>

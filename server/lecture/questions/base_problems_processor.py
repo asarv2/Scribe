@@ -40,13 +40,43 @@ class BaseProblemsProcessor(BaseProcessor):
     
     def _initialize_mcq_prompts(self):
         """Initialize prompts for MCQ questions"""
-        base_question_prompt = f"""You are a professor for the class {self.course_title}. You will be given documents from lectures and be asked to generate multiple choice questions for the students to answer. You will have 5 answer choices available, 'A', 'B', 'C', 'D', and 'E'. There can only be one correct answer. Put the question in <QUESTION> and </QUESTION> tags. Put the options in tags corresponding to the answer choice, e.g. <OPTION_A> and </OPTION_A>, with the text describing the option in the center. Put the answer in a tag if it is correct and incorrect ones with an explanation in a tag. For example, if answer A is correct, place the explanation in <CORRECT_A> and </CORRECT_A> tags. If the answer is incorrect, place the explanation in <INCORRECT_B> and </INCORRECT_B> tags. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. For each question, use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations. When adding your textual response with math symbols, be sure to use LaTeX formatting. """
+        base_question_prompt = f"""You are a professor for the class {self.course_title}. You will be given documents from lectures and be asked to generate multiple choice questions for the students to answer. You will have 5 answer choices available, 'A', 'B', 'C', 'D', and 'E'. For each question generated, there can only be one correct answer. If your response contains math symbols, be sure to use LaTeX formatting."""
         
-        default_question_prompt = f"""You will be tasked with generating single-part questions. Here is a full example output, generating 1 practice problem for the lecture Simplex Method. 
+        quality_prompt = f""" To generate questions of the highest quality, here are some guidelines you should follow.
+        CRITICAL REQUIREMENTS:
+        1. Questions should directly relate to the core content of the {self.content_type.value}.
+        2. Make each explanation complete and self-contained.
+        3. Each question should be difficult to answer correctly, if the student is not familiar with the content.
+        4. Questions should involve multi-step reasoning.
+        5. Make sure the questions cover a diverse set of concepts from the {self.content_type.value}.
+        """
+        
+        single_part_question_prompt = f"""TASK: You will be generating single-part questions to test comprehension of the {self.content_type.value}. 
+        
+        WHAT TO DO:
+        1. Put the question in <QUESTION> and </QUESTION> tags.
+        2. Put the options in tags corresponding to the answer choice, e.g. <OPTION_A> and </OPTION_A>, with the text describing the option in the center.
+        3. Put the answer in a tag if it is correct and incorrect ones with an explanation in a tag. For example, if answer A is correct, place the explanation in <CORRECT_A> and </CORRECT_A> tags. 
+        4. If the answer is incorrect, place the explanation in <INCORRECT_B> and </INCORRECT_B> tags.
+        5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question.
+        6. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations.
+        
+        Here is a full example output, generating 1 practice problem for the {self.content_type.value} Simplex Method. 
 
         YOUR OUTPUT: <OUTPUT><QUESTION>What is the first step in the simplex method?</QUESTION> <OPTION_A>Add slack variables to the constraints</OPTION_A> <OPTION_B>Form the initial tableau</OPTION_B> <OPTION_C>Solve the system of equations</OPTION_C> <OPTION_D>Identify the pivot column</OPTION_D> <OPTION_E>Identify the pivot row</OPTION_E> <CORRECT_B>Answer B is correct because it is the first step in the simplex method.</CORRECT_B> <INCORRECT_A>Answer A is incorrect because adding slack variables to the constraints is not the first step in the simplex method.</INCORRECT_A> <INCORRECT_C>Answer C is incorrect because solving the system of equations is not the first step in the simplex method.</INCORRECT_C> <INCORRECT_D>Answer D is incorrect because identifying the pivot column is not the first step in the simplex method.</INCORRECT_D> <INCORRECT_E>Answer E is incorrect because identifying the pivot row is not the first step in the simplex method.</INCORRECT_E><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></OUTPUT>"""
         
-        multipart_question_prompt = f"""You will be tasked with generating multi-part questions, anywhere between 3 and 5 parts. You can use <QUESTION_X> and </QUESTION_X> tags to encapsulate each part of the question, where X is the part number. The part number must be 'A', 'B', 'C', 'D', or 'E'. Here is a full example output, generating 1 practice problem for the lecture Simplex Method. 
+        multipart_question_prompt = f"""TASK: You will be generating multi-part questions to test comprehension of the {self.content_type.value}. 
+        
+        WHAT TO DO: 
+        1. You must generate at least 3 parts, and at most 5 parts.
+        2. Put the question in <QUESTION_X> and </QUESTION_X> tags, where X is the part number. For example, if you have 3 parts, you must use <QUESTION_A>, <QUESTION_B>, and <QUESTION_C> tags. The part number must be 'A', 'B', 'C', 'D', or 'E'. 
+        3. Put the options in tags corresponding to the answer choice, e.g. <OPTION_A> and </OPTION_A>, with the text describing the option in the center.
+        4. Put the answer in a tag if it is correct and incorrect ones with an explanation in a tag. For example, if answer A is correct, place the explanation in <CORRECT_A> and </CORRECT_A> tags. 
+        5. If the answer is incorrect, place the explanation in <INCORRECT_B> and </INCORRECT_B> tags.
+        6. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question.
+        7. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations.
+        
+        Here is a full example output, generating 1 practice problem for the {self.content_type.value} Simplex Method, with 3 parts. 
 
        YOUR OUTPUT: 
         <OUTPUT>
@@ -93,16 +123,16 @@ class BaseProblemsProcessor(BaseProcessor):
         computational_question_prompt = f"""IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process."""
         
         # single-part, conceptual
-        self.single_part_conceptual_prompt = base_question_prompt + conceptual_question_prompt + default_question_prompt
+        self.single_part_conceptual_prompt = base_question_prompt + quality_prompt + conceptual_question_prompt + single_part_question_prompt
         
         # single-part, computational
-        self.single_part_computational_prompt = base_question_prompt + computational_question_prompt + default_question_prompt
+        self.single_part_computational_prompt = base_question_prompt + quality_prompt + computational_question_prompt + single_part_question_prompt
         
         # multi-part, conceptual
-        self.multi_part_conceptual_prompt = base_question_prompt + conceptual_question_prompt + multipart_question_prompt
+        self.multi_part_conceptual_prompt = base_question_prompt + quality_prompt + conceptual_question_prompt + multipart_question_prompt
         
         # multi-part, computational
-        self.multi_part_computational_prompt = base_question_prompt + computational_question_prompt + multipart_question_prompt
+        self.multi_part_computational_prompt = base_question_prompt + quality_prompt + computational_question_prompt + multipart_question_prompt
         
     
     def _initialize_frq_prompts(self):
@@ -154,6 +184,10 @@ class BaseProblemsProcessor(BaseProcessor):
 
     def _clean_mcq_result(self, result: str, lecture_name: str, tags: list):
         """Clean up the result into the specified question format"""
+        # Remove ```xml from front if it exists and ``` from the end
+        result = re.sub(r'```xml', '', result)
+        result = re.sub(r'```', '', result)
+        
         question_blocks = re.findall(r'<OUTPUT>(.*?)</OUTPUT>', result, re.DOTALL)
         for block in question_blocks:
             if not block.strip():
@@ -165,14 +199,19 @@ class BaseProblemsProcessor(BaseProcessor):
                     multi_part_question_obj = []
                     
                     for letter in ['A', 'B', 'C', 'D', 'E']:
-                        # Pattern to match everything from QUESTION_X to either the next QUESTION_ or the end
-                        pattern = f'<QUESTION_{letter}>(.*?)</QUESTION_{letter}>(.*?)(?=<QUESTION_[A-E]>|$)'
+                        # Update pattern to be less greedy and handle newlines better
+                        pattern = f'<QUESTION_{letter}>(.*?)</QUESTION_{letter}>'
                         part_match = re.search(pattern, block, re.DOTALL)
                         
                         if part_match:
-                            # Group 1 is the question text, Group 2 is everything else
                             question_text = part_match.group(1).strip()
-                            part_block = part_match.group(0)  # Full match including question tags
+                            
+                            # Find slides specifically for this part
+                            part_end = block.find(f'</QUESTION_{letter}>')
+                            next_part_start = block.find(f'<QUESTION_{chr(ord(letter) + 1)}>')
+                            if next_part_start == -1:
+                                next_part_start = len(block)
+                            part_block = block[block.find(f'<QUESTION_{letter}>'):next_part_start]
                             
                             # Extract slide numbers for this part
                             slide_matches = re.findall(r'<SLIDE\s+(\d+)>', part_block)
@@ -180,13 +219,11 @@ class BaseProblemsProcessor(BaseProcessor):
                             
                             # Process this part as a question
                             question_obj = self._process_mcq_block(question_text, part_block, slides, tags)
-                            if question_obj:  # Only append if we got a valid question object
+                            if question_obj:
                                 multi_part_question_obj.append(question_obj)
                     
-                    if len(multi_part_question_obj) > 0:
+                    if multi_part_question_obj:
                         question_objs.append(multi_part_question_obj)
-                    else:
-                        print(f"No questions generated for {lecture_name}. RESULT: {result}")
                 else:
                     # Handle single-part questions
                     slide_matches = re.findall(r'<SLIDE\s+(\d+)>', block)

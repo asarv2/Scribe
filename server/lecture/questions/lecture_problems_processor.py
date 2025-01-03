@@ -100,5 +100,5 @@ class LectureProblemsProcessor(BaseProblemsProcessor):
                 
             # save outputs
             self.save_questions_json()
-            self.save_questions_text()
-            self.save_questions_pdf()
+        self.save_questions_text()
+        self.save_questions_pdf()

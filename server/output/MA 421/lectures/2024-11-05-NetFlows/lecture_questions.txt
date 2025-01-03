@@ -1,180 +1,180 @@
 QUESTION 1
-In the network flow problem depicted in Slide 4, what is the total supply in the network?
-A. 0
-B. 6
-C. 12
-D. 18
-E. 24
-
-ANSWER: A
-
-EXPLANATION:
-A. The total supply is calculated by summing the positive values of $b_i$ (supply) and subtracting the absolute values of negative $b_i$ (demand). In Slide 4, the supply values are 8 and 4, and the demand values are -2, -6, -6, and 5.  Therefore, the total supply is $8 + 4 - |-2| - |-6| - |-6| + |5| = 12 - 2 - 6 - 6 + 5 = 3$. However, the total supply must equal the total demand for a balanced network flow problem. Summing all $b_i$ values gives $8 + 0 + (-2) + (-6) + 0 + 4 + (-5) = -1$. There must be an error in the slide's depiction of the supply/demand values.  If we assume the total supply equals the total demand, then the total supply is 0.
-B. Incorrect. This is not the correct sum of supplies and demands.
-C. Incorrect. This is not the correct sum of supplies and demands.
-D. Incorrect. This is not the correct sum of supplies and demands.
-E. Incorrect. This is not the correct sum of supplies and demands.
-
-
-QUESTION 2
-In the context of minimum-cost network flow problems, what is the significance of the incidence matrix $A$, and how does its structure relate to the flow conservation constraints at each node?
-A. The incidence matrix $A$ is irrelevant to the flow conservation constraints; these constraints are determined solely by the supply/demand vector $b$.
-B. The incidence matrix $A$ represents the network's structure, with each column representing a node and each row representing an arc.  The flow conservation constraints are derived from the dot product of $A$ and the flow vector $x$.
-C. The incidence matrix $A$ represents the network's structure, with each row representing a node and each column representing an arc. The flow conservation constraints are directly encoded in the rows of $A$, with each row summing to zero.
-D. The incidence matrix $A$ represents the network's structure, with each row representing a node and each column representing an arc. The flow conservation constraints are derived from the equation $Ax = b$, where $x$ is the flow vector and $b$ is the supply/demand vector.
-E. The incidence matrix $A$ is a square matrix representing the connectivity of the network. The flow conservation constraints are determined by the eigenvalues of $A$.
-
-ANSWER: D
-
-EXPLANATION:
-A. The supply/demand vector $b$ provides the net supply or demand at each node, but the incidence matrix $A$ is crucial for defining how flows on arcs affect the node balances.
-B. The statement is incorrect because the columns of $A$ represent arcs, not nodes, and the rows represent nodes.
-C. While each row of $A$ represents a node, the rows do not necessarily sum to zero.  The flow conservation constraint is expressed as a balance equation for each node, not simply a row sum.
-D. The incidence matrix $A$ indeed represents the network's structure, with each row corresponding to a node and each column to an arc.  The equation $Ax = b$ directly encodes the flow conservation constraints, where each row represents the balance of inflow and outflow at a particular node.
-E. The incidence matrix is not necessarily square, and its eigenvalues are not directly related to the flow conservation constraints.
-
-
-QUESTION 3
-Why is the rank of the incidence matrix $A$ in a network flow problem equal to $m - 1$, where $m$ is the number of nodes, and what are the implications of this for solving the problem using linear programming?
-A. The rank of $A$ is $m - 1$ because there are $m - 1$ independent flow conservation equations; one equation is redundant due to the overall balance of supply and demand.
-B. The rank of $A$ is $m - 1$ because the incidence matrix is always singular; this means the network flow problem is always infeasible.
-C. The rank of $A$ is $m - 1$ because the network must be connected; otherwise, the problem is not well-defined.
-D. The rank of $A$ is $m - 1$ due to the inherent symmetry of the network; this symmetry simplifies the solution process.
-E. The rank of $A$ being $m - 1$ is a coincidence and has no particular significance for solving the problem.
-
-ANSWER: A
-
-EXPLANATION:
-A. The rank deficiency arises because the sum of all rows in the incidence matrix is always a zero vector, reflecting the overall balance of supply and demand in the network. This redundancy means one flow conservation equation can be removed without losing information, simplifying the linear program.
-B. The singularity of $A$ does not imply infeasibility.  It simply means that one of the flow conservation equations is linearly dependent on the others.
-C. Connectivity is important for the problem to be meaningful, but it doesn't directly explain why the rank is $m-1$.
-D. While network structures can exhibit symmetry, this is not the fundamental reason for the rank deficiency of the incidence matrix.
-E. The rank of the incidence matrix is a crucial property that significantly impacts the solution process of network flow problems.
-
-
-QUESTION 4
-Explain the relationship between spanning trees in a network and bases in the simplex method when solving minimum-cost network flow problems. How does this relationship facilitate the solution process?
-A. There is no relationship between spanning trees and simplex bases; they are entirely separate concepts.
-B. A spanning tree corresponds to a basis in the simplex method, where the arcs in the tree represent basic variables and the arcs not in the tree represent non-basic variables.  This allows for efficient iterative solution using the simplex method.
-C. Spanning trees are used to visualize the network, but they have no direct connection to the simplex method's solution process.
-D. A spanning tree represents a feasible solution, but not necessarily a basic solution, in the simplex method.  The simplex method is used to find a spanning tree that corresponds to an optimal solution.
-E. Spanning trees are only relevant for solving maximum flow problems, not minimum-cost flow problems.
-
-ANSWER: B
-
-EXPLANATION:
-A. The connection between spanning trees and simplex bases is a cornerstone of efficient network flow algorithms.
-B. This option correctly describes the fundamental relationship.  A spanning tree defines a basic feasible solution, where the flows on arcs outside the tree are zero (non-basic variables). The simplex method iteratively improves this solution by changing the spanning tree (basis).
-C. Spanning trees are not merely visual aids; they are directly linked to the algebraic structure of the problem and the simplex method's iterative process.
-D. A spanning tree does correspond to a basic solution, and the simplex method works by changing the spanning tree to improve the solution.
-E. Spanning trees are fundamental to solving both maximum flow and minimum-cost flow problems efficiently.
-
-
-QUESTION 5
-In Slide 2, what is the total supply in the network?
-A. 6
-B. 12
-C. 18
-D. 24
-E. 0
-
-ANSWER: B
-
-EXPLANATION:
-A. This is incorrect. It only considers the supply at node f.
-B. The total supply is the sum of all positive $b_i$ values.  In Slide 2, we have $b_a = 8$, $b_f = 4$. Therefore, the total supply is $8 + 4 = 12$.
-C. This is incorrect. It is not the sum of all supplies.
-D. This is incorrect. It is not the sum of all supplies.
-E. While the total supply equals the total demand, the question asks for the total supply alone.  The total supply is not 0.
-
-
-QUESTION 6
-In Slide 4, what is the total demand in the network?
-A. 6
-B. 12
-C. 18
-D. 24
-E. 0
+In the context of minimum-cost network flow problems, what is the significance of the rank of the incidence matrix A, and how does this relate to the number of independent flow conservation constraints?
+A. The rank of A is always equal to the number of nodes in the network, implying that all flow conservation constraints are independent.
+B. The rank of A is always equal to the number of arcs in the network, implying that all flow conservation constraints are independent.
+C. The rank of A is one less than the number of nodes, indicating that there is one redundant flow conservation constraint.
+D. The rank of A is one less than the number of arcs, indicating that there is one redundant flow conservation constraint.
+E. The rank of A is always full rank, regardless of the network structure, implying that all flow conservation constraints are independent.
 
 ANSWER: C
 
 EXPLANATION:
-A. This is incorrect. It only considers the demand at node c.
-B. This is incorrect. It is not the sum of all demands.
-C. The total demand is the sum of the absolute values of all negative $b_i$ values.  In Slide 4, we have $b_c = -2$, $b_d = -6$, $b_g = -5$. Therefore, the total demand is $|-2| + |-6| + |-5| = 13$.
-D. This is incorrect. It is not the sum of all demands.
-E. While the total supply equals the total demand, the question asks for the total demand alone. The total demand is not 0.
+A. Incorrect. The sum of rows in A is always zero, meaning there's at least one redundant constraint.
+B. Incorrect. The rank is related to the number of nodes, not arcs.
+C. The rank of the incidence matrix A is $m - 1$, where $m$ is the number of nodes. This is because the sum of all rows of A is a zero vector, indicating linear dependence among the rows. Therefore, only $m - 1$ of the flow conservation constraints are independent.
+D. Incorrect. The redundancy is related to the number of nodes, not arcs.
+E. Incorrect. The incidence matrix is always singular (non-full rank) for connected networks.
+
+
+QUESTION 2
+Explain how the complementary slackness condition is applied in the context of minimum-cost network flow problems, and how it relates to the primal and dual solutions.
+A. Complementary slackness states that for any optimal primal solution, all dual slack variables must be zero.
+B. Complementary slackness states that for any optimal dual solution, all primal variables must be zero.
+C. Complementary slackness implies that for each arc, either the primal flow is zero or the dual slack variable is zero (or both).
+D. Complementary slackness is not applicable to network flow problems because they are always feasible.
+E. Complementary slackness implies that the sum of primal flows must equal the sum of dual variables.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect.  It's not that *all* dual slacks are zero, but rather that for each arc, either the primal flow or the dual slack is zero.
+B. Incorrect.  It's not that *all* primal variables are zero, but rather that for each arc, either the primal flow or the dual slack is zero.
+C. In network flow problems, complementary slackness states that for each arc $(i, j)$, the product of the primal flow $x_{ij}$ and the dual slack variable $z_{ij}$ is zero: $x_{ij}z_{ij} = 0$. This means that if there is a positive flow on an arc ($x_{ij} > 0$), then the dual slack must be zero ($z_{ij} = 0$), and vice versa. This condition is crucial for verifying the optimality of a solution.
+D. Incorrect. Complementary slackness is a fundamental concept in linear programming and applies to network flow problems as well.
+E. Incorrect. Complementary slackness relates individual primal and dual variables on each arc, not their sums.
+
+
+QUESTION 3
+In a minimum-cost network flow problem, how is the initial basic feasible solution typically obtained using a spanning tree, and what is the significance of this approach?
+A. The initial solution is obtained by setting all arc flows to zero, regardless of the network structure.
+B. The initial solution is obtained by arbitrarily assigning flows to arcs until flow conservation is satisfied.
+C. The initial solution is obtained by finding a spanning tree and setting flows on arcs in the tree to satisfy flow conservation, while setting flows on arcs outside the tree to zero.
+D. The initial solution is obtained by solving the dual problem first and then using complementary slackness to find the primal flows.
+E. The initial solution is obtained by using a random number generator to assign flows to each arc.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect. This is not a feasible solution in general, as it may not satisfy flow conservation.
+B. Incorrect. This approach is not systematic and may not lead to a basic feasible solution.
+C. A spanning tree is a subgraph that connects all nodes without forming cycles.  By selecting a spanning tree, we can set the flows on the arcs in the tree to satisfy the flow conservation constraints at each node.  The flows on arcs not in the tree are set to zero. This provides a basic feasible solution, which can then be improved using the simplex method or other optimization algorithms.
+D. Incorrect. While the dual problem can provide information, the initial basic feasible solution is typically found directly in the primal space using a spanning tree.
+E. Incorrect. A random approach is not guaranteed to produce a feasible solution, let alone a basic one.
+
+
+QUESTION 4
+Suppose you have a minimum-cost network flow problem formulated as a linear program.  After solving the dual problem, you find that some dual slack variables are negative. What does this indicate about the current primal solution, and what method could be used to improve it?
+A. The primal solution is optimal because the dual problem is feasible.
+B. The primal solution is infeasible, and a Phase I method is needed.
+C. The primal solution is not optimal, and the primal simplex method can be used to improve it.
+D. The primal solution is unbounded, and the problem has no solution.
+E. The primal solution is optimal, but the dual solution is not.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect. Dual feasibility is a necessary but not sufficient condition for primal optimality. Negative dual slacks indicate that the primal solution can be improved.
+B. Incorrect.  Negative dual slacks indicate non-optimality, not infeasibility.  A Phase I method is used to find an initial feasible solution, not to improve a non-optimal solution.
+C. Negative dual slack variables indicate that the current primal solution is not optimal.  The primal simplex method can be applied to iteratively improve the solution by moving to adjacent basic feasible solutions until all dual slacks are non-negative (dual feasibility), which guarantees primal optimality.
+D. Incorrect.  Negative dual slacks indicate non-optimality, not unboundedness.  Unboundedness occurs when the primal objective function can be made arbitrarily small.
+E. Incorrect.  If the primal solution is optimal, then the dual solution must also be optimal, and all dual slacks must be non-negative.
+
+
+QUESTION 5
+In a minimum-cost network flow problem, explain the significance of the rank of the incidence matrix $A$, and how this relates to the number of independent flow conservation constraints.
+A. The rank of $A$ is always equal to the number of nodes, implying all flow conservation constraints are independent.
+B. The rank of $A$ is always $m-1$, where $m$ is the number of nodes, indicating one redundant constraint among the flow conservation equations.
+C. The rank of $A$ is always $n$, where $n$ is the number of arcs, meaning all flow conservation constraints are independent.
+D. The rank of $A$ is dependent on the specific network structure and can vary between $m-1$ and $m$, where $m$ is the number of nodes.
+E. The rank of $A$ is irrelevant to the number of independent flow conservation constraints.
+
+ANSWER: B
+
+EXPLANATION:
+A. Incorrect. The sum of rows in the incidence matrix is always zero, indicating a linear dependency.
+B. The rank of the incidence matrix $A$ in a minimum-cost network flow problem is $m - 1$, where $m$ is the number of nodes. This is because the sum of all rows of $A$ is a zero vector, indicating linear dependence among the rows.  Therefore, only $m - 1$ of the flow conservation constraints are independent.  The remaining constraint is redundant and can be removed without affecting the solution.
+C. Incorrect. The number of arcs ($n$) is not directly related to the rank of the incidence matrix. The rank is determined by the number of nodes and the network's connectivity.
+D. Incorrect. For a connected network, the rank is always $m-1$.  A disconnected network would have a lower rank.
+E. Incorrect. The rank of $A$ is crucial for determining the number of independent constraints and the structure of the problem.
+
+
+QUESTION 6
+In a minimum-cost network flow problem, the incidence matrix A has a specific rank. What is the rank of the incidence matrix A, and how does this relate to the number of independent flow conservation constraints?
+A. The rank of A is equal to the number of nodes in the network.
+B. The rank of A is equal to the number of arcs in the network.
+C. The rank of A is $m-1$, where $m$ is the number of nodes, reflecting one redundant constraint due to flow conservation.
+D. The rank of A is $m$, where $m$ is the number of nodes, implying all flow conservation constraints are independent.
+E. The rank of A is $n-1$, where $n$ is the number of arcs, reflecting one redundant constraint due to flow conservation.
+
+ANSWER: C
+
+EXPLANATION:
+A. Incorrect. While the number of rows in A is equal to the number of nodes, the rows are linearly dependent due to flow conservation, resulting in a lower rank.
+B. Incorrect. The number of columns in A is equal to the number of arcs, but this doesn't determine the rank, which is affected by linear dependence among the rows.
+C. The rank of the incidence matrix A is $m - 1$, where $m$ is the number of nodes. This is because the sum of all rows of A is a zero vector, indicating linear dependence among the rows.  Therefore, only $m - 1$ of the flow conservation constraints are independent.
+D. Incorrect.  The flow conservation constraints are not all independent; one is redundant due to the overall balance of supply and demand.
+E. Incorrect. The rank is related to the number of nodes, not the number of arcs.  The number of arcs influences the number of columns in A, but not its rank.
 
 
 QUESTION 7
-Referring to Slide 5, what is the entry $A_{a,(a,e)}$ in the incidence matrix A?
-A. 1
-B. -1
-C. 0
-D. 2
-E. It is undefined
+In the context of minimum-cost network flow problems, how is the complementary slackness condition applied, and how does it relate to the primal and dual solutions?
+A. Complementary slackness states that for each arc, either the flow is zero or the dual slack is zero, but not both.
+B. Complementary slackness implies that the sum of primal and dual objective function values is always zero.
+C. Complementary slackness is only relevant for the dual problem and doesn't directly involve primal variables.
+D. Complementary slackness requires that all primal and dual variables are strictly positive.
+E. Complementary slackness is not applicable to network flow problems.
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. This would be true if node a were the head of arc (a,e).
-B. According to the definition in Slide 5, $A_{i,(k,l)} = -1$ if $i=k$, $A_{i,(k,l)} = 1$ if $i=l$, and $A_{i,(k,l)} = 0$ otherwise. Since node a is the tail of arc (a,e), the entry is -1.
-C. This would be true if node a were neither the head nor tail of arc (a,e).
-D. There is no such entry in the incidence matrix.
-E. The entry is well-defined according to the definition given in Slide 5.
+A. Complementary slackness, in the context of minimum-cost network flow problems, states that for each arc $(i, j)$, either the flow $x_{ij}$ is zero, or the dual slack variable $z_{ij}$ is zero, but not both. This condition is a necessary and sufficient condition for optimality.
+B. Incorrect.  Complementary slackness relates the primal and dual solutions, but it doesn't imply that their objective function values sum to zero.  Instead, at optimality, the primal objective function value equals the negative of the dual objective function value.
+C. Incorrect. Complementary slackness involves both primal (flow) and dual (node potentials and slacks) variables, linking the primal and dual solutions at optimality.
+D. Incorrect. Complementary slackness allows for primal and dual variables to be zero; it only states that for each arc, the product of the primal flow and the dual slack is zero.
+E. Incorrect. Complementary slackness is a fundamental concept in linear programming and is directly applicable to network flow problems, providing a necessary and sufficient condition for optimality.
 
 
 QUESTION 8
-In Slide 7, what is the dual problem's objective function?
-A. $c^T x$
-B. $-b^T y$
-C. $b^T y$
-D. $Ax = -b$
-E. $A^T y \le c$
+In a minimum-cost network flow problem, how is the initial basic feasible solution typically obtained, and what is the significance of this approach?
+A. The initial solution is always the zero flow on all arcs.
+B. The initial solution is obtained by solving the dual problem first.
+C. The initial solution is obtained by arbitrarily assigning flows to arcs until flow conservation is satisfied.
+D. The initial solution is obtained by finding a spanning tree and assigning flows based on supply/demand at leaf nodes.
+E. An initial basic feasible solution is not necessary for solving minimum-cost network flow problems.
 
-ANSWER: B
+ANSWER: D
 
 EXPLANATION:
-A. This is the primal objective function.
-B. The dual problem in Slide 7 is given as $\max -b^T y$ subject to $A^T y \le c$. Therefore, the objective function is $-b^T y$.
-C. This is the negative of the dual objective function.
-D. This is a constraint in the primal problem.
-E. This is a constraint in the dual problem.
+A. Incorrect. The zero flow solution is a feasible solution, but it's not necessarily a basic feasible solution, which is required for efficient solution methods like the simplex method.
+B. Incorrect. While the dual problem provides valuable information, the initial basic feasible solution is typically found in the primal space using a spanning tree.
+C. Incorrect. Arbitrarily assigning flows may not lead to a feasible solution, and it certainly won't guarantee a basic feasible solution, which is crucial for efficient optimization.
+D. The initial basic feasible solution is typically obtained by finding a spanning tree of the network.  Starting at the leaf nodes (nodes with only one incident arc), flows are assigned based on the supply/demand at those nodes, and then iteratively working inwards towards the root node. This approach ensures a basic feasible solution (a solution with at most $m-1$ non-zero flows, where $m$ is the number of nodes) that can be used as a starting point for optimization algorithms.
+E. Incorrect. An initial basic feasible solution is essential for applying efficient optimization algorithms like the simplex method to solve minimum-cost network flow problems.
 
 
 QUESTION 9
-In the context of minimum-cost network flow problems, what is the significance of the incidence matrix A, and how does its structure relate to the flow conservation constraints at each node?
-A. The incidence matrix A is irrelevant to the flow conservation constraints; they are handled separately.
-B. The incidence matrix A represents the network's structure, and each row's sum, when multiplied by the flow vector, represents the net flow into or out of the corresponding node.
-C. The incidence matrix A is a square matrix whose determinant determines the feasibility of the network flow problem.
-D. The incidence matrix A is used only in the dual formulation of the network flow problem, not the primal.
-E. The incidence matrix A is a diagonal matrix whose diagonal entries represent the capacity of each arc in the network.
+Suppose you have solved the dual problem of a minimum-cost network flow problem, and some dual slack variables are negative. What does this indicate about the current primal solution, and what method could be used to improve it?
+A. The primal solution is optimal.
+B. The primal solution is infeasible.
+C. The primal solution is feasible but not optimal; the primal simplex method can improve it.
+D. The primal solution is unbounded.
+E. The dual problem is infeasible.
 
-ANSWER: B
+ANSWER: C
 
 EXPLANATION:
-A. Incorrect. The incidence matrix is fundamental to representing the flow conservation constraints.  The structure of A directly reflects the connections between nodes and how flow is balanced.
-B. The incidence matrix A encodes the network's topology. Each row corresponds to a node, and the entries in that row indicate the arcs entering and leaving that node.  When multiplied by the flow vector, the row sum represents the net flow into or out of the node, which must equal the node's supply or demand for flow conservation.
-C. Incorrect. The incidence matrix is not square; it has dimensions (number of nodes) x (number of arcs).  Its determinant is not defined, and feasibility is determined by the existence of a non-negative solution to the system $Ax = -b$.
-D. Incorrect. The incidence matrix A is central to both the primal and dual formulations of the network flow problem. It appears in both $Ax = -b$ (primal) and $A^T y \le c$ (dual).
-E. Incorrect. The incidence matrix A is not a diagonal matrix.  Diagonal entries would not represent arc capacities; rather, they would represent the net supply/demand at each node.
+A. Incorrect. Negative dual slacks directly contradict the optimality conditions (complementary slackness).  A solution is only optimal if all dual slacks are non-negative.
+B. Incorrect. Negative dual slacks indicate a suboptimal solution, not an infeasible one.  The primal solution is assumed to be feasible (satisfying flow conservation and non-negativity constraints).
+C. Negative dual slack variables indicate that the current primal solution is not optimal.  Because negative dual slacks violate dual feasibility, the primal solution, while feasible, can be improved. The primal simplex method can be used to iteratively improve the primal solution by moving to an adjacent basic feasible solution with a lower cost.
+D. Incorrect.  An unbounded primal solution would manifest differently, typically with unbounded dual variables, not just negative slacks.
+E. Incorrect.  Negative dual slacks indicate a problem with the primal solution, not the dual problem's feasibility.  The dual problem is assumed to be feasible.
 
 
 QUESTION 10
-In Slide 4, what is the total demand in the network?
-A. 6
-B. 11
-C. 17
-D. 23
-E. 0
+Consider a minimum-cost network flow problem with $m$ nodes and $n$ arcs.  The incidence matrix $A$ is an $m \times n$ matrix.  What is the rank of the incidence matrix $A$, and how does this relate to the number of independent flow conservation constraints?
+A. $m$
+B. $n$
+C. $m-1$
+D. $n-1$
+E. $m+n$
 
-ANSWER: B
+ANSWER: C
 
 EXPLANATION:
-A. The sum of negative values in the $b_i$ vector is not 6.
-B. The total demand is the sum of the negative values in the $b_i$ vector shown in Slide 4.  Adding the negative values (-2) + (-6) + (-6) + (-2) + (-5) = -21. However, the total supply is 23 (8 + 4 + 9 + 2). Since the network is balanced, the total demand must be equal to the total supply, which is 23.  Therefore, the total demand is 23. There seems to be an error in the slide, as the sum of the values shown does not equal zero. The correct answer should be 23, reflecting the balanced nature of the network.
-C. The sum of negative values in the $b_i$ vector is not 17.
-D. The sum of negative values in the $b_i$ vector is not 23.  The question asks for the total demand, which is the sum of the negative values.  The sum of the negative values is -11. However, since the network is balanced, the total demand should equal the total supply.  There is an error in the slide's values.
-E. The network is not balanced, meaning the total supply does not equal the total demand.  The total demand is not 0.
+A. Incorrect. The rank is not $m$ because the rows of the incidence matrix are linearly dependent. The sum of all rows is the zero vector.
+B. Incorrect. The rank is not $n$ because the number of arcs ($n$) is not directly related to the number of independent flow conservation constraints.
+C. The rank of the incidence matrix $A$ is $m-1$. This is because the sum of all rows of $A$ is a zero vector, indicating linear dependence among the rows. Therefore, only $m-1$ rows are linearly independent, representing $m-1$ independent flow conservation constraints.  One constraint is redundant because the total inflow must equal the total outflow in the network.
+D. Incorrect. The rank is not $n-1$. While $n-1$ arcs form a spanning tree, the rank is determined by the number of nodes and the linear dependence of the rows.
+E. Incorrect. The rank is not $m+n$. The rank is determined by the linear independence of the rows of the incidence matrix, which is related to the number of nodes, not the sum of nodes and arcs.
 
 

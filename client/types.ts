@@ -10,3 +10,6 @@ export type Lecture = Database[SchemaName]["Tables"]["lectures"]["Row"]
 export type Topic = Database[SchemaName]["Tables"]["topics"]["Row"]
 export type Question = Database[SchemaName]["Tables"]["questions"]["Row"]
 export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"]
+
+export type Generation = Database[SchemaName]["Tables"]["generations"]["Row"]
+export type GenerationType = "problem" | "summary"

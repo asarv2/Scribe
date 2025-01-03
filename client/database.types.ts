@@ -45,27 +45,100 @@ export type Database = {
         }
         Relationships: []
       }
+      documents: {
+        Row: {
+          created_at: string
+          description: string
+          figures: Json[]
+          id: string
+          latex: string
+          lecture: string
+          page: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          figures?: Json[]
+          id?: string
+          latex?: string
+          lecture: string
+          page: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          figures?: Json[]
+          id?: string
+          latex?: string
+          lecture?: string
+          page?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_lecture_fkey"
+            columns: ["lecture"]
+            isOneToOne: false
+            referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generations: {
+        Row: {
+          class: string
+          created_at: string
+          deleted: boolean
+          id: string
+          name: string
+          type: Database["prod"]["Enums"]["generation_type"]
+        }
+        Insert: {
+          class: string
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          name?: string
+          type?: Database["prod"]["Enums"]["generation_type"]
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          name?: string
+          type?: Database["prod"]["Enums"]["generation_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generations_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lectures: {
         Row: {
           class: string
-          created_at: string | null
-          deleted: boolean | null
+          created_at: string
+          deleted: boolean
           id: string
           name: string | null
           note_number: number | null
         }
         Insert: {
           class: string
-          created_at?: string | null
-          deleted?: boolean | null
+          created_at?: string
+          deleted?: boolean
           id?: string
           name?: string | null
           note_number?: number | null
         }
         Update: {
           class?: string
-          created_at?: string | null
-          deleted?: boolean | null
+          created_at?: string
+          deleted?: boolean
           id?: string
           name?: string | null
           note_number?: number | null
@@ -276,6 +349,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      generation_type: "problem" | "summary"
       question_type: "conceptual" | "computational" | "multi-part"
       topic_type: "group" | "term" | "problem" | "algorithm"
     }

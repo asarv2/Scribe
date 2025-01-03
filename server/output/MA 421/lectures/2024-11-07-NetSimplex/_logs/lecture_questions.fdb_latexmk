@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1735698874.44544 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07-NetSimplex/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735698874.94284 0
-  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07-NetSimplex/lecture_questions.tex" 1735698873.8033 13609 5be12d59596d995c34921f650aee6cc7 ""
+["pdflatex"] 1735921621.23931 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07-NetSimplex/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735921621.7914 0
+  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-07-NetSimplex/lecture_questions.tex" 1735921620.60336 13404 860fbef7fc78e66557c7781845238e17 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -99,9 +99,9 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1733257442.02404 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1733257414 8221420 9fe73b124419eb36a2edd6f23a82e5ea ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "_logs/lecture_questions.aux" 1735698874.88768 585 a47948eeca0cac961e506748ab9ef06b "pdflatex"
-  "_logs/lecture_questions.out" 1735698874.88814 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
-  "lecture_questions.tex" 1735698873.8033 13609 5be12d59596d995c34921f650aee6cc7 ""
+  "_logs/lecture_questions.aux" 1735921621.72968 585 9299ca02057ea1ccb55ecc4573b1ec91 "pdflatex"
+  "_logs/lecture_questions.out" 1735921621.73018 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
+  "lecture_questions.tex" 1735921620.60336 13404 860fbef7fc78e66557c7781845238e17 ""
   (generated)
   "_logs/lecture_questions.aux"
   "_logs/lecture_questions.log"

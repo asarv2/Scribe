@@ -111,7 +111,7 @@ export default function PracticeTopicPage({ params }: { params: { topicId: strin
                             <Link href={`/classes/${params.classId}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}><Latex>{topic?.title || ""} Practice</Latex></Text>
+                            <Text size="xl" fw={700} mb={6}><Latex>{topic?.title || ""}</Latex></Text>
                         </Group>
                         <Group p={"sm"}>
                             <Tooltip label="Download PDF">

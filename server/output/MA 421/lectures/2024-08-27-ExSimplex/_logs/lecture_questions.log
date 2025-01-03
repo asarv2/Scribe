@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 17:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  2 JAN 2025 09:11
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -428,36 +428,165 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 45.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 45.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 50.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 50.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 50.
  [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 84.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 84.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 84.
- [2{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/l
-ocal/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}] [3{/usr/local/texli
-ve/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [4]
+al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
+4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
+st/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
+vips/lm/lm-mathsy.enc}] [2]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:113: Undefined control sequence.
+<recently read> \text 
+                      
+l.113 ... introduced, and how the condition $\text
+                                                  {max } \xi = 0$ relates to...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
--ExSimplex/lecture_questions.tex:187: LaTeX Error: Unicode character ≤ (U+226
-4)
-               not set up for use with LaTeX.
+-ExSimplex/lecture_questions.tex:115: Undefined control sequence.
+<recently read> \text 
+                      
+l.115 ... point for the simplex method, and $\text
+                                                  {max } \xi = 0$ indicates ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.187 ...es transform inequality constraints ($≤
-                                                  $) into equality constrain...
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:116: Undefined control sequence.
+<recently read> \text 
+                      
+l.116 ...ed to check for unboundedness, and $\text
+                                                  {max } \xi = 0$ indicates ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-You may provide a definition with
-\DeclareUnicodeCharacter 
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:117: Undefined control sequence.
+<recently read> \text 
+                      
+l.117 ...to solve the problem directly, and $\text
+                                                  {max } \xi = 0$ is the opt...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-[5] [6] [7] [8] 
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:118: Undefined control sequence.
+<recently read> \text 
+                      
+l.118 ...used to find the dual problem, and $\text
+                                                  {max } \xi = 0$ indicates ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:119: Undefined control sequence.
+<recently read> \text 
+                      
+l.119 ...ed to check for infeasibility, and $\text
+                                                  {max } \xi = 0$ indicates ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:122: Undefined control sequence.
+<recently read> \text 
+                      
+l.122 ...the final objective function value $\text
+                                                  {max } \xi = 0$ and how th...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[3] [4] [5] [6] [7]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:288: Undefined control sequence.
+<recently read> \text 
+                      
+l.288 ... introduced, and how the condition $\text
+                                                  {max } \xi = 0$ relates to...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:294: Undefined control sequence.
+<recently read> \text 
+                      
+l.294 ...nal problem is feasible, not infeasible.}
+                                                  %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:297: Undefined control sequence.
+<recently read> \text 
+                      
+l.297 ...the final objective function value $\text
+                                                  {max } \xi = 0$ and how th...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:300: Undefined control sequence.
+<recently read> \text 
+                      
+l.300 ...ndicates feasibility, not infeasibility.}
+                                                  %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-08-27
+-ExSimplex/lecture_questions.tex:302: Undefined control sequence.
+<recently read> \text 
+                      
+l.302 ...a different property of linear programs.}
+                                                  %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[8] [9] [10] [11] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
@@ -472,13 +601,13 @@ Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
 (rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10357 strings out of 474116
- 160834 string characters out of 5743682
- 1943187 words of memory out of 5000000
- 32394 multiletter control sequences out of 15000+600000
+ 10409 strings out of 474116
+ 161248 string characters out of 5743682
+ 1945187 words of memory out of 5000000
+ 32393 multiletter control sequences out of 15000+600000
  595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,521b,839s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,729b,853s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texm
@@ -486,10 +615,10 @@ f-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/public/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
 lic/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy1
 0.pfb>
-Output written on _logs/lecture_questions.pdf (8 pages, 157550 bytes).
+Output written on _logs/lecture_questions.pdf (11 pages, 179998 bytes).
 PDF statistics:
- 303 PDF objects out of 1000 (max. 8388607)
- 275 compressed objects within 3 object streams
- 181 named destinations out of 1000 (max. 500000)
+ 377 PDF objects out of 1000 (max. 8388607)
+ 345 compressed objects within 4 object streams
+ 234 named destinations out of 1000 (max. 500000)
  17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

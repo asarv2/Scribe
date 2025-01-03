@@ -12,18 +12,55 @@
     align-items: center;
   }
   
+  .classSelector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: var(--mantine-font-size-sm);
+    color: var(--mantine-color-gray-7);
+    border-radius: var(--mantine-radius-sm);
+    
+    &:hover {
+        background-color: var(--mantine-color-gray-0);
+    }
+  }
+  
   .link {
     display: block;
     line-height: 1;
-    padding: rem(8px) rem(12px);
+    padding: 8px 12px;
     border-radius: var(--mantine-radius-sm);
     text-decoration: none;
-    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+    color: var(--mantine-color-gray-7);
     font-size: var(--mantine-font-size-sm);
     font-weight: 500;
 
-    [data-mantine-color-scheme] &[data-active] {
-      background-color: var(--mantine-color-blue-filled);
-      color: var(--mantine-color-white);
+    &:hover {
+        background-color: var(--mantine-color-gray-0);
+    }
+
+    &[data-active] {
+        background-color: var(--mantine-color-blue-0);
+        color: var(--mantine-color-blue-7);
+    }
+  }
+  
+  .profileButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--mantine-color-gray-7);
+    border-radius: var(--mantine-radius-sm);
+    
+    &:hover {
+        background-color: var(--mantine-color-gray-0);
     }
   }

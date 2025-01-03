@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 17:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:26
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -438,9 +438,9 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/f
-onts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
-vips/lm/lm-mathsy.enc}] [2] [3] [4] [5] [6] [7]
+4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
+st/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2024/texmf-dist/fonts/e
+nc/dvips/lm/lm-rm.enc}] [2] [3] [4] [5] [6] [7]
 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
@@ -454,11 +454,11 @@ Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
 Here is how much of TeX's memory you used:
  10305 strings out of 474116
  160434 string characters out of 5743682
- 1944187 words of memory out of 5000000
+ 1943187 words of memory out of 5000000
  32393 multiletter control sequences out of 15000+600000
  595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,649b,713s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,705b,715s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
@@ -467,7 +467,7 @@ s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
 lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7
 .pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr
 /local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on _logs/lecture_questions.pdf (7 pages, 151219 bytes).
+Output written on _logs/lecture_questions.pdf (7 pages, 157848 bytes).
 PDF statistics:
  248 PDF objects out of 1000 (max. 8388607)
  217 compressed objects within 3 object streams

@@ -47,7 +47,7 @@ export default function Class({ params }: { params: { classId: string } }) {
 
     return (
         <>
-            <div style={{ position: "fixed", width: "100vw", zIndex: 100 }} key="header">
+            <div style={{ position: "fixed", width: "100vw", zIndex: 100, top: 0 }} key="header">
                 <HeaderSimple />
             </div>
             <div style={{ width: "100vw", height: "100vh" }} key="map">
@@ -116,8 +116,8 @@ export default function Class({ params }: { params: { classId: string } }) {
                             {openNodeId && map && <NodeDetail lectureIds={flattenMapNode(map).find((node) => node.id === openNodeId)?.lectures ?? []} />}
                         </Suspense>
                     }
-                    <Link href={`${pathname}/practice/${openNodeId}`}>
-                        <Button onClick={close} style={{width: "100%"}}>Practice</Button>
+                    <Link href={`${pathname}/generate/new?topic=${openNodeId}`}>
+                        <Button onClick={close} style={{width: "100%"}}>Generate Problems</Button>
                     </Link>
                 </Stack>
             </Modal>

@@ -1,180 +1,180 @@
 QUESTION 1
-Given the primal problem (P) $\max \quad \zeta = c^T x$ subject to $Ax \le b$ and $x \ge 0$, and its dual problem (D) $\min \quad \xi = b^T y$ subject to $A^T y \ge c$ and $y \ge 0$, as shown in Slide 1, what is the expression for the Lagrangian function $L(x, y)$ used in the derivation of the dual problem?
-A. $L(x, y) = c^T x + y^T (Ax - b)$
-B. $L(x, y) = c^T x - y^T (Ax - b)$
-C. $L(x, y) = c^T x + y^T (b - Ax)$
-D. $L(x, y) = b^T y - x^T (A^T y - c)$
-E. $L(x, y) = b^T y + x^T (A^T y - c)$
+Consider the general linear program (GLP) presented in Slide 2: Maximize $c^T x$ subject to $Ax \le b$ and $x \le u$.  The Lagrangian is formed, incorporating Lagrange multipliers $y$ and $z$. If, during the process of finding the dual, we determine that $c^T - y^T A - z^T \ne 0$, what can we definitively conclude about the dual objective function $\xi(y, z)$, and why?
+A. The dual objective function $\xi(y, z)$ is unbounded below.
+B. The dual objective function $\xi(y, z)$ is unbounded above.
+C. The dual objective function $\xi(y, z)$ is bounded and has a finite minimum value.
+D. The dual objective function $\xi(y, z)$ is bounded and has a finite maximum value.
+E. We cannot conclude anything definitive about the dual objective function without further information.
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. This is incorrect. The signs are reversed in the constraint term. The Lagrangian should be minimized when the constraints are satisfied.
-B. The correct expression for the Lagrangian function is $L(x, y) = c^T x - y^T (Ax - b)$.  The Lagrangian incorporates the objective function and the constraints, with $y$ as Lagrange multipliers for the inequality constraints $Ax \le b$. The negative sign ensures that the Lagrangian is minimized when the constraints are satisfied.
-C. This is incorrect. The signs are reversed in the constraint term. The Lagrangian should be minimized when the constraints are satisfied.
-D. This is incorrect. This expression represents a Lagrangian related to the dual problem, not the primal problem.
-E. This is incorrect. This expression represents a Lagrangian related to the dual problem, not the primal problem, and the signs are reversed.
+A. The condition $c^T - y^T A - z^T \ne 0$ implies that the dual objective function is unbounded below.  In Slide 6, the Lagrangian is minimized with respect to $x$. If $c^T - y^T A - z^T \ne 0$, the term $(c^T - y^T A - z^T)x$ can be made arbitrarily small (approaching $-\infty$) by choosing an appropriate $x$, resulting in an unbounded dual objective function.
+B. The dual problem is a minimization problem.  An unbounded dual objective function would be unbounded below, not above.
+C. If the condition $c^T - y^T A - z^T \ne 0$ holds, the dual objective function is unbounded, so it cannot have a finite minimum value.
+D. The dual problem is a minimization problem, so it cannot have a finite maximum value.
+E. The condition $c^T - y^T A - z^T \ne 0$ directly impacts the unboundedness of the dual objective function, as explained in Slide 6.
 
 
 QUESTION 2
-Explain the significance of introducing the variables $x^+$ and $x^-$ in Slide 2 when transforming the general linear program (MI).
-A. To ensure the objective function remains linear.
-B. To handle unbounded variables and guarantee the existence of a solution.
-C. To simplify the constraint matrix A and make the problem easier to solve.
-D. To convert inequality constraints into equality constraints.
-E. To allow the use of the simplex method directly without further transformations.
+Referring to Slide 1, we have the primal linear program (P): Maximize $\zeta = c^T x$ subject to $Ax \le b$ and $x \ge 0$. The Lagrangian is given by $L(x, y) = c^T x - y^T(Ax - b)$, where $y$ is the Lagrange multiplier. Explain the significance of the non-negativity constraint $y \ge 0$ in the context of the Lagrangian and the derivation of the dual problem.
+A. The constraint $y \ge 0$ ensures the Lagrangian is convex.
+B. The constraint $y \ge 0$ is arbitrary and does not affect the dual problem.
+C. The constraint $y \ge 0$ ensures the dual problem is a minimization problem.
+D. The constraint $y \ge 0$ arises from the inequality constraints $Ax \le b$ in the primal problem and is crucial for ensuring weak duality.
+E. The constraint $y \ge 0$ is necessary for the Lagrangian to be differentiable.
 
-ANSWER: B
+ANSWER: D
 
 EXPLANATION:
-A. While the transformation maintains linearity of the objective function, it's not the primary significance. The main purpose is to handle variables without inherent non-negativity constraints.
-B. The introduction of $x^+ = \max(x, 0)$ and $x^- = \max(-x, 0)$ allows us to represent any real-valued variable $x$ as the difference of two non-negative variables ($x = x^+ - x^-$). This is crucial because the standard form of a linear program requires non-negativity constraints.  Without this transformation, the duality theory presented in the subsequent slides would not directly apply to the general linear program (MI) which does not have the non-negativity constraint on $x$.
-C. The transformation doesn't directly simplify the constraint matrix A. The focus is on the variables, not the matrix itself.
-D. The transformation doesn't directly convert inequality constraints to equality constraints. That happens later in the derivation of the dual.
-E. The transformation is a necessary step before applying duality theory and the simplex method, not a direct application of the simplex method itself.
+A. The Lagrangian's convexity is not directly determined by the non-negativity of $y$.
+B. The constraint $y \ge 0$ is not arbitrary; it's fundamental to the derivation and interpretation of the dual problem.
+C. The dual problem being a minimization problem is a consequence of the primal problem being a maximization problem, not directly due to $y \ge 0$.
+D. The non-negativity constraint $y \ge 0$ is directly linked to the inequality constraints $Ax \le b$ in the primal problem.  When deriving the dual, we consider the inequality $y^T(Ax - b) \le 0$, which holds only if $y \ge 0$. This constraint is essential for establishing weak duality, ensuring that the objective function value of any feasible solution to the primal problem is less than or equal to the objective function value of any feasible solution to the dual problem.
+E. The Lagrangian's differentiability is not directly related to the non-negativity of $y$.
 
 
 QUESTION 3
-In Slide 3, the derivation leads to the condition $A^T y + z \ge c$ and $A^T y + z \le c$.  Explain why this ultimately simplifies to $A^T y + z = c$ in the dual problem (D).
-A. It's a mathematical simplification to reduce the number of constraints.
-B. It's a consequence of the non-negativity constraints on $x^+$ and $x^-$.
-C. It's an assumption made to ensure the dual problem is feasible.
-D. It's a result of minimizing the Lagrangian function with respect to $x$.
-E. It's necessary to ensure strong duality holds between the primal and dual problems.
+Slide 3 shows the derivation of the dual problem from the Lagrangian.  The inequality $(y^T A + z^T)x^+ + (-y^T A - z^T)x^- \le y^T b + z^T u$ is derived.  Explain the significance of the subsequent inequalities $\ge c^T$ and $\ge -c^T$ added under this inequality.
+A. These inequalities are arbitrary and do not affect the final dual problem.
+B. These inequalities ensure the dual problem is feasible.
+C. These inequalities are necessary conditions for strong duality to hold.
+D. These inequalities represent lower bounds on the expression, ensuring that the dual objective function is bounded below.
+E. These inequalities are derived from the objective function of the primal problem and are crucial for deriving the constraints of the dual problem.
 
-ANSWER: D
+ANSWER: E
 
 EXPLANATION:
-A. While it simplifies the constraints, the simplification is a direct consequence of the minimization process, not an arbitrary reduction.
-B. The non-negativity constraints are important, but the equality arises from the minimization of the Lagrangian, not directly from the non-negativity of $x^+$ and $x^-$.
-C. It's not an assumption; it's a direct consequence of the mathematical derivation and the minimization of the Lagrangian.
-D. The derivation in Slide 3 involves minimizing the Lagrangian function.  The condition $A^T y + z \ge c$ arises from the coefficient of $x^+$ and $A^T y + z \le c$ from the coefficient of $x^-$.  To minimize the Lagrangian, the coefficient of $x$ must be zero, which implies $c^T - Y^T A - Z^T = 0$, leading to the equality constraint $A^T y + z = c$ in the dual problem.  If the coefficient were non-zero, the Lagrangian would be unbounded.
-E. While strong duality is related, the equality constraint is a direct result of the minimization process, not a requirement for strong duality to hold.
+A. These inequalities are not arbitrary; they are essential for the derivation.
+B. Feasibility of the dual problem is determined by the constraints, not these inequalities directly.
+C. Strong duality is a consequence of the relationship between the primal and dual optimal values, not a direct result of these inequalities.
+D. These inequalities do not directly ensure the dual objective function is bounded below; that is ensured by the constraints of the dual problem.
+E. The inequalities $\ge c^T$ and $\ge -c^T$ are not arbitrary additions. They are derived from the primal objective function, $c^T x = c^T (x^+ - x^-)$.  To ensure that the inequality derived from the Lagrangian remains valid for all feasible $x^+$, $x^-$, we must have the left-hand side bounded below by $c^T$ (when $x^+ > 0$ and $x^- = 0$) and above by $-c^T$ (when $x^+ = 0$ and $x^- > 0$). This is crucial for deriving the constraints $A^T y + z \ge c$ in the dual problem.
 
 
 QUESTION 4
-In Slide 6, the minimization of the Lagrangian leads to a piecewise function. Explain the significance of the condition $c^T - Y^T A - Z^T = 0$ and its implication for the dual problem.
-A. It ensures the dual problem is always feasible.
-B. It guarantees the existence of a finite optimal solution for the dual problem.
-C. It simplifies the calculation of the dual objective function.
-D. It is a necessary condition for weak duality to hold.
-E. It is a sufficient condition for strong duality to hold.
+In Slide 7, the final dual linear program (D) is presented as: Minimize $b^T y + u^T z$ subject to $A^T y + z = c$ and $y, z \ge 0$.  Explain the economic interpretation of the dual variable $z_i$ if the primal problem represents a production problem where $x_i$ represents the quantity of product $i$ produced, $c_i$ is the profit per unit of product $i$, $A$ represents resource consumption per unit of product, $b$ represents the total available resources, and $u$ represents the production capacity limits for each product.
+A. $z_i$ represents the shadow price of resource $i$.
+B. $z_i$ represents the marginal profit increase from exceeding the production capacity limit for product $i$.
+C. $z_i$ represents the marginal cost of producing one more unit of product $i$.
+D. $z_i$ represents the shadow price of the production capacity limit for product $i$.
+E. $z_i$ represents the unit profit of product $i$.
 
-ANSWER: B
+ANSWER: D
 
 EXPLANATION:
-A. Feasibility is related, but the condition primarily ensures a finite optimal solution, not necessarily feasibility.
-B. If $c^T - Y^T A - Z^T \ne 0$, then the Lagrangian is unbounded below, meaning the dual problem is unbounded.  Therefore, the condition $c^T - Y^T A - Z^T = 0$ is crucial for the dual problem to have a finite optimal solution. This condition directly leads to the constraints of the dual problem, ensuring that the dual objective function is finite and the dual problem is well-defined.
-C. While it simplifies the objective function, the main significance is in ensuring a finite optimal solution.
-D. Weak duality holds regardless of this condition; this condition is about the boundedness of the dual problem.
-E. This is a necessary condition for strong duality, but not sufficient on its own.  Feasibility of both primal and dual problems is also required.
+A. The shadow prices of resources are represented by the dual variables $y_i$.
+B. While $z_i$ relates to production capacity, it represents the shadow price, not the direct marginal profit increase from exceeding the limit.
+C. The marginal cost of production is not directly represented by the dual variables in this formulation.
+D. In this context, the dual variable $z_i$ represents the shadow price of the production capacity limit for product $i$.  It indicates the marginal increase in the objective function (total profit) if the production capacity limit for product $i$ were increased by one unit.  The dual constraint $A^T y + z = c$ reflects the trade-off between using resources ($y$) and exceeding capacity limits ($z$) to maximize profit.
+E. The unit profit of product $i$ is given by $c_i$ in the primal problem.
 
 
 QUESTION 5
-Explain the significance of introducing the variables $x^+$ and $x^-$ in Slide 2 when transforming the general linear program (MI).
-A. To ensure the objective function remains linear.
-B. To handle unbounded variables in the primal problem.
-C. To simplify the derivation of the dual problem.
-D. To convert inequality constraints into equality constraints.
-E. To guarantee the feasibility of the primal problem.
+Consider the general linear program (GLP) presented in Slide 2: Maximize $c^T x$ subject to $Ax \le b$ and $x \le u$. The Lagrangian is formed, incorporating Lagrange multipliers $y$ and $z$.  If, during the process of finding the dual, we determine that $c^T - y^T A - z^T \ne 0$, what can we definitively conclude about the dual objective function $\xi(y, z)$, and why?
+A. The dual objective function $\xi(y, z)$ is unbounded.
+B. The dual objective function $\xi(y, z)$ is bounded.
+C. The dual objective function $\xi(y, z)$ is equal to zero.
+D. The dual objective function $\xi(y, z)$ is infeasible.
+E. We cannot conclude anything definitive about the dual objective function without further information.
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. While the transformation maintains linearity in the objective function, it's not the primary reason for introducing $x^+$ and $x^-$. The main purpose is to handle potentially negative values of $x$.
-B. The introduction of $x^+$ and $x^-$ allows us to represent any real-valued variable $x$ as the difference of two non-negative variables. This is crucial because the standard form of a linear program requires non-negative variables, and the original problem (MI) does not necessarily have this constraint.  By expressing $x = x^+ - x^-$, where $x^+, x^- \ge 0$, we can handle variables that might take on negative values in the original formulation.
-C. The transformation simplifies the derivation, but the core reason is to handle the absence of non-negativity constraints in the original problem.
-D. Slack variables are used to convert inequalities to equalities, but $x^+$ and $x^-$ are used to handle the sign of the variables.
-E. The transformation doesn't guarantee feasibility; it allows us to work with a problem that can be more easily analyzed using duality theory.
+A. The correct answer is A.  If $c^T - y^T A - z^T \ne 0$, it means that the gradient of the Lagrangian with respect to $x$ is not zero.  In the process of deriving the dual, this condition leads to an unbounded dual objective function because the Lagrangian can be made arbitrarily small by choosing appropriate values of $x$.
+B. Incorrect.  The condition $c^T - y^T A - z^T \ne 0$ implies that the dual problem is unbounded, not bounded.
+C. Incorrect. The value of the dual objective function is not necessarily zero; it's unbounded.
+D. Incorrect. Infeasibility of the dual problem is not directly implied by this condition.  The dual problem is unbounded.
+E. Incorrect. The condition $c^T - y^T A - z^T \ne 0$ provides sufficient information to conclude that the dual objective function is unbounded.
 
 
 QUESTION 6
-Given the general linear program (MI) in Slide 2, $\max \quad c^T x$ subject to $Ax \le b$ and $x \le u$, what is the objective function of the transformed problem after introducing the variables $x^+$ and $x^-$?
-A. $c^T x^+$
-B. $c^T x^-$
-C. $c^T (x^+ + x^-)$
-D. $c^T (x^+ - x^-)$
-E. $c^T (x^- - x^+)$
+Consider the general linear program (GLP) presented in Slide 2: Maximize $c^T x$ subject to $Ax \le b$ and $x \le u$. The Lagrangian is formed, incorporating Lagrange multipliers $y$ and $z$. If, during the process of finding the dual, we determine that $c^T - y^T A - z^T \ne 0$, what can we definitively conclude about the dual objective function $\xi(y, z)$, and why?
+A. The dual objective function $\xi(y, z)$ is unbounded below.
+B. The dual objective function $\xi(y, z)$ is unbounded above.
+C. The dual objective function $\xi(y, z)$ is equal to zero.
+D. The dual objective function $\xi(y, z)$ is bounded and has a finite minimum value.
+E. We cannot conclude anything definitive about the dual objective function $\xi(y, z)$ without further information.
 
-ANSWER: D
+ANSWER: A
 
 EXPLANATION:
-A. This only considers the positive part of x.
-B. This only considers the negative part of x.
-C. This uses the sum instead of the difference.
-D. The transformation in Slide 2 replaces $x$ with $x^+ - x^-$. Therefore, the objective function becomes $c^T(x^+ - x^-)$.
-E. This uses the opposite difference.
+A. The condition $c^T - y^T A - z^T \ne 0$ implies that the dual objective function is unbounded below.  In the derivation of the dual, this term multiplies the primal variable $x$ in the Lagrangian. If this term is non-zero, the Lagrangian can be made arbitrarily small by choosing an appropriate value of $x$, leading to an unbounded dual objective function.
+B. The dual objective function is a minimization problem.  If it were unbounded, it would be unbounded below, not above.
+C. There's no reason to believe the dual objective function would be zero. The condition only tells us about boundedness.
+D. The condition implies the opposite: the dual is unbounded.
+E. The condition $c^T - y^T A - z^T \ne 0$ directly impacts the unboundedness of the dual objective function.
 
 
 QUESTION 7
-In Slide 3, the derivation of the dual problem involves the inequalities $(y^T A + z^T)x^+ + (-y^T A - z^T)x^- \le y^T b + z^T u$.  What condition is ultimately imposed to simplify the constraints of the dual problem?
-A. $y^T A + z^T \ge 0$
-B. $y^T A + z^T \le 0$
-C. $A^T y + z \ge c$
-D. $A^T y + z = c$
-E. $y^T b + z^T u = 0$
-
-ANSWER: D
-
-EXPLANATION:
-A. This is a condition on the coefficients, not the final constraint.
-B. This is a condition on the coefficients, not the final constraint.
-C. This is one of the intermediate inequalities, not the final simplification.
-D. The slide shows that the condition $A^T y + z \le c$ and $A^T y + z \ge c$ are combined to yield $A^T y + z = c$, simplifying the dual problem's constraints.
-E. This is a condition on the objective function, not the constraints.
-
-
-QUESTION 8
-Referring to Slide 4, what is the Lagrangian function, $L(x, y, z)$, for the linear program (M2) given by $\max \quad c^T x$ subject to $Ax \le b$ and $x \le u$?
-A. $L(x, y, z) = c^T x + y^T (Ax - b) + z^T (x - u)$
-B. $L(x, y, z) = c^T x - y^T (Ax - b) - z^T (x - u)$
-C. $L(x, y, z) = c^T x + y^T (Ax + b) + z^T (x + u)$
-D. $L(x, y, z) = c^T x - y^T (Ax + b) - z^T (x + u)$
-E. $L(x, y, z) = y^T (Ax - b) + z^T (x - u)$
-
-ANSWER: B
-
-EXPLANATION:
-A. Incorrect signs for the constraints in the Lagrangian.
-B. The Lagrangian function correctly incorporates the objective function and constraints with Lagrange multipliers $y$ and $z$.
-C. Incorrect signs for the constraints and b and u.
-D. Incorrect signs for the constraints and b and u.
-E. Missing the objective function.
-
-
-QUESTION 9
-In Slide 6, the minimization of the Lagrangian leads to a piecewise function. What condition must be satisfied for the minimum value of the Lagrangian to be finite (not $+\infty$)?
-A. $c^T - Y^T A - Z^T > 0$
-B. $c^T - Y^T A - Z^T < 0$
-C. $c^T - Y^T A - Z^T = 0$
-D. $Y^T b + Z^T u > 0$
-E. $Y^T b + Z^T u < 0$
+Referring to Slide 1, we have the primal linear program (P): Maximize $\zeta = c^T x$ subject to $Ax \le b$ and $x \ge 0$. The Lagrangian is given by $L(x, y) = c^T x - y^T(Ax - b)$, where $y$ is the Lagrange multiplier. Explain the significance of the non-negativity constraint $y \ge 0$ in the context of the Lagrangian and the derivation of the dual problem.
+A. The constraint $y \ge 0$ is arbitrary and does not affect the derivation of the dual problem.
+B. The constraint $y \ge 0$ ensures that the Lagrangian remains a convex function.
+C. The constraint $y \ge 0$ is necessary to guarantee the feasibility of the dual problem.
+D. The constraint $y \ge 0$ arises from the requirement that the dual problem is a minimization problem.
+E. The constraint $y \ge 0$ is a consequence of the non-negativity constraint $x \ge 0$ in the primal problem.
 
 ANSWER: C
 
 EXPLANATION:
-A. This condition leads to an unbounded solution.
-B. This condition leads to an unbounded solution.
-C. Only when $c^T - Y^T A - Z^T = 0$ does the minimum value become $Y^T b + Z^T u$; otherwise, it's unbounded.
-D. This is a condition on the objective function value, not the constraint for finiteness.
-E. This is a condition on the objective function value, not the constraint for finiteness.
+A. The constraint is not arbitrary; it's essential for the derivation and feasibility of the dual.
+B. While the Lagrangian's properties are important, the non-negativity constraint on $y$ is primarily about feasibility, not convexity.
+C. The non-negativity constraint $y \ge 0$ is crucial for the feasibility of the dual problem.  The dual problem is derived by minimizing the Lagrangian with respect to $x$ and then maximizing the resulting expression with respect to $y$.  The constraint $y \ge 0$ ensures that the dual problem remains a well-defined minimization problem with a feasible region. Without this constraint, the dual problem might be unbounded or infeasible.
+D. The constraint $y \ge 0$ is not a direct consequence of the dual being a minimization problem; it's a consequence of the derivation process and the nature of the constraints in the primal problem.
+E. While there's a relationship between the constraints in the primal and dual problems, the non-negativity of $y$ is not a direct consequence of the non-negativity of $x$. It's a consequence of the Lagrangian's structure and the desire for a feasible dual problem.
+
+
+QUESTION 8
+Slide 3 shows the derivation of the dual problem from the Lagrangian. The inequality $(y^T A + z^T)x^+ + (-y^T A - z^T)x^- \le y^T b + z^T u$ is derived. Explain the significance of the subsequent inequalities $\ge c^T$ and $\ge -c^T$ added under this inequality.
+A. These inequalities are added to ensure the dual problem is feasible.
+B. These inequalities are arbitrary and do not affect the final dual problem.
+C. These inequalities are necessary to bound the objective function of the dual problem.
+D. These inequalities are used to simplify the derivation and are not essential to the final result.
+E. These inequalities arise from the non-negativity constraints on $x^+$ and $x^-$ in the primal problem.
+
+ANSWER: C
+
+EXPLANATION:
+A. Feasibility is ensured by the constraints $y \ge 0$ and $z \ge 0$, not these additional inequalities.
+B. These inequalities are not arbitrary; they are essential for deriving a well-defined dual problem.
+C. The inequalities $\ge c^T$ and $\ge -c^T$ are crucial for bounding the objective function of the dual problem.  The original inequality involves both $x^+$ and $x^-$. To obtain a meaningful dual problem, we need to ensure that the expression is bounded from below.  The inequalities $\ge c^T$ and $\ge -c^T$ provide these bounds, leading to the final form of the dual objective function and constraints.
+D. These inequalities are not merely for simplification; they are fundamental to the derivation of the dual objective function.
+E. While the non-negativity of $x^+$ and $x^-$ is important, the inequalities $\ge c^T$ and $\ge -c^T$ are not a direct consequence of these constraints. They are a consequence of the need to bound the expression to derive a meaningful dual problem.
+
+
+QUESTION 9
+In Slide 7, the final dual linear program (D) is presented as: Minimize $b^T y + u^T z$ subject to $A^T y + z = c$ and $y, z \ge 0$. Explain the economic interpretation of the dual variable $z_i$ if the primal problem represents a production problem where $x_i$ represents the quantity of product $i$ produced, $c_i$ is the profit per unit of product $i$, $A$ represents resource consumption per unit of product, $b$ represents the total available resources, and $u$ represents the production capacity limits for each product.
+A. $z_i$ represents the shadow price of resource $i$.
+B. $z_i$ represents the marginal profit of product $i$.
+C. $z_i$ represents the shadow price of the production capacity limit for product $i$.
+D. $z_i$ represents the cost of producing one unit of product $i$.
+E. $z_i$ represents the total profit from selling all units of product $i$.
+
+ANSWER: C
+
+EXPLANATION:
+A. Shadow prices are associated with resource constraints, not production capacity limits.
+B. Marginal profit is already represented by $c_i$ in the primal problem.
+C. In this economic interpretation of the production problem, $z_i$ represents the shadow price of the production capacity limit for product $i$.  The dual variable $z_i$ is associated with the constraint $x_i \le u_i$, which limits the production of product $i$.  The value of $z_i$ indicates how much the optimal objective function value (total profit) would increase if the production capacity limit $u_i$ were increased by one unit.
+D. The cost of production is not directly represented by the dual variables.
+E. The total profit from selling all units of product $i$ is given by $c_i x_i$, not $z_i$.
 
 
 QUESTION 10
-Given the general linear program (MI) in Slide 2, $\max \quad c^T x$ subject to $Ax \le b$ and $x \le u$, what is the objective function of the transformed problem after introducing the variables $x^+$ and $x^-$?
-A. $c^T x^+$
-B. $c^T x^-$
-C. $c^T (x^+ + x^-)$
-D. $c^T (x^+ - x^-)$
-E. $c^T (x^- - x^+)$
+Consider the general linear program (GLP) presented in Slide 2: Maximize $c^T x$ subject to $Ax \le b$ and $x \le u$. The Lagrangian is formed, incorporating Lagrange multipliers $y$ and $z$.  If, during the process of finding the dual, we determine that $c^T - y^T A - z^T \ne 0$, what can we definitively conclude about the dual objective function $\xi(y, z)$, and why?
+A. The dual objective function $\xi(y, z)$ is unbounded below.
+B. The dual objective function $\xi(y, z)$ is unbounded above.
+C. The dual objective function $\xi(y, z)$ is bounded and has a finite minimum value.
+D. The dual objective function $\xi(y, z)$ is bounded and has a finite maximum value.
+E. We cannot conclude anything definitive about the dual objective function without further information.
 
-ANSWER: D
+ANSWER: A
 
 EXPLANATION:
-A. Answer A is incorrect. This only considers the positive part of x, ignoring the negative part.
-B. Answer B is incorrect. This only considers the negative part of x, ignoring the positive part.
-C. Answer C is incorrect. This sums the positive and negative parts, which is not the correct transformation.
-D. Answer D is correct.  The transformation in Slide 2 replaces $x$ with $x^+ - x^-$, directly substituting this into the original objective function $c^T x$ yields $c^T (x^+ - x^-)$.
-E. Answer E is incorrect. This subtracts the positive part from the negative part, reversing the correct transformation.
+A. The condition $c^T - y^T A - z^T \ne 0$ implies that the dual objective function is unbounded below.  In the derivation of the dual, this term multiplies the primal variable $x$ in the Lagrangian. If this term is non-zero, the objective function can be made arbitrarily small by choosing appropriately large values of $x$, leading to an unbounded dual objective function.
+B. The dual problem is a minimization problem.  An unbounded dual would be unbounded below, not above.
+C. If the term is non-zero, the dual is unbounded below.
+D. The dual problem is a minimization problem.  An unbounded dual would be unbounded below, not above.
+E. The condition provides sufficient information to determine that the dual is unbounded below.
 
 

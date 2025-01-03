@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 17:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:26
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -434,30 +434,61 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 48.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 48.
- [1
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:48: LaTeX Error: Environment bmatrix undef
+ined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.48 ...gmented constraint matrix $\begin{bmatrix}
+                                                   A & I \end{bmatrix}$, whe...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:48: Misplaced alignment tab character &.
+l.48 ...ted constraint matrix $\begin{bmatrix} A &
+                                                   I \end{bmatrix}$, where $...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:48: LaTeX Error: \begin{enumerate} on inpu
+t line 47 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.48 ...atrix $\begin{bmatrix} A & I \end{bmatrix}
+                                                  $, where $A$ is the origin...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/f
-onts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
-vips/lm/lm-mathsy.enc}]
+4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
+st/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2024/texmf-dist/fonts/e
+nc/dvips/lm/lm-rm.enc}]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Misplaced alignment tab character &.
-l.102 ... transformed from $\begin{pmatrix} \max &
-                                                   \xi(x) = c^T x \\ \text{s...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Undefined control sequence.
-<recently read> \text 
-                      
-l.102 ...n{pmatrix} \max & \xi(x) = c^T x \\ \text
-                                                  {s.t.} & Ax + W = b \\ & x...
+-SimplexMatrix/lecture_questions.tex:114: Undefined control sequence.
+l.114 ...me $Ax + I_m w = b$, where $x \in \mathbb
+                                                  {R}^n$ are the decision va...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -465,46 +496,9 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Misplaced alignment tab character &.
-l.102 ...x} \max & \xi(x) = c^T x \\ \text{s.t.} &
-                                                   Ax + W = b \\ & x, W \ge ...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Misplaced alignment tab character &.
-<recently read> &
-                 
-l.102 ... = c^T x \\ \text{s.t.} & Ax + W = b \\ &
-                                                   x, W \ge 0 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Misplaced alignment tab character &.
-l.102 ...\end{pmatrix}$ to $\begin{pmatrix} \max &
-                                                   \xi(x) = \bar{\beta} + \b...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Undefined control sequence.
-<recently read> \text 
-                      
-l.102 ...i(x) = \bar{\beta} + \bar{c}^T x \\ \text
-                                                  {s.t.} & Ax + W = b \\ & x...
+-SimplexMatrix/lecture_questions.tex:114: Undefined control sequence.
+l.114 ...re the decision variables, $w \in \mathbb
+                                                  {R}^m$ are the slack varia...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -512,9 +506,76 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Misplaced alignment tab character &.
-l.102 ...bar{\beta} + \bar{c}^T x \\ \text{s.t.} &
-                                                   Ax + W = b \\ & x, W \ge ...
+-SimplexMatrix/lecture_questions.tex:114: Undefined control sequence.
+l.114 ...$ are the slack variables, $A \in \mathbb
+                                                  {R}^{m \times n}$ is the c...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:114: Undefined control sequence.
+l.114 ...es m$ identity matrix, and $b \in \mathbb
+                                                  {R}^m$ is the right-hand s...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:114: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.114 ...e variable vector as $X = \begin{bmatrix}
+                                                   x \\ w \end{bmatrix}$, wh...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:114: LaTeX Error: \begin{enumerate} on inp
+ut line 47 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.114 ...$X = \begin{bmatrix} x \\ w \end{bmatrix}
+                                                  $, what is the dimension o...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:114: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.114 ...mented constraint matrix $\begin{bmatrix}
+                                                   A & I_m \end{bmatrix}$?%
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:114: Misplaced alignment tab character &.
+l.114 ...ed constraint matrix $\begin{bmatrix} A &
+                                                   I_m \end{bmatrix}$?%
 I can't figure out why you would want to use a tab mark
 here. If you just want an ampersand, the remedy is
 simple: Just type `I\&' now. But if some right brace
@@ -522,48 +583,285 @@ up above has ended a previous alignment prematurely,
 you're probably due for more error messages, and you
 might try typing `S' now just to see what is salvageable.
 
+
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:102: Misplaced alignment tab character &.
-<recently read> &
-                 
-l.102 ...r{c}^T x \\ \text{s.t.} & Ax + W = b \\ &
-                                                   x, W \ge 0 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+-SimplexMatrix/lecture_questions.tex:114: LaTeX Error: \begin{enumerate} on inp
+ut line 47 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.114 ...ix $\begin{bmatrix} A & I_m \end{bmatrix}
+                                                  $?%
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
 
 [2]
+
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:111: Undefined control sequence.
-l.111 ...ation (1) shows $BX_B + NX_N = b \implies
-                                                   X_B = B^{-1}b - B^{-1}NX_...
+-SimplexMatrix/lecture_questions.tex:141: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.141 ...ressed in matrix form as $\begin{bmatrix}
+                                                   B & N \end{bmatrix} \begi...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:141: Misplaced alignment tab character &.
+l.141 ...ed in matrix form as $\begin{bmatrix} B &
+                                                   N \end{bmatrix} \begin{bm...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:141: LaTeX Error: \begin{enumerate} on inp
+ut line 47 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.141 ...m as $\begin{bmatrix} B & N \end{bmatrix}
+                                                   \begin{bmatrix} X_B \\ X_...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:141: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.141 ...trix} B & N \end{bmatrix} \begin{bmatrix}
+                                                   X_B \\ X_N \end{bmatrix} ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:141: LaTeX Error: \begin{enumerate} on inp
+ut line 47 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.141 ... \begin{bmatrix} X_B \\ X_N \end{bmatrix}
+                                                   = b$, where $B$ and $N$ a...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:141: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.141 ... of the augmented matrix $\begin{bmatrix}
+                                                   A & I_m \end{bmatrix}$ co...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:141: Misplaced alignment tab character &.
+l.141 ...the augmented matrix $\begin{bmatrix} A &
+                                                   I_m \end{bmatrix}$ corres...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:141: LaTeX Error: \begin{enumerate} on inp
+ut line 47 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.141 ...ix $\begin{bmatrix} A & I_m \end{bmatrix}
+                                                  $ corresponding to basic a...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:152: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.152 ...ented constraint matrix $ \begin{bmatrix}
+                                                   A & I \end{bmatrix} $, wh...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:152: Misplaced alignment tab character &.
+l.152 ...d constraint matrix $ \begin{bmatrix} A &
+                                                   I \end{bmatrix} $, where ...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:152: LaTeX Error: \begin{enumerate} on inp
+ut line 151 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.152 ...rix $ \begin{bmatrix} A & I \end{bmatrix}
+                                                   $, where $ A $ is the ori...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[3] [4]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:187: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.187 ...mented constraint matrix $\begin{bmatrix}
+                                                   A & I \end{bmatrix}$, whe...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:187: Misplaced alignment tab character &.
+l.187 ...ed constraint matrix $\begin{bmatrix} A &
+                                                   I \end{bmatrix}$, where $...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:187: LaTeX Error: \begin{enumerate} on inp
+ut line 186 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.187 ...trix $\begin{bmatrix} A & I \end{bmatrix}
+                                                  $, where $A$ is the origin...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:190: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.190 ...re, the augmented matrix $\begin{bmatrix}
+                                                   A & I \end{bmatrix}$ has ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:190: Misplaced alignment tab character &.
+l.190 ...the augmented matrix $\begin{bmatrix} A &
+                                                   I \end{bmatrix}$ has dime...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:190: LaTeX Error: \begin{enumerate} on inp
+ut line 188 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.190 ...trix $\begin{bmatrix} A & I \end{bmatrix}
+                                                  $ has dimensions $m \times...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[5] [6]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:253: Undefined control sequence.
+l.253 ...me $Ax + I_m w = b$, where $x \in \mathbb
+                                                  {R}^n$ are the decision va...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[3] [4] [5]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Misplaced alignment tab character &.
-l.199 ... transformed from $\begin{pmatrix} \max &
-                                                   \xi(x) = c^T x \\ \text{s...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Undefined control sequence.
-<recently read> \text 
-                      
-l.199 ...n{pmatrix} \max & \xi(x) = c^T x \\ \text
-                                                  {s.t.} & Ax + W = b \\ & x...
+-SimplexMatrix/lecture_questions.tex:253: Undefined control sequence.
+l.253 ...re the decision variables, $w \in \mathbb
+                                                  {R}^m$ are the slack varia...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -571,46 +869,9 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Misplaced alignment tab character &.
-l.199 ...x} \max & \xi(x) = c^T x \\ \text{s.t.} &
-                                                   Ax + W = b \\ & x, W \ge ...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Misplaced alignment tab character &.
-<recently read> &
-                 
-l.199 ... = c^T x \\ \text{s.t.} & Ax + W = b \\ &
-                                                   x, W \ge 0 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Misplaced alignment tab character &.
-l.199 ...\end{pmatrix}$ to $\begin{pmatrix} \max &
-                                                   \xi(x) = \bar{\beta} + \b...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Undefined control sequence.
-<recently read> \text 
-                      
-l.199 ...i(x) = \bar{\beta} + \bar{c}^T x \\ \text
-                                                  {s.t.} & Ax + W = b \\ & x...
+-SimplexMatrix/lecture_questions.tex:253: Undefined control sequence.
+l.253 ...$ are the slack variables, $A \in \mathbb
+                                                  {R}^{m \times n}$ is the c...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -618,57 +879,477 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Misplaced alignment tab character &.
-l.199 ...bar{\beta} + \bar{c}^T x \\ \text{s.t.} &
-                                                   Ax + W = b \\ & x, W \ge ...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:199: Misplaced alignment tab character &.
-<recently read> &
-                 
-l.199 ...r{c}^T x \\ \text{s.t.} & Ax + W = b \\ &
-                                                   x, W \ge 0 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
--SimplexMatrix/lecture_questions.tex:208: Undefined control sequence.
-l.208 ...ation (1) shows $BX_B + NX_N = b \implies
-                                                   X_B = B^{-1}b - B^{-1}NX_...
+-SimplexMatrix/lecture_questions.tex:253: Undefined control sequence.
+l.253 ...es m$ identity matrix, and $b \in \mathbb
+                                                  {R}^m$ is the right-hand s...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[6] [7] 
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:253: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.253 ...e variable vector as $X = \begin{bmatrix}
+                                                   x \\ w \end{bmatrix}$, wh...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:253: LaTeX Error: \begin{enumerate} on inp
+ut line 186 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.253 ...$X = \begin{bmatrix} x \\ w \end{bmatrix}
+                                                  $, what is the dimension o...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:253: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.253 ...mented constraint matrix $\begin{bmatrix}
+                                                   A & I_m \end{bmatrix}$?%
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:253: Misplaced alignment tab character &.
+l.253 ...ed constraint matrix $\begin{bmatrix} A &
+                                                   I_m \end{bmatrix}$?%
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:253: LaTeX Error: \begin{enumerate} on inp
+ut line 186 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.253 ...ix $\begin{bmatrix} A & I_m \end{bmatrix}
+                                                  $?%
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:257: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.257 ...mented constraint matrix $\begin{bmatrix}
+                                                   A & I_m \end{bmatrix}$ ha...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:257: Misplaced alignment tab character &.
+l.257 ...ed constraint matrix $\begin{bmatrix} A &
+                                                   I_m \end{bmatrix}$ has $m...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:257: LaTeX Error: \begin{enumerate} on inp
+ut line 254 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.257 ...ix $\begin{bmatrix} A & I_m \end{bmatrix}
+                                                  $ has $m$ rows (from the o...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[7]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.280 ...ressed in matrix form as $\begin{bmatrix}
+                                                   B & N \end{bmatrix} \begi...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: Misplaced alignment tab character &.
+l.280 ...ed in matrix form as $\begin{bmatrix} B &
+                                                   N \end{bmatrix} \begin{bm...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: LaTeX Error: \begin{enumerate} on inp
+ut line 186 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.280 ...m as $\begin{bmatrix} B & N \end{bmatrix}
+                                                   \begin{bmatrix} X_B \\ X_...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.280 ...trix} B & N \end{bmatrix} \begin{bmatrix}
+                                                   X_B \\ X_N \end{bmatrix} ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: LaTeX Error: \begin{enumerate} on inp
+ut line 186 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.280 ... \begin{bmatrix} X_B \\ X_N \end{bmatrix}
+                                                   = b$, where $B$ and $N$ a...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.280 ... of the augmented matrix $\begin{bmatrix}
+                                                   A & I_m \end{bmatrix}$ co...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: Misplaced alignment tab character &.
+l.280 ...the augmented matrix $\begin{bmatrix} A &
+                                                   I_m \end{bmatrix}$ corres...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:280: LaTeX Error: \begin{enumerate} on inp
+ut line 186 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.280 ...ix $\begin{bmatrix} A & I_m \end{bmatrix}
+                                                  $ corresponding to basic a...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:291: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.291 ...ented constraint matrix $ \begin{bmatrix}
+                                                   A & I \end{bmatrix} $, wh...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:291: Misplaced alignment tab character &.
+l.291 ...d constraint matrix $ \begin{bmatrix} A &
+                                                   I \end{bmatrix} $, where ...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:291: LaTeX Error: \begin{enumerate} on inp
+ut line 290 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.291 ...rix $ \begin{bmatrix} A & I \end{bmatrix}
+                                                   $, where $ A $ is the ori...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:294: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.294 ...s, the augmented matrix $ \begin{bmatrix}
+                                                   A & I \end{bmatrix} $ bec...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:294: Misplaced alignment tab character &.
+l.294 ...he augmented matrix $ \begin{bmatrix} A &
+                                                   I \end{bmatrix} $ becomes...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:294: LaTeX Error: \begin{enumerate} on inp
+ut line 292 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.294 ...rix $ \begin{bmatrix} A & I \end{bmatrix}
+                                                   $ becomes 3x5 (3 constrai...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[8]
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 ...the constraint equation $ \begin{bmatrix}
+                                                   A & I \end{bmatrix} \begi...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: Misplaced alignment tab character &.
+l.303 ...constraint equation $ \begin{bmatrix} A &
+                                                   I \end{bmatrix} \begin{bm...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: LaTeX Error: \begin{enumerate} on inp
+ut line 301 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 ...ion $ \begin{bmatrix} A & I \end{bmatrix}
+                                                   \begin{bmatrix} X \\ W \e...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 ...trix} A & I \end{bmatrix} \begin{bmatrix}
+                                                   X \\ W \end{bmatrix} = b ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: LaTeX Error: \begin{enumerate} on inp
+ut line 301 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 ...rix} \begin{bmatrix} X \\ W \end{bmatrix}
+                                                   = b $ as $ BX_B + NX_N = ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: LaTeX Error: Environment bmatrix unde
+fined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 ...contains the columns of $ \begin{bmatrix}
+                                                   A & I \end{bmatrix} $ cor...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: Misplaced alignment tab character &.
+l.303 ...ains the columns of $ \begin{bmatrix} A &
+                                                   I \end{bmatrix} $ corresp...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-24
+-SimplexMatrix/lecture_questions.tex:303: LaTeX Error: \begin{enumerate} on inp
+ut line 301 ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.303 ... of $ \begin{bmatrix} A & I \end{bmatrix}
+                                                   $ corresponding to basic ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[9] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
 (rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10308 strings out of 474116
- 160502 string characters out of 5743682
- 1943187 words of memory out of 5000000
+ 10362 strings out of 474116
+ 160930 string characters out of 5743682
+ 1944187 words of memory out of 5000000
  32396 multiletter control sequences out of 15000+600000
  595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,780b,713s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,799b,851s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
@@ -677,10 +1358,10 @@ s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
 lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7
 .pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr
 /local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on _logs/lecture_questions.pdf (7 pages, 172404 bytes).
+Output written on _logs/lecture_questions.pdf (9 pages, 183864 bytes).
 PDF statistics:
- 248 PDF objects out of 1000 (max. 8388607)
- 217 compressed objects within 3 object streams
- 130 named destinations out of 1000 (max. 500000)
+ 319 PDF objects out of 1000 (max. 8388607)
+ 286 compressed objects within 3 object streams
+ 184 named destinations out of 1000 (max. 500000)
  17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

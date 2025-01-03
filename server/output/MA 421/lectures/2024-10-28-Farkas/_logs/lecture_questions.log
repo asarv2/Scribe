@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 20:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:26
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -439,264 +439,71 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
 4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
-st/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
-vips/lm/lm-mathsy.enc}]
+st/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2024/texmf-dist/fonts/e
+nc/dvips/lm/lm-rm.enc}] [2]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:124: Misplaced alignment tab character &.
-l.124 \item $A = \begin{pmatrix} 1 &
-                                     2 \\ 3 & 1 \end{pmatrix}, b = \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+-Farkas/lecture_questions.tex:134: Undefined control sequence.
+l.134 ...g holds: (F1) There exists $x \in \mathbb
+                                                  {R}^n$ such that $Ax = b$ ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:124: Misplaced alignment tab character &.
-l.124 \item $A = \begin{pmatrix} 1 & 2 \\ 3 &
-                                              1 \end{pmatrix}, b = \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+-Farkas/lecture_questions.tex:134: Undefined control sequence.
+l.134 ... \ge 0$; (F2) There exists $y \in \mathbb
+                                                  {R}^m$ such that $y^T A \g...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-[2]
+[3] [4]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:125: Misplaced alignment tab character &.
-l.125 \item $A = \begin{pmatrix} 1 &
-                                     3 \\ 2 & 1 \end{pmatrix}, b = \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+-Farkas/lecture_questions.tex:221: Undefined control sequence.
+l.221 ...only if every non-negative $y \in \mathbb
+                                                  {R}^m$ with $y^T A = 0^T$ ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
+[5]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:125: Misplaced alignment tab character &.
-l.125 \item $A = \begin{pmatrix} 1 & 3 \\ 2 &
-                                              1 \end{pmatrix}, b = \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+-Farkas/lecture_questions.tex:246: Undefined control sequence.
+l.246 ...g holds: (F1) There exists $x \in \mathbb
+                                                  {R}^n$ such that $Ax = b$ ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:126: Misplaced alignment tab character &.
-l.126 \item $A = \begin{pmatrix} 1 &
-                                     2 \\ 3 & 1 \end{pmatrix}, b = \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+-Farkas/lecture_questions.tex:246: Undefined control sequence.
+l.246 ... \ge 0$; (F2) There exists $y \in \mathbb
+                                                  {R}^m$ such that $y^T A \g...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:126: Misplaced alignment tab character &.
-l.126 \item $A = \begin{pmatrix} 1 & 2 \\ 3 &
-                                              1 \end{pmatrix}, b = \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+-Farkas/lecture_questions.tex:259: Undefined control sequence.
+l.259 ... only if every nonnegative $y \in \mathbb
+                                                  {R}^m$ with $y^T A = 0^T$ ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:127: Misplaced alignment tab character &.
-l.127 \item $A = \begin{pmatrix} 4 &
-                                     5 \\ 1 & 2 \\ 3 & 1 \end{pmatrix}, b = ...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:127: Misplaced alignment tab character &.
-l.127 \item $A = \begin{pmatrix} 4 & 5 \\ 1 &
-                                              2 \\ 3 & 1 \end{pmatrix}, b = ...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:127: Misplaced alignment tab character &.
-l.127 ...A = \begin{pmatrix} 4 & 5 \\ 1 & 2 \\ 3 &
-                                                   1 \end{pmatrix}, b = \beg...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:128: Misplaced alignment tab character &.
-l.128 \item $A = \begin{pmatrix} 1 &
-                                     2 \\ 3 & 1 \\ 1 & 0 \\ 0 & 1 \end{pmatr...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:128: Misplaced alignment tab character &.
-l.128 \item $A = \begin{pmatrix} 1 & 2 \\ 3 &
-                                              1 \\ 1 & 0 \\ 0 & 1 \end{pmatr...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:128: Misplaced alignment tab character &.
-l.128 ...A = \begin{pmatrix} 1 & 2 \\ 3 & 1 \\ 1 &
-                                                   0 \\ 0 & 1 \end{pmatrix},...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:128: Misplaced alignment tab character &.
-l.128 ...n{pmatrix} 1 & 2 \\ 3 & 1 \\ 1 & 0 \\ 0 &
-                                                   1 \end{pmatrix}, b = \beg...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[3] [4] [5] [6]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...{pmatrix}$. Then $A = \begin{pmatrix} 1 &
-                                                   2 \\ 2 & 1 \\ -1 & -1 \en...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...$. Then $A = \begin{pmatrix} 1 & 2 \\ 2 &
-                                                   1 \\ -1 & -1 \end{pmatrix...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ... = \begin{pmatrix} 1 & 2 \\ 2 & 1 \\ -1 &
-                                                   -1 \end{pmatrix}$.  We se...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...trix}$, then $A^T y = \begin{pmatrix} 1 &
-                                                   2 & -1 \\ 2 & 1 & -1 \end...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...}$, then $A^T y = \begin{pmatrix} 1 & 2 &
-                                                   -1 \\ 2 & 1 & -1 \end{pma...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...A^T y = \begin{pmatrix} 1 & 2 & -1 \\ 2 &
-                                                   1 & -1 \end{pmatrix} \beg...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...y = \begin{pmatrix} 1 & 2 & -1 \\ 2 & 1 &
-                                                   -1 \end{pmatrix} \begin{p...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...trix}$, then $A^T y = \begin{pmatrix} 1 &
-                                                   2 \\ 2 & 1 \\ -1 & -1 \en...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ...hen $A^T y = \begin{pmatrix} 1 & 2 \\ 2 &
-                                                   1 \\ -1 & -1 \end{pmatrix...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-28
--Farkas/lecture_questions.tex:253: Misplaced alignment tab character &.
-l.253 ... = \begin{pmatrix} 1 & 2 \\ 2 & 1 \\ -1 &
-                                                   -1 \end{pmatrix} \begin{p...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[7] [8] 
+[6] [7] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
@@ -711,24 +518,24 @@ Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
 (rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10323 strings out of 474116
- 160599 string characters out of 5743682
- 1953187 words of memory out of 5000000
- 32396 multiletter control sequences out of 15000+600000
+ 10321 strings out of 474116
+ 160541 string characters out of 5743682
+ 1945187 words of memory out of 5000000
+ 32393 multiletter control sequences out of 15000+600000
  595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,2176b,849s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,528b,853s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
 f-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
-lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7
-.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on _logs/lecture_questions.pdf (8 pages, 163545 bytes).
+lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy
+10.pfb>
+Output written on _logs/lecture_questions.pdf (7 pages, 146283 bytes).
 PDF statistics:
- 265 PDF objects out of 1000 (max. 8388607)
- 235 compressed objects within 3 object streams
- 145 named destinations out of 1000 (max. 500000)
+ 258 PDF objects out of 1000 (max. 8388607)
+ 231 compressed objects within 3 object streams
+ 146 named destinations out of 1000 (max. 500000)
  17 words of extra memory for PDF output out of 10000 (max. 10000000)
 
