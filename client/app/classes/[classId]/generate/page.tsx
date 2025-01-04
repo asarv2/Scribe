@@ -85,7 +85,7 @@ export default function GeneratePage({ params }: { params: { classId: string} })
                                             width={200}
                                             height={150}
                                             fit="contain"
-                                            fallbackSrc="/placeholder-image.png" // You might want to add a placeholder image
+                                            fallbackSrc="/placeholder_image.svg" // You might want to add a placeholder image
                                         />
                                         <Stack gap="xs">
                                             <Text size="lg" fw={500}>{generation.name}</Text>

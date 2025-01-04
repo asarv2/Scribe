@@ -69,7 +69,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
     const getActiveImage = (pageNumber: number) => {
         if (!classData || !lecture) return "";
         const activeDocument = documents?.find((doc) => doc.page === pageNumber);
-        return activeDocument ? `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classData.class_code}/lectures/${lecture.name}/images/${activeDocument.page}.png` : "";
+        return activeDocument ? `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${lectureId}/images/${activeDocument.page}.png` : "";
     }
 
     const handleSwipe = (touchEndX: number) => {
@@ -219,7 +219,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                                 onClick={() => handlePageClick(doc.page)}
                                             >
                                                 <Image
-                                                    src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classData?.class_code}/lectures/${lecture?.name}/images/${doc.page}.png`}
+                                                    src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${lectureId}/images/${doc.page}.png`}
                                                     alt={`Page ${doc.page}`}
                                                     fill
                                                     style={{ objectFit: 'cover' }}

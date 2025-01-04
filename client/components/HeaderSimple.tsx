@@ -19,7 +19,8 @@ import type { User } from '@supabase/supabase-js';
 
 const classNav = [
     { id: '3236bffb-cfa4-47b8-a0a2-44427df57e3b', label: 'MA 421' },
-    // { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
+    { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
+    { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA-421' },
 ];
 
 export function HeaderSimple() {
@@ -80,6 +81,7 @@ export function HeaderSimple() {
                             <Link href="/">
                                 <Image
                                     src="/images/logo.png"
+                                    priority
                                     alt="Logo"
                                     width={100}
                                     height={20}
@@ -173,6 +175,7 @@ export function HeaderSimple() {
                             <Link href="/" passHref>
                                 <Image
                                     src="/images/logo.png"
+                                    priority
                                     alt="Logo"
                                     width={100}
                                     height={20}

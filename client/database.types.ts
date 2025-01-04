@@ -124,24 +124,36 @@ export type Database = {
           created_at: string
           deleted: boolean
           id: string
+          last_parse_attempt: string | null
           name: string | null
           note_number: number | null
+          pages: number
+          parse_error: string | null
+          parse_status: Database["prod"]["Enums"]["parse_status"]
         }
         Insert: {
           class: string
           created_at?: string
           deleted?: boolean
           id?: string
+          last_parse_attempt?: string | null
           name?: string | null
           note_number?: number | null
+          pages?: number
+          parse_error?: string | null
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
         }
         Update: {
           class?: string
           created_at?: string
           deleted?: boolean
           id?: string
+          last_parse_attempt?: string | null
           name?: string | null
           note_number?: number | null
+          pages?: number
+          parse_error?: string | null
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
         }
         Relationships: [
           {
@@ -162,6 +174,7 @@ export type Database = {
           explanation_c: string | null
           explanation_d: string | null
           explanation_e: string | null
+          generation: string | null
           id: string
           lecture: string | null
           mcq: boolean
@@ -183,6 +196,7 @@ export type Database = {
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
+          generation?: string | null
           id?: string
           lecture?: string | null
           mcq?: boolean
@@ -204,6 +218,7 @@ export type Database = {
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
+          generation?: string | null
           id?: string
           lecture?: string | null
           mcq?: boolean
@@ -218,6 +233,13 @@ export type Database = {
           topic?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "questions_generation_fkey"
+            columns: ["generation"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "questions_lecture_fkey"
             columns: ["lecture"]
@@ -238,6 +260,7 @@ export type Database = {
         Row: {
           content: string
           created_at: string | null
+          generation: string | null
           id: string
           lecture: string | null
           topic: string | null
@@ -245,6 +268,7 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string | null
+          generation?: string | null
           id?: string
           lecture?: string | null
           topic?: string | null
@@ -252,11 +276,19 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string | null
+          generation?: string | null
           id?: string
           lecture?: string | null
           topic?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "summaries_generation_fkey"
+            columns: ["generation"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "summaries_lecture_fkey"
             columns: ["lecture"]
@@ -350,6 +382,7 @@ export type Database = {
     }
     Enums: {
       generation_type: "problem" | "summary"
+      parse_status: "parsing" | "batching" | "complete" | "idle" | "error"
       question_type: "conceptual" | "computational" | "multi-part"
       topic_type: "group" | "term" | "problem" | "algorithm"
     }
