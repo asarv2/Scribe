@@ -43,7 +43,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-latex-next": "^3.0.0",
-    "react-pdf": "^9.1.1"
+    "react-pdf": "^9.1.1",
+    "react-to-pdf": "^1.0.1"
   },
   "devDependencies": {
     "@types/html-to-pdfmake": "^2.4.4",

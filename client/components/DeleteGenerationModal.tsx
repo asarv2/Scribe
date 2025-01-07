@@ -44,7 +44,7 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
                 queryClient.invalidateQueries({ 
                     queryKey: ["generations", classId]
                 });
-                router.push(`/classes/${classId}`);
+                router.push(`/classes/${classId}/generate`);
             }
             notifications.show({
                 title: "Generation deleted",
@@ -67,9 +67,9 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
 
     return (
         <>
-            {isProfessor(user, classId) && <Tooltip label="Delete Lecture"><IconTrash size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {isProfessor(user, classId) && <Tooltip label="Delete Generation"><IconTrash size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
-            <Modal opened={opened} onClose={close} title="Delete Lecture" centered>
+            <Modal opened={opened} onClose={close} title="Delete Generation" centered>
                 <Stack>
                     <Text>Are you sure you want to remove {generationTitle}?</Text>
                     <Button onClick={handleDeleteClass} loading={loading} color="red">Delete</Button>

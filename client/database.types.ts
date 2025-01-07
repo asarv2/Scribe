@@ -129,24 +129,42 @@ export type Database = {
           class: string
           created_at: string
           deleted: boolean
+          generation_error: string | null
+          generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
+          last_generation_attempt: string | null
+          lectures: string[]
           name: string
+          progress: number
+          topics: string[]
           type: Database["prod"]["Enums"]["generation_type"]
         }
         Insert: {
           class: string
           created_at?: string
           deleted?: boolean
+          generation_error?: string | null
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
+          last_generation_attempt?: string | null
+          lectures?: string[]
           name?: string
+          progress?: number
+          topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
         }
         Update: {
           class?: string
           created_at?: string
           deleted?: boolean
+          generation_error?: string | null
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
+          last_generation_attempt?: string | null
+          lectures?: string[]
           name?: string
+          progress?: number
+          topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
         }
         Relationships: [
@@ -215,6 +233,7 @@ export type Database = {
           explanation_c: string | null
           explanation_d: string | null
           explanation_e: string | null
+          figures: string[]
           generation: string | null
           id: string
           lecture: string | null
@@ -237,6 +256,7 @@ export type Database = {
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
+          figures?: string[]
           generation?: string | null
           id?: string
           lecture?: string | null
@@ -259,6 +279,7 @@ export type Database = {
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
+          figures?: string[]
           generation?: string | null
           id?: string
           lecture?: string | null
@@ -301,6 +322,7 @@ export type Database = {
         Row: {
           content: string
           created_at: string | null
+          figures: string[]
           generation: string | null
           id: string
           lecture: string | null
@@ -309,6 +331,7 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string | null
+          figures?: string[]
           generation?: string | null
           id?: string
           lecture?: string | null
@@ -317,6 +340,7 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string | null
+          figures?: string[]
           generation?: string | null
           id?: string
           lecture?: string | null
@@ -428,9 +452,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary"
       parse_status: "parsing" | "batching" | "complete" | "idle" | "error"
-      question_type: "conceptual" | "computational" | "multi-part"
       topic_type: "group" | "term" | "problem" | "algorithm"
     }
     CompositeTypes: {

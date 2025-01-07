@@ -1,8 +1,8 @@
 import { Generation, TypedSupabaseClient } from "../../types";
 
-export async function getGenerationProblems(client: TypedSupabaseClient, generations: Generation[]) {
+export async function getGenerationSummaries(client: TypedSupabaseClient, generations: Generation[]) {
     const { data, error } = await client
-        .from("questions")
+        .from("summaries")
         .select("*")
         .in("generation", generations.map(generation => generation.id))
 

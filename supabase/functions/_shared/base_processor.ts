@@ -1,5 +1,5 @@
 import { ChatGoogleGenerativeAI } from "npm:@langchain/google-genai";
-import { HumanMessage } from "npm:@langchain/core/messages";
+import { AIMessage, HumanMessage } from "npm:@langchain/core/messages";
 
 export enum ContentType {
   LECTURE = "lecture",
@@ -37,6 +37,32 @@ export class BaseProcessor {
       maxRetries: 2,
     });
   }
+
+  async prepareConversationHistory(
+    messages: (HumanMessage | AIMessage)[],
+    maxTokens = 1048576,
+) {
+    // Get the last few messages that fit within the token limit
+    let tokenCount = 0;
+    const trimmedMessages: (HumanMessage | AIMessage)[] = [];
+
+    for (const message of messages.reverse()) {
+        const messageTokens = await this.llmGeminiFlash8b.getNumTokens(
+            message.content,
+        );
+        if (tokenCount + messageTokens > maxTokens) break;
+
+        tokenCount += messageTokens;
+        trimmedMessages.unshift(message);
+    }
+
+    console.log(
+        `\nTrimmed conversation history to ${trimmedMessages.length} messages from ${messages.length} messages`,
+    );
+    console.log(`Total tokens: ${tokenCount}`);
+
+    return trimmedMessages;
+}
 
   async robustGenerate(message: HumanMessage, retries = 5, initialWait = 5): Promise<string> {
     let lastError: Error | null = null;

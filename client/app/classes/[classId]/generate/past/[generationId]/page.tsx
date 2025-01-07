@@ -32,8 +32,9 @@ import QuestionSolutionLecture from "@/components/QuestionSolutionSlide";
 import NotesSummary from "@/components/NotesSummary";
 import Questions from "@/components/Questions";
 import { getGeneration } from "@/utils/queries/get-generation";
-import { getGenerationSummary } from "@/utils/queries/get-generation-summary";
 import { getGenerationProblems } from "@/utils/queries/get-generation-problems";
+import { getGenerationSummaries } from "@/utils/queries/get-generation-summaries";
+import DownloadGenerationModal from "@/components/DownloadGenerationModal";
 
 export default function Generation({ params }: { params: { classId: string, generationId: string} }) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
@@ -55,14 +56,16 @@ export default function Generation({ params }: { params: { classId: string, gene
         queryFn: () => getGeneration(supabase, generationId)
     })
 
-    const { data: generationSummary, isLoading: loadingGenerationSummary } = useQuery({
-        queryKey: ["generationSummary", generationId],
-        queryFn: () => getGenerationSummary(supabase, generationId)
+    const { data: generationSummaries, isLoading: loadingGenerationSummaries } = useQuery({
+        queryKey: ["generationSummaries", generationId],
+        queryFn: () => getGenerationSummaries(supabase, generation ? [generation] : []),
+        enabled: !!generation
     })
 
     const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({
         queryKey: ["generationProblems", generationId],
-        queryFn: () => getGenerationProblems(supabase, generationId)
+        queryFn: () => getGenerationProblems(supabase, generation ? [generation] : []),
+        enabled: !!generation
     })
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -83,6 +86,7 @@ export default function Generation({ params }: { params: { classId: string, gene
                             <Text size="xl" fw={700} mb={6}>{generation?.name}</Text>
                         </Group>
                         <Group>
+                            <DownloadGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} generationLatex={generationSummaries?.[0]?.content ?? ""} />
                             <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} />
                         </Group>
                     </Flex>
@@ -92,8 +96,8 @@ export default function Generation({ params }: { params: { classId: string, gene
                                 <Flex justify="space-between">
                                     <Title order={3}>Summary</Title>
                                 </Flex>
-                                <Skeleton visible={loadingGenerationSummary}>
-                                    <Markdown>{generationSummary?.content ?? ""}</Markdown>
+                                <Skeleton visible={loadingGenerationSummaries}>
+                                    <Latex>{generationSummaries?.[0]?.content ?? ""}</Latex>
                                 </Skeleton>
                             </Card>
                         </Stack>

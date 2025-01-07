@@ -17,7 +17,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname, useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight, IconUpload, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Button, em, Group, Stack } from "@mantine/core";
+import { ActionIcon, Box, Button, em, Group, Stack, TextInput } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -30,9 +30,11 @@ import { Radio, Select, Checkbox, Paper, NumberInput } from '@mantine/core';
 import { getMap } from "@/utils/queries/get-map";
 import { MapNode } from "@/utils/map/map-tree";
 import { getTopics } from "@/utils/queries/get-topics";
+import { createGeneration } from "@/utils/services/generation";
 
-export default function GenerateForm({classId}: {classId: string}) {
+export default function GenerateForm({ classId }: { classId: string }) {
     const supabase = useSupabaseBrowser();
+    const router = useRouter();
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
@@ -46,13 +48,13 @@ export default function GenerateForm({classId}: {classId: string}) {
         queryFn: () => getLectures(supabase, classId)
     })
 
-    const {data: map, isLoading: loadingMap} = useQuery({
+    const { data: map, isLoading: loadingMap } = useQuery({
         queryKey: ["map", classId],
         queryFn: () => getMap(supabase, classId, classData!.map),
         enabled: !!classData
     })
 
-    const {data: topics, isLoading: loadingTopics} = useQuery({
+    const { data: topics, isLoading: loadingTopics } = useQuery({
         queryKey: ["topics", classId],
         queryFn: () => getTopics(supabase, classId, classData!.map),
         enabled: !!classData
@@ -66,7 +68,10 @@ export default function GenerateForm({classId}: {classId: string}) {
     const searchParams = useSearchParams();
     const topicFromUrl = searchParams.get('topic');
 
-    const [contentType, setContentType] = useState<'summary' | 'problems'>(topicFromUrl ? 'problems' : 'summary');
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [generationTitle, setGenerationTitle] = useState<string>("");
+    const [contentType, setContentType] = useState<'summary' | 'problem'>(topicFromUrl ? 'problem' : 'summary');
     const [sourceType, setSourceType] = useState<string | null>(topicFromUrl ? 'topics' : null);
     const [selectedItems, setSelectedItems] = useState<string[]>(topicFromUrl ? [topicFromUrl] : []);
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
@@ -109,18 +114,55 @@ export default function GenerateForm({classId}: {classId: string}) {
         setExpandedNodes(newExpanded);
     };
 
-    const handleGenerate = () => {
+    const handleGenerate = async () => {
         console.log({
+            generationTitle,
             contentType,
             sourceType,
             selectedItems,
-            ...(contentType === 'problems' && {
+            ...(contentType === 'problem' && {
                 numQuestions,
                 problemType,
                 problemStyle,
                 problemParts
             })
         });
+
+        try {
+            setLoading(true);
+            // create generation
+            const generationLectures = sourceType === 'lectures' ? selectedItems : [];
+            const generationTopics = sourceType === 'topics' ? selectedItems.map((topicMapId) => topics?.find((topic) => topic.map_id === topicMapId)).map((topic) => topic?.id).filter((id) => id !== undefined) : [];
+            const questions = contentType === 'problem' ? numQuestions : 0;
+            const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions);
+            console.log(generation);
+
+            if (contentType === 'summary') {
+                supabase.functions.invoke('generate-summary', {
+                    body: {
+                        class_id: classId,
+                        generation_id: generation.id,
+                    }
+                });
+                // do not wait for response
+                router.push(`/classes/${classId}/generate`);
+            } else if (contentType === 'problem') {
+                supabase.functions.invoke('generate-problems', {
+                    body: {
+                        class_id: classId,
+                        generation_id: generation.id,
+                    }
+                });
+                // do not wait for response
+                router.push(`/classes/${classId}/generate`);
+            } else {
+                throw new Error("Invalid content type");
+            }
+        } catch (error) {
+            console.error("Error generating summary:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const getAllChildrenIds = (node: MapNode): string[] => {
@@ -135,10 +177,10 @@ export default function GenerateForm({classId}: {classId: string}) {
 
     const getAllParentIds = (node: MapNode, targetId: string): string[] => {
         let parents: string[] = [];
-        
+
         const findParent = (currentNode: MapNode, targetId: string): boolean => {
             if (!currentNode.children) return false;
-            
+
             if (currentNode.children.some(child => child.id === targetId || findParent(child, targetId))) {
                 parents.push(currentNode.id);
                 return true;
@@ -194,18 +236,18 @@ export default function GenerateForm({classId}: {classId: string}) {
 
     const renderTopicCheckboxes = (node: MapNode, depth = 0) => {
         if (!node) return null;
-        
+
         const childrenIds = node.children ? getAllChildrenIds(node) : [node.id];
         const allChildrenSelected = childrenIds.every(id => selectedItems.includes(id));
         const someChildrenSelected = !allChildrenSelected && childrenIds.some(id => selectedItems.includes(id));
         const isExpanded = expandedNodes.has(node.id);
-        
+
         return (
             <Stack key={node.id} ml={depth * 20}>
                 <Group style={{ cursor: 'pointer' }}>
                     {node.children && node.children.length > 0 && (
-                        <ActionIcon 
-                            size="sm" 
+                        <ActionIcon
+                            size="sm"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 toggleNode(node.id);
@@ -215,8 +257,8 @@ export default function GenerateForm({classId}: {classId: string}) {
                             {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
                         </ActionIcon>
                     )}
-                    <Checkbox 
-                        value={node.id} 
+                    <Checkbox
+                        value={node.id}
                         label={node.keyword}
                         styles={{
                             label: {
@@ -252,14 +294,20 @@ export default function GenerateForm({classId}: {classId: string}) {
 
                     <Paper shadow="xs" p="md" withBorder>
                         <Stack>
+                            <TextInput
+                                label="Generation Title"
+                                placeholder="Enter a title for the generation"
+                                value={generationTitle}
+                                onChange={(event) => setGenerationTitle(event.target.value)}
+                            />
                             <Radio.Group
                                 value={contentType}
-                                onChange={(value) => setContentType(value as 'summary' | 'problems')}
+                                onChange={(value) => setContentType(value as 'summary' | 'problem')}
                                 label="What would you like to generate?"
                                 required
                             >
                                 <Group mt="xs">
-                                    <Radio value="problems" label="Problems" />
+                                    <Radio value="problem" label="Problems" />
                                     <Radio value="summary" label="Summary" />
                                 </Group>
                             </Radio.Group>
@@ -291,9 +339,9 @@ export default function GenerateForm({classId}: {classId: string}) {
                                         {sourceType === 'lectures' && (
                                             <Stack>
                                                 {lectures?.map((lecture) => (
-                                                    <Checkbox 
-                                                        key={lecture.id} 
-                                                        value={lecture.id} 
+                                                    <Checkbox
+                                                        key={lecture.id}
+                                                        value={lecture.id}
                                                         label={lecture.name}
                                                         styles={{
                                                             label: {
@@ -309,7 +357,7 @@ export default function GenerateForm({classId}: {classId: string}) {
                             )}
 
                             {/* Add new problem options when contentType is 'problems' */}
-                            {contentType === 'problems' && (
+                            {contentType === 'problem' && (
                                 <>
                                     <NumberInput
                                         label="Number of questions"
@@ -362,9 +410,10 @@ export default function GenerateForm({classId}: {classId: string}) {
                                 </>
                             )}
 
-                            <Button 
+                            <Button
                                 onClick={() => handleGenerate()}
                                 disabled={!sourceType || selectedItems.length === 0}
+                                loading={loading}
                             >
                                 Generate
                             </Button>

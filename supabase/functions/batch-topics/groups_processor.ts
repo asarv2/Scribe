@@ -1,5 +1,5 @@
 import { HumanMessage } from "npm:@langchain/core/messages";
-import { BaseProcessor } from "./base_processor.ts";
+import { BaseProcessor } from "../_shared/base_processor.ts";
 import { Terms } from "./terms_processor.ts";
 
 interface Group {

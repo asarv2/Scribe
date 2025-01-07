@@ -1,5 +1,5 @@
 import { HumanMessage } from "npm:@langchain/core/messages";
-import { BaseProcessor } from "../parse-lecture/base_processor.ts";
+import { BaseProcessor } from "../_shared/base_processor.ts";
 
 export interface Terms {
   [key: string]: {
