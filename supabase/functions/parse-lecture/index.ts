@@ -27,11 +27,11 @@ Deno.serve(async (req) => {
   )
   console.log("Supabase client created");
 
+  const { class_id, lecture_id, handwritten } = await req.json();
+  console.log("Request params:", { class_id, lecture_id, handwritten });
+
   try {
     console.log("Starting parse-lecture function...");
-
-    const { class_id, lecture_id, handwritten } = await req.json();
-    console.log("Request params:", { class_id, lecture_id, handwritten });
 
     await supabase
     .from("lectures")
@@ -50,39 +50,42 @@ Deno.serve(async (req) => {
     const num_pages = lecture_response.data?.pages;
     console.log("Lecture query response:", lecture_response);
 
-    const documents_response = await supabase.from("documents").select("*").eq("lecture", lecture_id);
-    const documents = documents_response.data;
-    console.log("Documents query response:", documents_response);
-    const documents_processed = documents?.length ?? 0;
+    const initial_documents_response = await supabase.from("documents").select("*").eq("lecture", lecture_id);
+    const initial_documents = initial_documents_response.data;
+    console.log("Initial documents query response:", initial_documents_response);
 
+    const documents_to_process = Array.from(Array(num_pages).keys()).map((page) => ({
+      page: page + 1,
+    })).filter((doc_out) => !initial_documents?.some((doc) => doc.page === doc_out.page));
+    console.log("Documents to process:", documents_to_process);
 
     const google_api_key = Deno.env.get('GOOGLE_API_KEY') ?? '';
     // Create new instance of SlideProcessor
-    const processor = new SlideProcessor(class_title, handwritten, google_api_key);
+    const slide_processor = new SlideProcessor(class_title, handwritten, google_api_key);
     console.log("SlideProcessor created");
 
     // get images from supabase
     const images: ArrayBuffer[] = [];
     try {
-      for (let i = 1; i <= num_pages; i++) {
-        const imagePath = `${class_id}/lectures/${lecture_id}/images/${i}.png`;
+      for (const doc of documents_to_process) {
+        const imagePath = `${class_id}/lectures/${lecture_id}/images/${doc.page}.png`;
         console.log(`Trying to download: ${imagePath}`);
         
         const { data, error } = await supabase.storage.from("slides").download(imagePath);
         
         if (error) {
-          console.error(`Error downloading image ${i}:`, error);
+          console.error(`Error downloading image ${doc.page}:`, error);
           continue;
         }
 
         if (!data) {
-          console.error(`No data received for image ${i}`);
+          console.error(`No data received for image ${doc.page}`);
           continue;
         }
 
         const image_data = await data.arrayBuffer();
         images.push(image_data);
-        console.log(`Successfully downloaded image ${i}`);
+        console.log(`Successfully downloaded image ${doc.page}`);
       }
     } catch (error) {
       console.error("Error in image download process:", error);
@@ -90,29 +93,47 @@ Deno.serve(async (req) => {
 
     console.log("Total images downloaded:", images.length);
     console.log("Images query response:", images);
-    
+
+    const processed_documents = []
+    for (let i = 0; i < documents_to_process.length; i++) {
+      processed_documents.push({
+        page: documents_to_process[i].page,
+        image: images[i],
+        text: "",
+        imageBboxes: [],
+      });
+    }
+    console.log("Processed documents:", processed_documents);
     // Process the slides
     console.log("Starting slide processing...");
-    const results = await processor.processSlides(class_title, images, [], num_pages, [], documents_processed, async (result) => {
-      await supabase.from("documents").insert({
+    const results = await slide_processor.processSlides(class_title, num_pages, processed_documents, async (result) => {
+      const { data, error } = await supabase.from("documents").insert({
         latex: result.latex,
         figures: result.figures,
         description: result.description,
         page: result.page,
         lecture: lecture_id,
-      });
+      }).select("*").single();
+      if (error) {
+        console.error("Error inserting document:", error);
+      }
+      const document_id = data?.id;
+      await supabase.from("figures").insert(result.figures.map((figure) => ({
+        x_min: figure.bbox[0],
+        x_max: figure.bbox[2],
+        y_min: figure.bbox[1],
+        y_max: figure.bbox[3],
+        description: figure.description,
+        document: document_id,
+      })));
       console.log("Document inserted:", result.description);
     });
     console.log("Slide processing complete, results:", results);
-    
-    // Update status to completed on success
-    await supabase
-      .from("lectures")
-      .update({ 
-        parse_status: 'complete',
-        parse_error: null
-      })
-      .eq("id", lecture_id);
+
+    // invoke the batch-topics function. Do not wait for it to finish.
+    supabase.functions.invoke("batch-topics", {
+      body: { class_id, lecture_id }
+    });
 
     return new Response(
       JSON.stringify({ results }),
@@ -130,15 +151,13 @@ Deno.serve(async (req) => {
       cause: error.cause
     });
     // Ensure lecture status is updated on error
-    if (error.lecture_id) {
-      await supabase
-        .from("lectures")
-        .update({ 
-          parse_status: 'error',
-          parse_error: error.message
-        })
-        .eq("id", error.lecture_id);
-    }
+    await supabase
+    .from("lectures")
+    .update({ 
+      parse_status: 'error',
+      parse_error: error.message
+    })
+    .eq("id", lecture_id);
 
     return new Response(
       JSON.stringify({ 

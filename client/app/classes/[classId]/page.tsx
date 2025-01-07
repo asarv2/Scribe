@@ -21,6 +21,7 @@ import { getMap } from "@/utils/queries/get-map";
 import Latex from "react-latex-next";
 import { NodeImages } from "@/components/NodeImages";
 import { updateTopicPosition } from "@/utils/services/topics";
+import { getClass } from "@/utils/queries/get-class";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -35,9 +36,15 @@ export default function Class({ params }: { params: { classId: string } }) {
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
 
+    const {data: classData} = useQuery({
+        queryKey: ["class", classId],
+        queryFn: () => getClass(supabase, classId)
+    })
+
     const { data: map, isLoading: loadingMap } = useQuery({
         queryKey: ["map", classId],
-        queryFn: () => getMap(supabase, classId)
+        queryFn: () => getMap(supabase, classId, classData!.map),
+        enabled: !!classData
     })
 
     const { data: user } = useQuery({

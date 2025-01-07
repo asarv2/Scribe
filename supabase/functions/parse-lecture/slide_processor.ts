@@ -246,25 +246,26 @@ export class SlideProcessor extends BaseProcessor {
 
     async processSlides(
         lectureName: string,
-        images: ArrayBuffer[],
-        texts: string[],
-        numPages: number,
-        imageBboxes: Figure[][],
-        documentsProcessed: number,
+        numSlides: number,
+        documents: {
+            page: number,
+            image: ArrayBuffer,
+            text: string,
+            imageBboxes: Figure[],
+        }[],
         afterGenerate: (result: CleanedResponse) => Promise<void>,
-        numSlides?: number,
     ) {
         try {
             const results = [];
 
-            for (let i = documentsProcessed; i < (numSlides ?? numPages); i++) {
+            for (let i = 0; i < documents.length; i++) {
                 const result = await this.processPage(
-                    images[i],
-                    texts.length === 0 ? "" : texts[i],
-                    i + 1,
+                    documents[i].image,
+                    documents[i].text,
+                    documents[i].page,
                     lectureName,
-                    numPages,
-                    imageBboxes.length === 0 ? [] : imageBboxes[i],
+                    numSlides,
+                    documents[i].imageBboxes,
                 );
                 results.push(result);
                 afterGenerate(result);

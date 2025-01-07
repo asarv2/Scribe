@@ -34,9 +34,10 @@ import { FileInput, Progress } from "@mantine/core";
 import { createLecture } from "@/utils/services/lecture";
 import { getDocuments } from "@/utils/queries/get-documents";
 import * as pdfjs from 'pdfjs-dist';
-import { Document, Lecture } from "@/types";
+import { Document, Lecture, Topic } from "@/types";
+import { getTopics } from "@/utils/queries/get-topics";
 
-export default function LecturePage({ params }: { params: { classId: string} }) {
+export default function LecturePage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const fileInputRef = useRef<HTMLButtonElement>(null);
@@ -55,10 +56,16 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
         queryFn: () => getLectures(supabase, classId, false)
     })
 
-    const {data: documents, isLoading: loadingDocuments} = useQuery({
+    const { data: documents, isLoading: loadingDocuments } = useQuery({
         queryKey: ["documents", classId],
         queryFn: () => getDocuments(supabase, lectures?.map(lecture => lecture.id) ?? []),
         enabled: !!lectures
+    })
+
+    const { data: topics, isLoading: loadingTopics } = useQuery({
+        queryKey: ["topics", classId],
+        queryFn: () => getTopics(supabase, classId, classData!.map),
+        enabled: !!classData
     })
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -92,11 +99,11 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
 
         try {
             setSelectedFiles(files);
-            
+
             const uploadPromises = files.map(async (file) => {
                 try {
                     await processLecturePDF(
-                        file, 
+                        file,
                         classId,
                     );
 
@@ -116,9 +123,9 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
             });
 
             await Promise.all(uploadPromises);
-            
+
             setSelectedFiles([]);
-            
+
         } catch (error) {
             notifications.show({
                 title: 'Error',
@@ -130,7 +137,7 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
     };
 
     const processLecturePDF = async (
-        file: File, 
+        file: File,
         classId: string,
     ) => {
         const file_name = file.name.split(".")[0];
@@ -138,7 +145,7 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
 
         // convert file to array buffer
         const pdfBuffer = await file.arrayBuffer();
-                    
+
         // Get actual page count using PDF.js with proper worker setup
         const pdfJS = await import('pdfjs-dist');
         pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.mjs';
@@ -157,21 +164,21 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
             const context = canvas.getContext('2d')!;
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-            
+
             await page.render({
                 canvasContext: context,
                 viewport: viewport
             }).promise;
 
             // Convert canvas to blob
-            const blob = await new Promise<Blob>((resolve, reject) => 
+            const blob = await new Promise<Blob>((resolve, reject) =>
                 canvas.toBlob((blob) => blob ? resolve(blob) : reject('Failed to create blob'), 'image/png')
             );
-            
+
             // Fix the storage path - remove 'object' from the path
             const uploadPath = `${classId}/lectures/${lecture.id}/images/${i + 1}.png`;
             console.log("Uploading to path:", uploadPath); // Debug log
-            
+
             return supabase.storage
                 .from("slides") // Just the bucket name
                 .upload(uploadPath, blob, {
@@ -199,37 +206,62 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
         const lectureDocuments = documents.filter(document => document.lecture === lectureId);
         const lecture = lectures.find(lecture => lecture.id === lectureId);
         if (!lecture || lecture.pages === 0) return 0;
-        
+
         const progress = (lectureDocuments.length / lecture.pages) * 100;
-        
+
         setProgressMap(prev => ({
             ...prev,
             [lectureId]: progress
         }));
-        
+
         return progress;
     };
 
-    const retryParsing = async (classId: string, lecture: any) => {
+    const canRetryBatching = (lecture: Lecture) => {
+        const lectureTopics = topics?.filter(topic => topic.lectures?.includes(lecture.id) && topic.map_parent !== null);
+        if (!lectureTopics || lectureTopics.length === 0) return true;
+        return false
+    }
+
+    const canRetry = (lecture: Lecture) => {
+        const TIMEOUT = 150 * 1000; // 150 seconds in milliseconds
+        if (lecture.last_parse_attempt) {
+            const lastAttempt = new Date(lecture.last_parse_attempt);
+            const timeSinceLastAttempt = Date.now() - lastAttempt.getTime();
+            if (timeSinceLastAttempt > TIMEOUT && (lecture.parse_status === 'parsing' || lecture.parse_status === 'batching')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    const handleRetry = async (classId: string, lecture: Lecture) => {
         try {
             setParsingLectures(prev => new Set(prev).add(lecture.id));
-            
-            const response = await supabase.functions.invoke('parse-lecture', {
-                body: {
-                    class_id: classId,
-                    lecture_id: lecture.id,
-                    handwritten: true
+            if (lecture.parse_status === 'batching' || canRetryBatching(lecture)) {
+                // If in batching state, retry the batching process
+                await retryBatching(lecture.id);
+            } else {
+                // Otherwise retry the parsing process
+                const response = await supabase.functions.invoke('parse-lecture', {
+                    body: {
+                        class_id: classId,
+                        lecture_id: lecture.id,
+                        handwritten: true
+                    }
+                });
+
+                if (response.error) {
+                    throw new Error(response.error.message);
                 }
-            });
-            
-            if (response.error) {
-                throw new Error(response.error.message);
             }
         } catch (error) {
-            console.error('Error retrying parse:', error);
+            console.error('Error retrying:', error);
             notifications.show({
                 title: 'Error',
-                message: 'Failed to retry parsing. Please try again.',
+                message: `Failed to retry ${lecture.parse_status === 'batching' ? 'batching' : 'parsing'}. Please try again.`,
                 color: 'red'
             });
         } finally {
@@ -241,17 +273,24 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
         }
     };
 
-    const canRetry = (lecture: any) => {
-        if (parsingLectures.has(lecture.id)) return false;
-        
-        if (lecture.last_parse_attempt) {
-            const lastAttempt = new Date(lecture.last_parse_attempt);
-            const timeSinceLastAttempt = Date.now() - lastAttempt.getTime();
-            if (timeSinceLastAttempt < 30000) return false;
+    const retryBatching = async (lectureId: string) => {
+        try {
+            const response = await supabase.functions.invoke('batch-topics', {
+                body: {
+                    class_id: classId,
+                    lecture_id: lectureId
+                }
+            });
+            console.log("Batch topics function response:", response);
+        } catch (error) {
+            console.error('Error retrying batching:', error);
+            notifications.show({
+                title: 'Error',
+                message: 'Failed to retry batching. Please try again.',
+                color: 'red'
+            });
         }
-        
-        return true;
-    };
+    }
 
     useEffect(() => {
         const channel = supabase
@@ -302,7 +341,7 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
                 },
                 (payload) => {
                     console.log("Document change:", payload);
-                    
+
                     // Update documents in React Query cache
                     queryClient.setQueryData(["documents", classId], (oldData: Document[] = []) => {
                         let newData;
@@ -311,7 +350,7 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
                         } else if (payload.eventType === 'DELETE') {
                             newData = oldData.filter(doc => doc.id !== payload.old.id);
                         } else if (payload.eventType === 'UPDATE') {
-                            newData = oldData.map(doc => 
+                            newData = oldData.map(doc =>
                                 doc.id === payload.new.id ? payload.new : doc
                             );
                         } else {
@@ -371,7 +410,11 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
 
                     <Stack>
                         {(lectures && classData) && lectures.length > 0 && lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
-                            if (lecture.parse_status === "parsing" || lecture.parse_status === "error") {
+                            if (lecture.parse_status !== "complete" || canRetryBatching(lecture)) {
+                                const progress = getProgress(lecture.id);
+                                const remainingPages = lecture.pages - Math.floor((progress / 100) * lecture.pages);
+                                const estimatedSeconds = remainingPages * 4;
+                                const estimatedMinutes = Math.ceil(estimatedSeconds / 60);
                                 return (
                                     <Card withBorder key={lecture.id}>
                                         <Group align="flex-start" justify="space-between">
@@ -382,66 +425,105 @@ export default function LecturePage({ params }: { params: { classId: string} }) 
                                                     width={200}
                                                     height={150}
                                                     fit="contain"
-                                                    fallbackSrc="/placeholder_image.svg" // You might want to add a placeholder image
+                                                    fallbackSrc="/placeholder_image.svg"
                                                 />
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{lecture.name}</Text>
-                                                    <Text size="sm" c="dimmed">
-                                                        {lecture.parse_status === 'parsing' ? 'Parsing...' : 
-                                                         lecture.parse_status === 'error' ? 'Parse failed' : 'Waiting to parse'}
-                                                    </Text>
+                                                    {canRetry(lecture) ? (
+                                                        <Text size="sm" c="dimmed">
+                                                            {lecture.parse_status === 'parsing' ? 'Retry parsing. The function may have timed out.' :
+                                                                lecture.parse_status === 'batching' ? 'Retry batching. The function may have timed out.' :
+                                                                    lecture.parse_status === 'error' ? 'Retry parse. The function may have timed out.' : 'Retry parse. The function may have timed out.'}
+                                                        </Text>
+                                                    ) : (
+                                                        <Text size="sm" c="dimmed">
+                                                            {lecture.parse_status === 'parsing' ? 'Parsing...' :
+                                                                lecture.parse_status === 'batching' ? 'Creating topics and groups...' :
+                                                                    lecture.parse_status === 'error' ? 'Parse failed' : lecture.parse_status === 'idle' ? 'Waiting to parse' : 'Could not find any topics.'}
+                                                        </Text>
+                                                    )}
                                                     {lecture.parse_error && (
                                                         <Text size="sm" c="red">
                                                             Error: {lecture.parse_error}
                                                         </Text>
                                                     )}
-                                                    <Progress 
-                                                        value={getProgress(lecture.id)} 
-                                                        size="sm"
-                                                        color={lecture.parse_status === 'error' ? 'red' : 'blue'}
-                                                        animated={lecture.parse_status === 'parsing'}
-                                                        striped={lecture.parse_status === 'parsing'}
-                                                    />
+                                                    {canRetry(lecture) ?
+                                                        <Progress
+                                                            value={progress}
+                                                            size="sm"
+                                                            color={lecture.parse_status === 'parsing' ? 'blue' :
+                                                                lecture.parse_status === 'batching' ? 'orange' :
+                                                                    'blue'}
+                                                        /> :
+                                                        <Progress
+                                                            value={progress}
+                                                            size="sm"
+                                                            color={lecture.parse_status === 'parsing' ? 'blue' :
+                                                                lecture.parse_status === 'batching' || canRetryBatching(lecture) ? 'orange' :
+                                                                    'blue'}
+                                                            animated={lecture.parse_status === 'parsing' || lecture.parse_status === 'batching'}
+                                                            striped={lecture.parse_status === 'parsing' || lecture.parse_status === 'batching'}
+                                                        />}
+                                                    {(lecture.parse_status === 'parsing') && (
+                                                        <Text size="sm" c="dimmed">
+                                                            Estimated time remaining: ~{estimatedMinutes} minute{estimatedMinutes !== 1 ? 's' : ''}
+                                                        </Text>
+                                                    )}
                                                 </Stack>
                                             </Group>
-                                            <Button 
-                                                variant="light"
-                                                color={lecture.parse_status === 'error' ? 'red' : 'blue'}
-                                                onClick={() => retryParsing(classId, lecture)}
-                                                leftSection={<IconRefresh size={16} />}
-                                                disabled={lecture.parse_status === 'parsing'}
-                                                loading={lecture.parse_status === 'parsing'}
-                                            >
-                                                {lecture.parse_status === 'parsing' ? 'Parsing...' : 
-                                                 lecture.parse_status === 'error' ? 'Retry' : 'Start Parse'}
-                                            </Button>
+                                            {canRetry(lecture) ?
+                                                <Button
+                                                    variant="light"
+                                                    color={lecture.parse_status === 'parsing' ? 'blue' : 'orange'}
+                                                    onClick={() => handleRetry(classId, lecture)}
+                                                    leftSection={<IconRefresh size={16} />}
+                                                    loading={parsingLectures.has(lecture.id)}
+                                                >
+                                                    {parsingLectures.has(lecture.id) ? 'Retrying...' :
+                                                        lecture.parse_status === 'parsing' ? 'Retry Parsing' :
+                                                            lecture.parse_status === 'batching' ? 'Retry Batching' :
+                                                                !lecture.last_parse_attempt ? 'Start Parse' :
+                                                                    'Processing...'}
+                                                </Button> : <Button
+                                                    variant="light"
+                                                    color={lecture.parse_status === 'parsing' ? 'blue' : 'orange'}
+                                                    onClick={() => handleRetry(classId, lecture)}
+                                                    leftSection={<IconRefresh size={16} />}
+                                                    disabled={lecture.parse_status === 'parsing' || lecture.parse_status === 'batching' || lecture.parse_status === 'idle'}
+                                                    loading={parsingLectures.has(lecture.id)}
+                                                >
+                                                    {parsingLectures.has(lecture.id) ? 'Retrying...' :
+                                                        lecture.parse_status === 'parsing' ? 'Parsing...' :
+                                                            lecture.parse_status === 'batching' ? 'Processing...' :
+                                                                'Retry Batching'}
+                                                </Button>}
                                         </Group>
                                     </Card>
                                 )
                             }
                             return (
-                            <Link 
-                                href={`/classes/${classId}/lecture/${lecture.id}`} 
-                                key={lecture.id}
-                                style={{ textDecoration: 'none' }}
-                            >
-                                <Card withBorder>
-                                    <Group align="flex-start">
-                                        <MantineImage
-                                            src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${lecture.id}/images/1.png`}
-                                            alt={`First page of ${lecture.name}`}
-                                            width={200}
-                                            height={150}
-                                            fit="contain"
-                                            fallbackSrc="/placeholder_image.svg" // You might want to add a placeholder image
-                                        />
-                                        <Stack gap="xs">
-                                            <Text size="lg" fw={500}>{lecture.name}</Text>
-                                            <Text size="sm" c="dimmed">
-                                                Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
-                                            </Text>
-                                        </Stack>
-                                    </Group>
+                                <Link
+                                    href={`/classes/${classId}/lecture/${lecture.id}`}
+                                    key={lecture.id}
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <Card withBorder>
+                                        <Group align="flex-start">
+                                            <MantineImage
+                                                src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${lecture.id}/images/1.png`}
+                                                alt={`First page of ${lecture.name}`}
+                                                width={200}
+                                                height={150}
+                                                fit="contain"
+                                                fallbackSrc="/placeholder_image.svg" // You might want to add a placeholder image
+                                            />
+                                            <Stack gap="xs">
+                                                <Text size="lg" fw={500}>{lecture.name}</Text>
+                                                <Text size="sm" c="dimmed">
+                                                    Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
+                                                </Text>
+                                            </Stack>
+                                        </Group>
                                     </Card>
                                 </Link>
                             );

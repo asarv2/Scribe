@@ -48,12 +48,14 @@ export default function GenerateForm({classId}: {classId: string}) {
 
     const {data: map, isLoading: loadingMap} = useQuery({
         queryKey: ["map", classId],
-        queryFn: () => getMap(supabase, classId)
+        queryFn: () => getMap(supabase, classId, classData!.map),
+        enabled: !!classData
     })
 
     const {data: topics, isLoading: loadingTopics} = useQuery({
         queryKey: ["topics", classId],
-        queryFn: () => getTopics(supabase, classId)
+        queryFn: () => getTopics(supabase, classId, classData!.map),
+        enabled: !!classData
     })
 
     const { data: user, isLoading: loadingUser } = useQuery({

@@ -18,7 +18,7 @@ export type Database = {
           course_link: string | null
           created_at: string | null
           id: string
-          root_node: string | null
+          map: string | null
           title: string | null
         }
         Insert: {
@@ -29,7 +29,7 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           id?: string
-          root_node?: string | null
+          map?: string | null
           title?: string | null
         }
         Update: {
@@ -40,7 +40,7 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           id?: string
-          root_node?: string | null
+          map?: string | null
           title?: string | null
         }
         Relationships: []
@@ -79,6 +79,47 @@ export type Database = {
             columns: ["lecture"]
             isOneToOne: false
             referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      figures: {
+        Row: {
+          created_at: string
+          description: string
+          document: string
+          id: string
+          x_max: number
+          x_min: number
+          y_max: number
+          y_min: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          document?: string
+          id?: string
+          x_max?: number
+          x_min?: number
+          y_max?: number
+          y_min?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          document?: string
+          id?: string
+          x_max?: number
+          x_min?: number
+          y_max?: number
+          y_min?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "figures_document_fkey"
+            columns: ["document"]
+            isOneToOne: false
+            referencedRelation: "documents"
             referencedColumns: ["id"]
           },
         ]
@@ -310,8 +351,10 @@ export type Database = {
           class: string | null
           content: string
           created_at: string | null
+          figures: string[]
           id: string
           lectures: string[] | null
+          map: string | null
           map_id: string
           map_parent: string | null
           title: string
@@ -324,8 +367,10 @@ export type Database = {
           class?: string | null
           content?: string
           created_at?: string | null
+          figures?: string[]
           id?: string
           lectures?: string[] | null
+          map?: string | null
           map_id: string
           map_parent?: string | null
           title?: string
@@ -338,8 +383,10 @@ export type Database = {
           class?: string | null
           content?: string
           created_at?: string | null
+          figures?: string[]
           id?: string
           lectures?: string[] | null
+          map?: string | null
           map_id?: string
           map_parent?: string | null
           title?: string
