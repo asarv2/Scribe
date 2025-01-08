@@ -53,7 +53,7 @@ export default function Landing() {
   return (
     <>
       <HeaderSimple />
-      <Container fluid>
+      <Container fluid style={{ marginTop: "30px" }}>
         <Center>
           <Space h={500} />
           <Stack>

@@ -108,7 +108,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>

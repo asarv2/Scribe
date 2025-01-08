@@ -5,9 +5,10 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import { createClient } from "npm:@supabase/supabase-js";
 import { corsHeaders } from "../_shared/cors.ts";
-import { Figure, SummaryContent } from "./base_summary_processor.ts";
+import { SummaryContent } from "./base_summary_processor.ts";
 import { LectureSummaryProcessor } from "./lecture_summary_processor.ts";
 import { TopicSummaryProcessor } from "./topic_summary_processor.ts";
+import { Figure } from "../_shared/base_processor.ts";
 
 console.log("Generate-summary function up and running!");
 

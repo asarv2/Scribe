@@ -16,11 +16,14 @@ import { getUser } from '@/utils/queries/get-user';
 import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import type { User } from '@supabase/supabase-js';
+import { isProfessor } from '@/utils/lecture/isProfessor';
 
 const classNav = [
-    { id: '3236bffb-cfa4-47b8-a0a2-44427df57e3b', label: 'MA 421' },
+    { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA 421' },
+    // { id: '15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
+    // { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
+    { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
     { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
-    { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA-421' },
 ];
 
 export function HeaderSimple() {
@@ -35,23 +38,23 @@ export function HeaderSimple() {
 
     // Modify navigation links to be dynamic based on current class
     const navigationLinks = [
-        { 
-            link: currentClassId 
-                ? `/classes/${currentClassId}` 
-                : '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b', // default class
-            label: 'Topics' 
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a', // default class
+            label: 'Topics'
         },
-        { 
-            link: currentClassId 
-                ? `/classes/${currentClassId}/lecture` 
-                : '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b/lecture',
-            label: 'Lectures' 
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/lecture`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/lecture',
+            label: 'Lectures'
         },
-        { 
-            link: currentClassId 
-                ? `/classes/${currentClassId}/generate` 
-                : '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b/generate',
-            label: 'Generate' 
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/generate`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate',
+            label: 'Generate'
         },
     ];
 
@@ -77,7 +80,7 @@ export function HeaderSimple() {
             <header className={classes.header}>
                 <Container size="md" className={classes.inner}>
                     <Group justify="space-between" style={{ width: '100%' }}>
-                        <Group>
+                        <Group align="center">
                             <Link href="/">
                                 <Image
                                     src="/images/logo.png"
@@ -85,33 +88,42 @@ export function HeaderSimple() {
                                     alt="Logo"
                                     width={100}
                                     height={20}
+                                    style={{ marginTop: 4 }}
                                 />
                             </Link>
 
-                            <Menu shadow="md" width={200}>
-                                <Menu.Target>
-                                    <button className={classes.classSelector}>
-                                        {displayText} <IconChevronDown size={16} />
-                                    </button>
-                                </Menu.Target>
+                            {user && (
+                                <Menu shadow="md" width={200}>
+                                    <Menu.Target>
+                                        <button className={classes.classSelector}>
+                                            {displayText} <IconChevronDown size={16} />
+                                        </button>
+                                    </Menu.Target>
 
-                                <Menu.Dropdown>
-                                    {classNav.map((classItem) => (
-                                        <Menu.Item
-                                            key={classItem.id}
-                                            component={Link}
-                                            href={`/classes/${classItem.id}`}
-                                        >
-                                            {classItem.label}
-                                        </Menu.Item>
-                                    ))}
-                                </Menu.Dropdown>
-                            </Menu>
+                                    <Menu.Dropdown>
+                                        {classNav.map((classItem) => {
+                                            if (isProfessor(user, classItem.id)) {
+                                                return (
+                                                    <Menu.Item
+                                                        key={classItem.id}
+                                                        component={Link}
+                                                        href={`/classes/${classItem.id}`}
+                                            >
+                                                        {classItem.label}
+                                                    </Menu.Item>
+                                                )
+                                            }
+                                        })}
+                                    </Menu.Dropdown>
+                                </Menu>
+                            )}
                         </Group>
 
-                        <Group gap={5} visibleFrom="xs">
-                            {navigationItems}
-                        </Group>
+                        {user && (
+                            <Group gap={5} visibleFrom="xs">
+                                {navigationItems}
+                            </Group>
+                        )}
 
                         <Group gap={5} visibleFrom="xs">
                             {user ? (
@@ -121,16 +133,17 @@ export function HeaderSimple() {
                                             <IconUser size={20} />
                                         </button>
                                     </Menu.Target>
-
+                                    
                                     <Menu.Dropdown>
-                                        <Menu.Label>{user.email}</Menu.Label>
-                                        {/* <Menu.Item component={Link} href="/profile">
-                                            Profile
-                                        </Menu.Item>
-                                        <Menu.Item component={Link} href="/settings">
-                                            Settings
-                                        </Menu.Item> */}
+                                    <Menu.Label>{user.email}</Menu.Label>
                                         <Menu.Divider />
+                                        <Menu.Item
+                                            color="blue"
+                                            component={Link}
+                                            href="/login"
+                                        >
+                                            Account
+                                        </Menu.Item>
                                         <Menu.Item
                                             color="red"
                                             onClick={async () => {
@@ -187,11 +200,37 @@ export function HeaderSimple() {
                     <Drawer.Body>
                         <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md" p={4}>
                             <Divider my="sm" />
-                            {navigationItems}
+                            {user ? (
+                                <>
+                                    {navigationItems}
+                                    <Divider my="sm" />
+                                    <Box p={2}>
+                                        <Link
+                                            href="/login"
+                                            className={classes.link}
+                                            data-active={pathname === "/login" || undefined}
+                                        >
+                                            Account
+                                        </Link>
+                                    </Box>
+                                </>
+                            ) : (
+                                <>
+                                    <Box p={2}>
+                                        <Link
+                                            href="/login"
+                                            className={classes.link}
+                                            data-active={pathname === "/login" || undefined}
+                                        >
+                                            Login
+                                        </Link>
+                                    </Box>
+                                </>
+                            )}
                         </ScrollArea>
                     </Drawer.Body>
                 </Drawer.Content>
             </Drawer.Root >
-        </>
+            </>
     );
 }

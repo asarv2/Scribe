@@ -104,7 +104,7 @@ export default function PracticeTopicPage({ params }: { params: { topicId: strin
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>

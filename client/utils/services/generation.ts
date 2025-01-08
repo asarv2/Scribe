@@ -8,11 +8,11 @@ import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 import { GenerationType } from "@/types";
 
-export const createGeneration = async (classId: string, generationTitle: string, generationType: GenerationType, lectures: string[], topics: string[], numQuestions: number) => {
+export const createGeneration = async (classId: string, generationTitle: string, generationType: GenerationType, lectures: string[], topics: string[], numQuestions: number, mcq: boolean, conceptual: boolean, single: boolean) => {
     const supabase = useSupabaseServer(cookies());
     const { data, error } = await supabase
         .from("generations")
-        .insert({class: classId, name: generationTitle, type: generationType, lectures: lectures, topics: topics, num_questions: numQuestions})
+        .insert({class: classId, name: generationTitle, type: generationType, lectures: lectures, topics: topics, num_questions: numQuestions, mcq: mcq, conceptual: conceptual, single: single})
         .select("id, name")
         .single();
     if (error) {

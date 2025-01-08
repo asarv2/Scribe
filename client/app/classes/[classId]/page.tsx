@@ -36,7 +36,7 @@ export default function Class({ params }: { params: { classId: string } }) {
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
 
-    const {data: classData} = useQuery({
+    const { data: classData } = useQuery({
         queryKey: ["class", classId],
         queryFn: () => getClass(supabase, classId)
     })
@@ -54,9 +54,7 @@ export default function Class({ params }: { params: { classId: string } }) {
 
     return (
         <>
-            <div style={{ position: "fixed", width: "100vw", zIndex: 100, top: 0 }} key="header">
-                <HeaderSimple />
-            </div>
+            <HeaderSimple />
             <div style={{ width: "100vw", height: "100vh" }} key="map">
                 {map && <Map
                     user={user ?? undefined}
@@ -70,7 +68,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                     }}
                     onNodePositionChange={async (nodes) => {
                         try {
-                            const { success, error } = await updateTopicPosition(nodes.map(node => ({...node, class: classId})))
+                            const { success, error } = await updateTopicPosition(nodes.map(node => ({ ...node, class: classId })))
                             if (success) {
                                 console.log('Node position changed:', nodes)
                                 queryClient.invalidateQueries({ queryKey: ["map", classId] })
@@ -110,7 +108,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                         >
                             {openNodeId && map && <NodeImages visuals={flattenMapNode(map).find((node) => node.id === openNodeId)?.visuals ?? []} />}
                         </Suspense>
-                    }   
+                    }
                     <Latex key={"Description"}>{openNodeDescription as string}</Latex>
                     {
                         <Suspense
@@ -124,7 +122,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                         </Suspense>
                     }
                     <Link href={`${pathname}/generate/new?topic=${openNodeId}`}>
-                        <Button onClick={close} style={{width: "100%"}}>Generate Problems</Button>
+                        <Button onClick={close} style={{ width: "100%" }}>Generate Problems</Button>
                     </Link>
                 </Stack>
             </Modal>

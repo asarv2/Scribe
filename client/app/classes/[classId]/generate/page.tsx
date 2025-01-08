@@ -100,6 +100,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     body: {
                         class_id: classId,
                         generation_id: generation.id,
+
                     }
                 });
 
@@ -253,7 +254,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
@@ -317,7 +318,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                                 color={'blue'}
                                                 onClick={() => handleRetry(classId, generation)}
                                                 leftSection={<IconRefresh size={16} />}
-                                                disabled={generation.generation_status === 'generating' || generation.generation_status === 'error' || generation.generation_status === 'idle'}
+                                                disabled={generation.generation_status === 'generating' || generation.generation_status === 'idle'}
                                                 loading={generation.generation_status === 'generating'}
                                             >
                                                 {generation.generation_status === 'generating' ? 'Retrying...' :

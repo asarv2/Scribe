@@ -134,7 +134,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
             const generationLectures = sourceType === 'lectures' ? selectedItems : [];
             const generationTopics = sourceType === 'topics' ? selectedItems.map((topicMapId) => topics?.find((topic) => topic.map_id === topicMapId)).map((topic) => topic?.id).filter((id) => id !== undefined) : [];
             const questions = contentType === 'problem' ? numQuestions : 0;
-            const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions);
+            const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions, problemType === 'mcq', problemStyle === 'conceptual', problemParts === 'single');
             console.log(generation);
 
             if (contentType === 'summary') {
@@ -281,7 +281,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>

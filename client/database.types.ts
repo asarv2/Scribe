@@ -127,6 +127,7 @@ export type Database = {
       generations: {
         Row: {
           class: string
+          conceptual: boolean
           created_at: string
           deleted: boolean
           generation_error: string | null
@@ -134,13 +135,17 @@ export type Database = {
           id: string
           last_generation_attempt: string | null
           lectures: string[]
+          mcq: boolean
           name: string
+          num_questions: number
           progress: number
+          single: boolean
           topics: string[]
           type: Database["prod"]["Enums"]["generation_type"]
         }
         Insert: {
           class: string
+          conceptual?: boolean
           created_at?: string
           deleted?: boolean
           generation_error?: string | null
@@ -148,13 +153,17 @@ export type Database = {
           id?: string
           last_generation_attempt?: string | null
           lectures?: string[]
+          mcq?: boolean
           name?: string
+          num_questions?: number
           progress?: number
+          single?: boolean
           topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
         }
         Update: {
           class?: string
+          conceptual?: boolean
           created_at?: string
           deleted?: boolean
           generation_error?: string | null
@@ -162,8 +171,11 @@ export type Database = {
           id?: string
           last_generation_attempt?: string | null
           lectures?: string[]
+          mcq?: boolean
           name?: string
+          num_questions?: number
           progress?: number
+          single?: boolean
           topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
         }

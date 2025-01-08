@@ -1,15 +1,5 @@
 import { HumanMessage } from "npm:@langchain/core/messages";
-import { BaseProcessor, ContentType } from "../_shared/base_processor.ts";
-
-export interface Figure {
-    id: string;
-    document: string;
-    y_min: number;
-    x_min: number;
-    y_max: number;
-    x_max: number;
-    description: string;
-}
+import { BaseProcessor, ContentType, Figure } from "../_shared/base_processor.ts";
 
 export interface SummaryContent {
     figures: { [key: number]: Figure[] };

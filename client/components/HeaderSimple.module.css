@@ -1,18 +1,21 @@
 .header {
-    height: rem(56px);
-    margin-bottom: rem(30px);
+    height: rem(60px);
     background-color: var(--mantine-color-body);
     border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-  }
-  
-  .inner {
-    height: rem(56px);
+    padding: rem(8px) 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.inner {
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .classSelector {
+}
+
+.classSelector {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -27,9 +30,9 @@
     &:hover {
         background-color: var(--mantine-color-gray-0);
     }
-  }
-  
-  .link {
+}
+
+.link {
     display: block;
     line-height: 1;
     padding: 8px 12px;
@@ -47,9 +50,9 @@
         background-color: var(--mantine-color-blue-0);
         color: var(--mantine-color-blue-7);
     }
-  }
-  
-  .profileButton {
+}
+
+.profileButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,4 +66,4 @@
     &:hover {
         background-color: var(--mantine-color-gray-0);
     }
-  }
+}

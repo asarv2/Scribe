@@ -6,6 +6,16 @@ export enum ContentType {
   TOPIC = "topic"
 }
 
+export interface Figure {
+  id: string;
+  document: string;
+  y_min: number;
+  x_min: number;
+  y_max: number;
+  x_max: number;
+  description: string;
+}
+
 export class BaseProcessor {
   public llmGeminiPro: ChatGoogleGenerativeAI;
   public llmGeminiFlash: ChatGoogleGenerativeAI;

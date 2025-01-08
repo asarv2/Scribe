@@ -35,6 +35,7 @@ import { getGeneration } from "@/utils/queries/get-generation";
 import { getGenerationProblems } from "@/utils/queries/get-generation-problems";
 import { getGenerationSummaries } from "@/utils/queries/get-generation-summaries";
 import DownloadGenerationModal from "@/components/DownloadGenerationModal";
+import { Question } from "@/types";
 
 export default function Generation({ params }: { params: { classId: string, generationId: string} }) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
@@ -73,10 +74,99 @@ export default function Generation({ params }: { params: { classId: string, gene
         queryFn: () => getUser(supabase),
     })
 
+    const getGenerationLatex = () => {
+        if (generation?.type === "summary") {
+            return generationSummaries?.[0]?.content ?? "";
+        } else {
+            if (!generationProblems?.length) return "";
+            
+            // Helper function to format a single question
+            const formatQuestion = (question: Question, index: number, subIndex?: string) => {
+                const questionNumber = subIndex 
+                    ? `${index + 1}${subIndex}` 
+                    : `${index + 1}`;
+                
+                return `${questionNumber}. ${question.question}\n\n` +
+                    `A. ${question.option_a || ""}\n` +
+                    `B. ${question.option_b || ""}\n` +
+                    `C. ${question.option_c || ""}\n` +
+                    `D. ${question.option_d || ""}\n` +
+                    `E. ${question.option_e || ""}\n\n`;
+            };
+
+            // Helper function to format a single solution
+            const formatSolution = (question: Question, index: number, subIndex?: string) => {
+                const questionNumber = subIndex 
+                    ? `${index + 1}${subIndex}` 
+                    : `${index + 1}`;
+                
+                return `${questionNumber}. ${question.question}\n\n` +
+                    `A. ${question.explanation_a || ""} ${question.solution === "A" ? "(CORRECT)" : ""}\n` +
+                    `B. ${question.explanation_b || ""} ${question.solution === "B" ? "(CORRECT)" : ""}\n` +
+                    `C. ${question.explanation_c || ""} ${question.solution === "C" ? "(CORRECT)" : ""}\n` +
+                    `D. ${question.explanation_d || ""} ${question.solution === "D" ? "(CORRECT)" : ""}\n` +
+                    `E. ${question.explanation_e || ""} ${question.solution === "E" ? "(CORRECT)" : ""}\n\n`;
+            };
+
+            // Group questions by multipart
+            const multipartGroups: Record<string, Question[]> = {};
+            const singleQuestions = generationProblems.filter(q => {
+                if (q.multipart) {
+                    if (!multipartGroups[q.multipart]) {
+                        multipartGroups[q.multipart] = [];
+                    }
+                    multipartGroups[q.multipart].push(q);
+                    return false;
+                }
+                return true;
+            });
+
+            // Build the questions section
+            let questionsSection = "QUESTIONS\n\n";
+            let currentIndex = 0;
+
+            generationProblems.forEach(question => {
+                if (question.multipart === null) {
+                    // Single question
+                    questionsSection += formatQuestion(question, currentIndex);
+                    currentIndex++;
+                } else if (multipartGroups[question.multipart]?.[0] === question) {
+                    // First question of a multipart group
+                    questionsSection += `${currentIndex + 1}.\n`;
+                    multipartGroups[question.multipart].forEach((q, subIndex) => {
+                        questionsSection += formatQuestion(q, currentIndex, `) ${String.fromCharCode(97 + subIndex)}`);
+                    });
+                    currentIndex++;
+                }
+            });
+
+            // Build the solutions section
+            let solutionsSection = "\nSOLUTIONS\n\n";
+            currentIndex = 0;
+
+            generationProblems.forEach(question => {
+                if (question.multipart === null) {
+                    // Single question
+                    solutionsSection += formatSolution(question, currentIndex);
+                    currentIndex++;
+                } else if (multipartGroups[question.multipart]?.[0] === question) {
+                    // First question of a multipart group
+                    solutionsSection += `${currentIndex + 1}.\n`;
+                    multipartGroups[question.multipart].forEach((q, subIndex) => {
+                        solutionsSection += formatSolution(q, currentIndex, `) ${String.fromCharCode(97 + subIndex)}`);
+                    });
+                    currentIndex++;
+                }
+            });
+
+            return questionsSection + solutionsSection;
+        }
+    }
+
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
@@ -86,7 +176,7 @@ export default function Generation({ params }: { params: { classId: string, gene
                             <Text size="xl" fw={700} mb={6}>{generation?.name}</Text>
                         </Group>
                         <Group>
-                            <DownloadGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} generationLatex={generationSummaries?.[0]?.content ?? ""} />
+                            <DownloadGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
                             <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} />
                         </Group>
                     </Flex>
