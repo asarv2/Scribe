@@ -21,7 +21,7 @@ import { isProfessor } from '@/utils/lecture/isProfessor';
 const classNav = [
     { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA 421' },
     // { id: '15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
-    // { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
+    { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
     { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
     { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
 ];
@@ -38,12 +38,12 @@ export function HeaderSimple() {
 
     // Modify navigation links to be dynamic based on current class
     const navigationLinks = [
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}`
-                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a', // default class
-            label: 'Topics'
-        },
+        // {
+        //     link: currentClassId
+        //         ? `/classes/${currentClassId}`
+        //         : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a', // default class
+        //     label: 'Topics'
+        // },
         {
             link: currentClassId
                 ? `/classes/${currentClassId}/lecture`
@@ -52,9 +52,15 @@ export function HeaderSimple() {
         },
         {
             link: currentClassId
-                ? `/classes/${currentClassId}/generate`
-                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate',
-            label: 'Generate'
+                ? `/classes/${currentClassId}/generate/summary`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate/summary',
+            label: 'Summaries'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/generate/problems`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate/problems',
+            label: 'Problems'
         },
     ];
 

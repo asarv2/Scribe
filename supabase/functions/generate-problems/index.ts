@@ -261,11 +261,6 @@ Deno.serve(async (req) => {
           },
           [] as string[],
         );
-        const figures_ids = question_document_ids.flatMap((doc) =>
-          figures.filter((figure) => figure.document === doc).map((figure) =>
-            figure.id
-          )
-        );
         if ("options" in question) {
           const correct_answer = Object.keys(question["answers"]).find((opt) =>
             question["answers"][opt]
@@ -286,7 +281,7 @@ Deno.serve(async (req) => {
             "explanation_d": question["explanations"]["D"],
             "explanation_e": question["explanations"]["E"],
             "generation": generation_id,
-            "figures": figures_ids,
+            "documents": question_document_ids,
           } as { [key: string]: string | boolean | number | string[] };
           if (multi_part_uuid) {
             question_data["multipart"] = multi_part_uuid;
@@ -299,7 +294,7 @@ Deno.serve(async (req) => {
             "conceptual": question["tags"].includes("conceptual"),
             "solution": question["solution"],
             "generation": generation_id,
-            "figures": figures_ids,
+            "documents": question_document_ids,
           } as { [key: string]: string | boolean | number | string[] };
           if (multi_part_uuid) {
             question_data["multipart"] = multi_part_uuid;

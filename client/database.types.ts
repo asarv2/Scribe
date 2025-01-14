@@ -240,12 +240,12 @@ export type Database = {
         Row: {
           approved: boolean | null
           conceptual: boolean
+          documents: string[]
           explanation_a: string | null
           explanation_b: string | null
           explanation_c: string | null
           explanation_d: string | null
           explanation_e: string | null
-          figures: string[]
           generation: string | null
           id: string
           lecture: string | null
@@ -265,12 +265,12 @@ export type Database = {
         Insert: {
           approved?: boolean | null
           conceptual?: boolean
+          documents?: string[]
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
-          figures?: string[]
           generation?: string | null
           id?: string
           lecture?: string | null
@@ -290,12 +290,12 @@ export type Database = {
         Update: {
           approved?: boolean | null
           conceptual?: boolean
+          documents?: string[]
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
-          figures?: string[]
           generation?: string | null
           id?: string
           lecture?: string | null
@@ -375,7 +375,7 @@ export type Database = {
         Row: {
           content: string
           created_at: string | null
-          figures: string[]
+          documents: string[]
           generation: string | null
           id: string
           latex: string
@@ -385,7 +385,7 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string | null
-          figures?: string[]
+          documents?: string[]
           generation?: string | null
           id?: string
           latex?: string
@@ -395,7 +395,7 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string | null
-          figures?: string[]
+          documents?: string[]
           generation?: string | null
           id?: string
           latex?: string

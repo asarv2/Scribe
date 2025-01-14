@@ -33,7 +33,7 @@ import { getTopics } from "@/utils/queries/get-topics";
 import { createGeneration } from "@/utils/services/generation";
 import Latex from "@/components/Latex";
 
-export default function GenerateForm({ classId }: { classId: string }) {
+export default function GenerateForm({ classId, type }: { classId: string, type: 'problems' | 'summary' }) {
     const supabase = useSupabaseBrowser();
     const router = useRouter();
 
@@ -72,7 +72,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [generationTitle, setGenerationTitle] = useState<string>("");
-    const [contentType, setContentType] = useState<'summary' | 'problem'>('problem');
+    const [contentType, setContentType] = useState<'summary' | 'problem'>(type === 'summary' ? 'summary' : 'problem');
     const [sourceType, setSourceType] = useState<string | null>(topicFromUrl ? 'topics' : null);
     const [selectedItems, setSelectedItems] = useState<string[]>(topicFromUrl ? [topicFromUrl] : []);
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
@@ -286,10 +286,10 @@ export default function GenerateForm({ classId }: { classId: string }) {
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}/generate`}>
+                            <Link href={`/classes/${classId}/generate/${type === 'summary' ? 'summary' : 'problems'}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}>Generate Problems</Text>
+                            <Text size="xl" fw={700} mb={6}>Generate {type === 'summary' ? 'Summary' : 'Problems'}</Text>
                         </Group>
                     </Flex>
 

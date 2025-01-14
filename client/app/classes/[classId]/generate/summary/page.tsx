@@ -30,7 +30,6 @@ import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import { getGenerations } from "@/utils/queries/get-generations";
 import { Document, Generation, Lecture, Question, Summary } from "@/types";
-import { getGenerationFigures } from "@/utils/queries/get-generation-figures";
 import { getGenerationDocuments } from "@/utils/queries/get-generation-documents";
 import { getGenerationSummaries } from "@/utils/queries/get-generation-summaries";
 import { getGenerationProblems } from "@/utils/queries/get-generation-problems";
@@ -50,7 +49,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     const { data: generations, isLoading: loadingGenerations } = useQuery({
         queryKey: ["generations", classId],
-        queryFn: () => getGenerations(supabase, classId)
+        queryFn: () => getGenerations(supabase, classId, "summary")
     })
 
     const { data: generationSummaries, isLoading: loadingGenerationSummaries } = useQuery({
@@ -59,22 +58,10 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         enabled: !!generations
     })
 
-    const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({
-        queryKey: ["generationProblems", classId, generations],
-        queryFn: () => getGenerationProblems(supabase, generations ?? []),
-        enabled: !!generations
-    })
-
-    const { data: generationFigures, isLoading: loadingGenerationFigures } = useQuery({
-        queryKey: ["generationFigures", classId, generations],
-        queryFn: () => getGenerationFigures(supabase, generationSummaries ?? [], generationProblems ?? []),
-        enabled: !!generationSummaries && !!generationProblems
-    })
-
     const { data: generationDocuments, isLoading: loadingGenerationDocuments } = useQuery({
-        queryKey: ["generationDocuments", classId, generations],
-        queryFn: () => getGenerationDocuments(supabase, classId, generationFigures ?? []),
-        enabled: !!generationFigures
+        queryKey: ["generationSummariesDocuments", classId, generations],
+        queryFn: () => getGenerationDocuments(supabase, generationSummaries ? generationSummaries.map(summary => summary.documents).flat() : []),
+        enabled: !!generationSummaries
     })
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -84,29 +71,15 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     const handleRetry = async (classId: string, generation: Generation) => {
         try {
-            if (generation.type === 'summary') {
-                const response = await supabase.functions.invoke('generate-summary', {
-                    body: {
-                        class_id: classId,
-                        generation_id: generation.id,
-                    }
-                });
-
-                if (response.error) {
-                    throw new Error(response.error.message);
+            const response = await supabase.functions.invoke('generate-summary', {
+                body: {
+                    class_id: classId,
+                    generation_id: generation.id,
                 }
-            } else if (generation.type === 'problem') {
-                const response = await supabase.functions.invoke('generate-problems', {
-                    body: {
-                        class_id: classId,
-                        generation_id: generation.id,
+            });
 
-                    }
-                });
-
-                if (response.error) {
-                    throw new Error(response.error.message);
-                }
+            if (response.error) {
+                throw new Error(response.error.message);
             }
         } catch (error) {
             console.error('Error retrying:', error);
@@ -196,56 +169,11 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         };
     }, [classId, supabase, generations, queryClient]);
 
-    useEffect(() => {
-        if (!generations) return;
-        const channel = supabase
-            .channel('realtime-problems')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'questions',
-                    filter: `generation=in.(${generations.map(generation => generation.id).join(',')})`
-                },
-                (payload) => {
-                    console.log("Problem change:", payload);
-
-                    // Update documents in React Query cache
-                    queryClient.setQueryData(["generationProblems", classId], (oldData: Question[] = []) => {
-                        let newData;
-                        if (payload.eventType === 'INSERT') {
-                            newData = [...oldData, payload.new];
-                        } else if (payload.eventType === 'DELETE') {
-                            newData = oldData.filter(doc => doc.id !== payload.old.id);
-                        } else if (payload.eventType === 'UPDATE') {
-                            newData = oldData.map(doc =>
-                                doc.id === payload.new.id ? payload.new : doc
-                            );
-                        } else {
-                            newData = oldData;
-                        }
-                        return newData;
-                    });
-                }
-            )
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
-    }, [classId, supabase, generations, queryClient]);
-
     const getDocument = (generation: Generation): Document | undefined => {
         // first find the summary or question that matches the generation
         const summary = generationSummaries?.find(summary => summary.generation === generation.id);
-        const question = generationProblems?.find(question => question.generation === generation.id);
         if (summary) {
-            const figure = generationFigures?.find(figure => figure.id === summary.figures[0]);
-            return generationDocuments?.find(document => document.id === figure?.document)
-        } else if (question) {
-            const figure = generationFigures?.find(figure => figure.id === question.figures[0]);
-            return generationDocuments?.find(document => document.id === figure?.document);
+            return generationDocuments?.filter(document => summary.documents.includes(document.id))[0]
         }
         return undefined;
     }
@@ -261,11 +189,11 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                             <Link href={`/classes/${classId}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}>Generations</Text>
+                            <Text size="xl" fw={700} mb={6}>Summaries</Text>
                         </Group>
                         <Group>
-                            <Link href={`/classes/${classId}/generate/new`}>
-                                <Button>Generate Problems</Button>
+                            <Link href={`/classes/${classId}/generate/summary/new`}>
+                                <Button>Generate</Button>
                             </Link>
                         </Group>
                     </Flex>
@@ -276,11 +204,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                             if (generation.generation_status !== "complete") {
                                 const progress = generation.progress * 100
                                 let estimatedSeconds = 0;
-                                if (generation.type === "summary") {
-                                    estimatedSeconds = 10 * (1 - generation.progress) // takes 10 seconds to generate a summary
-                                } else if (generation.type === "problem") {
-                                    estimatedSeconds = (5 * (1 - generation.progress)) * (generation.num_questions) // takes 5 seconds per question
-                                }
+                                estimatedSeconds = 10 * (1 - generation.progress) // takes 10 seconds to generate a summary
                                 return (
                                     <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">
@@ -337,7 +261,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                             }
                             return (
                                 <Link
-                                    href={`/classes/${classId}/generate/past/${generation.id}`}
+                                    href={`/classes/${classId}/generate/summary/past/${generation.id}`}
                                     key={generation.id}
                                     style={{ textDecoration: 'none' }}
                                 >
