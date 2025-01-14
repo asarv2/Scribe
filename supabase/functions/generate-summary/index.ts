@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
 
         acc[lecture_id] = {
           figures: figures_dict,
-          content: lectureContent,
+          content: lectureContent
         };
         return acc;
       },

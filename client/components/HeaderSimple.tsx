@@ -113,7 +113,7 @@ export function HeaderSimple() {
                                                     <Menu.Item
                                                         key={classItem.id}
                                                         component={Link}
-                                                        href={`/classes/${classItem.id}`}
+                                                        href={`/classes/${classItem.id}/lecture`}
                                             >
                                                         {classItem.label}
                                                     </Menu.Item>
