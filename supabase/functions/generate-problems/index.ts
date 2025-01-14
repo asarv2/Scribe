@@ -6,7 +6,12 @@
 import { createClient } from "npm:@supabase/supabase-js";
 import { corsHeaders } from "../_shared/cors.ts";
 import { Figure } from "../_shared/base_processor.ts";
-import { ProblemsContent, Question } from "./base_problems_processor.ts";
+import {
+  FRQQuestion,
+  MCQQuestion,
+  ProblemsContent,
+  QuestionType,
+} from "./base_problems_processor.ts";
 import { LectureProblemsProcessor } from "./lecture_problems_processor.ts";
 import { TopicProblemsProcessor } from "./topic_problems_processor.ts";
 
@@ -71,11 +76,23 @@ Deno.serve(async (req) => {
     const generation_topics = generation_response.data?.topics as string[];
     const generation_questions = generation_response.data
       ?.num_questions as number;
-    const generation_conceptual = generation_response.data?.conceptual as boolean;
+    const generation_conceptual = generation_response.data
+      ?.conceptual as boolean;
     const generation_single = generation_response.data?.single as boolean;
+    const generation_question_type = generation_response.data?.mcq
+      ? QuestionType.MCQ
+      : QuestionType.FRQ;
 
     let lectures = generation_lectures;
     let names: string[] = [];
+
+    const lectures_response = await supabase.from("lectures").select("*").in(
+      "id",
+      generation_lectures,
+    );
+    const lectures_data = lectures_response.data ?? [];
+    console.log("Lectures:", lectures_data);
+
     if (generation_topics.length > 0) {
       const topics_response = await supabase.from("topics").select("*").in(
         "id",
@@ -86,13 +103,7 @@ Deno.serve(async (req) => {
       lectures = [...new Set(topics.map((topic) => topic.lectures).flat())];
       names = topics.map((topic) => topic.title);
     } else if (generation_lectures.length > 0) {
-      const lectures_response = await supabase.from("lectures").select("*").in(
-        "id",
-        generation_lectures,
-      );
-      const lectures = lectures_response.data ?? [];
-      console.log("Lectures:", lectures);
-      names = lectures.map((lecture) => lecture.name);
+      names = lectures_data.map((lecture) => lecture.name);
     }
 
     const documents_response = await supabase.from("documents").select("*").in(
@@ -113,6 +124,9 @@ Deno.serve(async (req) => {
 
     const lectures_processed = lectures.reduce(
       (acc, lecture_id) => {
+        const lecture_name = lectures_data.find((lecture) =>
+          lecture.id === lecture_id
+        )?.name;
         const lecture_figures = figures.filter((figure) =>
           figure.document === lecture_id
         );
@@ -141,7 +155,7 @@ Deno.serve(async (req) => {
 
         acc[lecture_id] = {
           figures: figures_dict,
-          content: lectureContent,
+          content: "LECTURE NAME: " + lecture_name + "\n" + lectureContent + "\n\n",
         };
         return acc;
       },
@@ -165,19 +179,39 @@ Deno.serve(async (req) => {
       return acc;
     }, {} as ProblemsContent);
 
-    let questions: Question[][] = [];
+    const batch_size = 2; // ask to generate 2 questions at a time
+
+    const onBatchComplete = async (
+      questions: (MCQQuestion | FRQQuestion)[][],
+    ) => {
+      // update generation progress
+      console.log("Generated questions for batch:", questions);
+      const progress = Math.min(
+        0.9,
+        (generation_questions - questions.length) / generation_questions,
+      );
+      await supabase.from("generations").update({ progress: progress }).eq(
+        "id",
+        generation_id,
+      );
+    };
+
+    let questions: (MCQQuestion | FRQQuestion)[][] = [];
     if (generation_lectures.length > 0) {
       const lecture_problems_processor = new LectureProblemsProcessor(
         google_api_key,
         class_title,
         names,
         content,
+        generation_question_type,
       );
       console.log("Lecture problems processor created");
       questions = await lecture_problems_processor.processProblems(
         generation_questions,
         generation_conceptual ? 1 : 0,
         generation_single ? 1 : 0,
+        batch_size,
+        onBatchComplete,
       );
       console.log("Lecture problems:", questions);
     } else if (generation_topics.length > 0) {
@@ -186,12 +220,15 @@ Deno.serve(async (req) => {
         class_title,
         names,
         content,
+        generation_question_type,
       );
       console.log("Topic problems processor created");
       questions = await topic_problems_processor.processProblems(
         generation_questions,
         generation_conceptual ? 1 : 0,
         generation_single ? 1 : 0,
+        batch_size,
+        onBatchComplete,
       );
       console.log("Topic problems:", questions);
     }
@@ -199,55 +236,120 @@ Deno.serve(async (req) => {
       throw new Error("No problems generated");
     }
 
-    const figures_ids = figures.map((figure) => figure.id);
-    // inserting summary into db
-
     const problems_data = questions.map((questionGroup) => {
       let multi_part_uuid = null;
       if (questionGroup.length > 1) {
         multi_part_uuid = crypto.randomUUID();
       }
       return questionGroup.map((question) => {
-        const correct_answer = Object.keys(question["answers"]).find((opt) =>
-          question["answers"][opt]
+        const slidesWithLectures = question["slides"];
+        const question_document_ids = Object.keys(slidesWithLectures).reduce(
+          (acc, lecture) => {
+            const lectureId = lectures_data.find((lecture) =>
+              lecture.name === lecture
+            )?.id;
+            if (lectureId) {
+              const document = documents.find((doc) =>
+                slidesWithLectures[lecture].includes(doc.page) &&
+                doc.lecture === lectureId
+              );
+              if (document) {
+                acc.push(document.id);
+              }
+            }
+            return acc;
+          },
+          [] as string[],
         );
-        const question_data = {
-          "question": question["question"],
-          "mcq": question["type"] === "mcq",
-          "conceptual": question["tags"].includes("conceptual"),
-          "option_a": question["options"]["A"],
-          "option_b": question["options"]["B"],
-          "option_c": question["options"]["C"],
-          "option_d": question["options"]["D"],
-          "option_e": question["options"]["E"],
-          "solution": correct_answer,
-          "explanation_a": question["explanations"]["A"],
-          "explanation_b": question["explanations"]["B"],
-          "explanation_c": question["explanations"]["C"],
-          "explanation_d": question["explanations"]["D"],
-          "explanation_e": question["explanations"]["E"],
-          "generation": generation_id,
-          "figures": figures_ids,
-        } as { [key: string]: string | boolean | number | string[] };
-        if (multi_part_uuid) {
-          question_data["multipart"] = multi_part_uuid;
+        const figures_ids = question_document_ids.flatMap((doc) =>
+          figures.filter((figure) => figure.document === doc).map((figure) =>
+            figure.id
+          )
+        );
+        if ("options" in question) {
+          const correct_answer = Object.keys(question["answers"]).find((opt) =>
+            question["answers"][opt]
+          );
+          const question_data = {
+            "question": question["question"],
+            "mcq": true,
+            "conceptual": question["tags"].includes("conceptual"),
+            "option_a": question["options"]["A"],
+            "option_b": question["options"]["B"],
+            "option_c": question["options"]["C"],
+            "option_d": question["options"]["D"],
+            "option_e": question["options"]["E"],
+            "solution": correct_answer,
+            "explanation_a": question["explanations"]["A"],
+            "explanation_b": question["explanations"]["B"],
+            "explanation_c": question["explanations"]["C"],
+            "explanation_d": question["explanations"]["D"],
+            "explanation_e": question["explanations"]["E"],
+            "generation": generation_id,
+            "figures": figures_ids,
+          } as { [key: string]: string | boolean | number | string[] };
+          if (multi_part_uuid) {
+            question_data["multipart"] = multi_part_uuid;
+          }
+          return question_data;
+        } else if ("solution" in question) {
+          const question_data = {
+            "question": question["question"],
+            "mcq": false,
+            "conceptual": question["tags"].includes("conceptual"),
+            "solution": question["solution"],
+            "generation": generation_id,
+            "figures": figures_ids,
+          } as { [key: string]: string | boolean | number | string[] };
+          if (multi_part_uuid) {
+            question_data["multipart"] = multi_part_uuid;
+          }
+          return question_data;
+        } else {
+          throw new Error("Question type not supported");
         }
-        return question_data;
       });
     }).flat();
     console.log("Problems data:", problems_data);
 
-    const problems_response = await supabase.from("questions").insert(
+    const questions_response = await supabase.from("questions").insert(
       problems_data,
-    );
+    ).select("id, question");
 
-    console.log("Problems response:", problems_response);
+    console.log("Questions response:", questions_response);
+
+    if (generation_question_type === QuestionType.FRQ) {
+      const rubrics_data = questions_response.data?.map(({ id, question }) => {
+        const question_data = questions.flat().find((q) =>
+          q["question"] === question
+        );
+        if (!question_data || !("rubric" in question_data)) {
+          throw new Error("Question not found");
+        }
+        const rubric = question_data["rubric"];
+        return rubric.map(({ points, content, standard }) => ({
+          "question": id,
+          "points": points,
+          "description": content,
+          "standard": standard,
+        }));
+      }).flat();
+
+      console.log("Rubrics data:", rubrics_data);
+
+      const rubrics_response = await supabase.from("rubrics").insert(
+        rubrics_data,
+      );
+
+      console.log("Rubrics response:", rubrics_response);
+    }
 
     // Update status to completed on success
     await supabase
       .from("generations")
       .update({
         generation_status: "complete",
+        progress: 1,
         generation_error: null,
       })
       .eq("id", generation_id);

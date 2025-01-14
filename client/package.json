@@ -43,9 +43,12 @@
     "pdfmake": "^0.2.15",
     "react": "^18",
     "react-dom": "^18",
-    "react-latex-next": "^3.0.0",
+    "react-katex": "^3.0.1",
+    "react-markdown": "^9.0.3",
     "react-pdf": "^9.1.1",
-    "react-to-pdf": "^1.0.1"
+    "react-to-pdf": "^1.0.1",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@types/html-to-pdfmake": "^2.4.4",
@@ -55,6 +58,7 @@
     "@types/pdfmake": "^0.2.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-katex": "^3.0.4",
     "postcss": "^8.4.43",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",

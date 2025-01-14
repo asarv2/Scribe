@@ -22,7 +22,7 @@ import { getTopic } from "@/utils/queries/get-topic";
 import jsPDF from "jspdf";
 import { marked } from "marked";
 import { notifications } from "@mantine/notifications";
-import Latex from "react-latex-next";
+import Latex from "@/components/Latex";
 import { useEffect } from "react";
 
 export default function PracticeTopicPage({ params }: { params: { topicId: string, classId: string } }) {

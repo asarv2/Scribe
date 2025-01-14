@@ -5,6 +5,7 @@ export async function getGenerationProblems(client: TypedSupabaseClient, generat
         .from("questions")
         .select("*")
         .in("generation", generations.map(generation => generation.id))
+        .order("question", { ascending: false })
 
     if (error) {
         throw new Error(error.message);

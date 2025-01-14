@@ -265,7 +265,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                         </Group>
                         <Group>
                             <Link href={`/classes/${classId}/generate/new`}>
-                                <Button>Generate New</Button>
+                                <Button>Generate Problems</Button>
                             </Link>
                         </Group>
                     </Flex>
@@ -274,8 +274,13 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                         {(generations && classData) && generations.length > 0 && generations.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((generation) => {
                             const document = getDocument(generation);
                             if (generation.generation_status !== "complete") {
-                                const progress = generation.progress // float from 0 to 1
-                                const estimatedSeconds = 10 * (1 - progress) // takes 10 seconds to generate a summary
+                                const progress = generation.progress * 100
+                                let estimatedSeconds = 0;
+                                if (generation.type === "summary") {
+                                    estimatedSeconds = 10 * (1 - generation.progress) // takes 10 seconds to generate a summary
+                                } else if (generation.type === "problem") {
+                                    estimatedSeconds = (5 * (1 - generation.progress)) * (generation.num_questions) // takes 5 seconds per question
+                                }
                                 return (
                                     <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">

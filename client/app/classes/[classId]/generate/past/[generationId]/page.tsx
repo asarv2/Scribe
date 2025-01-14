@@ -26,7 +26,6 @@ import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
 import DeleteLectureModal from "@/components/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import Latex from "react-latex-next";
 import DeleteGenerationModal from "@/components/DeleteGenerationModal";
 import QuestionSolutionLecture from "@/components/QuestionSolutionSlide";
 import NotesSummary from "@/components/NotesSummary";
@@ -36,8 +35,11 @@ import { getGenerationProblems } from "@/utils/queries/get-generation-problems";
 import { getGenerationSummaries } from "@/utils/queries/get-generation-summaries";
 import DownloadGenerationModal from "@/components/DownloadGenerationModal";
 import { Question } from "@/types";
+import { updateQuestionStatus } from "@/utils/services/questions";
+import Latex from "@/components/Latex";
 
-export default function Generation({ params }: { params: { classId: string, generationId: string} }) {
+export default function Generation({ params }: { params: { classId: string, generationId: string } }) {
+    const queryClient = useQueryClient();
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [pageNumber, setPageNumber] = useState<number>(1);
 
@@ -74,38 +76,68 @@ export default function Generation({ params }: { params: { classId: string, gene
         queryFn: () => getUser(supabase),
     })
 
+    const onUpdateStatus = async (questionId: string, approved: boolean, rejectionReason?: string) => {
+        try {
+            const { success, error } = await updateQuestionStatus(questionId, approved, rejectionReason);
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: ["generationProblems"] });
+                notifications.show({
+                    title: "Question status updated",
+                    message: "The question status has been updated successfully",
+                    color: "green",
+                });
+            } else {
+                throw new Error(error);
+            }
+        } catch (error: any) {
+            notifications.show({
+                title: "Error updating question status",
+                message: error?.message ?? "An error occurred while updating the question status",
+                color: "red",
+            });
+        }
+    }
+
     const getGenerationLatex = () => {
         if (generation?.type === "summary") {
             return generationSummaries?.[0]?.content ?? "";
         } else {
             if (!generationProblems?.length) return "";
-            
+
             // Helper function to format a single question
             const formatQuestion = (question: Question, index: number, subIndex?: string) => {
-                const questionNumber = subIndex 
-                    ? `${index + 1}${subIndex}` 
+                const questionNumber = subIndex
+                    ? `${index + 1}${subIndex}`
                     : `${index + 1}`;
-                
-                return `${questionNumber}. ${question.question}\n\n` +
-                    `A. ${question.option_a || ""}\n` +
-                    `B. ${question.option_b || ""}\n` +
-                    `C. ${question.option_c || ""}\n` +
-                    `D. ${question.option_d || ""}\n` +
-                    `E. ${question.option_e || ""}\n\n`;
+
+                if (question.mcq) {
+                    return `${questionNumber}. ${question.question}\n` +
+                        `A. ${question.option_a || ""}\n` +
+                        `B. ${question.option_b || ""}\n` +
+                        `C. ${question.option_c || ""}\n` +
+                        `D. ${question.option_d || ""}\n` +
+                        `E. ${question.option_e || ""}\n\n`;
+                } else {
+                    return `${questionNumber}. ${question.question}\n`
+                }
             };
 
             // Helper function to format a single solution
             const formatSolution = (question: Question, index: number, subIndex?: string) => {
-                const questionNumber = subIndex 
-                    ? `${index + 1}${subIndex}` 
+                const questionNumber = subIndex
+                    ? `${index + 1}${subIndex}`
                     : `${index + 1}`;
-                
-                return `${questionNumber}. ${question.question}\n\n` +
-                    `A. ${question.explanation_a || ""} ${question.solution === "A" ? "(CORRECT)" : ""}\n` +
-                    `B. ${question.explanation_b || ""} ${question.solution === "B" ? "(CORRECT)" : ""}\n` +
-                    `C. ${question.explanation_c || ""} ${question.solution === "C" ? "(CORRECT)" : ""}\n` +
-                    `D. ${question.explanation_d || ""} ${question.solution === "D" ? "(CORRECT)" : ""}\n` +
-                    `E. ${question.explanation_e || ""} ${question.solution === "E" ? "(CORRECT)" : ""}\n\n`;
+
+                if (question.mcq) {
+                    return `${questionNumber}. ${question.question}\n` +
+                        `A. ${question.option_a || ""} ${question.solution === "A" ? "(CORRECT)" : ""}\n` +
+                        `B. ${question.option_b || ""} ${question.solution === "B" ? "(CORRECT)" : ""}\n` +
+                        `C. ${question.option_c || ""} ${question.solution === "C" ? "(CORRECT)" : ""}\n` +
+                        `D. ${question.option_d || ""} ${question.solution === "D" ? "(CORRECT)" : ""}\n` +
+                        `E. ${question.option_e || ""} ${question.solution === "E" ? "(CORRECT)" : ""}\n\n`;
+                } else {
+                    return `${questionNumber}. ${question.question}\n` + `ANSWER: ${question.solution}`
+                }
             };
 
             // Group questions by multipart
@@ -122,7 +154,7 @@ export default function Generation({ params }: { params: { classId: string, gene
             });
 
             // Build the questions section
-            let questionsSection = "QUESTIONS\n\n";
+            let questionsSection = "QUESTIONS\n";
             let currentIndex = 0;
 
             generationProblems.forEach(question => {
@@ -141,7 +173,7 @@ export default function Generation({ params }: { params: { classId: string, gene
             });
 
             // Build the solutions section
-            let solutionsSection = "\nSOLUTIONS\n\n";
+            let solutionsSection = "\nSOLUTIONS\n";
             currentIndex = 0;
 
             generationProblems.forEach(question => {
@@ -176,7 +208,7 @@ export default function Generation({ params }: { params: { classId: string, gene
                             <Text size="xl" fw={700} mb={6}>{generation?.name}</Text>
                         </Group>
                         <Group>
-                            <DownloadGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
+                            <DownloadGenerationModal generationId={generationId} generationTitle={`${generation?.name ?? ""} - ${generation?.type === "summary" ? "Summary" : "Questions"}`} user={user ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
                             <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} />
                         </Group>
                     </Flex>
@@ -193,7 +225,10 @@ export default function Generation({ params }: { params: { classId: string, gene
                         </Stack>
                     ) : (
                         <Stack>
-                            <Questions questions={generationProblems ?? []} />
+                            <Questions
+                                questions={generationProblems ?? []}
+                                onUpdateStatus={onUpdateStatus}
+                            />
                         </Stack>
                     )}
                 </Stack>

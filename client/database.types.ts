@@ -238,8 +238,8 @@ export type Database = {
       }
       questions: {
         Row: {
+          approved: boolean | null
           conceptual: boolean
-          created_at: string
           explanation_a: string | null
           explanation_b: string | null
           explanation_c: string | null
@@ -257,12 +257,14 @@ export type Database = {
           option_d: string | null
           option_e: string | null
           question: string
+          reason: string
           solution: string
           topic: string | null
+          updated_at: string
         }
         Insert: {
+          approved?: boolean | null
           conceptual?: boolean
-          created_at?: string
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
@@ -280,12 +282,14 @@ export type Database = {
           option_d?: string | null
           option_e?: string | null
           question: string
+          reason?: string
           solution: string
           topic?: string | null
+          updated_at?: string
         }
         Update: {
+          approved?: boolean | null
           conceptual?: boolean
-          created_at?: string
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
@@ -303,8 +307,10 @@ export type Database = {
           option_d?: string | null
           option_e?: string | null
           question?: string
+          reason?: string
           solution?: string
           topic?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -330,6 +336,41 @@ export type Database = {
           },
         ]
       }
+      rubrics: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          points: number
+          question: string
+          standard: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          points?: number
+          question: string
+          standard?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          points?: number
+          question?: string
+          standard?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rubrics_question_fkey"
+            columns: ["question"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       summaries: {
         Row: {
           content: string
@@ -337,6 +378,7 @@ export type Database = {
           figures: string[]
           generation: string | null
           id: string
+          latex: string
           lecture: string | null
           topic: string | null
         }
@@ -346,6 +388,7 @@ export type Database = {
           figures?: string[]
           generation?: string | null
           id?: string
+          latex?: string
           lecture?: string | null
           topic?: string | null
         }
@@ -355,6 +398,7 @@ export type Database = {
           figures?: string[]
           generation?: string | null
           id?: string
+          latex?: string
           lecture?: string | null
           topic?: string | null
         }

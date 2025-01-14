@@ -31,6 +31,7 @@ import { getMap } from "@/utils/queries/get-map";
 import { MapNode } from "@/utils/map/map-tree";
 import { getTopics } from "@/utils/queries/get-topics";
 import { createGeneration } from "@/utils/services/generation";
+import Latex from "@/components/Latex";
 
 export default function GenerateForm({ classId }: { classId: string }) {
     const supabase = useSupabaseBrowser();
@@ -71,7 +72,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [generationTitle, setGenerationTitle] = useState<string>("");
-    const [contentType, setContentType] = useState<'summary' | 'problem'>(topicFromUrl ? 'problem' : 'summary');
+    const [contentType, setContentType] = useState<'summary' | 'problem'>('problem');
     const [sourceType, setSourceType] = useState<string | null>(topicFromUrl ? 'topics' : null);
     const [selectedItems, setSelectedItems] = useState<string[]>(topicFromUrl ? [topicFromUrl] : []);
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
@@ -259,7 +260,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
                     )}
                     <Checkbox
                         value={node.id}
-                        label={node.keyword}
+                        label={<Latex>{node.keyword}</Latex>}
                         styles={{
                             label: {
                                 cursor: 'pointer',
@@ -288,7 +289,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
                             <Link href={`/classes/${classId}/generate`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}>Generate</Text>
+                            <Text size="xl" fw={700} mb={6}>Generate Problems</Text>
                         </Group>
                     </Flex>
 
@@ -300,7 +301,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
                                 value={generationTitle}
                                 onChange={(event) => setGenerationTitle(event.target.value)}
                             />
-                            <Radio.Group
+                            {/* <Radio.Group
                                 value={contentType}
                                 onChange={(value) => setContentType(value as 'summary' | 'problem')}
                                 label="What would you like to generate?"
@@ -310,7 +311,7 @@ export default function GenerateForm({ classId }: { classId: string }) {
                                     <Radio value="problem" label="Problems" />
                                     <Radio value="summary" label="Summary" />
                                 </Group>
-                            </Radio.Group>
+                            </Radio.Group> */}
 
                             <Select
                                 label="Select source"

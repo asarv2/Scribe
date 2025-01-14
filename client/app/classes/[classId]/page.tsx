@@ -18,7 +18,7 @@ import { usePathname } from "next/navigation";
 import { NodeDetail } from "@/components/NodeDetail";
 import { getUser } from "@/utils/queries/get-user";
 import { getMap } from "@/utils/queries/get-map";
-import Latex from "react-latex-next";
+import Latex from "@/components/Latex";
 import { NodeImages } from "@/components/NodeImages";
 import { updateTopicPosition } from "@/utils/services/topics";
 import { getClass } from "@/utils/queries/get-class";

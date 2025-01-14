@@ -8,12 +8,9 @@
 import { Card, Tabs, FloatingIndicator, Box, Text, Flex, Group, Tooltip, Skeleton } from "@mantine/core"
 import { useState } from "react";
 import classes from "./Demo.module.css";
-import { IconReload } from "@tabler/icons-react";
-import { IconDownload } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Topic, Question } from "@/types";
-import 'katex/dist/katex.min.css';
-import Latex from 'react-latex-next';
+import Latex from '@/components/Latex';
 
 
 type QuestionSolutionTopicProps = {

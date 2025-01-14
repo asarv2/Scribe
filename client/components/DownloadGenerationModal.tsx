@@ -1,35 +1,27 @@
-/**
- * DownloadGenerationModal.tsx
- * Modal to download a generation as a PDF
- * @AshokSaravanan222
- * 11-15-2024
- */
-
-import { Button, Input, Modal, Stack, Tabs, TabsList, TabsPanel, TabsTab, Text, Textarea, Tooltip } from "@mantine/core"
-import { useDisclosure } from "@mantine/hooks"
-import { User } from "@supabase/supabase-js"
-import { IconDownload, IconPlus, IconTrash, IconCopy } from "@tabler/icons-react"
-import { useState } from "react"
-import { notifications } from "@mantine/notifications"
-import { uploadLectureImages } from "@/utils/services/storage"
-import { useQueryClient } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-import { isProfessor } from "@/utils/lecture/isProfessor"
-import { deleteLecture } from "@/utils/services/lecture"
-import { deleteGeneration } from "@/utils/services/generation"
+import { 
+    Button, Input, Modal, Stack, Tabs, TabsList, TabsPanel, TabsTab, Textarea, Tooltip 
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { User } from "@supabase/supabase-js";
+import { IconDownload, IconCopy } from "@tabler/icons-react";
+import { useState } from "react";
+import { notifications } from "@mantine/notifications";
 import 'katex/dist/katex.min.css';
-import Latex from 'react-latex-next';
+import Latex from '@/components/Latex';
 import { usePDF } from 'react-to-pdf';
+import { isProfessor } from "@/utils/lecture/isProfessor";
 
 type DownloadGenerationModalProps = {
-    classId: string
-    generationId: string
-    generationTitle: string
-    generationLatex: string
-    user: User | undefined
-}
+    classId: string;
+    generationId: string;
+    generationTitle: string;
+    generationLatex: string;
+    user: User | undefined;
+};
 
-export default function DownloadGenerationModal({ generationId, user, generationTitle, classId, generationLatex }: DownloadGenerationModalProps) {
+export default function DownloadGenerationModal({ 
+    generationId, user, generationTitle, classId, generationLatex 
+}: DownloadGenerationModalProps) {
     const [opened, { open, close }] = useDisclosure(false);
     const { toPDF, targetRef } = usePDF({ filename: `${generationTitle}.pdf` });
 
@@ -38,7 +30,7 @@ export default function DownloadGenerationModal({ generationId, user, generation
         notifications.show({
             title: 'Copied!',
             message: 'Content copied to clipboard',
-            color: 'green'
+            color: 'green',
         });
     };
 
@@ -64,25 +56,46 @@ export default function DownloadGenerationModal({ generationId, user, generation
 
     return (
         <>
-            {isProfessor(user, classId) && <Tooltip label="Download Generation"><IconDownload size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {isProfessor(user, classId) && (
+                <Tooltip label="Download Generation">
+                    <IconDownload 
+                        size={24} 
+                        color="black" 
+                        style={{ cursor: "pointer" }} 
+                        onClick={open} 
+                    />
+                </Tooltip>
+            )}
 
-            <Modal opened={opened} onClose={close} title={`Download Generation for ${generationTitle}`} centered size="lg">
+            <Modal 
+                opened={opened} 
+                onClose={close} 
+                title={`Download Generation for ${generationTitle}`} 
+                centered 
+                size="lg"
+            >
                 <Stack>
                     <Tabs defaultValue="txt">
                         <TabsList>
                             <TabsTab value="txt">txt</TabsTab>
-                            <TabsTab value="tex">tex</TabsTab>
-                            <TabsTab value="pdf">pdf</TabsTab>
+                            {/* <TabsTab value="tex">tex</TabsTab>
+                            <TabsTab value="pdf">pdf</TabsTab> */}
                         </TabsList>
                         
                         <TabsPanel value="txt">
                             <Stack>
                                 <Textarea value={generationLatex} maxRows={15} readOnly autosize />
                                 <Stack>
-                                    <Button leftSection={<IconCopy size={16} />} onClick={() => handleCopy(generationLatex)}>
+                                    <Button 
+                                        leftSection={<IconCopy size={16} />} 
+                                        onClick={() => handleCopy(generationLatex)}
+                                    >
                                         Copy
                                     </Button>
-                                    <Button leftSection={<IconDownload size={16} />} onClick={downloadTxt}>
+                                    <Button 
+                                        leftSection={<IconDownload size={16} />} 
+                                        onClick={downloadTxt}
+                                    >
                                         Download .txt
                                     </Button>
                                 </Stack>
@@ -93,10 +106,16 @@ export default function DownloadGenerationModal({ generationId, user, generation
                             <Stack>
                                 <Textarea value={generationLatex} maxRows={15} readOnly autosize />
                                 <Stack>
-                                    <Button leftSection={<IconCopy size={16} />} onClick={() => handleCopy(generationLatex)}>
+                                    <Button 
+                                        leftSection={<IconCopy size={16} />} 
+                                        onClick={() => handleCopy(generationLatex)}
+                                    >
                                         Copy
                                     </Button>
-                                    <Button leftSection={<IconDownload size={16} />} onClick={downloadTex}>
+                                    <Button 
+                                        leftSection={<IconDownload size={16} />} 
+                                        onClick={downloadTex}
+                                    >
                                         Download .tex
                                     </Button>
                                 </Stack>
@@ -105,10 +124,16 @@ export default function DownloadGenerationModal({ generationId, user, generation
 
                         <TabsPanel value="pdf">
                             <Stack>
-                                <div ref={targetRef} style={{ padding: '20px', maxHeight: '400px', overflowY: 'auto' }}>
+                                <div 
+                                    ref={targetRef} 
+                                    style={{ padding: '20px', maxHeight: '400px', overflowY: 'auto' }}
+                                >
                                     <Latex>{generationLatex}</Latex>
                                 </div>
-                                <Button leftSection={<IconDownload size={16} />} onClick={() => toPDF()}>
+                                <Button 
+                                    leftSection={<IconDownload size={16} />} 
+                                    onClick={() => toPDF()}
+                                >
                                     Download PDF
                                 </Button>
                             </Stack>
@@ -117,5 +142,5 @@ export default function DownloadGenerationModal({ generationId, user, generation
                 </Stack>
             </Modal>
         </>
-    )
+    );
 }

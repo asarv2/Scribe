@@ -26,7 +26,7 @@ import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
 import DeleteLectureModal from "@/components/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import Latex from "react-latex-next";
+import Latex from "@/components/Latex";
 
 export default function Lecture({ params }: { params: { classId: string, lectureId: string} }) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);

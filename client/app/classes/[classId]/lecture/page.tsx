@@ -26,7 +26,6 @@ import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
 import DeleteLectureModal from "@/components/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import Latex from "react-latex-next";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { Text, Card, Image as MantineImage } from "@mantine/core";
 import { useRouter } from "next/navigation";

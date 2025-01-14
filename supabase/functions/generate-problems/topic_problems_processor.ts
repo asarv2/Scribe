@@ -1,8 +1,9 @@
 import { ContentType } from "../_shared/base_processor.ts";
 import {
     BaseProblemsProcessor,
+    FRQQuestion,
+    MCQQuestion,
     ProblemsContent,
-    Question,
     QuestionType,
 } from "./base_problems_processor.ts";
 
@@ -15,8 +16,9 @@ export class TopicProblemsProcessor extends BaseProblemsProcessor {
         courseTitle: string,
         topicNames: string[],
         topics: ProblemsContent,
+        questionType: QuestionType,
     ) {
-        super(apiKey, courseTitle, ContentType.TOPIC, QuestionType.MCQ);
+        super(apiKey, courseTitle, ContentType.TOPIC, questionType);
         this.topics = topics;
         this.topicNames = topicNames;
     }
@@ -25,16 +27,15 @@ export class TopicProblemsProcessor extends BaseProblemsProcessor {
         numQuestions = 3,
         conceptualComputationalRatio = 1,
         singleMultiPartRatio = 1,
-    ): Promise<Question[][]> {
+        batchSize: number | undefined,
+        onBatchComplete: (questions: (MCQQuestion | FRQQuestion)[][]) => Promise<void>,
+    ): Promise<(MCQQuestion | FRQQuestion)[][]> {
         if (conceptualComputationalRatio > 1 || singleMultiPartRatio > 1) {
             throw new Error("Ratios cannot be greater than 1");
         }
 
         const topicName = this.topicNames.join(", ");
-
-        console.log(
-            `Generating ${numQuestions} questions for ${topicName}`,
-        );
+        console.log(`Generating ${numQuestions} questions for ${topicName}`);
 
         // Split questions by type
         const conceptualQuestions = Math.round(
@@ -82,13 +83,36 @@ export class TopicProblemsProcessor extends BaseProblemsProcessor {
                 : tags[0];
             console.log(`Generating ${numQ} ${tagDescription} questions`);
 
-            const result = await this.processBatch(
-                numQ,
-                topicName,
-                this.topics.content,
-                prompts[j],
-            );
-            this.cleanResult(result, topicName, tags);
+            if (batchSize) {
+                // Process in batches
+                for (let i = 0; i < numQ; i += batchSize) {
+                    const currentBatchSize = Math.min(batchSize, numQ - i);
+                    const result = await this.processBatch(
+                        currentBatchSize,
+                        topicName,
+                        this.topics.content,
+                        prompts[j],
+                    );
+                    this.cleanResult(result, topicName, tags);
+                    
+                    // Call onBatchComplete after each batch
+                    await onBatchComplete(this.questions[topicName]);
+                }
+            } else {
+                // Process all at once
+                const result = await this.processBatch(
+                    numQ,
+                    topicName,
+                    this.topics.content,
+                    prompts[j],
+                );
+                this.cleanResult(result, topicName, tags);
+            }
+        }
+
+        // If not batching, call onBatchComplete once at the end
+        if (!batchSize) {
+            await onBatchComplete(this.questions[topicName]);
         }
 
         return this.questions[topicName];
