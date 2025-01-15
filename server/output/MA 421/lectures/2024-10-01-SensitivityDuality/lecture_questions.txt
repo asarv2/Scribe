@@ -1,180 +1,199 @@
 QUESTION 1
-In Slide 7, the optimal solution is given by $x_1^* = 25 - \frac{t}{40}$ and $x_2^* = 75 + \frac{t}{40}$.  If we want to maintain feasibility ($x_1^*, x_2^* \ge 0$), what is the range of values for $t$?
-A. $-3000 \le t \le 1000$
-B. $-750 \le t \le 1000$
-C. $0 \le t \le 1000$
-D. $-3000 \le t \le 0$
-E. $-1000 \le t \le 3000$
+In the linear program presented in Slide 1, if the right-hand side of the second constraint ($10x_1 + 30x_2 \le 4000$) is increased by $t$, how does this affect the optimal values of $x_1$, $x_2$, and $\zeta$?  What is the maximum allowable increase $t$ before the current optimal solution becomes infeasible?
+A. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 1000$
+B. $x_1$ increases, $x_2$ decreases, $\zeta$ increases; $t \le 3000$
+C. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 3000$
+D. $x_1$ increases, $x_2$ decreases, $\zeta$ decreases; $t \le 1000$
+E. $x_1$ decreases, $x_2$ increases, $\zeta$ remains unchanged; $t \le 1000$
 
 ANSWER: A
 
 EXPLANATION:
-A. The correct answer is A.  To maintain feasibility, we need $25 - \frac{t}{40} \ge 0$ and $75 + \frac{t}{40} \ge 0$. Solving these inequalities gives $t \le 1000$ and $t \ge -3000$, respectively. Therefore, the range of $t$ is $-3000 \le t \le 1000$.
-B. Incorrect. This range only considers the constraint $x_1^* \ge 0$.
-C. Incorrect. This range only considers the constraint $x_1^* \ge 0$ and ignores the lower bound.
-D. Incorrect. This range only considers the constraint $x_2^* \ge 0$ and ignores the upper bound.
-E. Incorrect. This range has the bounds reversed.
+A. From Slide 7, increasing the right-hand side of the second constraint by $t$ leads to the updated optimal solution $x_1^* = 25 - \frac{t}{40}$ and $x_2^* = 75 + \frac{t}{40}$.  Thus, $x_1$ decreases and $x_2$ increases. The objective function becomes $\zeta^* = 6250 + 0.75t$, indicating an increase in $\zeta$. For feasibility, we require $x_1^* \ge 0$ and $x_2^* \ge 0$, which implies $25 - \frac{t}{40} \ge 0$ and $75 + \frac{t}{40} \ge 0$.  Solving these inequalities gives $t \le 1000$ and $t \ge -3000$. Therefore, the maximum allowable increase is $t \le 1000$.
+B. The direction of change in $x_1$ and $x_2$ is incorrect.  Slide 7 shows that $x_1$ decreases and $x_2$ increases.
+C. The maximum allowable increase is incorrect.  The constraint $x_1^* \ge 0$ limits the increase in $t$ to 1000.
+D. The direction of change in $\zeta$ is incorrect. Slide 8 shows that $\zeta$ increases with $t$.
+E. The objective function does change with $t$. Slide 8 shows that $\zeta$ increases with $t$.
 
 
 QUESTION 2
-In the context of Slide 1, if we increase the right-hand side constant of the second constraint ($10x_1 + 30x_2 \le 4000$) by a small amount $t$, how does this affect the optimal values of $x_1$ and $x_2$?
-A. $x_1$ increases and $x_2$ decreases proportionally.
-B. $x_1$ decreases and $x_2$ increases proportionally.
-C. Both $x_1$ and $x_2$ increase proportionally.
-D. Both $x_1$ and $x_2$ decrease proportionally.
-E. The effect on $x_1$ and $x_2$ is unpredictable without further information.
+Using complementary slackness (Slide 3), verify the optimality of the solution $x_1^* = 25$, $x_2^* = 75$ for the primal problem in Slide 1.  What are the optimal values of the dual variables $y_1^*$ and $y_2^*$, and how do they relate to the optimal objective function value?
+A. $y_1^* = 32.5$, $y_2^* = 0.75$; Strong duality holds, $\zeta^* = 6250 = 100y_1^* + 4000y_2^*$.
+B. $y_1^* = 0$, $y_2^* = 0$; Strong duality does not hold.
+C. $y_1^* = 25$, $y_2^* = 75$; Strong duality holds, $\zeta^* = 6250 = 100y_1^* + 4000y_2^*$.
+D. $y_1^* = 40$, $y_2^* = 70$; Strong duality does not hold.
+E. $y_1^* = 70$, $y_2^* = 40$; Strong duality holds, $\zeta^* = 6250 = 100y_1^* + 4000y_2^*$.
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. This is incorrect.  The changes in $x_1$ and $x_2$ are not simply proportional but are affected by the specific structure of the constraint matrix and the inverse of the basis matrix.
-B. The analysis in Slide 7 shows that increasing the right-hand side of the second constraint by $t$ leads to $x_1^* = 25 - \frac{t}{40}$ and $x_2^* = 75 + \frac{t}{40}$. Thus, $x_1$ decreases and $x_2$ increases as $t$ increases.
-C. This is incorrect. The changes in $x_1$ and $x_2$ are in opposite directions.
-D. This is incorrect. The changes in $x_1$ and $x_2$ are in opposite directions.
-E. This is incorrect. The effect can be determined from the sensitivity analysis presented in the slides.
+A. Since $x_1^* > 0$ and $x_2^* > 0$, complementary slackness implies that the corresponding dual slack variables are zero: $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$. Solving this system yields $y_1^* = 32.5$ and $y_2^* = 0.75$.  Substituting these values into the dual objective function gives $100(32.5) + 4000(0.75) = 6250$, which equals the optimal primal objective function value $\zeta^*$, confirming strong duality.
+B. This solution violates complementary slackness since $x_1^* > 0$ and $x_2^* > 0$ imply $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$.
+C. These values are the primal optimal solutions, not the dual optimal solutions.
+D. These values do not satisfy the dual constraints or complementary slackness.
+E. These values do not satisfy the dual constraints or complementary slackness.
 
 
 QUESTION 3
-Based on Slides 2 and 3, how does the concept of complementary slackness help verify the optimality of the solution found in Slide 1?
-A. Complementary slackness proves that the primal and dual objective functions are equal at the optimal solution.
-B. Complementary slackness ensures that the constraints of both the primal and dual problems are satisfied.
-C. Complementary slackness establishes a relationship between positive primal variables and zero dual slack variables (and vice versa), allowing for verification of the optimal solution.
-D. Complementary slackness guarantees the existence of an optimal solution for both the primal and dual problems.
-E. Complementary slackness is not directly relevant to verifying the optimality of the solution in Slide 1.
+Explain the economic interpretation of the dual variables $y_1^*$ and $y_2^*$ obtained in the previous question.  How are these values related to the sensitivity of the optimal objective function value to changes in the right-hand side of the constraints?
+A. They represent shadow prices; a unit increase in the right-hand side of the first constraint increases $\zeta$ by $y_1^*$, and a unit increase in the right-hand side of the second constraint increases $\zeta$ by $y_2^*$.
+B. They represent the optimal quantities of resources used; they are not related to sensitivity analysis.
+C. They represent the marginal costs of the resources; a unit increase in the right-hand side of either constraint decreases $\zeta$ by the corresponding dual variable.
+D. They represent the optimal production levels; they are not related to sensitivity analysis.
+E. They represent the reduced costs; they are not related to sensitivity analysis.
 
-ANSWER: C
+ANSWER: A
 
 EXPLANATION:
-A. While complementary slackness is related to strong duality (the equality of primal and dual objective values at optimality), it doesn't directly prove it. Strong duality is verified by comparing the objective function values obtained from the primal and dual optimal solutions.
-B. Complementary slackness doesn't directly ensure that all constraints are satisfied.  Feasibility is checked separately by verifying that the constraints are satisfied by the optimal solution.
-C. Slide 3 uses complementary slackness. Because $x_1^* > 0$ and $x_2^* > 0$, the corresponding dual slack variables $z_1$ and $z_2$ must be 0. This leads to a system of equations that can be solved to find the optimal dual variables, which are then used to verify strong duality.
-D. Complementary slackness doesn't guarantee the existence of an optimal solution.  The existence of an optimal solution is determined by the properties of the linear program itself (e.g., boundedness and feasibility).
-E. Complementary slackness is a crucial tool for verifying optimality in linear programming.
+A. The dual variables represent the shadow prices of the resources.  $y_1^*$ is the shadow price of the first constraint (total resource 1), and $y_2^*$ is the shadow price of the second constraint (total resource 2).  A small increase of $t$ in the right-hand side of the $i$-th constraint will increase the optimal objective function value by approximately $y_i^* t$.  This is evident from Slide 10, where $\Delta \zeta^* = (\Delta b)^T y^*$.
+B. The dual variables are not the optimal quantities of resources used. They represent the marginal value of additional resources.
+C. The dual variables represent the marginal value (increase) of additional resources, not the marginal cost.
+D. The dual variables are not related to production levels in this context. They represent the value of additional resources.
+E. The dual variables are not reduced costs. Reduced costs relate to the change in the objective function when changing non-basic variables.
 
 
 QUESTION 4
-Referring to Slides 7-10, what is the economic interpretation of the dual variable $y_2^*$ (the optimal dual variable associated with the second constraint in the primal problem) in the context of the linear program in Slide 1?
-A. It represents the marginal cost of producing one unit of $x_1$.
-B. It represents the marginal cost of producing one unit of $x_2$.
-C. It represents the shadow price of the second resource (the resource constrained by the second constraint).
-D. It represents the optimal value of the objective function.
-E. It represents the marginal profit obtained by increasing the production of $x_1$ and $x_2$.
+Consider the matrix representation of the linear program in Slide 4.  If we partition the variable vector $X$ into basic ($X_B$) and non-basic ($X_N$) variables, what is the significance of the reduced cost vector $\bar{C} = (B^{-1}N)^T c_B - c_N$ in determining the optimality of the current solution?
+A. If $\bar{C} \ge 0$, the current solution is optimal; otherwise, it is not.
+B. If $\bar{C} \le 0$, the current solution is optimal; otherwise, it is not.
+C. If any element of $\bar{C}$ is zero, the current solution is optimal.
+D. If any element of $\bar{C}$ is positive, the current solution is optimal.
+E. The reduced cost vector is irrelevant to determining optimality.
 
-ANSWER: C
+ANSWER: A
 
 EXPLANATION:
-A. This is incorrect. The marginal cost of producing $x_1$ is related to the objective function coefficient of $x_1$, not the dual variable $y_2^*$.
-B. This is incorrect. Similar to option A, the marginal cost of producing $x_2$ is related to the objective function coefficient of $x_2$, not the dual variable $y_2^*$.
-C. Slides 7-10 show that the dual variables represent shadow prices.  $y_2^*$ represents the increase in the optimal objective function value for a one-unit increase in the right-hand side of the second constraint, which represents a resource.  Therefore, it's the shadow price of that resource.
-D. This is incorrect. The optimal value of the objective function is $\zeta^*$, not $y_2^*$.
-E. This is incorrect. The marginal profit is related to the changes in the objective function value, not directly to a single dual variable.
+A. The reduced cost vector $\bar{C}$ represents the change in the objective function value per unit increase in each non-basic variable. If all elements of $\bar{C}$ are non-negative, increasing any non-basic variable will not improve the objective function, indicating that the current solution is optimal.  If any element of $\bar{C}$ is negative, increasing the corresponding non-basic variable will improve the objective function, indicating that the current solution is not optimal.
+B. This is incorrect.  A negative reduced cost indicates that the objective function can be improved by increasing the corresponding non-basic variable.
+C. This is incorrect.  A zero reduced cost indicates that increasing the corresponding non-basic variable will not change the objective function value, but it doesn't guarantee optimality.
+D. This is incorrect.  A positive reduced cost indicates that increasing the corresponding non-basic variable will worsen the objective function.
+E. This is incorrect. The reduced cost vector is crucial for determining optimality in the simplex method.
 
 
 QUESTION 5
-In Slide 1, if the right-hand side of the second constraint ($10x_1 + 30x_2 \le 4000$) is increased by $t$, what is the new optimal value of $x_1$ in terms of $t$?
-A. $25 + t/40$
-B. $25 - t/40$
-C. $75 + t/40$
-D. $75 - t/40$
-E. $25 + t$
+In the linear program presented in Slide 1, if the right-hand side of the second constraint ($10x_1 + 30x_2 \le 4000$) is increased by $t$, how does this affect the optimal values of $x_1$, $x_2$, and $\zeta$? What is the maximum allowable increase $t$ before the current optimal solution becomes infeasible?
+A. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 1000$
+B. $x_1$ increases, $x_2$ decreases, $\zeta$ increases; $t \le 1000$
+C. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 3000$
+D. $x_1$ increases, $x_2$ decreases, $\zeta$ decreases; $t \le 1000$
+E. $x_1$ decreases, $x_2$ increases, $\zeta$ remains unchanged; $t \le 1000$
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. This incorrectly adds $t/40$ instead of subtracting it.
-B. From Slide 7, the new optimal value of $x_1$ is given by $x_1^* = 25 - t/40$.
-C. This is the new optimal value for $x_2$, not $x_1$.
-D. This incorrectly subtracts $t/40$ from $x_2$ instead of $x_1$.
-E. This is an incorrect simplification of the change in $x_1$.
+A. The analysis in Slides 7 and 8 shows that increasing the right-hand side of the second constraint by $t$ leads to $x_1^* = 25 - t/40$ and $x_2^* = 75 + t/40$.  Since $x_1^*$ and $x_2^*$ must remain non-negative, we have $25 - t/40 \ge 0$ and $75 + t/40 \ge 0$. This implies $-1000 \le t \le 1000$. The objective function becomes $\zeta = 6250 + 0.75t$, showing an increase in $\zeta$ with increasing $t$. Thus, $x_1$ decreases, $x_2$ increases, and $\zeta$ increases. The maximum allowable increase before infeasibility is $t = 1000$.
+B. This option incorrectly states that $x_1$ increases and $x_2$ decreases. The calculations in Slide 7 show the opposite effect.
+C. This option has the correct trend for $x_1$, $x_2$, and $\zeta$, but the maximum allowable increase $t$ is incorrectly calculated. The constraint $25 - t/40 \ge 0$ gives $t \le 1000$.
+D. This option incorrectly states that $\zeta$ decreases. The calculations in Slide 8 show that $\zeta$ increases with increasing $t$.
+E. This option incorrectly states that $\zeta$ remains unchanged. The calculations in Slide 8 show that $\zeta$ increases with increasing $t$.
 
 
 QUESTION 6
-According to Slide 8, what is the expression for the new optimal objective function value ($\zeta^*$) after increasing the right-hand side of the second constraint in Slide 1 by $t$?
-A. $6250 - 0.75t$
-B. $6250 + 0.75t$
-C. $6250 + t$
-D. $6250 - t$
-E. $6250 + 32.5t$
+In the linear program presented in Slide 1, if the right-hand side of the second constraint ($10x_1 + 30x_2 \le 4000$) is increased by $t$, how does this affect the optimal values of $x_1$, $x_2$, and $\zeta$? What is the maximum allowable increase $t$ before the current optimal solution becomes infeasible?
+A. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 1000$
+B. $x_1$ increases, $x_2$ decreases, $\zeta$ increases; $t \le 4000$
+C. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 4000$
+D. $x_1$ increases, $x_2$ decreases, $\zeta$ decreases; $t \le 1000$
+E. $x_1$ decreases, $x_2$ increases, $\zeta$ remains unchanged; $t \le 1000$
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. This incorrectly subtracts the change instead of adding it.
-B. Slide 8 shows that the new optimal objective function value is $\zeta^* = 6250 + 0.75t$.
-C. This is an oversimplification of the change in the objective function.
-D. This is an oversimplification of the change in the objective function.
-E. This uses the wrong dual variable as a multiplier for $t$.
+A. From Slide 7, increasing the right-hand side of the second constraint by $t$ leads to the new optimal solution $x_1^* = 25 - \frac{t}{40}$ and $x_2^* = 75 + \frac{t}{40}$.  Thus, $x_1$ decreases and $x_2$ increases. The new objective function value is $\zeta^* = 6250 + 0.75t$, showing an increase in $\zeta$. For feasibility, we require $x_1^* \ge 0$ and $x_2^* \ge 0$, which implies $25 - \frac{t}{40} \ge 0$ and $75 + \frac{t}{40} \ge 0$.  The first inequality gives $t \le 1000$. The second inequality gives $t \ge -3000$. Therefore, the maximum allowable increase is $t \le 1000$.
+B. Incorrect. While the objective function increases, the changes in $x_1$ and $x_2$ are not correctly predicted. The upper bound on $t$ is also incorrect.
+C. Incorrect. The upper bound on $t$ is incorrect.  The analysis in Slide 7 shows a tighter constraint on $t$.
+D. Incorrect. The change in $\zeta$ is correctly predicted, but the changes in $x_1$ and $x_2$ are incorrect.
+E. Incorrect. The objective function does change with $t$. The analysis in Slide 7 shows that $\zeta$ increases with $t$.
 
 
 QUESTION 7
-Using complementary slackness (Slide 3), and given that $x_1^* = 25$ and $x_2^* = 75$, what is the value of $y_1$?
-A. 0
-B. 0.75
-C. 32.5
-D. 40
-E. 70
+Using complementary slackness (Slide 3), verify the optimality of the solution $x_1^* = 25$, $x_2^* = 75$ for the primal problem in Slide 1. What are the optimal values of the dual variables $y_1^*$ and $y_2^*$, and how do they relate to the optimal objective function value?
+A. $y_1^* = 32.5, y_2^* = 0.75$; $100y_1^* + 4000y_2^* = 6250 = \zeta^*$
+B. $y_1^* = 0, y_2^* = 1.4$; $100y_1^* + 4000y_2^* = 5600 \ne \zeta^*$
+C. $y_1^* = 40, y_2^* = 70$; $100y_1^* + 4000y_2^* = 290000 \ne \zeta^*$
+D. $y_1^* = 25, y_2^* = 75$; $100y_1^* + 4000y_2^* = 302500 \ne \zeta^*$
+E. $y_1^* = 30, y_2^* = 1$; $100y_1^* + 4000y_2^* = 7000 \ne \zeta^*$
 
-ANSWER: C
+ANSWER: A
 
 EXPLANATION:
-A. This would imply that $x_1^* = 0$, which contradicts the given information.
-B. This is the value of $y_2$, not $y_1$.
-C. Since $x_1^* > 0$ and $x_2^* > 0$, we have $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$. Solving this system gives $y_1 = 32.5$ and $y_2 = 0.75$.
-D. This is the right-hand side of the first constraint in the dual problem.
-E. This is the right-hand side of the second constraint in the dual problem.
+A. Since $x_1^* > 0$ and $x_2^* > 0$, complementary slackness implies that the corresponding dual slack variables are zero: $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$. Solving this system (as shown in Slide 3) yields $y_1^* = 32.5$ and $y_2^* = 0.75$.  The optimal dual objective function value is $100y_1^* + 4000y_2^* = 100(32.5) + 4000(0.75) = 6250$, which equals the optimal primal objective function value $\zeta^*$, verifying strong duality and thus the optimality of the solution.
+B. Incorrect. These values do not satisfy the complementary slackness conditions and do not lead to the correct dual objective function value.
+C. Incorrect. These values do not satisfy the complementary slackness conditions and do not lead to the correct dual objective function value.
+D. Incorrect. These values are the primal optimal values, not the dual optimal values. They also do not satisfy the complementary slackness conditions.
+E. Incorrect. These values do not satisfy the complementary slackness conditions and do not lead to the correct dual objective function value.
 
 
 QUESTION 8
-What is the range of values for $t$ that maintains feasibility ($x_1^*, x_2^* \ge 0$) in Slide 7, given the updated optimal solutions $x_1^* = 25 - t/40$ and $x_2^* = 75 + t/40$?
-A. $t \ge 1000$
-B. $-1000 \le t \le 1000$
-C. $-3000 \le t \le 1000$
-D. $t \le -3000$
-E. $t \ge 3000$
+Explain the economic interpretation of the dual variables $y_1^*$ and $y_2^*$ obtained in the previous question. How are these values related to the sensitivity of the optimal objective function value to changes in the right-hand side of the constraints?
+A. $y_1^*$ and $y_2^*$ represent the marginal increase in profit per unit increase in the right-hand side of the first and second constraints, respectively.  The sensitivity of $\zeta^*$ to changes in the right-hand side is directly proportional to these values.
+B. $y_1^*$ and $y_2^*$ represent the shadow prices of resources 1 and 2, respectively. The sensitivity of $\zeta^*$ to changes in the right-hand side is given by the dual variables.
+C. $y_1^*$ and $y_2^*$ represent the marginal cost of resources 1 and 2, respectively. The sensitivity of $\zeta^*$ to changes in the right-hand side is inversely proportional to these values.
+D. $y_1^*$ and $y_2^*$ represent the optimal quantities of resources 1 and 2, respectively. The sensitivity of $\zeta^*$ to changes in the right-hand side is independent of these values.
+E. $y_1^*$ and $y_2^*$ represent the slack variables in the dual problem. The sensitivity of $\zeta^*$ to changes in the right-hand side is unrelated to these values.
 
-ANSWER: C
+ANSWER: B
 
 EXPLANATION:
-A. This only considers the upper bound on $t$.
-B. This is a narrower range than the one calculated in Slide 7.
-C. Slide 7 explicitly states that to maintain feasibility, $-3000 \le t \le 1000$.
-D. This only considers the lower bound on $t$.
-E. This is an incorrect range for $t$.
+A. Incorrect. While the interpretation is close, it's more accurate to say they represent shadow prices, which reflect the marginal increase in the objective function value, not necessarily profit.
+B. The dual variables $y_1^*$ and $y_2^*$ represent the shadow prices of the resources associated with the first and second constraints, respectively.  A shadow price indicates the marginal increase in the optimal objective function value ($\zeta^*$) for a one-unit increase in the corresponding resource (right-hand side of the constraint).  Slide 10 explicitly shows that the change in $\zeta^*$ due to a change in $b$ is given by $(\Delta b)^T y^*$.  Therefore, the sensitivity of $\zeta^*$ to changes in the right-hand side is directly given by the dual variables.
+C. Incorrect. Shadow prices represent the marginal increase in the objective function value, not the marginal cost of resources.
+D. Incorrect. The dual variables represent shadow prices, not the optimal quantities of resources.
+E. Incorrect. The dual variables are not slack variables; they are shadow prices.
 
 
 QUESTION 9
-In the context of sensitivity analysis for the linear program in Slide 1, how does the optimal dual solution ($y^*$) relate to the change in the optimal objective function value ($\Delta \zeta^*$) when there's a small change in the right-hand side vector ($\Delta b$)?
-A. The change in the objective function is independent of the dual solution.
-B. $\Delta \zeta^*$ is equal to the dot product of $\Delta b$ and $y^*$.
-C. $\Delta \zeta^*$ is equal to the sum of the elements of $y^*$.
-D. $\Delta \zeta^*$ is equal to the product of the largest element in $\Delta b$ and the largest element in $y^*$.
-E. The change in the objective function is inversely proportional to the magnitude of $y^*$.
+Consider the matrix representation of the linear program in Slide 4. If we partition the variable vector $X$ into basic ($X_B$) and non-basic ($X_N$) variables, what is the significance of the reduced cost vector $\bar{C} = (B^{-1}N)^T c_B - c_N$ in determining the optimality of the current solution?
+A. If $\bar{C} = 0$, the current solution is optimal. If any element of $\bar{C}$ is positive, the solution is not optimal.
+B. If $\bar{C} > 0$, the current solution is optimal. If any element of $\bar{C}$ is negative, the solution is not optimal.
+C. If $\bar{C} < 0$, the current solution is optimal. If any element of $\bar{C}$ is positive, the solution is not optimal.
+D. The reduced cost vector is irrelevant to determining optimality.
+E. If any element of $\bar{C}$ is zero, the current solution is optimal.
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. Answer A is incorrect because the optimal dual solution directly influences the change in the objective function value when the right-hand side changes, as shown by the formula in Slide 10.
-B. Answer B is correct.  Slide 10 explicitly shows that for small changes in the right-hand side, the change in the optimal objective function value is given by $\Delta \zeta^* = (\Delta b)^T y^*$, which is the dot product of the change in the right-hand side vector and the optimal dual solution vector. This demonstrates the crucial role of the dual variables (shadow prices) in sensitivity analysis.
-C. Answer C is incorrect. The change in the objective function is not simply the sum of the dual variables; it's a weighted sum based on the changes in the right-hand side constraints.
-D. Answer D is incorrect. The relationship between the change in the objective function and the dual solution is not based on the largest elements but on the dot product of the vectors.
-E. Answer E is incorrect. The relationship is not an inverse proportionality; instead, it's a direct proportionality, as shown in Slide 10.
+A. The reduced cost vector $\bar{C}$ represents the change in the objective function value per unit increase in each non-basic variable. If all elements of $\bar{C}$ are non-negative ($\bar{C} \ge 0$), then increasing any non-basic variable will not improve the objective function value, indicating that the current solution is optimal. If any element of $\bar{C}$ is positive, it means that increasing the corresponding non-basic variable will improve the objective function, indicating that the current solution is not optimal.
+B. Incorrect.  A positive reduced cost indicates that the solution is *not* optimal because increasing the corresponding non-basic variable improves the objective function.
+C. Incorrect. A negative reduced cost indicates that the solution is *not* optimal because increasing the corresponding non-basic variable improves the objective function.
+D. Incorrect. The reduced cost vector is crucial for determining optimality in the simplex method.
+E. Incorrect.  A zero reduced cost for a non-basic variable doesn't necessarily imply optimality; all reduced costs must be non-negative for optimality.
 
 
 QUESTION 10
-In Slide 1, if the right-hand side of the second constraint ($10x_1 + 30x_2 \le 4000$) is increased by $t$, what is the new optimal value of $x_1$ in terms of $t$?
-A. $25 + t/40$
-B. $25 - t/40$
-C. $75 + t/40$
-D. $75 - t/40$
-E. $25 + t$
+Part A:
+In the linear program presented in Slide 1, if the right-hand side of the second constraint ($10x_1 + 30x_2 \le 4000$) is increased by $t$, how does this affect the optimal values of $x_1$, $x_2$, and $\zeta$? What is the maximum allowable increase $t$ before the current optimal solution becomes infeasible?
+A. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 1000$
+B. $x_1$ increases, $x_2$ decreases, $\zeta$ increases; $t \le 1000$
+C. $x_1$ decreases, $x_2$ increases, $\zeta$ increases; $t \le 3000$
+D. $x_1$ increases, $x_2$ decreases, $\zeta$ decreases; $t \le 1000$
+E. $x_1$ decreases, $x_2$ increases, $\zeta$ remains unchanged; $t \le 1000$
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. This is incorrect.  The calculation in Slide 7 shows a decrease in $x_1$ as $t$ increases.
-B. From Slide 7, the new optimal value of $x_1$ after increasing the right-hand side of the second constraint by $t$ is given by $x_1^* = 25 - t/40$.
-C. This is incorrect. This represents the change in $x_2$, not $x_1$.
-D. This is incorrect. This represents the change in $x_2$ with a negative sign, which is also incorrect.
-E. This is incorrect. The change in $x_1$ is not a simple addition of $t$. The correct expression involves the inverse of the basis matrix.
+A. From Slide 7, increasing the right-hand side of the second constraint by $t$ leads to the new optimal solution $x_1^* = 25 - \frac{t}{40}$ and $x_2^* = 75 + \frac{t}{40}$.  Thus, $x_1$ decreases and $x_2$ increases as $t$ increases.  From Slide 8, the new optimal objective function value is $\zeta^* = 6250 + 0.75t$, indicating an increase in $\zeta$. For the solution to remain feasible, we must have $x_1^* \ge 0$ and $x_2^* \ge 0$, which implies $25 - \frac{t}{40} \ge 0$ and $75 + \frac{t}{40} \ge 0$.  The first inequality gives $t \le 1000$, and the second inequality gives $t \ge -3000$. Therefore, the maximum allowable increase in $t$ before the solution becomes infeasible is 1000.
+B. Incorrect. While the objective function increases, the changes in $x_1$ and $x_2$ are opposite to what is stated.
+C. Incorrect. The upper bound on $t$ is calculated incorrectly.
+D. Incorrect. The objective function increases, and the changes in $x_1$ and $x_2$ are opposite to what is stated.
+E. Incorrect. The objective function does increase with $t$.
+
+Part B:
+Using complementary slackness (Slide 3), verify the optimality of the solution $x_1^* = 25$, $x_2^* = 75$ for the primal problem in Slide 1. What are the optimal values of the dual variables $y_1^*$ and $y_2^*$, and how do they relate to the optimal objective function value?
+A. $y_1^* = 32.5$, $y_2^* = 0.75$; $100y_1^* + 4000y_2^* = 6250 = \zeta^*$
+B. $y_1^* = 25$, $y_2^* = 75$; $100y_1^* + 4000y_2^* = 302500 \ne \zeta^*$
+C. $y_1^* = 0$, $y_2^* = 0$; $100y_1^* + 4000y_2^* = 0 \ne \zeta^*$
+D. $y_1^* = 40$, $y_2^* = 70$; $100y_1^* + 4000y_2^* = 300000 \ne \zeta^*$
+E. $y_1^* = 70$, $y_2^* = 40$; $100y_1^* + 4000y_2^* = 190000 \ne \zeta^*$
+
+ANSWER: A
+
+EXPLANATION:
+A. Since $x_1^* = 25 > 0$ and $x_2^* = 75 > 0$, complementary slackness implies that the corresponding dual slack variables are zero: $y_1 + 10y_2 = 40$ and $y_1 + 50y_2 = 70$. Solving this system gives $y_1^* = 32.5$ and $y_2^* = 0.75$.  The optimal objective function value of the dual problem is $100y_1^* + 4000y_2^* = 100(32.5) + 4000(0.75) = 6250$, which equals $\zeta^*$, verifying strong duality and the optimality of the primal solution.
+B. Incorrect. These values are the primal optimal solution, not the dual optimal solution.  Strong duality is not satisfied.
+C. Incorrect.  These values do not satisfy the dual constraints.
+D. Incorrect. These values are the coefficients from the objective function, not the dual optimal solution. Strong duality is not satisfied.
+E. Incorrect. These values are the coefficients from the objective function, switched. Strong duality is not satisfied.
+
 
 

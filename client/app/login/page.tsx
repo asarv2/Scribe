@@ -106,7 +106,7 @@ export default function Login() {
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Center key={String(loadingUser)}>
                     {user ? <Stack>
                         <Text>Logged in as {user.email}</Text>

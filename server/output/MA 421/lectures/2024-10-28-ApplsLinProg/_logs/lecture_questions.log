@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 17:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:26
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -428,20 +428,20 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 45.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 45.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 48.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 48.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 48.
  [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}] [2{/usr/local/texlive/2024/texm
-f-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/fonts/e
-nc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/l
-m/lm-mathsy.enc}] [3] [4] [5] [6] 
+al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [2] [3] [4] [5]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 199.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 199.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 199.
+ [6{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}] [7] [
+8{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/t
+exlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [9] [10] [11]
+
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
@@ -452,25 +452,24 @@ Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
 (rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10305 strings out of 474116
- 160438 string characters out of 5743682
- 1942187 words of memory out of 5000000
+ 10361 strings out of 474116
+ 160873 string characters out of 5743682
+ 1941187 words of memory out of 5000000
  32393 multiletter control sequences out of 15000+600000
  595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,1008b,713s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,933b,853s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
-cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texliv
-e/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/tex
-mf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fon
-ts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
-blic/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr
-17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr
-/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on _logs/lecture_questions.pdf (6 pages, 163537 bytes).
+cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
+e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
+f-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/font
+s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
+lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy
+10.pfb>
+Output written on _logs/lecture_questions.pdf (11 pages, 161612 bytes).
 PDF statistics:
- 243 PDF objects out of 1000 (max. 8388607)
- 213 compressed objects within 3 object streams
- 129 named destinations out of 1000 (max. 500000)
+ 317 PDF objects out of 1000 (max. 8388607)
+ 286 compressed objects within 3 object streams
+ 186 named destinations out of 1000 (max. 500000)
  17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

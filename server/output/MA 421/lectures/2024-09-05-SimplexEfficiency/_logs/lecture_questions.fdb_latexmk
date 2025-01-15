@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1735688103.16313 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-05-SimplexEfficiency/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735688103.67632 0
-  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-05-SimplexEfficiency/lecture_questions.tex" 1735688102.52335 17889 83281918807800935c2f1630cee67c3a ""
+["pdflatex"] 1735830764.59904 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-05-SimplexEfficiency/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735830765.11659 0
+  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-05-SimplexEfficiency/lecture_questions.tex" 1735830763.95171 34073 d7ceef67de43c4ad958a94b2e6bee0ad ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -100,9 +100,9 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1733257442.02404 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1733257414 8221420 9fe73b124419eb36a2edd6f23a82e5ea ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "_logs/lecture_questions.aux" 1735688103.61464 585 db194f7f84e4e6473981c80a7e9726fb "pdflatex"
-  "_logs/lecture_questions.out" 1735688103.61519 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
-  "lecture_questions.tex" 1735688102.52335 17889 83281918807800935c2f1630cee67c3a ""
+  "_logs/lecture_questions.aux" 1735830765.0543 590 c88aa20e34fe7ee4a660922134e9e4ec "pdflatex"
+  "_logs/lecture_questions.out" 1735830765.0548 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
+  "lecture_questions.tex" 1735830763.95171 34073 d7ceef67de43c4ad958a94b2e6bee0ad ""
   (generated)
   "_logs/lecture_questions.aux"
   "_logs/lecture_questions.log"

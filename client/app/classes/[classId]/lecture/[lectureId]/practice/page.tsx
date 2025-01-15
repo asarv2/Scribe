@@ -14,6 +14,7 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import NotesSummary from "@/components/NotesSummary";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { IconArrowLeft, IconDownload, IconRefresh } from '@tabler/icons-react';
 import { getLectureQuestions } from "@/utils/queries/get-questions";
 import QuestionSolutionSlide from "@/components/QuestionSolutionSlide";
@@ -27,6 +28,7 @@ export default function LecturePractice({ params }: { params: { classId: string,
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
     const lectureId = params.lectureId;
+    const router = useRouter();
 
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
@@ -102,13 +104,11 @@ export default function LecturePractice({ params }: { params: { classId: string,
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}/lecture/${lectureId}`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
-                            </Link>
+                            <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} onClick={() => router.back()} />
                             <Text size="xl" fw={700} mb={6}>Lecture {lecture?.note_number} Practice ({lecture?.name})</Text>
                         </Group>
                         <Group p={"sm"}>

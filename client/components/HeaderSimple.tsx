@@ -5,54 +5,177 @@
  * 09.01.2024
  */
 
-import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box } from '@mantine/core';
+import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { IconChevronDown, IconUser } from '@tabler/icons-react';
+import { getUser } from '@/utils/queries/get-user';
+import { useQuery } from '@tanstack/react-query';
+import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
+import type { User } from '@supabase/supabase-js';
+import { isProfessor } from '@/utils/lecture/isProfessor';
 
-
-const links = [
-    { link: '/classes/3236bffb-cfa4-47b8-a0a2-44427df57e3b', label: 'MA 421' },
-    // { link: '/classes/c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
-    // { link: '/login', label: 'Professor' },
+const classNav = [
+    { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA 421' },
+    // { id: '15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
+    { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
+    { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
+    { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
 ];
 
 export function HeaderSimple() {
+    const supabase = useSupabaseBrowser();
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const pathname = usePathname();
 
-    const items = links.map((link) => (
+    // Get current class from URL
+    const currentClassId = pathname.split('/classes/')[1]?.split('/')[0];
+    const currentClass = classNav.find(c => c.id === currentClassId);
+    const displayText = currentClass ? currentClass.label : 'Select Class';
+
+    // Modify navigation links to be dynamic based on current class
+    const navigationLinks = [
+        // {
+        //     link: currentClassId
+        //         ? `/classes/${currentClassId}`
+        //         : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a', // default class
+        //     label: 'Topics'
+        // },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/lecture`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/lecture',
+            label: 'Lectures'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/generate/summary`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate/summary',
+            label: 'Summaries'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/generate/problems`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate/problems',
+            label: 'Problems'
+        },
+    ];
+
+    const navigationItems = navigationLinks.map((link) => (
         <Box p={2} key={link.label}>
             <Link
-                key={link.label}
                 href={link.link}
                 className={classes.link}
-                data-active={pathname.includes(link.link) || undefined}
+                data-active={pathname === link.link || undefined}
             >
                 {link.label}
             </Link>
         </Box>
     ));
 
+    const { data: user } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
     return (
         <>
             <header className={classes.header}>
                 <Container size="md" className={classes.inner}>
-                    <Link href="/">
-                        <Image
-                            src="/images/logo.png"
-                            alt="Logo"
-                            width={100}
-                            height={20}
-                        />
-                    </Link>
-                    <Group gap={5} visibleFrom="xs">
-                        {items}
-                    </Group>
+                    <Group justify="space-between" style={{ width: '100%' }}>
+                        <Group align="center">
+                            <Link href="/">
+                                <Image
+                                    src="/images/logo.png"
+                                    priority
+                                    alt="Logo"
+                                    width={100}
+                                    height={20}
+                                    style={{ marginTop: 4 }}
+                                />
+                            </Link>
 
-                    <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="xs" size="sm" />
+                            {user && (
+                                <Menu shadow="md" width={200}>
+                                    <Menu.Target>
+                                        <button className={classes.classSelector}>
+                                            {displayText} <IconChevronDown size={16} />
+                                        </button>
+                                    </Menu.Target>
+
+                                    <Menu.Dropdown>
+                                        {classNav.map((classItem) => {
+                                            if (isProfessor(user, classItem.id)) {
+                                                return (
+                                                    <Menu.Item
+                                                        key={classItem.id}
+                                                        component={Link}
+                                                        href={`/classes/${classItem.id}/lecture`}
+                                            >
+                                                        {classItem.label}
+                                                    </Menu.Item>
+                                                )
+                                            }
+                                        })}
+                                    </Menu.Dropdown>
+                                </Menu>
+                            )}
+                        </Group>
+
+                        {user && (
+                            <Group gap={5} visibleFrom="xs">
+                                {navigationItems}
+                            </Group>
+                        )}
+
+                        <Group gap={5} visibleFrom="xs">
+                            {user ? (
+                                <Menu shadow="md" width={200}>
+                                    <Menu.Target>
+                                        <button className={classes.profileButton}>
+                                            <IconUser size={20} />
+                                        </button>
+                                    </Menu.Target>
+                                    
+                                    <Menu.Dropdown>
+                                    <Menu.Label>{user.email}</Menu.Label>
+                                        <Menu.Divider />
+                                        <Menu.Item
+                                            color="blue"
+                                            component={Link}
+                                            href="/login"
+                                        >
+                                            Account
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            color="red"
+                                            onClick={async () => {
+                                                await supabase.auth.signOut();
+                                                window.location.reload();
+                                            }}
+                                        >
+                                            Logout
+                                        </Menu.Item>
+                                    </Menu.Dropdown>
+                                </Menu>
+                            ) : (
+                                <Box p={2}>
+                                    <Link
+                                        href="/login"
+                                        className={classes.link}
+                                        data-active={pathname.includes('/login') || undefined}
+                                    >
+                                        Login
+                                    </Link>
+                                </Box>
+                            )}
+                        </Group>
+
+                        <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="xs" size="sm" />
+                    </Group>
                 </Container>
             </header>
 
@@ -71,6 +194,7 @@ export function HeaderSimple() {
                             <Link href="/" passHref>
                                 <Image
                                     src="/images/logo.png"
+                                    priority
                                     alt="Logo"
                                     width={100}
                                     height={20}
@@ -82,11 +206,37 @@ export function HeaderSimple() {
                     <Drawer.Body>
                         <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md" p={4}>
                             <Divider my="sm" />
-                            {items}
+                            {user ? (
+                                <>
+                                    {navigationItems}
+                                    <Divider my="sm" />
+                                    <Box p={2}>
+                                        <Link
+                                            href="/login"
+                                            className={classes.link}
+                                            data-active={pathname === "/login" || undefined}
+                                        >
+                                            Account
+                                        </Link>
+                                    </Box>
+                                </>
+                            ) : (
+                                <>
+                                    <Box p={2}>
+                                        <Link
+                                            href="/login"
+                                            className={classes.link}
+                                            data-active={pathname === "/login" || undefined}
+                                        >
+                                            Login
+                                        </Link>
+                                    </Box>
+                                </>
+                            )}
                         </ScrollArea>
                     </Drawer.Body>
                 </Drawer.Content>
             </Drawer.Root >
-        </>
+            </>
     );
 }

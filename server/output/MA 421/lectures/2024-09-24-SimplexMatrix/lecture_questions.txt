@@ -1,180 +1,252 @@
 QUESTION 1
-Given the linear program in Slide 1: $\max \quad \xi(x) = c^T x$ subject to $Ax \le b, x \ge 0$, and its equivalent formulation with slack variables $W = b - Ax$, $x, W \ge 0$, what is the dimension of the slack variable vector $W$?
-A. $n$
-B. $m$
-C. $m+n$
-D. $m-n$
-E. $n-m$
+Consider the linear program in Slide 1, expressed in matrix notation.  If we introduce slack variables to convert the inequality constraints into equalities, what is the dimension of the augmented constraint matrix $\begin{bmatrix} A & I \end{bmatrix}$, where $A$ is the original constraint matrix and $I$ is the identity matrix?
+A. $m \times n$
+B. $m \times (m+n)$
+C. $n \times (m+n)$
+D. $(m+n) \times n$
+E. $n \times m$
 
 ANSWER: B
 
 EXPLANATION:
-A. The dimension of $W$ is not $n$. $n$ is the number of decision variables, not the number of constraints.
-B. The dimension of the slack variable vector $W$ is $m$ because there is one slack variable for each inequality constraint, and there are $m$ inequality constraints in the original problem.
-C. The dimension of $W$ is not $m+n$. $m+n$ is the total number of variables in the problem after introducing slack variables.
-D. The dimension of $W$ cannot be $m-n$ because the number of slack variables cannot be negative.
-E. The dimension of $W$ cannot be $n-m$ because the number of slack variables cannot be negative.
+A. This is the dimension of the original constraint matrix $A$, not the augmented matrix.
+B. The original constraint matrix $A$ has dimensions $m \times n$.  The identity matrix $I$ has dimensions $m \times m$ to match the number of constraints.  Therefore, the augmented matrix $\begin{bmatrix} A & I \end{bmatrix}$ has dimensions $m \times (m+n)$.
+C. This is incorrect; the number of rows should be $m$, corresponding to the number of constraints.
+D. This is incorrect; the number of rows should be $m$, corresponding to the number of constraints.
+E. This is the transpose of the original constraint matrix $A$, not the augmented matrix.
 
 
 QUESTION 2
-In the context of the simplex method as presented in the slides, what is the fundamental purpose of introducing slack variables, and how does this transformation affect the representation of the linear program?
-A. Slack variables are introduced to simplify calculations by reducing the number of constraints in the linear program.
-B. Slack variables transform inequality constraints into equality constraints, allowing for a more straightforward application of the simplex algorithm which operates on systems of equations.
-C. Slack variables are used to ensure the feasibility of the linear program by adding additional degrees of freedom to the solution space.
-D. Slack variables are introduced to improve the numerical stability of the simplex algorithm by reducing the condition number of the constraint matrix.
-E. Slack variables are primarily used for theoretical analysis of the simplex method, rather than for practical implementation.
+Referring to Slide 4, explain the significance of partitioning the variable vector $X$ into basic ($X_B$) and non-basic ($X_N$) variables in the context of the simplex method. How does this partitioning simplify the representation of the objective function and constraints?
+A. It allows for easier calculation of the inverse of the constraint matrix.
+B. It simplifies the calculation of the dual problem.
+C. It allows for iterative solution by setting non-basic variables to zero and solving for basic variables.
+D. It simplifies the graphical representation of the feasible region.
+E. It is not significant; it is merely a notational convenience.
 
-ANSWER: B
+ANSWER: C
 
 EXPLANATION:
-A. Answer A is incorrect. While the introduction of slack variables might indirectly simplify calculations by changing the structure of the problem, their primary purpose is not to reduce the number of constraints. In fact, it increases the number of variables.
-B. Answer B is correct.  The introduction of slack variables is a crucial step in the simplex method because it converts inequality constraints ($Ax \le b$) into equality constraints ($Ax + W = b$), where $W$ is the vector of slack variables. This transformation is essential because the simplex algorithm is designed to work with systems of linear equations.  The slides clearly demonstrate this transformation in multiple equivalent formulations of the linear program.
-C. Answer C is incorrect. Slack variables do not guarantee feasibility; they simply transform the problem into a form suitable for the simplex algorithm. Feasibility is determined by the constraints and the solution found by the algorithm.
-D. Answer D is incorrect. While numerical stability is a concern in linear programming, the introduction of slack variables is not primarily aimed at improving it.  Other techniques are used to address numerical stability issues.
-E. Answer E is incorrect. Slack variables are fundamental to the practical implementation of the simplex method, not just theoretical analysis. They are essential for the algorithm's operation.
+A. While the inverse of the basic variable matrix ($B$) is calculated, the partitioning itself doesn't directly simplify this calculation.
+B. The partitioning simplifies the primal problem's solution; the dual problem's simplification is a consequence, not the direct result of the partitioning.
+C. The partitioning is crucial because at each iteration of the simplex method, the non-basic variables are set to zero, simplifying the constraints to a system of $m$ equations in $m$ unknowns (the basic variables). This allows for easy calculation of the basic variable values and the objective function value at each vertex of the feasible region.
+D. The partitioning doesn't directly simplify the graphical representation; it simplifies the algebraic representation used in the simplex algorithm.
+E. The partitioning is fundamental to the simplex algorithm's efficiency and is not merely a notational convenience.
 
 
 QUESTION 3
-How does the partitioning of variables into basic and non-basic sets within the simplex method facilitate the iterative solution process, and what is the significance of this partitioning in the matrix representation of the linear program?
-A. The partitioning simplifies calculations by reducing the dimensionality of the problem at each iteration.
-B. The partitioning allows for the iterative update of the solution by expressing basic variables in terms of non-basic variables, enabling a systematic exploration of the feasible region.
-C. The partitioning is primarily a theoretical construct, with little practical impact on the efficiency of the simplex algorithm.
-D. The partitioning is necessary to ensure the numerical stability of the simplex method, preventing potential errors during matrix inversions.
-E. The partitioning is only relevant for linear programs with equality constraints, not inequality constraints.
+In Slide 8, the objective function is rewritten as $J = \bar{J} + \bar{C}^T X_N$. What is the significance of the vector $\bar{C}$ (often called the reduced cost vector) in determining whether the current solution is optimal?
+A. If any element of $\bar{C}$ is positive, the solution is optimal.
+B. If any element of $\bar{C}$ is zero, the solution is optimal.
+C. If all elements of $\bar{C}$ are non-negative, the solution is optimal.
+D. If all elements of $\bar{C}$ are negative, the solution is optimal.
+E. The vector $\bar{C}$ is irrelevant to optimality; only the value of $\bar{J}$ matters.
 
-ANSWER: B
+ANSWER: D
 
 EXPLANATION:
-A. Answer A is incorrect. While the partitioning might indirectly simplify calculations, it doesn't reduce the problem's dimensionality. The number of variables remains the same; only their roles change.
-B. Answer B is correct. The partitioning of variables into basic and non-basic sets is the core of the simplex method's iterative process.  By setting non-basic variables to zero, the basic variables are uniquely determined by the equality constraints.  The algorithm then iteratively improves the solution by selecting a non-basic variable to enter the basis and a basic variable to leave, updating the basic variables accordingly. This process is clearly illustrated in the slides through the matrix representations ($BX_B + NX_N = b$) and the iterative updates of the objective function and basic variable values.
-C. Answer C is incorrect. The partitioning of variables is not merely a theoretical concept; it is fundamental to the practical implementation and efficiency of the simplex algorithm.
-D. Answer D is incorrect. While numerical stability is important, the partitioning itself doesn't directly address it. Other techniques are employed to improve numerical stability.
-E. Answer E is incorrect. The partitioning of variables is applicable to linear programs with both equality and inequality constraints (after introducing slack variables for inequalities).
+A. A positive element in $\bar{C}$ indicates that increasing the corresponding non-basic variable would improve the objective function, meaning the current solution is not optimal.
+B. A zero element in $\bar{C}$ indicates that increasing the corresponding non-basic variable would not change the objective function value.  While this doesn't necessarily mean the solution is optimal, it suggests the possibility of alternative optimal solutions.
+C. If any element of $\bar{C}$ is positive, the solution is not optimal because increasing the corresponding non-basic variable would improve the objective function.
+D. The reduced cost vector $\bar{C}$ represents the change in the objective function value for a unit increase in each non-basic variable. If all elements of $\bar{C}$ are negative, increasing any non-basic variable will not improve the objective function, indicating that the current solution is optimal.
+E. Both $\bar{J}$ and $\bar{C}$ are crucial for determining optimality. $\bar{J}$ gives the current objective function value, while $\bar{C}$ determines whether any improvement is possible.
 
 
 QUESTION 4
-Explain the relationship between the primal and dual simplex methods as depicted in the slides, focusing on how the matrix representations of their iterations highlight their connection.
-A. The primal and dual simplex methods are entirely independent algorithms with no mathematical relationship.
-B. The dual simplex method is simply a reversed version of the primal simplex method, with the steps performed in the opposite order.
-C. The matrix representations of the primal and dual simplex iterations reveal a close connection, with the matrices and vectors in one method being related to the transposes and negatives of those in the other method.
-D. The primal and dual simplex methods are only related in the context of linear programs with equality constraints.
-E. The dual simplex method is computationally more efficient than the primal simplex method in all cases.
+Slides 10 and 11 present two tables representing the primal and dual simplex methods in matrix form.  Explain the relationship between the two tables, focusing on the connection between the primal and dual objective function values and the basic variable values.
+A. The tables are unrelated; they represent different algorithms.
+B. The dual table is the negative transpose of the primal table.
+C. The dual table is the inverse of the primal table.
+D. The dual table is obtained by swapping rows and columns of the primal table.
+E. The dual table is identical to the primal table.
 
-ANSWER: C
+ANSWER: B
 
 EXPLANATION:
-A. Answer A is incorrect. The primal and dual simplex methods are deeply connected through the duality theory of linear programming.  Their solutions are related, and the iterations of one method are closely linked to the iterations of the other.
-B. Answer B is incorrect. While there are similarities, the dual simplex method is not simply a reversed primal simplex method. The steps and criteria for selecting entering and leaving variables are different.
-C. Answer C is correct. The slides explicitly show the matrix representations of both the primal and dual simplex methods.  The tables and equations demonstrate that the matrices and vectors involved in one method are closely related to the transposes and negatives of those in the other. This relationship highlights the duality between the primal and dual problems and their solutions.  The optimal dictionary, as shown in the slides, further emphasizes this connection.
-D. Answer D is incorrect. The relationship between the primal and dual simplex methods holds for linear programs with both equality and inequality constraints.
-E. Answer E is incorrect. The relative efficiency of the primal and dual simplex methods depends on the specific problem instance. Neither method is universally superior.
+A. The tables are closely related, representing the primal and dual formulations of the simplex method, which are intimately connected through duality theory.
+B. The relationship between the primal and dual simplex methods is highlighted by the fact that many entries in the dual table are the negative transpose of corresponding entries in the primal table. This reflects the duality theorem's connection between the primal and dual problems.
+C. While there's a mathematical relationship, it's not a simple inverse; it involves transposition and negation.
+D. The relationship is more complex than simply swapping rows and columns; it involves transposition and negation of specific entries.
+E. The tables are not identical; they represent different but related perspectives (primal and dual) on the same optimization problem.
 
 
 QUESTION 5
-Explain the significance of representing a linear program in matrix notation, particularly in the context of the simplex method.  How does this representation facilitate the algorithm's iterative process?
-A. Matrix notation simplifies the problem's visual representation, making it easier to understand the constraints.
-B. Matrix notation is essential for implementing the simplex method efficiently, allowing for systematic updates of the solution during iterations.
-C. Matrix notation is primarily useful for larger problems, while smaller problems can be solved more easily without it.
-D. Matrix notation is a theoretical tool, not directly used in the practical implementation of the simplex method.
-E. Matrix notation helps in identifying redundant constraints before applying the simplex method.
-
-ANSWER: B
-
-EXPLANATION:
-A. While matrix notation provides a compact representation, its primary significance lies in its computational advantages for the simplex algorithm, not just improved visualization.
-B. Matrix notation is crucial for the efficient implementation of the simplex method. It allows for concise representation of the objective function and constraints, enabling systematic updates of the solution and objective function value during each iteration through matrix operations.  The compact representation facilitates the algorithmic steps, making the method computationally feasible for larger problems.
-C. Matrix notation is beneficial for both small and large problems.  Its computational advantages become more pronounced as the problem size increases, but it remains a fundamental tool regardless of scale.
-D. Matrix notation is not merely theoretical; it's fundamental to the practical implementation of the simplex method.  The algorithm relies heavily on matrix operations for its iterative process.
-E. Identifying redundant constraints is a preprocessing step that can be done before representing the problem in matrix notation, but the matrix representation itself doesn't directly address redundancy.
-
-
-QUESTION 6
-Given the linear program in Slide 1, $\max \quad f(x) = c^T x$ subject to $Ax \le b, x \ge 0$, and its equivalent formulation with slack variables $W = b - Ax$, $x, W \ge 0$, what is the dimension of the slack variable vector $W$?
-A. $n$
-B. $m$
-C. $n+m$
-D. $m-n$
-E. $n-m$
-
-ANSWER: B
-
-EXPLANATION:
-A. The dimension of $W$ is not $n$. $n$ is the number of decision variables, not the number of constraints.
-B. The dimension of the slack variable vector $W$ is $m$ because there is one slack variable for each inequality constraint, and there are $m$ inequality constraints in the original problem.
-C. The dimension of $W$ is not $n+m$. This would be the total number of variables (decision and slack).
-D. The dimension of $W$ cannot be $m-n$ as this could be negative.  The number of slack variables must be non-negative.
-E. The dimension of $W$ cannot be $n-m$ as this could be negative. The number of slack variables must be non-negative.
-
-
-QUESTION 7
-In Slide 3, the linear program is transformed from $\begin{pmatrix} \max & \xi(x) = c^T x \\ \text{s.t.} & Ax + W = b \\ & x, W \ge 0 \end{pmatrix}$ to $\begin{pmatrix} \max & \xi(x) = \bar{\beta} + \bar{c}^T x \\ \text{s.t.} & Ax + W = b \\ & x, W \ge 0 \end{pmatrix}$ through simplex iterations. What does $\bar{\beta}$ represent?
-A. The updated cost vector
-B. The updated constraint matrix
-C. The current value of the objective function
-D. The updated right-hand side vector
-E. The number of iterations performed
-
-ANSWER: C
-
-EXPLANATION:
-A. $\bar{c}$ represents the updated cost vector, not $\bar{\beta}$
-B. The constraint matrix $A$ remains unchanged during simplex iterations.
-C. $\bar{\beta}$ represents the current value of the objective function after some number of simplex iterations.  The objective function is rewritten in the form $\bar{\beta} + \bar{c}^T x$ to reflect the current value and the remaining contribution from non-basic variables.
-D. The right-hand side vector $b$ also remains unchanged during simplex iterations.
-E. The number of iterations is not directly represented by a single variable in this notation.
-
-
-QUESTION 8
-Referring to Slide 8, equation (1) shows $BX_B + NX_N = b \implies X_B = B^{-1}b - B^{-1}NX_N$.  What is the significance of this transformation in the context of the simplex method?
-A. It updates the objective function.
-B. It identifies the entering variable.
-C. It expresses basic variables in terms of non-basic variables.
-D. It determines the optimal solution.
-E. It introduces slack variables.
-
-ANSWER: C
-
-EXPLANATION:
-A. Equation (2) in Slide 8 updates the objective function, not equation (1).
-B. The entering variable is determined by examining the reduced costs ($\bar{c}$) in equation (2), not directly from this equation.
-C. This transformation expresses the basic variables ($X_B$) as a function of the non-basic variables ($X_N$). This is crucial because in each iteration of the simplex method, the non-basic variables are set to zero, allowing for the direct calculation of the basic variables and the objective function value.
-D. The optimal solution is determined when all reduced costs are non-positive, not directly from this equation.
-E. The introduction of slack variables happens before the simplex iterations begin.
-
-
-QUESTION 9
-In Slide 14, the complementarity condition is stated as $x_j z_j = 0$ for complementary variables $x_j$ and $z_j$. What is the implication of this condition in the context of the optimal solution?
-A. At least one of $x_j$ and $z_j$ must be zero at the optimal solution.
-B. Both $x_j$ and $z_j$ must be positive at the optimal solution.
-C. Both $x_j$ and $z_j$ must be negative at the optimal solution.
-D. At least one of $x_j$ and $z_j$ must be one at the optimal solution.
-E. The product $x_j z_j$ must be equal to one at the optimal solution.
+Part A:
+Consider the linear program presented in Slide 1: Maximize $ \zeta = 3x_1 + 2x_2 $ subject to $ -x_1 + 3x_2 \le 12 $, $ x_1 + x_2 \le 8 $, $ 2x_1 - x_2 \le 10 $, and $ x_1, x_2 \ge 0 $. After introducing slack variables $w_1, w_2, w_3$ (Slide 1), and expressing the problem in matrix form (Slide 7), explain how the initial basic feasible solution is determined, and what its corresponding value of the objective function $\zeta$ is.
+A. The initial basic feasible solution is $x_1 = 0, x_2 = 0, w_1 = 12, w_2 = 8, w_3 = 10$, and $\zeta = 0$.
+B. The initial basic feasible solution is $x_1 = 12, x_2 = 8, w_1 = 0, w_2 = 0, w_3 = 0$, and $\zeta = 52$.
+C. The initial basic feasible solution cannot be determined without performing at least one simplex iteration.
+D. The initial basic feasible solution is $x_1 = 5, x_2 = 0, w_1 = 17, w_2 = 3, w_3 = 0$, and $\zeta = 15$.
+E. The initial basic feasible solution is $x_1 = 0, x_2 = 4, w_1 = 0, w_2 = 4, w_3 = 6$, and $\zeta = 8$.
 
 ANSWER: A
 
 EXPLANATION:
-A. The complementarity condition $x_j z_j = 0$ implies that at least one of $x_j$ and $z_j$ must be zero at the optimal solution. This is a key concept in complementary slackness.
-B. This is incorrect; at least one must be zero.
-C. This is incorrect; variables are non-negative in standard form.
-D. This is incorrect; at least one must be zero.
-E. This is incorrect; the product must be zero.
+A. The initial basic feasible solution is found by setting the non-basic variables ($x_1$ and $x_2$) to zero.  This directly gives the values of the basic variables ($w_1, w_2, w_3$) from the constraints: $w_1 = 12, w_2 = 8, w_3 = 10$. Substituting $x_1 = 0$ and $x_2 = 0$ into the objective function yields $\zeta = 3(0) + 2(0) = 0$.
+B. This solution violates the constraints.  The values of $x_1$ and $x_2$ are not feasible.
+C. The initial basic feasible solution is directly obtained by setting the non-basic variables to zero and solving for the basic variables.
+D. This is a feasible solution, but it is not the initial basic feasible solution. This solution is reached after several iterations of the simplex method.
+E. This is a feasible solution, but it is not the initial basic feasible solution. This solution is reached after several iterations of the simplex method.
+
+Part B:
+Referring to Slide 8, explain the significance of the reduced cost vector $\bar{C}$ in determining whether the current solution is optimal.  How does the interpretation of $\bar{C}$ relate to the concept of the reduced gradient in unconstrained optimization?
+A. If all elements of $\bar{C}$ are positive, the current solution is optimal; otherwise, it is not.
+B. If all elements of $\bar{C}$ are zero, the current solution is optimal; otherwise, it is not.
+C. If all elements of $\bar{C}$ are negative, the current solution is optimal; otherwise, it is not.
+D. The reduced cost vector $\bar{C}$ is irrelevant in determining optimality; only the objective function value matters.
+E. If any element of $\bar{C}$ is positive, the current solution is optimal; otherwise, it is not.
+
+ANSWER: C
+
+EXPLANATION:
+A. A positive element in $\bar{C}$ indicates that increasing the corresponding non-basic variable will *decrease* the objective function.
+B. If all elements of $\bar{C}$ are zero, it means the current solution is optimal, but there might be alternative optimal solutions.
+C. A negative element in $\bar{C}$ indicates that increasing the corresponding non-basic variable will improve the objective function.  If all elements of $\bar{C}$ are non-negative, no such improvement is possible, and the current solution is optimal. This is analogous to the reduced gradient in unconstrained optimization, where a zero gradient indicates a stationary point (potentially optimal).
+D. The reduced cost vector is crucial for determining optimality in the simplex method. It indicates the marginal improvement in the objective function by changing the non-basic variables.
+E. This is incorrect; all elements of $\bar{C}$ must be non-negative for optimality.
+
+Part C:
+Slides 10 and 11 present two tables representing the primal and dual simplex methods in matrix form. Explain the relationship between the two tables, focusing on the connection between the primal and dual objective function values and the basic variable values.  How does complementary slackness manifest in these tables?
+A. The tables are identical, except for a change of sign in the objective function value.
+B. The tables are transposes of each other, with a change of sign in the objective function value.
+C. The tables are unrelated; they represent different algorithms for solving linear programs.
+D. One table represents the primal simplex method, and the other represents the dual simplex method. The optimal objective function values are equal, and complementary slackness is reflected in the relationship between basic and non-basic variables in both tables.
+E. The tables are identical, except for a change of sign in the basic variable values.
+
+ANSWER: D
+
+EXPLANATION:
+A. The tables are not identical; they represent different aspects of the primal and dual problems.
+B. While there's a relationship involving transposition, it's not a simple transpose with a sign change.
+C. The tables are closely related, representing the primal and dual simplex methods, which are intimately connected through duality theory.
+D. The tables represent the primal and dual simplex methods.  Strong duality implies that the optimal objective function values are equal (or negatives of each other, depending on the maximization/minimization). Complementary slackness is reflected in the relationship between the basic and non-basic variables in both tables.  If a primal variable is basic (non-zero), its corresponding dual variable is non-basic (zero), and vice-versa.
+E. The basic variable values are not simply negated; the relationship is more complex and involves the duality theorem.
 
 
-QUESTION 10
-In Slide 1, given the linear program $\max \quad f(x) = c^T x$ subject to $Ax \le b, x \ge 0$, what is the dimension of the slack variable vector $W$ introduced in the equivalent formulation $W = b - Ax$, $x, W \ge 0$?
-A. $n$
-B. $m$
-C. $n+m$
-D. $m-n$
-E. $n-m$
+
+QUESTION 6
+Consider the linear program in Slide 1, expressed in matrix notation. After introducing slack variables, the constraints become $Ax + I_m w = b$, where $x \in \mathbb{R}^n$ are the decision variables, $w \in \mathbb{R}^m$ are the slack variables, $A \in \mathbb{R}^{m \times n}$ is the constraint matrix, $I_m$ is the $m \times m$ identity matrix, and $b \in \mathbb{R}^m$ is the right-hand side vector.  If we partition the variable vector as $X = \begin{bmatrix} x \\ w \end{bmatrix}$, what is the dimension of the augmented constraint matrix $\begin{bmatrix} A & I_m \end{bmatrix}$?
+A. $m \times n$
+B. $n \times m$
+C. $m \times (m+n)$
+D. $(m+n) \times m$
+E. $n \times (m+n)$
+
+ANSWER: C
+
+EXPLANATION:
+A. This is the dimension of the original constraint matrix $A$, before introducing slack variables.
+B. This is the transpose of the dimension of the original constraint matrix $A$.
+C. The augmented constraint matrix $\begin{bmatrix} A & I_m \end{bmatrix}$ has $m$ rows (from the original $m$ constraints) and $n + m$ columns (from the $n$ decision variables and $m$ slack variables). Therefore, its dimension is $m \times (m+n)$.
+D. This is incorrect; the number of rows is $m$, not $m+n$.
+E. This is incorrect; the number of rows is $m$, not $n$.
+
+
+QUESTION 7
+Referring to Slide 4, the objective function is expressed as $c^T X = c_B^T X_B + c_N^T X_N$, where $X_B$ and $X_N$ are vectors of basic and non-basic variables, respectively, and $c_B$ and $c_N$ are the corresponding cost vectors.  In the initial basic feasible solution, all non-basic variables are set to zero ($X_N = 0$).  Given that the objective function after simplex iterations is rewritten in Slide 8 as $J = \bar{J} + \bar{C}^T X_N$, where $\bar{J}$ is a constant and $\bar{C}$ is the reduced cost vector, what is the significance of the reduced cost vector $\bar{C}$ in determining the optimality of the current solution?
+A. If any element of $\bar{C}$ is positive, the solution is optimal.
+B. If all elements of $\bar{C}$ are zero, the solution is optimal.
+C. If any element of $\bar{C}$ is negative, the solution is optimal.
+D. If all elements of $\bar{C}$ are positive, the solution is optimal.
+E. If all elements of $\bar{C}$ are negative, the solution is optimal.
+
+ANSWER: E
+
+EXPLANATION:
+A. A positive element in $\bar{C}$ indicates that the objective function can be improved by increasing the corresponding non-basic variable.
+B. If all elements of $\bar{C}$ are zero, there might be alternative optimal solutions, but the current solution is still optimal.
+C. A negative element in $\bar{C}$ means increasing the corresponding non-basic variable would worsen the objective function.
+D. This is incorrect; a positive element indicates that the solution is not optimal.
+E. If all elements of $\bar{C}$ are non-positive, the current solution is optimal.  A positive element in $\bar{C}$ indicates that increasing the corresponding non-basic variable would improve the objective function, meaning the current solution is not optimal.
+
+
+QUESTION 8
+In Slide 10, two tables are presented, representing the primal and dual simplex methods in matrix form. The primal table shows the objective function value $c_B^T B^{-1} b$ and the basic variable values $B^{-1} b$, while the dual table shows $-c_B^T B^{-1} b$ and $-(B^{-1}b)^T$.  Explain the relationship between the primal and dual objective function values in these tables, and how this relates to the concept of duality in linear programming.
+A. The primal and dual objective function values are always equal.
+B. The primal objective function value is the negative of the dual objective function value.
+C. The primal objective function value is the transpose of the dual objective function value.
+D. There is no direct relationship between the primal and dual objective function values.
+E. The primal objective function value is always greater than or equal to the dual objective function value.
 
 ANSWER: B
 
 EXPLANATION:
-A. The dimension $n$ corresponds to the number of decision variables $x$, not the slack variables $W$.
-B. The dimension of the slack variable vector $W$ is equal to the number of rows in matrix $A$, which is $m$.  Each inequality constraint $Ax \le b$ requires one slack variable to transform it into an equality constraint.
-C. The dimension $n+m$ is the total number of variables (decision variables plus slack variables), not the dimension of the slack variable vector alone.
-D. The dimension $m-n$ is not necessarily a positive integer and doesn't represent a valid dimension for the slack variable vector.
-E. The dimension $n-m$ is not necessarily a positive integer and doesn't represent a valid dimension for the slack variable vector.
+A. This is only true at the optimal solution, according to strong duality.
+B. The primal objective function value ($c_B^T B^{-1} b$) is the negative of the dual objective function value ($-c_B^T B^{-1} b$). This reflects the fundamental relationship in duality: the optimal objective function values of the primal and dual problems are equal (but opposite in sign if one is maximization and the other is minimization).
+C. The relationship is not simply a transpose; it involves a negative sign.
+D. There is a fundamental relationship between the primal and dual objective function values, based on duality theory.
+E. This is only true for feasible solutions before reaching optimality (weak duality).
+
+
+QUESTION 9
+Consider Slide 7, where the constraints are expressed in matrix form as $\begin{bmatrix} B & N \end{bmatrix} \begin{bmatrix} X_B \\ X_N \end{bmatrix} = b$, where $B$ and $N$ are matrices formed from the columns of the augmented matrix $\begin{bmatrix} A & I_m \end{bmatrix}$ corresponding to basic and non-basic variables, respectively.  Explain how the initial basic feasible solution is determined in the simplex method, and how this relates to the matrices $B$ and $N$.
+A. The initial basic feasible solution is obtained by setting $X_B = B^{-1}b$ and $X_N = 0$.
+B. The initial basic feasible solution is obtained by setting $X_B = 0$ and $X_N = N^{-1}b$.
+C. The initial basic feasible solution is obtained by setting $X_B = b$ and $X_N = 0$.
+D. The initial basic feasible solution is obtained by setting $X_B = 0$ and $X_N = b$.
+E. The initial basic feasible solution cannot be determined from the given information.
+
+ANSWER: A
+
+EXPLANATION:
+A. In the initial basic feasible solution, all non-basic variables are set to zero ($X_N = 0$).  The basic variables are then determined by solving $BX_B = b$, which gives $X_B = B^{-1}b$.  This assumes that $B$ is invertible (which is true for a feasible problem).
+B. This is incorrect; the non-basic variables are set to zero initially.
+C. This is incorrect; the basic variables are obtained by solving $BX_B = b$.
+D. This is incorrect; the non-basic variables are set to zero initially.
+E. The initial basic feasible solution can be determined using the given matrix equation.
+
+
+QUESTION 10
+Part A:
+Consider the linear program presented in Slide 1: Maximize $ \zeta = 3x_1 + 2x_2 $ subject to $ -x_1 + 3x_2 \le 12 $, $ x_1 + x_2 \le 8 $, $ 2x_1 - x_2 \le 10 $, and $ x_1, x_2 \ge 0 $. After introducing slack variables $ w_1, w_2, w_3 $ (Slide 1) and expressing the problem in matrix form (Slide 7), what is the dimension of the augmented constraint matrix $ \begin{bmatrix} A & I \end{bmatrix} $, where $ A $ is the original constraint matrix and $ I $ is the identity matrix?
+A. 3 x 3
+B. 3 x 5
+C. 5 x 3
+D. 2 x 3
+E. 5 x 5
+
+ANSWER: B
+
+EXPLANATION:
+A. This is incorrect. The original constraint matrix has 2 variables, and 3 slack variables are added.
+B. The original constraint matrix $A$ is 3x2 (3 constraints, 2 variables).  After introducing 3 slack variables, the augmented matrix $ \begin{bmatrix} A & I \end{bmatrix} $ becomes 3x5 (3 constraints, 2 original variables + 3 slack variables).
+C. This is incorrect. The number of rows represents the number of constraints, and the number of columns represents the number of variables.
+D. This is incorrect. There are 3 constraints in the problem.
+E. This is incorrect. The identity matrix added has dimensions 3x3, not 5x5.
+
+Part B:
+Referring to Slide 4, explain how partitioning the variable vector $ X $ into basic ($ X_B $) and non-basic ($ X_N $) variables simplifies the representation of the constraints in matrix form.  Specifically, how does this partitioning lead to the equation $ BX_B + NX_N = b $?
+A. It allows for the direct solution of $X_B$ without matrix inversion.
+B. It separates the variables into dependent and independent sets, allowing for a simpler representation of the constraints.
+C. It reduces the number of variables in the problem, simplifying the calculations.
+D. It allows for the use of Gaussian elimination to solve the system of equations.
+E. It is not directly related to simplifying the constraint representation.
+
+ANSWER: B
+
+EXPLANATION:
+A. While solving for $X_B$ is a consequence, the simplification is primarily in the representation of the constraints.
+B. Partitioning $X$ into basic and non-basic variables allows us to rewrite the constraint equation $ \begin{bmatrix} A & I \end{bmatrix} \begin{bmatrix} X \\ W \end{bmatrix} = b $ as $ BX_B + NX_N = b $, where $B$ contains the columns of $ \begin{bmatrix} A & I \end{bmatrix} $ corresponding to basic variables and $N$ contains the columns corresponding to non-basic variables.  This separates the variables into a dependent set ($X_B$, determined by $X_N$) and an independent set ($X_N$).
+C. The number of variables remains the same; the simplification is in how they are handled algebraically.
+D. Gaussian elimination can be used, but the partitioning simplifies the application of Gaussian elimination.
+E. The partitioning is fundamental to the matrix representation of the simplex method.
+
+Part C:
+In Slide 8, the objective function is rewritten as $ J = \bar{J} + \bar{C}^T X_N $. What is the significance of the reduced cost vector $ \bar{C} $ in determining whether the current solution is optimal?  How does the interpretation of $ \bar{C} $ relate to the concept of the reduced gradient in unconstrained optimization?
+A. If any element of $ \bar{C} $ is positive, the current solution is optimal.
+B. If all elements of $ \bar{C} $ are zero, the current solution is optimal.
+C. If any element of $ \bar{C} $ is negative, the current solution is optimal.
+D. The reduced cost vector is irrelevant to optimality.
+E. If all elements of $ \bar{C} $ are non-negative, the current solution is optimal.
+
+ANSWER: E
+
+EXPLANATION:
+A. This is incorrect; a positive element indicates that increasing the corresponding non-basic variable would improve the objective function.
+B. This is incorrect; all elements being zero indicates multiple optimal solutions.
+C. This is incorrect; a negative element indicates that increasing the corresponding non-basic variable would improve the objective function.
+D. This is incorrect; the reduced cost vector is crucial for determining optimality in the simplex method.
+E. If all elements of $ \bar{C} $ are non-negative, it means that increasing any non-basic variable will not improve the objective function. This indicates that the current solution is optimal.  Similar to the reduced gradient in unconstrained optimization, $ \bar{C} $ represents the change in the objective function per unit increase in a non-basic variable, holding other non-basic variables constant.
+
 
 

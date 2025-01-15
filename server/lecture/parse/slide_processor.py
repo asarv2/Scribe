@@ -575,6 +575,7 @@ class SlideProcessor(BaseProcessor):
                 continue
             
         self.save_notes_text(self.lectures_output_dir)
+        self.save_images_png(self.lectures_output_dir)
         self.save_figures_png(self.lectures_output_dir)
         self.save_notes_pdf(self.lectures_output_dir) # after figures are saved
 
@@ -605,7 +606,22 @@ class SlideProcessor(BaseProcessor):
                     xmin, ymin, xmax, ymax = max(0, xmin - padding), max(0, ymin - padding), min(image.width, xmax + padding), min(image.height, ymax + padding)
                     cropped = image.crop((min(xmin, xmax), min(ymin, ymax), max(xmin, xmax), max(ymin, ymax)))    
                     cropped.save(os.path.join(file_path, lecture_name, "figures", f"{page_number}.{idx + 1}.png"))
-            
+                    
+    def save_images_png(self, file_path: str):
+        """Save the images as PNG files.
+        Args:
+            file_path (str): The path to the output directory.
+            images (list[Image.Image]): The images to save.
+        """
+        for lecture_name in self.notes.keys():
+            os.makedirs(os.path.join(file_path, lecture_name, "images"), exist_ok=True)
+            pdf_path = os.path.join(self.notes_dir, f"{lecture_name}.pdf")
+            images = convert_from_path(pdf_path, dpi=50)   
+            images = [self.create_square_image(image) for image in images]
+            for page_number, image in zip(sorted(list(self.notes[lecture_name].keys()), key=lambda x: int(x)), images):
+                image.save(os.path.join(file_path, lecture_name, "images", f"{page_number}.png"))
+            print(f"Saved {len(images)} images for {lecture_name}.")
+
     def save_notes_pdf(self, file_path: str):
         """Save the notes as a PDF file and crop each of the figures in the notes.
 
@@ -663,6 +679,24 @@ class SlideProcessor(BaseProcessor):
                 "class": self.class_id
             }).execute()
         print(f"Saved {len(self.notes)} notes to supabase.")
+
+    def save_lecture_documents_supabase(self):
+        """
+        Save the lecture documents to supabase.
+        """
+        lecture_mapping = self.supabase.table("lectures").select("id, name").eq("class", self.class_id).execute().data
+        lecture_mapping = {lecture["name"]: lecture["id"] for lecture in lecture_mapping}
+        
+        for lecture_name in self.notes.keys():
+            for page_number in self.notes[lecture_name].keys():
+                self.supabase.table("documents").insert({
+                    "lecture": lecture_mapping[lecture_name],
+                    "page": page_number,
+                    "latex": self.notes[lecture_name][page_number]["latex"],
+                    "figures": self.notes[lecture_name][page_number]["figures"],
+                    "description": self.notes[lecture_name][page_number]["description"]
+                }).execute()
+            print(f"Saved {len(self.notes[lecture_name])} lecture documents to supabase.")
         
     def save_notes_storage_supabase(self):
         """
@@ -682,7 +716,7 @@ class SlideProcessor(BaseProcessor):
     
     def save_figures_storage_supabase(self):
         """
-        Save the figures to supabase storage.
+        Save the figures to supabase storage. OLD CODE, NOT USED.
         """
         for lecture_name in self.notes.keys():
             print(f"Saving figures for {lecture_name}...")
@@ -694,6 +728,21 @@ class SlideProcessor(BaseProcessor):
                     file_options={"cache-control": "3600", "upsert": "true"},
                 )
                 print(f"Saved {figure} to supabase storage. Response: {response}")
+                
+    def save_images_storage_supabase(self):
+        """
+        Save the images to supabase storage.
+        """
+        for lecture_name in self.notes.keys():
+            print(f"Saving images for {lecture_name}...")
+            images = [os.path.join(self.output_dir, self.course_code, "lectures", f"{lecture_name}", "images", f) for f in os.listdir(os.path.join(self.output_dir, self.course_code, "lectures", f"{lecture_name}", "images"))]
+            for image in images:
+                response = self.supabase.storage.from_("slides").upload(
+                    file=image,
+                    path=f"{self.course_code}/lectures/{lecture_name}/images/{image.split('/')[-1]}",
+                    file_options={"cache-control": "3600", "upsert": "true"},
+                )
+                print(f"Saved {image} to supabase storage. Response: {response}")
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process slides for course notes.")

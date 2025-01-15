@@ -20,6 +20,9 @@ if __name__ == "__main__":
     #     output_dir=output_dir,
     #     regenerate=False
     # )
+    # slide_processor.save_images_png(slide_processor.lectures_output_dir)
+    # slide_processor.save_images_storage_supabase()
+    # slide_processor.save_lecture_documents_supabase()
     # slide_processor.save_figures_png(slide_processor.lectures_output_dir)
     
     # slide_processor.save_notes_pdf(slide_processor.lectures_output_dir)
@@ -83,10 +86,10 @@ if __name__ == "__main__":
     # topic_problems_processor.save_questions_supabase()
     # topic_problems_processor.process_problems(num_questions=10, single_multi_part_ratio=0.8, conceptual_computational_ratio=0.5)
     
-    summary_processor = LectureSummaryProcessor(
-        class_id=class_id,
-        output_dir=output_dir,
-        regenerate=False
-    )
+    # summary_processor = LectureSummaryProcessor(
+    #     class_id=class_id,
+    #     output_dir=output_dir,
+    #     regenerate=False
+    # )
     # summary_processor.process_summary()
-    summary_processor.save_summary_supabase()
+    # summary_processor.save_summary_supabase()

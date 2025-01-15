@@ -341,13 +341,13 @@ export const Map: React.FC<PropsWithChildren<MapProps>> = ({
 				nodesDraggable={isProfessor(user, classId)}
 				nodesConnectable={false}
 			>
-				<Controls showInteractive={false} showZoom={true} showFitView={true} orientation='horizontal'>
-					<ControlButton onClick={handleCenter}>
+				<Controls showInteractive={false} showZoom={true} showFitView={true} orientation='horizontal' position='top-right'>
+					{/* <ControlButton onClick={handleCenter}>
 						<TargetIcon />
-					</ControlButton>
-					<ControlButton onClick={openDownload}>
+					</ControlButton> */}
+					{/* <ControlButton onClick={openDownload}>
 						<DownloadIcon />
-					</ControlButton>
+					</ControlButton> */}
 					{isProfessor(user, classId) && <ControlButton onClick={openReset}>
 						<ReloadIcon />
 					</ControlButton>}

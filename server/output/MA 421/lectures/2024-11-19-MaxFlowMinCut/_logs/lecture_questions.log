@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 20:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:27
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -380,8 +380,10 @@ LaTeX Font Info:    ... okay on input line 42.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring ON on input line 42.
+(_logs/lecture_questions.out) (_logs/lecture_questions.out)
 \@outlinefile=\write3
 \openout3 = `lecture_questions.out'.
+
 
 (/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -429,124 +431,33 @@ LaTeX Font Info:    External font `lmex10' loaded for size
  [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 98.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 98.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 98.
+al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [2] [3] [4] [5]
 
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-19
--MaxFlowMinCut/lecture_questions.tex:104: LaTeX Error: Unicode character ≤ (U
-+2264)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.104 ...ty shown in Slide 3:  Flow($s \to t$) ≤
-                                                   K(C).%
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-[2{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/lo
-cal/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-19
--MaxFlowMinCut/lecture_questions.tex:141: LaTeX Error: Unicode character ≤ (U
-+2264)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.141 ...sents the inequality "Flow($s \to t$) ≤
-                                                   K(C)". What is the signif...
-
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-[3{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}] [4]
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-19
--MaxFlowMinCut/lecture_questions.tex:231: LaTeX Error: Unicode character ≤ (U
-+2264)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.231 ...ty shown in Slide 3:  Flow($s \to t$) ≤
-                                                   K(C).%
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-[5]
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-11-19
--MaxFlowMinCut/lecture_questions.tex:268: LaTeX Error: Unicode character ≤ (U
-+2264)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.268 ...sents the inequality "Flow($s \to t$) ≤
-                                                   K(C)". What is the signif...
-
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-[6{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
-[7] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `lecture_questions.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `lecture_questions.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  7BC3F9064CAEE187291BB9238670FDD7;166.
-
-Package lastpage Warning: Rerun to get the references right on input line 298.
-
+Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
+(rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10337 strings out of 474116
- 160591 string characters out of 5743682
- 1942187 words of memory out of 5000000
- 32390 multiletter control sequences out of 15000+600000
- 595644 words of font info for 61 fonts, out of 8000000 for 9000
+ 10244 strings out of 474116
+ 159897 string characters out of 5743682
+ 1941187 words of memory out of 5000000
+ 32381 multiletter control sequences out of 15000+600000
+ 584858 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,598b,854s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,665b,713s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
-cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texliv
-e/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/tex
-mf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fon
-ts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pu
-blic/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr
-17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></u
-sr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on _logs/lecture_questions.pdf (7 pages, 150739 bytes).
+cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive
+/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf
+-dist/fonts/type1/public/lm/lmr17.pfb>
+Output written on _logs/lecture_questions.pdf (5 pages, 122362 bytes).
 PDF statistics:
- 287 PDF objects out of 1000 (max. 8388607)
- 256 compressed objects within 3 object streams
- 168 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 163 PDF objects out of 1000 (max. 8388607)
+ 146 compressed objects within 2 object streams
+ 92 named destinations out of 1000 (max. 500000)
+ 17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

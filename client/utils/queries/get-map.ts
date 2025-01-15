@@ -1,11 +1,15 @@
 import { Topic, TypedSupabaseClient } from "../../types";
 import { MapNode } from "../map/map-tree";
 
-export async function getMap(client: TypedSupabaseClient, classId: string): Promise<MapNode | null> {
+export async function getMap(client: TypedSupabaseClient, classId: string, map: string | null): Promise<MapNode | null> {
+    if (!map) {
+        return null;
+    }
     const { data: topics, error } = await client
         .from("topics")
         .select("*")
         .eq("class", classId)
+        .eq("map", map)
         .neq("type", "problem")
         .neq("type", "algorithm");
 

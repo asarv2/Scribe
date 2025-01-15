@@ -16,7 +16,7 @@ import { Lecture, Question } from "@/types";
 import { jsPDF } from "jspdf";
 import { marked } from "marked";
 import 'katex/dist/katex.min.css';
-import Latex from 'react-latex-next';
+import Latex from '@/components/Latex';
 
 
 type QuestionSolutionLectureProps = {

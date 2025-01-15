@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 17:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:13
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -380,8 +380,10 @@ LaTeX Font Info:    ... okay on input line 42.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring ON on input line 42.
+(_logs/lecture_questions.out) (_logs/lecture_questions.out)
 \@outlinefile=\write3
 \openout3 = `lecture_questions.out'.
+
 
 (/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -427,195 +429,47 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 45.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 66.
+(Font)              <10> on input line 48.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 66.
+(Font)              <7> on input line 48.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 66.
+(Font)              <5> on input line 48.
  [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
-4/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/f
-onts/enc/dvips/lm/lm-mathsy.enc}] [2{/usr/local/texlive/2024/texmf-dist/fonts/e
-nc/dvips/lm/lm-mathit.enc}]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:111: Misplaced alignment tab character &.
-l.111 ... c, y \ge 0$, if $A = \begin{pmatrix} 1 &
-                                                   2 \\ 3 & 4 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
+st/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
+vips/lm/lm-mathsy.enc}] [2] [3] [4] [5] [6] [7] [8] [9]
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:111: Misplaced alignment tab character &.
-l.111 ... 0$, if $A = \begin{pmatrix} 1 & 2 \\ 3 &
-                                                   4 \end{pmatrix}$, $b = \b...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[3] [4] [5] [6]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:233: Misplaced alignment tab character &.
-l.233 ...es, we have $\xi(y) = \begin{pmatrix} 1 &
-                                                   2 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:247: Misplaced alignment tab character &.
-l.247 ... c, y \ge 0$, if $A = \begin{pmatrix} 1 &
-                                                   2 \\ 3 & 4 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:247: Misplaced alignment tab character &.
-l.247 ... 0$, if $A = \begin{pmatrix} 1 & 2 \\ 3 &
-                                                   4 \end{pmatrix}$, $b = \b...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:250: Misplaced alignment tab character &.
-l.250 ...$b$, we get $\xi(y) = \begin{pmatrix} 5 &
-                                                   6 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[7]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:279: Misplaced alignment tab character &.
-l.279 ...nto $\xi(x) = c^T x = \begin{pmatrix} 1 &
-                                                   1 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:287: Misplaced alignment tab character &.
-l.287 ...he constraints: $Ax = \begin{pmatrix} 1 &
-                                                   2 \\ 3 & 4 \end{pmatrix} ...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:287: Misplaced alignment tab character &.
-l.287 ...aints: $Ax = \begin{pmatrix} 1 & 2 \\ 3 &
-                                                   4 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:298: Misplaced alignment tab character &.
-l.298 ...nto $\xi(y) = b^T y = \begin{pmatrix} 5 &
-                                                   6 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[8]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:306: Misplaced alignment tab character &.
-l.306 ...constraints: $A^T y = \begin{pmatrix} 1 &
-                                                   3 \\ 2 & 4 \end{pmatrix} ...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-17
--DualityGeneral/lecture_questions.tex:306: Misplaced alignment tab character &.
-l.306 ...ts: $A^T y = \begin{pmatrix} 1 & 3 \\ 2 &
-                                                   4 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[9] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `lecture_questions.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `lecture_questions.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  7BC3F9064CAEE187291BB9238670FDD7;166.
-
-Package lastpage Warning: Rerun to get the references right on input line 316.
-
+Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
+(rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10352 strings out of 474116
- 160751 string characters out of 5743682
- 1948187 words of memory out of 5000000
- 32392 multiletter control sequences out of 15000+600000
+ 10333 strings out of 474116
+ 160657 string characters out of 5743682
+ 1942187 words of memory out of 5000000
+ 32393 multiletter control sequences out of 15000+600000
  595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,604b,853s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,850b,851s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
 f-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
-lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7
-.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on _logs/lecture_questions.pdf (9 pages, 167164 bytes).
+lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy
+10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
+Output written on _logs/lecture_questions.pdf (9 pages, 160399 bytes).
 PDF statistics:
- 305 PDF objects out of 1000 (max. 8388607)
- 274 compressed objects within 3 object streams
- 182 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 283 PDF objects out of 1000 (max. 8388607)
+ 252 compressed objects within 3 object streams
+ 158 named destinations out of 1000 (max. 500000)
+ 17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

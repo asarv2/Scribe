@@ -22,7 +22,7 @@ import { getTopic } from "@/utils/queries/get-topic";
 import jsPDF from "jspdf";
 import { marked } from "marked";
 import { notifications } from "@mantine/notifications";
-import Latex from "react-latex-next";
+import Latex from "@/components/Latex";
 import { useEffect } from "react";
 
 export default function PracticeTopicPage({ params }: { params: { topicId: string, classId: string } }) {
@@ -104,14 +104,14 @@ export default function PracticeTopicPage({ params }: { params: { topicId: strin
     return (
         <>
             <HeaderSimple />
-            <Container fluid>
+            <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${params.classId}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
-                            <Text size="xl" fw={700} mb={6}><Latex>{topic?.title || ""} Practice</Latex></Text>
+                            <Text size="xl" fw={700} mb={6}><Latex>{topic?.title || ""}</Latex></Text>
                         </Group>
                         <Group p={"sm"}>
                             <Tooltip label="Download PDF">

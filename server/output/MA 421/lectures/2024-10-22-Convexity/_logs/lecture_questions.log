@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 17:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:26
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -429,18 +429,18 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 45.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 66.
+(Font)              <10> on input line 52.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 66.
+(Font)              <7> on input line 52.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 66.
+(Font)              <5> on input line 52.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:66: Undefined control sequence.
+-Convexity/lecture_questions.tex:54: Undefined control sequence.
 <recently read> \mathbb 
                         
-l.66 ...ts in the convex hull of a set in $\mathbb
-                                                  {R}^m$?%
+l.54 ...exity is only defined for sets in $\mathbb
+                                                  {R}^2$, so the intersectio...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -448,11 +448,23 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:75: Undefined control sequence.
+-Convexity/lecture_questions.tex:54: Undefined control sequence.
 <recently read> \mathbb 
                         
-l.75 ...wo disjoint nonempty polyhedra in $\mathbb
-                                                  {R}^n$ can be separated by...
+l.54 ...ntersection of two convex sets in $\mathbb
+                                                  {R}^3$ is not necessarily ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:68: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.68 ...n the convex hull of a set $S$ in $\mathbb
+                                                  {R}^m$ can be expressed as...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -464,46 +476,13 @@ and I'll forget about whatever was undefined.
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
 4/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-di
-st/fonts/enc/dvips/lm/lm-rm.enc}]
+st/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
+vips/lm/lm-mathsy.enc}]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:93: Undefined control sequence.
-l.93 \item A set $S \subseteq \mathbb
-                                     {R}^m$ is convex if for any $z_1, z_2 \...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:95: Undefined control sequence.
-l.95 ...1 + (1-t)z_2 \in S$ for all $t \in \mathbb
-                                                  {R}$%
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[2{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
-[3]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:163: Undefined control sequence.
+-Convexity/lecture_questions.tex:96: Undefined control sequence.
 <recently read> \mathbb 
                         
-l.163 ...s in the convex hull of a set in $\mathbb
-                                                  {R}^m$?%
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:166: Undefined control sequence.
-<recently read> \mathbb 
-                        
-l.166 ...t in the convex hull of a set in $\mathbb
+l.96 ...n the convex hull of a set $S$ in $\mathbb
                                                   {R}^m$ can be expressed as...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -512,11 +491,97 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:172: Undefined control sequence.
+-Convexity/lecture_questions.tex:105: Undefined control sequence.
 <recently read> \mathbb 
                         
-l.172 ...o disjoint nonempty polyhedra in $\mathbb
-                                                  {R}^n$ can be separated by...
+l.105 ...= \{(1, 0), (0, 1), (1, 1)\}$ in $\mathbb
+                                                  {R}^2$.  Describe the conv...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:110: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.110 \item Conv($S$) is the entire $\mathbb
+                                            {R}^2$ plane.%
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[2]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:120: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.120 ...xity is only defined for sets in $\mathbb
+                                                  {R}^2$, so the intersectio...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:120: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.120 ...tersection of two convex sets in $\mathbb
+                                                  {R}^3$ is not necessarily ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:134: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.134 ... the convex hull of a set $S$ in $\mathbb
+                                                  {R}^m$ can be expressed as...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:136: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.136 ... the convex hull of a set $S$ in $\mathbb
+                                                  {R}^m$ can be written as a...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[3]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:157: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.157 ...thbb{R}^n$ for any positive integer $n$.}
+                                                  %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:171: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.171 ... the convex hull of a set $S$ in $\mathbb
+                                                  {R}^m$ can be expressed as...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -525,16 +590,55 @@ and I'll forget about whatever was undefined.
 
 [4]
 /Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
--Convexity/lecture_questions.tex:190: Undefined control sequence.
-l.190 \item A set $S \subseteq \mathbb
-                                      {R}^m$ is convex if for any $z_1, z_2 ...
+-Convexity/lecture_questions.tex:199: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.199 ... the convex hull of a set $S$ in $\mathbb
+                                                  {R}^m$ can be expressed as...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[5] [6] [7] 
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:208: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.208 ...= \{(1, 0), (0, 1), (1, 1)\}$ in $\mathbb
+                                                  {R}^2$.  Describe the conv...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:223: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.223 ...thbb{R}^n$ for any positive integer $n$.}
+                                                  %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[5]
+/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-10-22
+-Convexity/lecture_questions.tex:237: Undefined control sequence.
+<recently read> \mathbb 
+                        
+l.237 ... the convex hull of a set $S$ in $\mathbb
+                                                  {R}^m$ can be expressed as...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[6] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
@@ -549,25 +653,24 @@ Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
 (rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10308 strings out of 474116
- 160451 string characters out of 5743682
- 1942187 words of memory out of 5000000
- 32395 multiletter control sequences out of 15000+600000
- 599907 words of font info for 62 fonts, out of 8000000 for 9000
+ 10309 strings out of 474116
+ 160454 string characters out of 5743682
+ 1947187 words of memory out of 5000000
+ 32394 multiletter control sequences out of 15000+600000
+ 595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,508b,711s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,480b,843s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
 f-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
 lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7
-.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr
-/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on _logs/lecture_questions.pdf (7 pages, 173055 bytes).
+.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
+Output written on _logs/lecture_questions.pdf (6 pages, 162174 bytes).
 PDF statistics:
- 248 PDF objects out of 1000 (max. 8388607)
- 217 compressed objects within 3 object streams
- 130 named destinations out of 1000 (max. 500000)
+ 242 PDF objects out of 1000 (max. 8388607)
+ 214 compressed objects within 3 object streams
+ 133 named destinations out of 1000 (max. 500000)
  17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

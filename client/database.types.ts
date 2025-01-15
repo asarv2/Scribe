@@ -18,7 +18,7 @@ export type Database = {
           course_link: string | null
           created_at: string | null
           id: string
-          root_node: string | null
+          map: string | null
           title: string | null
         }
         Insert: {
@@ -29,7 +29,7 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           id?: string
-          root_node?: string | null
+          map?: string | null
           title?: string | null
         }
         Update: {
@@ -40,35 +40,191 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           id?: string
-          root_node?: string | null
+          map?: string | null
           title?: string | null
         }
         Relationships: []
       }
-      lectures: {
+      documents: {
+        Row: {
+          created_at: string
+          description: string
+          figures: Json[]
+          id: string
+          latex: string
+          lecture: string
+          page: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          figures?: Json[]
+          id?: string
+          latex?: string
+          lecture: string
+          page: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          figures?: Json[]
+          id?: string
+          latex?: string
+          lecture?: string
+          page?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_lecture_fkey"
+            columns: ["lecture"]
+            isOneToOne: false
+            referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      figures: {
+        Row: {
+          created_at: string
+          description: string
+          document: string
+          id: string
+          x_max: number
+          x_min: number
+          y_max: number
+          y_min: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          document?: string
+          id?: string
+          x_max?: number
+          x_min?: number
+          y_max?: number
+          y_min?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          document?: string
+          id?: string
+          x_max?: number
+          x_min?: number
+          y_max?: number
+          y_min?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "figures_document_fkey"
+            columns: ["document"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generations: {
         Row: {
           class: string
-          created_at: string | null
-          deleted: boolean | null
+          conceptual: boolean
+          created_at: string
+          deleted: boolean
+          generation_error: string | null
+          generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
-          name: string | null
-          note_number: number | null
+          last_generation_attempt: string | null
+          lectures: string[]
+          mcq: boolean
+          name: string
+          num_questions: number
+          progress: number
+          single: boolean
+          topics: string[]
+          type: Database["prod"]["Enums"]["generation_type"]
         }
         Insert: {
           class: string
-          created_at?: string | null
-          deleted?: boolean | null
+          conceptual?: boolean
+          created_at?: string
+          deleted?: boolean
+          generation_error?: string | null
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
-          name?: string | null
-          note_number?: number | null
+          last_generation_attempt?: string | null
+          lectures?: string[]
+          mcq?: boolean
+          name?: string
+          num_questions?: number
+          progress?: number
+          single?: boolean
+          topics?: string[]
+          type?: Database["prod"]["Enums"]["generation_type"]
         }
         Update: {
           class?: string
-          created_at?: string | null
-          deleted?: boolean | null
+          conceptual?: boolean
+          created_at?: string
+          deleted?: boolean
+          generation_error?: string | null
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
+          last_generation_attempt?: string | null
+          lectures?: string[]
+          mcq?: boolean
+          name?: string
+          num_questions?: number
+          progress?: number
+          single?: boolean
+          topics?: string[]
+          type?: Database["prod"]["Enums"]["generation_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generations_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lectures: {
+        Row: {
+          class: string
+          created_at: string
+          deleted: boolean
+          id: string
+          last_parse_attempt: string | null
+          name: string | null
+          note_number: number | null
+          pages: number
+          parse_error: string | null
+          parse_status: Database["prod"]["Enums"]["parse_status"]
+        }
+        Insert: {
+          class: string
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          last_parse_attempt?: string | null
           name?: string | null
           note_number?: number | null
+          pages?: number
+          parse_error?: string | null
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          last_parse_attempt?: string | null
+          name?: string | null
+          note_number?: number | null
+          pages?: number
+          parse_error?: string | null
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
         }
         Relationships: [
           {
@@ -82,13 +238,15 @@ export type Database = {
       }
       questions: {
         Row: {
+          approved: boolean | null
           conceptual: boolean
-          created_at: string
+          documents: string[]
           explanation_a: string | null
           explanation_b: string | null
           explanation_c: string | null
           explanation_d: string | null
           explanation_e: string | null
+          generation: string | null
           id: string
           lecture: string | null
           mcq: boolean
@@ -99,17 +257,21 @@ export type Database = {
           option_d: string | null
           option_e: string | null
           question: string
+          reason: string
           solution: string
           topic: string | null
+          updated_at: string
         }
         Insert: {
+          approved?: boolean | null
           conceptual?: boolean
-          created_at?: string
+          documents?: string[]
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
+          generation?: string | null
           id?: string
           lecture?: string | null
           mcq?: boolean
@@ -120,17 +282,21 @@ export type Database = {
           option_d?: string | null
           option_e?: string | null
           question: string
+          reason?: string
           solution: string
           topic?: string | null
+          updated_at?: string
         }
         Update: {
+          approved?: boolean | null
           conceptual?: boolean
-          created_at?: string
+          documents?: string[]
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
           explanation_d?: string | null
           explanation_e?: string | null
+          generation?: string | null
           id?: string
           lecture?: string | null
           mcq?: boolean
@@ -141,10 +307,19 @@ export type Database = {
           option_d?: string | null
           option_e?: string | null
           question?: string
+          reason?: string
           solution?: string
           topic?: string | null
+          updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "questions_generation_fkey"
+            columns: ["generation"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "questions_lecture_fkey"
             columns: ["lecture"]
@@ -161,29 +336,83 @@ export type Database = {
           },
         ]
       }
-      summaries: {
+      rubrics: {
         Row: {
           content: string
-          created_at: string | null
+          created_at: string
           id: string
-          lecture: string | null
-          topic: string | null
+          points: number
+          question: string
+          standard: string
         }
         Insert: {
-          content: string
-          created_at?: string | null
+          content?: string
+          created_at?: string
           id?: string
-          lecture?: string | null
-          topic?: string | null
+          points?: number
+          question: string
+          standard?: string
         }
         Update: {
           content?: string
+          created_at?: string
+          id?: string
+          points?: number
+          question?: string
+          standard?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rubrics_question_fkey"
+            columns: ["question"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      summaries: {
+        Row: {
+          conclusion: string
+          content: string
+          created_at: string | null
+          documents: string[]
+          generation: string | null
+          id: string
+          lecture: string | null
+          preamble: string
+          topic: string | null
+        }
+        Insert: {
+          conclusion?: string
+          content: string
           created_at?: string | null
+          documents?: string[]
+          generation?: string | null
           id?: string
           lecture?: string | null
+          preamble?: string
+          topic?: string | null
+        }
+        Update: {
+          conclusion?: string
+          content?: string
+          created_at?: string | null
+          documents?: string[]
+          generation?: string | null
+          id?: string
+          lecture?: string | null
+          preamble?: string
           topic?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "summaries_generation_fkey"
+            columns: ["generation"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "summaries_lecture_fkey"
             columns: ["lecture"]
@@ -205,8 +434,10 @@ export type Database = {
           class: string | null
           content: string
           created_at: string | null
+          figures: string[]
           id: string
           lectures: string[] | null
+          map: string | null
           map_id: string
           map_parent: string | null
           title: string
@@ -219,8 +450,10 @@ export type Database = {
           class?: string | null
           content?: string
           created_at?: string | null
+          figures?: string[]
           id?: string
           lectures?: string[] | null
+          map?: string | null
           map_id: string
           map_parent?: string | null
           title?: string
@@ -233,8 +466,10 @@ export type Database = {
           class?: string | null
           content?: string
           created_at?: string | null
+          figures?: string[]
           id?: string
           lectures?: string[] | null
+          map?: string | null
           map_id?: string
           map_parent?: string | null
           title?: string
@@ -276,7 +511,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      question_type: "conceptual" | "computational" | "multi-part"
+      generation_status: "idle" | "error" | "complete" | "generating"
+      generation_type: "problem" | "summary"
+      parse_status: "parsing" | "batching" | "complete" | "idle" | "error"
       topic_type: "group" | "term" | "problem" | "algorithm"
     }
     CompositeTypes: {

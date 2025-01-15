@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  31 DEC 2024 17:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.12.3)  3 JAN 2025 10:12
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -440,120 +440,36 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 al/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
 4/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2024/texmf-dist/f
 onts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/d
-vips/lm/lm-mathsy.enc}] [2] [3]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12
--Duality/lecture_questions.tex:171: Misplaced alignment tab character &.
-l.171 ..., y \geq 0$,  if $A = \begin{pmatrix} 1 &
-                                                   2 \\ 3 & 4 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
+vips/lm/lm-mathsy.enc}] [2] [3] [4] [5] [6] [7] [8] [9]
 
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12
--Duality/lecture_questions.tex:171: Misplaced alignment tab character &.
-l.171 ...0$,  if $A = \begin{pmatrix} 1 & 2 \\ 3 &
-                                                   4 \end{pmatrix}$, $b = \b...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[4] [5] [6] [7]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12
--Duality/lecture_questions.tex:267: Misplaced alignment tab character &.
-l.267 ...B.  $\xi(x) = c^T x = \begin{pmatrix} 2 &
-                                                   1 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12
--Duality/lecture_questions.tex:286: Misplaced alignment tab character &.
-l.286 ... C. $\xi(y) = b^T y = \begin{pmatrix} 4 &
-                                                   5 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[8]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12
--Duality/lecture_questions.tex:319: Misplaced alignment tab character &.
-l.319 ..., y \geq 0$,  if $A = \begin{pmatrix} 1 &
-                                                   2 \\ 3 & 4 \end{pmatrix}$...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12
--Duality/lecture_questions.tex:319: Misplaced alignment tab character &.
-l.319 ...0$,  if $A = \begin{pmatrix} 1 & 2 \\ 3 &
-                                                   4 \end{pmatrix}$, $b = \b...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[9]
-/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12
--Duality/lecture_questions.tex:321: Misplaced alignment tab character &.
-l.321 ...$b$, we get $\xi(y) = \begin{pmatrix} 5 &
-                                                   6 \end{pmatrix} \begin{pm...
-I can't figure out why you would want to use a tab mark
-here. If you just want an ampersand, the remedy is
-simple: Just type `I\&' now. But if some right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-[10] 
 enddocument/afterlastpage: lastpage setting LastPage.
 (_logs/lecture_questions.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `lecture_questions.out' has not changed.
 (rerunfilecheck)             Checksum: 7BC3F9064CAEE187291BB9238670FDD7;166.
  ) 
 Here is how much of TeX's memory you used:
- 10375 strings out of 474116
- 161015 string characters out of 5743682
- 1946187 words of memory out of 5000000
- 32396 multiletter control sequences out of 15000+600000
+ 10359 strings out of 474116
+ 160844 string characters out of 5743682
+ 1942187 words of memory out of 5000000
+ 32393 multiletter control sequences out of 15000+600000
  595644 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,718b,853s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,820b,843s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texliv
 e/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texm
 f-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/pub
-lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7
-.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on _logs/lecture_questions.pdf (10 pages, 170810 bytes).
+lic/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy
+10.pfb>
+Output written on _logs/lecture_questions.pdf (9 pages, 155224 bytes).
 PDF statistics:
- 332 PDF objects out of 1000 (max. 8388607)
- 300 compressed objects within 3 object streams
- 197 named destinations out of 1000 (max. 500000)
+ 309 PDF objects out of 1000 (max. 8388607)
+ 280 compressed objects within 3 object streams
+ 184 named destinations out of 1000 (max. 500000)
  17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

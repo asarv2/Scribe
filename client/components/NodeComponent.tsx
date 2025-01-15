@@ -1,6 +1,6 @@
 import { Handle, NodeProps, Position as FlowPosition } from '@xyflow/react';
 import React from 'react';
-import Latex from 'react-latex-next';
+import Latex from '@/components/Latex';
 
 export const NodeComponent: React.FC<NodeProps> = ({ data}) => {
     return (

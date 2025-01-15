@@ -1,180 +1,180 @@
 QUESTION 1
-What is the significance of the convexity of a set in the context of linear programming?
-A. Convexity ensures the existence of a unique optimal solution.
-B. Convexity guarantees that any local optimum is also a global optimum.
-C. Convexity is not relevant to linear programming; it's only important in nonlinear programming.
-D. Convexity simplifies the problem but is not essential for finding an optimal solution.
-E. Convexity is a necessary condition for the application of many linear programming algorithms, ensuring the existence of an optimal solution within the feasible region.
+Part A:
+Prove that the intersection of two convex sets is also a convex set.
+A. Let $C_1$ and $C_2$ be two convex sets. Let $x, y \in C_1 \cap C_2$. Then $x, y \in C_1$ and $x, y \in C_2$. Since $C_1$ and $C_2$ are convex, for any $t \in [0, 1]$, $tx + (1-t)y \in C_1$ and $tx + (1-t)y \in C_2$. Therefore, $tx + (1-t)y \in C_1 \cap C_2$, proving that $C_1 \cap C_2$ is convex.
+B. The intersection of two convex sets is not necessarily convex. A counterexample can be constructed.
+C. Convexity is only defined for sets in $\mathbb{R}^2$, so the intersection of two convex sets in $\mathbb{R}^3$ is not necessarily convex.
+D. The proof requires the use of the Caratheodory theorem.
+E. The statement is only true if the convex sets are bounded.
+
+ANSWER: A
+
+EXPLANATION:
+A. This option provides a correct and concise proof.  The argument directly uses the definition of convexity for both sets and shows that the line segment connecting any two points in the intersection remains within the intersection.
+B. This is incorrect. The intersection of convex sets is always convex.
+C. This is incorrect. Convexity is defined for sets in $\mathbb{R}^n$ for any positive integer $n$.
+D. This is incorrect. While the Caratheodory theorem is related to convex sets, it is not necessary to prove this specific statement.
+E. This is incorrect. Boundedness is not a requirement for the intersection of convex sets to be convex.
+
+Part B:
+Explain why the convex hull of a set $S$, denoted Conv($S$), is the smallest convex set containing $S$.
+A. Because Conv($S$) is defined as the intersection of all convex sets containing $S$, any smaller convex set would not contain all of $S$.
+B. Because Conv($S$) is defined as the union of all convex sets containing $S$, it is the largest convex set containing $S$.
+C. This is a consequence of Caratheodory's theorem.
+D. This is only true if $S$ is a finite set.
+E. The statement is only true if $S$ is a convex set.
+
+ANSWER: A
+
+EXPLANATION:
+A. This option correctly explains why the definition of Conv($S$) as the intersection of all convex sets containing $S$ implies that it is the smallest such set.  Any smaller convex set would necessarily exclude some elements of $S$, contradicting the definition.
+B. This is incorrect. The convex hull is defined as the intersection, not the union, of all convex sets containing $S$.
+C. While Caratheodory's theorem is related to convex hulls, it doesn't directly explain why Conv($S$) is the smallest convex set containing $S$.
+D. This is incorrect. The definition and the property of being the smallest convex set containing $S$ hold regardless of whether $S$ is finite or infinite.
+E. This is incorrect. The convex hull is defined for any set $S$, whether convex or not. If $S$ is already convex, then Conv($S$) = $S$.
+
+Part C:
+Using Caratheodory's Theorem, explain why any point in the convex hull of a set $S$ in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$.
+A. Caratheodory's Theorem directly states this property; no further explanation is needed.
+B. The proof involves constructing a linear program and showing that its optimal solution uses at most $m+1$ points from $S$.
+C. This is a consequence of the Separation Theorem.
+D. This is only true if $S$ is a finite set.
+E. This is only true if $S$ is a convex set.
 
 ANSWER: B
 
 EXPLANATION:
-A. While convexity often leads to a unique optimal solution, it's not a strict requirement.  Multiple optimal solutions can exist in a convex feasible region.
-B. A convex feasible region guarantees that any local optimum is also a global optimum. This is a crucial property exploited by linear programming algorithms, which often search for local optima and rely on this property to ensure they have found the global optimum.
-C. Convexity is fundamental to linear programming. The feasible region of a linear program is always a convex set.  This property is essential for the correctness and efficiency of many algorithms used to solve linear programs.
-D. Convexity is not merely a simplification; it's a fundamental property that underpins the theoretical foundation and algorithmic approaches of linear programming.  Without convexity, many algorithms would not be guaranteed to find an optimal solution.
-E. While convexity is important for the existence of an optimal solution, it is not a necessary condition for the application of *all* linear programming algorithms.  Some algorithms might still find a solution even in non-convex cases, but they may not guarantee finding the global optimum.
+A. While Caratheodory's Theorem states the result, it's crucial to understand the underlying reasoning.
+B. This option correctly identifies the core idea of the proof of Caratheodory's Theorem, which involves formulating a linear program to find a convex combination representing a given point in the convex hull. The optimal solution of this LP, due to its structure, will involve at most $m+1$ points.
+C. The Separation Theorem is a different result in convex analysis and is not directly involved in proving Caratheodory's Theorem.
+D. This is incorrect. Caratheodory's Theorem applies to any set $S$, regardless of whether it is finite or infinite.
+E. This is incorrect. Caratheodory's Theorem applies to any set $S$, whether it is convex or not. The convex hull is defined for any set.
+
 
 
 QUESTION 2
-Explain the concept of a convex combination of points and its relevance to convex sets.
-A. A convex combination is a linear combination of points where the coefficients are all positive.
-B. A convex combination is a weighted average of points where the weights are non-negative and sum to one.  A set is convex if and only if it contains all convex combinations of its points.
-C. A convex combination is any linear combination of points within a convex set.
-D. A convex combination is a special type of linear combination used only for proving theorems about convex sets.
-E. A convex combination is a linear combination of points where the coefficients sum to zero.
+Prove that the intersection of two convex sets is also a convex set.
+A. Let $C_1$ and $C_2$ be two convex sets.  Consider $x, y \in C_1 \cap C_2$. Then $x, y \in C_1$ and $x, y \in C_2$. Since $C_1$ and $C_2$ are convex, for any $t \in [0, 1]$, $tx + (1-t)y \in C_1$ and $tx + (1-t)y \in C_2$. Therefore, $tx + (1-t)y \in C_1 \cap C_2$, proving that $C_1 \cap C_2$ is convex.
+B. The intersection of two convex sets is not necessarily convex. A counterexample can be constructed.
+C. Convexity is only defined for single sets, not intersections of sets.
+D. Let $C_1$ and $C_2$ be two convex sets.  The intersection $C_1 \cap C_2$ is convex if and only if $C_1$ and $C_2$ are disjoint.
+E. The intersection of two convex sets is only convex if they are both bounded.
 
-ANSWER: B
+ANSWER: A
 
 EXPLANATION:
-A. The coefficients in a convex combination must be non-negative, but they don't need to be strictly positive (they can be zero).
-B. A convex combination is a weighted average of points, with non-negative weights that sum to one.  This definition is directly tied to the definition of a convex set: a set is convex if and only if it contains all convex combinations of its points. This is a fundamental concept in convex analysis.
-C. A convex combination can be formed from points whether or not they are in a convex set. The definition of a convex combination is independent of the concept of a convex set.
-D. Convex combinations are not just for proving theorems; they are a fundamental concept in defining and understanding convex sets and their properties.
-E. The coefficients in a convex combination must sum to one, not zero.
+A. This proof correctly demonstrates that the intersection of two convex sets is convex by showing that any convex combination of two points in the intersection remains within the intersection.
+B. This statement is false. The intersection of convex sets is always convex.
+C. This statement is false.  Convexity is defined for any set, including intersections of sets.
+D. This statement is false. The intersection of two convex sets is always convex, regardless of whether they are disjoint.
+E. This statement is false. Boundedness is not a requirement for the intersection of convex sets to be convex.
 
 
 QUESTION 3
-What does Carathéodory's Theorem state about the representation of points in the convex hull of a set in $\mathbb{R}^m$?
-A. Every point in the convex hull can be expressed as a convex combination of at most $m$ points from the set.
-B. Every point in the convex hull can be expressed as a convex combination of at most $m+1$ points from the set.
-C. Every point in the convex hull can be expressed as a convex combination of all points in the set.
-D. Carathéodory's Theorem is unrelated to the representation of points in the convex hull.
-E. Every point in the convex hull can be expressed as a convex combination of infinitely many points from the set.
+Explain why the convex hull of a set $S$, denoted Conv($S$), is the smallest convex set containing $S$.
+A. The convex hull is the largest convex set containing $S$.
+B. The convex hull is defined as the intersection of all convex sets containing $S$. Since it's an intersection of convex sets, it's convex, and it contains $S$ by definition. Any smaller convex set containing $S$ would have to be a subset of this intersection, making Conv($S$) the smallest.
+C. The convex hull is not necessarily the smallest convex set containing $S$.
+D. The convex hull is only the smallest convex set containing $S$ if $S$ is finite.
+E. The convex hull is only defined for convex sets $S$.
 
 ANSWER: B
 
 EXPLANATION:
-A. The theorem states $m+1$, not $m$, points are sufficient.
-B. Carathéodory's Theorem states that any point in the convex hull of a set in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from the original set. This is a powerful result that limits the number of points needed for representation.
-C. This is incorrect; it's not necessary to use all points in the set.  Carathéodory's Theorem provides a much more efficient representation.
-D. Carathéodory's Theorem is precisely about the representation of points in the convex hull.
-E. The theorem states a finite number ($m+1$) of points are sufficient, not infinitely many.
+A. This is incorrect; the convex hull is the smallest, not the largest, convex set containing $S$.
+B. This explanation correctly defines the convex hull as the intersection of all convex sets containing $S$ and logically argues why this makes it the smallest such set.
+C. This is incorrect; the convex hull is always the smallest convex set containing $S$.
+D. This is incorrect; the definition and property hold for any set $S$, whether finite or infinite.
+E. This is incorrect; the convex hull is defined for any set $S$, regardless of whether $S$ itself is convex.
 
 
 QUESTION 4
-The Separation Theorem states that two disjoint nonempty polyhedra in $\mathbb{R}^n$ can be separated by what?
-A. A single point
-B. A line segment
-C. Disjoint hyperplanes
-D. Disjoint half-spaces
-E. A single hyperplane
-
-ANSWER: D
-
-EXPLANATION:
-A. A single point cannot separate two regions in space.
-B. A line segment is too limited to separate two arbitrary polyhedra.
-C. While hyperplanes are involved, the separation is achieved by disjoint half-spaces defined by these hyperplanes.
-D. The Separation Theorem guarantees the existence of two disjoint half-spaces that separate the two disjoint polyhedra.  This is a fundamental result in convex analysis with significant implications for optimization.
-E. A single hyperplane might not suffice to separate two disjoint polyhedra; two disjoint half-spaces are needed.
-
-
-QUESTION 5
-Explain the concept of a convex set and provide a real-world example that is not a geometric shape.
-A. A convex set is a set where any line segment connecting two points within the set is entirely contained within the set.  Example: The set of all possible portfolios with a given risk tolerance.
-B. A convex set is a set that is always symmetrical around its center. Example: A perfectly round ball.
-C. A convex set is a set where the sum of any two points in the set is also in the set. Example: The set of all positive real numbers.
-D. A convex set is a set that can be enclosed by a circle. Example: A set of points forming a circle.
-E. A convex set is a set that is always connected. Example: A line segment.
-
-ANSWER: A
-
-EXPLANATION:
-A. A convex set is correctly defined, and the portfolio example is a valid non-geometric illustration.  Different combinations of assets within a given risk tolerance will always result in a portfolio that also falls within that risk tolerance.
-B. This describes a specific type of convex set (symmetrical), but not all convex sets are symmetrical.  A triangle is a convex set but not symmetrical.
-C. This is incorrect; the sum of two points is not the defining characteristic of a convex set.  Consider a triangle; the sum of two vertices is generally outside the triangle.
-D. This is incorrect; a convex set does not need to be enclosed by a circle.  A square is a convex set, but it cannot be enclosed by a circle that only touches its vertices.
-E. Connectedness is not sufficient for convexity.  A horseshoe shape is connected but not convex.
-
-
-QUESTION 6
-A set $S \subseteq \mathbb{R}^m$ is convex if for any $z_1, z_2 \in S$, what condition must hold for $tz_1 + (1-t)z_2$?
-A. $tz_1 + (1-t)z_2 \in S$ for all $t \in \mathbb{R}$
-B. $tz_1 + (1-t)z_2 \in S$ for all $0 \le t \le 1$
-C. $tz_1 + (1-t)z_2 \in S$ for some $0 \le t \le 1$
-D. $tz_1 + (1-t)z_2 \in S$ for all $t > 1$
-E. $tz_1 + (1-t)z_2 \in S$ only if $t = 0.5$
-
-ANSWER: B
-
-EXPLANATION:
-A. Answer A is incorrect.  The condition must hold only for $0 \le t \le 1$, representing the line segment between the two points.  Extending it to all real numbers $t$ would include points outside the line segment.
-B. Answer B is correct. This is the definition of a convex set:  the line segment connecting any two points in the set must also be entirely within the set.  The condition $0 \le t \le 1$ ensures that we are considering only points on the line segment between $z_1$ and $z_2$.
-C. Answer C is incorrect. The condition must hold for \textit{all} $t$ in the interval $[0, 1]$, not just for some $t$ in that interval.
-D. Answer D is incorrect. The condition only applies to the line segment between $z_1$ and $z_2$, which is defined by $0 \le t \le 1$.
-E. Answer E is incorrect. The condition must hold for all $t$ in the interval $[0, 1]$, not just for $t = 0.5$.
-
-
-QUESTION 7
-What is the significance of the convexity of a set in the context of linear programming?
-A. Convexity ensures the existence of a unique optimal solution.
-B. Convexity guarantees that any local optimum is also a global optimum.
-C. Convexity is not relevant to linear programming; it's only important in nonlinear programming.
-D. Convexity simplifies the problem but is not essential for finding a solution.
-E. Convexity is a necessary condition for the application of many linear programming algorithms, ensuring that the feasible region has desirable properties.
-
-ANSWER: E
-
-EXPLANATION:
-A. While convexity often leads to a unique optimal solution, it's not a strict requirement.  Linear programs can have multiple optimal solutions even with a convex feasible region.
-B. This statement is true, but it doesn't fully capture the significance of convexity.  The broader importance is that the feasible region is convex, allowing for efficient search algorithms.
-C. This is incorrect.  Convexity is fundamental to linear programming. The feasible region of any linear program is a convex set.
-D. While some algorithms might work without explicitly using convexity, the underlying structure of the problem relies heavily on the convexity of the feasible region.
-E. Convexity is crucial because the feasible region of a linear program is always a convex set.  Many algorithms, like the simplex method, rely on this property to guarantee that a local optimum is also a global optimum and to efficiently search the solution space.
-
-
-QUESTION 8
-Explain the concept of a convex combination of points and its relevance to convex sets.
-A. A convex combination is a weighted average of points where the weights are positive and sum to one.  It's relevant because any convex combination of points within a convex set must also lie within that set.
-B. A convex combination is a linear combination of points where the weights are non-negative. It's relevant because it defines the boundary of a convex set.
-C. A convex combination is any linear combination of points. It's relevant because it defines the interior of a convex set.
-D. A convex combination is a weighted average of points where the weights are negative and sum to one. It's relevant because it defines the exterior of a convex set.
-E. A convex combination is only relevant to non-convex sets.
-
-ANSWER: A
-
-EXPLANATION:
-A. A convex combination is a weighted average of points where the weights are non-negative and sum to one. This directly relates to the definition of a convex set: a set is convex if and only if any convex combination of points within the set also lies within the set.
-B. While the weights are non-negative, they must also sum to one to be a convex combination.  A convex combination doesn't define the boundary; it defines points within the set.
-C. The weights must be non-negative and sum to one; otherwise, it's not a convex combination.  It doesn't define the interior exclusively; it defines points within the set, including the boundary and interior.
-D. The weights must be non-negative and sum to one.  A convex combination doesn't define the exterior; it defines points within the set.
-E. Convex combinations are fundamentally important for defining and understanding convex sets.
-
-
-QUESTION 9
-What is the significance of convexity in the context of linear programming, and how does it relate to the feasible region of a linear program?
-A. Convexity ensures that the feasible region is always bounded, guaranteeing the existence of an optimal solution.
-B. Convexity guarantees that any local optimum found within the feasible region is also a global optimum.
-C. Convexity is not relevant to linear programming; it is a concept used only in nonlinear optimization.
-D. Convexity simplifies the search for an optimal solution by ensuring that the feasible region is a connected set.
-E. Convexity is a necessary condition for the existence of a dual problem, but it is not directly related to the feasible region of the primal problem.
-
-ANSWER: B
-
-EXPLANATION:
-A. Answer A is incorrect. While convexity is related to the properties of the feasible region, it does not guarantee boundedness. A linear program can have an unbounded feasible region and still have an optimal solution (or be unbounded).
-B. Answer B is correct.  The feasible region of a linear program is always a convex set.  This crucial property ensures that any local optimum found within the feasible region is also a global optimum.  This simplifies the search for an optimal solution because we don't need to worry about getting stuck in local optima that are not global optima.
-C. Answer C is incorrect. Convexity is a fundamental concept in linear programming. The feasible region of a linear program is always a convex set, and this property is essential for the theoretical foundation and algorithmic efficiency of linear programming.
-D. Answer D is incorrect. While convexity implies connectedness, the significance of convexity in linear programming is primarily related to the guarantee of global optimality from local optima, not just connectedness.
-E. Answer E is incorrect. Convexity of the feasible region is crucial for both the primal and dual problems.  The duality theory relies heavily on the convexity of the feasible regions of both the primal and dual problems.
-
-
-QUESTION 10
-Given the data points $\{x_1, x_2, x_3, x_4, x_5\} = \{1, 3, 5, 7, 9\}$, what is the solution obtained by minimizing the $L^1$-error (least absolute deviations) as shown in Slide 1?
-A. 1
-B. 3
-C. 5
-D. 7
-E. 9
+Using Caratheodory's Theorem, explain why any point in the convex hull of a set $S$ in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$.
+A. Caratheodory's Theorem states that any point in the convex hull can be expressed as a convex combination of at most $m$ points.  The $+1$ is a mistake.
+B. Caratheodory's Theorem doesn't relate to the number of points in a convex combination.
+C. Caratheodory's Theorem states that any point in the convex hull can be expressed as a convex combination of at most $m+1$ points. The proof involves constructing a linear program to find such a combination and showing that a basic feasible solution will have at most $m+1$ non-zero variables.
+D. Only points in the interior of the convex hull can be expressed as a convex combination of at most $m+1$ points.
+E. The number of points required is unbounded.
 
 ANSWER: C
 
 EXPLANATION:
-A. 1 is the minimum value in the data set, not the median.
-B. 3 is not the median of the data set.
-C. The $L^1$ error is minimized when the solution is the median of the data set.  The median of $\{1, 3, 5, 7, 9\}$ is 5.
-D. 7 is not the median of the data set.
-E. 9 is the maximum value in the data set, not the median.
+A. This is incorrect; Caratheodory's Theorem states that at most $m+1$ points are needed.
+B. This is incorrect; Caratheodory's Theorem is directly about the number of points in a convex combination representing a point in the convex hull.
+C. This option correctly states Caratheodory's Theorem and outlines the core idea of its proof using linear programming.
+D. This is incorrect; the theorem applies to all points in the convex hull, not just interior points.
+E. This is incorrect; Caratheodory's Theorem provides an upper bound of $m+1$ points.
+
+
+QUESTION 5
+Consider a set $S = \{(1, 0), (0, 1), (1, 1)\}$ in $\mathbb{R}^2$.  Describe the convex hull of $S$, Conv($S$), and provide a point within Conv($S$) that is a convex combination of all three points in $S$.
+A. Conv($S$) is the triangle with vertices (1, 0), (0, 1), and (1, 1).  The point (2/3, 2/3) is a convex combination of all three points.
+B. Conv($S$) is the line segment connecting (1, 0) and (0, 1). The point (1/2, 1/2) is a convex combination of (1,0) and (0,1).
+C. Conv($S$) is the set $S$ itself.  There is no convex combination of all three points.
+D. Conv($S$) is the entire $\mathbb{R}^2$ plane.
+E. Conv($S$) is undefined for this set $S$.
+
+ANSWER: A
+
+EXPLANATION:
+A. The description of Conv($S$) is correct, and (2/3, 2/3) is a valid convex combination: (1/3)(1,0) + (1/3)(0,1) + (1/3)(1,1).
+B. This is incorrect; Conv($S$) includes the entire triangle, not just the line segment.
+C. This is incorrect; the convex hull is the smallest convex set containing $S$, which is the triangle.
+D. This is incorrect; the convex hull is the triangle, not the entire plane.
+E. This is incorrect; the convex hull is defined for any set.
+
+
+QUESTION 6
+Part A:
+Prove that the intersection of two convex sets is also a convex set.
+A. Let $C_1$ and $C_2$ be two convex sets. Let $x, y \in C_1 \cap C_2$. Then $x, y \in C_1$ and $x, y \in C_2$. Since $C_1$ is convex, for any $t \in [0, 1]$, $tx + (1-t)y \in C_1$. Similarly, since $C_2$ is convex, $tx + (1-t)y \in C_2$. Therefore, $tx + (1-t)y \in C_1 \cap C_2$, proving that $C_1 \cap C_2$ is convex.
+B. The intersection of two convex sets is not necessarily convex.  A counterexample can be constructed.
+C. Convexity is only defined for sets in $\mathbb{R}^2$, so the intersection of two convex sets in $\mathbb{R}^3$ is not necessarily convex.
+D. The intersection of two convex sets is only convex if the sets are disjoint.
+E. The statement is only true for specific types of convex sets, such as polyhedra.
+
+ANSWER: A
+
+EXPLANATION:
+A. This proof correctly uses the definition of convexity to show that the intersection of two convex sets inherits the convexity property.  For any two points in the intersection, their convex combination is also in both sets, and thus in the intersection.
+B. This is incorrect. The intersection of convex sets is always convex.
+C. This is incorrect. Convexity is defined for sets in $\mathbb{R}^n$ for any positive integer $n$.
+D. This is incorrect. Disjointness is irrelevant to the convexity of the intersection. The intersection of disjoint sets is simply the empty set, which is itself a convex set.
+E. This is incorrect. The statement holds true for all convex sets, regardless of their specific type.
+
+Part B:
+Explain why the convex hull of a set $S$, denoted Conv($S$), is the smallest convex set containing $S$.
+A. By definition, Conv($S$) is the intersection of all convex sets containing $S$.  Since it's an intersection of convex sets, it's convex. Any smaller convex set would necessarily exclude some points from $S$, contradicting the definition.
+B. The convex hull is the largest convex set containing $S$.
+C. The convex hull is only the smallest convex set containing $S$ if $S$ is finite.
+D. The convex hull is not necessarily a convex set.
+E. The concept of "smallest" is not well-defined for sets.
+
+ANSWER: A
+
+EXPLANATION:
+A. This explanation correctly uses the definition of the convex hull as the intersection of all convex sets containing $S$ to argue that it is the smallest such set.  Any smaller convex set would leave out points of $S$.
+B. This is incorrect. The convex hull is the smallest, not the largest, convex set containing $S$.
+C. This is incorrect. The definition of the convex hull applies to sets of any cardinality.
+D. This is incorrect. The convex hull is, by definition, a convex set.
+E. This is incorrect. The concept of "smallest" is well-defined for sets in terms of set inclusion.
+
+Part C:
+Using Caratheodory's Theorem, explain why any point in the convex hull of a set $S$ in $\mathbb{R}^m$ can be expressed as a convex combination of at most $m+1$ points from $S$.
+A. Caratheodory's Theorem directly states that any point in the convex hull of a set $S$ in $\mathbb{R}^m$ can be written as a convex combination of at most $m+1$ points from $S$. The proof involves constructing a linear program and using the properties of basic feasible solutions.
+B. This is only true if the set $S$ is convex.
+C. Caratheodory's Theorem only applies to finite sets $S$.
+D. The number of points needed is at most $m$, not $m+1$.
+E. The statement is not related to Caratheodory's Theorem.
+
+ANSWER: A
+
+EXPLANATION:
+A. This correctly states Caratheodory's Theorem and indicates that the proof relies on linear programming arguments related to basic feasible solutions.
+B. This is incorrect. Caratheodory's Theorem applies to any set $S$, whether convex or not.
+C. This is incorrect. Caratheodory's Theorem applies to sets of any cardinality.
+D. This is incorrect. Caratheodory's Theorem states that at most $m+1$ points are needed.
+E. This is incorrect. The statement is a direct consequence of Caratheodory's Theorem.
+
 
 

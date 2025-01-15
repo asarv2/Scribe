@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1735688467.6399 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12-Duality/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735688468.21623 2
-  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12-Duality/lecture_questions.tex" 1735688467.56191 27463 3f8710a1df0309b531af0e6cb52bf731 ""
+["pdflatex"] 1735920758.10522 "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12-Duality/lecture_questions.tex" "lecture_questions.pdf" "lecture_questions" 1735920758.63779 0
+  "/Users/ashoksaravanan/Coding/ScribeLec/server/output/MA 421/lectures/2024-09-12-Duality/lecture_questions.tex" 1735920757.42613 30875 369d108e2cfcea59d65edc863309cf93 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -35,7 +35,6 @@
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb" 1255129361 119235 f35b44530a1d90eb90fe15d9cba67ea0 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb" 1255129361 113634 f99c44d58bae0863375faf0e1d74d612 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb" 1255129361 119752 1bd8d06e4079df624bf59ce3ad7c9aa6 ""
-  "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb" 1255129361 121145 68312a933e2c689ed40ec0aba373e279 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb" 1254269338 27863 09ce3735688ffde955e72da27c95b61a ""
   "/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2024/texmf-dist/tex/generic/atbegshi/atbegshi.sty" 1575674566 24708 5584a51a7101caf7e6bbf1fc27d8f7b1 ""
@@ -100,9 +99,9 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1733257442.02404 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1733257414 8221420 9fe73b124419eb36a2edd6f23a82e5ea ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "_logs/lecture_questions.aux" 1735688468.1449 590 c88aa20e34fe7ee4a660922134e9e4ec "pdflatex"
-  "_logs/lecture_questions.out" 1735688468.14523 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
-  "lecture_questions.tex" 1735688467.56191 27463 3f8710a1df0309b531af0e6cb52bf731 ""
+  "_logs/lecture_questions.aux" 1735920758.57923 585 f1dfab2e568080cbd5c9b0b58ade01be "pdflatex"
+  "_logs/lecture_questions.out" 1735920758.57959 166 7bc3f9064caee187291bb9238670fdd7 "pdflatex"
+  "lecture_questions.tex" 1735920757.42613 30875 369d108e2cfcea59d65edc863309cf93 ""
   (generated)
   "_logs/lecture_questions.aux"
   "_logs/lecture_questions.log"

@@ -122,8 +122,14 @@ INPUT _logs/lecture_questions.aux
 INPUT _logs/lecture_questions.aux
 OUTPUT _logs/lecture_questions.aux
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/graphics/color.sty
-OUTPUT _logs/lecture_questions.out
+INPUT _logs/lecture_questions.out
+INPUT _logs/lecture_questions.out
+INPUT _logs/lecture_questions.out
+INPUT _logs/lecture_questions.out
 OUTPUT _logs/lecture_questions.pdf
+INPUT _logs/lecture_questions.out
+INPUT _logs/lecture_questions.out
+OUTPUT _logs/lecture_questions.out
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -164,9 +170,9 @@ INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/lmsy7.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/lm/lmsy5.tfm
 INPUT /usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc
 INPUT _logs/lecture_questions.aux
 INPUT _logs/lecture_questions.out
 INPUT _logs/lecture_questions.out
@@ -176,5 +182,5 @@ INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb
