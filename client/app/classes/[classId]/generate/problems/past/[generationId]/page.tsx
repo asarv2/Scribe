@@ -96,10 +96,8 @@ export default function Generation({ params }: { params: { classId: string, gene
         if (!generationProblems?.length) return "";
 
         // Helper function to format a single question
-        const formatQuestion = (question: Question, index: number, subIndex?: string) => {
-            const questionNumber = subIndex
-                ? `${index + 1}${subIndex}`
-                : `${index + 1}`;
+        const formatQuestion = (question: Question, index: string) => {
+            const questionNumber = index;
 
             if (question.mcq) {
                 return `${questionNumber}. ${question.question}\n` +
@@ -114,10 +112,8 @@ export default function Generation({ params }: { params: { classId: string, gene
         };
 
         // Helper function to format a single solution
-        const formatSolution = (question: Question, index: number, subIndex?: string) => {
-            const questionNumber = subIndex
-                ? `${index + 1}${subIndex}`
-                : `${index + 1}`;
+        const formatSolution = (question: Question, index: string) => {
+            const questionNumber = index;
 
             if (question.mcq) {
                 return `${questionNumber}. ${question.question}\n` +
@@ -151,13 +147,13 @@ export default function Generation({ params }: { params: { classId: string, gene
         generationProblems.forEach(question => {
             if (question.multipart === null) {
                 // Single question
-                questionsSection += formatQuestion(question, currentIndex);
+                questionsSection += formatQuestion(question, (currentIndex + 1).toString());
                 currentIndex++;
             } else if (multipartGroups[question.multipart]?.[0] === question) {
                 // First question of a multipart group
                 questionsSection += `${currentIndex + 1}.\n`;
                 multipartGroups[question.multipart].forEach((q, subIndex) => {
-                    questionsSection += formatQuestion(q, currentIndex, `) ${String.fromCharCode(97 + subIndex)}`);
+                    questionsSection += formatQuestion(q, `${String.fromCharCode(97 + subIndex)}`);
                 });
                 currentIndex++;
             }
@@ -170,13 +166,13 @@ export default function Generation({ params }: { params: { classId: string, gene
         generationProblems.forEach(question => {
             if (question.multipart === null) {
                 // Single question
-                solutionsSection += formatSolution(question, currentIndex);
+                solutionsSection += formatSolution(question, (currentIndex + 1).toString());
                 currentIndex++;
             } else if (multipartGroups[question.multipart]?.[0] === question) {
                 // First question of a multipart group
                 solutionsSection += `${currentIndex + 1}.\n`;
                 multipartGroups[question.multipart].forEach((q, subIndex) => {
-                    solutionsSection += formatSolution(q, currentIndex, `) ${String.fromCharCode(97 + subIndex)}`);
+                    solutionsSection += formatSolution(q, `${String.fromCharCode(97 + subIndex)}`);
                 });
                 currentIndex++;
             }
@@ -192,14 +188,14 @@ export default function Generation({ params }: { params: { classId: string, gene
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}`}>
+                            <Link href={`/classes/${classId}/generate/problems`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>{generation?.name}</Text>
                         </Group>
                         <Group>
                             <DownloadGenerationModal generationId={generationId} generationTitle={`${generation?.name ?? ""} - ${generation?.type === "summary" ? "Summary" : "Questions"}`} user={user ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
-                            <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} />
+                            <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} type="problems" />
                         </Group>
                     </Flex>
                     <Stack>

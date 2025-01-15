@@ -47,19 +47,19 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         queryFn: () => getClass(supabase, classId)
     })
 
-    const { data: generations, isLoading: loadingGenerations } = useQuery({
-        queryKey: ["generations", classId],
+    const { data: summariesGenerations, isLoading: loadingSummariesGenerations } = useQuery({
+        queryKey: ["summariesGenerations", classId],
         queryFn: () => getGenerations(supabase, classId, "summary")
     })
 
     const { data: generationSummaries, isLoading: loadingGenerationSummaries } = useQuery({
-        queryKey: ["generationSummaries", classId, generations],
-        queryFn: () => getGenerationSummaries(supabase, generations ?? []),
-        enabled: !!generations
+        queryKey: ["generationSummaries", classId, summariesGenerations],
+        queryFn: () => getGenerationSummaries(supabase, summariesGenerations ?? []),
+        enabled: !!summariesGenerations
     })
 
     const { data: generationDocuments, isLoading: loadingGenerationDocuments } = useQuery({
-        queryKey: ["generationSummariesDocuments", classId, generations],
+        queryKey: ["generationSummariesDocuments", classId, summariesGenerations],
         queryFn: () => getGenerationDocuments(supabase, generationSummaries ? generationSummaries.map(summary => summary.documents).flat() : []),
         enabled: !!generationSummaries
     })
@@ -108,14 +108,14 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                         const newGeneration = payload.new as Generation;
                         console.log("Generation:", newGeneration);
                         // Update your lectures state with the new data
-                        queryClient.setQueryData(["generations", classId], (oldData: Generation[] = []) => {
+                        queryClient.setQueryData(["summariesGenerations", classId], (oldData: Generation[] = []) => {
                             return [...oldData, newGeneration];
                         });
                     } else if (payload.eventType === 'UPDATE') {
                         const updatedGeneration = payload.new as Generation;
                         console.log("Updated Generation:", updatedGeneration);
-                        queryClient.setQueryData(["generations", classId], (oldData: Generation[] = []) => {
-                            return oldData?.map(generation => 
+                        queryClient.setQueryData(["summariesGenerations", classId], (oldData: Generation[] = []) => {
+                            return oldData?.map(generation =>
                                 generation.id === updatedGeneration.id ? updatedGeneration : generation
                             ) || [];
                         });
@@ -130,7 +130,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
     }, [classId, supabase, queryClient]);
 
     useEffect(() => {
-        if (!generations) return;
+        if (!summariesGenerations) return;
         const channel = supabase
             .channel('realtime-summaries')
             .on(
@@ -139,7 +139,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     event: '*',
                     schema: 'prod',
                     table: 'summaries',
-                    filter: `generation=in.(${generations.map(generation => generation.id).join(',')})`
+                    filter: `generation=in.(${summariesGenerations.map(generation => generation.id).join(',')})`
                 },
                 (payload) => {
                     console.log("Summary change:", payload);
@@ -167,7 +167,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [classId, supabase, generations, queryClient]);
+    }, [classId, supabase, summariesGenerations, queryClient]);
 
     const getDocument = (generation: Generation): Document | undefined => {
         // first find the summary or question that matches the generation
@@ -186,7 +186,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}`}>
+                            <Link href={`/`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>Summaries</Text>
@@ -199,12 +199,12 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     </Flex>
 
                     <Stack>
-                        {(generations && classData) && generations.length > 0 && generations.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((generation) => {
+                        {(summariesGenerations && classData) && summariesGenerations.length > 0 && summariesGenerations.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((generation) => {
                             const document = getDocument(generation);
                             if (generation.generation_status !== "complete") {
                                 const progress = generation.progress * 100
                                 let estimatedSeconds = 0;
-                                estimatedSeconds = 10 * (1 - generation.progress) // takes 10 seconds to generate a summary
+                                estimatedSeconds = 20 * (1 - generation.progress) // takes 20 seconds to generate a summary
                                 return (
                                     <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">

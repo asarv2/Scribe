@@ -27,6 +27,7 @@ export class LectureProblemsProcessor extends BaseProblemsProcessor {
         numQuestions = 3,
         conceptualComputationalRatio = 1,
         singleMultiPartRatio = 1,
+        allLectures: { id: string; note_number: number }[],
         batchSize: number | undefined,
         onBatchComplete: (questions: (MCQQuestion | FRQQuestion)[][]) => Promise<void>,
     ): Promise<(MCQQuestion | FRQQuestion)[][]> {
@@ -94,10 +95,10 @@ export class LectureProblemsProcessor extends BaseProblemsProcessor {
                         this.lectures.content,
                         prompts[j],
                     );
-                    this.cleanResult(result, lectureName, tags);
+                    this.cleanResult(result, lectureName, tags, allLectures);
                     
                     // Call onBatchComplete after each batch
-                    await onBatchComplete(this.questions[lectureName]);
+                    await onBatchComplete(this.questions[lectureName].slice(i, i + currentBatchSize));
                 }
             } else {
                 // Process all at once
@@ -107,7 +108,7 @@ export class LectureProblemsProcessor extends BaseProblemsProcessor {
                     this.lectures.content,
                     prompts[j],
                 );
-                this.cleanResult(result, lectureName, tags);
+                this.cleanResult(result, lectureName, tags, allLectures);
             }
         }
 

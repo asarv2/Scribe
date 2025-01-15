@@ -1,5 +1,5 @@
 import { ContentType } from "../_shared/base_processor.ts";
-import { BaseSummaryProcessor, SummaryContent } from "./base_summary_processor.ts";
+import { BaseSummaryProcessor, Summary, SummaryContent } from "./base_summary_processor.ts";
 export class TopicSummaryProcessor extends BaseSummaryProcessor {
     private topics: SummaryContent;
     private topicNames: string[];
@@ -14,15 +14,29 @@ export class TopicSummaryProcessor extends BaseSummaryProcessor {
         this.topicNames = topicNames;
     }
 
-    async processSummary(): Promise<string> {
+    async processSummary(
+        allLectures: {note_number: number, id: string}[], 
+        numBatches: number, 
+        onBatchComplete: (batchNumber: number, summary: Summary) => Promise<void>
+    ): Promise<Summary> {
         console.log(`Generating summary for ${this.topicNames}`);
-        // want error to be caught by the caller
-        const result = await this.processBatch(
-            this.topicNames.join(", "),
-            this.topics.content,
-        );
-        console.log("Result:", result);
-        this.cleanResult(result, this.topicNames.join(", "));
-        return this.summary[this.topicNames.join(", ")];
+        
+        const names = this.topicNames.join(", ");
+        const batches = this.splitContentIntoBatches(this.topics.content, numBatches);
+        
+        for (let i = 0; i < batches.length; i++) {
+            console.log(`Processing batch ${i + 1} of ${batches.length}`);
+            const result = await this.processBatch(
+                names,
+                batches[i],
+            );
+            console.log(`Batch ${i + 1} result:`, result);
+            this.cleanResult(result, names, allLectures);
+            
+            // Call the batch completion callback
+            await onBatchComplete(i + 1, this.summary[names]);
+        }
+
+        return this.summary[names];
     }
 }

@@ -80,7 +80,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
             2. Questions should directly relate to the core content of the ${this.contentType.valueOf()}.
             3. Make each explanation complete and self-contained.
             4. Each question should be difficult to answer correctly, if the student is not familiar with the content.
-            6. Make sure the questions cover a diverse set of concepts from the ${this.contentType.valueOf()}.`;
+            5. Make sure the questions cover a diverse set of concepts from the ${this.contentType.valueOf()}.`;
 
         const singlePartConceptualPrompt =
             `IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part conceptual practice problem for the ${
@@ -89,7 +89,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
                     : "topic Simplex Method"
             }. 
         
-        OUTPUT: <OUTPUT><QUESTION>Which statement about degeneracy in the Simplex Method is correct?</QUESTION> <OPTION_A> Degeneracy only happens if the objective function has multiple optimal solutions.</OPTION_A> <OPTION_B>Degeneracy can cause the Simplex Method to cycle, so tie-breaking rules (like Bland's rule) may be needed.</OPTION_B> <OPTION_C>Once the Simplex Method encounters a degenerate BFS, it automatically concludes the solution is optimal.</OPTION_C> <OPTION_D>Degeneracy can never occur if all right-hand side constants are strictly positive.</OPTION_D> <OPTION_E>Degeneracy only appears in minimization problems, not in maximization.</OPTION_E> <CORRECT_B>In degenerate solutions, more constraints are active at a corner than strictly necessary, which can cause zero steps in objective improvement and lead the algorithm to revisit the same BFS (cycling). Anti-cycling pivot rules help avoid infinite loops.</CORRECT_B> <INCORRECT_A>Multiple optimal solutions can occur even without degeneracy in the BFS. Likewise, degeneracy can occur in problems that do not have multiple optima. They are different concepts.</INCORRECT_A> <INCORRECT_C>A degenerate BFS does not guarantee optimality. It simply means a basic variable is zero or multiple constraints are active at the same vertex.</INCORRECT_C> <INCORRECT_D>You can have degeneracy even if all RHS values are positive, for example if constraints intersect in such a way that multiple constraints are tight at the same point. Strict positivity of RHS does not rule out degeneracy.</INCORRECT_D> <INCORRECT_E>Degeneracy can arise in both minimization and maximization problems; it's an artifact of geometry (multiple constraints meeting at a corner in certain ways), not the direction of optimization.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></OUTPUT>`;
+        OUTPUT: <OUTPUT><QUESTION>Which statement about degeneracy in the Simplex Method is correct?</QUESTION> <OPTION_A> Degeneracy only happens if the objective function has multiple optimal solutions.</OPTION_A> <OPTION_B>Degeneracy can cause the Simplex Method to cycle, so tie-breaking rules (like Bland's rule) may be needed.</OPTION_B> <OPTION_C>Once the Simplex Method encounters a degenerate BFS, it automatically concludes the solution is optimal.</OPTION_C> <OPTION_D>Degeneracy can never occur if all right-hand side constants are strictly positive.</OPTION_D> <OPTION_E>Degeneracy only appears in minimization problems, not in maximization.</OPTION_E> <CORRECT_B>In degenerate solutions, more constraints are active at a corner than strictly necessary, which can cause zero steps in objective improvement and lead the algorithm to revisit the same BFS (cycling). Anti-cycling pivot rules help avoid infinite loops.</CORRECT_B> <INCORRECT_A>Multiple optimal solutions can occur even without degeneracy in the BFS. Likewise, degeneracy can occur in problems that do not have multiple optima. They are different concepts.</INCORRECT_A> <INCORRECT_C>A degenerate BFS does not guarantee optimality. It simply means a basic variable is zero or multiple constraints are active at the same vertex.</INCORRECT_C> <INCORRECT_D>You can have degeneracy even if all RHS values are positive, for example if constraints intersect in such a way that multiple constraints are tight at the same point. Strict positivity of RHS does not rule out degeneracy.</INCORRECT_D> <INCORRECT_E>Degeneracy can arise in both minimization and maximization problems; it's an artifact of geometry (multiple constraints meeting at a corner in certain ways), not the direction of optimization.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></OUTPUT>`;
 
         const singlePartComputationalPrompt =
             `IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part computational practice problem for the ${
@@ -114,7 +114,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         Initial Basic Feasible Solution (BFS): $x_1 = x_2 = 0$, $s_1 = 6$, $s_2 = 4$.
 
         After forming the initial simplex tableau, we ask: which pivot column and pivot row would be chosen for the first pivot (using the "most negative entry in the objective row" rule for entering variable, and the minimum ratio test for leaving variable)? 
-        Which is the correct pivot choice?</QUESTION> <OPTION_A>Enter $x_1$ (pivot column), leave $s_1$.</OPTION_A> <OPTION_B>Enter $x_1$ (pivot column), leave $s_2$.</OPTION_B> <OPTION_C>Enter $x_2$ (pivot column), leave $s_1$.</OPTION_C> <OPTION_D>Enter $x_2$ (pivot column), leave $s_2$.</OPTION_D> <OPTION_E>Skip pivoting altogether since the BFS is already optimal.</OPTION_E> <CORRECT_B>If the objective row indicates $x_1$ as the best variable to enter (most negative coefficient) and the ratio test indicates $s_2$ leaves first, this is the correct pivot choice.</CORRECT_B> <INCORRECT_A>Entering $x_1$ and leaving $s_1$ might be incorrect if the ratio test (i.e., $\min\{(\text{RHS})/(\text{coefficient in pivot column})\}$) indicates that $s_2$ has the smaller ratio, meaning $s_2$ hits zero first as $x_1$ increases.</INCORRECT_A> <INCORRECT_C>Entering $x_2$ could be correct if $x_2$ had the most negative objective coefficient, but in our hypothetical calculations, we assume $x_1$'s coefficient is more negative. Also, the ratio test might not single out $s_1$ if it doesn't yield the smallest ratio.</INCORRECT_C> <INCORRECT_D>Same rationale as in (C): it might happen if the numbers align that way, but we are positing a scenario where $x_1$ is chosen.</INCORRECT_D> <INCORRECT_E>The BFS $(x_1=0,x_2=0,s_1=6,s_2=4)$ is feasible, but the objective row has negative coefficients for $x_1$ or $x_2$, meaning we can improve the objective. We do not skip pivoting in that case.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></OUTPUT>
+        Which is the correct pivot choice?</QUESTION> <OPTION_A>Enter $x_1$ (pivot column), leave $s_1$.</OPTION_A> <OPTION_B>Enter $x_1$ (pivot column), leave $s_2$.</OPTION_B> <OPTION_C>Enter $x_2$ (pivot column), leave $s_1$.</OPTION_C> <OPTION_D>Enter $x_2$ (pivot column), leave $s_2$.</OPTION_D> <OPTION_E>Skip pivoting altogether since the BFS is already optimal.</OPTION_E> <CORRECT_B>If the objective row indicates $x_1$ as the best variable to enter (most negative coefficient) and the ratio test indicates $s_2$ leaves first, this is the correct pivot choice.</CORRECT_B> <INCORRECT_A>Entering $x_1$ and leaving $s_1$ might be incorrect if the ratio test (i.e., $\min\{(\text{RHS})/(\text{coefficient in pivot column})\}$) indicates that $s_2$ has the smaller ratio, meaning $s_2$ hits zero first as $x_1$ increases.</INCORRECT_A> <INCORRECT_C>Entering $x_2$ could be correct if $x_2$ had the most negative objective coefficient, but in our hypothetical calculations, we assume $x_1$'s coefficient is more negative. Also, the ratio test might not single out $s_1$ if it doesn't yield the smallest ratio.</INCORRECT_C> <INCORRECT_D>Same rationale as in (C): it might happen if the numbers align that way, but we are positing a scenario where $x_1$ is chosen.</INCORRECT_D> <INCORRECT_E>The BFS $(x_1=0,x_2=0,s_1=6,s_2=4)$ is feasible, but the objective row has negative coefficients for $x_1$ or $x_2$, meaning we can improve the objective. We do not skip pivoting in that case.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></OUTPUT>
         `;
 
         const multiPartConceptualPrompt =
@@ -149,7 +149,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <INCORRECT_B>Artificial variables are only added when a straightforward BFS is not easily available (e.g., in "$\geq$" or "$=$" constraints). For "$\leq$" constraints with positive $b_i$, slack variables suffice for an initial solution.</INCORRECT_B> 
         <INCORRECT_C>Surplus variables appear in "$\geq$" constraints, not in "$\leq$" constraints.</INCORRECT_C> 
         <INCORRECT_D>Even if $b_i > 0$, we must introduce slack variables for each "$\leq$" constraint to get an initial basic solution.</INCORRECT_D>
-        <INCORRECT_E>In a maximization standard form, we add slack variables (not subtract them). Sometimes you'll see it written as "$\leq \rightarrow +s_i =$", but it's never done by subtracting slack variables for "$\leq$" constraints.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></PART_A>
+        <INCORRECT_E>In a maximization standard form, we add slack variables (not subtract them). Sometimes you'll see it written as "$\leq \rightarrow +s_i =$", but it's never done by subtracting slack variables for "$\leq$" constraints.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></PART_A>
         
         <PART_B>
         <QUESTION>Suppose you actually have a mixture of constraints: some are "$\geq$" and others are "$\leq$". You cannot find an obvious initial basic feasible solution. You decide to use the Two-Phase Simplex Method. Which statement is true regarding Phase I?</QUESTION> 
@@ -162,7 +162,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <INCORRECT_A>Phase I temporarily replaces the original objective with the objective of minimizing the sum of artificial variables.</INCORRECT_A> 
         <INCORRECT_C>Answer C is incorrect because determining the pivot column is a step in the simplex algorithm, not related to adding slack variables.</INCORRECT_C> 
         <INCORRECT_D>If the minimum sum of artificial variables is not zero, we conclude the problem is infeasible; we do not simply proceed to Phase II with a positive sum.</INCORRECT_D>
-        <INCORRECT_E>We do not maximize artificial variables; that would be counter to seeking a feasible solution.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 4><SLIDE 5></LECTURE></PART_B>
+        <INCORRECT_E>We do not maximize artificial variables; that would be counter to seeking a feasible solution.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 4><SLIDE 5></LECTURE></PART_B>
         
         <PART_C>
         <QUESTION>After successfully completing Phase I (you found a feasible solution with all artificial variables at zero), you move to Phase II and restore the original objective function (maximization). However, you notice that several constraints in the new Phase II tableau have degenerate basic feasible solutions. Which of the following statements is correct regarding degeneracy?</QUESTION> 
@@ -175,7 +175,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <INCORRECT_A>A degenerate BFS is not necessarily optimal; it simply indicates that more constraints are binding than the dimension requires (some basic variable(s) might be zero).</INCORRECT_A> 
         <INCORRECT_C>Degeneracy can arise in any linear program, regardless of whether it's min or max.</INCORRECT_C> 
         <INCORRECT_D>A degenerate BFS does not imply unboundedness. It just means a corner (vertex) of the feasible region is formed by multiple intersecting constraints.</INCORRECT_D>
-        <INCORRECT_E>If you completed Phase I successfully, you have feasibility. A degenerate BFS does not negate that.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11></LECTURE></PART_C></OUTPUT>`;
+        <INCORRECT_E>If you completed Phase I successfully, you have feasibility. A degenerate BFS does not negate that.</INCORRECT_E><LECTURE 1><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11></LECTURE></PART_C></OUTPUT>`;
 
         const multiPartComputationalPrompt =
             `IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part computational practice problem for the ${
@@ -215,7 +215,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <INCORRECT_A>We do not pick slack variables to improve the objective if they have a zero coefficient in the objective row. Typically, their coefficients remain zero; we pick the variable that can improve the objective.</INCORRECT_A> 
         <INCORRECT_B>That's reversed: we don't pick a basic variable to enter. We look at the nonbasic variables.</INCORRECT_B> 
         <INCORRECT_D>We do not always pick $x_2$. We compare the objective coefficients at each iteration.</INCORRECT_D>
-        <INCORRECT_E>If both are negative, that actually implies we can improve the objective (since negative in the $-z$ row for a maximization problem means an improvement direction). We do not skip pivoting if at least one is negative.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></PART_A>
+        <INCORRECT_E>If both are negative, that actually implies we can improve the objective (since negative in the $-z$ row for a maximization problem means an improvement direction). We do not skip pivoting if at least one is negative.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></PART_A>
         
         <PART_B>
         <QUESTION>Assume the entering variable is $x_2$. Next, you perform the minimum ratio test to determine the leaving variable from $\{s_1, s_2\}$. Suppose the ratio test yields:
@@ -232,7 +232,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <INCORRECT_A>In a minimum ratio test, the variable associated with the smallest positive ratio leaves. That's $4$ (not $8$).</INCORRECT_A> 
         <INCORRECT_C>The ratio test is not about whichever slack variable has the bigger or smaller starting value—it depends on the ratio of right-hand side to the pivot-column coefficient.</INCORRECT_C> 
         <INCORRECT_D>Both ratios being positive means we do have a valid pivot row. We must pivot because the objective can be improved.</INCORRECT_D>
-        <INCORRECT_E>Only one basic variable leaves at a time. $x_2$ replaces one slack in the basis.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 4><SLIDE 5></LECTURE></PART_B>
+        <INCORRECT_E>Only one basic variable leaves at a time. $x_2$ replaces one slack in the basis.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 4><SLIDE 5></LECTURE></PART_B>
         
         <PART_C>
         <QUESTION>After pivoting, you update the tableau. Now the basis is $\{x_2, s_2\}$. Suppose the new BFS from the pivot is:
@@ -249,7 +249,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <INCORRECT_B>Slack variables can leave or re-enter the basis multiple times. There's no rule preventing nonbasic variables from re-entering.</INCORRECT_B> 
         <INCORRECT_C>A variable being zero in the BFS is exactly how we typically identify a nonbasic variable that might enter.</INCORRECT_C> 
         <INCORRECT_D>A negative coefficient in the $-z$ row does not imply infeasibility; it implies an opportunity to increase the objective.</INCORRECT_D>
-        <INCORRECT_E>The entire point of the Simplex algorithm is that the basis can change iteration by iteration. We absolutely consider pivoting further if there is any negative cost in the objective row.</INCORRECT_E><LECTURE 2024-08-27-ExSimplex><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11></LECTURE></PART_C></OUTPUT>`;
+        <INCORRECT_E>The entire point of the Simplex algorithm is that the basis can change iteration by iteration. We absolutely consider pivoting further if there is any negative cost in the objective row.</INCORRECT_E><LECTURE 1><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11></LECTURE></PART_C></OUTPUT>`;
 
         const singlePartPrompt =
             `TASK: You will be generating single-part questions to test comprehension of the ${this.contentType.valueOf()}. 
@@ -259,7 +259,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         2. Put the options in tags corresponding to the answer choice, e.g. <OPTION_A> and </OPTION_A>, with the text describing the option in the center.
         3. Put the answer in a tag if it is correct and incorrect ones with an explanation in a tag. For example, if answer A is correct, place the explanation in <CORRECT_A> and </CORRECT_A> tags. 
         4. If the answer is incorrect, place the explanation in <INCORRECT_B> and </INCORRECT_B> tags.
-        5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture name. An example is <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
         6. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations.`;
 
         const multiPartPrompt =
@@ -272,7 +272,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         4. Put the options in tags corresponding to the answer choice, e.g. <OPTION_A> and </OPTION_A>, with the text describing the option in the center.
         4. Put the answer in a tag if it is correct and incorrect ones with an explanation in a tag. For example, if answer A is correct, place the explanation in <CORRECT_A> and </CORRECT_A> tags. 
         5. If the answer is incorrect, place the explanation in <INCORRECT_B> and </INCORRECT_B> tags.
-        6. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture name. An example is <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        6. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture name. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
         7. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations.`;
 
         this.singlePartConceptualPrompt =
@@ -296,7 +296,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
             2. Questions should directly relate to the core content of the ${this.contentType.valueOf()}.
             3. Make each explanation complete and self-contained.
             4. Each question should be difficult to answer correctly, if the student is not familiar with the content.
-            6. Make sure the questions cover a diverse set of concepts from the ${this.contentType.valueOf()}.`;
+            5. Make sure the questions cover a diverse set of concepts from the ${this.contentType.valueOf()}.`;
 
         const singlePartPrompt =
             `TASK: You will be generating single-part questions to test comprehension of the ${this.contentType.valueOf()}. 
@@ -304,7 +304,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         WHAT TO DO:
         1. Put the question in <QUESTION> and </QUESTION> tags.
         2. Put the solution in <SOLUTION> and </SOLUTION> tags.
-        3. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture name. An example is <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        3. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
         4. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution.`;
 
         const multiPartPrompt =
@@ -314,7 +314,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         1. You must generate exactly 3 parts.
         2. Put each of the questions in <QUESTION> and </QUESTION> tags.
         3. Put the solution in <SOLUTION> and </SOLUTION> tags.
-        4. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture name. An example is <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        4. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
         5. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution.`;
 
         const singlePartConceptualPrompt =
@@ -329,7 +329,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <SOLUTION>Definition of Degeneracy\nA Basic Feasible Solution (BFS) is degenerate if at least one of the basic variables is zero. Equivalently, more constraints are “active” at the same vertex of the feasible region than strictly necessary.\nIn geometric terms, degeneracy happens when multiple edges (or faces) of the feasible region intersect at a single point, potentially causing more constraints than needed to be tight at a vertex.\nHow Degeneracy Can Cause Cycling\nIn a non-degenerate iteration, each pivot typically improves the objective (or at least changes the BFS). In a degenerate situation, it is possible to pivot from one BFS to another BFS that has exactly the same objective value—and possibly even the same BFS if the pivot reintroduces the identical set of basic variables in a different order. Algebraically, a zero basic variable might remain at zero after a pivot step if the entering variable does not actually change in value (due to ratio tests matching up in a way that yields no net change). When this happens repeatedly, the Simplex Method might “cycle” through a sequence of BFSs (or effectively come back to the same BFS configuration), preventing forward progress.\nAnti-Cycling Strategies\nBland's Rule: Pick the entering and leaving variables by the smallest index among the candidates, which guarantees the algorithm will not cycle.\nOther strategies include Lexicographic ordering, Perturbation methods, etc.\nFinal Summary\nDegeneracy is not uncommon and doesn't always lead to cycling, but it can. \nHow Degeneracy Can Cause Cycling. In a non-degenerate iteration, each pivot typically improves the objective (or at least changes the BFS). In a degenerate situation, it is possible to pivot from one BFS to another BFS that has exactly the same objective value—and possibly even the same BFS if the pivot reintroduces the identical set of basic variables in a different order. Algebraically, a zero basic variable might remain at zero after a pivot step if the entering variable does not actually change in value (due to ratio tests matching up in a way that yields no net change). When this happens repeatedly, the Simplex Method might “cycle” through a sequence of BFSs (or effectively come back to the same BFS configuration), preventing forward progress. Anti-Cycling Strategies\nBland's Rule: Pick the entering and leaving variables by the smallest index among the candidates, which guarantees the algorithm will not cycle. Other strategies include Lexicographic ordering, Perturbation methods, etc.\nFinal Summary\nDegeneracy is not uncommon and doesn't always lead to cycling, but it can. Pivot rules that systematically break ties (like Bland's rule) ensure eventual progress toward an optimal solution.</SOLUTION>
         
         <RUBRIC><STANDARD Definition of Degeneracy><POINT 1>For stating that degeneracy involves a BFS with one or more basic variables at zero.</POINT><POINT 1>For mentioning that more constraints are active at a vertex than the dimension requires.</POINT></STANDARD><STANDARD Explanation of Cycling><POINT 1>For mentioning that in a degenerate pivot, the objective might not change.</POINT><POINT 2>For clarifying how the algorithm can revisit the same BFS or bounce among a set of BFSs without progress.</POINT></STANDARD><STANDARD Geometric & Algebraic Reasoning><POINT 1>For describing degeneracy in geometric terms (multiple edges/faces intersecting at one point).</POINT><POINT 1>For mentioning the algebraic perspective (zero pivot steps, repeated BFS).</POINT></STANDARD><STANDARD Anti-Cycling Strategy><POINT 1>For naming a specific strategy (e.g., Bland's rule).</POINT><POINT 1>For briefly explaining how that strategy prevents cycling (e.g., systematic tie-breaking).</POINT><POINT 1>For overall clarity and completeness in linking degeneracy to the need for such rules.</POINT></STANDARD></RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
+        <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </OUTPUT>`;
 
         const singlePartComputationalPrompt = `IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part computational practice problem for the ${
@@ -388,7 +388,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         </SOLUTION>
 
         <RUBRIC><STANDARD Setup with Slack Variables><POINT 1>For correctly adding slack variables $s_1$ and $s_2$ to the constraints.</POINT><POINT 1>For stating the initial BFS $(x_1, x_2, s_1, s_2) = (0, 0, 4, 6)$.</POINT></STANDARD><STANDARD Initial Tableau & Objective Function><POINT 1>For correctly placing coefficients into the tableau.</POINT><POINT 1>For indicating the correct $-z$ row (or equivalent representation).</POINT><POINT 1>For identifying negative coefficients (the “most negative” approach for pivot).</POINT></STANDARD><STANDARD Pivot Column Selection><POINT 2>For correctly naming which $x_i$ has the most negative reduced cost and thus enters.</POINT></STANDARD><STANDARD Minimum Ratio Test & Pivot Row><POINT 2>For correctly applying the ratio test to find the leaving variable, showing the numeric comparison.</POINT></STANDARD><STANDARD Presentation & Correct Conclusion><POINT 1>For stating the final result clearly: “$x_1$ enters, $s_2$ leaves” (or the appropriate pair).</POINT></STANDARD></RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
+        <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </OUTPUT>`;
 
         const multiPartConceptualPrompt = `IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part (3 parts) conceptual practice problem for the ${
@@ -403,7 +403,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         The objective in Phase I is to minimize the sum of these artificial variables, ideally driving them all to zero, proving feasibility.</SOLUTION>
 
         <RUBRIC><STANDARD Purpose of Phase I><POINT 1>For mentioning infeasibility or complicated constraints ("$\geq$" or "$=$").</POINT><POINT 1>For explaining how Phase I finds an initial feasible solution.</POINT><POINT 1>For stating the goal: minimize the sum of artificial variables.</POINT></STANDARD></RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
+        <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </PART_A>
 
         <PART_B>
@@ -412,7 +412,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         The artificial variable $a_1$ starts as the basic variable with value $10$. Phase I attempts to drive $a_1$ to zero (if feasible). If $a_1$ remains positive in the best solution, it signals infeasibility.</SOLUTION>
         
         <RUBRIC><STANDARD Artificial Variables><POINT 1>For explaining how artificial variables are introduced when no obvious BFS is available.</POINT><POINT 1>For correctly describing how artificial variables are added (especially with "$\geq$" or "$=$" constraints).</POINT><POINT 1>For explaining why artificial variables need to be driven to zero in Phase I.</POINT></STANDARD></RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 6><SLIDE 7><SLIDE 8></LECTURE>
+        <LECTURE 1><SLIDE 6><SLIDE 7><SLIDE 8></LECTURE>
         </PART_B>
 
         <PART_C>
@@ -422,7 +422,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         Algebraically, that leftover positive artificial variable is the proof that no feasible solution exists.</SOLUTION>
 
         <RUBRIC><STANDARD Conclusion if Sum of Artificial Vars > 0><POINT 2>For stating it means the original LP is infeasible.</POINT><POINT 1>For explaining that at least one artificial variable remains positive, violating feasibility.</POINT><POINT 1>For overall clarity in connecting the final value of artificial variables to feasibility.</POINT></STANDARD></RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 9><SLIDE 12></LECTURE>
+        <LECTURE 1><SLIDE 9><SLIDE 12></LECTURE>
         </PART_C>
         </OUTPUT>`;
 
@@ -462,7 +462,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         </SOLUTION>
 
         <RUBRIC><STANDARD Correct Setup><POINT 1>For correctly rewriting constraints with slack variables $s_1, s_2$.</POINT><POINT 1>For stating the initial BFS $(x_1, x_2, s_1, s_2) = (0, 0, 5, 12)$.</POINT><POINT 1>For correctly writing the objective function in a form suitable for the tableau (e.g., $-z + 4x_1 + x_2 = 0$).</POINT></STANDARD></RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
+        <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </PART_A>
         <PART_B>
         <QUESTION>Perform one pivot (select entering and leaving variables) and update the tableau to get the new BFS. Show your calculations.</QUESTION>
@@ -484,7 +484,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         </SOLUTION>
 
         <RUBRIC><STANDARD One Pivot Step><POINT 1>For identifying the pivot column (most negative in the $-z$ row).</POINT><POINT 1>For ratio test on each row and picking the correct pivot row.</POINT><POINT 1>For correct row operations to pivot.</POINT><POINT 1>For stating the updated BFS (which variable replaced which slack).</POINT></STANDARD></RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 6><SLIDE 7><SLIDE 8></LECTURE>
+        <LECTURE 1><SLIDE 6><SLIDE 7><SLIDE 8></LECTURE>
         </PART_B>
         <PART_C>
         <QUESTION>Check if the solution is optimal. If not, describe which variable(s) can still enter the basis and how you would proceed.</QUESTION>
@@ -503,7 +503,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         <POINT 1>For describing the next step (e.g., pivot again if negative coefficients remain).</POINT>
         </STANDARD>
         </RUBRIC>
-        <LECTURE 2024-08-27-ExSimplex><SLIDE 9><SLIDE 11><SLIDE 12></LECTURE>
+        <LECTURE 1><SLIDE 9><SLIDE 11><SLIDE 12></LECTURE>
         </PART_C>
         </OUTPUT>`;
         this.singlePartConceptualPrompt =
@@ -544,19 +544,20 @@ export class BaseProblemsProcessor extends BaseProcessor {
                 },
             ],
         });
-
-        return await this.robustGenerate(message);
+        const response = await this.robustGenerate(message);
+        console.log("RESPONSE: ", response);
+        return response;
     }
 
-    protected cleanResult(result: string, name: string, tags: string[]): void {
+    protected cleanResult(result: string, name: string, tags: string[], lectures: { id: string; note_number: number }[]): void {
         if (this.questionType === QuestionType.MCQ) {
-            this.cleanMCQResult(result, name, tags);
+            this.cleanMCQResult(result, name, tags, lectures);
         } else {
-            this.cleanFRQResult(result, name, tags);
+            this.cleanFRQResult(result, name, tags, lectures);
         }
     }
 
-    private cleanMCQResult(result: string, name: string, tags: string[]): void {
+    private cleanMCQResult(result: string, name: string, tags: string[], lectures: { id: string; note_number: number }[]): void {
         // Remove XML tags if present
         result = result.replace(/```xml|```/g, "");
 
@@ -564,117 +565,95 @@ export class BaseProblemsProcessor extends BaseProcessor {
 
         for (const block of questionBlocks) {
             try {
-                const questionObjs: MCQQuestion[][] = [];
-
                 if (tags.includes("multi-part")) {
+                    // Handle multi-part questions
                     const multiPartQuestionObj: MCQQuestion[] = [];
-
+                    
+                    // Process each part
                     for (const letter of ["A", "B", "C"]) {
                         const partMatch = block.match(
-                            new RegExp(
-                                `<PART_${letter}>(.*?)</PART_${letter}>`,
-                                "s",
-                            ),
+                            new RegExp(`<PART_${letter}>(.*?)</PART_${letter}>`, "s")
                         );
+                        
                         if (partMatch) {
-                            const questionObj = this.processMCQBlock(
-                                partMatch[1].trim(),
-                                partMatch[1], // Pass only the part's content for lecture/slide parsing
-                                tags,
-                            );
+                            const questionObj = this.processMCQBlock(partMatch[1], tags, lectures);
                             if (questionObj) {
                                 multiPartQuestionObj.push(questionObj);
                             }
                         }
                     }
 
-                    if (multiPartQuestionObj.length > 0) {
-                        questionObjs.push(multiPartQuestionObj);
+                    // Only add if we have all parts
+                    if (multiPartQuestionObj.length === 3) {
+                        if (!this.questions[name]) {
+                            this.questions[name] = [];
+                        }
+                        this.questions[name].push(multiPartQuestionObj);
                     }
                 } else {
-                    const questionMatch = block.match(
-                        /<QUESTION>(.*?)<\/QUESTION>/s,
-                    );
-                    if (questionMatch) {
-                        const questionObj = this.processMCQBlock(
-                            questionMatch[1].trim(),
-                            block,
-                            tags,
-                        );
-                        if (questionObj) {
-                            questionObjs.push([questionObj]);
+                    // Handle single-part questions - treat as a single part
+                    const questionObj = this.processMCQBlock(block, tags, lectures);
+                    if (questionObj) {
+                        if (!this.questions[name]) {
+                            this.questions[name] = [];
                         }
+                        this.questions[name].push([questionObj]);
                     }
-                }
-
-                if (questionObjs.length > 0) {
-                    if (!this.questions[name]) {
-                        this.questions[name] = [];
-                    }
-                    this.questions[name].push(...questionObjs);
                 }
             } catch (e) {
-                console.error(
-                    `Error processing question block: ${
-                        e instanceof Error ? e.message : String(e)
-                    }`,
-                );
+                console.error(`Error processing question block: ${e instanceof Error ? e.message : String(e)}`);
             }
         }
     }
 
-    private processMCQBlock(
-        question: string,
-        block: string,
-        tags: string[],
-    ): MCQQuestion | null {
-        // Extract lecture and slides information
-        const lectureSlides: { [lecture: string]: number[] } = {};
-        const lectureMatches = block.matchAll(/<LECTURE\s+(.*?)>(.*?)<\/LECTURE>/gs);
-        
-        for (const match of Array.from(lectureMatches)) {
-            const lectureName = match[1].trim();
-            const lectureContent = match[2];
-            
-            // Extract slide numbers for this lecture
-            const slideNumbers = Array.from(lectureContent.matchAll(/<SLIDE\s+(\d+)>/g))
-                .map(slideMatch => parseInt(slideMatch[1]))
-                .filter(num => !isNaN(num));
-            
-            if (slideNumbers.length > 0) {
-                lectureSlides[lectureName] = slideNumbers;
-            }
-        }
+    private processMCQBlock(block: string, tags: string[], lectures: { id: string; note_number: number }[]): MCQQuestion | null {
+        // Extract question text
+        const questionMatch = block.match(/<QUESTION>(.*?)<\/QUESTION>/s);
+        if (!questionMatch) return null;
+        const question = questionMatch[1].trim();
 
+        // Extract options, answers, and explanations
         const options: { [key: string]: string } = {};
         const answers: { [key: string]: boolean } = {};
         const explanations: { [key: string]: string } = {};
 
-        // Process options, correct answers, and explanations
         for (const letter of ["A", "B", "C", "D", "E"]) {
-            const optionMatch = block.match(
-                new RegExp(`<OPTION_${letter}>(.*?)</OPTION_${letter}>`, "s"),
-            );
+            // Extract option
+            const optionMatch = block.match(new RegExp(`<OPTION_${letter}>(.*?)</OPTION_${letter}>`, "s"));
             if (optionMatch) {
                 options[letter] = optionMatch[1].trim();
                 answers[letter] = false;
             }
 
-            const correctMatch = block.match(
-                new RegExp(`<CORRECT_${letter}>(.*?)</CORRECT_${letter}>`, "s"),
-            );
-            const incorrectMatch = block.match(
-                new RegExp(
-                    `<INCORRECT_${letter}>(.*?)</INCORRECT_${letter}>`,
-                    "s",
-                ),
-            );
+            // Extract correct/incorrect answers and explanations
+            const correctMatch = block.match(new RegExp(`<CORRECT_${letter}>(.*?)</CORRECT_${letter}>`, "s"));
+            const incorrectMatch = block.match(new RegExp(`<INCORRECT_${letter}>(.*?)</INCORRECT_${letter}>`, "s"));
 
             if (correctMatch) {
                 answers[letter] = true;
                 explanations[letter] = correctMatch[1].trim();
             } else if (incorrectMatch) {
                 explanations[letter] = incorrectMatch[1].trim();
+            }
+        }
+
+        // Extract lecture and slides information
+        const lectureSlides: { [lecture: string]: number[] } = {};
+        const lectureMatches = block.matchAll(/<LECTURE\s+(\d+)>(.*?)<\/LECTURE>/gs);
+        
+        for (const match of Array.from(lectureMatches)) {
+            const lectureNumber = parseInt(match[1].trim());
+            const lectureContent = match[2];
+            
+            const lecture = lectures.find(l => l.note_number === lectureNumber);
+            if (!lecture) continue;
+            
+            const slideNumbers = Array.from(lectureContent.matchAll(/<SLIDE\s+(\d+)>/g))
+                .map(slideMatch => parseInt(slideMatch[1]))
+                .filter(num => !isNaN(num));
+            
+            if (slideNumbers.length > 0) {
+                lectureSlides[lecture.id] = slideNumbers;
             }
         }
 
@@ -688,7 +667,7 @@ export class BaseProblemsProcessor extends BaseProcessor {
         };
     }
 
-    private cleanFRQResult(result: string, name: string, tags: string[]): void {
+    private cleanFRQResult(result: string, name: string, tags: string[], lectures: { id: string; note_number: number }[]): void {
         // Remove XML tags if present
         result = result.replace(/```xml|```/g, "");
 
@@ -696,111 +675,74 @@ export class BaseProblemsProcessor extends BaseProcessor {
 
         for (const block of questionBlocks) {
             try {
-                const questionObjs: FRQQuestion[][] = [];
-
                 if (tags.includes("multi-part")) {
+                    // Handle multi-part questions
                     const multiPartQuestionObj: FRQQuestion[] = [];
-
+                    
+                    // Process each part
                     for (const letter of ["A", "B", "C"]) {
                         const partMatch = block.match(
-                            new RegExp(
-                                `<PART_${letter}>(.*?)</PART_${letter}>`,
-                                "s",
-                            ),
+                            new RegExp(`<PART_${letter}>(.*?)</PART_${letter}>`, "s")
                         );
+                        
                         if (partMatch) {
-                            const questionObj = this.processFRQBlock(
-                                partMatch[1].trim(),
-                                block,
-                                tags,
-                            );
+                            const questionObj = this.processFRQBlock(partMatch[1], tags, lectures);
                             if (questionObj) {
                                 multiPartQuestionObj.push(questionObj);
                             }
                         }
                     }
 
-                    if (multiPartQuestionObj.length > 0) {
-                        questionObjs.push(multiPartQuestionObj);
+                    // Only add if we have all parts
+                    if (multiPartQuestionObj.length === 3) {
+                        if (!this.questions[name]) {
+                            this.questions[name] = [];
+                        }
+                        this.questions[name].push(multiPartQuestionObj);
                     }
                 } else {
-                    const questionMatch = block.match(
-                        /<QUESTION>(.*?)<\/QUESTION>/s,
-                    );
-                    if (questionMatch) {
-                        const questionObj = this.processFRQBlock(
-                            questionMatch[1].trim(),
-                            block,
-                            tags,
-                        );
-                        if (questionObj) {
-                            questionObjs.push([questionObj]);
+                    // Handle single-part questions - treat as a single block
+                    const questionObj = this.processFRQBlock(block, tags, lectures);
+                    if (questionObj) {
+                        if (!this.questions[name]) {
+                            this.questions[name] = [];
                         }
+                        this.questions[name].push([questionObj]);
                     }
-                }
-
-                if (questionObjs.length > 0) {
-                    if (!this.questions[name]) {
-                        this.questions[name] = [];
-                    }
-                    this.questions[name].push(...questionObjs);
                 }
             } catch (e) {
-                console.error(
-                    `Error processing question block: ${
-                        e instanceof Error ? e.message : String(e)
-                    }`,
-                );
+                console.error(`Error processing question block: ${e instanceof Error ? e.message : String(e)}`);
             }
         }
     }
 
-    private processFRQBlock(
-        question: string,
-        block: string,
-        tags: string[],
-    ): FRQQuestion | null {
-        // Extract lecture and slides information
-        const lectureSlides: { [lecture: string]: number[] } = {};
-        const lectureMatches = block.matchAll(/<LECTURE\s+(.*?)>(.*?)<\/LECTURE>/gs);
-        
-        for (const match of Array.from(lectureMatches)) {
-            const lectureName = match[1].trim();
-            const lectureContent = match[2];
-            
-            // Extract slide numbers for this lecture
-            const slideNumbers = Array.from(lectureContent.matchAll(/<SLIDE\s+(\d+)>/g))
-                .map(slideMatch => parseInt(slideMatch[1]))
-                .filter(num => !isNaN(num));
-            
-            if (slideNumbers.length > 0) {
-                lectureSlides[lectureName] = slideNumbers;
-            }
-        }
+    private processFRQBlock(block: string, tags: string[], lectures: { id: string; note_number: number }[]): FRQQuestion | null {
+        // Extract question text
+        const questionMatch = block.match(/<QUESTION>(.*?)<\/QUESTION>/s);
+        if (!questionMatch) return null;
+        const question = questionMatch[1].trim();
 
         // Extract solution
         const solutionMatch = block.match(/<SOLUTION>(.*?)<\/SOLUTION>/s);
-        const solution = solutionMatch ? solutionMatch[1].trim() : "";
+        if (!solutionMatch) return null;
+        const solution = solutionMatch[1].trim();
 
         // Extract rubric
-        const rubricMatch = block.match(/<RUBRIC>(.*?)<\/RUBRIC>/s);
         const rubric: Rubric[] = [];
+        const rubricMatch = block.match(/<RUBRIC>(.*?)<\/RUBRIC>/s);
         
         if (rubricMatch) {
-            const standardMatches = rubricMatch[1].matchAll(
-                /<STANDARD\s+(.*?)>(.*?)<\/STANDARD>/gs
-            );
+            // Changed regex to handle standards without attributes
+            const standardMatches = rubricMatch[1].matchAll(/<STANDARD>(.*?)<\/STANDARD>/gs);
             
-            for (const match of standardMatches) {
+            for (const match of Array.from(standardMatches)) {
                 const standardName = match[1].trim();
-                const standardContent = match[2];
                 
-                // Extract points from the standard content
-                const pointMatches = standardContent.matchAll(
-                    /<POINT\s+(\d+)>(.*?)<\/POINT>/gs
-                );
+                // Find all POINT tags that follow this STANDARD until the next STANDARD or end
+                const standardContent = match[0];
+                const pointMatches = standardContent.matchAll(/<POINT\s+(\d+)>(.*?)<\/POINT>/gs);
                 
-                for (const pointMatch of pointMatches) {
+                for (const pointMatch of Array.from(pointMatches)) {
                     rubric.push({
                         standard: standardName,
                         content: pointMatch[2].trim(),
@@ -810,11 +752,31 @@ export class BaseProblemsProcessor extends BaseProcessor {
             }
         }
 
+        // Extract lecture and slides information
+        const lectureSlides: { [lecture: string]: number[] } = {};
+        const lectureMatches = block.matchAll(/<LECTURE\s+(\d+)>(.*?)<\/LECTURE>/gs);
+        
+        for (const match of Array.from(lectureMatches)) {
+            const lectureNumber = parseInt(match[1].trim());
+            const lectureContent = match[2];
+            
+            const lecture = lectures.find(l => l.note_number === lectureNumber);
+            if (!lecture) continue;
+            
+            const slideNumbers = Array.from(lectureContent.matchAll(/<SLIDE\s+(\d+)>/g))
+                .map(slideMatch => parseInt(slideMatch[1]))
+                .filter(num => !isNaN(num));
+            
+            if (slideNumbers.length > 0) {
+                lectureSlides[lecture.id] = slideNumbers;
+            }
+        }
+
         return {
             question,
             solution,
             tags,
-            slides: lectureSlides, // Now contains a dictionary of lecture names to slide numbers
+            slides: lectureSlides,
             rubric
         };
     }

@@ -229,6 +229,11 @@ export default function Questions({ questions, onUpdateStatus }: QuestionsProps)
                                                             {question.explanation_c && <h4 style={{ color: question.solution === "C" ? "red" : "black" }}><Latex>{`C. ${question.explanation_c || ""}`}</Latex></h4>}
                                                             {question.explanation_d && <h4 style={{ color: question.solution === "D" ? "red" : "black" }}><Latex>{`D. ${question.explanation_d || ""}`}</Latex></h4>}
                                                             {question.explanation_e && <h4 style={{ color: question.solution === "E" ? "red" : "black" }}><Latex>{`E. ${question.explanation_e || ""}`}</Latex></h4>}
+                                                            {question.solution !== "A" && question.solution !== "B" && question.solution !== "C" && question.solution !== "D" && question.solution !== "E" && (
+                                                                <h4 style={{ color: "red" }}>
+                                                                    <Latex>{`${question.solution}`}</Latex>
+                                                                </h4>
+                                                            )}
                                                         </Box>
                                                     </Box>
                                                 ))}

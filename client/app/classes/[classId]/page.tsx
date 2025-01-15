@@ -121,7 +121,7 @@ export default function Class({ params }: { params: { classId: string } }) {
                             {openNodeId && map && <NodeDetail lectureIds={flattenMapNode(map).find((node) => node.id === openNodeId)?.lectures ?? []} />}
                         </Suspense>
                     }
-                    <Link href={`${pathname}/generate/new?topic=${openNodeId}`}>
+                    <Link href={`${pathname}/generate/problems/new?topic=${openNodeId}`}>
                         <Button onClick={close} style={{ width: "100%" }}>Generate Problems</Button>
                     </Link>
                 </Stack>

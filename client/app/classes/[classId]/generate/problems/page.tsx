@@ -47,19 +47,19 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         queryFn: () => getClass(supabase, classId)
     })
 
-    const { data: generationsProblems, isLoading: loadingGenerationsProblems } = useQuery({
-        queryKey: ["generationsProblems", classId],
+    const { data: problemGenerations, isLoading: loadingProblemGenerations } = useQuery({
+        queryKey: ["problemGenerations", classId],
         queryFn: () => getGenerations(supabase, classId, "problem")
     })
 
     const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({
-        queryKey: ["generationProblems", classId, generationsProblems],
-        queryFn: () => getGenerationProblems(supabase, generationsProblems ?? []),
-        enabled: !!generationsProblems
+        queryKey: ["generationProblems", classId, problemGenerations],
+        queryFn: () => getGenerationProblems(supabase, problemGenerations ?? []),
+        enabled: !!problemGenerations
     })
 
     const { data: generationProblemsDocuments, isLoading: loadingGenerationProblemsDocuments } = useQuery({
-        queryKey: ["generationProblemsDocuments", classId, generationsProblems],
+        queryKey: ["generationProblemsDocuments", classId, generationProblems],
         queryFn: () => getGenerationDocuments(supabase, generationProblems ? generationProblems.map(problem => problem.documents).flat() : []),
         enabled: !!generationProblems
     })
@@ -95,7 +95,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     useEffect(() => {
         const channel = supabase
-            .channel('realtime-generations')
+            .channel(`realtime-generations-${classId}`)
             .on(
                 'postgres_changes',
                 {
@@ -105,33 +105,37 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     filter: `class=eq.${classId}`
                 },
                 (payload) => {
+                    console.log("Received realtime payload:", payload);
                     if (payload.eventType === 'INSERT') {
                         const newGeneration = payload.new as Generation;
-                        console.log("Generation:", newGeneration);
-                        // Update your lectures state with the new data
-                        queryClient.setQueryData(["generations", classId], (oldData: Generation[] = []) => {
-                            return [...oldData, newGeneration];
-                        });
+                        queryClient.setQueryData(
+                            ["problemGenerations", classId], 
+                            (oldData: Generation[] = []) => [...oldData, newGeneration]
+                        );
                     } else if (payload.eventType === 'UPDATE') {
                         const updatedGeneration = payload.new as Generation;
-                        console.log("Updated Generation:", updatedGeneration);
-                        queryClient.setQueryData(["generations", classId], (oldData: Generation[] = []) => {
-                            return oldData?.map(generation =>
-                                generation.id === updatedGeneration.id ? updatedGeneration : generation
-                            ) || [];
-                        });
+                        queryClient.setQueryData(
+                            ["problemGenerations", classId], 
+                            (oldData: Generation[] = []) => 
+                                oldData?.map(generation =>
+                                    generation.id === updatedGeneration.id ? updatedGeneration : generation
+                                ) || []
+                        );
                     }
                 }
             )
             .subscribe();
 
+        console.log("Subscribed to realtime channel:", channel.state);
+
         return () => {
+            console.log("Unsubscribing from channel");
             supabase.removeChannel(channel);
         };
     }, [classId, supabase, queryClient]);
 
     useEffect(() => {
-        if (!generationsProblems) return;
+        if (!problemGenerations) return;
         const channel = supabase
             .channel('realtime-problems')
             .on(
@@ -140,13 +144,12 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     event: '*',
                     schema: 'prod',
                     table: 'questions',
-                    filter: `generation=in.(${generationsProblems.map(generation => generation.id).join(',')})`
+                    filter: `generation=in.(${problemGenerations.map(generation => generation.id).join(',')})`
                 },
                 (payload) => {
                     console.log("Problem change:", payload);
-
                     // Update documents in React Query cache
-                    queryClient.setQueryData(["generationProblems", classId], (oldData: Question[] = []) => {
+                    queryClient.setQueryData(["generationProblems", classId, problemGenerations], (oldData: Question[] = []) => {
                         let newData;
                         if (payload.eventType === 'INSERT') {
                             newData = [...oldData, payload.new];
@@ -168,7 +171,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [classId, supabase, generationsProblems, queryClient]);
+    }, [classId, supabase, generationProblems, queryClient]);
 
     const getDocument = (generation: Generation): Document | undefined => {
         // first find the summary or question that matches the generation
@@ -187,7 +190,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}`}>
+                            <Link href={`/`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>Problems</Text>
@@ -200,12 +203,12 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     </Flex>
 
                     <Stack>
-                        {(generationsProblems && classData) && generationsProblems.length > 0 && generationsProblems.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((generation) => {
+                        {(problemGenerations && classData) && problemGenerations.length > 0 && problemGenerations.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((generation) => {
                             const document = getDocument(generation);
                             if (generation.generation_status !== "complete") {
                                 const progress = generation.progress * 100
                                 let estimatedSeconds = 0;
-                                estimatedSeconds = (5 * (1 - generation.progress)) * (generation.num_questions) // takes 5 seconds per question
+                                estimatedSeconds = ((generation.single ? 10 : 20) * (1 - generation.progress)) * (generation.num_questions) // takes 5 seconds per question
                                 return (
                                     <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">
@@ -238,7 +241,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                                     />
                                                     {(generation.generation_status === 'generating') && (
                                                         <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{estimatedSeconds} seconds
+                                                            Estimated time remaining: ~{Math.round(estimatedSeconds)} seconds
                                                         </Text>
                                                     )}
                                                 </Stack>

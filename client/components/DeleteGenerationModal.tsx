@@ -23,9 +23,10 @@ type DeleteGenerationModalProps = {
     generationId: string
     generationTitle: string
     user: User | undefined
+    type: "summary" | "problems"
 }
 
-export default function DeleteGenerationModal({ generationId, user, generationTitle, classId }: DeleteGenerationModalProps) {
+export default function DeleteGenerationModal({ generationId, user, generationTitle, classId, type }: DeleteGenerationModalProps) {
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
@@ -39,12 +40,12 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
                 throw new Error(error);
             } else {
                 queryClient.invalidateQueries({
-                    queryKey: ["generation", generationId]
+                    queryKey: [type === "summary" ? "generationSummaries" : "generationProblems", classId]
                 });
                 queryClient.invalidateQueries({ 
-                    queryKey: ["generations", classId]
+                    queryKey: [type === "summary" ? "summariesGenerations" : "problemsGenerations", classId]
                 });
-                router.push(`/classes/${classId}/generate`);
+                router.push(`/classes/${classId}/generate/${type === "summary" ? "summary" : "problems"}`);
             }
             notifications.show({
                 title: "Generation deleted",

@@ -34,6 +34,7 @@ import { createGeneration } from "@/utils/services/generation";
 import Latex from "@/components/Latex";
 
 export default function GenerateForm({ classId, type }: { classId: string, type: 'problems' | 'summary' }) {
+    const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const router = useRouter();
 
@@ -73,7 +74,7 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
 
     const [generationTitle, setGenerationTitle] = useState<string>("");
     const [contentType, setContentType] = useState<'summary' | 'problem'>(type === 'summary' ? 'summary' : 'problem');
-    const [sourceType, setSourceType] = useState<string | null>(topicFromUrl ? 'topics' : null);
+    const [sourceType, setSourceType] = useState<string | null>(topicFromUrl ? 'topics' : 'lectures');
     const [selectedItems, setSelectedItems] = useState<string[]>(topicFromUrl ? [topicFromUrl] : []);
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
@@ -145,8 +146,9 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
                         generation_id: generation.id,
                     }
                 });
+                queryClient.invalidateQueries({ queryKey: ["summariesGenerations", classId] });
                 // do not wait for response
-                router.push(`/classes/${classId}/generate`);
+                router.push(`/classes/${classId}/generate/summary`);
             } else if (contentType === 'problem') {
                 supabase.functions.invoke('generate-problems', {
                     body: {
@@ -154,8 +156,9 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
                         generation_id: generation.id,
                     }
                 });
+                queryClient.invalidateQueries({ queryKey: ["problemGenerations", classId] });
                 // do not wait for response
-                router.push(`/classes/${classId}/generate`);
+                router.push(`/classes/${classId}/generate/problems`);
             } else {
                 throw new Error("Invalid content type");
             }

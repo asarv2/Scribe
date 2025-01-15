@@ -373,33 +373,36 @@ export type Database = {
       }
       summaries: {
         Row: {
+          conclusion: string
           content: string
           created_at: string | null
           documents: string[]
           generation: string | null
           id: string
-          latex: string
           lecture: string | null
+          preamble: string
           topic: string | null
         }
         Insert: {
+          conclusion?: string
           content: string
           created_at?: string | null
           documents?: string[]
           generation?: string | null
           id?: string
-          latex?: string
           lecture?: string | null
+          preamble?: string
           topic?: string | null
         }
         Update: {
+          conclusion?: string
           content?: string
           created_at?: string | null
           documents?: string[]
           generation?: string | null
           id?: string
-          latex?: string
           lecture?: string | null
+          preamble?: string
           topic?: string | null
         }
         Relationships: [

@@ -86,12 +86,16 @@ Deno.serve(async (req) => {
     let lectures = generation_lectures;
     let names: string[] = [];
 
-    const lectures_response = await supabase.from("lectures").select("*").in(
-      "id",
-      generation_lectures,
-    );
-    const lectures_data = lectures_response.data ?? [];
-    console.log("Lectures:", lectures_data);
+    const all_lectures_response = await supabase.from("lectures").select("*")
+      .eq("class", class_id);
+    const all_lectures = all_lectures_response.data
+      ? all_lectures_response.data.map((lecture) => ({
+        id: lecture.id,
+        name: lecture.name,
+        note_number: lecture.note_number,
+      }))
+      : [];
+    console.log("All Lectures:", all_lectures);
 
     if (generation_topics.length > 0) {
       const topics_response = await supabase.from("topics").select("*").in(
@@ -103,7 +107,9 @@ Deno.serve(async (req) => {
       lectures = [...new Set(topics.map((topic) => topic.lectures).flat())];
       names = topics.map((topic) => topic.title);
     } else if (generation_lectures.length > 0) {
-      names = lectures_data.map((lecture) => lecture.name);
+      names = all_lectures.filter((lecture) =>
+        generation_lectures.includes(lecture.id)
+      ).map((lecture) => lecture.name);
     }
 
     const documents_response = await supabase.from("documents").select("*").in(
@@ -124,9 +130,12 @@ Deno.serve(async (req) => {
 
     const lectures_processed = lectures.reduce(
       (acc, lecture_id) => {
-        const lecture_name = lectures_data.find((lecture) =>
+        const lecture_name = all_lectures.find((lecture) =>
           lecture.id === lecture_id
         )?.name;
+        const lecture_note_number = all_lectures.find((lecture) =>
+          lecture.id === lecture_id
+        )?.note_number;
         const lecture_figures = figures.filter((figure) =>
           figure.document === lecture_id
         );
@@ -153,9 +162,13 @@ Deno.serve(async (req) => {
           "</DESCRIPTION>"
         ).join("\n\n");
 
+        const final_content = "LECTURE NAME: " + lecture_name +
+          " | LECTURE NUMBER: " + lecture_note_number + "\n" + lectureContent +
+          "\n\n";
+
         acc[lecture_id] = {
           figures: figures_dict,
-          content: "LECTURE NAME: " + lecture_name + "\n" + lectureContent + "\n\n",
+          content: final_content,
         };
         return acc;
       },
@@ -179,16 +192,116 @@ Deno.serve(async (req) => {
       return acc;
     }, {} as ProblemsContent);
 
-    const batch_size = 2; // ask to generate 2 questions at a time
+    const batch_size = generation_single ? 2 : 1; // ask to generate 2 questions at a time if single part questions, 1 if multi-part
 
     const onBatchComplete = async (
       questions: (MCQQuestion | FRQQuestion)[][],
     ) => {
       // update generation progress
       console.log("Generated questions for batch:", questions);
+      const problems_data = questions.map((questionGroup) => {
+        let multi_part_uuid = null;
+        if (questionGroup.length > 1) {
+          multi_part_uuid = crypto.randomUUID();
+        }
+        return questionGroup.map((question) => {
+          const slidesWithLectures = question["slides"];
+          const question_document_ids = Object.keys(slidesWithLectures).reduce(
+            (acc, lectureId) => {
+              const document = documents.find((doc) =>
+                slidesWithLectures[lectureId].includes(doc.page) &&
+                doc.lecture === lectureId
+              );
+              if (document) {
+                acc.push(document.id);
+              }
+              return acc;
+            },
+            [] as string[],
+          );
+          if ("options" in question) {
+            const correct_answer = Object.keys(question["answers"]).find((
+              opt,
+            ) => question["answers"][opt]);
+            const question_data = {
+              "question": question["question"],
+              "mcq": true,
+              "conceptual": question["tags"].includes("conceptual"),
+              "option_a": question["options"]["A"],
+              "option_b": question["options"]["B"],
+              "option_c": question["options"]["C"],
+              "option_d": question["options"]["D"],
+              "option_e": question["options"]["E"],
+              "solution": correct_answer,
+              "explanation_a": question["explanations"]["A"],
+              "explanation_b": question["explanations"]["B"],
+              "explanation_c": question["explanations"]["C"],
+              "explanation_d": question["explanations"]["D"],
+              "explanation_e": question["explanations"]["E"],
+              "generation": generation_id,
+              "documents": question_document_ids,
+            } as { [key: string]: string | boolean | number | string[] };
+            if (multi_part_uuid) {
+              question_data["multipart"] = multi_part_uuid;
+            }
+            return question_data;
+          } else if ("solution" in question) {
+            const question_data = {
+              "question": question["question"],
+              "mcq": false,
+              "conceptual": question["tags"].includes("conceptual"),
+              "solution": question["solution"],
+              "generation": generation_id,
+              "documents": question_document_ids,
+            } as { [key: string]: string | boolean | number | string[] };
+            if (multi_part_uuid) {
+              question_data["multipart"] = multi_part_uuid;
+            }
+            return question_data;
+          } else {
+            throw new Error("Question type not supported");
+          }
+        });
+      }).flat();
+      console.log("Problems data:", problems_data);
+
+      const questions_response = await supabase.from("questions").insert(
+        problems_data,
+      ).select("id, question");
+
+      console.log("Questions response:", questions_response);
+
+      if (generation_question_type === QuestionType.FRQ) {
+        const rubrics_data = questions_response.data?.map(
+          ({ id, question }) => {
+            const question_data = questions.flat().find((q) =>
+              q["question"] === question
+            );
+            if (!question_data || !("rubric" in question_data)) {
+              throw new Error("Question not found");
+            }
+            const rubric = question_data["rubric"];
+            return rubric.map(({ points, content, standard }) => ({
+              "question": id,
+              "points": points,
+              "content": content,
+              "standard": standard,
+            }));
+          },
+        ).flat();
+
+        console.log("Rubrics data:", rubrics_data);
+
+        const rubrics_response = await supabase.from("rubrics").insert(
+          rubrics_data,
+        );
+
+        console.log("Rubrics response:", rubrics_response);
+      }
+
       const progress = Math.min(
         0.9,
-        (generation_questions - questions.length) / generation_questions,
+        questions.length / generation_questions,
       );
       await supabase.from("generations").update({ progress: progress }).eq(
         "id",
@@ -210,6 +323,7 @@ Deno.serve(async (req) => {
         generation_questions,
         generation_conceptual ? 1 : 0,
         generation_single ? 1 : 0,
+        all_lectures,
         batch_size,
         onBatchComplete,
       );
@@ -227,6 +341,7 @@ Deno.serve(async (req) => {
         generation_questions,
         generation_conceptual ? 1 : 0,
         generation_single ? 1 : 0,
+        all_lectures,
         batch_size,
         onBatchComplete,
       );
@@ -234,109 +349,6 @@ Deno.serve(async (req) => {
     }
     if (Object.keys(questions).length === 0) {
       throw new Error("No problems generated");
-    }
-
-    const problems_data = questions.map((questionGroup) => {
-      let multi_part_uuid = null;
-      if (questionGroup.length > 1) {
-        multi_part_uuid = crypto.randomUUID();
-      }
-      return questionGroup.map((question) => {
-        const slidesWithLectures = question["slides"];
-        const question_document_ids = Object.keys(slidesWithLectures).reduce(
-          (acc, lecture) => {
-            const lectureId = lectures_data.find((lecture) =>
-              lecture.name === lecture
-            )?.id;
-            if (lectureId) {
-              const document = documents.find((doc) =>
-                slidesWithLectures[lecture].includes(doc.page) &&
-                doc.lecture === lectureId
-              );
-              if (document) {
-                acc.push(document.id);
-              }
-            }
-            return acc;
-          },
-          [] as string[],
-        );
-        if ("options" in question) {
-          const correct_answer = Object.keys(question["answers"]).find((opt) =>
-            question["answers"][opt]
-          );
-          const question_data = {
-            "question": question["question"],
-            "mcq": true,
-            "conceptual": question["tags"].includes("conceptual"),
-            "option_a": question["options"]["A"],
-            "option_b": question["options"]["B"],
-            "option_c": question["options"]["C"],
-            "option_d": question["options"]["D"],
-            "option_e": question["options"]["E"],
-            "solution": correct_answer,
-            "explanation_a": question["explanations"]["A"],
-            "explanation_b": question["explanations"]["B"],
-            "explanation_c": question["explanations"]["C"],
-            "explanation_d": question["explanations"]["D"],
-            "explanation_e": question["explanations"]["E"],
-            "generation": generation_id,
-            "documents": question_document_ids,
-          } as { [key: string]: string | boolean | number | string[] };
-          if (multi_part_uuid) {
-            question_data["multipart"] = multi_part_uuid;
-          }
-          return question_data;
-        } else if ("solution" in question) {
-          const question_data = {
-            "question": question["question"],
-            "mcq": false,
-            "conceptual": question["tags"].includes("conceptual"),
-            "solution": question["solution"],
-            "generation": generation_id,
-            "documents": question_document_ids,
-          } as { [key: string]: string | boolean | number | string[] };
-          if (multi_part_uuid) {
-            question_data["multipart"] = multi_part_uuid;
-          }
-          return question_data;
-        } else {
-          throw new Error("Question type not supported");
-        }
-      });
-    }).flat();
-    console.log("Problems data:", problems_data);
-
-    const questions_response = await supabase.from("questions").insert(
-      problems_data,
-    ).select("id, question");
-
-    console.log("Questions response:", questions_response);
-
-    if (generation_question_type === QuestionType.FRQ) {
-      const rubrics_data = questions_response.data?.map(({ id, question }) => {
-        const question_data = questions.flat().find((q) =>
-          q["question"] === question
-        );
-        if (!question_data || !("rubric" in question_data)) {
-          throw new Error("Question not found");
-        }
-        const rubric = question_data["rubric"];
-        return rubric.map(({ points, content, standard }) => ({
-          "question": id,
-          "points": points,
-          "description": content,
-          "standard": standard,
-        }));
-      }).flat();
-
-      console.log("Rubrics data:", rubrics_data);
-
-      const rubrics_response = await supabase.from("rubrics").insert(
-        rubrics_data,
-      );
-
-      console.log("Rubrics response:", rubrics_response);
     }
 
     // Update status to completed on success
