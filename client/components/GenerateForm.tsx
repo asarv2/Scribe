@@ -82,7 +82,7 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
     const [problemType, setProblemType] = useState<'mcq' | 'frq'>('mcq');
     const [problemStyle, setProblemStyle] = useState<'conceptual' | 'computational'>('conceptual');
     const [problemParts, setProblemParts] = useState<'single' | 'multi'>('single');
-    const [numQuestions, setNumQuestions] = useState<number>(3);
+    const [numQuestions, setNumQuestions] = useState<number | undefined>(3);
 
     useEffect(() => {
         if (topicFromUrl && map) {
@@ -135,7 +135,7 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
             // create generation
             const generationLectures = sourceType === 'lectures' ? selectedItems : [];
             const generationTopics = sourceType === 'topics' ? selectedItems.map((topicMapId) => topics?.find((topic) => topic.map_id === topicMapId)).map((topic) => topic?.id).filter((id) => id !== undefined) : [];
-            const questions = contentType === 'problem' ? numQuestions : 0;
+            const questions = contentType === 'problem' ? numQuestions ?? 0 : 0;
             const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions, problemType === 'mcq', problemStyle === 'conceptual', problemParts === 'single');
             console.log(generation);
 
@@ -367,7 +367,13 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
                                         label="Number of questions"
                                         description="How many questions would you like to generate?"
                                         value={numQuestions}
-                                        onChange={(val) => setNumQuestions(Number(val))}
+                                        onChange={(val) => {
+                                            if (val) {
+                                                setNumQuestions(Number(val));
+                                            } else {
+                                                setNumQuestions(undefined);
+                                            }
+                                        }}
                                         min={1}
                                         max={10}
                                         required
@@ -416,7 +422,7 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
 
                             <Button
                                 onClick={() => handleGenerate()}
-                                disabled={!sourceType || selectedItems.length === 0}
+                                disabled={!sourceType || selectedItems.length === 0 || numQuestions === undefined || generationTitle === ""}
                                 loading={loading}
                             >
                                 Generate

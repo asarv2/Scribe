@@ -181,12 +181,12 @@ export class SlideProcessor extends BaseProcessor {
             const message = new HumanMessage({
                 content: [
                     {
-                        type: "text",
-                        text: basePrompt + "\n\n" + additionalPrompt,
-                    },
-                    {
                         type: "image_url",
                         image_url: `data:image/png;base64,${base64Image}`,
+                    },
+                    {
+                        type: "text",
+                        text: basePrompt + "\n\n" + additionalPrompt,
                     },
                     ...(text.length > 0 ? [{ type: "text", text }] : []),
                 ],

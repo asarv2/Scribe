@@ -190,10 +190,10 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/`}>
+                            {/* <Link href={`/`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
-                            </Link>
-                            <Text size="xl" fw={700} mb={6}>Problems</Text>
+                            </Link> */}
+                            <Text size="xl" fw={700} mb={6} pl={4}>Problems</Text>
                         </Group>
                         <Group>
                             <Link href={`/classes/${classId}/generate/problems/new`}>

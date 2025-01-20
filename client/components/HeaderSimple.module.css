@@ -67,3 +67,19 @@
         background-color: var(--mantine-color-gray-0);
     }
 }
+
+.feedbackButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--mantine-color-gray-7);
+    border-radius: var(--mantine-radius-sm);
+    
+    &:hover {
+        background-color: var(--mantine-color-gray-0);
+    }
+}
