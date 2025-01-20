@@ -83,6 +83,30 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          created_at: string
+          feature: string
+          id: string
+          negative: string
+          positive: string
+        }
+        Insert: {
+          created_at?: string
+          feature?: string
+          id?: string
+          negative?: string
+          positive?: string
+        }
+        Update: {
+          created_at?: string
+          feature?: string
+          id?: string
+          negative?: string
+          positive?: string
+        }
+        Relationships: []
+      }
       figures: {
         Row: {
           created_at: string

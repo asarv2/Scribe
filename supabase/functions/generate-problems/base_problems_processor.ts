@@ -304,8 +304,10 @@ export class BaseProblemsProcessor extends BaseProcessor {
         WHAT TO DO:
         1. Put the question in <QUESTION> and </QUESTION> tags.
         2. Put the solution in <SOLUTION> and </SOLUTION> tags.
-        3. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
-        4. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution.`;
+        3. You should create a rubric for the question in <RUBRIC> and </RUBRIC> tags. You should create certain standards for the question, and then create points for each standard. Use <STANDARD x> and </STANDARD x> tags for each standard, where x is the standard name. Inside of each of the standards, use <POINT x> and </POINT x> tags for each point, where x is the amount of points the point is worth. Inside of each of the point tags, include the textual description of what will earn that point.
+        4. Ensure that all the points on the rubric add up to 10. There should not be any 0 point rubric items, answers can only earn positive points.
+        5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        6. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution.`;
 
         const multiPartPrompt =
             `TASK: You will be generating multi-part questions to test comprehension of the ${this.contentType.valueOf()}. 
@@ -314,8 +316,10 @@ export class BaseProblemsProcessor extends BaseProcessor {
         1. You must generate exactly 3 parts.
         2. Put each of the questions in <QUESTION> and </QUESTION> tags.
         3. Put the solution in <SOLUTION> and </SOLUTION> tags.
-        4. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
-        5. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution.`;
+        4. You should create a rubric for the question in <RUBRIC> and </RUBRIC> tags. You should create certain standards for the question, and then create points for each standard. Use <STANDARD x> and </STANDARD x> tags for each standard, where x is the standard name. Inside of each of the standards, use <POINT x> and </POINT x> tags for each point, where x is the amount of points the point is worth. Inside of each of the point tags, include the textual description of what will earn that point.
+        5. Ensure that all the points on the rubric add up to 10. There should not be any 0 point rubric items, answers can only earn positive points.
+        6. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        7. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution.`;
 
         const singlePartConceptualPrompt =
             `IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part conceptual practice problem for the ${
@@ -730,23 +734,27 @@ export class BaseProblemsProcessor extends BaseProcessor {
         // Extract rubric
         const rubric: Rubric[] = [];
         const rubricMatch = block.match(/<RUBRIC>(.*?)<\/RUBRIC>/s);
-        
+
         if (rubricMatch) {
-            // Changed regex to handle standards without attributes
-            const standardMatches = rubricMatch[1].matchAll(/<STANDARD>(.*?)<\/STANDARD>/gs);
+            // Changed regex to handle standards with attributes
+            const standardMatches = rubricMatch[1].matchAll(/<STANDARD(?:\s+([^>]*))?>(.*?)<\/STANDARD>/gs);
+            const standardArray = Array.from(standardMatches);
             
-            for (const match of Array.from(standardMatches)) {
-                const standardName = match[1].trim();
-                
-                // Find all POINT tags that follow this STANDARD until the next STANDARD or end
+            for (const match of standardArray) {
+                const standardName = match[1]?.trim() || match[2]?.trim();
                 const standardContent = match[0];
-                const pointMatches = standardContent.matchAll(/<POINT\s+(\d+)>(.*?)<\/POINT>/gs);
                 
-                for (const pointMatch of Array.from(pointMatches)) {
+                const pointMatches = standardContent.matchAll(/<POINT\s+(\d+)>(.*?)<\/POINT>/gs);
+                const pointArray = Array.from(pointMatches);
+                
+                for (const pointMatch of pointArray) {
+                    const points = parseInt(pointMatch[1]);
+                    const content = pointMatch[2].trim();
+                    
                     rubric.push({
                         standard: standardName,
-                        content: pointMatch[2].trim(),
-                        points: parseInt(pointMatch[1])
+                        content: content,
+                        points: points
                     });
                 }
             }

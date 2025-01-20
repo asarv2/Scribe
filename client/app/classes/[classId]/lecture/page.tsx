@@ -86,11 +86,12 @@ export default function LecturePage({ params }: { params: { classId: string } })
             return;
         }
 
-        const invalidFiles = files.filter(file => !file.type.includes('pdf'));
+        // check if the files are pdf or .mp4
+        const invalidFiles = files.filter(file => !file.type.includes('pdf') && !file.type.includes('mp4'));
         if (invalidFiles.length > 0) {
             notifications.show({
                 title: 'Error',
-                message: 'Only PDF files are allowed',
+                message: 'Only PDF and MP4 files are allowed',
                 color: 'red'
             });
             return;
@@ -101,10 +102,19 @@ export default function LecturePage({ params }: { params: { classId: string } })
 
             const uploadPromises = files.map(async (file) => {
                 try {
-                    await processLecturePDF(
-                        file,
-                        classId,
-                    );
+                    if (file.type.includes('pdf')) {
+                        await processLecturePDF(
+                            file,
+                            classId,
+                        );
+                    } else if (file.type.includes('mp4')) {
+                        await processLectureMP4(
+                            file,
+                            classId,
+                        );
+                    } else {
+                        throw new Error('Invalid file type');
+                    }
 
                     notifications.show({
                         title: 'Success',
@@ -194,6 +204,139 @@ export default function LecturePage({ params }: { params: { classId: string } })
             }
         });
         console.log("Parse lecture function response:", response);
+    };
+
+    const processLectureMP4 = async (file: File, classId: string) => {
+        console.log("Processing MP4 file:", file);
+    
+        const CHUNK_SIZE = 60; // chunk size in seconds
+    
+        const getVideoDuration = (file: File): Promise<number> => {
+            return new Promise((resolve, reject) => {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+    
+                video.onloadedmetadata = () => {
+                    const duration = video.duration;
+                    resolve(duration);
+                };
+    
+                video.onerror = () => {
+                    URL.revokeObjectURL(video.src);
+                    reject("Error loading video metadata");
+                };
+    
+                video.src = URL.createObjectURL(file);
+            });
+        };
+    
+        const extractAudioFromVideo = async (videoFile: File, start: number, duration: number): Promise<Blob> => {
+            return new Promise((resolve, reject) => {
+                const video = document.createElement('video');
+                const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+                const dest = audioContext.createMediaStreamDestination();
+                
+                video.src = URL.createObjectURL(videoFile);
+                video.currentTime = start;
+    
+                video.oncanplay = async () => {
+                    const source = audioContext.createMediaElementSource(video);
+                    source.connect(dest);
+                    
+                    const mediaRecorder = new MediaRecorder(dest.stream);
+                    const chunks: BlobPart[] = [];
+    
+                    mediaRecorder.ondataavailable = (e) => {
+                        chunks.push(e.data);
+                    };
+    
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(chunks, { type: 'audio/wav' });
+                        URL.revokeObjectURL(video.src);
+                        resolve(blob);
+                    };
+    
+                    video.play();
+                    mediaRecorder.start();
+    
+                    setTimeout(() => {
+                        video.pause();
+                        mediaRecorder.stop();
+                        source.disconnect();
+                        audioContext.close();
+                    }, duration * 1000);
+                };
+    
+                video.onerror = () => {
+                    URL.revokeObjectURL(video.src);
+                    reject("Error loading video");
+                };
+            });
+        };
+    
+        const extractVideoChunk = (file: File, start: number, end: number, duration: number): Blob => {
+            const slicedChunk = file.slice(
+                Math.floor(start / duration * file.size),
+                Math.floor(end / duration * file.size)
+            );
+            return new Blob([slicedChunk], { type: 'video/mp4' });
+        };
+    
+        try {
+            const duration = await getVideoDuration(file);
+            const totalChunks = Math.ceil(duration / CHUNK_SIZE);
+            const numPages = 3 * Math.ceil(duration / 60);
+    
+            const lecture = await createLecture(classId, file.name.split(".")[0], (lectures?.length ?? 0) + 1, numPages);
+    
+            for (let chunkNumber = 0; chunkNumber < totalChunks; chunkNumber++) {
+                const start = chunkNumber * CHUNK_SIZE;
+                const end = Math.min((chunkNumber + 1) * CHUNK_SIZE, duration);
+                const chunkDuration = end - start;
+    
+                // Extract both video and audio chunks
+                const videoChunk = extractVideoChunk(file, start, end, duration);
+                const audioChunk = await extractAudioFromVideo(file, start, chunkDuration);
+    
+                // Create form data with both chunks
+                const formData = new FormData();
+                formData.append('video_chunk', videoChunk, `video_${chunkNumber}.mp4`);
+                formData.append('audio_chunk', audioChunk, `audio_${chunkNumber}.wav`);
+                formData.append('chunk_number', chunkNumber.toString());
+                formData.append('total_chunks', totalChunks.toString());
+                formData.append('class_id', classId);
+                formData.append('lecture_id', lecture.id);
+                formData.append('filename', file.name);
+    
+                console.log('Chunk details:', {
+                    videoSize: videoChunk.size,
+                    videoType: videoChunk.type,
+                    audioSize: audioChunk.size,
+                    audioType: audioChunk.type,
+                    number: chunkNumber,
+                    total: totalChunks,
+                    originalType: file.type
+                });
+    
+                const response = await fetch("https://api.ashoksaravanan.com/scribe/parse-video", {
+                    method: "POST",
+                    body: formData,
+                });
+    
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`Server error (${response.status}):`, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+    
+                const result = await response.json();
+                console.log(`Chunk ${chunkNumber + 1}/${totalChunks} processed:`, result);
+            }
+    
+        } catch (error) {
+            console.error("Error processing video:", error);
+            throw error;
+        }
     };
 
     const getProgress = (lectureId: string) => {
@@ -388,17 +531,17 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/`}>
+                            {/* <Link href={`/`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
-                            </Link>
-                            <Text size="xl" fw={700} mb={6}>Lectures</Text>
+                            </Link> */}
+                            <Text size="xl" fw={700} mb={6} pl={4}>Lectures</Text>
                         </Group>
                         <Group>
                             <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Lectures</Button>
                             <FileInput
                                 ref={fileInputRef}
                                 placeholder="Upload PDFs"
-                                accept="application/pdf"
+                                accept="application/pdf,video/mp4"
                                 multiple
                                 onChange={handleFilesUpload}
                                 value={selectedFiles}

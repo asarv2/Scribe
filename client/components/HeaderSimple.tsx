@@ -11,7 +11,7 @@ import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { IconChevronDown, IconUser } from '@tabler/icons-react';
+import { IconChevronDown, IconMessage, IconUser } from '@tabler/icons-react';
 import { getUser } from '@/utils/queries/get-user';
 import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
@@ -24,6 +24,7 @@ const classNav = [
     { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
     { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
     { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
+    { id: 'ae333215-2914-4026-8aae-418f1255cdd0', label: 'ECE 20007' },
 ];
 
 export function HeaderSimple() {
@@ -114,7 +115,7 @@ export function HeaderSimple() {
                                                         key={classItem.id}
                                                         component={Link}
                                                         href={`/classes/${classItem.id}/lecture`}
-                                            >
+                                                    >
                                                         {classItem.label}
                                                     </Menu.Item>
                                                 )
@@ -133,34 +134,42 @@ export function HeaderSimple() {
 
                         <Group gap={5} visibleFrom="xs">
                             {user ? (
-                                <Menu shadow="md" width={200}>
-                                    <Menu.Target>
-                                        <button className={classes.profileButton}>
-                                            <IconUser size={20} />
-                                        </button>
-                                    </Menu.Target>
+                                <>
+                                    <Menu shadow="md" width={200}>
+                                        <Menu.Target>
+                                            <button className={classes.profileButton}>
+                                                <IconUser size={20} />
+                                            </button>
+                                        </Menu.Target>
+
+                                        <Menu.Dropdown>
+                                            <Menu.Label>{user.email}</Menu.Label>
+                                            <Menu.Divider />
+                                            <Menu.Item
+                                                color="blue"
+                                                component={Link}
+                                                href="/login"
+                                            >
+                                                Account
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                color="red"
+                                                onClick={async () => {
+                                                    await supabase.auth.signOut();
+                                                    window.location.reload();
+                                                }}
+                                            >
+                                                Logout
+                                            </Menu.Item>
+                                        </Menu.Dropdown>
+                                    </Menu>
                                     
-                                    <Menu.Dropdown>
-                                    <Menu.Label>{user.email}</Menu.Label>
-                                        <Menu.Divider />
-                                        <Menu.Item
-                                            color="blue"
-                                            component={Link}
-                                            href="/login"
-                                        >
-                                            Account
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            color="red"
-                                            onClick={async () => {
-                                                await supabase.auth.signOut();
-                                                window.location.reload();
-                                            }}
-                                        >
-                                            Logout
-                                        </Menu.Item>
-                                    </Menu.Dropdown>
-                                </Menu>
+                                    <Link href="/feedback">
+                                        <button className={classes.feedbackButton}>
+                                            <IconMessage size={20} />
+                                        </button>
+                                    </Link>
+                                </>
                             ) : (
                                 <Box p={2}>
                                     <Link
@@ -237,6 +246,6 @@ export function HeaderSimple() {
                     </Drawer.Body>
                 </Drawer.Content>
             </Drawer.Root >
-            </>
+        </>
     );
 }
