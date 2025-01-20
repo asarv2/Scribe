@@ -318,7 +318,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     originalType: file.type
                 });
     
-                const response = await fetch("http://127.0.0.1:5000/parse-video", {
+                const response = await fetch("https://api.ashoksaravanan.com/scribe/parse-video", {
                     method: "POST",
                     body: formData,
                 });

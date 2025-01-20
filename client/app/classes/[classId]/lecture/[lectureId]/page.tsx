@@ -112,7 +112,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}`}>
+                            <Link href={`/classes/${classId}/lecture`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
