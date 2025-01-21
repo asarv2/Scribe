@@ -17,7 +17,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname, useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight, IconUpload, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Button, em, Group, Stack, TextInput } from "@mantine/core";
+import { ActionIcon, Box, Button, em, Group, Stack, Textarea, TextInput } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -83,6 +83,7 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
     const [problemStyle, setProblemStyle] = useState<'conceptual' | 'computational'>('conceptual');
     const [problemParts, setProblemParts] = useState<'single' | 'multi'>('single');
     const [numQuestions, setNumQuestions] = useState<number | undefined>(3);
+    const [additionalInstructions, setAdditionalInstructions] = useState<string>("");
 
     useEffect(() => {
         if (topicFromUrl && map) {
@@ -154,6 +155,7 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
                     body: {
                         class_id: classId,
                         generation_id: generation.id,
+                        additional_instructions: additionalInstructions,
                     }
                 });
                 queryClient.invalidateQueries({ queryKey: ["problemGenerations", classId] });
@@ -417,6 +419,13 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
                                             <Radio value="multi" label="Multi-Part" />
                                         </Group>
                                     </Radio.Group>
+
+                                    <Textarea
+                                        label="Additional Instructions"
+                                        placeholder="Enter any additional instructions for the AI"
+                                        value={additionalInstructions}
+                                        onChange={(event) => setAdditionalInstructions(event.target.value)}
+                                    />
                                 </>
                             )}
 

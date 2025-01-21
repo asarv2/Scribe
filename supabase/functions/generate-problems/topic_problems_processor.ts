@@ -17,8 +17,9 @@ export class TopicProblemsProcessor extends BaseProblemsProcessor {
         topicNames: string[],
         topics: ProblemsContent,
         questionType: QuestionType,
+        additionalInstructions: string,
     ) {
-        super(apiKey, courseTitle, ContentType.TOPIC, questionType);
+        super(apiKey, courseTitle, ContentType.TOPIC, questionType, additionalInstructions);
         this.topics = topics;
         this.topicNames = topicNames;
     }

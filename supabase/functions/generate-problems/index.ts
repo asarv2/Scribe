@@ -44,10 +44,12 @@ Deno.serve(async (req) => {
   const {
     class_id,
     generation_id,
+    additional_instructions,
   } = await req.json();
   console.log("Request params:", {
     class_id,
     generation_id,
+    additional_instructions,
   });
 
   try {
@@ -317,6 +319,7 @@ Deno.serve(async (req) => {
         names,
         content,
         generation_question_type,
+        additional_instructions,
       );
       console.log("Lecture problems processor created");
       questions = await lecture_problems_processor.processProblems(
@@ -335,6 +338,7 @@ Deno.serve(async (req) => {
         names,
         content,
         generation_question_type,
+        additional_instructions,
       );
       console.log("Topic problems processor created");
       questions = await topic_problems_processor.processProblems(

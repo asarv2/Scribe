@@ -62,7 +62,7 @@ export function HeaderSimple() {
                 ? `/classes/${currentClassId}/generate/problems`
                 : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate/problems',
             label: 'Problems'
-        },
+        }, 
     ];
 
     const navigationItems = navigationLinks.map((link) => (

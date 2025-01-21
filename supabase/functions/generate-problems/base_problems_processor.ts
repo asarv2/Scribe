@@ -47,17 +47,20 @@ export class BaseProblemsProcessor extends BaseProcessor {
     protected singlePartComputationalPrompt: string = "";
     protected multiPartConceptualPrompt: string = "";
     protected multiPartComputationalPrompt: string = "";
+    protected additionalInstructions: string = "";
 
     constructor(
         apiKey: string,
         courseTitle: string,
         contentType: ContentType,
         questionType: QuestionType = QuestionType.MCQ,
+        additionalInstructions: string = ""
     ) {
         super(apiKey);
         this.courseTitle = courseTitle;
         this.contentType = contentType;
         this.questionType = questionType;
+        this.additionalInstructions = additionalInstructions;
         this.initializePrompts();
     }
 
@@ -275,14 +278,16 @@ export class BaseProblemsProcessor extends BaseProcessor {
         6. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture name. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
         7. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations.`;
 
+        const additional_instructions = `VERY IMPORTANT: Follow these additonal instructions in the generation of the problems: ${this.additionalInstructions}`;
+
         this.singlePartConceptualPrompt =
-            `${baseQuestionPrompt}\n${qualityPrompt}\n${singlePartPrompt}\n${singlePartConceptualPrompt}`;
+            `${baseQuestionPrompt}\n${qualityPrompt}\n${singlePartPrompt}\n${singlePartConceptualPrompt}\n${additional_instructions}`;
         this.singlePartComputationalPrompt =
-            `${baseQuestionPrompt}\n${qualityPrompt}\n${singlePartPrompt}\n${singlePartComputationalPrompt}`;
+            `${baseQuestionPrompt}\n${qualityPrompt}\n${singlePartPrompt}\n${singlePartComputationalPrompt}\n${additional_instructions}`;
         this.multiPartConceptualPrompt =
-            `${baseQuestionPrompt}\n${qualityPrompt}\n${multiPartPrompt}\n${multiPartConceptualPrompt}`;
+            `${baseQuestionPrompt}\n${qualityPrompt}\n${multiPartPrompt}\n${multiPartConceptualPrompt}\n${additional_instructions}  `;
         this.multiPartComputationalPrompt =
-            `${baseQuestionPrompt}\n${qualityPrompt}\n${multiPartPrompt}\n${multiPartComputationalPrompt}`;
+            `${baseQuestionPrompt}\n${qualityPrompt}\n${multiPartPrompt}\n${multiPartComputationalPrompt}\n${additional_instructions}`;
     }
 
     protected initializeFRQPrompts(): void {
