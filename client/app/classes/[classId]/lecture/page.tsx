@@ -31,10 +31,10 @@ import { Text, Card, Image as MantineImage } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import { createLecture } from "@/utils/services/lecture";
-import { getDocuments } from "@/utils/queries/get-documents";
 import * as pdfjs from 'pdfjs-dist';
 import { Document, Lecture, Topic } from "@/types";
 import { getTopics } from "@/utils/queries/get-topics";
+import { getDocumentsLecture } from "@/utils/queries/get-documents-lecture";
 
 export default function LecturePage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -57,7 +57,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
         queryKey: ["documents", classId],
-        queryFn: () => getDocuments(supabase, lectures?.map(lecture => lecture.id) ?? []),
+        queryFn: () => getDocumentsLecture(supabase, lectures?.map(lecture => lecture.id) ?? []),
         enabled: !!lectures
     })
 
@@ -196,14 +196,14 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 });
         }));
         console.log("Images uploaded:", images);
-        const response = await supabase.functions.invoke('parse-lecture', {
+        // don't wait for the function to finish
+        supabase.functions.invoke('parse-lecture', {
             body: {
                 class_id: classId,
                 lecture_id: lecture.id,
                 handwritten: true
             }
         });
-        console.log("Parse lecture function response:", response);
     };
 
     const processLectureMP4 = async (file: File, classId: string) => {
@@ -472,7 +472,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
     useEffect(() => {
         if (!lectures) return;
         const channel = supabase
-            .channel('realtime-documents')
+            .channel('realtime-lecture-documents')
             .on(
                 'postgres_changes',
                 {

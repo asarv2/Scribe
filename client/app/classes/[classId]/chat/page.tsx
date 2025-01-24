@@ -19,14 +19,11 @@ export default function ChatPage({ classId }: { classId: string }) {
     const login = async () => {
         setIsLoading(true);
         try {
-            const P = require('piazza-api');
-            const user = await P.login(username, password);
-            setDisplayName(user.name);
             setUsername("");
             setPassword("");
             notifications.show({
                 title: "Logged in",
-                message: "You are logged in as " + user.name,
+                message: "You are logged in",
                 color: "green",
             });
         } catch (error: any) {

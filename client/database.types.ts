@@ -52,8 +52,11 @@ export type Database = {
           figures: Json[]
           id: string
           latex: string
-          lecture: string
+          lecture: string | null
           page: number
+          processed: boolean
+          text: string
+          textbook: string | null
         }
         Insert: {
           created_at?: string
@@ -61,8 +64,11 @@ export type Database = {
           figures?: Json[]
           id?: string
           latex?: string
-          lecture: string
+          lecture?: string | null
           page: number
+          processed?: boolean
+          text?: string
+          textbook?: string | null
         }
         Update: {
           created_at?: string
@@ -70,8 +76,11 @@ export type Database = {
           figures?: Json[]
           id?: string
           latex?: string
-          lecture?: string
+          lecture?: string | null
           page?: number
+          processed?: boolean
+          text?: string
+          textbook?: string | null
         }
         Relationships: [
           {
@@ -79,6 +88,13 @@ export type Database = {
             columns: ["lecture"]
             isOneToOne: false
             referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_textbook_fkey"
+            columns: ["textbook"]
+            isOneToOne: false
+            referencedRelation: "textbooks"
             referencedColumns: ["id"]
           },
         ]
@@ -449,6 +465,50 @@ export type Database = {
             columns: ["topic"]
             isOneToOne: false
             referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      textbooks: {
+        Row: {
+          class: string
+          created_at: string
+          deleted: boolean
+          id: string
+          last_parse_attempt: string | null
+          pages: number
+          parse_error: string | null
+          parse_status: Database["prod"]["Enums"]["parse_status"]
+          title: string
+        }
+        Insert: {
+          class: string
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          last_parse_attempt?: string | null
+          pages?: number
+          parse_error?: string | null
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
+          title?: string
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          last_parse_attempt?: string | null
+          pages?: number
+          parse_error?: string | null
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "textbooks_class_fkey1"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
         ]

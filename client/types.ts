@@ -7,6 +7,7 @@ export type SchemaName = typeof schema;
 export type TypedSupabaseClient = SupabaseClient<Database>
 
 export type Lecture = Database[SchemaName]["Tables"]["lectures"]["Row"]
+export type Textbook = Database[SchemaName]["Tables"]["textbooks"]["Row"]
 export type Topic = Database[SchemaName]["Tables"]["topics"]["Row"]
 export type Question = Database[SchemaName]["Tables"]["questions"]["Row"]
 export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"]

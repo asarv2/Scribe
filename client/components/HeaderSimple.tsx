@@ -22,9 +22,10 @@ const classNav = [
     { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA 421' },
     // { id: '15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
     { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
-    { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
-    { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
+    // { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
+    // { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
     { id: 'ae333215-2914-4026-8aae-418f1255cdd0', label: 'ECE 20007' },
+    { id: "11d5b457-6f87-4ea3-94ec-c04b2138ceb3", label: "CS 253" }
 ];
 
 export function HeaderSimple() {
@@ -62,10 +63,57 @@ export function HeaderSimple() {
                 ? `/classes/${currentClassId}/generate/problems`
                 : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate/problems',
             label: 'Problems'
-        }, 
+        },
     ];
 
-    const navigationItems = navigationLinks.map((link) => (
+    const MA421NavigationLinks = [
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/lecture`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/lecture',
+            label: 'Lectures'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/textbook`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/textbook',
+            label: 'Textbooks'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/generate/problems`
+                : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a/generate/problems',
+            label: 'Problems'
+        },
+    ]
+
+    const ECE20007NavigationLinks = [
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/lecture`
+                : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/lecture',
+            label: 'Lectures'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/chat`
+                : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/chat',
+            label: 'Chat'
+        },
+    ]
+
+    const classNavigationLinks = {
+        "ef85b3e5-3a62-41a4-8db1-98e5f201779a": MA421NavigationLinks,
+        "ae333215-2914-4026-8aae-418f1255cdd0": ECE20007NavigationLinks
+    } as { [key: string]: { link: string; label: string; }[] }
+
+    const { data: user } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+
+    const navigationItems = (user && classNavigationLinks[currentClassId] ? classNavigationLinks[currentClassId] : navigationLinks).map((link) => (
         <Box p={2} key={link.label}>
             <Link
                 href={link.link}
@@ -77,10 +125,6 @@ export function HeaderSimple() {
         </Box>
     ));
 
-    const { data: user } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase),
-    })
 
     return (
         <>
@@ -163,7 +207,7 @@ export function HeaderSimple() {
                                             </Menu.Item>
                                         </Menu.Dropdown>
                                     </Menu>
-                                    
+
                                     <Link href="/feedback">
                                         <button className={classes.feedbackButton}>
                                             <IconMessage size={20} />
