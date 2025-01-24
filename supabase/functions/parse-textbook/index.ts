@@ -178,6 +178,16 @@ Deno.serve(async (req) => {
       batch_results.push(results);
     }
     console.log("Batch results:", batch_results);
+
+    // Update status to completed on success
+    await supabase
+      .from("textbooks")
+      .update({
+        parse_status: "complete",
+        parse_error: null,
+      })
+      .eq("id", textbook_id);
+
     return new Response(
       JSON.stringify({ results: batch_results }),
       {

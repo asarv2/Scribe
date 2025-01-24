@@ -60,7 +60,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
-        queryKey: ["documents", classId],
+        queryKey: ["textbookDocuments", classId],
         queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
         enabled: !!textbooks
     })
@@ -500,7 +500,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                     console.log("Document change:", payload);
 
                     // Update documents in React Query cache
-                    queryClient.setQueryData(["documents", classId], (oldData: Document[] = []) => {
+                    queryClient.setQueryData(["textbookDocuments", classId], (oldData: Document[] = []) => {
                         let newData;
                         if (payload.eventType === 'INSERT') {
                             newData = [...oldData, payload.new];
