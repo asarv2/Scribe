@@ -11,7 +11,7 @@ import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 
 
-export default function ChatPage({ classId }: { classId: string }) {
+export default function ChatPage({ params }: { params: { classId: string } }) {
     const [displayName, setDisplayName] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [username, setUsername] = useState<string>("");
