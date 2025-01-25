@@ -1,5 +1,2 @@
-.env
-/env
-old/
-Notes/
-output/
+app/.env
+app/env

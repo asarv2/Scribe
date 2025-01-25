@@ -299,12 +299,12 @@ export default function SimpleGenerateForm({ classId, type }: { classId: string,
 
                     <Paper shadow="xs" p="md" withBorder>
                         <Stack>
-                            {/* <TextInput
+                            <TextInput
                                 label="Generation Title"
                                 placeholder="Enter a title for the generation"
                                 value={generationTitle}
                                 onChange={(event) => setGenerationTitle(event.target.value)}
-                            /> */}
+                            />
                             {/* <Radio.Group
                                 value={contentType}
                                 onChange={(value) => setContentType(value as 'summary' | 'problem')}

@@ -7,6 +7,6 @@
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
-  "python.defaultInterpreterPath": "${workspaceFolder}/server/env/bin/python",
+  "python.defaultInterpreterPath": "${workspaceFolder}/server/app/env/bin/python",
   "python.terminal.activateEnvironment": true
 }
