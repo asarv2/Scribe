@@ -2,10 +2,11 @@ from multiprocessing.dummy.connection import Client
 import re
 
 class CertaintyEvaluator(object):
-    def __init__(self, supabase: Client, generation_id: str, class_id: str):
+    def __init__(self, supabase: Client, generation_id: str):
         self.supabase = supabase
         self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
-        self.course = self.supabase.table("classes").select("*").eq("id", class_id).single().   execute().data
+        class_id = self.generation.get("class")
+        self.course = self.supabase.table("classes").select("*").eq("id", class_id).single().execute().data
         self.questions = self.supabase.table("questions").select("*").eq("generation", generation_id).execute().data
         
     def _format_questions_text(self) -> str:

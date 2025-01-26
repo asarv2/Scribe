@@ -64,7 +64,8 @@ export default function Textbook({ params }: { params: { classId: string, textbo
 
     const { data: figures, isLoading: loadingFigures } = useQuery({
         queryKey: ["figures", textbookId],
-        queryFn: () => getFigures(supabase, documents?.map((doc) => doc.id) ?? [])
+        queryFn: () => getFigures(supabase, documents?.map((doc) => doc.id) ?? []),
+        enabled: !!documents
     })
 
     const { data: textbook, isLoading: loadingTextbook } = useQuery({
@@ -166,7 +167,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                             style={{ objectFit: 'contain' }}
                                             sizes="100vw"
                                         />
-                                        {figures?.filter(figure => {
+                                        {!loadingFigures && figures?.filter(figure => {
                                             const activeDocument = documents?.find(doc => doc.page === pageNumber);
                                             return figure.document === activeDocument?.id;
                                         }).map(figure => {

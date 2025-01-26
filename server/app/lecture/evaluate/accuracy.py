@@ -6,6 +6,10 @@ import os
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 api_key = os.getenv('GOOGLE_API_KEY')
 if not api_key:
     raise ValueError("No Google API Key found. Make sure GOOGLE_API_KEY is set in your environment.")
@@ -33,7 +37,6 @@ class GeminiDecisionMaker:
     def __init__(self, 
                  supabase: Client, 
                  generation_id: str, 
-                 class_id: str,
                  model_name='gemini-1.5-flash',
                  temperature=0.5,
                  max_tokens=None,
@@ -49,7 +52,7 @@ class GeminiDecisionMaker:
             self.supabase = supabase
             
             self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
-            
+            class_id = self.generation.get("class")
             self.course = self.supabase.table("classes").select("*").eq("id", class_id).single().execute().data
             
             self.questions = self.supabase.table("questions").select("*").eq("generation", generation_id).execute().data

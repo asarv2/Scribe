@@ -1,7 +1,7 @@
 from supabase.client import Client
 
 class ComplexityEvaluator(object):
-    def __init__(self, supabase: Client, llm, generation_id: str, class_id: str):
+    def __init__(self, supabase: Client, llm, generation_id: str):
         """
         Evaluates the complexity of a generation, based on the number of steps it took to solve it, the audience it is for, and if the LLM got the correct answer.
         """
@@ -9,6 +9,7 @@ class ComplexityEvaluator(object):
         
         self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
         
+        class_id = self.generation.get("class")
         self.course = self.supabase.table("classes").select("*").eq("id", class_id).single().execute().data
         
         self.questions = self.supabase.table("questions").select("*").eq("generation", generation_id).execute().data

@@ -136,7 +136,7 @@ export default function SimpleGenerateForm({ classId, type }: { classId: string,
             const generationLectures = sourceType === 'lectures' ? selectedItems : [];
             const generationTopics = sourceType === 'topics' ? selectedItems.map((topicMapId) => topics?.find((topic) => topic.map_id === topicMapId)).map((topic) => topic?.id).filter((id) => id !== undefined) : [];
             const questions = contentType === 'problem' ? numQuestions ?? 0 : 0;
-            const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions, problemType === 'mcq', problemStyle === 'conceptual', problemParts === 'single');
+            const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions, problemType === 'mcq', problemStyle === 'conceptual', problemParts === 'single', additionalInstructions, `${process.env.NEXT_PUBLIC_API_URL}`);
             console.log(generation);
 
             if (contentType === 'summary') {

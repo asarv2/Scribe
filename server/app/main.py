@@ -1,4 +1,14 @@
 import traceback
+import os
+import sys
+
+# Add app directory to Python path for local development
+if not os.getenv('DOCKER_ENV'):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append(BASE_DIR)
+else:
+    BASE_DIR = '/app'
+
 from flask import Flask, request
 from flask_cors import CORS
 import os
@@ -16,9 +26,8 @@ from app.lecture.evaluate.certainty import CertaintyEvaluator
 from app.lecture.evaluate.complexity import ComplexityEvaluator
 
 load_dotenv()
+    
 
-# Configure upload folder with absolute path
-BASE_DIR = '/services/scribe'
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
 
@@ -121,7 +130,6 @@ def parse_lecture():
 def evaluate():
     data = request.get_json()
     generation_id = data['generation_id']
-    class_id = data['class_id']
     
     try:
         # creating supabase client
@@ -140,12 +148,12 @@ def evaluate():
         )
         
         # certainty
-        certainty_evaluator = CertaintyEvaluator(supabase, generation_id, class_id)
+        certainty_evaluator = CertaintyEvaluator(supabase, generation_id)
         print("Certainty evaluator created")
         certainty_score, certainty_explanation = certainty_evaluator.evaluate_certainty()
         print(f"Certainty score and explanation calculated: Score: {certainty_score}, Explanation: {certainty_explanation}")
         # accuracy
-        gemini_decision_maker = GeminiDecisionMaker(supabase, generation_id, class_id)
+        gemini_decision_maker = GeminiDecisionMaker(supabase, generation_id)
         print("Gemini decision maker created")
         accuracy_explanation, accuracy_score = generate_llm_quality_report(gemini_decision_maker, expected_question_count=3)
         print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
@@ -157,7 +165,7 @@ def evaluate():
         print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
         
         # complexity
-        complexity_evaluator = ComplexityEvaluator(supabase, llm, generation_id, class_id)
+        complexity_evaluator = ComplexityEvaluator(supabase, llm, generation_id)
         print("Complexity evaluator created")
         complexity_explanation, complexity_score = complexity_evaluator.evaluate_complexity()
         print(f"Complexity score and explanation calculated: Score: {complexity_score}, Explanation: {complexity_explanation}")
@@ -203,4 +211,7 @@ def evaluate():
 
 if __name__ == "__main__":
     print("Server starting up...")
-    app.run(host='0.0.0.0', port=5000, debug=False)  # Set debug to False
+    if os.getenv('DOCKER_ENV'):
+        app.run(host='0.0.0.0', port=5000, debug=False) # Set debug to False
+    else:
+        app.run(host='0.0.0.0', port=8000, debug=False)  # Set debug to False

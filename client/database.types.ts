@@ -99,6 +99,100 @@ export type Database = {
           },
         ]
       }
+      evaluations: {
+        Row: {
+          accuracy: number
+          accuracy_explanation: string
+          adherence: number
+          adherence_explanation: string
+          certainty: number
+          certainty_explanation: string
+          clarity: number
+          clarity_explanation: string
+          complexity: number
+          complexity_explanation: string
+          created_at: string
+          generation: string
+          id: string
+          novelty: number
+          novelty_explanation: string
+        }
+        Insert: {
+          accuracy?: number
+          accuracy_explanation?: string
+          adherence?: number
+          adherence_explanation?: string
+          certainty?: number
+          certainty_explanation?: string
+          clarity?: number
+          clarity_explanation?: string
+          complexity?: number
+          complexity_explanation?: string
+          created_at?: string
+          generation: string
+          id?: string
+          novelty?: number
+          novelty_explanation?: string
+        }
+        Update: {
+          accuracy?: number
+          accuracy_explanation?: string
+          adherence?: number
+          adherence_explanation?: string
+          certainty?: number
+          certainty_explanation?: string
+          clarity?: number
+          clarity_explanation?: string
+          complexity?: number
+          complexity_explanation?: string
+          created_at?: string
+          generation?: string
+          id?: string
+          novelty?: number
+          novelty_explanation?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluations_generation_fkey"
+            columns: ["generation"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      examples: {
+        Row: {
+          created_at: string
+          generation: string | null
+          id: string
+          input: string
+          output: string
+        }
+        Insert: {
+          created_at?: string
+          generation?: string | null
+          id?: string
+          input: string
+          output: string
+        }
+        Update: {
+          created_at?: string
+          generation?: string | null
+          id?: string
+          input?: string
+          output?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "logs_generation_fkey"
+            columns: ["generation"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedback: {
         Row: {
           created_at: string
@@ -166,6 +260,7 @@ export type Database = {
       }
       generations: {
         Row: {
+          additional_info: string
           class: string
           conceptual: boolean
           created_at: string
@@ -179,11 +274,13 @@ export type Database = {
           name: string
           num_questions: number
           progress: number
+          response_url: string
           single: boolean
           topics: string[]
           type: Database["prod"]["Enums"]["generation_type"]
         }
         Insert: {
+          additional_info?: string
           class: string
           conceptual?: boolean
           created_at?: string
@@ -197,11 +294,13 @@ export type Database = {
           name?: string
           num_questions?: number
           progress?: number
+          response_url?: string
           single?: boolean
           topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
         }
         Update: {
+          additional_info?: string
           class?: string
           conceptual?: boolean
           created_at?: string
@@ -215,6 +314,7 @@ export type Database = {
           name?: string
           num_questions?: number
           progress?: number
+          response_url?: string
           single?: boolean
           topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
