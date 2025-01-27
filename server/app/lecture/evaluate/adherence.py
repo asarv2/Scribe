@@ -48,6 +48,7 @@ class adherenceEvaluator():
         self.is_conceptual = self.generation.get("conceptual", False)
         self.is_single_part = self.generation.get("single", False)
         self.questions = self.supabase.table("questions").select("question").eq("generation", generation_id).execute().data
+        self.answers = self.supabase.table("questions").select("solution").eq("generation", generation_id).execute().data
 
         self.class_title = self.supabase.table("classes").select("title").eq("id", self.class_id).single().execute().data.get("title", "No class title")
 
@@ -68,6 +69,7 @@ class adherenceEvaluator():
         
         for attempt in range(retries):
             try:
+                print(message)
                 response = self.llm_gemini_flash.invoke(message)
                 response_content = response.content if hasattr(response, 'content') else str(response)
 
@@ -152,7 +154,7 @@ class adherenceEvaluator():
 
     def _format_answer(self, question: dict, part_idx: int = None) -> str:
         """Format the answer for a question or question part"""
-        answers = question.get("answers", {})
+        answers = self.answers
         
         if part_idx is not None:
             answers = answers[part_idx] if isinstance(answers, list) else {}
@@ -225,7 +227,7 @@ class adherenceEvaluator():
         1. **Entering Variable:** In the tableau from Part A, the most negative coefficient in the Z-row is $-\\frac{1}{2}$, corresponding to $x_3$. Therefore, $x_3$ enters the basis.\\n\\n2. **Leaving Variable:** Perform the minimum ratio test:\\n\\n$\\frac{5/2}{1/2} = 5$\\n$\\frac{1/2}{1/2} = 1$\\n\\nThe minimum ratio is 1, corresponding to the $s_3$ row. Therefore, $s_3$ leaves the basis.\\n\\n3. **Pivot Operation:** The pivot element is $\\frac{1}{2}$ (in the $s_3$ row and $x_3$ column). Perform row operations to make the pivot element 1 and other elements in the $x_3$ column 0:\\n\\nNew Row 3: $2R_3$\\nNew Row 1: $R_1 - \\frac{1}{2}R_3$\\nNew Z-row: $R_Z + \\frac{1}{2}R_3$\\n\\nThis yields the updated tableau:\\n\\n$\\begin{array}{c|cccccc|c} & x_1 & x_2 & x_3 & s_1 & s_2 & s_3 & RHS \\\\\\hline x_1 & 1 & 2 & 0 & 1 & 0 & -1 & 2 \\\\ s_2 & 0 & -5 & 0 & -2 & 1 & 0 & 1 \\\\ x_3 & 0 & -1 & 1 & -3 & 0 & 2 & 1 \\\\\\hline Z & 0 & 3 & 0 & 1 & 0 & 1 & 13 \\\\\\end{array}$\\n\\nThe new BFS is $(x_1, x_2, x_3, s_1, s_2, s_3) = (2, 0, 1, 0, 1, 0)$, with $Z = 13$.\\n\\n4. **Optimality Check:** All coefficients in the Z-row are non-negative. Therefore, this solution is optimal.
         OUTPUT:
         <OUTPUT>6</OUTPUT>
-        <WHY>The generation asked for a 2x2 matrix, but the solution had a differnet amount of constraints and variables. Moreover, the solution and steps were not as clear as the other solutions.</WHY>
+        <WHY>The generation asked for a 2x2 matrix, but the solution had a different amount of constraints and variables. Moreover, the solution and steps were not as clear as the other solutions.</WHY>
         """
 
         final_prompt = f"""
