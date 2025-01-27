@@ -1,27 +1,54 @@
 # groups_processor.py
 import json
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, TypedDict, Optional
 import re
-from lecture.base_processor import BaseProcessor
+from app.services.base_processor import BaseProcessor
 from langchain_core.messages import HumanMessage
 import os
 import uuid
 
+class Term(TypedDict):
+    term: str
+    definition: str
+    lectures: Dict[str, List[int]]
+    type: str
+    figures: List[str]
+
+class Group(TypedDict):
+    group: str
+    definition: str
+    terms: Dict[str, Term]
+    subgroups: Optional[Dict[str, 'Group']]
+
+class Topic(TypedDict):
+    title: str
+    content: str
+    class_id: str
+    map_parent: Optional[str]
+    map_id: str
+    lectures: List[str]
+    figures: List[str]
+    type: str
+
 class GroupsProcessor(BaseProcessor):
     def __init__(self, 
-                 terms: Dict[str, Dict],
-                 group: str = None,
-                 depth: int = 1,
-                 max_depth: int = 2,
+                 terms: Dict[str, Term],
+                 course_title: str,
+                 course_description: str,
+                 group: Optional[str] = None,
+                 depth: int = 0,
+                 max_depth: int = 3,
                  *args, **kwargs):
         """
         Initialize the GroupsProcessor.
 
         Args:
-            terms (Dict[str, Dict]): The terms to process.
-            group (str, optional): The group to start at. If None, then start at the root group. Defaults to None.
-            depth (int, optional): The depth of the current group. Used to determine which group to start at. Ex, setting depth to 2 will initialize the GroupsProcessor at the second level of groups (subgroups). Defaults to 1.
-            max_depth (int, optional): The maximum depth to process. Defaults to 2.
+            terms (Dict[str, Term]): The terms to process.
+            course_title (str): The title of the course.
+            course_description (str): The description of the course.
+            group (Optional[str], optional): The group to start at. If None, then start at the root group. Defaults to None.
+            depth (int, optional): The depth of the current group. Used to determine which group to start at. Ex, setting depth to 2 will initialize the GroupsProcessor at the second level of groups (subgroups). Defaults to 0.
+            max_depth (int, optional): The maximum depth to process. Defaults to 3.
 
         Raises:
             ValueError: If the depth is greater than the max depth.
@@ -29,6 +56,8 @@ class GroupsProcessor(BaseProcessor):
         """
         super().__init__(*args, **kwargs)
         self.terms = terms
+        self.course_title = course_title
+        self.course_description = course_description
         self.group = group if group else self.course_title
         if depth > max_depth:
             raise ValueError("Depth cannot be greater than max depth")
@@ -83,13 +112,12 @@ class GroupsProcessor(BaseProcessor):
         else:
             self.groups = {}
 
-
-    def generate_hierarchy(self, pointer_group: str = None) -> str:
+    def generate_hierarchy(self, pointer_group: Optional[str] = None) -> str:
         """
         Generate the hierarchy of groups as an indented string.
         
         Args:
-            pointer_group (str, optional): The group name where to show "(YOU ARE HERE)". 
+            pointer_group (Optional[str], optional): The group name where to show "(YOU ARE HERE)". 
                 If None, no pointer is shown. Defaults to None.
         
         Returns:
@@ -121,34 +149,28 @@ class GroupsProcessor(BaseProcessor):
         
         return "\n".join(hierarchy)
     
-    def generate_groups(self, batch_size: int = None) -> List[str]:
+    async def generate_groups(self) -> List[str]:
         """
         Generate groups by processing terms in batches. If batch size is None, then process all terms at once.
         
-        Args:
-            category (str): The category to process
-            batch_size (int): Number of terms to process in each batch
-            
         Returns:
             List[str]: Combined raw groups from all batches
         """
         terms = list(self.terms.keys())
-        batches = [terms[i:i + batch_size] for i in range(0, len(terms), batch_size)] if batch_size else [terms]
-        all_raw_groups = []
+        if len(terms) < 3:
+            return []
         
-        for i, batch in enumerate(batches):
-            terms_str = "TERMS: " + ', '.join(batch)
-            hierarchy_str = "HIERARCHY: " + self.generate_hierarchy(pointer_group=self.group)
-            prompt = self.create_groups_prompt + terms_str + hierarchy_str + "\nOUTPUT: "
-            try:
-                batch_results = self.robust_generate(HumanMessage(content=[{"type": "text", "text": prompt}]))
-                all_raw_groups.extend(batch_results.split('\n'))
-            except Exception as e:
-                print(f"Error processing batch {i}: {e}")
-                continue
-        
-        return all_raw_groups
-    
+        terms_str = "TERMS: " + ", ".join(terms)
+        hierarchy_str = "HIERARCHY:\n" + self.generate_hierarchy(self.group)
+        prompt = f"{self.create_groups_prompt}\n\n{terms_str}\n\n{hierarchy_str}\nOUTPUT: "
+
+        try:
+            message = HumanMessage(content=prompt)
+            result = await self.robust_generate(message)
+            return [line for line in result.split("\n") if line.strip()]
+        except Exception as e:
+            print("Error generating groups:", str(e))
+            return []
     
     def clean_generated_groups(self, generated_groups: List[str]) -> Tuple[List[str], List[str], List[str]]:
         """
@@ -180,14 +202,11 @@ class GroupsProcessor(BaseProcessor):
                     definitions.append(sections[1].strip())
         return groups, formatted_groups, definitions
     
-    def process_batch(self, 
-                      terms: List[str], 
-                      groups: List[str],
-                      batch_index: int) -> str:
+    async def process_batch(self, terms: List[str], groups: List[str], batch_index: int) -> str:
         """
         Process a batch of terms and generate groups.
         """
-        print(f"********** Processing batch {batch_index + 1} **********")
+        print(f"Processing batch {batch_index + 1}")
         
         # Format groups for prompt
         groups_prompt = "\n".join(f"[{group}]-[GROUP {idx + 1}]" for idx, group in enumerate(groups))
@@ -195,10 +214,10 @@ class GroupsProcessor(BaseProcessor):
         # Generate group assignments
         message = HumanMessage(content=[
             {"type": "text", "text": self.group_terms_prompt},
-            {"type": "text", "text": f"Use the following groups to decide which group each of the following terms belong to: GROUPS: {groups_prompt}\n\nTERMS: {terms}\nOUTPUT: "}
+            {"type": "text", "text": f"Use the following groups to decide which group each of the following terms belong to:\nGROUPS: {groups_prompt}\n\nTERMS: {', '.join(terms)}\nOUTPUT: "}
         ])
         
-        return self.robust_generate(message)
+        return await self.robust_generate(message)
     
     def clean_result(self, result: str, terms: List[str], all_groups: List[str], formatted_groups: List[str], definitions: List[str]):
         """
@@ -281,59 +300,7 @@ class GroupsProcessor(BaseProcessor):
         ungrouped_terms = [term for term in terms if term not in grouped_terms]
         print("Could not group terms: ", ungrouped_terms)
 
-    def process_groups(self,
-                      batch_size = None) -> Dict[str, List[str]]:
-        """
-        Process terms, extract content in batches, and generates groups.
-        
-        Args:
-            batch_size: the number of terms to process in each batch. If None, then process all terms at once.
-        """
-        if len(self.terms) < 3:  # Base case: not enough terms to group
-            return {}
-        
-        print(f"--------------- Processing groups at depth {self.depth}---------------")
-        
-        # Generate and process initial groups
-        raw_generated_groups = self.generate_groups(batch_size)
-        generated_groups, formatted_groups, definitions = self.clean_generated_groups(raw_generated_groups)
-        print("Generated groups: ", generated_groups)
-
-        terms = list(self.terms.keys())
-        
-        if batch_size is None:
-            # Process all terms at once
-            try:
-                result = self.process_batch(terms, generated_groups, 0)
-                self.clean_result(result, terms, generated_groups, formatted_groups, definitions)
-            except Exception as e:
-                print(f"Error processing groups: {e}")
-        else:
-            # Process in batches
-            for i in range(0, len(terms), batch_size):
-                batch = terms[i:i + batch_size]
-                try:
-                    result = self.process_batch(batch, generated_groups, i // batch_size)
-                    batch_groups = self.clean_result(result, batch, generated_groups, formatted_groups, definitions)
-                    # Merge batch results into current_groups
-                    for group_name, group_data in batch_groups.items():
-                        if group_name in self.groups:
-                            self.groups[group_name]["terms"].update(group_data["terms"])
-                        else:
-                            self.groups[group_name] = group_data
-                except Exception as e:
-                    print(f"Error processing batch {i // batch_size}: {e}")
-
-        # Save results for current depth
-        self.save_groups_json(self.json_output_file)
-        self.save_groups_text(self.text_output_file)
-        
-        # Process subgroups recursively
-        self._process_recursive_groups()
-        
-        return self.groups
-
-    def _process_recursive_groups(self) -> Dict[str, Dict]:
+    async def process_recursive_groups(self) -> None:
         """
         Process all subgroups recursively and return combined results.
         Returns a dictionary of all subgroups organized by their parent group.
@@ -341,20 +308,22 @@ class GroupsProcessor(BaseProcessor):
         if self.depth >= self.max_depth:  # Base case: max depth reached
             return
     
-        for group_name, group_data in self.groups.items():
+        for group_name, group_data in list(self.groups.items()):
             if len(group_data["terms"]) >= 3:
                 print(f"Processing subgroup {group_name} at depth {self.depth + 1}")
                 # Create new processor for subgroup
                 subgroup_processor = GroupsProcessor(
-                    group=group_name,
                     terms=group_data["terms"],
+                    course_title=self.course_title,
+                    course_description=self.course_description,
+                    group=group_name,
                     depth=self.depth + 1,
                     max_depth=self.max_depth,
                     class_id=self.class_id,
                     output_dir=self.output_dir,
                     regenerate=self.regenerate,
                 )
-                group_subgroups = subgroup_processor.process_groups()
+                group_subgroups = await subgroup_processor.process_groups()
                 
                 if group_subgroups:  # Only process if subgroups were created
                     # Keep track of which terms were successfully grouped into subgroups
@@ -519,3 +488,101 @@ class GroupsProcessor(BaseProcessor):
         # upload to supabase
         self.supabase.table("topics").insert(all_topics).execute()
         print(f"Generated {len(all_topics)} topics for Supabase insertion")
+
+    async def process_groups(self) -> Dict[str, Group]:
+        """
+        Process terms, extract content in batches, and generates groups.
+        
+        Returns:
+            Dict[str, Group]: The complete group hierarchy
+        """
+        if len(self.terms) < 3:  # Base case: not enough terms to group
+            return {}
+        
+        print(f"--------------- Processing groups at depth {self.depth}---------------")
+        
+        # Generate and process initial groups
+        raw_generated_groups = await self.generate_groups()
+        generated_groups, formatted_groups, definitions = self.clean_generated_groups(raw_generated_groups)
+        print("Generated groups: ", generated_groups)
+
+        terms = list(self.terms.keys())
+        
+        result = await self.process_batch(terms, generated_groups, 0)
+        self.clean_result(result, terms, generated_groups, formatted_groups, definitions)
+
+        # Process subgroups recursively
+        await self.process_recursive_groups()
+        
+        # Save results for current depth
+        self.save_groups_json(self.json_output_file)
+        self.save_groups_text(self.text_output_file)
+        
+        return self.groups
+
+    def reformat_topics(self, lecture_mapping: Dict[str, Dict], class_id: str) -> List[Topic]:
+        """Reformat groups into topics for database storage."""
+        def process_group(group_name: str, group_data: Group, parent_id: Optional[str] = None) -> List[Topic]:
+            topics = []
+            
+            # Create group topic
+            group_id = str(uuid.uuid4())
+            group_topic: Topic = {
+                "title": group_data["group"],
+                "content": group_data["definition"],
+                "class_id": class_id,
+                "map_parent": parent_id,
+                "map_id": group_id,
+                "lectures": [],  # Will be populated from terms
+                "figures": [],
+                "type": "group"
+            }
+            topics.append(group_topic)
+
+            # Process terms
+            for term_data in group_data["terms"].values():
+                term_id = str(uuid.uuid4())
+                lecture_ids = [
+                    lecture_mapping[name]["id"]
+                    for name in term_data["lectures"]
+                    if name in lecture_mapping
+                ]
+
+                term_topic: Topic = {
+                    "title": term_data["term"],
+                    "content": term_data["definition"],
+                    "class_id": class_id,
+                    "map_parent": group_id,
+                    "map_id": term_id,
+                    "lectures": lecture_ids,
+                    "figures": term_data.get("figures", []),
+                    "type": term_data.get("type", "term")
+                }
+                topics.append(term_topic)
+
+            # Process subgroups recursively
+            if "subgroups" in group_data:
+                for subgroup_name, subgroup_data in group_data["subgroups"].items():
+                    topics.extend(process_group(subgroup_name, subgroup_data, group_id))
+
+            return topics
+
+        # Create root node
+        root_id = str(uuid.uuid4())
+        root_node: Topic = {
+            "title": self.course_title,
+            "content": self.course_description,
+            "class_id": class_id,
+            "map_parent": None,
+            "map_id": root_id,
+            "lectures": [lecture['id'] for lecture in lecture_mapping.values()],
+            "figures": [],
+            "type": "group"
+        }
+
+        # Process all groups and collect topics
+        all_topics = [root_node]
+        for group_name, group_data in self.groups.items():
+            all_topics.extend(process_group(group_name, group_data, root_id))
+
+        return all_topics

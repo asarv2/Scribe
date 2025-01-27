@@ -60,7 +60,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
-        queryKey: ["documents", classId],
+        queryKey: ["lectureDocuments", classId],
         queryFn: () => getDocumentsLecture(supabase, lectures?.map(lecture => lecture.id) ?? []),
         enabled: !!lectures
     })
@@ -650,36 +650,44 @@ export default function LecturePage({ params }: { params: { classId: string } })
     };
 
     const canRetryBatching = (lecture: Lecture) => {
-        const lectureTopics = topics?.filter(topic => topic.lectures?.includes(lecture.id) && topic.map_parent !== null);
-        if (!lectureTopics || lectureTopics.length === 0) return true;
         return false
+        // Only allow retry batching if no topics exist for this lecture
+        const lectureTopics = topics?.filter(topic => 
+            topic.lectures?.includes(lecture.id) && 
+            topic.map_parent !== null
+        );
+        
+        return !lectureTopics?.length;
     }
 
     const canRetry = (lecture: Lecture) => {
-        const TIMEOUT = 150 * 1000; // 150 seconds in milliseconds
-        if (lecture.last_parse_attempt) {
-            const lastAttempt = new Date(lecture.last_parse_attempt);
-            const timeSinceLastAttempt = Date.now() - lastAttempt.getTime();
-            if (timeSinceLastAttempt > TIMEOUT && (lecture.parse_status === 'parsing' || lecture.parse_status === 'batching')) {
-                return true;
-            }
-        }
-        return false;
+        // Allow retry if status is parsing/batching/error
+        return ['parsing', 'batching', 'error'].includes(lecture.parse_status);
     }
 
     const handleRetry = async (classId: string, lecture: Lecture) => {
         try {
             setParsingLectures(prev => new Set(prev).add(lecture.id));
-            if (lecture.parse_status === 'batching' || canRetryBatching(lecture)) {
-                // If in batching state, retry the batching process
+            
+            // Update local lecture status immediately
+            queryClient.setQueryData(["lectures", classId], (oldData: Lecture[]) => {
+                return oldData.map(l => {
+                    if (l.id === lecture.id) {
+                        return {
+                            ...l,
+                            parse_status: canRetryBatching(lecture) ? 'batching' : 'parsing',
+                        };
+                    }
+                    return l;
+                });
+            });
+
+            if (canRetryBatching(lecture)) {
                 await retryBatching(lecture.id);
             } else {
-                // use the /parse-lecture function, from api
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse-lecture`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         class_id: classId,
                         lecture_id: lecture.id,
@@ -688,16 +696,29 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 });
 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`Server error (${response.status}):`, errorText);
-                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error retrying:', error);
+            
+            // Update status to error on failure
+            queryClient.setQueryData(["lectures", classId], (oldData: Lecture[]) => {
+                return oldData.map(l => {
+                    if (l.id === lecture.id) {
+                        return {
+                            ...l,
+                            parse_status: 'error',
+                            parse_error: error.message
+                        };
+                    }
+                    return l;
+                });
+            });
+
             notifications.show({
                 title: 'Error',
-                message: `Failed to retry ${lecture.parse_status === 'batching' ? 'batching' : 'parsing'}. Please try again.`,
+                message: `Failed to ${canRetryBatching(lecture) ? 'batch' : 'parse'} lecture. Please try again.`,
                 color: 'red'
             });
         } finally {
@@ -784,7 +805,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     console.log("Document change:", payload);
 
                     // Update documents in React Query cache
-                    queryClient.setQueryData(["documents", classId], (oldData: Document[] = []) => {
+                    queryClient.setQueryData(["lectureDocuments", classId], (oldData: Document[] = []) => {
                         let newData;
                         if (payload.eventType === 'INSERT') {
                             newData = [...oldData, payload.new];
@@ -852,7 +873,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     <Stack>
                         {(lectures && documents && classData) && lectures.length > 0 && lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
                             if (lecture.parse_status !== "complete" || canRetryBatching(lecture)) {
-                                const progress = getProgress(lecture.id);
+                                const progress = getProgress(lecture.id, parsingLectures.has(lecture.id));
                                 const remainingPages = lecture.pages - Math.floor((progress / 100) * lecture.pages);
                                 const estimatedSeconds = remainingPages * 4;
                                 const estimatedMinutes = Math.ceil(estimatedSeconds / 60);
@@ -872,9 +893,9 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                                     <Text size="lg" fw={500}>{lecture.name}</Text>
                                                     {canRetry(lecture) ? (
                                                         <Text size="sm" c="dimmed">
-                                                            {lecture.parse_status === 'parsing' ? 'Retry parsing. The function may have timed out.' :
-                                                                lecture.parse_status === 'batching' ? 'Retry batching. The function may have timed out.' :
-                                                                    lecture.parse_status === 'error' ? 'Retry parse. The function may have timed out.' : 'Retry parse. The function may have timed out.'}
+                                                            {lecture.parse_status === 'parsing' ? 'Retry parsing.' :
+                                                                lecture.parse_status === 'batching' ? 'Retry batching.' :
+                                                                    lecture.parse_status === 'error' ? 'Retry parse.' : 'Retry parse.'}
                                                         </Text>
                                                     ) : (
                                                         <Text size="sm" c="dimmed">
@@ -912,7 +933,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                                     )}
                                                 </Stack>
                                             </Group>
-                                            {canRetry(lecture) ?
+                                            {canRetry(lecture) ? (
                                                 <Button
                                                     variant="light"
                                                     color={lecture.parse_status === 'parsing' ? 'blue' : 'orange'}
@@ -920,24 +941,23 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                                     leftSection={<IconRefresh size={16} />}
                                                     loading={parsingLectures.has(lecture.id)}
                                                 >
-                                                    {parsingLectures.has(lecture.id) ? 'Retrying...' :
-                                                        lecture.parse_status === 'parsing' ? 'Retry Parsing' :
-                                                            lecture.parse_status === 'batching' ? 'Retry Batching' :
-                                                                !lecture.last_parse_attempt ? 'Start Parse' :
-                                                                    'Processing...'}
-                                                </Button> : <Button
+                                                    {parsingLectures.has(lecture.id) ? 'Processing...' :
+                                                     lecture.parse_status === 'error' ? 'Retry' :
+                                                     lecture.parse_status === 'batching' ? 'Retry Batching' :
+                                                     'Retry Parsing'}
+                                                </Button>
+                                            ) : (
+                                                <Button
                                                     variant="light"
                                                     color={lecture.parse_status === 'parsing' ? 'blue' : 'orange'}
-                                                    onClick={() => handleRetry(classId, lecture)}
+                                                    disabled={true}
                                                     leftSection={<IconRefresh size={16} />}
-                                                    disabled={lecture.parse_status === 'parsing' || lecture.parse_status === 'batching' || lecture.parse_status === 'idle'}
-                                                    loading={parsingLectures.has(lecture.id)}
                                                 >
-                                                    {parsingLectures.has(lecture.id) ? 'Retrying...' :
-                                                        lecture.parse_status === 'parsing' ? 'Parsing...' :
-                                                            lecture.parse_status === 'batching' ? 'Processing...' :
-                                                                'Retry Batching'}
-                                                </Button>}
+                                                    {lecture.parse_status === 'parsing' ? 'Parsing...' :
+                                                     lecture.parse_status === 'batching' ? 'Processing...' :
+                                                     'Processing...'}
+                                                </Button>
+                                            )}
                                         </Group>
                                     </Card>
                                 )

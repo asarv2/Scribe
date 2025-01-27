@@ -14,7 +14,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 import time
 
 class Figure:
-    def __init__(self, bbox: List[float], description: str):
+    def __init__(self, bbox: List[int], description: str):
         self.bbox = bbox
         self.description = description
 

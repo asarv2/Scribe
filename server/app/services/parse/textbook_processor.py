@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Optional, Callable, Union
 from langchain_core.messages import AIMessage, HumanMessage
 import base64
 import re
-from app.lecture.base_processor import BaseProcessor, Figure, CleanedResponse
+from app.services.base_processor import BaseProcessor, Figure, CleanedResponse
 
 class TextbookProcessor(BaseProcessor):
     def __init__(self, course_title: str, handwritten: bool = False):

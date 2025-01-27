@@ -1,0 +1,44 @@
+from typing import List, Dict, Callable, Awaitable
+from app.services.base_processor import ContentType
+from app.services.summary.base_summary_processor import BaseSummaryProcessor, Summary, SummaryContent
+
+class LectureSummaryProcessor(BaseSummaryProcessor):
+    def __init__(
+        self,
+        course_title: str,
+        lecture_names: List[str],
+        lectures: SummaryContent
+    ):
+        super().__init__(course_title, ContentType.LECTURE)
+        self.lectures = lectures
+        self.lecture_names = lecture_names
+
+    async def process_summary(
+        self,
+        all_lectures: List[Dict[str, str]],
+        num_batches: int,
+        on_batch_complete: Callable[[int, Summary], Awaitable[None]]
+    ) -> Summary:
+        """
+        Process the lecture content in batches and generate summaries.
+        
+        Args:
+            all_lectures: List of lecture dictionaries with note_number and id
+            num_batches: Number of batches to split the content into
+            on_batch_complete: Callback function to execute after each batch
+        """
+        print(f"Generating summary for {', '.join(self.lecture_names)}")
+        
+        names = ", ".join(self.lecture_names)
+        batches = self.split_content_into_batches(self.lectures['content'], num_batches)
+        
+        for i, batch in enumerate(batches):
+            print(f"Processing batch {i + 1} of {len(batches)}")
+            result = await self.process_batch(names, batch)
+            print(f"Batch {i + 1} result:", result)
+            self.clean_result(result, names, all_lectures)
+            
+            # Call the batch completion callback
+            await on_batch_complete(i + 1, self.summary[names])
+
+        return self.summary[names]

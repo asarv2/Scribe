@@ -1,10 +1,30 @@
 # terms_processor.py
 import re
-from typing import Dict, List
+from typing import Dict, List, TypedDict, Optional
 import os
 import json
 from langchain_core.messages import HumanMessage
-from lecture.base_processor import BaseProcessor
+from app.services.base_processor import BaseProcessor
+
+class Figure(TypedDict):
+    id: str
+    document: str
+    y_min: float
+    x_min: float
+    y_max: float
+    x_max: float
+    description: str
+
+class LectureContent(TypedDict):
+    figures: Dict[int, List[Figure]]
+    content: str
+
+class Term(TypedDict):
+    term: str
+    definition: str
+    lectures: Dict[str, List[int]]
+    type: str
+    figures: List[str]
 
 class TermsProcessor(BaseProcessor):
     def __init__(self, *args, **kwargs):

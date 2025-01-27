@@ -12,3 +12,4 @@ langchain-google-genai==2.0.9
 moviepy==1.0.3
 Pillow==10.2.0
 pylatex==1.4.2
+requests>=2.31.0

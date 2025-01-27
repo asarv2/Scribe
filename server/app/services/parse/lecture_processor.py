@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional, Callable, Union
 from langchain_core.messages import AIMessage, HumanMessage
 import base64
-from app.lecture.base_processor import BaseProcessor, Figure, CleanedResponse
+from app.services.base_processor import BaseProcessor, Figure, CleanedResponse
 
 class LectureProcessor(BaseProcessor):
     def __init__(self, course_title: str, handwritten: bool = False):
@@ -11,11 +11,11 @@ class LectureProcessor(BaseProcessor):
         self.notes: Dict[str, Dict[int, CleanedResponse]] = {}
         self.conversation_history: List[Union[HumanMessage, AIMessage]] = []
 
-    def parse_bbox(self, bbox: str) -> List[float]:
+    def parse_bbox(self, bbox: str) -> List[int]:
         bbox = bbox.strip().replace('[', '').replace(']', '')
         try:
             ymin, xmin, ymax, xmax = map(
-                lambda x: float(x.strip()),
+                lambda x: int(x.strip()),
                 bbox.split(',')
             )
             return [ymin, xmin, ymax, xmax]
