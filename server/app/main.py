@@ -133,8 +133,8 @@ def evaluate():
     
     try:
         # creating supabase client
-        supabase_url = os.getenv("SUPABASE_URL")
-        supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
+        supabase_url = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        supabase_private_key = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
         opts = ClientOptions().replace(schema="prod")
         supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
         print("Supabase client created")
