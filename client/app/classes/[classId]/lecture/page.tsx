@@ -202,7 +202,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
         console.log("Pages processed:", pages);
 
         // Call the parse-lecture endpoint
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse-lecture`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -609,9 +609,17 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     originalType: file.type
                 });
     
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse-video`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/video`, {
                     method: "POST",
-                    body: formData,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        class_id: classId,
+                        lecture_id: lecture.id,
+                        video_chunk: videoChunk,
+                        audio_chunk: audioChunk
+                    }),
                 });
     
                 if (!response.ok) {
@@ -650,7 +658,6 @@ export default function LecturePage({ params }: { params: { classId: string } })
     };
 
     const canRetryBatching = (lecture: Lecture) => {
-        return false
         // Only allow retry batching if no topics exist for this lecture
         const lectureTopics = topics?.filter(topic => 
             topic.lectures?.includes(lecture.id) && 
@@ -685,7 +692,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
             if (canRetryBatching(lecture)) {
                 await retryBatching(lecture.id);
             } else {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse-lecture`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -732,11 +739,14 @@ export default function LecturePage({ params }: { params: { classId: string } })
 
     const retryBatching = async (lectureId: string) => {
         try {
-            const response = await supabase.functions.invoke('batch-topics', {
-                body: {
+            // call the /batch endpoint
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/batch/process`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
                     class_id: classId,
                     lecture_id: lectureId
-                }
+                })
             });
             console.log("Batch topics function response:", response);
         } catch (error) {
@@ -803,38 +813,23 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 },
                 (payload) => {
                     console.log("Document change:", payload);
-
-                    // Update documents in React Query cache
-                    queryClient.setQueryData(["lectureDocuments", classId], (oldData: Document[] = []) => {
-                        let newData;
-                        if (payload.eventType === 'INSERT') {
-                            newData = [...oldData, payload.new];
-                        } else if (payload.eventType === 'DELETE') {
-                            newData = oldData.filter(doc => doc.id !== payload.old.id);
-                        } else if (payload.eventType === 'UPDATE') {
-                            newData = oldData.map(doc =>
-                                doc.id === payload.new.id ? payload.new : doc
-                            );
-                        } else {
-                            newData = oldData;
-                        }
-                        const newDocument = payload.new as Document;
-
-                        // Update progress for the affected lecture
-                        const lectureId = newDocument.lecture;
-                        if (lectureId) {
-                            const lecture = lectures?.find(l => l.id === lectureId);
-                            if (lecture) {
-                                const progress = (newData.filter(doc => doc.lecture === lectureId).length / lecture.pages) * 100;
-                                setProgressMap(prev => ({
-                                    ...prev,
-                                    [lectureId]: progress
-                                }));
-                            }
-                        }
-
-                        return newData;
+                    
+                    // Instead of manually updating cache, invalidate the queries
+                    queryClient.invalidateQueries({
+                        queryKey: ["lectureDocuments", classId]
                     });
+                    
+                    // If you need immediate progress updates, you can still update the progress map
+                    const newDocument = payload.new as Document;
+                    if (newDocument?.lecture) {
+                        const lecture = lectures?.find(l => l.id === newDocument.lecture);
+                        if (lecture) {
+                            // Trigger a fresh progress calculation
+                            queryClient.invalidateQueries({
+                                queryKey: ["lectureDocuments", classId]
+                            });
+                        }
+                    }
                 }
             )
             .subscribe();

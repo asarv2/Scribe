@@ -9,7 +9,7 @@ from app.extensions import supabase
 
 batch_bp = Blueprint('batch', __name__)
 
-@batch_bp.route('/', methods=['POST'])
+@batch_bp.route('/process', methods=['POST'])
 async def batch_topics(class_id=None, lecture_id=None):
     """
     Batch topics and return the documents.
@@ -159,7 +159,9 @@ async def batch_topics(class_id=None, lecture_id=None):
         groups_processor = GroupsProcessor(
             all_terms,
             class_title,
-            class_description
+            class_description,
+            depth=1,
+            max_depth=2
         )
         groups_results = await groups_processor.process_groups()
         print("Groups processing complete, results:", groups_results)
@@ -169,7 +171,7 @@ async def batch_topics(class_id=None, lecture_id=None):
         print("Topics:", topics)
 
         # Insert topics into database
-        topics_response = supabase.table("topics").insert(topics).select("map").execute()
+        topics_response = supabase.table("topics").insert(topics).execute()
         topics_inserted = topics_response.data
         print("Topics inserted:", topics_inserted)
 
@@ -180,10 +182,11 @@ async def batch_topics(class_id=None, lecture_id=None):
             }).eq("id", class_id).execute()
 
         # Update lecture status to complete
-        supabase.table("lectures").update({
+        lecture_response = supabase.table("lectures").update({
             "parse_status": "complete",
             "parse_error": None
         }).eq("id", lecture_id).execute()
+        print("Lecture response:", lecture_response)
 
         return jsonify({"topics": topics}), 200
 

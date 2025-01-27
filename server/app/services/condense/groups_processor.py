@@ -1,6 +1,6 @@
 # groups_processor.py
 import json
-from typing import Dict, List, Tuple, TypedDict, Optional
+from typing import Dict, List, Tuple, TypedDict, Optional, Set
 import re
 from app.services.base_processor import BaseProcessor
 from langchain_core.messages import HumanMessage
@@ -23,12 +23,17 @@ class Group(TypedDict):
 class Topic(TypedDict):
     title: str
     content: str
+    map: str
     class_id: str
     map_parent: Optional[str]
     map_id: str
     lectures: List[str]
     figures: List[str]
     type: str
+
+class LectureMapping(TypedDict):
+    id: str
+    note_number: int
 
 class GroupsProcessor(BaseProcessor):
     def __init__(self, 
@@ -37,7 +42,7 @@ class GroupsProcessor(BaseProcessor):
                  course_description: str,
                  group: Optional[str] = None,
                  depth: int = 0,
-                 max_depth: int = 3,
+                 max_depth: int = 2,
                  *args, **kwargs):
         """
         Initialize the GroupsProcessor.
@@ -48,7 +53,7 @@ class GroupsProcessor(BaseProcessor):
             course_description (str): The description of the course.
             group (Optional[str], optional): The group to start at. If None, then start at the root group. Defaults to None.
             depth (int, optional): The depth of the current group. Used to determine which group to start at. Ex, setting depth to 2 will initialize the GroupsProcessor at the second level of groups (subgroups). Defaults to 0.
-            max_depth (int, optional): The maximum depth to process. Defaults to 3.
+            max_depth (int, optional): The maximum depth to process. Defaults to 2.
 
         Raises:
             ValueError: If the depth is greater than the max depth.
@@ -65,12 +70,8 @@ class GroupsProcessor(BaseProcessor):
             raise ValueError("Depth and max depth cannot be less than 1")
         self.depth = depth
         self.max_depth = max_depth
-        self.summary_type = ("sub" * (depth - 1)) + "groups"
-        
-        # Generate timestamp for output file
-        os.makedirs(os.path.join(self.output_dir, self.course_code, self.summary_type), exist_ok=True)
-        self.json_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.json")
-        self.text_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.txt")
+
+        self.groups: Dict[str, Group] = {}  # Initialize empty groups dictionary
         
         # prompts
         self.create_groups_prompt = f"""Your objective is to condense a large list of terms into a smaller list of groups, where each group is a more specific version of a term. You will also be given a hierarchy of what groups have already been created, so you do not recreate them. This is in the context of the course {self.course_title}.
@@ -104,13 +105,6 @@ class GroupsProcessor(BaseProcessor):
         Now it's your turn. Extract the most important topics from the following terms and hierarchy. """
         
         self.group_terms_prompt = f"Your objective is to decide which group each of the following Key Terms/Problem Types/Algorithm Solutions belong to, in the context of the course {self.course_title}. If there is only one group that the term is a part of, respond in the following format: <key term>: <GROUP number>. Here is an example to assist you: 'GROUPS: [simplex method]-[GROUP 1]\n[linear programming applications]-[GROUP 2]\n[network flow]-[GROUP 3]\n\nTERMS: primal problem, dual problem, network, node, knapsack problem, maximum weight matching\n\nOUTPUT: <primal problem>: <GROUP 1>\n\n<dual problem>: <GROUP 2>\n\n<network>: <GROUP 3>\n\n<node>: <GROUP 3>\n\n<knapsack problem>: <GROUP 2>\n\n<maximum weight matching>: <GROUP 3>'. For terms that are a part of multiple groups, respond in the following format: <key term>: <GROUP number><GROUP number>. Here is another example to assist you: 'GROUPS: [duality]-[GROUP 1]\n[convexity]-[GROUP 2]\n[network applications]-[GROUP 3]\n\nTERMS: dual problem, weak duality theorem, convex hull, farkas lemma, bellmans equation, dummy node\n\nOUTPUT: <dual problem>: <GROUP 1><GROUP 3>\n\n<weak duality theorem>: <GROUP 1><GROUP 2>\n\n<convex hull>: <GROUP 2>\n\n<farkas lemma>: <GROUP 1>\n\n<bellmans equation>: <GROUP 1>\n\n<dummy node>: <GROUP 1><GROUP 3>'."
-        
-        # load the previous groups if they exist
-        if os.path.exists(self.json_output_file) and not self.regenerate:
-            with open(self.json_output_file, "r") as file:
-                self.groups = json.load(file)
-        else:
-            self.groups = {}
 
     def generate_hierarchy(self, pointer_group: Optional[str] = None) -> str:
         """
@@ -319,9 +313,6 @@ class GroupsProcessor(BaseProcessor):
                     group=group_name,
                     depth=self.depth + 1,
                     max_depth=self.max_depth,
-                    class_id=self.class_id,
-                    output_dir=self.output_dir,
-                    regenerate=self.regenerate,
                 )
                 group_subgroups = await subgroup_processor.process_groups()
                 
@@ -341,154 +332,6 @@ class GroupsProcessor(BaseProcessor):
                     # Add the subgroups to the current group
                     self.groups[group_name]["subgroups"] = group_subgroups
         
-        self.save_groups_json(os.path.join(self.output_dir, self.course_code, "sub" + self.summary_type, "summary.json"))
-        self.save_groups_text(os.path.join(self.output_dir, self.course_code, "sub" + self.summary_type, "summary.txt"))
-        
-    def save_groups_json(self, file_path: str):
-        """Save groups to JSON, including all subgroups"""
-        with open(file_path, "w") as file:
-            json.dump(self.groups, file, indent=4)
-    
-    def save_groups_text(self, file_path: str):
-        """Save groups to text file, including all subgroups"""
-        def write_groups(groups, file, level=0):
-            indent = "  " * level
-            for group_name, group_data in groups.items():
-                # Handle different group data structures
-                if isinstance(group_data, dict):
-                    # If it's a group with metadata
-                    if 'group' in group_data:
-                        group_title = group_data['group']
-                    else:
-                        group_title = group_name
-                    
-                    file.write(f"{indent}{group_title}\n")
-                    
-                    if 'subgroups' in group_data and group_data['subgroups']: # Recursively write subgroups if they exist
-                        write_groups(group_data['subgroups'], file, level + 1)
-                    elif 'terms' in group_data: # Write terms if they exist
-                        terms = group_data['terms']
-                        if isinstance(terms, dict):
-                            for term_name, term_data in terms.items():
-                                # Write term with its definition if available
-                                file.write(f"{indent}  {term_name}\n")
-                        else:
-                            file.write(f"{indent}  {terms}\n")
-                else:
-                    # If it's a simple term-definition pair
-                    file.write(f"{indent}{group_name}\n")
-        
-        try:
-            with open(file_path, "w") as file:
-                write_groups(self.groups, file)
-            print(f"Saved groups text at depth {self.depth} to {file_path}")
-        except Exception as e:
-            print(f"Error saving groups text to {file_path}: {str(e)}")
-            
-    def save_groups_supabase(self):
-        '''
-        This function is used to save the groups to supabase.
-        insert into 'topics' table. Each topic has 'title', 'content', 'class', 'map_parent', 
-        'map_id', 'lectures', 'visual', and 'type'
-        title is the group/term name
-        content is the definition of the group/term
-        class is a class variable, at self.class_id
-        map_id is a randomly generated uuid for each of the topics
-        map_parent is the map id of the parent map
-        lectures is the list of lecture ids that correspond, which comes from each term's 'lectures' 
-        field, mapping to the lecture id in supabase
-        visual is the latex representation of a group/term. (for now we may do the image link, 90%)
-        type is the type of the topic, which is 'group', 'term', 'problem', or 'algorithm'
-        '''
-        
-        # Create a mapping from lecture names to ids
-        lecture_mapping = self.supabase.table("lectures").select("id, name").eq("class", self.class_id).execute().data
-        name_to_id = {lecture['name']: lecture['id'] for lecture in lecture_mapping}
-        
-        def create_topic_entry(title, content, parent_id=None, lectures=None, visuals=None, topic_type='group'):
-            """Helper function to create a standardized topic entry"""
-            return {
-                "title": title,
-                "content": content,
-                "class": self.class_id,  # Assuming self.class_id exists
-                "map_parent": parent_id,
-                "map_id": str(uuid.uuid4()),
-                "lectures": lectures or [],
-                "visuals": visuals or [],
-                "type": topic_type
-            }
-
-        def process_group(group_name, group_data, parent_id=None):
-            """Recursively process groups and their terms"""
-            topics = []
-            
-            # Create entry for the group itself
-            group_entry = create_topic_entry(
-                title=group_data.get("group", group_name),
-                content=group_data.get("definition", ""),
-                parent_id=parent_id,
-                topic_type='group'  # Groups are always type 'group'
-            )
-            topics.append(group_entry)
-            
-            # Process all terms in this group
-            for term_data in group_data.get("terms", {}).values():
-                # Convert lecture names to ids using the mapping
-                lecture_names = list(term_data.get("lectures", {}).keys())
-                lecture_ids = [name_to_id[name] for name in lecture_names if name in name_to_id]
-                
-                # Get the term type from the term data, defaulting to 'term' if not specified
-                term_type = term_data.get("type", "term")
-                if term_type == 'Key Terms':
-                    term_type = 'term'
-                elif term_type == 'Problem Types':
-                    term_type = 'problem'
-                elif term_type == 'Algorithm Solutions':
-                    term_type = 'algorithm'
-                    
-                visuals = term_data.get("visuals", [])
-                visuals = [os.path.join(self.supabase_url, "storage", "v1", "object", "public", "slides", self.course_code, "lectures", lecture_names[0], "figures", visual) for visual in visuals]
-                
-                term_entry = create_topic_entry(
-                    title=term_data.get("term", ""),
-                    content=term_data.get("definition", ""),
-                    parent_id=group_entry["map_id"],
-                    lectures=lecture_ids,
-                    visuals=visuals,
-                    topic_type=term_type
-                )
-                topics.append(term_entry)
-            
-            # Recursively process subgroups
-            for subgroup_name, subgroup_data in group_data.get("subgroups", {}).items():
-                # Recursively process each subgroup with the current group's map_id as parent
-                subgroup_topics = process_group(subgroup_name, subgroup_data, group_entry["map_id"])
-                topics.extend(subgroup_topics)
-            
-            return topics
-
-        # Create root node for course
-        root_id = str(uuid.uuid4())
-        root_node = {
-            "title": self.course_title,
-            "content": self.course_description,
-            "class": self.class_id,
-            "map_parent": None,
-            "map_id": root_id,
-            "lectures": [lecture['id'] for lecture in lecture_mapping],  # Include all lectures
-            "visuals": [],
-            "type": "group"
-        }
-        
-        # Process all groups and collect topics
-        all_topics = [root_node]  # Start with root node
-        for group_name, group_data in self.groups.items():
-            all_topics.extend(process_group(group_name, group_data, root_id))  # Pass root_id as parent
-        
-        # upload to supabase
-        self.supabase.table("topics").insert(all_topics).execute()
-        print(f"Generated {len(all_topics)} topics for Supabase insertion")
-
     async def process_groups(self) -> Dict[str, Group]:
         """
         Process terms, extract content in batches, and generates groups.
@@ -514,68 +357,110 @@ class GroupsProcessor(BaseProcessor):
         # Process subgroups recursively
         await self.process_recursive_groups()
         
-        # Save results for current depth
-        self.save_groups_json(self.json_output_file)
-        self.save_groups_text(self.text_output_file)
-        
         return self.groups
 
-    def reformat_topics(self, lecture_mapping: Dict[str, Dict], class_id: str) -> List[Topic]:
+    def reformat_topics(self, lecture_mapping: Dict[str, LectureMapping], class_id: str) -> List[Topic]:
         """Reformat groups into topics for database storage."""
-        def process_group(group_name: str, group_data: Group, parent_id: Optional[str] = None) -> List[Topic]:
-            topics = []
-            
-            # Create group topic
-            group_id = str(uuid.uuid4())
-            group_topic: Topic = {
-                "title": group_data["group"],
-                "content": group_data["definition"],
-                "class_id": class_id,
-                "map_parent": parent_id,
-                "map_id": group_id,
-                "lectures": [],  # Will be populated from terms
-                "figures": [],
-                "type": "group"
+        map_id = str(uuid.uuid4())
+
+        def create_topic_entry(
+            title: str,
+            content: str,
+            map_id: str,
+            map_parent: Optional[str],
+            lectures: List[str],
+            figures: List[str],
+            type_: str
+        ) -> Topic:
+            return {
+                "title": title,
+                "content": content,
+                "map": map_id,
+                "class": class_id,
+                "map_parent": map_parent,
+                "map_id": str(uuid.uuid4()),
+                "lectures": lectures,
+                "figures": figures,
+                "type": type_
             }
-            topics.append(group_topic)
 
-            # Process terms
-            for term_data in group_data["terms"].values():
-                term_id = str(uuid.uuid4())
-                lecture_ids = [
-                    lecture_mapping[name]["id"]
-                    for name in term_data["lectures"]
-                    if name in lecture_mapping
-                ]
+        def process_group(
+            group_name: str,
+            group_data: Group,
+            parent_id: Optional[str] = None
+        ) -> List[Topic]:
+            topics: List[Topic] = []
 
-                term_topic: Topic = {
-                    "title": term_data["term"],
-                    "content": term_data["definition"],
-                    "class_id": class_id,
-                    "map_parent": group_id,
-                    "map_id": term_id,
-                    "lectures": lecture_ids,
-                    "figures": term_data.get("figures", []),
-                    "type": term_data.get("type", "term")
-                }
-                topics.append(term_topic)
+            if not group_data:
+                print(f"Group data is undefined for group: {group_name}")
+                return topics
 
-            # Process subgroups recursively
-            if "subgroups" in group_data:
-                for subgroup_name, subgroup_data in group_data["subgroups"].items():
-                    topics.extend(process_group(subgroup_name, subgroup_data, group_id))
+            # Create entry for the group itself
+            group_entry = create_topic_entry(
+                group_data['group'] or group_name,
+                group_data['definition'] or "",
+                map_id,
+                parent_id,
+                [],
+                [],
+                "group"
+            )
+            topics.append(group_entry)
+
+            # Process all terms in this group
+            if group_data['terms']:
+                for term_data in group_data['terms'].values():
+                    if not term_data:
+                        continue
+
+                    # Convert lecture names to ids using the mapping
+                    lecture_names = term_data['lectures'].keys()
+                    lecture_ids = [lecture_mapping[name]['id'] for name in lecture_names]
+
+                    # Get the term type from the term data
+                    term_type = term_data['type'] or "term"
+                    if term_type == "Key Terms":
+                        term_type = "term"
+                    elif term_type == "Problem Types":
+                        term_type = "problem"
+                    elif term_type == "Algorithm Solutions":
+                        term_type = "algorithm"
+
+                    term_entry = create_topic_entry(
+                        term_data['term'] or "",
+                        term_data['definition'] or "",
+                        map_id,
+                        group_entry['map_id'],
+                        lecture_ids,
+                        term_data.get('figures', []),
+                        term_type
+                    )
+                    topics.append(term_entry)
+
+            # Recursively process subgroups
+            if group_data.get('subgroups'):
+                for subgroup_name, subgroup_data in group_data['subgroups'].items():
+                    if not subgroup_data:
+                        continue
+                    subgroup_topics = process_group(
+                        subgroup_name,
+                        subgroup_data,
+                        group_entry['map_id']
+                    )
+                    topics.extend(subgroup_topics)
 
             return topics
 
-        # Create root node
+        # Create root node for course
         root_id = str(uuid.uuid4())
         root_node: Topic = {
             "title": self.course_title,
             "content": self.course_description,
-            "class_id": class_id,
+            "map": map_id,
+            "class": class_id,
             "map_parent": None,
             "map_id": root_id,
-            "lectures": [lecture['id'] for lecture in lecture_mapping.values()],
+            "lectures": [mapping['id'] for mapping in lecture_mapping.values()],
             "figures": [],
             "type": "group"
         }
@@ -583,6 +468,8 @@ class GroupsProcessor(BaseProcessor):
         # Process all groups and collect topics
         all_topics = [root_node]
         for group_name, group_data in self.groups.items():
+            if not group_data:
+                continue
             all_topics.extend(process_group(group_name, group_data, root_id))
 
         return all_topics

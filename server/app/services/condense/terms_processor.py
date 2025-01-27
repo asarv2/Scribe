@@ -1,10 +1,7 @@
-# terms_processor.py
-import re
 from typing import Dict, List, TypedDict, Optional
-import os
-import json
-from langchain_core.messages import HumanMessage
 from app.services.base_processor import BaseProcessor
+from langchain_core.messages import HumanMessage
+import re
 
 class Figure(TypedDict):
     id: str
@@ -15,47 +12,31 @@ class Figure(TypedDict):
     x_max: float
     description: str
 
-class LectureContent(TypedDict):
-    figures: Dict[int, List[Figure]]
-    content: str
-
 class Term(TypedDict):
     term: str
     definition: str
-    lectures: Dict[str, List[int]]
+    lectures: Dict[str, List[int]]  # lecture_id -> slide numbers
     type: str
     figures: List[str]
 
+class Terms(TypedDict):
+    terms: Dict[str, Term]
+
 class TermsProcessor(BaseProcessor):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.summary_type = "terms" # the name of the output directory for the terms summary
-        
-        # reading in the slides
-        lectures_folder = os.path.join(self.output_dir, self.course_code, "lectures")
-        self.slides = []
-        self.slide_names = []
-        self.figures = {}
-        for lecture_dir in sorted(os.listdir(lectures_folder)):
-            notes_path = os.path.join(lectures_folder, lecture_dir, "notes.txt")
-            self.figures[lecture_dir] = []
-            
-            if os.path.isfile(notes_path):
-                with open(notes_path, 'r') as file:
-                    self.slides.append(file.read())
-                    self.slide_names.append(lecture_dir)
-                    
-            figures_folder = os.path.join(lectures_folder, lecture_dir, "figures")
-            if os.path.isdir(figures_folder):
-                for figure_file in os.listdir(figures_folder):
-                    self.figures[lecture_dir].append(figure_file)
-        # Generate timestamp for output file
-        os.makedirs(os.path.join(self.output_dir, self.course_code, self.summary_type), exist_ok=True)
-        self.json_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.json")
-        self.text_output_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "summary.txt")
-        
-        self.processed_terms_file = os.path.join(self.output_dir, self.course_code, self.summary_type, "processed_terms.txt")
-        
+    def __init__(
+        self,
+        course_title: str,
+        lectures: Dict[str, Dict[str, Dict[int, List[Figure]]]]
+    ):
+        super().__init__()
+        self.course_title = course_title
+        self.lectures = lectures
+        self.terms: Dict[str, Term] = {}
+        self.processed_terms: List[str] = []
+        self.initialize_prompts()
+
+    def initialize_prompts(self) -> None:
+        """Initialize the prompts for different term categories"""
         self.prompts = {
         "Key Terms": f"""Extract the key terms from the following slides and provide a clear and concise definition for each one.
         
@@ -111,141 +92,109 @@ class TermsProcessor(BaseProcessor):
         
         Here is an example: 'Strong Duality: This theorem states that the optimal objective function values of the primal and dual problems are equal.<SLIDE 2>'. If citing multiple slides, include the slide numbers at the end of the term. Here is another example: 'Caratheodory's Theorem: This theorem states that any point in the convex hull of a set in Rm can be expressed as a convex combination of at most m+1 points. This significantly reduces the computational complexity of algorithms dealing with convex hulls, as it limits the number of points that need to be considered.<SLIDE 8><SLIDE 9>'."""
         }
-        # check if summary.json exists
-        if os.path.exists(self.json_output_file) and not self.regenerate:
-            with open(self.json_output_file, "r") as file:
-                self.terms = json.load(file)
-        else:
-            self.terms = {}
-            
-        if os.path.exists(self.processed_terms_file) and not self.regenerate:
-            with open(self.processed_terms_file, "r") as file:
-                self.processed_terms = file.read().splitlines()
-        else:
-            self.processed_terms = []
-        
-    def process_batch(self, 
-                      slides: List[str], 
-                      category: str,
-                      batch_index: int) -> str:
-        """
-        Process a batch of slides and generate terms.
-        """
+
+    async def process_batch(
+        self,
+        lecture_content: str,
+        category: str,
+        batch_index: int
+    ) -> str:
+        """Process a batch of content for term extraction"""
         print(f"Processing batch {batch_index + 1} for {category}")
-        combined_text = "\n".join(slides)
         message = HumanMessage(content=[
             {"type": "text", "text": self.prompts[category]},
-            {"type": "text", "text": "The following terms have already been generated. Do not repeat them: " + ", ".join(self.terms.keys())},
-            {"type": "text", "text": combined_text},
+            {
+                "type": "text",
+                "text": "The following terms have already been generated. Do not repeat them: " +
+                    ", ".join(self.terms.keys())
+            },
+            {"type": "text", "text": lecture_content}
         ])
-        return self.robust_generate(message)
-        
-    def clean_result(self, result: str, lecture_name: str, category: str):
-        """
-        Clean up the result by getting it in the form of {
-            "cleaned_term_name" : {
-                    "term": "term",
-                    "definition": "definition",
-                    "lectures": {
-                        "lecture_name": [1, 2, 3, e.t.c.] # list of slides
-                    }
-                    "type": "concept/problem/algorithm"
-                    "visuals": ["figure1.png", "figure2.png", "figure3.png", e.t.c.] # list of names of figure files
-                }  
-            }
-            
-        }
-        """
-        terms_added = []
-        for line in result.splitlines():
-            if ":" in line:
-                try:
-                    formatted_term, definition_with_slides = line.split(":", 1)
-                    term = formatted_term.strip().lower().strip("*")
-                    term = re.sub(r'\([^)]*\)', '', term).strip()
-                    
-                    # Extract slides more carefully
-                    slides = []
-                    if "<SLIDE" in definition_with_slides:
-                        definition = definition_with_slides.split("<SLIDE")[0].strip()
-                        # Extract slide numbers using regex
-                        slide_matches = re.findall(r'<SLIDE\s+(\d+)>', definition_with_slides)
-                        slides = [int(num) for num in slide_matches if num.isdigit()]
-                    else:
-                        definition = definition_with_slides.strip()
-                        slides = []  # No slides referenced
-                        
-                    visuals = [] # find visuals based on slides. Check the 
-                    for slide in slides:
-                        for figure in self.figures[lecture_name]:
-                            if int(figure.split(".")[0]) == slide:
-                                visuals.append(figure)
-                    
-                    if term in self.terms:
-                        lectures = self.terms[term]["lectures"]
-                        if lecture_name in lectures:
-                            lectures[lecture_name] = list(set(lectures[lecture_name] + slides))
-                        else:
-                            lectures[lecture_name] = slides
-                        print("Pruning term: ", term)
-                    else:
-                        self.terms[term] = {
-                            "term": formatted_term,
-                            "definition": definition,
-                            "lectures": {
-                                lecture_name: slides
-                            },
-                            "type": category,
-                            "visuals": visuals
-                        }
-                        terms_added.append(term)
-                except Exception as e:
-                    print(f"Error processing line: '{line}'\nError: {str(e)}")
-                    continue
-        print(f"Terms added: {terms_added}")
+        return await self.robust_generate(message)
 
-    def process_terms(self,
-                      num_slides: int = None,
-                      batch_size: int = 1):
-        """
-        Process slides, extract content in batches, and generates terms.
+    def clean_result(
+        self,
+        result: str,
+        lecture_name: str,
+        category: str
+    ) -> None:
+        """Clean and process the result from the LLM"""
+        lines = result.split("\n")
         
-        Args:
-            num_slides: the number of slides to process. If None, process all slides.
-            batch_size: the number of slides to process in each batch.
-        """
-        
-        # Process each category and aggregate results
-        for i in range(0, len(self.slides) if num_slides is None else num_slides, batch_size):
-            batch = self.slides[i:i + batch_size]
-            for category in self.prompts.keys():
-                if f"{self.slide_names[i]} - {category}" in self.processed_terms:
-                    print(f"Skipping {self.slide_names[i]} - {category} because it has already been processed")
-                    continue
-                try:
-                    result = self.process_batch(batch, category, i // batch_size)
-                    self.clean_result(result, self.slide_names[i], category)
-                    
-                    # Save results to file
-                    self.save_terms_json(self.json_output_file)
-                    self.save_terms_text(self.text_output_file)
-                    self.update_processed_terms(self.slide_names[i], category)
-                except Exception as e:
-                    print(f"Error processing batch {i // batch_size} for {category}: {e}")
-                    
-    def update_processed_terms(self, lecture_name: str, category: str):
-        self.processed_terms.append(f"{lecture_name} - {category}")
-        self.save_processed_terms(self.processed_terms_file)
-                
-    def save_terms_json(self, file_path: str):
-        with open(file_path, "w") as file:
-            json.dump(self.terms, file, indent=4)
-    
-    def save_terms_text(self, file_path: str):
-        with open(file_path, "w") as file:
-            terms = self.terms.keys()
-            file.write("\n".join(terms))
+        for line in lines:
+            if ":" not in line:
+                continue
+
+            try:
+                formatted_term, definition_with_slides = line.split(":", 1)
+                term = formatted_term.strip().lower()
+                # Remove content in parentheses
+                term = re.sub(r'\([^)]*\)', '', term).strip()
+
+                # Extract slides and definition
+                if "<SLIDE" in definition_with_slides:
+                    definition = definition_with_slides.split("<SLIDE")[0].strip()
+                    # Extract slide numbers using regex
+                    slides = [
+                        int(num)
+                        for num in re.findall(r'<SLIDE\s+(\d+)>', definition_with_slides)
+                    ]
+                else:
+                    definition = definition_with_slides.strip()
+                    slides = []
+
+                # Find visuals based on slides
+                figures = []
+                for slide in slides:
+                    figures_for_slide = self.lectures[lecture_name]['figures'].get(slide, [])
+                    figures.extend(figure['id'] for figure in figures_for_slide)
+
+                # Update or create term
+                if term in self.terms:
+                    lectures = self.terms[term]['lectures']
+                    if lecture_name in lectures:
+                        lectures[lecture_name] = list(set(lectures[lecture_name] + slides))
+                    else:
+                        lectures[lecture_name] = slides
+                    print("Updating existing term:", term)
+                else:
+                    self.terms[term] = {
+                        "term": formatted_term,
+                        "definition": definition,
+                        "lectures": {lecture_name: slides},
+                        "type": category,
+                        "figures": figures
+                    }
+                    print("Added new term:", term)
+
+            except Exception as error:
+                print(f"Error processing line: '{line}'\nError: {str(error)}")
+
+    async def process_terms(self) -> Dict[str, Term]:
+        """Process all lectures and extract terms"""
+        for i, lecture_name in enumerate(self.lectures):
+            lecture_content = self.lectures[lecture_name]['content']
             
-    def save_processed_terms(self, file_path: str):
-        with open(file_path, "w") as file:
-            file.write("\n".join(self.processed_terms))
+            for category in self.prompts:
+                process_key = f"{lecture_name} - {category}"
+                
+                if process_key in self.processed_terms:
+                    print(f"Skipping {process_key} because it has already been processed")
+                    continue
+
+                try:
+                    result = await self.process_batch(lecture_content, category, i)
+                    self.clean_result(result, lecture_name, category)
+                    self.processed_terms.append(process_key)
+                except Exception as error:
+                    print(f"Error processing batch {i} for {category}:", error)
+
+        return self.terms
+
+    def get_terms(self) -> Dict[str, Term]:
+        """Get all processed terms"""
+        return self.terms
+
+    def get_processed_terms(self) -> List[str]:
+        """Get list of processed term keys"""
+        return self.processed_terms
