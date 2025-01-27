@@ -1,15 +1,14 @@
 import traceback
 import os
 import sys
-
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(BASE_DIR)
 else:
     BASE_DIR = '/app'
-
-from flask import Flask, request
+from datetime import datetime
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -24,16 +23,12 @@ from app.lecture.evaluate.accuracy import GeminiDecisionMaker, generate_llm_qual
 from app.lecture.evaluate.adherence import adherenceEvaluator
 from app.lecture.evaluate.certainty import CertaintyEvaluator
 from app.lecture.evaluate.complexity import ComplexityEvaluator
+from app.lecture.parse.lecture_processor import LectureProcessor
+from app.lecture.parse.textbook_processor import TextbookProcessor
 
 load_dotenv()
     
-
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
-ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 app = Flask(__name__)
 # Enable all origins and methods
@@ -45,18 +40,406 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 print("Server starting up...") # Direct print for immediate feedback
 
-# device = "cuda" if torch.cuda.is_available() else "cpu"
-# video_processor = VideoProcessor()
-# print("Initialized VideoProcessor")  # Direct print
+# creating supabase client        
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
+opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
+supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
+print("Supabase client created")
 
 @app.route('/')
 @app.route('/health')
 def health():
+    """
+    Check if the server is healthy.
+    """
     return {"status": "healthy"}, 200
+
+@app.route('/parse-lecture', methods=['POST'])
+async def parse_lecture():
+    """
+    Parse a lecture and return the documents.
+    """
+    try:
+        print("Starting parse-lecture function...")
+        data = request.get_json()
+        class_id = data.get('class_id')
+        lecture_id = data.get('lecture_id')
+        handwritten = data.get('handwritten')
+        
+        print("Request params:", {"class_id": class_id, "lecture_id": lecture_id, "handwritten": handwritten})
+
+        # Update lecture status to parsing
+        supabase.table("lectures").update({
+            "parse_status": "parsing",
+            "parse_error": None,
+            "last_parse_attempt": datetime.now().isoformat()
+        }).eq("id", lecture_id).execute()
+
+        # Get class title
+        class_response = supabase.table("classes").select("*").eq("id", class_id).single().execute()
+        class_title = class_response.data.get('title')
+        print("Class query response:", class_response)
+
+        # Get lecture info
+        lecture_response = supabase.table("lectures").select("*").eq("id", lecture_id).single().execute()
+        num_pages = lecture_response.data.get('pages')
+        print("Lecture query response:", lecture_response)
+
+        # Get existing documents
+        documents_response = supabase.table("documents").select("*").eq("lecture", lecture_id).execute()
+        documents = documents_response.data
+        if not documents:
+            raise Exception("No documents found")
+
+        # Filter out processed documents
+        documents_to_process = [doc for doc in documents if not doc.get('processed', False)]
+        print("Documents to process:", documents_to_process)
+
+        # Create new instance of LectureProcessor
+        lecture_processor = LectureProcessor(class_title, handwritten)
+        print("LectureProcessor created")
+
+        # Process in batches
+        batch_size = 20
+        batch_results = []
+        
+        for i in range(0, len(documents_to_process), batch_size):
+            batch = documents_to_process[i:i + batch_size]
+            print("Processing batch:", batch)
+
+            # Get images and figures from supabase
+            images = []
+            figures = []
+            
+            try:
+                for doc in batch:
+                    # Download image
+                    image_path = f"{class_id}/{lecture_id}/{doc['id']}.png"
+                    print(f"Trying to download: {image_path}")
+                    
+                    response = supabase.storage.from_("lectures").download(image_path)
+                    
+                    if not response:
+                        print(f"No data received for image {doc['page']}")
+                        continue
+
+                    images.append(response)
+                    print(f"Successfully downloaded image {doc['page']}")
+
+                    # Get figures
+                    figures_response = supabase.table("figures").select("*").eq("document", doc['id']).execute()
+                    figures_data = figures_response.data
+                    if not figures_data:
+                        print(f"No figures found for document {doc['id']}")
+                        figures.append([])
+                        continue
+
+                    formatted_figures = [
+                        {
+                            "bbox": [
+                                float(fig['x_min']), 
+                                float(fig['y_min']), 
+                                float(fig['x_max']), 
+                                float(fig['y_max'])
+                            ],
+                            "description": str(fig['description'])
+                        }
+                        for fig in figures_data
+                    ]
+                    figures.append(formatted_figures)
+
+            except Exception as error:
+                print("Error in image/figures download process:", error)
+                raise error
+
+            print("Total images downloaded:", len(images))
+
+            # Prepare documents for processing
+            processed_documents = [
+                {
+                    "page": doc["page"],
+                    "image": img,
+                    "text": doc.get("text", ""),
+                    "image_bboxes": figs
+                }
+                for doc, img, figs in zip(batch, images, figures)
+            ]
+            print("Processed documents:", processed_documents)
+
+            # Process the batch
+            print("Starting lecture processing...")
+            
+            async def after_generate(result):
+                # Find document ID
+                document_id = next(
+                    (doc['id'] for doc in documents if doc['page'] == result.page),
+                    None
+                )
+                if not document_id:
+                    raise Exception(f"Document not found for page {result.page}")
+
+                # Update document
+                supabase.table("documents").update({
+                    "latex": result.latex,
+                    "description": result.description,
+                    "processed": True
+                }).eq("id", document_id).execute()
+
+                # Insert new figures
+                figures_data = [
+                    {
+                        "x_min": figure.bbox[0],
+                        "x_max": figure.bbox[2],
+                        "y_min": figure.bbox[1],
+                        "y_max": figure.bbox[3],
+                        "description": figure.description,
+                        "document": document_id
+                    }
+                    for figure in result.figures
+                ]
+                
+                if figures_data:
+                    supabase.table("figures").insert(figures_data).execute()
+                
+                print("Document inserted:", result.description)
+
+            results = await lecture_processor.process_slides(
+                class_title,
+                num_pages,
+                processed_documents,
+                after_generate
+            )
+            print("Lecture processing for batch complete, results:", results)
+            batch_results.append(results)
+
+        print("Batch results:", batch_results)
+
+        # Update lecture status to complete
+        supabase.table("lectures").update({
+            "parse_status": "complete",
+            "parse_error": None
+        }).eq("id", lecture_id).execute()
+
+        return jsonify({"results": batch_results}), 200
+
+    except Exception as error:
+        print("Error in parse-lecture function:", {
+            "name": type(error).__name__,
+            "message": str(error),
+            "stack": traceback.format_exc(),
+        })
+        
+        # Update lecture status to error
+        supabase.table("lectures").update({
+            "parse_status": "error",
+            "parse_error": str(error)
+        }).eq("id", lecture_id).execute()
+
+        return jsonify({
+            "error": str(error),
+            "stack": traceback.format_exc(),
+            "name": type(error).__name__
+        }), 500
+    
+@app.route('/parse-textbook', methods=['POST'])
+async def parse_textbook():
+    """
+    Parse a textbook and return the documents.
+    """
+    try:
+        print("Starting parse-textbook function...")
+        data = request.get_json()
+        class_id = data.get('class_id')
+        textbook_id = data.get('textbook_id')
+        handwritten = data.get('handwritten')
+        
+        print("Request params:", {"class_id": class_id, "textbook_id": textbook_id, "handwritten": handwritten})
+
+        # Update textbook status to parsing
+        supabase.table("textbooks").update({
+            "parse_status": "parsing",
+            "parse_error": None,
+            "last_parse_attempt": datetime.now().isoformat()
+        }).eq("id", textbook_id).execute()
+
+        # Get class title
+        class_response = supabase.table("classes").select("*").eq("id", class_id).single().execute()
+        class_title = class_response.data.get('title')
+        print("Class query response:", class_response)
+
+        # Get textbook info
+        textbook_response = supabase.table("textbooks").select("*").eq("id", textbook_id).single().execute()
+        num_pages = textbook_response.data.get('pages')
+        print("Textbook query response:", textbook_response)
+
+        # Get existing documents
+        documents_response = supabase.table("documents").select("*").eq("textbook", textbook_id).execute()
+        documents = documents_response.data
+        if not documents:
+            raise Exception("No documents found")
+
+        # Filter out processed documents
+        documents_to_process = [doc for doc in documents if not doc.get('processed', False)]
+        print("Documents to process:", documents_to_process)
+
+        # Create new instance of TextbookProcessor
+        textbook_processor = TextbookProcessor(class_title, handwritten)
+        print("TextbookProcessor created")
+
+        # Process in batches
+        batch_size = 20
+        batch_results = []
+        
+        for i in range(0, len(documents_to_process), batch_size):
+            batch = documents_to_process[i:i + batch_size]
+            print("Processing batch:", batch)
+
+            # Get images and figures from supabase
+            images = []
+            figures = []
+            
+            try:
+                for doc in batch:
+                    # Download image
+                    image_path = f"{class_id}/textbooks/{textbook_id}/images/{doc['page']}.png"
+                    print(f"Trying to download: {image_path}")
+                    
+                    response = supabase.storage.from_("slides").download(image_path)
+                    
+                    if not response.data:
+                        print(f"No data received for image {doc['page']}")
+                        continue
+
+                    images.append(response.data)
+                    print(f"Successfully downloaded image {doc['page']}")
+
+                    # Get figures
+                    figures_response = supabase.table("figures").select("*").eq("document", doc['id']).execute()
+                    figures_data = figures_response.data
+                    if not figures_data:
+                        print(f"No figures found for document {doc['id']}")
+                        figures.append([])
+                        continue
+
+                    formatted_figures = [
+                        {
+                            "bbox": [
+                                float(fig['x_min']), 
+                                float(fig['y_min']), 
+                                float(fig['x_max']), 
+                                float(fig['y_max'])
+                            ],
+                            "description": str(fig['description'])
+                        }
+                        for fig in figures_data
+                    ]
+                    figures.append(formatted_figures)
+
+            except Exception as error:
+                print("Error in image/figures download process:", error)
+                raise error
+
+            print("Total images downloaded:", len(images))
+            print("Images query response:", images)
+
+            # Prepare documents for processing
+            processed_documents = [
+                {
+                    "page": doc["page"],
+                    "image": img,
+                    "text": doc.get("text", ""),
+                    "image_bboxes": figs
+                }
+                for doc, img, figs in zip(batch, images, figures)
+            ]
+            print("Processed documents:", processed_documents)
+
+            # Process the batch
+            print("Starting textbook processing...")
+            
+            async def after_generate(result):
+                # Find document ID
+                document_id = next(
+                    (doc['id'] for doc in documents if doc['page'] == result.page),
+                    None
+                )
+                if not document_id:
+                    raise Exception(f"Document not found for page {result.page}")
+
+                # Update document
+                supabase.table("documents").update({
+                    "latex": result.latex,
+                    "description": result.description,
+                    "processed": True
+                }).eq("id", document_id).execute()
+
+                # Insert new figures
+                figures_data = [
+                    {
+                        "x_min": figure.bbox[0],
+                        "x_max": figure.bbox[2],
+                        "y_min": figure.bbox[1],
+                        "y_max": figure.bbox[3],
+                        "description": figure.description,
+                        "document": document_id
+                    }
+                    for figure in result.figures
+                ]
+                
+                if figures_data:
+                    supabase.table("figures").insert(figures_data).execute()
+                
+                print("Document inserted:", result.description)
+
+            results = await textbook_processor.process_pages(
+                class_title,
+                num_pages,
+                processed_documents,
+                after_generate
+            )
+            print("Textbook processing for batch complete, results:", results)
+            batch_results.append(results)
+
+        print("Batch results:", batch_results)
+
+        # Update textbook status to complete
+        supabase.table("textbooks").update({
+            "parse_status": "complete",
+            "parse_error": None
+        }).eq("id", textbook_id).execute()
+
+        return jsonify({"results": batch_results}), 200
+
+    except Exception as error:
+        print("Error in parse-textbook function:", {
+            "name": type(error).__name__,
+            "message": str(error),
+            "stack": traceback.format_exc(),
+        })
+        
+        # Update textbook status to error
+        supabase.table("textbooks").update({
+            "parse_status": "error",
+            "parse_error": str(error)
+        }).eq("id", textbook_id).execute()
+
+        return jsonify({
+            "error": str(error),
+            "stack": traceback.format_exc(),
+            "name": type(error).__name__
+        }), 500
 
 @app.route('/parse-video', methods=['POST'])
 def parse_video():
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    """
+    Parse a video and audio chunk and return the documents.
+    """
+    ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
+    def allowed_file(filename):
+        return '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
     video_processor = VideoProcessor()
     print("Initialized VideoProcessor")  # Direct print
 
@@ -113,31 +496,20 @@ def parse_video():
     return 'Invalid file type', 400
 
 
-@app.route('/parse-lecture', methods=['POST'])
-def parse_lecture():
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    video_processor = VideoProcessor()
-    print("Initialized VideoProcessor")  # Direct print
-    
-    lecture_id = request.form['lecture_id']
-    class_id = request.form['class_id']
-    original_filename = request.form['filename']
-    video_processor.parse_lecture(lecture_id, class_id, original_filename)
-    return 'Lecture parsed', 200
+@app.route("/evaluate-lecture", methods=["POST"])
+def evaluate_lecture():
+    data = request.get_json()
+    lecture_id = data['lecture_id']
+    class_id = data['class_id']
+    return "Not implemented", 500
 
 
-@app.route("/evaluate", methods=["POST"])
-def evaluate():
+@app.route("/evaluate-generation", methods=["POST"])
+def evaluate_generation():
     data = request.get_json()
     generation_id = data['generation_id']
     
     try:
-        # creating supabase client
-        supabase_url = os.getenv("SUPABASE_URL")
-        supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
-        opts = ClientOptions().replace(schema="prod")
-        supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
-        print("Supabase client created")
         
         llm = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash',

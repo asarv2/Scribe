@@ -7,138 +7,129 @@ from pylatex import Document, Section, Subsection, Command, Package
 from pylatex.base_classes import Container
 from pylatex.utils import NoEscape, bold
 from pylatex.base_classes import Environment
-from typing import Dict, List
+from typing import Dict, List, Union, Optional
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 import time
-from supabase.client import Client, create_client, ClientOptions
+
+class Figure:
+    def __init__(self, bbox: List[float], description: str):
+        self.bbox = bbox
+        self.description = description
+
+class CleanedResponse:
+    def __init__(self, page: int, latex: str, figures: List[Figure], description: str):
+        self.page = page
+        self.latex = latex
+        self.figures = figures
+        self.description = description
 
 class ContentType(Enum):
     LECTURE = "lecture"
     TOPIC = "topic"
 
 class BaseProcessor:
-    def __init__(self, class_id: str, output_dir: str, regenerate: bool = False):
-        '''
-        Base class for all processors.
-        
-        Args:
-            class_id: The uuid of the class in supabase, ex: 123e4567-e89b-12d3-a456-426614174000
-            
-            output_dir: The directory to save the output files.
-
-            regenerate: Whether to regenerate the given files.
-            
-        Attributes:
-            self.supabase: The supabase client.
-            self.supabase_url: The url of the supabase instance.
-            self.llm_gemini_pro: The gemini-1.5-pro llm for processing.
-            self.llm_gemini_flash: The gemini-2.0-flash-exp llm for processing.
-            self.llm_gemini_flash8b: The gemini-1.5-flash8b llm for processing.
-            self.class_id: The uuid of the class in supabase, ex: 123e4567-e89b-12d3-a456-426614174000
-            self.course_title: The title of the course.
-            self.course_description: The description of the course.
-            self.course_code: The code of the course.
-            self.output_dir: The directory to save the output files.
-            self.regenerate: Whether to regenerate the given files.
-            self.course_link: A link to the course, if not a brightspace course, ex: https://www.math.purdue.edu/~yipn/421
-            self.brightspace_course_id: The 7 digit id found on the link of the brightspace course URL, ex 1095465
-            self.brightspace_course_descriptor: A descriptor for the course, found on the grid view, ex WL.202510.CS24200.LE1.
-        '''
-        load_dotenv()  # Load environment variables
-        
-        # creating supabase client
-        self.supabase_url = os.getenv("SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_PRIVATE_KEY")
-        schema = os.getenv("SUPABASE_SCHEMA")
-        opts = ClientOptions().replace(schema=schema)
-        self.supabase: Client = create_client(self.supabase_url, supabase_key, options=opts)
-        self.class_id = class_id
-        
-        # getting class info
-        class_info = self.supabase.table("classes").select("*").eq("id", class_id).execute().data[0]
-        self.course_title = class_info["title"]
-        self.course_description = class_info["course_description"]
-        self.course_code = class_info["class_code"]
-        self.course_link = class_info["course_link"]
-        self.brightspace_course_id = class_info["brightspace_course_id"]
-        self.brightspace_course_descriptor = class_info["brightspace_course_descriptor"]
-        
-        self.output_dir = output_dir
-        os.makedirs(os.path.join(self.output_dir, self.course_code), exist_ok=True)
-        self.regenerate = regenerate
-        
+    def __init__(self):
+        """
+        Initialize the BaseProcessor and create all the models.
+        """
+        # Initialize LangChain models
         self.llm_gemini_pro = ChatGoogleGenerativeAI(
             model='gemini-1.5-pro',
-            temperature=0, 
-            max_tokens=None, 
-            timeout=None, 
+            temperature=0,
+            max_tokens=None,
+            timeout=None,
             max_retries=2
         )
         
         self.llm_gemini_flash = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash',
-            temperature=0, 
-            max_tokens=None, 
-            timeout=None, 
+            temperature=0,
+            max_tokens=None,
+            timeout=None,
             max_retries=2
         )
         
         self.llm_gemini_flash8b = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash-8b',
-            temperature=0, 
-            max_tokens=None, 
-            timeout=None, 
+            temperature=0,
+            max_tokens=None,
+            timeout=None,
             max_retries=2
         )
-        
-        
-        
-    def robust_generate(self, message: HumanMessage, retries: int = 5, initial_wait: int = 5) -> str:
-        """
-        Robust method for generating text with exponential backoff.
-        
-        Args:
-            message: The message to process
-            retries: Number of retry attempts
-            initial_wait: Initial wait time in seconds
-        
-        Returns:
-            str: Generated text response
-        """
+
+    async def prepare_conversation_history(
+        self,
+        messages: List[Union[HumanMessage, AIMessage]],
+        max_tokens: int = 1048576
+    ) -> List[Union[HumanMessage, AIMessage]]:
+        # Get the last few messages that fit within the token limit
+        token_count = 0
+        trimmed_messages: List[Union[HumanMessage, AIMessage]] = []
+
+        for message in reversed(messages):
+            message_tokens = await self.llm_gemini_flash8b.get_num_tokens(
+                message.content
+            )
+            if token_count + message_tokens > max_tokens:
+                break
+
+            token_count += message_tokens
+            trimmed_messages.insert(0, message)
+
+        print(
+            f"\nTrimmed conversation history to {len(trimmed_messages)} messages from {len(messages)} messages"
+        )
+        print(f"Total tokens: {token_count}")
+
+        return trimmed_messages
+
+    async def robust_generate(
+        self,
+        message: HumanMessage,
+        retries: int = 5,
+        initial_wait: int = 5
+    ) -> str:
         last_error = None
-        
+
         for attempt in range(retries):
             try:
-                response = self.llm_gemini_flash.generate([[message]])
-                return response.generations[0][0].text
-                
-            except Exception as e:
-                last_error = e
-                
-                # Check for different types of errors that need retrying
-                should_retry = any([
-                    "ResourceExhausted" in str(e),
-                    "rate_limit" in str(e).lower(),
-                    "too many requests" in str(e).lower(),
-                    "quota exceeded" in str(e).lower()
-                ])
-                
+                # Try Gemini Flash first
+                try:
+                    response = await self.llm_gemini_flash.agenerate([[message]])
+                    return response.generations[0][0].text
+                except Exception as flash_error:
+                    # If Flash fails with RECITATION error, try Pro
+                    if "RECITATION" in str(flash_error):
+                        print("Gemini Flash blocked due to RECITATION, trying Gemini Pro...")
+                        pro_response = await self.llm_gemini_pro.agenerate([[message]])
+                        return pro_response.generations[0][0].text
+                    raise flash_error  # Re-throw if it's not a RECITATION error
+
+            except Exception as error:
+                last_error = error
+                error_msg = str(error).lower()
+
+                should_retry = any(
+                    msg in error_msg for msg in [
+                        "resourceexhausted",
+                        "rate_limit",
+                        "too many requests",
+                        "quota exceeded"
+                    ]
+                )
+
                 if should_retry and attempt < retries - 1:
-                    # Calculate wait time with exponential backoff
                     wait_time = initial_wait * (1.5 ** attempt)
                     print(f"Attempt {attempt + 1}/{retries} failed. Retrying in {wait_time:.1f} seconds...")
-                    print(f"Error: {str(e)}")
-                    time.sleep(wait_time)
+                    print(f"Error: {str(error)}")
+                    await time.sleep(wait_time)
                     continue
-                
-                # If we're out of retries or it's not a retryable error
                 break
-        
-        # If we get here, all retries failed
-        raise RuntimeError(f"Failed after {retries} attempts. Last error: {last_error}")
-    
+
+        raise Exception(f"Failed after {retries} attempts. Last error: {str(last_error)}")
+
     # Common utility methods
     def format_url_for_latex(self, url: str) -> str:
         """

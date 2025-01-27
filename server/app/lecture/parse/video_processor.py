@@ -1,10 +1,11 @@
 from typing import List
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
-from app.lecture.parse.video_transcriber import VideoTranscriber
-from moviepy import *
+import torch
+from moviepy.editor import VideoFileClip
 from PIL import Image
 import numpy as np
+import whisper
 
 class VideoProcessor:
     def __init__(self):
@@ -34,17 +35,20 @@ class VideoProcessor:
         self.base_prompt = """
         You are a video processor that transcribes videos and generates documents from the transcript.
         """
-        
-        self.transcriber = VideoTranscriber()
 
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"Using device: {self.device}")
+        
+        # Load model with specified device
+        self.model = whisper.load_model("base").to(self.device)
 
 
     def transcribe_video(self, file_path):
         """
         Transcribe the video by calling the whisper api.
         """
-        transcript = self.transcriber.transcribe_video(file_path)
-        return transcript
+        result = self.model.transcribe(file_path)
+        return result["text"]
     
     def process_video(self, file_path):
         """

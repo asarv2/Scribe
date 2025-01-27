@@ -35,6 +35,10 @@ import * as pdfjs from 'pdfjs-dist';
 import { Document, Lecture, Topic } from "@/types";
 import { getTopics } from "@/utils/queries/get-topics";
 import { getDocumentsLecture } from "@/utils/queries/get-documents-lecture";
+import { createLectureDocument, createTextbookDocument } from "@/utils/services/document";
+import { createFigures } from "@/utils/services/figures";
+import { createTextbook } from "@/utils/services/textbook";
+import { calculateResizedDimensions } from "@/utils/services/resize";
 
 export default function LecturePage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -145,66 +149,353 @@ export default function LecturePage({ params }: { params: { classId: string } })
         }
     };
 
-    const processLecturePDF = async (
-        file: File,
-        classId: string,
-    ) => {
+    const processLecturePDF = async (file: File, classId: string) => {
         const file_name = file.name.split(".")[0];
         console.log("File name:", file_name);
 
-        // convert file to array buffer
-        const pdfBuffer = await file.arrayBuffer();
+        // Add error handling for PDF loading
+        let pdf;
+        try {
+            const pdfBuffer = await file.arrayBuffer();
+            const pdfJS = await import('pdfjs-dist');
+            pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.mjs';
+            pdf = await pdfJS.getDocument(pdfBuffer).promise;
+        } catch (error) {
+            console.error("Error loading PDF:", error);
+            throw new Error("Failed to load PDF");
+        }
 
-        // Get actual page count using PDF.js with proper worker setup
-        const pdfJS = await import('pdfjs-dist');
-        pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.mjs';
-
-        const pdf = await pdfJS.getDocument(pdfBuffer).promise;
         const numPages = pdf.numPages;
         console.log("Number of pages:", numPages);
 
         const lecture = await createLecture(classId, file_name, (lectures?.length ?? 0) + 1, numPages);
         console.log("Lecture ID:", lecture.id);
-        // uploading images to supabase
-        const images = await Promise.all(Array.from({ length: numPages }, async (_, i) => {
-            const page = await pdf.getPage(i + 1);
-            const viewport = page.getViewport({ scale: 1.5 });
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d')!;
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
 
-            await page.render({
-                canvasContext: context,
-                viewport: viewport
-            }).promise;
+        const pages = [];
+        for (let i = 0; i < numPages; i++) {
+            try {
+                console.log(`Processing page ${i + 1}/${numPages}`);
+                
+                // Add timeout protection
+                const pagePromise = Promise.race([
+                    processPage(pdf, i, lecture.id, classId),
+                    new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Page processing timeout')), 30000)
+                    )
+                ]);
 
-            // Convert canvas to blob
-            const blob = await new Promise<Blob>((resolve, reject) =>
-                canvas.toBlob((blob) => blob ? resolve(blob) : reject('Failed to create blob'), 'image/png')
-            );
-
-            // Fix the storage path - remove 'object' from the path
-            const uploadPath = `${classId}/lectures/${lecture.id}/images/${i + 1}.png`;
-            console.log("Uploading to path:", uploadPath); // Debug log
-
-            return supabase.storage
-                .from("slides") // Just the bucket name
-                .upload(uploadPath, blob, {
-                    cacheControl: '3600',
-                    upsert: true // Add this if you want to overwrite existing files
+                const pageResult = await pagePromise;
+                pages.push(pageResult);
+                
+                // // Add a small delay between pages to prevent overwhelming
+                // await new Promise(resolve => setTimeout(resolve, 100));
+                
+            } catch (error: any) {
+                console.error(`Error processing page ${i + 1}:`, error);
+                pages.push({
+                    pageNumber: i + 1,
+                    error: error.message
                 });
-        }));
-        console.log("Images uploaded:", images);
-        // don't wait for the function to finish
-        supabase.functions.invoke('parse-lecture', {
-            body: {
+            }
+        }
+
+        console.log("Pages processed:", pages);
+
+        // Call the parse-lecture endpoint
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse-lecture`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
                 class_id: classId,
                 lecture_id: lecture.id,
                 handwritten: true
-            }
+            })
         });
+        console.log("Parse lecture response:", response);
     };
+
+    async function processPage(pdf: any, pageIndex: number, lectureId: string, classId: string) {
+        let tempCanvas: HTMLCanvasElement | null = null;
+        let finalCanvas: HTMLCanvasElement | null = null;
+        
+        const cleanup = () => {
+            if (tempCanvas) {
+                tempCanvas.width = 0;
+                tempCanvas.height = 0;
+            }
+            if (finalCanvas) {
+                finalCanvas.width = 0;
+                finalCanvas.height = 0;
+            }
+        };
+
+        // Helper function to timeout any promise
+        const withTimeout = async (promise: Promise<any>, timeoutMs: number, operation: string) => {
+            return Promise.race([
+                promise,
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error(`${operation} timed out after ${timeoutMs}ms`)), timeoutMs)
+                )
+            ]);
+        };
+
+        try {
+            // Get the page with timeout
+            const page = await withTimeout(
+                pdf.getPage(pageIndex + 1),
+                5000, // 5 second timeout for getting the page
+                'Getting page'
+            );
+
+            let documentId: string | null = null;
+            try {
+                // Try to get text content with timeout
+                const textContent = await withTimeout(
+                    page.getTextContent(),
+                    10000, // 10 second timeout for text extraction
+                    'Text extraction'
+                );
+                const pageText = textContent.items
+                    .map((item: any) => item.str)
+                    .join(' ');
+                const result = await createLectureDocument(lectureId, pageIndex + 1, pageText);
+                if (result.success && result.documentId) {
+                    documentId = result.documentId;
+                    console.log("Page text extracted successfully");
+                }
+            } catch (textError) {
+                console.warn(`Skipping text extraction for page ${pageIndex + 1}:`, textError);
+                // Create document with empty text if text extraction fails
+                const result = await createLectureDocument(lectureId, pageIndex + 1, "");
+                if (result.success && result.documentId) {
+                    documentId = result.documentId;
+                }
+            }
+
+            if (!documentId) {
+                throw new Error("Failed to create document record");
+            }
+
+            try {
+                // Image processing with timeout
+                const imageProcessingPromise = withTimeout(
+                    (async () => {
+                        const baseViewport = page.getViewport({ scale: 1.0 });
+                        const { width: targetWidth, height: targetHeight } = calculateResizedDimensions(
+                            baseViewport.width,
+                            baseViewport.height
+                        );
+                        const scale = targetWidth / baseViewport.width;
+                        const viewport = page.getViewport({ scale });
+
+                        finalCanvas = document.createElement('canvas');
+                        const finalContext = finalCanvas.getContext('2d')!;
+                        finalCanvas.width = 1000;
+                        finalCanvas.height = 1000;
+                        finalContext.fillStyle = 'white';
+                        finalContext.fillRect(0, 0, 1000, 1000);
+
+                        const offsetX = Math.floor((1000 - targetWidth) / 2);
+                        const offsetY = Math.floor((1000 - targetHeight) / 2);
+
+                        tempCanvas = document.createElement('canvas');
+                        const tempContext = tempCanvas.getContext('2d')!;
+                        tempCanvas.width = targetWidth;
+                        tempCanvas.height = targetHeight;
+
+                        await page.render({
+                            canvasContext: tempContext,
+                            viewport: viewport
+                        }).promise;
+
+                        finalContext.drawImage(tempCanvas, offsetX, offsetY);
+
+                        return { targetWidth, targetHeight, offsetX, offsetY, viewport };
+                    })(),
+                    15000,
+                    'Image processing'
+                );
+
+                const imageResult = await imageProcessingPromise;
+
+                // Convert to blob with compression
+                const pageBlob = await withTimeout(
+                    new Promise<Blob>((resolve, reject) =>
+                        finalCanvas?.toBlob(
+                            (blob) => blob ? resolve(blob) : reject('Failed to create blob'),
+                            'image/png',
+                            0.8
+                        )
+                    ),
+                    5000, // 5 second timeout for blob creation
+                    'Blob creation'
+                );
+
+                // Upload the page image
+                const pageUploadPath = `${classId}/${lectureId}/${documentId}.png`;
+                await withTimeout(
+                    supabase.storage
+                        .from("lectures")
+                        .upload(pageUploadPath, pageBlob, {
+                            cacheControl: '3600',
+                            upsert: true
+                        }),
+                    20000, // 20 second timeout for upload
+                    'Image upload'
+                );
+
+                // Try to process embedded images with timeout
+                let embeddedImagesInfo = [];
+                try {
+                    const operatorList = await withTimeout(
+                        page.getOperatorList(),
+                        10000, // 10 second timeout for operator list
+                        'Getting operator list'
+                    );
+                    const pdfJS = await import('pdfjs-dist');
+
+                    // Process embedded images with a global timeout
+                    const processedImages = await withTimeout(
+                        processEmbeddedImages(operatorList, page, pdfJS, imageResult),
+                        1000, // 1 second timeout for all image processing
+                        'Processing embedded images'
+                    );
+                    embeddedImagesInfo = processedImages;
+                } catch (imageError) {
+                    console.warn(`Skipping embedded images for page ${pageIndex + 1}:`, imageError);
+                }
+
+                // Create figures if we have any embedded images
+                if (embeddedImagesInfo.length > 0) {
+                    try {
+                        const figures = embeddedImagesInfo.map((image: any) => ({
+                            y_min: Math.max(0, image.normalizedDimensions.y),
+                            y_max: Math.min(1000, image.normalizedDimensions.y + image.normalizedDimensions.height),
+                            x_min: Math.max(0, image.normalizedDimensions.x),
+                            x_max: Math.min(1000, image.normalizedDimensions.x + image.normalizedDimensions.width),
+                            description: "",
+                            document: documentId
+                        }));
+
+                        await withTimeout(
+                            createFigures(figures),
+                            10000, // 10 second timeout for creating figures
+                            'Creating figures'
+                        );
+                    } catch (figuresError) {
+                        console.warn(`Skipping figures creation for page ${pageIndex + 1}:`, figuresError);
+                    }
+                }
+
+                return {
+                    pageNumber: pageIndex + 1,
+                    dimensions: {
+                        width: 1000,
+                        height: 1000,
+                        contentWidth: imageResult.targetWidth,
+                        contentHeight: imageResult.targetHeight,
+                        offsetX: imageResult.offsetX,
+                        offsetY: imageResult.offsetY
+                    },
+                    embeddedImages: embeddedImagesInfo
+                };
+
+            } catch (imageError: any) {
+                console.warn(`Image processing failed for page ${pageIndex + 1}:`, imageError);
+                // Return basic page info even if image processing fails
+                return {
+                    pageNumber: pageIndex + 1,
+                    error: imageError.message,
+                    documentId
+                };
+            }
+
+        } catch (error) {
+            throw error;
+        } finally {
+            cleanup();
+        }
+    }
+
+    // Helper function to process embedded images
+    async function processEmbeddedImages(operatorList: any, page: any, pdfJS: any, imageResult: any) {
+        const embeddedImagesInfo = [];
+        for (let j = 0; j < operatorList.fnArray.length; j++) {
+            if (operatorList.fnArray[j] === pdfJS.OPS.paintImageXObject) {
+                const objId = operatorList.argsArray[j][0];
+                
+                // Find the most recent transform matrix
+                let transform = null;
+                for (let k = j; k >= 0; k--) {
+                    if (operatorList.fnArray[k] === pdfJS.OPS.transform) {
+                        transform = operatorList.argsArray[k];
+                        break;
+                    }
+                }
+
+                if (!transform || transform.length !== 6) {
+                    console.warn("Could not find valid transform matrix for image:", objId);
+                    continue;
+                }
+
+                const imgData = await new Promise<any>(resolve => {
+                    page.objs.get(objId, (data: any) => resolve(data));
+                });
+                
+                if (imgData && typeof imgData.width === 'number' && typeof imgData.height === 'number') {
+                    const [a, b, c, d, e, f] = transform;
+                    const PDF_POINTS_PER_PIXEL = 72 / 96;
+
+                    const width = Math.abs(a / PDF_POINTS_PER_PIXEL);
+                    const height = Math.abs(d / PDF_POINTS_PER_PIXEL);
+                    const x = e / PDF_POINTS_PER_PIXEL;
+                    const y = imageResult.viewport.height - ((f / PDF_POINTS_PER_PIXEL) + height);
+                    const pageScaleFactor = imageResult.targetWidth / imageResult.targetWidth;
+
+                    const originalDims = {
+                        x: Math.round(x),
+                        y: Math.round(y),
+                        width: Math.round(width),
+                        height: Math.round(height)
+                    };
+
+                    if (!Object.values(originalDims).some(isNaN)) {
+                        const normalizedDims = {
+                            x: Math.round((originalDims.x * pageScaleFactor) + imageResult.offsetX),
+                            y: Math.round((originalDims.y * pageScaleFactor) + imageResult.offsetY),
+                            width: Math.round(originalDims.width * pageScaleFactor),
+                            height: Math.round(originalDims.height * pageScaleFactor)
+                        };
+
+                        console.log("Valid image found:", {
+                            objId,
+                            pageScale: pageScaleFactor,
+                            original: originalDims,
+                            normalized: normalizedDims,
+                            imageData: {
+                                width: imgData.width,
+                                height: imgData.height
+                            },
+                            pageInfo: {
+                                targetWidth: imageResult.targetWidth,
+                                targetHeight: imageResult.targetHeight,
+                                offsetX: imageResult.offsetX,
+                                offsetY: imageResult.offsetY
+                            }
+                        });
+
+                        embeddedImagesInfo.push({
+                            dimensions: originalDims,
+                            normalizedDimensions: normalizedDims
+                        });
+                    }
+                }
+            }
+        }
+        return embeddedImagesInfo;
+    }
 
     const processLectureMP4 = async (file: File, classId: string) => {
         console.log("Processing MP4 file:", file);
@@ -318,7 +609,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     originalType: file.type
                 });
     
-                const response = await fetch("https://api.ashoksaravanan.com/scribe/parse-video", {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse-video`, {
                     method: "POST",
                     body: formData,
                 });
@@ -339,16 +630,15 @@ export default function LecturePage({ params }: { params: { classId: string } })
         }
     };
 
-    const getProgress = (lectureId: string) => {
+    const getProgress = (lectureId: string, uploading: boolean = false) => {
         if (progressMap[lectureId] !== undefined) {
             return progressMap[lectureId];
         }
 
         if (!documents || !lectures) return 0;
-        const lectureDocuments = documents.filter(document => document.lecture === lectureId);
+        const lectureDocuments = documents.filter(document => document.lecture === lectureId && (uploading || document.processed));
         const lecture = lectures.find(lecture => lecture.id === lectureId);
         if (!lecture || lecture.pages === 0) return 0;
-
         const progress = (lectureDocuments.length / lecture.pages) * 100;
 
         setProgressMap(prev => ({
@@ -377,8 +667,6 @@ export default function LecturePage({ params }: { params: { classId: string } })
         return false;
     }
 
-
-
     const handleRetry = async (classId: string, lecture: Lecture) => {
         try {
             setParsingLectures(prev => new Set(prev).add(lecture.id));
@@ -386,17 +674,23 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 // If in batching state, retry the batching process
                 await retryBatching(lecture.id);
             } else {
-                // Otherwise retry the parsing process
-                const response = await supabase.functions.invoke('parse-lecture', {
-                    body: {
+                // use the /parse-lecture function, from api
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse-lecture`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
                         class_id: classId,
                         lecture_id: lecture.id,
                         handwritten: true
-                    }
+                    })
                 });
 
-                if (response.error) {
-                    throw new Error(response.error.message);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`Server error (${response.status}):`, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
                 }
             }
         } catch (error) {
@@ -432,6 +726,11 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 color: 'red'
             });
         }
+    }
+
+    const getDocumentImage = (document: Document) => {
+        if (!document) return '/placeholder_image.svg';
+        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
     }
 
     useEffect(() => {
@@ -551,7 +850,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     </Flex>
 
                     <Stack>
-                        {(lectures && classData) && lectures.length > 0 && lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
+                        {(lectures && documents && classData) && lectures.length > 0 && lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
                             if (lecture.parse_status !== "complete" || canRetryBatching(lecture)) {
                                 const progress = getProgress(lecture.id);
                                 const remainingPages = lecture.pages - Math.floor((progress / 100) * lecture.pages);
@@ -562,7 +861,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                         <Group align="flex-start" justify="space-between">
                                             <Group align="flex-start">
                                                 <MantineImage
-                                                    src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${lecture.id}/images/1.png`}
+                                                    src={getDocumentImage(documents[0])}
                                                     alt={`First page of ${lecture.name}`}
                                                     width={200}
                                                     height={150}
@@ -652,7 +951,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                     <Card withBorder>
                                         <Group align="flex-start">
                                             <MantineImage
-                                                src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${lecture.id}/images/1.png`}
+                                                src={getDocumentImage(documents[0])}
                                                 alt={`First page of ${lecture.name}`}
                                                 width={200}
                                                 height={150}

@@ -13,11 +13,6 @@ interface CleanedResponse {
     description: string;
 }
 
-interface TextItem {
-    str?: string;
-    items?: TextItem[];
-}
-
 export class TextbookProcessor extends BaseProcessor {
     private handwritten: boolean;
     private courseTitle: string;

@@ -1,6 +1,0 @@
-# First import base requirements
--r base.txt
-
-# Core ML/GPU packages
-torch==2.5.1+cu121  # CUDA 12.1 version
-openai-whisper==20240930

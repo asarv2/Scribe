@@ -1,6 +1,0 @@
-# First import base requirements
--r base.txt
-
-# Mac-specific torch installation
---find-links https://download.pytorch.org/whl/torch_stable.html
-torch==2.5.1
