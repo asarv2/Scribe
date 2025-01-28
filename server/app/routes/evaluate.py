@@ -9,6 +9,8 @@ from app.services.evaluate.complexity import ComplexityEvaluator
 from app.services.evaluate.clarity import clarityEvaluator
 from app.extensions import supabase
 from datetime import datetime
+from app.services.evaluate.novelty import NoveltyEvaluator
+
 evaluate_bp = Blueprint('evaluate', __name__)
 
 @evaluate_bp.route('/lecture', methods=['POST'])
@@ -95,7 +97,7 @@ def evaluate_generation():
         # accuracy
         gemini_decision_maker = GeminiDecisionMaker(supabase, generation_id)
         print("Gemini decision maker created")
-        accuracy_explanation, accuracy_score = generate_llm_quality_report(gemini_decision_maker, expected_question_count=3)
+        accuracy_explanation, accuracy_score = generate_llm_quality_report(gemini_decision_maker)
         print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
         
         # adherence
@@ -111,7 +113,9 @@ def evaluate_generation():
         print(f"Complexity score and explanation calculated: Score: {complexity_score}, Explanation: {complexity_explanation}")
         
         # novelty
-        novelty_explanation, novelty_score = "Not implemented", 0
+        novelty_evaluator = NoveltyEvaluator(supabase, llm, generation_id)
+        print("Novelty evaluator created")
+        novelty_explanation, novelty_score = novelty_evaluator.evaluate_novelty()
         print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
         
         # clarity

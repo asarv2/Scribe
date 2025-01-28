@@ -1,12 +1,11 @@
 from supabase.client import Client
 import re
-
 from app.utils.convert_generation_example import GenerationFormatter
 
-class ComplexityEvaluator(object):
+class NoveltyEvaluator(object):
     def __init__(self, supabase: Client, llm, generation_id: str):
         """
-        Evaluates the complexity of a generation, based on the number of steps it took to solve it, the audience it is for, and if the LLM got the correct answer.
+        Evaluates the novelty of a generation, based on the diveristy of the questions, and how much it is different from the example text.
         """
         self.supabase = supabase
         
@@ -23,20 +22,21 @@ class ComplexityEvaluator(object):
         
         self.llm = llm
 
-    def evaluate_complexity(self):
+
+    def evaluate_novelty(self):
         """
-        Evaluates the complexity of a generation, based on the number of steps it took to solve it, the audience it is for, and if the LLM got the correct answer.
+        Evaluates the novelty of a generation, based on the diveristy of the questions, and how much it is different from the example text.
         """
         
         message = f"""
-        You are the professor for the course {self.course.get("title", "")}. You are given a generation, with the name {self.generation.get("name", "")}, and you need to evaluate the complexity of the generation, on a scale of 1 to 10. This course is meant for upper level undergraduate students.
+        You are the professor for the course {self.course.get("title", "")}. You are given a generation, with the name {self.generation.get("name", "")}, and you need to evaluate the novelty of the generation, on a scale of 1 to 10. This course is meant for upper level undergraduate students.
         """
 
-        complexity_prompt = f"""
-        YOU MUST EVALUATE THE COMPLEXITY OF THE GENERATION BASED ON THE FOLLOWING CRITERIA:
-        1. The number of steps it takes to solve the problem
-        2. The audience it is for
-        3. Solve the question on your own, and compare it to the steps that were taken in the generation. 
+        novelty_prompt = f"""
+        YOU MUST EVALUATE THE NOVELTY OF THE GENERATION BASED ON THE FOLLOWING CRITERIA:
+        1. How close it is to the example text
+        2. How diverse the questions are
+        3. But, it should not be too different from the example text, as it should be relevant to the course.
         """
         
         example = """
@@ -69,12 +69,12 @@ class ComplexityEvaluator(object):
         Solution C: 
         1. **Entering Variable:** In the tableau from Part A, the most negative coefficient in the Z-row is $-\\frac{1}{2}$, corresponding to $x_3$. Therefore, $x_3$ enters the basis.\\n\\n2. **Leaving Variable:** Perform the minimum ratio test:\\n\\n$\\frac{5/2}{1/2} = 5$\\n$\\frac{1/2}{1/2} = 1$\\n\\nThe minimum ratio is 1, corresponding to the $s_3$ row. Therefore, $s_3$ leaves the basis.\\n\\n3. **Pivot Operation:** The pivot element is $\\frac{1}{2}$ (in the $s_3$ row and $x_3$ column). Perform row operations to make the pivot element 1 and other elements in the $x_3$ column 0:\\n\\nNew Row 3: $2R_3$\\nNew Row 1: $R_1 - \\frac{1}{2}R_3$\\nNew Z-row: $R_Z + \\frac{1}{2}R_3$\\n\\nThis yields the updated tableau:\\n\\n$\\begin{array}{c|cccccc|c} & x_1 & x_2 & x_3 & s_1 & s_2 & s_3 & RHS \\\\\\hline x_1 & 1 & 2 & 0 & 1 & 0 & -1 & 2 \\\\ s_2 & 0 & -5 & 0 & -2 & 1 & 0 & 1 \\\\ x_3 & 0 & -1 & 1 & -3 & 0 & 2 & 1 \\\\\\hline Z & 0 & 3 & 0 & 1 & 0 & 1 & 13 \\\\\\end{array}$\\n\\nThe new BFS is $(x_1, x_2, x_3, s_1, s_2, s_3) = (2, 0, 1, 0, 1, 0)$, with $Z = 13$.\\n\\n4. **Optimality Check:** All coefficients in the Z-row are non-negative. Therefore, this solution is optimal.
         OUTPUT:
-        <OUTPUT>6</OUTPUT>
-        <WHY>The problem was very straightforward, and may not test the student's deep understanding of the topic.</WHY>
+        <OUTPUT>8</OUTPUT>
+        <WHY>The questions are very close to the example text, and are relevant to the course.</WHY>
         """
         
         final_prompt = f"""
-        {message}\n\n{complexity_prompt}\n\n{example}\n\n
+        {message}\n\n{novelty_prompt}\n\n{example}\n\n
         Now, it is your turn to evaluate the generation: {self.generation.get("name", "")}. 
         
         Generation Requirements:

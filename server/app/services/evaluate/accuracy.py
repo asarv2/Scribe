@@ -8,6 +8,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from dotenv import load_dotenv
 
+from app.utils.convert_generation_example import GenerationFormatter
+
 load_dotenv()
 
 api_key = os.getenv('GOOGLE_API_KEY')
@@ -80,24 +82,26 @@ class GeminiDecisionMaker:
                     return f"Error generating text: {e}"
         return "Unknown error in GeminiDecisionMaker."
 
-def generate_llm_quality_report(gemini_decision_maker: GeminiDecisionMaker,
-                               expected_question_count: int) -> str:
+def generate_llm_quality_report(gemini_decision_maker: GeminiDecisionMaker) -> str:
     output = []
     for question in gemini_decision_maker.questions:
-        output.append({"question": question.get("question", ""), "solution": question.get("solution", ""), "type": "MCQ" if len(question.get("solution", "")) == 1 else "FRQ", "actual": "MCQ" if gemini_decision_maker.generation.get("mcq", "") == True else "FRQ", "note": gemini_decision_maker.generation.get("additional_info", ""), "structure": "Single" if gemini_decision_maker.generation.get("single", True) == True else "Multi", "actual structure": "Single" if question.get("multipart", "") == "" else "Multi"})
+        report = {
+            "question": question.get("question", ""), 
+            "solution": question.get("solution", ""), 
+            "type": "MCQ" if len(question.get("solution", "")) == 1 else "FRQ", 
+            "actual": "MCQ" if question.get("mcq", "") == True else "FRQ", 
+            "note": gemini_decision_maker.generation.get("additional_info", ""), 
+            "structure": "Single" if gemini_decision_maker.generation.get("single", True) == True else "Multi", 
+            "actual structure": "Single" if question.get("multipart", None) == None else "Multi"
+        }
+        output.append(report)
         
     title = gemini_decision_maker.generation.get("name", "")
     
-    
     issues = []
+    actual_question_count = len(output)
+    total_possible = actual_question_count * 3  # 3 points per question (type, structure, note)
     score = 0
-    total_possible = 1 + (expected_question_count * 3)  # 1 for count + 3 points per question
-
-    # Check question count (1 point)
-    if len(output) == expected_question_count:
-        score += 1
-    else:
-        issues.append(f"Expected {expected_question_count} questions, found {len(output)}.")
 
     # Check each question (up to 3 points each)
     for i, item in enumerate(output, start=1):
@@ -138,12 +142,12 @@ def generate_llm_quality_report(gemini_decision_maker: GeminiDecisionMaker,
     # Generate summary with score
     if issues:
         prompt = (
-            f"For the {title} question set, summarize these issues in a short bullet list:\n"
+            f"For the {title} question set with {actual_question_count} questions, summarize these issues in a short bullet list:\n"
             f"Score: {score}/{total_possible}\n\n" +
             "\n".join(issues)
         )
     else:
-        prompt = f"The {title} question set appears correct and complies with all requirements.\nScore: {score}/{total_possible}"
+        prompt = f"The {title} question set with {actual_question_count} questions appears correct and complies with all requirements.\nScore: {score}/{total_possible}"
 
     report = gemini_decision_maker.generate_text(prompt)
     return report, int(float(score/total_possible) * 10)
@@ -161,6 +165,6 @@ if __name__ == "__main__":
 
     # Evaluation
     gemini_decision_maker = GeminiDecisionMaker()
-    result = generate_llm_quality_report(gemini_decision_maker, llm_output,title, expected_question_count=3)
+    result = generate_llm_quality_report(gemini_decision_maker)
     print("Evaluation Results:")
     print(result)
