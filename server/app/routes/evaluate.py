@@ -7,6 +7,7 @@ from app.services.evaluate.adherence import adherenceEvaluator
 from app.services.evaluate.certainty import CertaintyEvaluator
 from app.services.evaluate.complexity import ComplexityEvaluator
 from app.extensions import supabase
+from datetime import datetime
 evaluate_bp = Blueprint('evaluate', __name__)
 
 @evaluate_bp.route('/lecture', methods=['POST'])
@@ -21,9 +22,10 @@ def evaluate_lecture():
         print(f"Lecture: {lecture}")
         
         # latency
-        start_time = lecture.data[0]['created_at']
+        created_at = datetime.strptime(lecture.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
+        created_at_timestamp = created_at.timestamp()
         end_time = time.time()
-        latency_seconds = end_time - start_time
+        latency_seconds = end_time - created_at_timestamp
         latency_ms = latency_seconds * 1000
         print(f"Latency: {latency_ms} ms")
 
@@ -73,13 +75,14 @@ def evaluate_generation():
         )
 
         # get generation
-        generation = supabase.table("generations").select("*").eq("id", generation_id).execute()
+        generation = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
         print(f"Generation: {generation}")
         
         # latency
-        start_time = generation.data[0]['created_at']
+        created_at = datetime.strptime(generation.data['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
+        created_at_timestamp = created_at.timestamp()
         end_time = time.time()
-        latency_seconds = end_time - start_time
+        latency_seconds = end_time - created_at_timestamp
         latency_ms = latency_seconds * 1000
         print(f"Latency: {latency_ms} ms")
         
@@ -95,7 +98,7 @@ def evaluate_generation():
         print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
         
         # adherence
-        adherence_evaluator = adherenceEvaluator(generation_id)
+        adherence_evaluator = adherenceEvaluator(supabase, generation_id)
         print("Adherence evaluator created")
         adherence_explanation, adherence_score = adherence_evaluator.evaluate_adherence()
         print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")

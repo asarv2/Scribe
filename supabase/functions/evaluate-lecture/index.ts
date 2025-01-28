@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
   const server_url = lecture.response_url;
 
   // call the server to evaluate the generation
-  const response = await fetch(`${server_url}/evaluate-lecture`, {
+  const response = await fetch(`${server_url}/evaluate/lecture`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

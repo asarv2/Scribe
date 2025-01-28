@@ -6,17 +6,17 @@ from supabase.client import Client, create_client, ClientOptions
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 class adherenceEvaluator():
-    def __init__(self, generation_id):
+    def __init__(self, supabase, generation_id):
         '''
         Class for all evaluating a how well the model adhered to the given input.
         
         Args:
+            supabase: The supabase client.
             generation_id: The uuid of the class in supabase, ex: 123e4567-e89b-12d3-a456-426614174000
             
             
         Attributes:
             self.supabase: The supabase client.
-            self.supabase_url: The url of the supabase instance.
             self.class_title: The title of the course the generation is for.
             self.name: name of the generated problem or summary
             self.type: type of the generation, ex: "problem" or "summary"
@@ -26,18 +26,14 @@ class adherenceEvaluator():
             self.is_mcq: whether the generation is multiple choice
             self.is_conceptual: whether the generation is conceptual
             self.is_single_part: whether the generation is single part
-            selff
+            self.questions: the questions in the generation
+            self.answers: the answers to the questions in the generation
         '''
         load_dotenv()
-
-        # creating supabase client
-        self.supabase_url = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-        supabase_key = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-        opts = ClientOptions().replace(schema="prod")
-        self.supabase: Client = create_client(self.supabase_url, supabase_key, options=opts)
         
 
         # getting generation info
+        self.supabase = supabase
         self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
         self.name = self.generation.get("name", "No name")
         self.type = self.generation.get("type", "No type")
@@ -73,8 +69,22 @@ class adherenceEvaluator():
                 response = self.llm_gemini_flash.invoke(message)
                 response_content = response.content if hasattr(response, 'content') else str(response)
 
-                adherence_score = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content).group(1)
-                return response.content, adherence_score
+                # Extract score and explanation using regex
+                score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)
+                explanation_match = re.search(r"<WHY>(.*?)</WHY>", response_content, re.DOTALL)
+                
+                if not score_match or not explanation_match:
+                    raise ValueError("Response missing required OUTPUT or WHY tags")
+                    
+                adherence_score = score_match.group(1)
+                explanation = explanation_match.group(1).strip()
+                
+                # Validate score is between 1-10
+                score_int = int(adherence_score)
+                if not 1 <= score_int <= 10:
+                    raise ValueError(f"Invalid adherence score: {score_int}. Must be between 1 and 10.")
+                
+                return explanation, score_int
                 
             except Exception as e:
                 last_error = e

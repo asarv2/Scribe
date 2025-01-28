@@ -1,4 +1,5 @@
 from supabase.client import Client
+import re
 
 class ComplexityEvaluator(object):
     def __init__(self, supabase: Client, llm, generation_id: str):
@@ -162,4 +163,20 @@ class ComplexityEvaluator(object):
         """
         
         response = self.llm.invoke(final_prompt)
-        return response.content, 5
+        response_content = response.content if hasattr(response, 'content') else str(response)
+
+        # Extract score and explanation using regex
+        score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)
+        explanation_match = re.search(r"<WHY>(.*?)</WHY>", response_content, re.DOTALL)
+        
+        if not score_match or not explanation_match:
+            raise ValueError("Response missing required OUTPUT or WHY tags")
+            
+        complexity_score = int(score_match.group(1))
+        explanation = explanation_match.group(1).strip()
+        
+        # Validate score is between 1-10
+        if not 1 <= complexity_score <= 10:
+            raise ValueError(f"Invalid complexity score: {complexity_score}. Must be between 1 and 10.")
+        
+        return explanation, complexity_score
