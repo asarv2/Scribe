@@ -6,10 +6,8 @@
  */
 "use client"
 import GenerateForm from "@/components/GenerateForm";
-import SimpleGenerateForm from "@/components/SimpleGenerateForm";
 
 export default function GenerateProblemsPage({ params }: { params: { classId: string} }) {
     const classId = params.classId;
-    return <SimpleGenerateForm classId={classId} type="problems" /> 
-    // return <GenerateForm classId={classId} type="problems" />
+    return <GenerateForm classId={classId} type="problems" />
 }

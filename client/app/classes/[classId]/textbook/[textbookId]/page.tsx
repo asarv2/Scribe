@@ -183,10 +183,10 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                                         transition: 'opacity 0.3s ease',
                                                         cursor: 'pointer',
                                                         zIndex: 50,
-                                                        left: `${(figure.x_min / 1000) * 100}%`,
-                                                        top: `${(figure.y_min / 1000) * 100}%`,
-                                                        width: `${((figure.x_max - figure.x_min) / 1000) * 100}%`,
-                                                        height: `${((figure.y_max - figure.y_min) / 1000) * 100}%`,
+                                                        left: `${(figure.y_min / 1000) * 100}%`,
+                                                        top: `${(figure.x_min / 1000) * 100}%`,
+                                                        width: `${((figure.y_max - figure.y_min) / 1000) * 100}%`,
+                                                        height: `${((figure.x_max - figure.x_min) / 1000) * 100}%`,
                                                         opacity: hoveredFigure === figure.id ? 0.8 : 0.2,
                                                     }}
                                                     onMouseEnter={() => setHoveredFigure(figure.id)}

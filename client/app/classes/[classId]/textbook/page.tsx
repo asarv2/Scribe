@@ -39,6 +39,7 @@ import { createTextbook } from "@/utils/services/textbook";
 import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
 import { createTextbookDocument } from "@/utils/services/document";
 import { createFigures } from "@/utils/services/figures";
+import { calculateResizedDimensions } from "@/utils/services/resize";
 
 export default function TextbookPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -370,22 +371,6 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                 handwritten: true
             }
         });
-    };
-
-    // Helper function to resize dimensions to fit 1000x1000
-    const calculateResizedDimensions = (width: number, height: number, maxSize: number = 1000) => {
-        const aspectRatio = width / height;
-        let newWidth, newHeight;
-
-        if (width > height) {
-            newWidth = maxSize;
-            newHeight = Math.round(maxSize / aspectRatio);
-        } else {
-            newHeight = maxSize;
-            newWidth = Math.round(maxSize * aspectRatio);
-        }
-
-        return { width: newWidth, height: newHeight };
     };
 
     const getProgress = (textbookId: string, uploading: boolean = false) => {

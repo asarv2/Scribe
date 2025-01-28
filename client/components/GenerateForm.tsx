@@ -82,7 +82,7 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
     const [problemType, setProblemType] = useState<'mcq' | 'frq'>('mcq');
     const [problemStyle, setProblemStyle] = useState<'conceptual' | 'computational'>('conceptual');
     const [problemParts, setProblemParts] = useState<'single' | 'multi'>('single');
-    const [numQuestions, setNumQuestions] = useState<number | undefined>(3);
+    const [numQuestions, setNumQuestions] = useState<number | undefined>(1);
     const [additionalInstructions, setAdditionalInstructions] = useState<string>("");
 
     useEffect(() => {
@@ -141,22 +141,32 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
             console.log(generation);
 
             if (contentType === 'summary') {
-                supabase.functions.invoke('generate-summary', {
-                    body: {
+                // invoke the generate/summary endpoint, do not wait for response
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summary`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
                         class_id: classId,
                         generation_id: generation.id,
-                    }
+                    })
                 });
                 queryClient.invalidateQueries({ queryKey: ["summariesGenerations", classId] });
                 // do not wait for response
                 router.push(`/classes/${classId}/generate/summary`);
             } else if (contentType === 'problem') {
-                supabase.functions.invoke('generate-problems', {
-                    body: {
+                // invoke the generate/problems endpoint, do not wait for response
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
                         class_id: classId,
                         generation_id: generation.id,
                         additional_instructions: additionalInstructions,
-                    }
+                    })
                 });
                 queryClient.invalidateQueries({ queryKey: ["problemGenerations", classId] });
                 // do not wait for response

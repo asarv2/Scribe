@@ -71,17 +71,19 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     const handleRetry = async (classId: string, generation: Generation) => {
         try {
-            const response = await supabase.functions.invoke('generate-problems', {
-                body: {
+            // invoke the generate/problems endpoint, do not wait for response
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     class_id: classId,
                     generation_id: generation.id,
-
-                }
+                })
             });
 
-            if (response.error) {
-                throw new Error(response.error.message);
-            }
+            queryClient.invalidateQueries({ queryKey: ["generationProblems", classId, problemGenerations] });
         } catch (error) {
             console.error('Error retrying:', error);
             notifications.show({

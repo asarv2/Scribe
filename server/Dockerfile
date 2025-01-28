@@ -15,6 +15,16 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     ffmpeg \
     curl \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-latex-recommended \
+    texlive-pictures \
+    texlive-science \
+    texlive-fonts-recommended \
+    latexmk \
+    cm-super \
+    dvipng \
+    ghostscript \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container

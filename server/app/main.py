@@ -1,7 +1,5 @@
-import traceback
 import os
 import sys
-
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -9,208 +7,50 @@ if not os.getenv('DOCKER_ENV'):
 else:
     BASE_DIR = '/app'
 
-from flask import Flask, request
+from flask import jsonify
 from flask_cors import CORS
-import os
-from langchain_google_genai import ChatGoogleGenerativeAI
-from werkzeug.utils import secure_filename
-from app.lecture.parse.video_processor import VideoProcessor
-import json
-import torch
-from supabase.client import Client, create_client, ClientOptions
-from dotenv import load_dotenv
+from app.extensions import app, supabase_url, supabase_private_key
+from app.routes.parse import parse_bp
+from app.routes.evaluate import evaluate_bp
+from app.routes.batch import batch_bp
+from app.routes.generate import generate_bp
+# Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+print("CORS enabled for all routes")
 
-from app.lecture.evaluate.accuracy import GeminiDecisionMaker, generate_llm_quality_report
-from app.lecture.evaluate.adherence import adherenceEvaluator
-from app.lecture.evaluate.certainty import CertaintyEvaluator
-from app.lecture.evaluate.complexity import ComplexityEvaluator
+# Add configuration validation
+if not supabase_url or not supabase_private_key:
+    raise ValueError("Missing required Supabase configuration. Please check your .env file.")
 
-load_dotenv()
-    
-
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
-ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-app = Flask(__name__)
-# Enable all origins and methods
-CORS(app, resources={r"/*": {"origins": "*"}})
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Ensure upload folder exists
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-print("Server starting up...") # Direct print for immediate feedback
-
-# device = "cuda" if torch.cuda.is_available() else "cpu"
-# video_processor = VideoProcessor()
-# print("Initialized VideoProcessor")  # Direct print
+app.register_blueprint(parse_bp, url_prefix='/parse')
+app.register_blueprint(evaluate_bp, url_prefix='/evaluate')
+app.register_blueprint(batch_bp, url_prefix='/batch')
+app.register_blueprint(generate_bp, url_prefix='/generate')
 
 @app.route('/')
-@app.route('/health')
+def index():
+    return "<h1>This is the Scribe API.</h1>"
+
+@app.route('/health', methods=['GET'], strict_slashes=False)
 def health():
-    return {"status": "healthy"}, 200
-
-@app.route('/parse-video', methods=['POST'])
-def parse_video():
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    video_processor = VideoProcessor()
-    print("Initialized VideoProcessor")  # Direct print
-
-    if 'video_chunk' not in request.files or 'audio_chunk' not in request.files:
-        print("Missing video or audio chunk in request")
-        return 'Missing video or audio chunk', 400
-    
-    video_chunk = request.files['video_chunk']
-    audio_chunk = request.files['audio_chunk']
-    chunk_number = int(request.form['chunk_number'])
-    total_chunks = int(request.form['total_chunks'])
-    lecture_id = request.form['lecture_id']
-    class_id = request.form['class_id']
-    original_filename = request.form['filename']
-    
-    if video_chunk.filename == '' or audio_chunk.filename == '':
-        print("Empty filename received")
-        return 'No selected file', 400
-        
-    if video_chunk and audio_chunk and allowed_file(original_filename):
-        # Save both chunks
-        video_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{lecture_id}_video_{chunk_number}.mp4")
-        audio_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{lecture_id}_audio_{chunk_number}.wav")
-        
-        print(f"Saving chunks to: {video_path} and {audio_path}")
-        
-        video_chunk.save(video_path)
-        audio_chunk.save(audio_path)
-        
-        try:
-            # Use audio file for transcription
-            transcript = video_processor.transcribe_video(audio_path)
-            # Use video file for frame extraction
-            photos = video_processor.process_video(video_path)
-            documents = video_processor.generate_documents(photos, transcript)
-            
-            return json.dumps({
-                'chunk': chunk_number,
-                'total': total_chunks,
-                'documents': documents
-            }), 200
-        except Exception as e:
-            print(f"Error processing files: {str(e)}")
-            import traceback
-            traceback.print_exc()
-            return f'Error processing files: {str(e)}', 500
-        finally:
-            # Clean up both files
-            if os.path.exists(video_path):
-                os.remove(video_path)
-            if os.path.exists(audio_path):
-                os.remove(audio_path)
-    
-    return 'Invalid file type', 400
-
-
-@app.route('/parse-lecture', methods=['POST'])
-def parse_lecture():
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    video_processor = VideoProcessor()
-    print("Initialized VideoProcessor")  # Direct print
-    
-    lecture_id = request.form['lecture_id']
-    class_id = request.form['class_id']
-    original_filename = request.form['filename']
-    video_processor.parse_lecture(lecture_id, class_id, original_filename)
-    return 'Lecture parsed', 200
-
-
-@app.route("/evaluate", methods=["POST"])
-def evaluate():
-    data = request.get_json()
-    generation_id = data['generation_id']
-    
+    """Check if the server is healthy."""
     try:
-        # creating supabase client
-        supabase_url = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-        supabase_private_key = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-        opts = ClientOptions().replace(schema="prod")
-        supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
-        print("Supabase client created")
-        
-        llm = ChatGoogleGenerativeAI(
-            model='gemini-1.5-flash',
-            temperature=0, 
-            max_tokens=None, 
-            timeout=None, 
-            max_retries=2
-        )
-        
-        # certainty
-        certainty_evaluator = CertaintyEvaluator(supabase, generation_id)
-        print("Certainty evaluator created")
-        certainty_score, certainty_explanation = certainty_evaluator.evaluate_certainty()
-        print(f"Certainty score and explanation calculated: Score: {certainty_score}, Explanation: {certainty_explanation}")
-        # accuracy
-        gemini_decision_maker = GeminiDecisionMaker(supabase, generation_id)
-        print("Gemini decision maker created")
-        accuracy_explanation, accuracy_score = generate_llm_quality_report(gemini_decision_maker, expected_question_count=3)
-        print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
-        
-        # adherence
-        adherence_evaluator = adherenceEvaluator(generation_id)
-        print("Adherence evaluator created")
-        adherence_explanation, adherence_score = adherence_evaluator.evaluate_adherence()
-        print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
-        
-        # complexity
-        complexity_evaluator = ComplexityEvaluator(supabase, llm, generation_id)
-        print("Complexity evaluator created")
-        complexity_explanation, complexity_score = complexity_evaluator.evaluate_complexity()
-        print(f"Complexity score and explanation calculated: Score: {complexity_score}, Explanation: {complexity_explanation}")
-        
-        # novelty
-        novelty_explanation, novelty_score = "Not implemented", 0
-        print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
-        
-        # clarity
-        clarity_explanation, clarity_score = "Not implemented", 0
-        print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
-        
-        
-            
-        # uploading to supabase
-        response = supabase.table("evaluations").insert({
-            "generation": generation_id,
-            "certainty": certainty_score,
-            "certainty_explanation": certainty_explanation,
-            "complexity": complexity_score,
-            "complexity_explanation": complexity_explanation,
-            "adherence": adherence_score,
-            "adherence_explanation": adherence_explanation,
-            "accuracy": accuracy_score,
-            "accuracy_explanation": accuracy_explanation,
-            "novelty": novelty_score,
-            "novelty_explanation": novelty_explanation,
-            "clarity": clarity_score,
-            "clarity_explanation": clarity_explanation
-        }).execute()
-        
-    except Exception as e:
-        print(f"Error uploading evaluation to Supabase:")
-        print(f"Generation ID: {generation_id}")
-        print(f"Error details: {str(e)}")
-        print(f"Error type: {type(e).__name__}")
-        print(f"Traceback: ", traceback.format_exc())
-        return f'Error uploading evaluation: {type(e).__name__} - {str(e)}', 500
-    
-    return 'Evaluation uploaded', 200
+        return jsonify({"status": "healthy"}), 200
+    except Exception as error:
+        # Errorjsonifyng logic
+        return jsonify({
+            "error": str(error),
+            "name": type(error).__name__
+        }), 500
 
-
+# Add error handler for Supabase connection issues
+@app.errorhandler(Exception)
+def handle_error(error):
+    return {"error": str(error)}, 500
 
 if __name__ == "__main__":
     print("Server starting up...")
+    print("Supabase connection established...")
     if os.getenv('DOCKER_ENV'):
         app.run(host='0.0.0.0', port=5000, debug=False) # Set debug to False
     else:
