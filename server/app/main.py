@@ -1,5 +1,6 @@
 import os
 import sys
+
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,6 +15,7 @@ from app.routes.parse import parse_bp
 from app.routes.evaluate import evaluate_bp
 from app.routes.batch import batch_bp
 from app.routes.generate import generate_bp
+from app.routes.upload import upload_bp
 # Enable CORS for all routes
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 print("CORS enabled for all routes")
@@ -26,6 +28,7 @@ app.register_blueprint(parse_bp, url_prefix='/parse')
 app.register_blueprint(evaluate_bp, url_prefix='/evaluate')
 app.register_blueprint(batch_bp, url_prefix='/batch')
 app.register_blueprint(generate_bp, url_prefix='/generate')
+app.register_blueprint(upload_bp, url_prefix='/upload')
 
 @app.route('/')
 def index():

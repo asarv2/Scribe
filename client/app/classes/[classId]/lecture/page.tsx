@@ -167,7 +167,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
         const numPages = pdf.numPages;
         console.log("Number of pages:", numPages);
 
-        const lecture = await createLecture(classId, file_name, (lectures?.length ?? 0) + 1, numPages);
+        const lecture = await createLecture(classId, file_name, (lectures?.length ?? 0) + 1, numPages, 1, `${process.env.NEXT_PUBLIC_API_URL}`);
         console.log("Lecture ID:", lecture.id);
 
         const pages = [];
@@ -497,135 +497,41 @@ export default function LecturePage({ params }: { params: { classId: string } })
     }
 
     const processLectureMP4 = async (file: File, classId: string) => {
-        console.log("Processing MP4 file:", file);
-    
-        const CHUNK_SIZE = 60; // chunk size in seconds
-    
-        const getVideoDuration = (file: File): Promise<number> => {
-            return new Promise((resolve, reject) => {
-                const video = document.createElement('video');
-                video.preload = 'metadata';
-    
-                video.onloadedmetadata = () => {
-                    const duration = video.duration;
-                    resolve(duration);
-                };
-    
-                video.onerror = () => {
-                    URL.revokeObjectURL(video.src);
-                    reject("Error loading video metadata");
-                };
-    
+        const formData = new FormData();
+        formData.append('video', file);
+        try {
+            // Calculate expected number of pages (1 page per 20 seconds)
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            const duration = await new Promise<number>((resolve) => {
+                video.onloadedmetadata = () => resolve(video.duration);
                 video.src = URL.createObjectURL(file);
             });
-        };
+            const numPages = Math.ceil(duration / 20);
     
-        const extractAudioFromVideo = async (videoFile: File, start: number, duration: number): Promise<Blob> => {
-            return new Promise((resolve, reject) => {
-                const video = document.createElement('video');
-                const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-                const dest = audioContext.createMediaStreamDestination();
-                
-                video.src = URL.createObjectURL(videoFile);
-                video.currentTime = start;
-    
-                video.oncanplay = async () => {
-                    const source = audioContext.createMediaElementSource(video);
-                    source.connect(dest);
-                    
-                    const mediaRecorder = new MediaRecorder(dest.stream);
-                    const chunks: BlobPart[] = [];
-    
-                    mediaRecorder.ondataavailable = (e) => {
-                        chunks.push(e.data);
-                    };
-    
-                    mediaRecorder.onstop = () => {
-                        const blob = new Blob(chunks, { type: 'audio/wav' });
-                        URL.revokeObjectURL(video.src);
-                        resolve(blob);
-                    };
-    
-                    video.play();
-                    mediaRecorder.start();
-    
-                    setTimeout(() => {
-                        video.pause();
-                        mediaRecorder.stop();
-                        source.disconnect();
-                        audioContext.close();
-                    }, duration * 1000);
-                };
-    
-                video.onerror = () => {
-                    URL.revokeObjectURL(video.src);
-                    reject("Error loading video");
-                };
-            });
-        };
-    
-        const extractVideoChunk = (file: File, start: number, end: number, duration: number): Blob => {
-            const slicedChunk = file.slice(
-                Math.floor(start / duration * file.size),
-                Math.floor(end / duration * file.size)
+            // Create lecture entry first
+            const lecture = await createLecture(
+                classId, 
+                file.name.split(".")[0], 
+                (lectures?.length ?? 0) + 1, 
+                numPages,
+                0,
+                `${process.env.NEXT_PUBLIC_API_URL}`
             );
-            return new Blob([slicedChunk], { type: 'video/mp4' });
-        };
+            
+            formData.append('lecture_id', lecture.id);
     
-        try {
-            const duration = await getVideoDuration(file);
-            const totalChunks = Math.ceil(duration / CHUNK_SIZE);
-            const numPages = 3 * Math.ceil(duration / 60);
-    
-            const lecture = await createLecture(classId, file.name.split(".")[0], (lectures?.length ?? 0) + 1, numPages);
-    
-            for (let chunkNumber = 0; chunkNumber < totalChunks; chunkNumber++) {
-                const start = chunkNumber * CHUNK_SIZE;
-                const end = Math.min((chunkNumber + 1) * CHUNK_SIZE, duration);
-                const chunkDuration = end - start;
-    
-                // Extract both video and audio chunks
-                const videoChunk = extractVideoChunk(file, start, end, duration);
-                const audioChunk = await extractAudioFromVideo(file, start, chunkDuration);
-    
-                // Create form data with both chunks
-                const formData = new FormData();
-                formData.append('video_chunk', videoChunk, `video_${chunkNumber}.mp4`);
-                formData.append('audio_chunk', audioChunk, `audio_${chunkNumber}.wav`);
-                formData.append('chunk_number', chunkNumber.toString());
-                formData.append('total_chunks', totalChunks.toString());
-                formData.append('class_id', classId);
-                formData.append('lecture_id', lecture.id);
-                formData.append('filename', file.name);
-    
-                console.log('Chunk details:', {
-                    videoSize: videoChunk.size,
-                    videoType: videoChunk.type,
-                    audioSize: audioChunk.size,
-                    audioType: audioChunk.type,
-                    number: chunkNumber,
-                    total: totalChunks,
-                    originalType: file.type
-                });
-    
-                // invoke the parse/video endpoint, do not wait for response
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/video`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        class_id: classId,
-                        lecture_id: lecture.id,
-                        video_chunk: videoChunk,
-                        audio_chunk: audioChunk
-                    }),
-                });
-                queryClient.invalidateQueries({ queryKey: ["lectures", classId] });
-            }
+            // don't wait for the response
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/video`, {
+                method: 'POST',
+                body: formData,
+                // Remove Content-Type header to let browser set it with boundary
+            });
+            
+            return lecture.id;
     
         } catch (error) {
-            console.error("Error processing video:", error);
+            console.error('Upload failed:', error);
             throw error;
         }
     };
@@ -638,6 +544,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
             );
             const lecture = lectures.find(lecture => lecture.id === lectureId);
             if (!lecture || lecture.pages === 0) return 0;
+            if (lecture.upload_progress !== 1) return lecture.upload_progress * 100;
             return (lectureDocuments.length / lecture.pages) * 100;
         };
     }, [documents, lectures]);
