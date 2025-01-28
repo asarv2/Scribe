@@ -71,16 +71,18 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     const handleRetry = async (classId: string, generation: Generation) => {
         try {
-            const response = await supabase.functions.invoke('generate-summary', {
-                body: {
+            // invoke the generate/summary endpoint, do not wait for response
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summary`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     class_id: classId,
                     generation_id: generation.id,
-                }
+                })
             });
-
-            if (response.error) {
-                throw new Error(response.error.message);
-            }
+            queryClient.invalidateQueries({ queryKey: ["summariesGenerations", classId] });
         } catch (error) {
             console.error('Error retrying:', error);
             notifications.show({

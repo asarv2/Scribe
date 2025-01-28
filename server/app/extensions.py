@@ -18,3 +18,5 @@ opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
 supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
 
 print("Supabase client initialized")
+
+app.config['ASGI_APPLICATION'] = True

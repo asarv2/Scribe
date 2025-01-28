@@ -64,14 +64,14 @@ class BaseProcessor:
         messages: List[Union[HumanMessage, AIMessage]],
         max_tokens: int = 1048576
     ) -> List[Union[HumanMessage, AIMessage]]:
-        # Get the last few messages that fit within the token limit
+        # Simple character-based estimation (approximately 4 characters per token)
+        CHARS_PER_TOKEN = 4
         token_count = 0
         trimmed_messages: List[Union[HumanMessage, AIMessage]] = []
 
         for message in reversed(messages):
-            message_tokens = await self.llm_gemini_flash8b.get_num_tokens(
-                message.content
-            )
+            # Estimate tokens based on character count
+            message_tokens = len(message.content) // CHARS_PER_TOKEN
             if token_count + message_tokens > max_tokens:
                 break
 
@@ -81,7 +81,7 @@ class BaseProcessor:
         print(
             f"\nTrimmed conversation history to {len(trimmed_messages)} messages from {len(messages)} messages"
         )
-        print(f"Total tokens: {token_count}")
+        print(f"Estimated total tokens: {token_count}")
 
         return trimmed_messages
 

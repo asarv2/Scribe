@@ -191,12 +191,24 @@ async def parse_lecture():
 
         print("Batch results:", batch_results)
 
-        # Instead of making an HTTP request, call the function directly
+# Make HTTP request to batch endpoint
         try:
-            # Create a task to run batch_topics with parameters
-            asyncio.create_task(batch_topics(class_id=class_id, lecture_id=lecture_id))
+            request_body = {
+                "class_id": class_id,
+                "lecture_id": lecture_id
+            }
             
-            print("Batch-topics processing initiated")
+            # Use url_for to generate the URL (more maintainable)
+            batch_url = url_for('batch.batch_topics', _external=True)
+            
+            # Make the request
+            response = requests.post(batch_url, json=request_body)
+            
+            if response.status_code != 200:
+                print("Warning: Batch processing request failed:", response.json())
+            else:
+                print("Batch-topics processing initiated")
+            
             return jsonify({"results": batch_results}), 200
 
         except Exception as batch_error:
@@ -205,12 +217,6 @@ async def parse_lecture():
                 "message": str(batch_error),
                 "stack": traceback.format_exc(),
             })
-            
-            # If batch-topics call fails, still mark as complete
-            supabase.table("lectures").update({
-                "parse_status": "complete",
-                "parse_error": None
-            }).eq("id", lecture_id).execute()
             
             return jsonify({"results": batch_results}), 200
 

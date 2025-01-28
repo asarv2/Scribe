@@ -10,17 +10,15 @@ from app.extensions import supabase
 batch_bp = Blueprint('batch', __name__)
 
 @batch_bp.route('/process', methods=['POST'])
-async def batch_topics(class_id=None, lecture_id=None):
+async def batch_topics():
     """
     Batch topics and return the documents.
     """
     try:
         print("Starting batch-topics function...")
-        if class_id is None or lecture_id is None:
-            # If parameters aren't passed directly, get them from request
-            data = request.get_json()
-            class_id = data.get('class_id')
-            lecture_id = data.get('lecture_id')
+        data = request.get_json()
+        class_id = data.get('class_id')
+        lecture_id = data.get('lecture_id')
         
         print("Request params:", {"class_id": class_id, "lecture_id": lecture_id})
 
@@ -137,8 +135,8 @@ async def batch_topics(class_id=None, lecture_id=None):
                 term_type = "Algorithm Solutions"
 
             mapped_lectures = {}
-            for lecture_id in term.get('lectures', []):
-                lecture = next((l for l in lectures if l['id'] == lecture_id), None)
+            for lec_id in term.get('lectures', []):
+                lecture = next((l for l in lectures if l['id'] == lec_id), None)
                 if lecture:
                     mapped_lectures[lecture['name']] = list(range(1, lecture['pages'] + 1))
 

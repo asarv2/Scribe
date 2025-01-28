@@ -1,3 +1,4 @@
+import time
 from flask import Blueprint, request
 import traceback
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -11,7 +12,49 @@ evaluate_bp = Blueprint('evaluate', __name__)
 @evaluate_bp.route('/lecture', methods=['POST'])
 def evaluate_lecture():
     """Evaluate a lecture and return the documents."""
-    return 'Evaluate lecture', 200
+    data = request.get_json()
+    lecture_id = data['lecture_id']
+    
+    try:
+        # get lecture
+        lecture = supabase.table("lectures").select("*").eq("id", lecture_id).execute()
+        print(f"Lecture: {lecture}")
+        
+        # latency
+        start_time = lecture.data[0]['created_at']
+        end_time = time.time()
+        latency_seconds = end_time - start_time
+        latency_ms = latency_seconds * 1000
+        print(f"Latency: {latency_ms} ms")
+
+        # uploading to supabase
+        response = supabase.table("evaluations").insert({
+            "lecture": lecture_id,
+            "latency": latency_ms,
+            "certainty": 0,
+            "certainty_explanation": "Not implemented",
+            "complexity": 0,
+            "complexity_explanation": "Not implemented",
+            "adherence": 0,
+            "adherence_explanation": "Not implemented",
+            "accuracy": 0,
+            "accuracy_explanation": "Not implemented",
+            "novelty": 0,
+            "novelty_explanation": "Not implemented",
+            "clarity": 0,
+            "clarity_explanation": "Not implemented"
+        }).execute()
+        print(f"Evaluation uploaded: {response}")
+        
+    except Exception as e:
+        print(f"Error uploading evaluation to Supabase:")
+        print(f"Lecture ID: {lecture_id}")
+        print(f"Error details: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Traceback: ", traceback.format_exc())
+        return f'Error uploading evaluation: {type(e).__name__} - {str(e)}', 500
+    
+    return 'Evaluation uploaded', 200
 
 
 @evaluate_bp.route('/generation', methods=['POST'])
@@ -21,7 +64,6 @@ def evaluate_generation():
     generation_id = data['generation_id']
     
     try:
-        
         llm = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash',
             temperature=0, 
@@ -29,6 +71,17 @@ def evaluate_generation():
             timeout=None, 
             max_retries=2
         )
+
+        # get generation
+        generation = supabase.table("generations").select("*").eq("id", generation_id).execute()
+        print(f"Generation: {generation}")
+        
+        # latency
+        start_time = generation.data[0]['created_at']
+        end_time = time.time()
+        latency_seconds = end_time - start_time
+        latency_ms = latency_seconds * 1000
+        print(f"Latency: {latency_ms} ms")
         
         # certainty
         certainty_evaluator = CertaintyEvaluator(supabase, generation_id)
@@ -64,6 +117,7 @@ def evaluate_generation():
         # uploading to supabase
         response = supabase.table("evaluations").insert({
             "generation": generation_id,
+            "latency": latency_ms,
             "certainty": certainty_score,
             "certainty_explanation": certainty_explanation,
             "complexity": complexity_score,

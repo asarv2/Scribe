@@ -6,7 +6,7 @@
  */
 "use client"
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Markdown from 'markdown-to-jsx'
@@ -78,7 +78,6 @@ export default function LecturePage({ params }: { params: { classId: string } })
 
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [parsingLectures, setParsingLectures] = useState<Set<string>>(new Set());
-    const [progressMap, setProgressMap] = useState<Record<string, number>>({});
 
     const handleFilesUpload = async (files: File[] | null) => {
         if (!files || files.length === 0) {
@@ -201,8 +200,8 @@ export default function LecturePage({ params }: { params: { classId: string } })
 
         console.log("Pages processed:", pages);
 
-        // Call the parse-lecture endpoint
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
+        // Call the parse-lecture endpoint, do not wait for response
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -213,7 +212,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 handwritten: true
             })
         });
-        console.log("Parse lecture response:", response);
+        queryClient.invalidateQueries({ queryKey: ["lectures", classId] });
     };
 
     async function processPage(pdf: any, pageIndex: number, lectureId: string, classId: string) {
@@ -609,7 +608,8 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     originalType: file.type
                 });
     
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/video`, {
+                // invoke the parse/video endpoint, do not wait for response
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/video`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -621,15 +621,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                         audio_chunk: audioChunk
                     }),
                 });
-    
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`Server error (${response.status}):`, errorText);
-                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-                }
-    
-                const result = await response.json();
-                console.log(`Chunk ${chunkNumber + 1}/${totalChunks} processed:`, result);
+                queryClient.invalidateQueries({ queryKey: ["lectures", classId] });
             }
     
         } catch (error) {
@@ -638,24 +630,25 @@ export default function LecturePage({ params }: { params: { classId: string } })
         }
     };
 
-    const getProgress = (lectureId: string, uploading: boolean = false) => {
-        if (progressMap[lectureId] !== undefined) {
-            return progressMap[lectureId];
-        }
+    const getProgress = useMemo(() => {
+        return (lectureId: string, uploading: boolean = false) => {
+            if (!documents || !lectures) return 0;
+            const lectureDocuments = documents.filter(document => 
+                document.lecture === lectureId && (uploading || document.processed)
+            );
+            const lecture = lectures.find(lecture => lecture.id === lectureId);
+            if (!lecture || lecture.pages === 0) return 0;
+            return (lectureDocuments.length / lecture.pages) * 100;
+        };
+    }, [documents, lectures]);
 
-        if (!documents || !lectures) return 0;
-        const lectureDocuments = documents.filter(document => document.lecture === lectureId && (uploading || document.processed));
-        const lecture = lectures.find(lecture => lecture.id === lectureId);
-        if (!lecture || lecture.pages === 0) return 0;
-        const progress = (lectureDocuments.length / lecture.pages) * 100;
-
-        setProgressMap(prev => ({
-            ...prev,
-            [lectureId]: progress
-        }));
-
-        return progress;
-    };
+    const getEstimatedTime = useMemo(() => {
+        return (lectureId: string) => {
+            const lecture = lectures?.find(lecture => lecture.id === lectureId);
+            if (!lecture || lecture.pages === 0) return 0;
+            return Math.ceil((lecture.pages * 4) / 60);
+        };
+    }, [lectures]);
 
     const canRetryBatching = (lecture: Lecture) => {
         // Only allow retry batching if no topics exist for this lecture
@@ -664,12 +657,12 @@ export default function LecturePage({ params }: { params: { classId: string } })
             topic.map_parent !== null
         );
         
-        return !lectureTopics?.length;
+        return !lectureTopics?.length && lecture.parse_status !== 'complete';
     }
 
     const canRetry = (lecture: Lecture) => {
         // Allow retry if status is parsing/batching/error
-        return ['parsing', 'batching', 'error'].includes(lecture.parse_status);
+        return lecture.parse_status === 'error';
     }
 
     const handleRetry = async (classId: string, lecture: Lecture) => {
@@ -814,22 +807,10 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 (payload) => {
                     console.log("Document change:", payload);
                     
-                    // Instead of manually updating cache, invalidate the queries
+                    // Immediately invalidate the documents query to trigger a refresh
                     queryClient.invalidateQueries({
                         queryKey: ["lectureDocuments", classId]
                     });
-                    
-                    // If you need immediate progress updates, you can still update the progress map
-                    const newDocument = payload.new as Document;
-                    if (newDocument?.lecture) {
-                        const lecture = lectures?.find(l => l.id === newDocument.lecture);
-                        if (lecture) {
-                            // Trigger a fresh progress calculation
-                            queryClient.invalidateQueries({
-                                queryKey: ["lectureDocuments", classId]
-                            });
-                        }
-                    }
                 }
             )
             .subscribe();
@@ -868,10 +849,6 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     <Stack>
                         {(lectures && documents && classData) && lectures.length > 0 && lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
                             if (lecture.parse_status !== "complete" || canRetryBatching(lecture)) {
-                                const progress = getProgress(lecture.id, parsingLectures.has(lecture.id));
-                                const remainingPages = lecture.pages - Math.floor((progress / 100) * lecture.pages);
-                                const estimatedSeconds = remainingPages * 4;
-                                const estimatedMinutes = Math.ceil(estimatedSeconds / 60);
                                 return (
                                     <Card withBorder key={lecture.id}>
                                         <Group align="flex-start" justify="space-between">
@@ -906,14 +883,14 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                                     )}
                                                     {canRetry(lecture) ?
                                                         <Progress
-                                                            value={progress}
+                                                            value={getProgress(lecture.id, parsingLectures.has(lecture.id))}
                                                             size="sm"
                                                             color={lecture.parse_status === 'parsing' ? 'blue' :
                                                                 lecture.parse_status === 'batching' ? 'orange' :
                                                                     'blue'}
                                                         /> :
                                                         <Progress
-                                                            value={progress}
+                                                            value={getProgress(lecture.id, lecture.parse_status === 'idle' || parsingLectures.has(lecture.id))}
                                                             size="sm"
                                                             color={lecture.parse_status === 'parsing' ? 'blue' :
                                                                 lecture.parse_status === 'batching' || canRetryBatching(lecture) ? 'orange' :
@@ -923,7 +900,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                                         />}
                                                     {(lecture.parse_status === 'parsing') && (
                                                         <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{estimatedMinutes} minute{estimatedMinutes !== 1 ? 's' : ''}
+                                                            Estimated time remaining: ~{getEstimatedTime(lecture.id)} minute{getEstimatedTime(lecture.id) !== 1 ? 's' : ''}
                                                         </Text>
                                                     )}
                                                 </Stack>

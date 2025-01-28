@@ -12,8 +12,7 @@ from app.services.problems.base_problems_processor import (
     MCQQuestion,
     FRQQuestion,
     ProblemsContent,
-    QuestionType,
-    Figure
+    QuestionType
 )
 import uuid
 
@@ -387,7 +386,7 @@ async def generate_problems():
                     problems_data.append(question_data)
 
             # Insert questions
-            questions_response = supabase.table("questions").insert(problems_data).select("id, question").execute()
+            questions_response = supabase.table("questions").insert(problems_data).execute()
             print("Questions response:", questions_response)
 
             # Handle rubrics for FRQ questions
