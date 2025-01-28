@@ -6,6 +6,7 @@ from app.services.evaluate.accuracy import GeminiDecisionMaker, generate_llm_qua
 from app.services.evaluate.adherence import adherenceEvaluator
 from app.services.evaluate.certainty import CertaintyEvaluator
 from app.services.evaluate.complexity import ComplexityEvaluator
+from app.services.evaluate.clarity import clarityEvaluator
 from app.extensions import supabase
 from datetime import datetime
 evaluate_bp = Blueprint('evaluate', __name__)
@@ -114,7 +115,7 @@ def evaluate_generation():
         print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
         
         # clarity
-        clarity_explanation, clarity_score = "Not implemented", 0
+        clarity_explanation, clarity_score = clarityEvaluator(supabase, generation_id).evaluate_clarity()
         print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
         
         # uploading to supabase
