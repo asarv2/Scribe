@@ -1,4 +1,5 @@
 import time
+import re
 from dotenv import load_dotenv
 import os
 from supabase.client import Client, create_client, ClientOptions
@@ -30,8 +31,8 @@ class adherenceEvaluator():
         load_dotenv()
 
         # creating supabase client
-        self.supabase_url = os.getenv("SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_PRIVATE_KEY")
+        self.supabase_url = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        supabase_key = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
         opts = ClientOptions().replace(schema="prod")
         self.supabase: Client = create_client(self.supabase_url, supabase_key, options=opts)
         
@@ -47,6 +48,7 @@ class adherenceEvaluator():
         self.is_conceptual = self.generation.get("conceptual", False)
         self.is_single_part = self.generation.get("single", False)
         self.questions = self.supabase.table("questions").select("question").eq("generation", generation_id).execute().data
+        self.answers = self.supabase.table("questions").select("solution").eq("generation", generation_id).execute().data
 
         self.class_title = self.supabase.table("classes").select("title").eq("id", self.class_id).single().execute().data.get("title", "No class title")
 
@@ -67,8 +69,12 @@ class adherenceEvaluator():
         
         for attempt in range(retries):
             try:
+                print(message)
                 response = self.llm_gemini_flash.invoke(message)
-                return response.content, 5
+                response_content = response.content if hasattr(response, 'content') else str(response)
+
+                adherence_score = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content).group(1)
+                return response.content, adherence_score
                 
             except Exception as e:
                 last_error = e
@@ -148,7 +154,7 @@ class adherenceEvaluator():
 
     def _format_answer(self, question: dict, part_idx: int = None) -> str:
         """Format the answer for a question or question part"""
-        answers = question.get("answers", {})
+        answers = self.answers
         
         if part_idx is not None:
             answers = answers[part_idx] if isinstance(answers, list) else {}
@@ -182,13 +188,12 @@ class adherenceEvaluator():
         3. On a scale of 1-10, rate the adherence of the model to the input provided. 1 being the lowest and 10 being the highest.
         4.. Provide a clear and concise explanation as to why that score was given.
         """
-        generation_information_prompt = f"""
-        GENERATION INFORMATION:
-        The generation shoule be for the class {self.class_title} and should be an example of a generated{self.type} for the topics {self.topics}.
-        The requested generation should be {self.num_questions} questions long and is {" a multiple choice question" if self.is_mcq else "not a multiple choice question"}. The generation should  {"" if self.is_conceptual else "not"} be conceptual, and should be composed of {"a single part" if self.is_single_part else "multiple parts"}.
-        """
-        output_information_prompt= f"""In response to the given generation information, the model generated the following questions and solutions:
-        {self._format_questions_text()}
+
+        adherence_prompt = f"""
+        YOU MUST EVALUATE THE HOW WELL THE GENERATION ADHERES TO THE GIVEN GENERATION INFORMATION BASED ON THE FOLLOWING CRITERIA:
+        1. How well the generation adheres to the given specifications like the number of questions, the topics, the class, and the type of questions.
+        2. Whether the output questions are relevant to the given topics and class.
+        3. Whether the output solutions are correct and relevant to the given topics and class.
         """
         
         example = """
@@ -222,14 +227,24 @@ class adherenceEvaluator():
         1. **Entering Variable:** In the tableau from Part A, the most negative coefficient in the Z-row is $-\\frac{1}{2}$, corresponding to $x_3$. Therefore, $x_3$ enters the basis.\\n\\n2. **Leaving Variable:** Perform the minimum ratio test:\\n\\n$\\frac{5/2}{1/2} = 5$\\n$\\frac{1/2}{1/2} = 1$\\n\\nThe minimum ratio is 1, corresponding to the $s_3$ row. Therefore, $s_3$ leaves the basis.\\n\\n3. **Pivot Operation:** The pivot element is $\\frac{1}{2}$ (in the $s_3$ row and $x_3$ column). Perform row operations to make the pivot element 1 and other elements in the $x_3$ column 0:\\n\\nNew Row 3: $2R_3$\\nNew Row 1: $R_1 - \\frac{1}{2}R_3$\\nNew Z-row: $R_Z + \\frac{1}{2}R_3$\\n\\nThis yields the updated tableau:\\n\\n$\\begin{array}{c|cccccc|c} & x_1 & x_2 & x_3 & s_1 & s_2 & s_3 & RHS \\\\\\hline x_1 & 1 & 2 & 0 & 1 & 0 & -1 & 2 \\\\ s_2 & 0 & -5 & 0 & -2 & 1 & 0 & 1 \\\\ x_3 & 0 & -1 & 1 & -3 & 0 & 2 & 1 \\\\\\hline Z & 0 & 3 & 0 & 1 & 0 & 1 & 13 \\\\\\end{array}$\\n\\nThe new BFS is $(x_1, x_2, x_3, s_1, s_2, s_3) = (2, 0, 1, 0, 1, 0)$, with $Z = 13$.\\n\\n4. **Optimality Check:** All coefficients in the Z-row are non-negative. Therefore, this solution is optimal.
         OUTPUT:
         <OUTPUT>6</OUTPUT>
-        <WHY>The generation asked for a 2x2 matrix, but the solution had a differnet amount of constraints and variables. Moreover, the solution and steps were not as clear as the other solutions.</WHY>
+        <WHY>The generation asked for a 2x2 matrix, but the solution had a different amount of constraints and variables. Moreover, the solution and steps were not as clear as the other solutions.</WHY>
+        """
+
+        final_prompt = f"""
+        {base_question_prompt}\n\n{quality_prompt}\n\n{adherence_prompt}\n\n{example}\n\n
+        Now, it is your turn to evaluate the generation: {self.name}. 
+        
+        Generation Requirements:
+        - Wanted {self.num_questions} questions
+        - Wanted {"single part" if self.is_single_part else "multi part"} questions
+        - Wanted {"mcq" if self.is_mcq else "free response"} questions
+        - Wanted {"conceptual" if self.is_conceptual else "computational"} questions
+        IMPORTANT: Wanted the following additional information: {self.generation.get("additional_info", "")}
+        
+        Generation Output: 
+        {self._format_questions_text()}
+        
+        OUTPUT:
         """
         
-        return str(f"""
-        {base_question_prompt}\n\n{quality_prompt}\n\n{generation_information_prompt}\n\n{example}\n\n{output_information_prompt}. """)
-        
-
-if __name__ == "__main__":
-    adherenceEvaluator = adherenceEvaluator(1)
-
-    adherenceEvaluator.evaluate_adherence(adherenceEvaluator.input, adherenceEvaluator.output)
+        return str(final_prompt)
