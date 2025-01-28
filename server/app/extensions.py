@@ -11,6 +11,18 @@ print("Loaded environment variables")
 app = Flask(__name__)
 print("Flask app initialized")
 
+# set the app to be an ASGI app
+app.config['ASGI_APPLICATION'] = True
+
+# set upload folder based on environment
+if os.getenv('DOCKER_ENV'):
+    app.config['UPLOAD_FOLDER'] = "/app/uploads"
+else:
+    app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+
+# Ensure upload directory exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 # Initialize Supabase client
 supabase_url = os.getenv("SUPABASE_URL")
 supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
@@ -19,4 +31,3 @@ supabase: Client = create_client(supabase_url, supabase_private_key, options=opt
 
 print("Supabase client initialized")
 
-app.config['ASGI_APPLICATION'] = True

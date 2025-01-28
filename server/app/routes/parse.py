@@ -1,3 +1,4 @@
+import math
 from flask import Blueprint, request, jsonify, current_app, url_for
 from app.extensions import supabase
 from app.services.parse.lecture_processor import LectureProcessor
@@ -191,7 +192,7 @@ async def parse_lecture():
 
         print("Batch results:", batch_results)
 
-# Make HTTP request to batch endpoint
+        # Make HTTP request to batch endpoint
         try:
             request_body = {
                 "class_id": class_id,
@@ -428,67 +429,84 @@ async def parse_textbook():
         }), 500
 
 @parse_bp.route('/video', methods=['POST'])
-def parse_video():
+async def parse_video():
     """
-    Parse a video and audio chunk and return the documents.
+    Parse a video and return the documents.
     """
-    ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
-    def allowed_file(filename):
-        return '.' in filename and \
-            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    try:
+        print("Starting parse-video function...")
+        data = request.get_json()
+        video_path = data.get('video_path')
+        lecture_id = data.get('lecture_id')
 
-    video_processor = VideoProcessor()
-    print("Initialized VideoProcessor")  # Direct print
+        print("Request params:", {"video_path": video_path, "lecture_id": lecture_id})
 
-    if 'video_chunk' not in request.files or 'audio_chunk' not in request.files:
-        print("Missing video or audio chunk in request")
-        return 'Missing video or audio chunk', 400
-    
-    video_chunk = request.files['video_chunk']
-    audio_chunk = request.files['audio_chunk']
-    chunk_number = int(request.form['chunk_number'])
-    total_chunks = int(request.form['total_chunks'])
-    lecture_id = request.form['lecture_id']
-    class_id = request.form['class_id']
-    original_filename = request.form['filename']
-    
-    if video_chunk.filename == '' or audio_chunk.filename == '':
-        print("Empty filename received")
-        return 'No selected file', 400
+        if not video_path or not lecture_id:
+            return jsonify({'error': 'Missing required parameters'}), 400
+
+        # Get lecture and class info
+        lecture = supabase.table("lectures").select("*").eq("id", lecture_id).single().execute().data
+        class_data = supabase.table("classes").select("*").eq("id", lecture['class']).single().execute().data
         
-    if video_chunk and audio_chunk and allowed_file(original_filename):
-        # Save both chunks
-        video_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{lecture_id}_video_{chunk_number}.mp4")
-        audio_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{lecture_id}_audio_{chunk_number}.wav")
-        
-        print(f"Saving chunks to: {video_path} and {audio_path}")
-        
-        video_chunk.save(video_path)
-        audio_chunk.save(audio_path)
-        
+        video_processor = VideoProcessor(class_data['title'], lecture['name'], video_path)
+        print("VideoProcessor created")
+        async def after_generate(transcript: str, description: str, page: int, photo_bytes: bytes):
+            """Callback function to save documents and images"""
+            document = supabase.table("documents").insert({
+                "text": transcript,
+                "description": description,
+                "page": page,
+                "lecture": lecture_id
+            }).execute()
+            document_id = document.data[0]['id']
+            print(f"Document inserted: {document_id}")
+
+            # Upload image to supabase
+            supabase.storage.from_("lectures").upload(
+                f"{class_data['id']}/{lecture_id}/{document_id}.png",
+                photo_bytes
+            )
+            print(f"Image uploaded to supabase: {class_data['id']}/{lecture_id}/{document_id}.png")
+        # Process video and handle results
+        await video_processor.process_video(after_generate)
+
+        # make HTTP request to parse-lecture endpoint
         try:
-            # Use audio file for transcription
-            transcript = video_processor.transcribe_video(audio_path)
-            # Use video file for frame extraction
-            photos = video_processor.process_video(video_path)
-            documents = video_processor.generate_documents(photos, transcript)
+            request_body = {
+                "class_id": class_data["id"],
+                "lecture_id": lecture_id,
+                "handwritten": True
+            }
             
-            return json.dumps({
-                'chunk': chunk_number,
-                'total': total_chunks,
-                'documents': documents
-            }), 200
-        except Exception as e:
-            print(f"Error processing files: {str(e)}")
-            import traceback
-            traceback.print_exc()
-            return f'Error processing files: {str(e)}', 500
-        finally:
-            # Clean up both files
-            if os.path.exists(video_path):
-                os.remove(video_path)
-            if os.path.exists(audio_path):
-                os.remove(audio_path)
-    
-    return 'Invalid file type', 400
+            # Use url_for to generate the URL (more maintainable)
+            parse_lecture_url = url_for('parse.parse_lecture', _external=True)
+            
+            # Make the request
+            parse_lecture_response = requests.post(parse_lecture_url, json=request_body)
+            
+            if parse_lecture_response.status_code != 200:
+                print("Warning: Parse-lecture processing request failed:", parse_lecture_response.json())
+            else:
+                print("Parse-lecture processing initiated")
+            
+            return jsonify({"results": parse_lecture_response.json()}), 200
+
+        except Exception as parse_lecture_error:
+            print("Error calling parse-lecture:", {
+                "name": type(parse_lecture_error).__name__,
+                "message": str(parse_lecture_error),
+                "stack": traceback.format_exc(),
+            })
+            
+            return jsonify({"results": parse_lecture_response.json()}), 200
+
+    except Exception as e:
+        print(f"Error in parse_video: {str(e)}")
+        # Update lecture status to failed
+        if lecture_id:
+            supabase.table("lectures").update({
+                "parse_status": "error",
+                "parse_error": str(e)
+            }).eq("id", lecture_id).execute()
+        return jsonify({'error': str(e)}), 500
 
