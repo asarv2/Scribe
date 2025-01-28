@@ -112,8 +112,11 @@ export type Database = {
           complexity: number
           complexity_explanation: string
           created_at: string
-          generation: string
+          generation: string | null
           id: string
+          latency: number
+          latex_compiles: boolean
+          lecture: string | null
           novelty: number
           novelty_explanation: string
         }
@@ -129,8 +132,11 @@ export type Database = {
           complexity?: number
           complexity_explanation?: string
           created_at?: string
-          generation: string
+          generation?: string | null
           id?: string
+          latency?: number
+          latex_compiles?: boolean
+          lecture?: string | null
           novelty?: number
           novelty_explanation?: string
         }
@@ -146,8 +152,11 @@ export type Database = {
           complexity?: number
           complexity_explanation?: string
           created_at?: string
-          generation?: string
+          generation?: string | null
           id?: string
+          latency?: number
+          latex_compiles?: boolean
+          lecture?: string | null
           novelty?: number
           novelty_explanation?: string
         }
@@ -159,39 +168,35 @@ export type Database = {
             referencedRelation: "generations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "evaluations_lecture_fkey"
+            columns: ["lecture"]
+            isOneToOne: false
+            referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
         ]
       }
       examples: {
         Row: {
           created_at: string
-          generation: string | null
           id: string
           input: string
           output: string
         }
         Insert: {
           created_at?: string
-          generation?: string | null
           id?: string
           input: string
           output: string
         }
         Update: {
           created_at?: string
-          generation?: string | null
           id?: string
           input?: string
           output?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "logs_generation_fkey"
-            columns: ["generation"]
-            isOneToOne: false
-            referencedRelation: "generations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       feedback: {
         Row: {
@@ -336,11 +341,15 @@ export type Database = {
           deleted: boolean
           id: string
           last_parse_attempt: string | null
+          last_upload_attempt: string | null
           name: string | null
           note_number: number | null
           pages: number
           parse_error: string | null
           parse_status: Database["prod"]["Enums"]["parse_status"]
+          response_url: string
+          upload_error: string | null
+          upload_progress: number
         }
         Insert: {
           class: string
@@ -348,11 +357,15 @@ export type Database = {
           deleted?: boolean
           id?: string
           last_parse_attempt?: string | null
+          last_upload_attempt?: string | null
           name?: string | null
           note_number?: number | null
           pages?: number
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
+          response_url?: string
+          upload_error?: string | null
+          upload_progress?: number
         }
         Update: {
           class?: string
@@ -360,11 +373,15 @@ export type Database = {
           deleted?: boolean
           id?: string
           last_parse_attempt?: string | null
+          last_upload_attempt?: string | null
           name?: string | null
           note_number?: number | null
           pages?: number
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
+          response_url?: string
+          upload_error?: string | null
+          upload_progress?: number
         }
         Relationships: [
           {
