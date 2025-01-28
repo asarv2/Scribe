@@ -2,9 +2,9 @@ from flask import Blueprint, jsonify
 
 health_bp = Blueprint('health', __name__)
 
-@health_bp.route('/health', methods=['GET'])
+@health_bp.route('/', methods=['GET'])
 def health():
-    """Parse a lecture and return the documents."""
+    """Check if the server is healthy."""
     try:
         return jsonify({"status": "healthy"}), 200
     except Exception as error:
