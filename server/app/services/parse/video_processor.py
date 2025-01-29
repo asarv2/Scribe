@@ -77,7 +77,7 @@ class VideoProcessor(BaseProcessor):
             self.conversation_history.append(message)
 
             # Generate response using AI
-            response = await self.robust_generate(message)
+            response = await self.robust_generate(message, model="gemini-1.5-flash-8b")
             self.conversation_history.append(AIMessage(content=response))
 
             return self.clean_response(response)

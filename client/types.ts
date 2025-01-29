@@ -16,3 +16,4 @@ export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"]
 
 export type Generation = Database[SchemaName]["Tables"]["generations"]["Row"]
 export type GenerationType = "problem" | "summary"
+export type Evaluation = Database[SchemaName]["Tables"]["evaluations"]["Row"]

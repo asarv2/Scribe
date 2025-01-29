@@ -512,7 +512,7 @@ class BaseProblemsProcessor(BaseProcessor):
                 "text": f"You should generate {num_questions} new questions for: {name}. INPUT: {content}\n\nYOUR OUTPUT: "
             }
         ])
-        response = await self.robust_generate(message)
+        response = await self.robust_generate(message, model="gemini-1.5-pro")
         print("RESPONSE: ", response)
         return response
 

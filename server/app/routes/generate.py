@@ -160,7 +160,8 @@ async def generate_summary():
             processor = LectureSummaryProcessor(
                 course_title=class_title,
                 lecture_names=names,
-                lectures=content
+                lectures=content,
+                additional_instructions=generation_response.data.get('additional_info', '')
             )
             summary = await processor.process_summary(all_lectures, num_batches, on_batch_complete)
             print("Lecture summary:", summary)
@@ -168,7 +169,8 @@ async def generate_summary():
             processor = TopicSummaryProcessor(
                 course_title=class_title,
                 topic_names=names,
-                topics=content
+                topics=content,
+                additional_instructions=generation_response.data.get('additional_info', '')
             )
             summary = await processor.process_summary(all_lectures, num_batches, on_batch_complete)
             print("Topic summary:", summary)
@@ -221,12 +223,10 @@ async def generate_problems():
         data: ProblemRequest = request.get_json()
         class_id = data.get('class_id')
         generation_id = data.get('generation_id')
-        additional_instructions = data.get('additional_instructions')
 
         print("Request params:", {
             "class_id": class_id,
             "generation_id": generation_id,
-            "additional_instructions": additional_instructions
         })
 
         # Update generation status to generating
@@ -427,7 +427,7 @@ async def generate_problems():
                 lecture_names=names,
                 lectures=content,
                 question_type=generation_question_type,
-                additional_instructions=additional_instructions
+                additional_instructions=generation_data.get('additional_info', '')
             )
             print("Lecture problems processor created")
             questions = await processor.process_problems(
@@ -446,7 +446,7 @@ async def generate_problems():
                 topic_names=names,
                 topics=content,
                 question_type=generation_question_type,
-                additional_instructions=additional_instructions
+                additional_instructions=generation_data.get('additional_info', '')
             )
             print("Topic problems processor created")
             questions = await processor.process_problems(

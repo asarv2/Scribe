@@ -7,7 +7,7 @@ from pylatex import Document, Section, Subsection, Command, Package
 from pylatex.base_classes import Container
 from pylatex.utils import NoEscape, bold
 from pylatex.base_classes import Environment
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Union, Optional, Literal
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, AIMessage
@@ -35,6 +35,7 @@ class BaseProcessor:
         Initialize the BaseProcessor and create all the models.
         """
         # Initialize LangChain models
+        # 2 Requests per minute
         self.llm_gemini_pro = ChatGoogleGenerativeAI(
             model='gemini-1.5-pro',
             temperature=0,
@@ -43,6 +44,7 @@ class BaseProcessor:
             max_retries=2
         )
         
+        # 15 Requests per minute
         self.llm_gemini_flash = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash',
             temperature=0,
@@ -50,7 +52,17 @@ class BaseProcessor:
             timeout=None,
             max_retries=2
         )
+
+        # 10 Requests per minute
+        self.llm_gemini_flash_exp = ChatGoogleGenerativeAI(
+            model='gemini-2.0-flash-exp',
+            temperature=0,
+            max_tokens=None,
+            timeout=None,
+            max_retries=2
+        )
         
+        # 15 Requests per minute
         self.llm_gemini_flash8b = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash-8b',
             temperature=0,
@@ -84,10 +96,24 @@ class BaseProcessor:
         print(f"Estimated total tokens: {token_count}")
 
         return trimmed_messages
+    
+
+    async def get_rpm(self, model: str) -> int:
+        if model == "gemini-1.5-flash-8b":
+            return 15
+        elif model == "gemini-1.5-flash":
+            return 15
+        elif model == "gemini-1.5-flash-exp":
+            return 10
+        elif model == "gemini-1.5-pro":
+            return 2
+        else:
+            raise ValueError(f"Invalid model: {model}")
 
     async def robust_generate(
         self,
         message: HumanMessage,
+        model: Literal["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"] = "gemini-1.5-flash-8b",
         retries: int = 5,
         initial_wait: int = 5
     ) -> str:
@@ -97,7 +123,17 @@ class BaseProcessor:
             try:
                 # Try Gemini Flash first
                 try:
-                    response = await self.llm_gemini_flash.agenerate([[message]])
+                    if model == "gemini-1.5-flash-8b":
+                        response = await self.llm_gemini_flash8b.agenerate([[message]])
+                    elif model == "gemini-1.5-flash":
+                        response = await self.llm_gemini_flash.agenerate([[message]])
+                    elif model == "gemini-2.0-flash-exp":
+                        response = await self.llm_gemini_flash_exp.agenerate([[message]])
+                    elif model == "gemini-1.5-pro":
+                        response = await self.llm_gemini_pro.agenerate([[message]])
+                    else:
+                        raise ValueError(f"Invalid model: {model}")
+
                     return response.generations[0][0].text
                 except Exception as flash_error:
                     # If Flash fails with RECITATION error, try Pro

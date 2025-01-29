@@ -7,9 +7,10 @@ class LectureSummaryProcessor(BaseSummaryProcessor):
         self,
         course_title: str,
         lecture_names: List[str],
-        lectures: SummaryContent
+        lectures: SummaryContent,
+        additional_instructions: str
     ):
-        super().__init__(course_title, ContentType.LECTURE)
+        super().__init__(course_title, ContentType.LECTURE, additional_instructions)
         self.lectures = lectures
         self.lecture_names = lecture_names
 

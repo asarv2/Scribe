@@ -550,12 +550,12 @@ export default function LecturePage({ params }: { params: { classId: string } })
     }, [documents, lectures]);
 
     const getEstimatedTime = useMemo(() => {
-        return (lectureId: string) => {
+        return (lectureId: string, uploading: boolean = false) => {
             const lecture = lectures?.find(lecture => lecture.id === lectureId);
             if (!lecture || lecture.pages === 0) return 0;
-            return Math.ceil((lecture.pages * 4) / 60);
+            return Math.ceil(((lecture.pages * 4) / 60) * (100 - getProgress(lectureId, uploading)) / 100);
         };
-    }, [lectures]);
+    }, [documents, lectures]);
 
     const canRetryBatching = (lecture: Lecture) => {
         // Only allow retry batching if no topics exist for this lecture

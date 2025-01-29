@@ -177,27 +177,6 @@ export type Database = {
           },
         ]
       }
-      examples: {
-        Row: {
-          created_at: string
-          id: string
-          input: string
-          output: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          input: string
-          output: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          input?: string
-          output?: string
-        }
-        Relationships: []
-      }
       feedback: {
         Row: {
           created_at: string
@@ -266,6 +245,7 @@ export type Database = {
       generations: {
         Row: {
           additional_info: string
+          base_generation_id: string | null
           class: string
           conceptual: boolean
           created_at: string
@@ -283,9 +263,11 @@ export type Database = {
           single: boolean
           topics: string[]
           type: Database["prod"]["Enums"]["generation_type"]
+          version: number
         }
         Insert: {
           additional_info?: string
+          base_generation_id?: string | null
           class: string
           conceptual?: boolean
           created_at?: string
@@ -303,9 +285,11 @@ export type Database = {
           single?: boolean
           topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
+          version?: number
         }
         Update: {
           additional_info?: string
+          base_generation_id?: string | null
           class?: string
           conceptual?: boolean
           created_at?: string
@@ -323,8 +307,16 @@ export type Database = {
           single?: boolean
           topics?: string[]
           type?: Database["prod"]["Enums"]["generation_type"]
+          version?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "generations_base_generation_id_fkey"
+            columns: ["base_generation_id"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "generations_class_fkey"
             columns: ["class"]
@@ -398,6 +390,7 @@ export type Database = {
           approved: boolean | null
           conceptual: boolean
           documents: string[]
+          example: boolean
           explanation_a: string | null
           explanation_b: string | null
           explanation_c: string | null
@@ -405,7 +398,6 @@ export type Database = {
           explanation_e: string | null
           generation: string | null
           id: string
-          lecture: string | null
           mcq: boolean
           multipart: string | null
           option_a: string | null
@@ -416,13 +408,13 @@ export type Database = {
           question: string
           reason: string
           solution: string
-          topic: string | null
           updated_at: string
         }
         Insert: {
           approved?: boolean | null
           conceptual?: boolean
           documents?: string[]
+          example?: boolean
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
@@ -430,7 +422,6 @@ export type Database = {
           explanation_e?: string | null
           generation?: string | null
           id?: string
-          lecture?: string | null
           mcq?: boolean
           multipart?: string | null
           option_a?: string | null
@@ -441,13 +432,13 @@ export type Database = {
           question: string
           reason?: string
           solution: string
-          topic?: string | null
           updated_at?: string
         }
         Update: {
           approved?: boolean | null
           conceptual?: boolean
           documents?: string[]
+          example?: boolean
           explanation_a?: string | null
           explanation_b?: string | null
           explanation_c?: string | null
@@ -455,7 +446,6 @@ export type Database = {
           explanation_e?: string | null
           generation?: string | null
           id?: string
-          lecture?: string | null
           mcq?: boolean
           multipart?: string | null
           option_a?: string | null
@@ -466,7 +456,6 @@ export type Database = {
           question?: string
           reason?: string
           solution?: string
-          topic?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -475,20 +464,6 @@ export type Database = {
             columns: ["generation"]
             isOneToOne: false
             referencedRelation: "generations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "questions_lecture_fkey"
-            columns: ["lecture"]
-            isOneToOne: false
-            referencedRelation: "lectures"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "questions_topic_fkey1"
-            columns: ["topic"]
-            isOneToOne: false
-            referencedRelation: "topics"
             referencedColumns: ["id"]
           },
         ]
@@ -534,33 +509,30 @@ export type Database = {
           content: string
           created_at: string | null
           documents: string[]
+          example: boolean
           generation: string | null
           id: string
-          lecture: string | null
           preamble: string
-          topic: string | null
         }
         Insert: {
           conclusion?: string
           content: string
           created_at?: string | null
           documents?: string[]
+          example?: boolean
           generation?: string | null
           id?: string
-          lecture?: string | null
           preamble?: string
-          topic?: string | null
         }
         Update: {
           conclusion?: string
           content?: string
           created_at?: string | null
           documents?: string[]
+          example?: boolean
           generation?: string | null
           id?: string
-          lecture?: string | null
           preamble?: string
-          topic?: string | null
         }
         Relationships: [
           {
@@ -568,20 +540,6 @@ export type Database = {
             columns: ["generation"]
             isOneToOne: false
             referencedRelation: "generations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "summaries_lecture_fkey"
-            columns: ["lecture"]
-            isOneToOne: false
-            referencedRelation: "lectures"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "summaries_topic_fkey"
-            columns: ["topic"]
-            isOneToOne: false
-            referencedRelation: "topics"
             referencedColumns: ["id"]
           },
         ]

@@ -7,7 +7,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.utils.convert_generation_example import GenerationFormatter
 
-class adherenceEvaluator():
+class AdherenceEvaluator():
     def __init__(self, supabase, generation_id):
         '''
         Class for all evaluating a how well the model adhered to the given input.

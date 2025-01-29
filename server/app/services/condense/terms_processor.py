@@ -110,7 +110,7 @@ class TermsProcessor(BaseProcessor):
             },
             {"type": "text", "text": lecture_content}
         ])
-        return await self.robust_generate(message)
+        return await self.robust_generate(message, model="gemini-1.5-flash-8b")
 
     def clean_result(
         self,

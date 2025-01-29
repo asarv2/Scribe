@@ -104,7 +104,7 @@ class LectureProcessor(BaseProcessor):
             self.conversation_history.append(message)
 
             # Generate response using AI
-            response = await self.robust_generate(message)
+            response = await self.robust_generate(message, model="gemini-1.5-flash")
             print("Response:", response)
 
             if response:
@@ -164,7 +164,7 @@ class LectureProcessor(BaseProcessor):
 
         # Common example figure
         example_figure = '''
-        <FIGURE [200, 90, 745, 527]>A description of the figure.</FIGURE>'''
+        <FIGURE [200, 90, 745, 527]>Theorem 10.1 statement.</FIGURE>'''
 
         # Common example description
         example_description = '''
@@ -177,7 +177,7 @@ class LectureProcessor(BaseProcessor):
 
             {example_latex}
             
-            2. Find any important figures on the slides and provide the 4 bounding box coordinates: [ymin, xmin, ymax, xmax]. Use <FIGURE> and </FIGURE> tags to enclose the figure coordinates. If there are no figures present, simply do not write any <FIGURE> tags. Example:
+            2. Find any important figures on the slides and provide the 4 bounding box coordinates: [ymin, xmin, ymax, xmax]. These figures should be important equations, diagrams, or highlighted content. Refrain from have insignificant figures like 'an arrow' or 'a dot', as well as too broad figures like 'the entire slide'. Use <FIGURE> and </FIGURE> tags to enclose the figure coordinates. If there are no figures present, simply do not write any <FIGURE> tags. Example:
             {example_figure}
 
             3. Provide a text based description of what you see, including specific details that would not be known unless you were given the context of the slide. Be very detailed and specific, but make sure to stay concise and to the point. Use LaTeX to describe any mathematical content you see on the slide. Use <DESCRIPTION> and </DESCRIPTION> tags to enclose the description. Example:
@@ -213,7 +213,7 @@ class LectureProcessor(BaseProcessor):
         # Common example figures (only for handwritten)
         example_figures = '''
         <FIGURE [200, 90, 745, 527]>Theorem 10.1 statement.</FIGURE>
-        <FIGURE [400, 490, 800, 700]>Conclusion of the proof for n=3.</FIGURE>'''
+        <FIGURE [400, 490, 800, 700]>Geometric interpretation of the proof.</FIGURE>'''
 
         # Common example description
         example_description = '''

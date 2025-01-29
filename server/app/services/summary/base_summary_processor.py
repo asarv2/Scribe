@@ -20,10 +20,11 @@ class Summary(TypedDict):
     slides: Dict[str, List[int]]
 
 class BaseSummaryProcessor(BaseProcessor):
-    def __init__(self, course_title: str, content_type: ContentType):
+    def __init__(self, course_title: str, content_type: ContentType, additional_instructions: str = ""):
         super().__init__()
         self.course_title = course_title
         self.content_type = content_type
+        self.additional_instructions = additional_instructions
         self.summary: Dict[str, Summary] = {}
         # Base prompts
         base_question_prompt = (
@@ -111,12 +112,17 @@ class BaseSummaryProcessor(BaseProcessor):
             f"</OUTPUT>"
         )
 
+        additional_instructions_prompt = (
+            f"VERY IMPORTANT: Follow these additonal instructions in the generation of the summary: {self.additional_instructions}"
+        )
+
         self.summary_prompt = (
             f"{base_question_prompt}\n"
             f"{quality_prompt}\n"
             f"{summary_requirements_prompt}\n"
             f"{summary_formatting_prompt}\n"
-            f"{example}"
+            f"{example}\n"
+            f"{additional_instructions_prompt}"
         )
 
     async def process_batch(self, name: str, content: str) -> str:
@@ -137,7 +143,7 @@ class BaseSummaryProcessor(BaseProcessor):
         ])
 
         trimmed_messages = await self.prepare_conversation_history([message])
-        return await self.robust_generate(trimmed_messages[0])
+        return await self.robust_generate(trimmed_messages[0], model="gemini-1.5-flash-8b")
 
     def clean_result(self, result: str, name: str, lectures: List[Dict[str, str]]) -> None:
         """Clean and process the generated summary result."""

@@ -61,7 +61,7 @@ async def parse_lecture():
         print("LectureProcessor created")
 
         # Process in batches
-        batch_size = 20
+        batch_size = 10 # for gemini flash experimental
         batch_results = []
         
         for i in range(0, len(documents_to_process), batch_size):
@@ -98,10 +98,10 @@ async def parse_lecture():
                     formatted_figures = [
                         {
                             "bbox": [
-                                float(fig['x_min']), 
                                 float(fig['y_min']), 
-                                float(fig['x_max']), 
-                                float(fig['y_max'])
+                                float(fig['x_min']), 
+                                float(fig['y_max']), 
+                                float(fig['x_max'])
                             ],
                             "description": str(fig['description'])
                         }
@@ -149,10 +149,10 @@ async def parse_lecture():
                 # Insert new figures
                 figures_data = [
                     {
-                        "x_min": figure.bbox[0],
-                        "x_max": figure.bbox[2],
-                        "y_min": figure.bbox[1],
-                        "y_max": figure.bbox[3],
+                        "y_min": figure.bbox[0],
+                        "x_min": figure.bbox[1],
+                        "y_max": figure.bbox[2],
+                        "x_max": figure.bbox[3],
                         "description": figure.description,
                         "document": document_id
                     }
@@ -286,7 +286,7 @@ async def parse_textbook():
         print("TextbookProcessor created")
 
         # Process in batches
-        batch_size = 20
+        batch_size = 10 # for gemini flash experimental
         batch_results = []
         
         for i in range(0, len(documents_to_process), batch_size):
@@ -323,10 +323,10 @@ async def parse_textbook():
                     formatted_figures = [
                         {
                             "bbox": [
-                                float(fig['x_min']), 
                                 float(fig['y_min']), 
-                                float(fig['x_max']), 
-                                float(fig['y_max'])
+                                float(fig['x_min']), 
+                                float(fig['y_max']), 
+                                float(fig['x_max'])
                             ],
                             "description": str(fig['description'])
                         }
@@ -375,10 +375,10 @@ async def parse_textbook():
                 # Insert new figures
                 figures_data = [
                     {
-                        "x_min": figure.bbox[0],
-                        "x_max": figure.bbox[2],
-                        "y_min": figure.bbox[1],
-                        "y_max": figure.bbox[3],
+                        "y_min": figure.bbox[0],
+                        "x_min": figure.bbox[1],
+                        "y_max": figure.bbox[2],
+                        "x_max": figure.bbox[3],
                         "description": figure.description,
                         "document": document_id
                     }

@@ -2,11 +2,11 @@ import time
 from flask import Blueprint, request
 import traceback
 from langchain_google_genai import ChatGoogleGenerativeAI
-from app.services.evaluate.accuracy import GeminiDecisionMaker, generate_llm_quality_report
-from app.services.evaluate.adherence import adherenceEvaluator
+from app.services.evaluate.accuracy import AccuracyEvaluator
+from app.services.evaluate.adherence import AdherenceEvaluator
 from app.services.evaluate.certainty import CertaintyEvaluator
 from app.services.evaluate.complexity import ComplexityEvaluator
-from app.services.evaluate.clarity import clarityEvaluator
+from app.services.evaluate.clarity import ClarityEvaluator
 from app.extensions import supabase
 from datetime import datetime
 from app.services.evaluate.novelty import NoveltyEvaluator
@@ -95,13 +95,13 @@ def evaluate_generation():
         certainty_score, certainty_explanation = certainty_evaluator.evaluate_certainty()
         print(f"Certainty score and explanation calculated: Score: {certainty_score}, Explanation: {certainty_explanation}")
         # accuracy
-        gemini_decision_maker = GeminiDecisionMaker(supabase, generation_id)
-        print("Gemini decision maker created")
-        accuracy_explanation, accuracy_score = generate_llm_quality_report(gemini_decision_maker)
+        accuracy_evaluator = AccuracyEvaluator(supabase, generation_id)
+        print("Accuracy evaluator created")
+        accuracy_explanation, accuracy_score = accuracy_evaluator.evaluate_accuracy()
         print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
         
         # adherence
-        adherence_evaluator = adherenceEvaluator(supabase, generation_id)
+        adherence_evaluator = AdherenceEvaluator(supabase, generation_id)
         print("Adherence evaluator created")
         adherence_explanation, adherence_score = adherence_evaluator.evaluate_adherence()
         print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
@@ -119,7 +119,9 @@ def evaluate_generation():
         print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
         
         # clarity
-        clarity_explanation, clarity_score = clarityEvaluator(supabase, generation_id).evaluate_clarity()
+        clarity_evaluator = ClarityEvaluator(supabase, generation_id)
+        print("Clarity evaluator created")
+        clarity_explanation, clarity_score = clarity_evaluator.evaluate_clarity()
         print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
         
         # uploading to supabase

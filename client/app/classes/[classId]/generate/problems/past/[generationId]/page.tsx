@@ -37,6 +37,8 @@ import DownloadGenerationModal from "@/components/DownloadGenerationModal";
 import { Question } from "@/types";
 import { updateQuestionStatus } from "@/utils/services/questions";
 import Latex from "@/components/Latex";
+import RegenerateGenerationModal from "@/components/Regenerate/RegenerateGenerationModal";
+import { getEvaluations } from "@/utils/queries/get-evaluations";
 
 export default function Generation({ params }: { params: { classId: string, generationId: string } }) {
     const queryClient = useQueryClient();
@@ -62,6 +64,12 @@ export default function Generation({ params }: { params: { classId: string, gene
     const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({
         queryKey: ["generationProblems", generationId],
         queryFn: () => getGenerationProblems(supabase, generation ? [generation] : []),
+        enabled: !!generation
+    })
+
+    const {data: evaluations, isLoading: loadingEvaluations} = useQuery({
+        queryKey: ["evaluations", generationId],
+        queryFn: () => getEvaluations(supabase, generationId),
         enabled: !!generation
     })
 
@@ -194,6 +202,7 @@ export default function Generation({ params }: { params: { classId: string, gene
                             <Text size="xl" fw={700} mb={6}>{generation?.name}</Text>
                         </Group>
                         <Group>
+                            {generation && <RegenerateGenerationModal generation={generation} evaluations={evaluations ?? []} />}
                             <DownloadGenerationModal generationId={generationId} generationTitle={`${generation?.name ?? ""} - ${generation?.type === "summary" ? "Summary" : "Questions"}`} user={user ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
                             <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} type="problems" />
                         </Group>

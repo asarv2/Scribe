@@ -7,12 +7,12 @@ class TopicSummaryProcessor(BaseSummaryProcessor):
         self,
         course_title: str,
         topic_names: List[str],
-        topics: SummaryContent
+        topics: SummaryContent,
+        additional_instructions: str
     ):
-        super().__init__(course_title, ContentType.TOPIC)
+        super().__init__(course_title, ContentType.TOPIC, additional_instructions)
         self.topics = topics
         self.topic_names = topic_names
-
     async def process_summary(
         self,
         all_lectures: List[Dict[str, str]],

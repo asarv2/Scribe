@@ -180,6 +180,11 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         return undefined;
     }
 
+    const getActiveImage = (document: Document) => {
+        if (!document) return "/placeholder_image.svg";
+        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
+    }
+
 
     return (
         <>
@@ -208,11 +213,11 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                 let estimatedSeconds = 0;
                                 estimatedSeconds = 20 * (1 - generation.progress) // takes 20 seconds to generate a summary
                                 return (
-                                    <Card withBorder key={generation.id}>
+                                    document && <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">
                                             <Group align="flex-start">
                                                 <MantineImage
-                                                    src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${document?.lecture}/images/${document?.page}.png`}
+                                                    src={getActiveImage(document)}
                                                     alt={`Page ${document?.page} of ${document?.lecture}`}
                                                     width={200}
                                                     height={150}
@@ -262,7 +267,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                 )
                             }
                             return (
-                                <Link
+                                document && <Link
                                     href={`/classes/${classId}/generate/summary/past/${generation.id}`}
                                     key={generation.id}
                                     style={{ textDecoration: 'none' }}
@@ -270,7 +275,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                     <Card withBorder>
                                         <Group align="flex-start">
                                             <MantineImage
-                                                src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/lectures/${document?.lecture}/images/${document?.page}.png`}
+                                                src={getActiveImage(document)}
                                                 alt={`Page ${document?.page} of ${document?.lecture}`}
                                                 width={200}
                                                 height={150}

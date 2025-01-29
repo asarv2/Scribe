@@ -1,4 +1,3 @@
-from multiprocessing.dummy.connection import Client
 import re
 from google.generativeai import GenerativeModel
 import google.generativeai as genai
@@ -10,147 +9,100 @@ from dotenv import load_dotenv
 
 from app.utils.convert_generation_example import GenerationFormatter
 
-load_dotenv()
 
-api_key = os.getenv('GOOGLE_API_KEY')
-if not api_key:
-    raise ValueError("No Google API Key found. Make sure GOOGLE_API_KEY is set in your environment.")
+class AccuracyEvaluator:
+    def __init__(self, supabase, generation_id):
+        '''
+        Class for evaluating the accuracy and quality of generated questions.
+        
+        Args:
+            supabase: The supabase client.
+            generation_id: The uuid of the class in supabase
+            
+        Attributes:
+            self.supabase: The supabase client
+            self.generation: The generation data from supabase
+            self.questions: The questions in the generation
+        '''
+        load_dotenv()
+        
+        # getting generation info
+        self.supabase = supabase
+        self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
+        self.questions = self.supabase.table("questions").select("*").eq("generation", generation_id).execute().data
 
-genai.configure(api_key=api_key)
-
-def is_self_contained(content):
-    """
-    Checks if the content is self-contained (e.g., no external references like <SLIDE 17>).
-    """
-    external_reference_pattern = r"<SLIDE \d+>"
-    return not re.search(external_reference_pattern, content)
-
-def validate_latex(content):
-    """
-    Checks if the LaTeX content contains invalid tags.
-    """
-    invalid_patterns = [r"<>", r">", r"<.*?>"]
-    for pattern in invalid_patterns:
-        if re.search(pattern, content):
-            return False
-    return True
-
-class GeminiDecisionMaker:
-    def __init__(self, 
-                 supabase: Client, 
-                 generation_id: str, 
-                 model_name='gemini-1.5-flash',
-                 temperature=0.5,
-                 max_tokens=None,
-                 max_retries=2):
-        try:
-            self.model = GenerativeModel(model_name)
-            self.generation_config = {  # Add this missing config
-                "temperature": temperature,
-                "max_output_tokens": max_tokens,
-            }
-            self.max_retries = max_retries
-            
-            self.supabase = supabase
-            
-            self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
-            class_id = self.generation.get("class")
-            self.course = self.supabase.table("classes").select("*").eq("id", class_id).single().execute().data
-            
-            self.questions = self.supabase.table("questions").select("*").eq("generation", generation_id).execute().data
-            
-            
-        except Exception as e:
-            print(f"Error initializing GeminiDecisionMaker: {e}")
-            self.model = None
-    
-    def generate_text(self, prompt: str) -> str:
+    def is_self_contained(self, content):
         """
-        Sends a prompt to the Gemini model and returns the generated text.
+        Checks if the content is self-contained (e.g., no external references like <SLIDE 17>).
         """
-        if not self.model:
-            return "Gemini model not initialized properly."
+        external_reference_pattern = r"<SLIDE \d+>"
+        return not re.search(external_reference_pattern, content)
+
+    def validate_latex(self, content):
+        """
+        Checks if the LaTeX content contains invalid tags.
+        """
+        invalid_patterns = [r"<>", r">", r"<.*?>"]
+        for pattern in invalid_patterns:
+            if re.search(pattern, content):
+                return False
+        return True
+
+    def evaluate_accuracy(self) -> tuple[str, int]:
+        """
+        Evaluates the accuracy of the generated questions based on objective metrics.
         
-        attempt = 0
-        while attempt < self.max_retries:
-            try:
-                response = self.model.generate_content(prompt, generation_config=self.generation_config)
-                return response.text
-            except Exception as e:
-                attempt += 1
-                if attempt >= self.max_retries:
-                    return f"Error generating text: {e}"
-        return "Unknown error in GeminiDecisionMaker."
+        Returns:
+            tuple: (explanation string, score out of 10)
+        """
+        issues = []
+        actual_question_count = len(self.questions)
+        total_possible = actual_question_count * 4  # 4 points per question
+        score = 0
 
-def generate_llm_quality_report(gemini_decision_maker: GeminiDecisionMaker) -> str:
-    output = []
-    for question in gemini_decision_maker.questions:
-        report = {
-            "question": question.get("question", ""), 
-            "solution": question.get("solution", ""), 
-            "type": "MCQ" if len(question.get("solution", "")) == 1 else "FRQ", 
-            "actual": "MCQ" if question.get("mcq", "") == True else "FRQ", 
-            "note": gemini_decision_maker.generation.get("additional_info", ""), 
-            "structure": "Single" if gemini_decision_maker.generation.get("single", True) == True else "Multi", 
-            "actual structure": "Single" if question.get("multipart", None) == None else "Multi"
-        }
-        output.append(report)
-        
-    title = gemini_decision_maker.generation.get("name", "")
-    
-    issues = []
-    actual_question_count = len(output)
-    total_possible = actual_question_count * 3  # 3 points per question (type, structure, note)
-    score = 0
+        # Check each question (up to 4 points each)
+        for i, question in enumerate(self.questions, start=1):
+            question_text = question.get("question", "")
+            solution = question.get("solution", "")
+            expected_type = "MCQ" if len(solution) == 1 else "FRQ"
+            actual_type = "MCQ" if question.get("mcq", False) else "FRQ"
+            expected_structure = "Single" if self.generation.get("single", True) else "Multi"
+            actual_structure = "Single" if question.get("multipart", None) is None else "Multi"
 
-    # Check each question (up to 3 points each)
-    for i, item in enumerate(output, start=1):
-        question = item.get("question", "")
-        solution = item.get("solution", "")
-        expected_type = item.get("type", "")
-        actual_type = item.get("actual", "")
-        note = item.get("note", "")
-        expected_structure = item.get("structure", "")
-        actual_structure = item.get("actual structure", "")
-
-        # Check all issues independently
-        # 1. Check self-contained
-        if not is_self_contained(question) or not is_self_contained(solution):
-            issues.append(f"Question {i} or its solution contains external references (<SLIDE X>)")
-        
-        # 2. Check type (1 point)
-        if actual_type == expected_type:
-            score += 1
-        else:
-            issues.append(f"Question {i} is '{actual_type}', should be '{expected_type}'.")
-
-        # 3. Check structure (1 point)
-        if actual_structure == expected_structure:
-            score += 1
-        else:
-            issues.append(f"Question {i} has '{actual_structure}' structure, should be '{expected_structure}'.")
-
-        # 4. Check note (1 point)
-        if note:
-            note_prompt = f"Does this question follow the note '{note}'?\nQuestion: {question}\nAnswer with just 'yes' or 'no'."
-            follows_note = gemini_decision_maker.generate_text(note_prompt).lower().strip()
-            if 'yes' in follows_note:
+            # 1. Check self-contained (1 point)
+            if self.is_self_contained(question_text) and self.is_self_contained(solution):
                 score += 1
             else:
-                issues.append(f"Question {i} does not follow the note: '{note}'")
+                issues.append(f"Question {i} or its solution contains external references (<SLIDE X>)")
+            
+            # 2. Check type (1 point)
+            if actual_type == expected_type:
+                score += 1
+            else:
+                issues.append(f"Question {i} is '{actual_type}', should be '{expected_type}'.")
 
-    # Generate summary with score
-    if issues:
-        prompt = (
-            f"For the {title} question set with {actual_question_count} questions, summarize these issues in a short bullet list:\n"
-            f"Score: {score}/{total_possible}\n\n" +
-            "\n".join(issues)
-        )
-    else:
-        prompt = f"The {title} question set with {actual_question_count} questions appears correct and complies with all requirements.\nScore: {score}/{total_possible}"
+            # 3. Check structure (1 point)
+            if actual_structure == expected_structure:
+                score += 1
+            else:
+                issues.append(f"Question {i} has '{actual_structure}' structure, should be '{expected_structure}'.")
 
-    report = gemini_decision_maker.generate_text(prompt)
-    return report, int(float(score/total_possible) * 10)
+            # 4. Check LaTeX validity (1 point)
+            if self.validate_latex(question_text) and self.validate_latex(solution):
+                score += 1
+            else:
+                issues.append(f"Question {i} or its solution contains invalid LaTeX formatting")
+
+        # Generate summary
+        title = self.generation.get("name", "")
+        summary = f"Evaluation Report for {title}\n"
+        summary += f"Score: {score}/{total_possible}\n"
+        if issues:
+            summary += "Issues found:\n" + "\n".join(f"- {issue}" for issue in issues)
+        else:
+            summary += "No issues found. All requirements met."
+
+        return summary, int(float(score/total_possible) * 10)
 
 
 # Example usage
@@ -163,8 +115,6 @@ if __name__ == "__main__":
         {"question": "<FRQ> Write a function in Python.", "solution": "Here is the function...", "type": "FRQ", "actual": "MCQ", "structure": "Single", "actual structure": "Single"},
     ]
 
-    # Evaluation
-    gemini_decision_maker = GeminiDecisionMaker()
-    result = generate_llm_quality_report(gemini_decision_maker)
+    result = AccuracyEvaluator(None, None).evaluate_accuracy()
     print("Evaluation Results:")
     print(result)

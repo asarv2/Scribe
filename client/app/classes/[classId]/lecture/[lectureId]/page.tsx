@@ -30,7 +30,7 @@ import Latex from "@/components/Latex";
 import { Document } from "@/types";
 import { getFigures } from "@/utils/queries/get-figures";
 
-export default function Lecture({ params }: { params: { classId: string, lectureId: string} }) {
+export default function Lecture({ params }: { params: { classId: string, lectureId: string } }) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [hoveredFigure, setHoveredFigure] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
     const lectureId = params.lectureId;
-    
+
 
     const handlePageClick = (newDocumentId: string) => {
         setActiveDocumentId(newDocumentId);
@@ -106,7 +106,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
         const handleKeyDown = (event: KeyboardEvent) => {
             if (!documents) return;
             const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
-            
+
             if (event.key === 'ArrowLeft' && currentIndex > 0) {
                 handlePageClick(documents[currentIndex - 1].id);
             } else if (event.key === 'ArrowRight' && currentIndex < documents.length - 1) {
@@ -172,7 +172,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                         />
                                         {!loadingFigures && figures?.filter(figure => figure.document === activeDocumentId).map(figure => {
                                             const isBottomHalf = (figure.y_min / 1000) > 0.5;
-                                            
+
                                             return (
                                                 <Box
                                                     key={figure.id}
@@ -182,10 +182,10 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                                         transition: 'opacity 0.3s ease',
                                                         cursor: 'pointer',
                                                         zIndex: 50,
-                                                        left: `${(figure.y_min / 1000) * 100}%`,
-                                                        top: `${(figure.x_min / 1000) * 100}%`,
-                                                        width: `${((figure.y_max - figure.y_min) / 1000) * 100}%`,
-                                                        height: `${((figure.x_max - figure.x_min) / 1000) * 100}%`,
+                                                        left: `${(figure.x_min / 1000) * 100}%`,
+                                                        top: `${(figure.y_min / 1000) * 100}%`,
+                                                        width: `${((figure.x_max - figure.x_min) / 1000) * 100}%`,
+                                                        height: `${((figure.y_max - figure.y_min) / 1000) * 100}%`,
                                                         opacity: hoveredFigure === figure.id ? 0.8 : 0.2,
                                                     }}
                                                     onMouseEnter={() => setHoveredFigure(figure.id)}
@@ -209,7 +209,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                                             overflowWrap: 'break-word',
                                                             whiteSpace: 'normal',
                                                         }}>
-                                                            {figure.description}
+                                                            <Latex>{figure.description}</Latex>
                                                         </Text>
                                                     )}
                                                 </Box>

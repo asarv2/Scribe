@@ -160,7 +160,7 @@ class GroupsProcessor(BaseProcessor):
 
         try:
             message = HumanMessage(content=prompt)
-            result = await self.robust_generate(message)
+            result = await self.robust_generate(message, model="gemini-1.5-flash-8b")
             return [line for line in result.split("\n") if line.strip()]
         except Exception as e:
             print("Error generating groups:", str(e))
@@ -211,7 +211,7 @@ class GroupsProcessor(BaseProcessor):
             {"type": "text", "text": f"Use the following groups to decide which group each of the following terms belong to:\nGROUPS: {groups_prompt}\n\nTERMS: {', '.join(terms)}\nOUTPUT: "}
         ])
         
-        return await self.robust_generate(message)
+        return await self.robust_generate(message, model="gemini-1.5-flash-8b")
     
     def clean_result(self, result: str, terms: List[str], all_groups: List[str], formatted_groups: List[str], definitions: List[str]):
         """
