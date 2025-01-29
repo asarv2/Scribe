@@ -553,7 +553,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
         return (lectureId: string, uploading: boolean = false) => {
             const lecture = lectures?.find(lecture => lecture.id === lectureId);
             if (!lecture || lecture.pages === 0) return 0;
-            return Math.ceil(((lecture.pages * 4) / 60) * (100 - getProgress(lectureId, uploading)) / 100);
+            return Number(((lecture.pages * 4)) * (100 - getProgress(lectureId, uploading)) / 100).toFixed(2);
         };
     }, [documents, lectures]);
 
@@ -563,8 +563,9 @@ export default function LecturePage({ params }: { params: { classId: string } })
             topic.lectures?.includes(lecture.id) && 
             topic.map_parent !== null
         );
+        const allTopicsProcessed = topics?.every(topic => topic.lectures?.includes(lecture.id) && topic.map_parent !== null);
         
-        return !lectureTopics?.length && lecture.parse_status !== 'complete';
+        return !lectureTopics?.length && allTopicsProcessed && lecture.parse_status !== 'complete';
     }
 
     const canRetry = (lecture: Lecture) => {
@@ -807,7 +808,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                                         />}
                                                     {(lecture.parse_status === 'parsing') && (
                                                         <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{getEstimatedTime(lecture.id)} minute{getEstimatedTime(lecture.id) !== 1 ? 's' : ''}
+                                                            Estimated time remaining: ~{getEstimatedTime(lecture.id)} seconds{getEstimatedTime(lecture.id) !== '1.00' ? 's' : ''}
                                                         </Text>
                                                     )}
                                                 </Stack>
@@ -815,7 +816,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                             {canRetry(lecture) ? (
                                                 <Button
                                                     variant="light"
-                                                    color={lecture.parse_status === 'parsing' ? 'blue' : 'orange'}
+                                                    color={canRetryBatching(lecture) ? 'orange' : 'blue'}
                                                     onClick={() => handleRetry(classId, lecture)}
                                                     leftSection={<IconRefresh size={16} />}
                                                     loading={parsingLectures.has(lecture.id)}

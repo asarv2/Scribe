@@ -78,7 +78,11 @@ async def parse_lecture():
                     image_path = f"{class_id}/{lecture_id}/{doc['id']}.png"
                     print(f"Trying to download: {image_path}")
                     
-                    response = supabase.storage.from_("lectures").download(image_path)
+                    try:
+                        response = supabase.storage.from_("lectures").download(image_path)
+                    except Exception as e:
+                        print(f"Error downloading image {doc['page']}: {e}")
+                        continue
                     
                     if not response:
                         print(f"No data received for image {doc['page']}")
@@ -303,7 +307,11 @@ async def parse_textbook():
                     image_path = f"{class_id}/textbooks/{textbook_id}/images/{doc['page']}.png"
                     print(f"Trying to download: {image_path}")
                     
-                    response = supabase.storage.from_("slides").download(image_path)
+                    try:
+                        response = supabase.storage.from_("textbooks").download(image_path)
+                    except Exception as e:
+                        print(f"Error downloading image {doc['page']}: {e}")
+                        continue
                     
                     if not response.data:
                         print(f"No data received for image {doc['page']}")
