@@ -6,9 +6,48 @@ from app.utils.convert_generation_example import GenerationFormatter
 
 class ClarityEvaluator(object):
     def __init__(self, supabase: Client, llm, generation_id: str):
+        '''
+        Class for all evaluating a how clear a generation is.
+        
+        Args:
+            supabase: The supabase client.
+            generation_id: The uuid of the class in supabase, ex: 123e4567-e89b-12d3-a456-426614174000
+            
+            
+        Attributes:
+            self.supabase: The supabase client.
+            self.class_title: The title of the course the generation is for.
+            self.name: name of the generated problem or summary
+            self.type: type of the generation, ex: "problem" or "summary"
+            self.class_id: the id of the class the generation is for
+            self.topics: the topics the generation is for
+            self.num_questions: the number of questions in the generation
+            self.is_mcq: whether the generation is multiple choice
+            self.is_conceptual: whether the generation is conceptual
+            self.is_single_part: whether the generation is single part
+            self.questions: the questions in the generation
+            self.answers: the answers to the questions in the generation
+        '''
+
+        # getting generation info
         self.supabase = supabase
         self.llm = llm
+        self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
+        self.name = self.generation.get("name", "No name")
+        self.type = self.generation.get("type", "No type")
+        self.class_id = self.generation.get("class", "No class")
+        self.topics = self.generation.get("topics", "No topics")
+        self.num_questions = self.generation.get("num_questions", "No num_questions")
+        self.is_mcq = self.generation.get("mcq", False)
+        self.is_conceptual = self.generation.get("conceptual", False)
+        self.is_single_part = self.generation.get("single", False)
+        self.questions = self.supabase.table("questions").select("question").eq("generation", generation_id).execute().data
+        self.answers = self.supabase.table("questions").select("solution").eq("generation", generation_id).execute().data
         self.generation_id = generation_id
+
+        self.class_title = self.supabase.table("classes").select("title").eq("id", self.class_id).single().execute().data.get("title", "No class title")
+
+        self.generation_formatter = GenerationFormatter(self.supabase, generation_id) 
 
     def evaluate_clarity(self, retries: int = 5, initial_wait: int = 5):
         # create a prompt for the model using information about the generation

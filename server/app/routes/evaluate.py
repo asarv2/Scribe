@@ -4,7 +4,7 @@ import traceback
 from langchain_google_genai import ChatGoogleGenerativeAI
 from app.services.evaluate.accuracy import AccuracyEvaluator
 from app.services.evaluate.adherence import AdherenceEvaluator
-from app.services.evaluate.clarity import ClarityEvaluator
+# from app.services.evaluate.clarity import ClarityEvaluator
 from app.services.evaluate.certainty import CertaintyEvaluator
 from app.services.evaluate.complexity import ComplexityEvaluator
 from app.services.evaluate.novelty import NoveltyEvaluator
@@ -108,10 +108,10 @@ def evaluate_generation():
         print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
 
         # clarity
-        clarity_evaluator = ClarityEvaluator(supabase, llm, generation_id)
-        print("Clarity evaluator created")
-        clarity_explanation, clarity_score = clarity_evaluator.evaluate_clarity()
-        print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
+        # clarity_evaluator = ClarityEvaluator(supabase, llm, generation_id)
+        # print("Clarity evaluator created")
+        # clarity_explanation, clarity_score = clarity_evaluator.evaluate_clarity()
+        # print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
         
         # complexity
         complexity_evaluator = ComplexityEvaluator(supabase, llm, generation_id)
@@ -140,8 +140,8 @@ def evaluate_generation():
             "accuracy_explanation": accuracy_explanation,
             "novelty": novelty_score,
             "novelty_explanation": novelty_explanation,
-            "clarity": clarity_score,
-            "clarity_explanation": clarity_explanation
+            "clarity": 0,
+            "clarity_explanation": "Not implemented"
         }).execute()
         print(f"Evaluation uploaded: {response}")
         
