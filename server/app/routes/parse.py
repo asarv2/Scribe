@@ -61,7 +61,7 @@ async def parse_lecture():
         print("LectureProcessor created")
 
         # Process in batches
-        batch_size = 10 # for gemini flash experimental
+        batch_size = 15
         batch_results = []
         
         for i in range(0, len(documents_to_process), batch_size):
@@ -286,7 +286,7 @@ async def parse_textbook():
         print("TextbookProcessor created")
 
         # Process in batches
-        batch_size = 10 # for gemini flash experimental
+        batch_size = 15
         batch_results = []
         
         for i in range(0, len(documents_to_process), batch_size):

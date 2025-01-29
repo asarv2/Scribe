@@ -1,14 +1,10 @@
 import time
 import re
-from dotenv import load_dotenv
-import os
-from supabase.client import Client, create_client, ClientOptions
-from langchain_google_genai import ChatGoogleGenerativeAI
-
+from supabase.client import Client
 from app.utils.convert_generation_example import GenerationFormatter
 
 class AdherenceEvaluator():
-    def __init__(self, supabase, generation_id):
+    def __init__(self, supabase: Client, llm, generation_id: str):
         '''
         Class for all evaluating a how well the model adhered to the given input.
         
@@ -31,11 +27,11 @@ class AdherenceEvaluator():
             self.questions: the questions in the generation
             self.answers: the answers to the questions in the generation
         '''
-        load_dotenv()
         
 
         # getting generation info
         self.supabase = supabase
+        self.llm = llm
         self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
         self.name = self.generation.get("name", "No name")
         self.type = self.generation.get("type", "No type")
@@ -52,14 +48,7 @@ class AdherenceEvaluator():
 
         self.class_title = self.supabase.table("classes").select("title").eq("id", self.class_id).single().execute().data.get("title", "No class title")
 
-        # model we will prompt for adherence evaluation
-        self.llm_gemini_flash = ChatGoogleGenerativeAI(
-            model='gemini-1.5-flash',
-            temperature=0, 
-            max_tokens=None, 
-            timeout=None, 
-            max_retries=2
-        )
+
         
     def evaluate_adherence(self, retries: int = 5, initial_wait: int = 5):
         # create a prompt for the model using information about the generation
@@ -69,7 +58,7 @@ class AdherenceEvaluator():
         
         for attempt in range(retries):
             try:
-                response = self.llm_gemini_flash.invoke(message)
+                response = self.llm.invoke(message)
                 response_content = response.content if hasattr(response, 'content') else str(response)
 
                 # Extract score and explanation using regex

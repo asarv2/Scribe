@@ -7,9 +7,9 @@ from app.services.evaluate.adherence import AdherenceEvaluator
 from app.services.evaluate.certainty import CertaintyEvaluator
 from app.services.evaluate.complexity import ComplexityEvaluator
 from app.services.evaluate.clarity import ClarityEvaluator
+from app.services.evaluate.novelty import NoveltyEvaluator
 from app.extensions import supabase
 from datetime import datetime
-from app.services.evaluate.novelty import NoveltyEvaluator
 
 evaluate_bp = Blueprint('evaluate', __name__)
 
@@ -101,7 +101,7 @@ def evaluate_generation():
         print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
         
         # adherence
-        adherence_evaluator = AdherenceEvaluator(supabase, generation_id)
+        adherence_evaluator = AdherenceEvaluator(supabase, llm, generation_id)
         print("Adherence evaluator created")
         adherence_explanation, adherence_score = adherence_evaluator.evaluate_adherence()
         print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
@@ -119,7 +119,7 @@ def evaluate_generation():
         print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
         
         # clarity
-        clarity_evaluator = ClarityEvaluator(supabase, generation_id)
+        clarity_evaluator = ClarityEvaluator(supabase, llm, generation_id)
         print("Clarity evaluator created")
         clarity_explanation, clarity_score = clarity_evaluator.evaluate_clarity()
         print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
