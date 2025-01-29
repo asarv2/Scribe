@@ -7,16 +7,19 @@ bind = "0.0.0.0:5000"
 backlog = 2048
 
 # Worker processes
-workers = 1  # Single worker for rate limiting
-worker_class = 'gevent'
-worker_connections = 1000
+workers = 1
+worker_class = 'sync'  # Changed from gevent to sync for debugging
 timeout = 300
 keepalive = 2
+max_requests = 0
+max_requests_jitter = 0
 
 # Logging
-accesslog = '/var/log/gunicorn/access.log'
-errorlog = '/var/log/gunicorn/error.log'
-loglevel = 'info'
+accesslog = '-'  # Log to stdout
+errorlog = '-'   # Log to stderr
+loglevel = 'debug'  # Increased log level for debugging
+capture_output = True
+enable_stdio_inheritance = True
 
 # Process naming
 proc_name = 'gunicorn_scribe'
@@ -28,6 +31,11 @@ umask = 0
 user = None
 group = None
 tmp_upload_dir = None
+
+# Debugging
+reload = False
+preload_app = False
+check_config = True
 
 # SSL
 keyfile = None
@@ -43,6 +51,8 @@ def on_reload(server):
 def when_ready(server):
     print("Gunicorn server is ready. Listening on", bind)
 
+def worker_abort(worker):
+    print(f"Worker {worker.pid} aborted with error")
+
 def worker_exit(server, worker):
-    from datetime import datetime
-    print(f"Worker exited: {datetime.now()}")
+    print(f"Worker {worker.pid} exited with code {worker.exitcode}")

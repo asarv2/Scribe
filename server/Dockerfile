@@ -53,5 +53,5 @@ RUN mkdir -p /var/log/gunicorn && \
 # Expose the Flask port
 EXPOSE 5000
 
-# Run gunicorn with gevent worker
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "--worker-class", "gevent", "--workers", "1", "app.main:app"]
+# Run with debugging enabled
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "--log-level", "debug", "--capture-output", "--enable-stdio-inheritance", "app.main:app"]
