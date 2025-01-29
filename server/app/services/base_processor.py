@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, AIMessage
 import time
 import asyncio
+from app.services.rate_limiter import rate_limiter
 
 class Figure:
     def __init__(self, bbox: List[int], description: str):
@@ -31,26 +32,6 @@ class ContentType(Enum):
     TOPIC = "topic"
 
 class BaseProcessor:
-    # Class-level rate limiting
-    _model_semaphores = {
-        "gemini-1.5-flash-8b": asyncio.Semaphore(15),  # 15 RPM
-        "gemini-1.5-flash": asyncio.Semaphore(15),     # 15 RPM
-        "gemini-2.0-flash-exp": asyncio.Semaphore(10), # 10 RPM
-        "gemini-1.5-pro": asyncio.Semaphore(2)         # 2 RPM
-    }
-    _model_last_call = {
-        "gemini-1.5-flash-8b": {},  # Will store {task_id: timestamp}
-        "gemini-1.5-flash": {},
-        "gemini-2.0-flash-exp": {},
-        "gemini-1.5-pro": {}
-    }
-    _model_locks = {
-        "gemini-1.5-flash-8b": asyncio.Lock(),
-        "gemini-1.5-flash": asyncio.Lock(),
-        "gemini-2.0-flash-exp": asyncio.Lock(),
-        "gemini-1.5-pro": asyncio.Lock()
-    }
-
     def __init__(self):
         """
         Initialize the BaseProcessor and create all the models.
@@ -139,68 +120,36 @@ class BaseProcessor:
         initial_wait: int = 5
     ) -> str:
         last_error = None
-        task_id = id(asyncio.current_task())  # Get unique ID for current task
 
         for attempt in range(retries):
             try:
-                # Get the semaphore for the current model
-                semaphore = self._model_semaphores[model]
-                lock = self._model_locks[model]
-
-                # Acquire semaphore and check rate limits
-                async with semaphore:
-                    # Check and update last call time with lock
-                    async with lock:
-                        current_time = time.time()
-                        last_calls = self._model_last_call[model]
-                        
-                        # Clean up old task entries
-                        current_tasks = {id(task) for task in asyncio.all_tasks()}
-                        last_calls = {tid: ts for tid, ts in last_calls.items() 
-                                    if tid in current_tasks}
-                        
-                        # Calculate minimum wait time based on RPM
-                        rpm = await self.get_rpm(model)
-                        min_interval = 60.0 / rpm  # seconds between requests
-                        
-                        # Find the most recent call time
-                        if last_calls:
-                            most_recent = max(last_calls.values())
-                            wait_time = most_recent + min_interval - current_time
-                            if wait_time > 0:
-                                await asyncio.sleep(wait_time)
-                        
-                        # Update last call time for this task
-                        self._model_last_call[model][task_id] = time.time()
-
+                # Acquire rate limiter permission
+                await rate_limiter.acquire(model)
+                
+                try:
                     # Try Gemini Flash first
-                    try:
-                        if model == "gemini-1.5-flash-8b":
-                            response = await self.llm_gemini_flash8b.agenerate([[message]])
-                        elif model == "gemini-1.5-flash":
-                            response = await self.llm_gemini_flash.agenerate([[message]])
-                        elif model == "gemini-2.0-flash-exp":
-                            response = await self.llm_gemini_flash_exp.agenerate([[message]])
-                        elif model == "gemini-1.5-pro":
-                            response = await self.llm_gemini_pro.agenerate([[message]])
-                        else:
-                            raise ValueError(f"Invalid model: {model}")
+                    if model == "gemini-1.5-flash-8b":
+                        response = await self.llm_gemini_flash8b.agenerate([[message]])
+                    elif model == "gemini-1.5-flash":
+                        response = await self.llm_gemini_flash.agenerate([[message]])
+                    elif model == "gemini-2.0-flash-exp":
+                        response = await self.llm_gemini_flash_exp.agenerate([[message]])
+                    elif model == "gemini-1.5-pro":
+                        response = await self.llm_gemini_pro.agenerate([[message]])
+                    else:
+                        raise ValueError(f"Invalid model: {model}")
 
-                        # Clean up task entry after successful completion
-                        async with lock:
-                            self._model_last_call[model].pop(task_id, None)
-                            
-                        return response.generations[0][0].text
+                    return response.generations[0][0].text
 
-                    except Exception as flash_error:
-                        # If Flash fails with RECITATION error, try Pro
-                        if "RECITATION" in str(flash_error):
-                            print("Gemini Flash blocked due to RECITATION, trying Gemini Pro...")
-                            # Use Pro model's semaphore for the fallback
-                            async with self._model_semaphores["gemini-1.5-pro"]:
-                                pro_response = await self.llm_gemini_pro.agenerate([[message]])
-                                return pro_response.generations[0][0].text
-                        raise flash_error  # Re-throw if it's not a RECITATION error
+                except Exception as flash_error:
+                    # If Flash fails with RECITATION error, try Pro
+                    if "RECITATION" in str(flash_error):
+                        print("Gemini Flash blocked due to RECITATION, trying Gemini Pro...")
+                        # Acquire rate limiter for Pro model
+                        await rate_limiter.acquire("gemini-1.5-pro")
+                        pro_response = await self.llm_gemini_pro.agenerate([[message]])
+                        return pro_response.generations[0][0].text
+                    raise flash_error  # Re-throw if it's not a RECITATION error
 
             except Exception as error:
                 last_error = error
@@ -222,10 +171,6 @@ class BaseProcessor:
                     await asyncio.sleep(wait_time)
                     continue
                 break
-
-        # Clean up task entry after all retries failed
-        async with self._model_locks[model]:
-            self._model_last_call[model].pop(task_id, None)
 
         raise Exception(f"Failed after {retries} attempts. Last error: {str(last_error)}")
 

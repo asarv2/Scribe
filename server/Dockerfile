@@ -46,8 +46,12 @@ COPY app/ app/
 # Copy gunicorn configuration
 COPY gunicorn.conf.py .
 
+# Create directory for gunicorn logs
+RUN mkdir -p /var/log/gunicorn && \
+    chmod 777 /var/log/gunicorn
+
 # Expose the Flask port
 EXPOSE 5000
 
-# Run the Flask app directly
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "app.main:app"]
+# Run gunicorn with gevent worker
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "--worker-class", "gevent", "--workers", "1", "app.main:app"]

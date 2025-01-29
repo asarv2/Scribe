@@ -263,7 +263,10 @@ class GroupsProcessor(BaseProcessor):
                         definition = definitions[group_idx]
                         
                         # finding original term from the cleaned term
-                        complete_term = self.terms[term]
+                        complete_term = self.terms.get(term, None)
+                        if not complete_term:
+                            print(f"Could not find term: {term} in terms dictionary")
+                            continue
                         
                         # guaranteed that the groups are unique
                         if group in self.groups:

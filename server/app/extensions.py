@@ -11,8 +11,8 @@ print("Loaded environment variables")
 app = Flask(__name__)
 print("Flask app initialized")
 
-# set the app to be an ASGI app
-app.config['ASGI_APPLICATION'] = True
+# Configure for async operation
+app.config['PROPAGATE_EXCEPTIONS'] = True  # Better error handling for async
 
 # set upload folder based on environment
 if os.getenv('DOCKER_ENV'):
@@ -30,4 +30,7 @@ opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
 supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
 
 print("Supabase client initialized")
+
+# Enable CORS
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
