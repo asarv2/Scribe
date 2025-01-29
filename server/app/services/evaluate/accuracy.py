@@ -9,8 +9,7 @@ from dotenv import load_dotenv
 
 from app.utils.convert_generation_example import GenerationFormatter
 
-
-class AccuracyEvaluator:
+class AccuracyEvaluator(object):
     def __init__(self, supabase, generation_id):
         '''
         Class for evaluating the accuracy and quality of generated questions.

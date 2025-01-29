@@ -3,7 +3,7 @@ import re
 from supabase.client import Client
 from app.utils.convert_generation_example import GenerationFormatter
 
-class AdherenceEvaluator():
+class AdherenceEvaluator(object):
     def __init__(self, supabase: Client, llm, generation_id: str):
         '''
         Class for all evaluating a how well the model adhered to the given input.
