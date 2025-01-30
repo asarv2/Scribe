@@ -1,5 +1,6 @@
 
 
+import ollama
 from supabase.client import Client
 import re
 import time
@@ -59,8 +60,8 @@ class ClarityEvaluator():
         
         for attempt in range(retries):
             try:
-                response = self.llm.invoke(message)
-                response_content = response.content if hasattr(response, 'content') else str(response)
+                response = ollama.generate(model=self.llm, prompt=message)
+                response_content = response.response if hasattr(response, 'response') else str(response)
 
                 # Extract score and explanation using regex
                 score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)

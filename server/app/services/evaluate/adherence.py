@@ -1,5 +1,6 @@
 import time
 import re
+import ollama
 from supabase.client import Client
 from app.utils.convert_generation_example import GenerationFormatter
 
@@ -58,8 +59,10 @@ class AdherenceEvaluator():
         
         for attempt in range(retries):
             try:
-                response = self.llm.invoke(message)
-                response_content = response.content if hasattr(response, 'content') else str(response)
+                response = ollama.generate(model=self.llm, prompt=message)
+                print(response)
+                response_content = response.response if hasattr(response, 'response') else str(response)
+                print(response_content)
 
                 # Extract score and explanation using regex
                 score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)
