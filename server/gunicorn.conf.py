@@ -7,8 +7,9 @@ bind = "0.0.0.0:5000"
 backlog = 2048
 
 # Worker processes
-workers = 1
-worker_class = 'sync'  # Changed from gevent to sync for debugging
+workers = multiprocessing.cpu_count() * 2 + 1  # Recommended formula for CPU-bound tasks
+worker_class = 'gevent'
+worker_connections = 1000
 timeout = 300
 keepalive = 2
 max_requests = 0
@@ -34,7 +35,7 @@ tmp_upload_dir = None
 
 # Debugging
 reload = False
-preload_app = False
+preload_app = True  # Changed to True to load app once
 check_config = True
 
 # SSL
@@ -44,6 +45,9 @@ certfile = None
 # Server hooks
 def on_starting(server):
     print("Starting Gunicorn server...")
+    # Import here to avoid circular imports
+    from gevent import monkey
+    monkey.patch_all()
 
 def on_reload(server):
     print("Reloading Gunicorn server...")

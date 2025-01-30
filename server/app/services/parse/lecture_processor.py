@@ -103,13 +103,19 @@ class LectureProcessor(BaseProcessor):
             # Add message to conversation history
             self.conversation_history.append(message)
 
-            # Generate response using AI
-            response = await self.robust_generate(message, model="gemini-1.5-flash")
-            print("Response:", response)
+            # Generate response using AI with increased retries and wait time
+            response = await self.robust_generate(
+                message,
+                model="gemini-1.5-flash",
+            )
+            
+            if not response:
+                raise Exception("Empty response from AI model")
+            
+            print(f"Successfully processed page {page_number}")
 
-            if response:
-                # Add AI response to conversation history
-                self.conversation_history.append(AIMessage(content=response))
+            # Add AI response to conversation history
+            self.conversation_history.append(AIMessage(content=response))
 
             return self.clean_response(
                 response,
@@ -119,7 +125,8 @@ class LectureProcessor(BaseProcessor):
             )
 
         except Exception as error:
-            print(f"Error processing page {page_number}:", error)
+            print(f"Error processing page {page_number}: {str(error)}")
+            # Add more specific error handling if needed
             raise error
 
     async def process_slides(

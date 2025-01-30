@@ -14,6 +14,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 import time
 import asyncio
 from app.services.rate_limiter import rate_limiter
+import threading
 
 class Figure:
     def __init__(self, bbox: List[int], description: str):
@@ -73,6 +74,15 @@ class BaseProcessor:
             max_retries=2
         )
 
+        # Add circuit breaker state
+        self._circuit_breaker = {
+            "failures": 0,
+            "last_failure": 0,
+            "threshold": 5,
+            "cooldown": 60  # seconds
+        }
+        self._circuit_breaker_lock = threading.Lock()
+
     async def prepare_conversation_history(
         self,
         messages: List[Union[HumanMessage, AIMessage]],
@@ -119,6 +129,13 @@ class BaseProcessor:
         retries: int = 5,
         initial_wait: int = 5
     ) -> str:
+        # Check circuit breaker
+        with self._circuit_breaker_lock:
+            current_time = time.time()
+            if (self._circuit_breaker["failures"] >= self._circuit_breaker["threshold"] and 
+                current_time - self._circuit_breaker["last_failure"] < self._circuit_breaker["cooldown"]):
+                raise Exception("Circuit breaker open - too many recent failures")
+
         last_error = None
 
         for attempt in range(retries):
@@ -171,6 +188,10 @@ class BaseProcessor:
                     await asyncio.sleep(wait_time)
                     continue
                 break
+
+        with self._circuit_breaker_lock:
+            self._circuit_breaker["failures"] += 1
+            self._circuit_breaker["last_failure"] = current_time
 
         raise Exception(f"Failed after {retries} attempts. Last error: {str(last_error)}")
 

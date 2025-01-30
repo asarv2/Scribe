@@ -660,7 +660,9 @@ export default function LecturePage({ params }: { params: { classId: string } })
         }
     }
 
-    const getDocumentImage = (document: Document) => {
+    const getDocumentImage = (lectureId: string) => {
+        if (!lectureId) return '/placeholder_image.svg';
+        const document = documents?.find(document => document.lecture === lectureId);
         if (!document) return '/placeholder_image.svg';
         return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
     }
@@ -762,7 +764,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                         <Group align="flex-start" justify="space-between">
                                             <Group align="flex-start">
                                                 <MantineImage
-                                                    src={getDocumentImage(documents[0])}
+                                                    src={getDocumentImage(lecture.id)}
                                                     alt={`First page of ${lecture.name}`}
                                                     width={200}
                                                     height={150}
@@ -851,7 +853,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                     <Card withBorder>
                                         <Group align="flex-start">
                                             <MantineImage
-                                                src={getDocumentImage(documents[0])}
+                                                src={getDocumentImage(lecture.id)}
                                                 alt={`First page of ${lecture.name}`}
                                                 width={200}
                                                 height={150}
