@@ -5,7 +5,8 @@ from app.services.problems.base_problems_processor import (
     MCQQuestion,
     FRQQuestion,
     ProblemsContent,
-    QuestionType
+    QuestionType,
+    QuestionPrompt
 )
 
 class LectureProblemsProcessor(BaseProblemsProcessor):
@@ -23,83 +24,47 @@ class LectureProblemsProcessor(BaseProblemsProcessor):
 
     async def process_problems(
         self,
-        num_questions: int = 3,
-        conceptual_ratio: float = 1,
-        single_part_ratio: float = 1,
+        question_prompts: List[QuestionPrompt],
         all_lectures: List[Dict[str, Union[str, int]]] = [],
-        batch_size: int = None,
         on_batch_complete: Callable[[List[List[Union[MCQQuestion, FRQQuestion]]]], Awaitable[None]] = None
     ) -> List[List[Union[MCQQuestion, FRQQuestion]]]:
         """Process problems for lectures"""
-        if conceptual_ratio > 1 or single_part_ratio > 1:
-            raise ValueError("Ratios cannot be greater than 1")
-
+        
         lecture_name = ", ".join(self.lecture_names)
-        print(f"Generating {num_questions} questions for {lecture_name}")
+        print(f"Generating {len(question_prompts)} questions for {lecture_name}")
 
-        # Split questions by type
-        conceptual_questions = round(num_questions * conceptual_ratio)
-        computational_questions = num_questions - conceptual_questions
+        for question_prompt in question_prompts:
+            question_id = question_prompt.get('id')
+            
+            tags = []
+            prompt = None
+            if question_prompt.get('computational') and question_prompt.get('multi_part'):
+                tags.append('computational')
+                tags.append('multi-part')
+                prompt = self.multi_part_computational_prompt
+            elif question_prompt.get('computational'):
+                tags.append('computational')
+                prompt = self.single_part_computational_prompt
+            elif question_prompt.get('conceptual') and question_prompt.get('multi_part'):
+                tags.append('conceptual')
+                tags.append('multi-part')
+                prompt = self.multi_part_conceptual_prompt
+            elif question_prompt.get('conceptual'):
+                tags.append('conceptual')
+                prompt = self.single_part_conceptual_prompt
 
-        single_part_conceptual = round(conceptual_questions * single_part_ratio)
-        multi_part_conceptual = conceptual_questions - single_part_conceptual
 
-        single_part_computational = round(computational_questions * single_part_ratio)
-        multi_part_computational = computational_questions - single_part_computational
-
-        question_numbers = [
-            single_part_conceptual,
-            multi_part_conceptual,
-            single_part_computational,
-            multi_part_computational
-        ]
-        prompts = [
-            self.single_part_conceptual_prompt,
-            self.multi_part_conceptual_prompt,
-            self.single_part_computational_prompt,
-            self.multi_part_computational_prompt
-        ]
-        all_tags = [
-            ["conceptual"],
-            ["conceptual", "multi-part"],
-            ["computational"],
-            ["computational", "multi-part"]
-        ]
-
-        for j, num_q in enumerate(question_numbers):
-            if num_q == 0:
-                continue
-
-            tags = all_tags[j]
             tag_description = f"{tags[0]} {tags[1]}" if len(tags) > 1 else tags[0]
-            print(f"Generating {num_q} {tag_description} questions")
+            print(f"Generating 1 {tag_description} question")
 
-            if batch_size:
-                # Process in batches
-                for i in range(0, num_q, batch_size):
-                    current_batch_size = min(batch_size, num_q - i)
-                    result = await self.process_batch(
-                        current_batch_size,
-                        lecture_name,
-                        self.lectures['content'],
-                        prompts[j]
-                    )
-                    self.clean_result(result, lecture_name, tags, all_lectures)
-                    
-                    # Call on_batch_complete after each batch
-                    await on_batch_complete(self.questions[lecture_name][i:i + current_batch_size])
-            else:
-                # Process all at once
-                result = await self.process_batch(
-                    num_q,
+            result = await self.process_batch(
                     lecture_name,
                     self.lectures['content'],
-                    prompts[j]
+                    prompt
                 )
-                self.clean_result(result, lecture_name, tags, all_lectures)
+            self.clean_result(question_id, result, lecture_name, tags, all_lectures)
 
-        # If not batching, call on_batch_complete once at the end
-        if not batch_size:
-            await on_batch_complete(self.questions[lecture_name])
+            if on_batch_complete:
+                await on_batch_complete(self.questions[lecture_name])
 
         return self.questions[lecture_name]

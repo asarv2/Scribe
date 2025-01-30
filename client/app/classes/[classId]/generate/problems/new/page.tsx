@@ -5,9 +5,11 @@
  * 01.03.2025
  */
 "use client"
+import GenerateCanvas from "@/components/GenerateCanvas";
 import GenerateForm from "@/components/GenerateForm";
 
 export default function GenerateProblemsPage({ params }: { params: { classId: string} }) {
     const classId = params.classId;
-    return <GenerateForm classId={classId} type="problems" />
+    return <GenerateCanvas classId={classId} />
+    // return <GenerateForm classId={classId} type="problems" />
 }

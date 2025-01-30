@@ -12,7 +12,8 @@ from app.services.problems.base_problems_processor import (
     MCQQuestion,
     FRQQuestion,
     ProblemsContent,
-    QuestionType
+    QuestionType,
+    QuestionPrompt
 )
 import uuid
 
@@ -247,10 +248,18 @@ async def generate_problems():
         generation_data = generation_response.data
         generation_lectures = generation_data.get('lectures', [])
         generation_topics = generation_data.get('topics', [])
-        generation_questions = generation_data.get('num_questions', 0)
-        generation_conceptual = generation_data.get('conceptual', False)
-        generation_single = generation_data.get('single', False)
         generation_question_type = QuestionType.MCQ if generation_data.get('mcq') else QuestionType.FRQ
+
+        question_prompts_raw = supabase.table("questions").select("*").eq("generation", generation_id).execute().data
+        question_prompts: List[QuestionPrompt] = []
+        for prompt in question_prompts_raw:
+            question_prompts.append({
+                "id": prompt.get('id'),
+                "mcq": prompt.get('mcq'),
+                "multi_part": prompt.get('multipart') is not None,
+                "computational": not prompt.get('conceptual')
+            })
+        print("Question prompts:", question_prompts)
 
         lectures = generation_lectures
         names: List[str] = []
@@ -335,17 +344,14 @@ async def generate_problems():
             content['figures'].update(lecture_data['figures'])
             content['content'] += lecture_data['content']
 
-        # Set batch size based on question type
-        batch_size = 2 if generation_single else 1
 
         async def on_batch_complete(questions: List[List[Union[MCQQuestion, FRQQuestion]]]):
             print("Generated questions for batch:", questions)
             
             problems_data = []
-            for question_group in questions:
-                multi_part_uuid = str(uuid.uuid4()) if len(question_group) > 1 else None
-                
+            for question_group in questions: 
                 for question in question_group:
+                    question_id = question.get('id')
                     question_document_ids = [doc.get('id') for doc in documents]
                     
                     if isinstance(question, dict) and "options" in question:
@@ -353,8 +359,6 @@ async def generate_problems():
                         correct_answer = next((opt for opt, is_correct in question["answers"].items() if is_correct), None)
                         question_data = {
                             "question": question["question"],
-                            "mcq": True,
-                            "conceptual": "conceptual" in question.get("tags", []),
                             "option_a": question["options"]["A"],
                             "option_b": question["options"]["B"],
                             "option_c": question["options"]["C"],
@@ -366,27 +370,20 @@ async def generate_problems():
                             "explanation_c": question["explanations"]["C"],
                             "explanation_d": question["explanations"]["D"],
                             "explanation_e": question["explanations"]["E"],
-                            "generation": generation_id,
                             "documents": question_document_ids
                         }
                     else:
                         # FRQ Question
                         question_data = {
                             "question": question["question"],
-                            "mcq": False,
-                            "conceptual": "conceptual" in question.get("tags", []),
                             "solution": question["solution"],
-                            "generation": generation_id,
                             "documents": question_document_ids
                         }
-                    
-                    if multi_part_uuid:
-                        question_data["multipart"] = multi_part_uuid
                     
                     problems_data.append(question_data)
 
             # Insert questions
-            questions_response = supabase.table("questions").insert(problems_data).execute()
+            questions_response = supabase.table("questions").update(problems_data).eq("id", question_id).execute()
             print("Questions response:", questions_response)
 
             # Handle rubrics for FRQ questions
@@ -413,7 +410,7 @@ async def generate_problems():
                     print("Rubrics response:", rubrics_response)
 
             # Update progress
-            progress = min(0.9, len(questions) / generation_questions)
+            progress = min(0.9, len(questions) / len(question_prompts))
             supabase.table("generations").update({
                 "progress": progress
             }).eq("id", generation_id).execute()
@@ -431,11 +428,8 @@ async def generate_problems():
             )
             print("Lecture problems processor created")
             questions = await processor.process_problems(
-                num_questions=generation_questions,
-                conceptual_ratio=1 if generation_conceptual else 0,
-                single_part_ratio=1 if generation_single else 0,
                 all_lectures=all_lectures,
-                batch_size=batch_size,
+                question_prompts=question_prompts,
                 on_batch_complete=on_batch_complete
             )
             print("Lecture problems:", questions)
@@ -450,11 +444,8 @@ async def generate_problems():
             )
             print("Topic problems processor created")
             questions = await processor.process_problems(
-                num_questions=generation_questions,
-                conceptual_ratio=1 if generation_conceptual else 0,
-                single_part_ratio=1 if generation_single else 0,
+                question_prompts=question_prompts,
                 all_lectures=all_lectures,
-                batch_size=batch_size,
                 on_batch_complete=on_batch_complete
             )
             print("Topic problems:", questions)

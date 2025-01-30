@@ -13,7 +13,14 @@ class Rubric(TypedDict):
     content: str
     points: int
 
+class QuestionPrompt(TypedDict):
+    id: str
+    mcq: bool
+    multi_part: bool
+    computational: bool
+
 class MCQQuestion(TypedDict):
+    id: str
     question: str
     options: Dict[str, str]
     answers: Dict[str, bool]
@@ -22,6 +29,7 @@ class MCQQuestion(TypedDict):
     slides: Dict[str, List[int]]  # lecture_id -> slide numbers
 
 class FRQQuestion(TypedDict):
+    id: str
     question: str
     solution: str
     tags: List[str]
@@ -487,7 +495,6 @@ class BaseProblemsProcessor(BaseProcessor):
 
     async def process_batch(
         self,
-        num_questions: int,
         name: str,
         content: str,
         prompt: str
@@ -509,7 +516,7 @@ class BaseProblemsProcessor(BaseProcessor):
             },
             {
                 "type": "text",
-                "text": f"You should generate {num_questions} new questions for: {name}. INPUT: {content}\n\nYOUR OUTPUT: "
+                "text": f"You should generate 1 new questions for: {name}. INPUT: {content}\n\nYOUR OUTPUT: "
             }
         ])
         response = await self.robust_generate(message, model="gemini-1.5-pro")
@@ -518,6 +525,7 @@ class BaseProblemsProcessor(BaseProcessor):
 
     def clean_result(
         self,
+        question_id: str,
         result: str,
         name: str,
         tags: List[str],
@@ -525,12 +533,13 @@ class BaseProblemsProcessor(BaseProcessor):
     ) -> None:
         """Clean the result based on question type"""
         if self.question_type == QuestionType.MCQ:
-            self.clean_mcq_result(result, name, tags, lectures)
+            self.clean_mcq_result(question_id, result, name, tags, lectures)
         else:
-            self.clean_frq_result(result, name, tags, lectures)
+            self.clean_frq_result(question_id, result, name, tags, lectures)
 
     def clean_mcq_result(
         self,
+        question_id: str,
         result: str,
         name: str,
         tags: List[str],
@@ -557,7 +566,7 @@ class BaseProblemsProcessor(BaseProcessor):
                         )
                         
                         if part_match:
-                            question_obj = self.process_mcq_block(part_match.group(1), tags, lectures)
+                            question_obj = self.process_mcq_block(question_id, part_match.group(1), tags, lectures)
                             if question_obj:
                                 multi_part_question_obj.append(question_obj)
                     
@@ -568,7 +577,7 @@ class BaseProblemsProcessor(BaseProcessor):
                         self.questions[name].append(multi_part_question_obj)
                 else:
                     # Handle single-part questions
-                    question_obj = self.process_mcq_block(block, tags, lectures)
+                    question_obj = self.process_mcq_block(question_id, block, tags, lectures)
                     if question_obj:
                         if name not in self.questions:
                             self.questions[name] = []
@@ -579,6 +588,7 @@ class BaseProblemsProcessor(BaseProcessor):
 
     def clean_frq_result(
         self,
+        question_id: str,
         result: str,
         name: str,
         tags: List[str],
@@ -605,7 +615,7 @@ class BaseProblemsProcessor(BaseProcessor):
                         )
                         
                         if part_match:
-                            question_obj = self.process_frq_block(part_match.group(1), tags, lectures)
+                            question_obj = self.process_frq_block(question_id, part_match.group(1), tags, lectures)
                             if question_obj:
                                 multi_part_question_obj.append(question_obj)
                     
@@ -616,7 +626,7 @@ class BaseProblemsProcessor(BaseProcessor):
                         self.questions[name].append(multi_part_question_obj)
                 else:
                     # Handle single-part questions
-                    question_obj = self.process_frq_block(block, tags, lectures)
+                    question_obj = self.process_frq_block(question_id, block, tags, lectures)
                     if question_obj:
                         if name not in self.questions:
                             self.questions[name] = []
@@ -627,6 +637,7 @@ class BaseProblemsProcessor(BaseProcessor):
 
     def process_mcq_block(
         self,
+        question_id: str,
         block: str,
         tags: List[str],
         lectures: List[Dict[str, Union[str, int]]]
@@ -681,6 +692,7 @@ class BaseProblemsProcessor(BaseProcessor):
                 lecture_slides[str(lecture['id'])] = slide_numbers
 
         return {
+            "id": question_id,
             "question": question,
             "options": options,
             "answers": answers,
@@ -691,6 +703,7 @@ class BaseProblemsProcessor(BaseProcessor):
 
     def process_frq_block(
         self,
+        question_id: str,
         block: str,
         tags: List[str],
         lectures: List[Dict[str, Union[str, int]]]
@@ -753,6 +766,7 @@ class BaseProblemsProcessor(BaseProcessor):
                 lecture_slides[str(lecture['id'])] = slide_numbers
 
         return {
+            "id": question_id,
             "question": question,
             "solution": solution,
             "tags": tags,

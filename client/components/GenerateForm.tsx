@@ -118,67 +118,67 @@ export default function GenerateForm({ classId, type }: { classId: string, type:
     };
 
     const handleGenerate = async () => {
-        console.log({
-            generationTitle,
-            contentType,
-            sourceType,
-            selectedItems,
-            ...(contentType === 'problem' && {
-                numQuestions,
-                problemType,
-                problemStyle,
-                problemParts
-            })
-        });
+        // console.log({
+        //     generationTitle,
+        //     contentType,
+        //     sourceType,
+        //     selectedItems,
+        //     ...(contentType === 'problem' && {
+        //         numQuestions,
+        //         problemType,
+        //         problemStyle,
+        //         problemParts
+        //     })
+        // });
 
-        try {
-            setLoading(true);
-            // create generation
-            const generationLectures = sourceType === 'lectures' ? selectedItems : [];
-            const generationTopics = sourceType === 'topics' ? selectedItems.map((topicMapId) => topics?.find((topic) => topic.map_id === topicMapId)).map((topic) => topic?.id).filter((id) => id !== undefined) : [];
-            const questions = contentType === 'problem' ? numQuestions ?? 0 : 0;
-            const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions, problemType === 'mcq', problemStyle === 'conceptual', problemParts === 'single', additionalInstructions, `${process.env.NEXT_PUBLIC_API_URL}`);
-            console.log(generation);
+        // try {
+        //     setLoading(true);
+        //     // create generation
+        //     const generationLectures = sourceType === 'lectures' ? selectedItems : [];
+        //     const generationTopics = sourceType === 'topics' ? selectedItems.map((topicMapId) => topics?.find((topic) => topic.map_id === topicMapId)).map((topic) => topic?.id).filter((id) => id !== undefined) : [];
+        //     const questions = contentType === 'problem' ? numQuestions ?? 0 : 0;
+        //     const generation = await createGeneration(classId, generationTitle, contentType, generationLectures, generationTopics, questions, problemType === 'mcq', problemStyle === 'conceptual', problemParts === 'single', additionalInstructions, `${process.env.NEXT_PUBLIC_API_URL}`);
+        //     console.log(generation);
 
-            if (contentType === 'summary') {
-                // invoke the generate/summary endpoint, do not wait for response
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summary`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        class_id: classId,
-                        generation_id: generation.id,
-                    })
-                });
-                queryClient.invalidateQueries({ queryKey: ["summariesGenerations", classId] });
-                // do not wait for response
-                router.push(`/classes/${classId}/generate/summary`);
-            } else if (contentType === 'problem') {
-                // invoke the generate/problems endpoint, do not wait for response
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        class_id: classId,
-                        generation_id: generation.id,
-                        additional_instructions: additionalInstructions,
-                    })
-                });
-                queryClient.invalidateQueries({ queryKey: ["problemGenerations", classId] });
-                // do not wait for response
-                router.push(`/classes/${classId}/generate/problems`);
-            } else {
-                throw new Error("Invalid content type");
-            }
-        } catch (error) {
-            console.error("Error generating summary:", error);
-        } finally {
-            setLoading(false);
-        }
+        //     if (contentType === 'summary') {
+        //         // invoke the generate/summary endpoint, do not wait for response
+        //         fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summary`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({
+        //                 class_id: classId,
+        //                 generation_id: generation.id,
+        //             })
+        //         });
+        //         queryClient.invalidateQueries({ queryKey: ["summariesGenerations", classId] });
+        //         // do not wait for response
+        //         router.push(`/classes/${classId}/generate/summary`);
+        //     } else if (contentType === 'problem') {
+        //         // invoke the generate/problems endpoint, do not wait for response
+        //         fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({
+        //                 class_id: classId,
+        //                 generation_id: generation.id,
+        //                 additional_instructions: additionalInstructions,
+        //             })
+        //         });
+        //         queryClient.invalidateQueries({ queryKey: ["problemGenerations", classId] });
+        //         // do not wait for response
+        //         router.push(`/classes/${classId}/generate/problems`);
+        //     } else {
+        //         throw new Error("Invalid content type");
+        //     }
+        // } catch (error) {
+        //     console.error("Error generating summary:", error);
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     const getAllChildrenIds = (node: MapNode): string[] => {
