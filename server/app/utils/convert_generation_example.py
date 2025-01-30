@@ -28,6 +28,20 @@ class GenerationFormatter:
             return self._format_summary()
         else:
             return ""
+        
+    def format_question_requirements(self) -> str:
+        """Format question requirements"""
+        if self.generation_data.get("type") == "problem":
+            formatted_text = f"Wanted {len(self.items)} questions\n"
+            for question_index, question in enumerate(self.items):
+                formatted_text += f"QUESTION {question_index + 1}: {question.get('question', '')}\n"
+                formatted_text += f"Wanted {'single part' if question.get('multipart', None) == None else 'multi part'} question\n"
+                formatted_text += f"Wanted {'mcq' if question.get('mcq', False) else 'free response'} question\n"
+                formatted_text += f"Wanted {'conceptual' if question.get('conceptual', False) else 'computational'} question\n"
+                formatted_text += f"IMPORTANT: Wanted the following additional information: {question.get('additional_info', '')}\n"
+            return formatted_text
+        else:
+            return ""
     
     def _format_questions(self) -> str:
         """Format multiple questions"""

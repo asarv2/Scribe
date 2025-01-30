@@ -24,6 +24,8 @@ import { MapNode } from "@/utils/map/map-tree";
 import Latex from "@/components/Latex";
 import { Checkbox, ActionIcon } from "@mantine/core";
 import { createGeneration } from "@/utils/services/generation";
+import { createQuestions } from "@/utils/services/questions";
+import { v4 as uuidv4 } from 'uuid';
 
 type GenerateCanvasProps = {
     classId: string;
@@ -104,19 +106,56 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
     const [loading, setLoading] = useState(false);
 
     const handleGenerate = async () => {
-
         try {
             setLoading(true);
-            // create generation
-            const generationLectures = selectedContext.includes('lectures') ? selectedContext.filter(item => item.startsWith('lecture_')) : [];
-            const generationTopics = selectedContext.includes('topics') ? selectedContext.filter(item => item.startsWith('topic_')) : [];
-
             // creating generation
-            const generation = await createGeneration(classId, generationName, 'problem', generationLectures, generationTopics, `${process.env.NEXT_PUBLIC_API_URL}`);
+            const generation = await createGeneration(classId, generationName, 'problem', `${process.env.NEXT_PUBLIC_API_URL}`);
             console.log(generation);
 
-            // creating problems
+            const multipartQuestions = problems.filter(problem => problem.isMultiPart).map(problem => {
+                const multipart_uuid = uuidv4();
+                // 3 questions
+                return [{
+                    generation: generation.id,
+                    mcq: problem.isMCQ,
+                    conceptual: problem.isComputational,
+                    multipart: multipart_uuid,
+                    additional_info: problem.prompt,
+                    topics: problem.context.topics,
+                    lectures: problem.context.lectures
+                }, {
+                    generation: generation.id,
+                    mcq: problem.isMCQ,
+                    conceptual: problem.isComputational,
+                    multipart: multipart_uuid,
+                    additional_info: problem.prompt,
+                    topics: problem.context.topics,
+                    lectures: problem.context.lectures
+                }, {
+                    generation: generation.id,
+                    mcq: problem.isMCQ,
+                    conceptual: problem.isComputational,
+                    multipart: multipart_uuid,
+                    additional_info: problem.prompt,
+                    topics: problem.context.topics,
+                    lectures: problem.context.lectures
+                }]
+            }).flat();
             
+            const singleQuestions = problems.filter(problem => !problem.isMultiPart).map(problem => ({
+                generation: generation.id,
+                mcq: problem.isMCQ,
+                conceptual: problem.isComputational,
+                additional_info: problem.prompt,
+                topics: problem.context.topics,
+                lectures: problem.context.lectures
+            }));
+
+            // creating problems
+            const {success, error} = await createQuestions([...singleQuestions, ...multipartQuestions]);
+            if (!success) {
+                throw new Error(error);
+            }
 
             // invoke the generate/problems endpoint, do not wait for response
             fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
@@ -767,7 +806,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
                         {/* <Text size="xl" fw={700} mb={6}>Generate Problems</Text> */}
                     </Group>
                     <Group>
-                        <Button>Generate Problems</Button>
+                        <Button onClick={handleGenerate} loading={loading}>Generate Problems</Button>
                     </Group>
                 </Flex>
 

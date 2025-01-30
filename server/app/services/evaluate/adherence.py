@@ -20,7 +20,6 @@ class AdherenceEvaluator(object):
             self.type: type of the generation, ex: "problem" or "summary"
             self.class_id: the id of the class the generation is for
             self.topics: the topics the generation is for
-            self.num_questions: the number of questions in the generation
             self.is_mcq: whether the generation is multiple choice
             self.is_conceptual: whether the generation is conceptual
             self.is_single_part: whether the generation is single part
@@ -37,7 +36,6 @@ class AdherenceEvaluator(object):
         self.type = self.generation.get("type", "No type")
         self.class_id = self.generation.get("class", "No class")
         self.topics = self.generation.get("topics", "No topics")
-        self.num_questions = self.generation.get("num_questions", "No num_questions")
         self.is_mcq = self.generation.get("mcq", False)
         self.is_conceptual = self.generation.get("conceptual", False)
         self.is_single_part = self.generation.get("single", False)
@@ -132,9 +130,10 @@ class AdherenceEvaluator(object):
         INPUT: 
         Generation Requirements:
         - Wanted 1 questions
-        - Wanted multi part questions
-        - Wanted free response questions
-        - Wanted computational questions
+        QUESTION 1:
+        - Wanted multi part question
+        - Wanted free response question
+        - Wanted computational question
         IMPORTANT: Wanted the following additional information: Make it a 2x2 matrix for simplex method.        
         Generation Output: 
         QUESTION 1:
@@ -161,11 +160,7 @@ class AdherenceEvaluator(object):
         Now, it is your turn to evaluate the generation: {self.name}. 
         
         Generation Requirements:
-        - Wanted {self.num_questions} questions
-        - Wanted {"single part" if self.is_single_part else "multi part"} questions
-        - Wanted {"mcq" if self.is_mcq else "free response"} questions
-        - Wanted {"conceptual" if self.is_conceptual else "computational"} questions
-        IMPORTANT: Wanted the following additional information: {self.generation.get("additional_info", "")}
+        {self.generation_formatter.format_question_requirements()}
         
         Generation Output: 
         {self.generation_formatter.main()}

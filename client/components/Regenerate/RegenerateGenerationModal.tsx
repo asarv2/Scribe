@@ -41,61 +41,61 @@ export default function RegenerateGenerationModal({ generation, evaluations }: R
 
     const handleRegenerateGeneration = async () => {
         setLoading(true);
-        try {
-            const finalComments = `${additionalInfo}\n${getEvaluationComments()}`
-            const newGeneration = await createGeneration(generation.class, generation.name, generation.type, generation.lectures, generation.topics, generation.num_questions, generation.mcq, generation.conceptual, generation.single, finalComments, `${process.env.NEXT_PUBLIC_API_URL}`, generation.id, Number(generation.version) + 1);
-            if (!newGeneration) {
-                throw new Error("Failed to create new generation");
-            } else {
-                // make an api call to 
-                if (generation.type === 'summary') {
-                    // invoke the generate/summary endpoint, do not wait for response
-                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summary`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            class_id: generation.class,
-                            generation_id: newGeneration.id,
-                        })
-                    });
-                    queryClient.invalidateQueries({ queryKey: ["summariesGenerations", generation.class] });
-                    // do not wait for response
-                    router.push(`/classes/${generation.class}/generate/summary`);
-                } else if (generation.type === 'problem') {
-                    // invoke the generate/problems endpoint, do not wait for response
-                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            class_id: generation.class,
-                            generation_id: newGeneration.id,
-                        })
-                    });
-                    queryClient.invalidateQueries({ queryKey: ["problemGenerations", generation.class] });
-                    // do not wait for response
-                    router.push(`/classes/${generation.class}/generate/problems`);
-                }
-            }
-            notifications.show({
-                title: "Regenerate Started",
-                message: "You have successfully regenerated " + generation.name,
-                color: "blue",
-            });
-        } catch (error: any) {
-            console.error(error);
-            notifications.show({
-                title: "Failed to regenerate generation",
-                message: error.message,
-                color: "red",
-            })
-        } finally {
-            setLoading(false);
-            close();
-        }
+        // try {
+        //     const finalComments = `${additionalInfo}\n${getEvaluationComments()}`
+        //     const newGeneration = await createGeneration(generation.class, generation.name, generation.type, generation.lectures, generation.topics, generation.num_questions, generation.mcq, generation.conceptual, generation.single, finalComments, `${process.env.NEXT_PUBLIC_API_URL}`, generation.id, Number(generation.version) + 1);
+        //     if (!newGeneration) {
+        //         throw new Error("Failed to create new generation");
+        //     } else {
+        //         // make an api call to 
+        //         if (generation.type === 'summary') {
+        //             // invoke the generate/summary endpoint, do not wait for response
+        //             fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summary`, {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                 },
+        //                 body: JSON.stringify({
+        //                     class_id: generation.class,
+        //                     generation_id: newGeneration.id,
+        //                 })
+        //             });
+        //             queryClient.invalidateQueries({ queryKey: ["summariesGenerations", generation.class] });
+        //             // do not wait for response
+        //             router.push(`/classes/${generation.class}/generate/summary`);
+        //         } else if (generation.type === 'problem') {
+        //             // invoke the generate/problems endpoint, do not wait for response
+        //             fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                 },
+        //                 body: JSON.stringify({
+        //                     class_id: generation.class,
+        //                     generation_id: newGeneration.id,
+        //                 })
+        //             });
+        //             queryClient.invalidateQueries({ queryKey: ["problemGenerations", generation.class] });
+        //             // do not wait for response
+        //             router.push(`/classes/${generation.class}/generate/problems`);
+        //         }
+        //     }
+        //     notifications.show({
+        //         title: "Regenerate Started",
+        //         message: "You have successfully regenerated " + generation.name,
+        //         color: "blue",
+        //     });
+        // } catch (error: any) {
+        //     console.error(error);
+        //     notifications.show({
+        //         title: "Failed to regenerate generation",
+        //         message: error.message,
+        //         color: "red",
+        //     })
+        // } finally {
+        //     setLoading(false);
+        //     close();
+        // }
 
     }
 

@@ -25,7 +25,6 @@ export async function getGenerations(
             .select("*")
             .eq("class", classId)
             .eq("deleted", false)
-            .neq("num_questions", 0)
             .order("created_at", { ascending: false });
 
         if (problemError) {

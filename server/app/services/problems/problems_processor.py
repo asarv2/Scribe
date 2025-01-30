@@ -1,12 +1,8 @@
-from typing import Dict, List, TypedDict, Optional, Union
+from typing import Dict, List, TypedDict, Optional, Union, TypedDict, Callable, Awaitable
 from enum import Enum
-from app.services.base_processor import BaseProcessor, ContentType
+from app.services.base_processor import BaseProcessor
 from langchain_core.messages import HumanMessage
 import re
-
-class QuestionType(Enum):
-    MCQ = "mcq"
-    FRQ = "frq"
 
 class Rubric(TypedDict):
     standard: str
@@ -18,6 +14,7 @@ class QuestionPrompt(TypedDict):
     mcq: bool
     multi_part: bool
     computational: bool
+    additional_info: str
 
 class MCQQuestion(TypedDict):
     id: str
@@ -40,38 +37,22 @@ class ProblemsContent(TypedDict):
     figures: Dict[int, List[str]]
     content: str
 
-class BaseProblemsProcessor(BaseProcessor):
+class ProblemsProcessor(BaseProcessor):
     def __init__(
         self,
         course_title: str,
-        content_type: ContentType,
-        question_type: QuestionType = QuestionType.MCQ,
-        additional_instructions: str = ""
+        names: List[str],
+        items: Dict[str, ProblemsContent],
     ):
         super().__init__()
         self.course_title = course_title
-        self.content_type = content_type
-        self.question_type = question_type
-        self.additional_instructions = additional_instructions
         self.questions: Dict[str, List[List[Union[MCQQuestion, FRQQuestion]]]] = {}
-
-        self.single_part_conceptual_prompt = ""
-        self.single_part_computational_prompt = ""
-        self.multi_part_conceptual_prompt = ""
-        self.multi_part_computational_prompt = ""
-
-        self.initialize_prompts()
-
-    def initialize_prompts(self) -> None:
-        """Initialize prompts based on question type"""
-        if self.question_type == QuestionType.MCQ:
-            self.initialize_mcq_prompts()
-        else:
-            self.initialize_frq_prompts()
+        self.names = names
+        self.items = items
 
 
-    def initialize_mcq_prompts(self) -> None:
-        """Initialize MCQ prompts"""
+    def initialize_mcq_prompts(self) -> tuple[str, str, str, str]:
+        """Initialize MCQ prompts. Will return a tuple of 4 strings, single_part_conceptual_prompt, single_part_computational_prompt, multi_part_conceptual_prompt, multi_part_computational_prompt"""
                 # Prompts
         base_question_prompt = f"You are a professor for the class {self.course_title}. You will be given documents from lectures and be asked to generate multiple choice questions for the students to answer. You will have 5 answer choices available, 'A', 'B', 'C', 'D', and 'E'. For each question generated, there can only be one correct answer. If your response contains math symbols, be sure to use LaTeX formatting."
 
@@ -79,12 +60,12 @@ class BaseProblemsProcessor(BaseProcessor):
             
             CRITICAL REQUIREMENTS:
             1. This course is a graduate level class, so you will need to generate complex, multi-step questions.
-            2. Questions should directly relate to the core content of the {self.content_type.value}.
+            2. Questions should directly relate to the core content of the material.
             3. Make each explanation complete and self-contained.
             4. Each question should be difficult to answer correctly, if the student is not familiar with the content.
-            5. Make sure the questions cover a diverse set of concepts from the {self.content_type.value}."""
+            5. Make sure the questions cover a diverse set of concepts from the material."""
 
-        single_part_prompt = f"""TASK: You will be generating single-part questions to test comprehension of the {self.content_type.value}. 
+        single_part_prompt = f"""TASK: You will be generating single-part questions to test comprehension of the material. 
         
         WHAT TO DO:
         1. Put the question in <QUESTION> and </QUESTION> tags.
@@ -94,7 +75,7 @@ class BaseProblemsProcessor(BaseProcessor):
         5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question.
         6. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations."""
 
-        multi_part_prompt = f"""TASK: You will be generating multi-part questions to test comprehension of the {self.content_type.value}. 
+        multi_part_prompt = f"""TASK: You will be generating multi-part questions to test comprehension of the material. 
         
         WHAT TO DO: 
         1. You must generate exactly 3 parts.
@@ -107,10 +88,10 @@ class BaseProblemsProcessor(BaseProcessor):
         8. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations."""
 
 
-        single_part_conceptual_prompt = """IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part conceptual practice problem for the """ + ("topic Simplex Method" if self.content_type.value == "topic" else "lecture 2024-08-27-ExSimplex") + """."
+        single_part_conceptual_prompt = """IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part conceptual practice problem for the Simplex Method."
         
         OUTPUT: <OUTPUT><QUESTION>Which statement about degeneracy in the Simplex Method is correct?</QUESTION> <OPTION_A> Degeneracy only happens if the objective function has multiple optimal solutions.</OPTION_A> <OPTION_B>Degeneracy can cause the Simplex Method to cycle, so tie-breaking rules (like Bland's rule) may be needed.</OPTION_B> <OPTION_C>Once the Simplex Method encounters a degenerate BFS, it automatically concludes the solution is optimal.</OPTION_C> <OPTION_D>Degeneracy can never occur if all right-hand side constants are strictly positive.</OPTION_D> <OPTION_E>Degeneracy only appears in minimization problems, not in maximization.</OPTION_E> <CORRECT_B>In degenerate solutions, more constraints are active at a corner than strictly necessary, which can cause zero steps in objective improvement and lead the algorithm to revisit the same BFS (cycling). Anti-cycling pivot rules help avoid infinite loops.</CORRECT_B> <INCORRECT_A>Multiple optimal solutions can occur even without degeneracy in the BFS. Likewise, degeneracy can occur in problems that do not have multiple optima. They are different concepts.</INCORRECT_A> <INCORRECT_C>A degenerate BFS does not guarantee optimality. It simply means a basic variable is zero or multiple constraints are active at the same vertex.</INCORRECT_C> <INCORRECT_D>You can have degeneracy even if all RHS values are positive, for example if constraints intersect in such a way that multiple constraints are tight at the same point. Strict positivity of RHS does not rule out degeneracy.</INCORRECT_D> <INCORRECT_E>Degeneracy can arise in both minimization and maximization problems; it's an artifact of geometry (multiple constraints meeting at a corner in certain ways), not the direction of optimization.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></OUTPUT>"""
-        single_part_computational_prompt = """IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part computational practice problem for the """ + ("topic Simplex Method" if self.content_type.value == "topic" else "lecture 2024-08-27-ExSimplex") + """."
+        single_part_computational_prompt = """IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part computational practice problem for the Simplex Method."
         
         OUTPUT: <OUTPUT><QUESTION>Consider the following maximization problem: $\max z = 3x_1 + 5x_2$ subject to:
         $\begin{align*}
@@ -130,7 +111,7 @@ class BaseProblemsProcessor(BaseProcessor):
         After forming the initial simplex tableau, we ask: which pivot column and pivot row would be chosen for the first pivot (using the "most negative entry in the objective row" rule for entering variable, and the minimum ratio test for leaving variable)? 
         Which is the correct pivot choice?</QUESTION> <OPTION_A>Enter $x_1$ (pivot column), leave $s_1$.</OPTION_A> <OPTION_B>Enter $x_1$ (pivot column), leave $s_2$.</OPTION_B> <OPTION_C>Enter $x_2$ (pivot column), leave $s_1$.</OPTION_C> <OPTION_D>Enter $x_2$ (pivot column), leave $s_2$.</OPTION_D> <OPTION_E>Skip pivoting altogether since the BFS is already optimal.</OPTION_E> <CORRECT_B>If the objective row indicates $x_1$ as the best variable to enter (most negative coefficient) and the ratio test indicates $s_2$ leaves first, this is the correct pivot choice.</CORRECT_B> <INCORRECT_A>Entering $x_1$ and leaving $s_1$ might be incorrect if the ratio test (i.e., $\min\{(\text{RHS})/(\text{coefficient in pivot column})\}$) indicates that $s_2$ has the smaller ratio, meaning $s_2$ hits zero first as $x_1$ increases.</INCORRECT_A> <INCORRECT_C>Entering $x_2$ could be correct if $x_2$ had the most negative objective coefficient, but in our hypothetical calculations, we assume $x_1$'s coefficient is more negative. Also, the ratio test might not single out $s_1$ if it doesn't yield the smallest ratio.</INCORRECT_C> <INCORRECT_D>Same rationale as in (C): it might happen if the numbers align that way, but we are positing a scenario where $x_1$ is chosen.</INCORRECT_D> <INCORRECT_E>The BFS $(x_1=0,x_2=0,s_1=6,s_2=4)$ is feasible, but the objective row has negative coefficients for $x_1$ or $x_2$, meaning we can improve the objective. We do not skip pivoting in that case.</INCORRECT_E><LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE></OUTPUT>
         """
-        multi_part_conceptual_prompt = """IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part (3 parts) conceptual practice problem for the """ + ("topic Simplex Method" if self.content_type.value == "topic" else "lecture 2024-08-27-ExSimplex") + """."
+        multi_part_conceptual_prompt = """IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part (3 parts) conceptual practice problem for the Simplex Method."
         
         OUTPUT: 
         <OUTPUT>
@@ -185,7 +166,7 @@ class BaseProblemsProcessor(BaseProcessor):
         <INCORRECT_D>A degenerate BFS does not imply unboundedness. It just means a corner (vertex) of the feasible region is formed by multiple intersecting constraints.</INCORRECT_D>
         <INCORRECT_E>If you completed Phase I successfully, you have feasibility. A degenerate BFS does not negate that.</INCORRECT_E><LECTURE 1><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11></LECTURE></PART_C></OUTPUT>"""
 
-        multi_part_computational_prompt = """IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part computational practice problem for the """ + ("topic Simplex Method" if self.content_type.value == "topic" else "lecture 2024-08-27-ExSimplex") + """."
+        multi_part_computational_prompt = """IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part computational practice problem for the Simplex Method."
         
         OUTPUT: 
         <OUTPUT>
@@ -254,16 +235,11 @@ class BaseProblemsProcessor(BaseProcessor):
         <INCORRECT_D>A negative coefficient in the $-z$ row does not imply infeasibility; it implies an opportunity to increase the objective.</INCORRECT_D>
         <INCORRECT_E>The entire point of the Simplex algorithm is that the basis can change iteration by iteration. We absolutely consider pivoting further if there is any negative cost in the objective row.</INCORRECT_E><LECTURE 1><SLIDE 7><SLIDE 8><SLIDE 9><SLIDE 10><SLIDE 11></LECTURE></PART_C></OUTPUT>"""
 
-        additional_instructions = f"VERY IMPORTANT: Follow these additonal instructions in the generation of the problems: {self.additional_instructions}"
 
-
-        self.single_part_conceptual_prompt = f"{base_question_prompt}\n{self.quality_prompt}\n{single_part_prompt}\n{single_part_conceptual_prompt}\n{additional_instructions}"
-        self.single_part_computational_prompt = f"{base_question_prompt}\n{quality_prompt}\n{single_part_prompt}\n{single_part_computational_prompt}\n{additional_instructions}"
-        self.multi_part_conceptual_prompt = f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_conceptual_prompt}\n{additional_instructions}"
-        self.multi_part_computational_prompt = f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_computational_prompt}\n{additional_instructions}"
+        return f"{base_question_prompt}\n{quality_prompt}\n{single_part_prompt}\n{single_part_conceptual_prompt}", f"{base_question_prompt}\n{quality_prompt}\n{single_part_prompt}\n{single_part_computational_prompt}", f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_conceptual_prompt}", f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_computational_prompt}"
 
     def initialize_frq_prompts(self) -> None:
-        """Initialize FRQ prompts"""
+        """Initialize FRQ prompts. Will return a tuple of 4 strings, single_part_conceptual_prompt, single_part_computational_prompt, multi_part_conceptual_prompt, multi_part_computational_prompt"""
         
         base_question_prompt = f"You are a professor for the class {self.course_title}. You will be given documents from lectures and be asked to generate free response questions for the students to answer. You should provide step by step reasoning for the answer. If your response contains math symbols, be sure to use LaTeX formatting."
 
@@ -271,12 +247,12 @@ class BaseProblemsProcessor(BaseProcessor):
             
             CRITICAL REQUIREMENTS:
             1. This course is a graduate level class, so you will need to generate complex, multi-step questions.
-            2. Questions should directly relate to the core content of the {self.content_type.value}.
+            2. Questions should directly relate to the core content of the material.
             3. Make each explanation complete and self-contained.
             4. Each question should be difficult to answer correctly, if the student is not familiar with the content.
-            5. Make sure the questions cover a diverse set of concepts from the {self.content_type.value}."""
+            5. Make sure the questions cover a diverse set of concepts from the material."""
 
-        single_part_prompt = f"""TASK: You will be generating single-part questions to test comprehension of the {self.content_type.value}. 
+        single_part_prompt = f"""TASK: You will be generating single-part questions to test comprehension of the material. 
         
         WHAT TO DO:
         1. Put the question in <QUESTION> and </QUESTION> tags.
@@ -286,7 +262,7 @@ class BaseProblemsProcessor(BaseProcessor):
         5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
         6. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution."""
 
-        multi_part_prompt = f"""TASK: You will be generating multi-part questions to test comprehension of the {self.content_type.value}. 
+        multi_part_prompt = f"""TASK: You will be generating multi-part questions to test comprehension of the material. 
         
         WHAT TO DO:
         1. You must generate exactly 3 parts.
@@ -298,9 +274,7 @@ class BaseProblemsProcessor(BaseProcessor):
         7. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution."""
 
 
-        single_part_conceptual_prompt = f"""IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part conceptual practice problem for the {
-            "lecture 2024-08-27-ExSimplex" if self.content_type.value == "lecture" else "topic Simplex Method"
-        }.
+        single_part_conceptual_prompt = f"""IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part conceptual practice problem for the Simplex Method.
 
         OUTPUT: <OUTPUT><QUESTION>Explain how degeneracy can lead to cycling in the Simplex Method, and name at least one strategy (or pivot rule) used to avoid cycling. Provide a concise but thorough explanation, using geometric and algebraic reasoning to illustrate your answer.</QUESTION>
 
@@ -310,9 +284,7 @@ class BaseProblemsProcessor(BaseProcessor):
         <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </OUTPUT>"""
 
-        single_part_computational_prompt = f"""IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part computational practice problem for the {
-            "lecture 2024-08-27-ExSimplex" if self.content_type.value == "lecture" else "topic Simplex Method"
-        }.""" + """
+        single_part_computational_prompt = """IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part computational practice problem for the Simplex Method.
 
         OUTPUT: <OUTPUT><QUESTION>Consider the following maximization linear program:
 
@@ -369,9 +341,7 @@ class BaseProblemsProcessor(BaseProcessor):
         <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </OUTPUT>"""
 
-        multi_part_conceptual_prompt = f"""IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part (3 parts) conceptual practice problem for the {
-            "lecture 2024-08-27-ExSimplex" if self.content_type.value == "lecture" else "topic Simplex Method"
-        }.
+        multi_part_conceptual_prompt = """IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part (3 parts) conceptual practice problem for the Simplex Method.
 
         OUTPUT: <OUTPUT>
         <PART_A>
@@ -404,9 +374,8 @@ class BaseProblemsProcessor(BaseProcessor):
         </PART_C>
         </OUTPUT>"""
 
-        multi_part_computational_prompt = f"""IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part (3 parts) computational practice problem for the {
-            "lecture 2024-08-27-ExSimplex" if self.content_type.value == "lecture" else "topic Simplex Method"
-        }.""" + """
+        multi_part_computational_prompt = """IMPORTANT: In addition, you should aim to generate computational questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 multi-part (3 parts) computational practice problem for the Simplex Method.
+
         OUTPUT: <OUTPUT>
         <PART_A>
         <QUESTION>You are given the following maximization problem:
@@ -484,12 +453,7 @@ class BaseProblemsProcessor(BaseProcessor):
         </PART_C>
         </OUTPUT>"""
 
-        additional_instructions = f"VERY IMPORTANT: Follow these additonal instructions in the generation of the problems: {self.additional_instructions}"
-
-        self.single_part_conceptual_prompt = f"{base_question_prompt}\n{quality_prompt}\n{single_part_prompt}\n{single_part_conceptual_prompt}\n{additional_instructions}"
-        self.single_part_computational_prompt = f"{base_question_prompt}\n{quality_prompt}\n{single_part_prompt}\n{single_part_computational_prompt}\n{additional_instructions}"
-        self.multi_part_conceptual_prompt = f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_conceptual_prompt}\n{additional_instructions}"
-        self.multi_part_computational_prompt = f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_computational_prompt}\n{additional_instructions}"
+        return f"{base_question_prompt}\n{quality_prompt}\n{single_part_prompt}\n{single_part_conceptual_prompt}", f"{base_question_prompt}\n{quality_prompt}\n{single_part_prompt}\n{single_part_computational_prompt}", f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_conceptual_prompt}", f"{base_question_prompt}\n{quality_prompt}\n{multi_part_prompt}\n{multi_part_computational_prompt}"
 
 
 
@@ -497,7 +461,8 @@ class BaseProblemsProcessor(BaseProcessor):
         self,
         name: str,
         content: str,
-        prompt: str
+        prompt: str,
+        additional_info: str
     ) -> str:
         """Process a batch of questions"""
         flat_questions = [
@@ -509,7 +474,7 @@ class BaseProblemsProcessor(BaseProcessor):
         flat_questions_str = "\n".join(flat_questions)
 
         message = HumanMessage(content=[
-            {"type": "text", "text": prompt},
+            {"type": "text", "text": prompt + "\n\nVERY IMPORTANT: Follow these additonal instructions in the generation of the problems: " + additional_info},
             {
                 "type": "text",
                 "text": "The following questions have already been generated. Do not repeat them: " + flat_questions_str
@@ -526,13 +491,14 @@ class BaseProblemsProcessor(BaseProcessor):
     def clean_result(
         self,
         question_id: str,
+        question_type: str,
         result: str,
         name: str,
         tags: List[str],
         lectures: List[Dict[str, Union[str, int]]]
     ) -> None:
         """Clean the result based on question type"""
-        if self.question_type == QuestionType.MCQ:
+        if question_type == "mcq":
             self.clean_mcq_result(question_id, result, name, tags, lectures)
         else:
             self.clean_frq_result(question_id, result, name, tags, lectures)
@@ -773,3 +739,69 @@ class BaseProblemsProcessor(BaseProcessor):
             "slides": lecture_slides,
             "rubric": rubric
         } 
+    
+
+    async def process_problems(
+        self,
+        question_prompts: List[QuestionPrompt],
+        all_lectures: List[Dict[str, Union[str, int]]] = [],
+        on_batch_complete: Callable[[List[List[Union[MCQQuestion, FRQQuestion]]]], Awaitable[None]] = None
+    ) -> List[List[Union[MCQQuestion, FRQQuestion]]]:
+        """Process problems for lectures"""
+        
+        name = ", ".join(self.names)
+        print(f"Generating {len(question_prompts)} questions for {name}")
+
+        mcq_prompts = self.initialize_mcq_prompts()
+        frq_prompts = self.initialize_frq_prompts()
+
+        for question_prompt in question_prompts:
+            question_id = question_prompt.get('id')
+            
+            tags = []
+            prompt = None
+            if question_prompt.get('computational') and question_prompt.get('multi_part'):
+                tags.append('computational')
+                tags.append('multi-part')
+                if question_prompt.get('mcq'):
+                    prompt = mcq_prompts[3]
+                else:
+                    prompt = frq_prompts[3]
+            elif question_prompt.get('computational'):
+                tags.append('computational')
+                if question_prompt.get('mcq'):
+                    prompt = mcq_prompts[1]
+                else:
+                    prompt = frq_prompts[1]
+            elif not question_prompt.get('computational') and question_prompt.get('multi_part'):
+                tags.append('conceptual')
+                tags.append('multi-part')
+                if question_prompt.get('mcq'):
+                    prompt = mcq_prompts[2]
+                else:
+                    prompt = frq_prompts[2]
+            elif not question_prompt.get('computational'):
+                tags.append('conceptual')
+                if question_prompt.get('mcq'):
+                    prompt = mcq_prompts[0]
+                else:
+                    prompt = frq_prompts[0]
+
+            if prompt:
+                print(f"Generating 1 {tags} question")
+            else:
+                print(f"No prompt found for {tags}")
+                continue
+
+            result = await self.process_batch(
+                    name,
+                    self.items[question_id]['content'],
+                    prompt,
+                    question_prompt.get('additional_info')
+                )
+            self.clean_result(question_id, "mcq" if question_prompt.get('mcq') else "frq", result, name, tags, all_lectures)
+
+            if on_batch_complete:
+                await on_batch_complete(self.questions[name])
+
+        return self.questions[name]

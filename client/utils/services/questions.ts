@@ -38,3 +38,15 @@ export const updateQuestionStatus = async (questionId: string, approved: boolean
     }
     return { success: true, error: "" };
 }
+
+export const createQuestions = async (questions: { generation: string, mcq: boolean, conceptual: boolean, multipart?: string, additional_info: string, topics: string[], lectures: string[] }[]) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("questions")
+        .insert(questions as any)
+        .select()
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}

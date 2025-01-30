@@ -49,9 +49,10 @@ class ComplexityEvaluator(object):
         INPUT: 
         Generation Requirements:
         - Wanted 1 questions
-        - Wanted multi part questions
-        - Wanted free response questions
-        - Wanted computational questions
+        QUESTION 1:
+        - Wanted multi part question
+        - Wanted free response question
+        - Wanted computational question
         IMPORTANT: Wanted the following additional information: Make it a 2x2 matrix for simplex method.        
         Generation Output: 
         QUESTION 1:
@@ -78,11 +79,7 @@ class ComplexityEvaluator(object):
         Now, it is your turn to evaluate the generation: {self.generation.get("name", "")}. 
         
         Generation Requirements:
-        - Wanted {self.generation.get("num_questions", "")} questions
-        - Wanted {"single part" if self.generation.get("single", "") else "multi part"} questions
-        - Wanted {"mcq" if self.generation.get("mcq", "") else "free response"} questions
-        - Wanted {"conceptual" if self.generation.get("conceptual", "") else "computational"} questions
-        IMPORTANT: Wanted the following additional information: {self.generation.get("additional_info", "")}
+        {self.generation_formatter.format_question_requirements()}
         
         Generation Output: 
         {self.generation_formatter.main()}

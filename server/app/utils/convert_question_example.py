@@ -30,7 +30,7 @@ class QuestionFormatter:
                 formatted_text += f"Explanation: {self._format_mcq_explanation(question)}\n\n"
             
         return formatted_text
-
+    
     def _format_mcq_options(self, question: dict) -> str:
         """Format MCQ options"""
         options_text = ""

@@ -64,6 +64,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         enabled: !!generationProblems
     })
 
+
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
