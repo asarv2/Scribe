@@ -70,7 +70,7 @@ def evaluate_generation():
     generation_id = data['generation_id']
     
     try:
-        llm = "deepseek-r1:1.5b"
+        llm = "deepseek-r1:7b"
 
         # get generation
         generation = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
