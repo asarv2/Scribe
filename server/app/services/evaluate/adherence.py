@@ -1,5 +1,6 @@
 import time
 import re
+import ollama
 from supabase.client import Client
 from app.utils.convert_generation_example import GenerationFormatter
 
@@ -56,8 +57,9 @@ class AdherenceEvaluator(object):
         
         for attempt in range(retries):
             try:
-                response = self.llm.invoke(message)
-                response_content = response.content if hasattr(response, 'content') else str(response)
+                response = ollama.generate(model=self.llm, prompt=message)
+                response_content = response.response if hasattr(response, 'response') else str(response)
+                print(response_content)
 
                 # Extract score and explanation using regex
                 score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)
@@ -122,8 +124,8 @@ class AdherenceEvaluator(object):
         
         example = """
         FORMATTING:
-        1. Use <OUTPUT>x</OUTPUT> tags to encapsulate the output of the rating of the generation, where x is the rating of the generation.
-        2. Add a <WHY>x</WHY> tags to encapsulate the reasoning behind the rating of the generation, where x is the reasoning behind the rating of the generation.
+        1. In your response, use <OUTPUT>x</OUTPUT> tags to encapsulate the output of the rating of the generation, where x is the rating of the generation.
+        2. In your response, use <WHY>x</WHY> tags to encapsulate the reasoning behind the rating of the generation, where x is the reasoning behind the rating of the generation.
         
         Here is a complete example for a generation for: Simplex Method 2x2
         

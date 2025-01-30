@@ -1,3 +1,4 @@
+import ollama
 from supabase.client import Client
 import re
 
@@ -87,8 +88,8 @@ class ComplexityEvaluator(object):
         OUTPUT:
         """
         
-        response = self.llm.invoke(final_prompt)
-        response_content = response.content if hasattr(response, 'content') else str(response)
+        response = ollama.generate(model=self.llm, prompt=message)
+        response_content = response.response if hasattr(response, 'response') else str(response)
 
         # Extract score and explanation using regex
         score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)

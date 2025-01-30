@@ -11,6 +11,7 @@ from app.services.evaluate.novelty import NoveltyEvaluator
 
 from app.extensions import supabase
 from datetime import datetime
+import ollama
 
 evaluate_bp = Blueprint('evaluate', __name__)
 
@@ -70,13 +71,7 @@ def evaluate_generation():
     generation_id = data['generation_id']
     
     try:
-        llm = ChatGoogleGenerativeAI(
-            model='gemini-1.5-flash',
-            temperature=0, 
-            max_tokens=None, 
-            timeout=None, 
-            max_retries=2
-        )
+        llm = "deepseek-r1:7b"
 
         # get generation
         generation = supabase.table("generations").select("*").eq("id", generation_id).single().execute()

@@ -1,4 +1,7 @@
 
+
+import ollama
+import re
 import time
 import re
 from supabase.client import Client
@@ -52,8 +55,8 @@ class ClarityEvaluator(object):
         
         for attempt in range(retries):
             try:
-                response = self.llm.invoke(message)
-                response_content = response.content if hasattr(response, 'content') else str(response)
+                response = ollama.generate(model=self.llm, prompt=message)
+                response_content = response.response if hasattr(response, 'response') else str(response)
 
                 # Extract score and explanation using regex
                 score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)
@@ -107,6 +110,7 @@ class ClarityEvaluator(object):
         2. Make each explanation complete and self-contained.
         3. On a scale of 1-10, rate the clarity of the generated question and solution provided by the model. 1 being the lowest and 10 being the highest.
         4. Provide a clear and concise explanation as to why that score was given. (Why is the generation clear or unclear? How could it be more clear?)
+        5. Pay special attention to formatting, spacing, and clarity of wording - evaluate how well the text is structured and organized for readability.
         """
 
         clarity_prompt = f"""
@@ -116,6 +120,7 @@ class ClarityEvaluator(object):
         4. Whether the output questions format the question in a way that is easy to understand and follow.
         5. Whether the generation avoids ambiguity in the questions and solutions.
         6. Whether the generation avoid asking too many questions or providing too much information at once.
+        7. Whether the generation uses spacing and new lines to make the questions and solutions more readable.
         """
         
         example = """
