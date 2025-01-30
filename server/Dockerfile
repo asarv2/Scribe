@@ -1,21 +1,18 @@
-# Use NVIDIA's PyTorch image as base
+# Use NVIDIA's PyTorch image instead
 FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
+ENV FLASK_DEBUG=false
+
+# Add environment variable to indicate Docker environment
 ENV DOCKER_ENV=true
 
-# Install Python 3.11 and required system dependencies
+# Install Python and required system dependencies
 RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    && add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update \
-    && apt-get install -y \
-    python3.11 \
-    python3.11-distutils \
-    python3.11-dev \
+    python3 \
     python3-pip \
     ffmpeg \
     curl \
@@ -30,14 +27,6 @@ RUN apt-get update && apt-get install -y \
     dvipng \
     ghostscript \
     && rm -rf /var/lib/apt/lists/*
-
-# Install pip for Python 3.11
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
-
-# Set Python 3.11 as default
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
-    && update-alternatives --set python3 /usr/bin/python3.11 \
-    && ln -sf /usr/bin/python3 /usr/bin/python
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -66,4 +55,4 @@ RUN mkdir -p /var/log/gunicorn && \
 EXPOSE 5000
 
 # Run with debugging enabled
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "--log-level", "debug", "--capture-output", "--enable-stdio-inheritance", "app.main:app"]
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "app.main:app"]
