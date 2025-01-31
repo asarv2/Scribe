@@ -51,14 +51,8 @@ COPY gunicorn.conf.py .
 RUN mkdir -p /var/log/gunicorn && \
     chmod 777 /var/log/gunicorn
 
-# Create a directory for model cache
-RUN mkdir -p /root/.cache/huggingface
-
-# Pre-download the model during build
-RUN python3 -c "from transformers import AutoModelForCausalLM, AutoTokenizer; AutoModelForCausalLM.from_pretrained('deepseek-ai/DeepSeek-R1-Distill-Qwen-7B', trust_remote_code=True); AutoTokenizer.from_pretrained('deepseek-ai/DeepSeek-R1-Distill-Qwen-7B')"
-
-# Set the cache directory as a volume to persist it
-VOLUME /root/.cache/huggingface
+# Create directory for local model storage
+RUN mkdir -p /app/models/deepseek-r1-7b
 
 # Expose the Flask port
 EXPOSE 5000

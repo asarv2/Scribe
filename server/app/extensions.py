@@ -40,18 +40,45 @@ CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 deepseek_model = None
 deepseek_tokenizer = None
 
-if os.getenv('DOCKER_ENV'):
-    print("Initializing DeepSeek model in Docker environment...")
-    try:
+print("Checking for DeepSeek model...")
+model_path = "/app/models/deepseek-r1-7b"
+
+try:
+    if os.path.exists(model_path):
+        print(f"Loading DeepSeek model from local path: {model_path}")
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         deepseek_model = AutoModelForCausalLM.from_pretrained(
-            "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-            trust_remote_code=True
+            model_path,
+            trust_remote_code=True,
+            local_files_only=True
         ).to(device)
-        deepseek_tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/DeepSeek-R1-Distill-Qwen-7B")
-        print(f"DeepSeek model initialized on device: {device}")
-    except Exception as e:
-        print(f"Failed to initialize DeepSeek model: {e}")
-        deepseek_model = None
-        deepseek_tokenizer = None
+        deepseek_tokenizer = AutoTokenizer.from_pretrained(
+            model_path,
+            local_files_only=True
+        )
+    else:
+        if os.getenv('DOCKER_ENV'):
+            print("Local model not found, downloading from Hugging Face...")
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            deepseek_model = AutoModelForCausalLM.from_pretrained(
+                "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+                trust_remote_code=True
+            ).to(device)
+            deepseek_tokenizer = AutoTokenizer.from_pretrained(
+                "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+            )
+            
+            # Save the model locally for future use
+            print(f"Saving model to {model_path}")
+            os.makedirs(model_path, exist_ok=True)
+            deepseek_model.save_pretrained(model_path)
+            deepseek_tokenizer.save_pretrained(model_path)
+        else:
+            print("Local model not found, not downloading.")
+        
+    print(f"DeepSeek model initialized on device: {device}")
+except Exception as e:
+    print(f"Failed to initialize DeepSeek model: {e}")
+    deepseek_model = None
+    deepseek_tokenizer = None
 

@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 from app.extensions import supabase
 from app.extensions import app
-from app.models.storage import ProgressFileStorage
+from app.services.storage import ProgressFileStorage
 
 upload_bp = Blueprint('upload', __name__)
 
