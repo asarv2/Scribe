@@ -7,8 +7,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from dotenv import load_dotenv
 
-from app.utils.convert_generation_example import GenerationFormatter
-
 class AccuracyEvaluator(object):
     def __init__(self, supabase, generation_id):
         '''

@@ -13,8 +13,12 @@ from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, AIMessage
 import time
 import asyncio
+
+import torch
 from app.services.rate_limiter import rate_limiter
 import threading
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from app.extensions import deepseek_model, deepseek_tokenizer
 
 class Figure:
     def __init__(self, bbox: List[int], description: str):
@@ -121,14 +125,30 @@ class BaseProcessor:
             return 2
         else:
             raise ValueError(f"Invalid model: {model}")
+        
+    async def generate_deepseek_r1_7b(self, message: Union[HumanMessage, AIMessage]) -> str:
+        if deepseek_model is None or deepseek_tokenizer is None:
+            # Fallback to Gemini if DeepSeek is not available
+            print("DeepSeek model not available, falling back to Gemini Flash-8B...")
+            response = await self.llm_gemini_flash8b.agenerate([[message]])
+            return response.generations[0][0].text
+            
+        inputs = deepseek_tokenizer(message.content, return_tensors="pt", truncation=True, max_length=1024)
+        outputs = deepseek_model.generate(**inputs, max_length=1024)
+        return deepseek_tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     async def robust_generate(
         self,
-        message: HumanMessage,
-        model: Literal["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"] = "gemini-1.5-flash-8b",
+        message: Union[HumanMessage, AIMessage],
+        model: Literal["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro", "deepseek-r1-7b"] = "gemini-1.5-flash-8b",
         retries: int = 5,
         initial_wait: int = 5
     ) -> str:
+        # Add check for DeepSeek availability
+        if model == "deepseek-r1-7b" and (deepseek_model is None or deepseek_tokenizer is None):
+            print("DeepSeek model not available, falling back to Gemini Flash-8B...")
+            model = "gemini-1.5-flash-8b"
+
         # Check circuit breaker
         with self._circuit_breaker_lock:
             current_time = time.time()
@@ -153,6 +173,8 @@ class BaseProcessor:
                         response = await self.llm_gemini_flash_exp.agenerate([[message]])
                     elif model == "gemini-1.5-pro":
                         response = await self.llm_gemini_pro.agenerate([[message]])
+                    elif model == "deepseek-r1-7b":
+                        response = await self.generate_deepseek_r1_7b(message)
                     else:
                         raise ValueError(f"Invalid model: {model}")
 

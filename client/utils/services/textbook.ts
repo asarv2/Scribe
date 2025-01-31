@@ -7,12 +7,12 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
-export const createTextbook = async (classId: string, textbookTitle: string, numPages: number) => {
+export const createTextbook = async (classId: string, textbookTitle: string, numPages: number, response_url: string) => {
     const supabase = useSupabaseServer(cookies());
     console.log("Creating textbook", classId, textbookTitle, numPages);
     const { data, error } = await supabase
         .from("textbooks")
-        .insert({class: classId, title: textbookTitle, pages: numPages})
+        .insert({class: classId, title: textbookTitle, pages: numPages, response_url: response_url})
         .select("*")
         .single();
     if (error) {

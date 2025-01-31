@@ -201,11 +201,11 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                             {/* <Link href={`/`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link> */}
-                            <Text size="xl" fw={700} mb={6} pl={4}>Problems</Text>
+                            <Text size="xl" fw={700} mb={6} pl={4}>Generations</Text>
                         </Group>
                         <Group>
                             <Link href={`/classes/${classId}/generate/problems/new`}>
-                                <Button>Generate</Button>
+                                <Button>Generate Problems</Button>
                             </Link>
                         </Group>
                     </Flex>

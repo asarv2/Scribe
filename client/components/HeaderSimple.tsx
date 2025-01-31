@@ -53,27 +53,6 @@ export function HeaderSimple() {
                 : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/lecture',
             label: 'Lectures'
         },
-        // {
-        //     link: currentClassId
-        //         ? `/classes/${currentClassId}/generate/summary`
-        //         : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate/summary',
-        //     label: 'Summaries'
-        // },
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}/generate/problems`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate/problems',
-            label: 'Problems'
-        },
-    ];
-
-    const MA421NavigationLinks = [
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}/lecture`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/lecture',
-            label: 'Lectures'
-        },
         {
             link: currentClassId
                 ? `/classes/${currentClassId}/textbook`
@@ -84,28 +63,49 @@ export function HeaderSimple() {
             link: currentClassId
                 ? `/classes/${currentClassId}/generate/problems`
                 : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate/problems',
-            label: 'Problems'
+            label: 'Generate'
         },
-    ]
+    ];
 
-    const ECE20007NavigationLinks = [
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}/lecture`
-                : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/lecture',
-            label: 'Lectures'
-        },
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}/chat`
-                : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/chat',
-            label: 'Chat'
-        },
-    ]
+    // const MA421NavigationLinks = [
+    //     {
+    //         link: currentClassId
+    //             ? `/classes/${currentClassId}/lecture`
+    //             : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/lecture',
+    //         label: 'Lectures'
+    //     },
+    //     {
+    //         link: currentClassId
+    //             ? `/classes/${currentClassId}/textbook`
+    //             : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/textbook',
+    //         label: 'Textbooks'
+    //     },
+    //     {
+    //         link: currentClassId
+    //             ? `/classes/${currentClassId}/generate/problems`
+    //             : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate/problems',
+    //         label: 'Problems'
+    //     },
+    // ]
+
+    // const ECE20007NavigationLinks = [
+    //     {
+    //         link: currentClassId
+    //             ? `/classes/${currentClassId}/lecture`
+    //             : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/lecture',
+    //         label: 'Lectures'
+    //     },
+    //     {
+    //         link: currentClassId
+    //             ? `/classes/${currentClassId}/chat`
+    //             : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/chat',
+    //         label: 'Chat'
+    //     },
+    // ]
 
     const classNavigationLinks = {
-        "ef85b3e5-3a62-41a4-8db1-98e5f201779a": MA421NavigationLinks,
-        "ae333215-2914-4026-8aae-418f1255cdd0": ECE20007NavigationLinks
+        // "ef85b3e5-3a62-41a4-8db1-98e5f201779a": MA421NavigationLinks,
+        // "ae333215-2914-4026-8aae-418f1255cdd0": ECE20007NavigationLinks
     } as { [key: string]: { link: string; label: string; }[] }
 
     const { data: user } = useQuery({

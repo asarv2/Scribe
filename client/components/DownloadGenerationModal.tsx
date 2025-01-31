@@ -75,11 +75,11 @@ export default function DownloadGenerationModal({
                 size="lg"
             >
                 <Stack>
-                    <Tabs defaultValue="txt">
+                    <Tabs defaultValue="tex">
                         <TabsList>
-                            <TabsTab value="txt">txt</TabsTab>
-                            {/* <TabsTab value="tex">tex</TabsTab>
-                            <TabsTab value="pdf">pdf</TabsTab> */}
+                            {/* <TabsTab value="txt">txt</TabsTab> */}
+                            <TabsTab value="tex">tex</TabsTab>
+                            <TabsTab value="pdf">pdf</TabsTab>
                         </TabsList>
                         
                         <TabsPanel value="txt">

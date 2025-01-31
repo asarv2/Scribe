@@ -196,34 +196,13 @@ async def parse_lecture():
 
         print("Batch results:", batch_results)
 
-        # Make HTTP request to batch endpoint
-        try:
-            request_body = {
-                "class_id": class_id,
-                "lecture_id": lecture_id
-            }
-            
-            # Use url_for to generate the URL (more maintainable)
-            batch_url = url_for('batch.batch_topics', _external=True)
-            
-            # Make the request
-            response = requests.post(batch_url, json=request_body)
-            
-            if response.status_code != 200:
-                print("Warning: Batch processing request failed:", response.json())
-            else:
-                print("Batch-topics processing initiated")
-            
-            return jsonify({"results": batch_results}), 200
+        # Update lecture status to complete
+        supabase.table("lectures").update({
+            "parse_status": "complete",
+            "parse_error": None
+        }).eq("id", lecture_id).execute()
 
-        except Exception as batch_error:
-            print("Error calling batch-topics:", {
-                "name": type(batch_error).__name__,
-                "message": str(batch_error),
-                "stack": traceback.format_exc(),
-            })
-            
-            return jsonify({"results": batch_results}), 200
+        return jsonify({"results": batch_results}), 200
 
     except Exception as error:
         print("Error in parse-lecture function:", {
@@ -303,8 +282,8 @@ async def parse_textbook():
             
             try:
                 for doc in batch:
-                    # Download image
-                    image_path = f"{class_id}/textbooks/{textbook_id}/images/{doc['page']}.png"
+                    # Download image - Updated path structure to match lectures
+                    image_path = f"{class_id}/{textbook_id}/{doc['id']}.png"
                     print(f"Trying to download: {image_path}")
                     
                     try:
@@ -313,11 +292,11 @@ async def parse_textbook():
                         print(f"Error downloading image {doc['page']}: {e}")
                         continue
                     
-                    if not response.data:
+                    if not response:
                         print(f"No data received for image {doc['page']}")
                         continue
 
-                    images.append(response.data)
+                    images.append(response)
                     print(f"Successfully downloaded image {doc['page']}")
 
                     # Get figures
@@ -347,7 +326,6 @@ async def parse_textbook():
                 raise error
 
             print("Total images downloaded:", len(images))
-            print("Images query response:", images)
 
             # Prepare documents for processing
             processed_documents = [
@@ -405,7 +383,24 @@ async def parse_textbook():
                 after_generate
             )
             print("Textbook processing for batch complete, results:", results)
-            batch_results.append(results)
+
+            # Convert CleanedResponse objects to dictionaries (matching lecture format)
+            serializable_results = [
+                {
+                    "page": result.page,
+                    "latex": result.latex,
+                    "description": result.description,
+                    "figures": [
+                        {
+                            "bbox": figure.bbox,
+                            "description": figure.description
+                        }
+                        for figure in result.figures
+                    ]
+                }
+                for result in results
+            ]
+            batch_results.append(serializable_results)
 
         print("Batch results:", batch_results)
 

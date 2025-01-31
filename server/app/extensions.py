@@ -3,6 +3,8 @@ from flask_cors import CORS
 from supabase.client import Client, create_client, ClientOptions
 import os
 from dotenv import load_dotenv
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 load_dotenv()
 print("Loaded environment variables")
@@ -33,4 +35,23 @@ print("Supabase client initialized")
 
 # Enable CORS
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
+# Initialize DeepSeek model only in Docker environment
+deepseek_model = None
+deepseek_tokenizer = None
+
+if os.getenv('DOCKER_ENV'):
+    print("Initializing DeepSeek model in Docker environment...")
+    try:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        deepseek_model = AutoModelForCausalLM.from_pretrained(
+            "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+            trust_remote_code=True
+        ).to(device)
+        deepseek_tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/DeepSeek-R1-Distill-Qwen-7B")
+        print(f"DeepSeek model initialized on device: {device}")
+    except Exception as e:
+        print(f"Failed to initialize DeepSeek model: {e}")
+        deepseek_model = None
+        deepseek_tokenizer = None
 

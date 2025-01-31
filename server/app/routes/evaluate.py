@@ -11,7 +11,6 @@ from app.services.evaluate.novelty import NoveltyEvaluator
 
 from app.extensions import supabase
 from datetime import datetime
-import ollama
 
 evaluate_bp = Blueprint('evaluate', __name__)
 
@@ -64,15 +63,62 @@ def evaluate_lecture():
     return 'Evaluation uploaded', 200
 
 
+@evaluate_bp.route('/textbook', methods=['POST'])
+def evaluate_textbook():
+    """Evaluate a textbook and return the documents."""
+    data = request.get_json()
+    textbook_id = data['textbook_id']
+    
+    try:
+        # get textbook
+        textbook = supabase.table("textbooks").select("*").eq("id", textbook_id).execute()
+        print(f"Textbook: {textbook}")
+        
+        # latency
+        created_at = datetime.strptime(textbook.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
+        created_at_timestamp = created_at.timestamp()
+        end_time = time.time()
+        latency_seconds = end_time - created_at_timestamp
+        latency_ms = latency_seconds * 1000
+        print(f"Latency: {latency_ms} ms")
+
+        # uploading to supabase
+        response = supabase.table("evaluations").insert({
+            "textbook": textbook_id,
+            "latency": latency_ms,
+            "certainty": 0,
+            "certainty_explanation": "Not implemented",
+            "complexity": 0,
+            "complexity_explanation": "Not implemented",
+            "adherence": 0,
+            "adherence_explanation": "Not implemented",
+            "accuracy": 0,
+            "accuracy_explanation": "Not implemented",
+            "novelty": 0,
+            "novelty_explanation": "Not implemented",
+            "clarity": 0,
+            "clarity_explanation": "Not implemented"
+        }).execute()
+        print(f"Evaluation uploaded: {response}")
+        
+    except Exception as e:
+        print(f"Error uploading evaluation to Supabase:")
+        print(f"Textbook ID: {textbook_id}")
+        print(f"Error details: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Traceback: ", traceback.format_exc())
+        return f'Error uploading evaluation: {type(e).__name__} - {str(e)}', 500
+    
+    return 'Evaluation uploaded', 200
+
+
 @evaluate_bp.route('/generation', methods=['POST'])
-def evaluate_generation():
+async def evaluate_generation():
     """Evaluate a generation and return the documents."""
     data = request.get_json()
     generation_id = data['generation_id']
     
     try:
-        llm = "deepseek-r1:7b"
-
         # get generation
         generation = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
         print(f"Generation: {generation}")
@@ -97,9 +143,9 @@ def evaluate_generation():
         print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
         
         # adherence
-        adherence_evaluator = AdherenceEvaluator(supabase, llm, generation_id)
+        adherence_evaluator = AdherenceEvaluator(supabase, "deepseek-r1-7b", generation_id)
         print("Adherence evaluator created")
-        adherence_explanation, adherence_score = adherence_evaluator.evaluate_adherence()
+        adherence_explanation, adherence_score = await adherence_evaluator.evaluate_adherence()
         print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
 
         # clarity
@@ -109,15 +155,15 @@ def evaluate_generation():
         # print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
         
         # complexity
-        complexity_evaluator = ComplexityEvaluator(supabase, llm, generation_id)
+        complexity_evaluator = ComplexityEvaluator(supabase, "deepseek-r1-7b", generation_id)
         print("Complexity evaluator created")
-        complexity_explanation, complexity_score = complexity_evaluator.evaluate_complexity()
+        complexity_explanation, complexity_score = await complexity_evaluator.evaluate_complexity()
         print(f"Complexity score and explanation calculated: Score: {complexity_score}, Explanation: {complexity_explanation}")
         
         # novelty
-        novelty_evaluator = NoveltyEvaluator(supabase, llm, generation_id)
+        novelty_evaluator = NoveltyEvaluator(supabase, "deepseek-r1-7b", generation_id)
         print("Novelty evaluator created")
-        novelty_explanation, novelty_score = novelty_evaluator.evaluate_novelty()
+        novelty_explanation, novelty_score = await novelty_evaluator.evaluate_novelty()
         print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
         
         

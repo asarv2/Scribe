@@ -387,6 +387,7 @@ export type Database = {
       }
       questions: {
         Row: {
+          additional_info: string
           approved: boolean | null
           conceptual: boolean
           documents: string[]
@@ -398,6 +399,7 @@ export type Database = {
           explanation_e: string | null
           generation: string | null
           id: string
+          lectures: string[]
           mcq: boolean
           multipart: string | null
           option_a: string | null
@@ -408,9 +410,11 @@ export type Database = {
           question: string
           reason: string
           solution: string
+          topics: string[]
           updated_at: string
         }
         Insert: {
+          additional_info?: string
           approved?: boolean | null
           conceptual?: boolean
           documents?: string[]
@@ -422,30 +426,7 @@ export type Database = {
           explanation_e?: string | null
           generation?: string | null
           id?: string
-          mcq?: boolean
-          multipart?: string | null
-          option_a?: string | null
-          option_b?: string | null
-          option_c?: string | null
-          option_d?: string | null
-          option_e?: string | null
-          question: string
-          reason?: string
-          solution: string
-          updated_at?: string
-        }
-        Update: {
-          approved?: boolean | null
-          conceptual?: boolean
-          documents?: string[]
-          example?: boolean
-          explanation_a?: string | null
-          explanation_b?: string | null
-          explanation_c?: string | null
-          explanation_d?: string | null
-          explanation_e?: string | null
-          generation?: string | null
-          id?: string
+          lectures?: string[]
           mcq?: boolean
           multipart?: string | null
           option_a?: string | null
@@ -456,6 +437,34 @@ export type Database = {
           question?: string
           reason?: string
           solution?: string
+          topics?: string[]
+          updated_at?: string
+        }
+        Update: {
+          additional_info?: string
+          approved?: boolean | null
+          conceptual?: boolean
+          documents?: string[]
+          example?: boolean
+          explanation_a?: string | null
+          explanation_b?: string | null
+          explanation_c?: string | null
+          explanation_d?: string | null
+          explanation_e?: string | null
+          generation?: string | null
+          id?: string
+          lectures?: string[]
+          mcq?: boolean
+          multipart?: string | null
+          option_a?: string | null
+          option_b?: string | null
+          option_c?: string | null
+          option_d?: string | null
+          option_e?: string | null
+          question?: string
+          reason?: string
+          solution?: string
+          topics?: string[]
           updated_at?: string
         }
         Relationships: [
@@ -593,6 +602,7 @@ export type Database = {
           class: string | null
           content: string
           created_at: string | null
+          deleted: boolean
           figures: string[]
           id: string
           lectures: string[] | null
@@ -609,6 +619,7 @@ export type Database = {
           class?: string | null
           content?: string
           created_at?: string | null
+          deleted?: boolean
           figures?: string[]
           id?: string
           lectures?: string[] | null
@@ -625,6 +636,7 @@ export type Database = {
           class?: string | null
           content?: string
           created_at?: string | null
+          deleted?: boolean
           figures?: string[]
           id?: string
           lectures?: string[] | null

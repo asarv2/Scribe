@@ -1,11 +1,12 @@
 import time
 import re
-import ollama
+from typing import Literal
 from supabase.client import Client
 from app.utils.convert_generation_example import GenerationFormatter
-
+from app.services.base_processor import BaseProcessor
+from langchain_core.messages import HumanMessage
 class AdherenceEvaluator(object):
-    def __init__(self, supabase: Client, llm, generation_id: str):
+    def __init__(self, supabase: Client, llm: Literal["deepseek-r1-7b", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"], generation_id: str):
         '''
         Class for all evaluating a how well the model adhered to the given input.
         
@@ -31,6 +32,7 @@ class AdherenceEvaluator(object):
 
         # getting generation info
         self.supabase = supabase
+        self.base_processor = BaseProcessor()
         self.llm = llm
         self.generation = self.supabase.table("generations").select("*").eq("id", generation_id).single().execute().data
         self.name = self.generation.get("name", "No name")
@@ -49,7 +51,7 @@ class AdherenceEvaluator(object):
 
 
         
-    def evaluate_adherence(self, retries: int = 5, initial_wait: int = 5):
+    async def evaluate_adherence(self, retries: int = 5, initial_wait: int = 5):
         # create a prompt for the model using information about the generation
         message = self._initialize_evaluation_prompts()
 
@@ -57,26 +59,30 @@ class AdherenceEvaluator(object):
         
         for attempt in range(retries):
             try:
-                response = ollama.generate(model=self.llm, prompt=message)
-                response_content = response.response if hasattr(response, 'response') else str(response)
-                print(response_content)
+                response = await self.base_processor.robust_generate(
+                    HumanMessage(content=message),
+                    model=self.llm
+                )
 
                 # Extract score and explanation using regex
-                score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)
-                explanation_match = re.search(r"<WHY>(.*?)</WHY>", response_content, re.DOTALL)
+                score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response)
+                explanation_match = re.search(r"<WHY>(.*?)</WHY>", response, re.DOTALL)
                 
-                if not score_match or not explanation_match:
-                    raise ValueError("Response missing required OUTPUT or WHY tags")
+                if not score_match:
+                    score = 1
+                else:
+                    score = int(score_match.group(1))
+                
+                if not explanation_match:
+                    explanation = "No explanation provided"
+                else:
+                    explanation = explanation_match.group(1).strip()
                     
-                adherence_score = score_match.group(1)
-                explanation = explanation_match.group(1).strip()
-                
                 # Validate score is between 1-10
-                score_int = int(adherence_score)
-                if not 1 <= score_int <= 10:
-                    raise ValueError(f"Invalid adherence score: {score_int}. Must be between 1 and 10.")
+                if not 1 <= score <= 10:
+                    raise ValueError(f"Invalid adherence score: {score}. Must be between 1 and 10.")
                 
-                return explanation, score_int
+                return explanation, score
                 
             except Exception as e:
                 last_error = e

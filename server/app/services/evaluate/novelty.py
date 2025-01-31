@@ -1,10 +1,13 @@
-import ollama
+from typing import Literal
+
 from supabase.client import Client
 import re
 from app.utils.convert_generation_example import GenerationFormatter
+from app.services.base_processor import BaseProcessor
+from langchain_core.messages import HumanMessage
 
 class NoveltyEvaluator(object):
-    def __init__(self, supabase: Client, llm, generation_id: str):
+    def __init__(self, supabase: Client, llm: Literal["deepseek-r1-7b", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"], generation_id: str):
         """
         Evaluates the novelty of a generation, based on the diveristy of the questions, and how much it is different from the example text.
         """
@@ -21,10 +24,11 @@ class NoveltyEvaluator(object):
         
         self.summaries = self.supabase.table("summaries").select("*").eq("generation", generation_id).execute().data
         
+        self.base_processor = BaseProcessor()
         self.llm = llm
 
 
-    def evaluate_novelty(self):
+    async def evaluate_novelty(self):
         """
         Evaluates the novelty of a generation, based on the diveristy of the questions, and how much it is different from the example text.
         """
@@ -88,21 +92,27 @@ class NoveltyEvaluator(object):
         OUTPUT:
         """
         
-        response = ollama.generate(model=self.llm, prompt=final_prompt)
-        response_content = response.response if hasattr(response, 'response') else str(response)
+        response = await self.base_processor.robust_generate(
+            HumanMessage(content=final_prompt),
+            model=self.llm
+        )
 
         # Extract score and explanation using regex
-        score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response_content)
-        explanation_match = re.search(r"<WHY>(.*?)</WHY>", response_content, re.DOTALL)
+        score_match = re.search(r"<OUTPUT>(\d+)</OUTPUT>", response)
+        explanation_match = re.search(r"<WHY>(.*?)</WHY>", response, re.DOTALL)
         
-        if not score_match or not explanation_match:
-            raise ValueError("Response missing required OUTPUT or WHY tags")
+        if not score_match:
+            score = 1
+        else:
+            score = int(score_match.group(1))
+        
+        if not explanation_match:
+            explanation = "No explanation provided"
+        else:
+            explanation = explanation_match.group(1).strip()
             
-        complexity_score = int(score_match.group(1))
-        explanation = explanation_match.group(1).strip()
-        
         # Validate score is between 1-10
-        if not 1 <= complexity_score <= 10:
-            raise ValueError(f"Invalid complexity score: {complexity_score}. Must be between 1 and 10.")
+        if not 1 <= score <= 10:
+            raise ValueError(f"Invalid novelty score: {score}. Must be between 1 and 10.")
         
-        return explanation, complexity_score
+        return explanation, score

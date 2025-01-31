@@ -806,7 +806,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
                         {/* <Text size="xl" fw={700} mb={6}>Generate Problems</Text> */}
                     </Group>
                     <Group>
-                        <Button onClick={handleGenerate} loading={loading}>Generate Problems</Button>
+                        <Button onClick={handleGenerate} loading={loading}>Generate</Button>
                     </Group>
                 </Flex>
 

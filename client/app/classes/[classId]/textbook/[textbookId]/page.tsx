@@ -34,7 +34,7 @@ import { getFigures } from "@/utils/queries/get-figures";
 
 export default function Textbook({ params }: { params: { classId: string, textbookId: string } }) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
-    const [pageNumber, setPageNumber] = useState<number>(1);
+    const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [hoveredFigure, setHoveredFigure] = useState<string | null>(null);
     const previewScrollRef = useRef<HTMLDivElement>(null);
 
@@ -42,12 +42,8 @@ export default function Textbook({ params }: { params: { classId: string, textbo
     const classId = params.classId;
     const textbookId = params.textbookId;
 
-
-    const handlePageClick = (newPageNumber: number) => {
-        if (newPageNumber < 1 || (newPageNumber > (documents?.length ?? 0))) {
-            return;
-        }
-        setPageNumber(newPageNumber);
+    const handlePageClick = (newDocumentId: string) => {
+        setActiveDocumentId(newDocumentId);
     };
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
@@ -78,35 +74,44 @@ export default function Textbook({ params }: { params: { classId: string, textbo
         queryFn: () => getUser(supabase),
     })
 
-    const getActiveImage = (pageNumber: number) => {
-        if (!classData || !textbook) return "";
-        const activeDocument = documents?.find((doc) => doc.page === pageNumber);
-        return activeDocument ? `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/textbooks/${textbookId}/images/${activeDocument.page}.png` : "";
+    const getActiveImage = (documentId: string | null) => {
+        if (!classData || !textbook || !documentId) return "/placeholder_image.svg";
+        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${textbookId}/${documentId}.png`
     }
 
     const handleSwipe = (touchEndX: number) => {
-        if (touchStartX !== null) {
+        if (touchStartX !== null && documents) {
             const deltaX = touchStartX - touchEndX;
-            const minSwipeDistance = 50; // Minimum distance for a swipe
+            const minSwipeDistance = 50;
 
-            if (deltaX > minSwipeDistance) {
+            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
+            if (deltaX > minSwipeDistance && currentIndex < documents.length - 1) {
                 // Swipe left (next page)
-                handlePageClick(pageNumber + 1);
-            } else if (deltaX < -minSwipeDistance) {
+                handlePageClick(documents[currentIndex + 1].id);
+            } else if (deltaX < -minSwipeDistance && currentIndex > 0) {
                 // Swipe right (previous page)
-                handlePageClick(pageNumber - 1);
+                handlePageClick(documents[currentIndex - 1].id);
             }
         }
         setTouchStartX(null);
     };
 
+    useEffect(() => {
+        // Set initial active document
+        if (documents && documents.length > 0 && !activeDocumentId) {
+            setActiveDocumentId(documents[0].id);
+        }
+    }, [documents, activeDocumentId]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'ArrowLeft') {
-                handlePageClick(pageNumber - 1);
-            } else if (event.key === 'ArrowRight') {
-                handlePageClick(pageNumber + 1);
+            if (!documents) return;
+            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
+
+            if (event.key === 'ArrowLeft' && currentIndex > 0) {
+                handlePageClick(documents[currentIndex - 1].id);
+            } else if (event.key === 'ArrowRight' && currentIndex < documents.length - 1) {
+                handlePageClick(documents[currentIndex + 1].id);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -114,11 +119,11 @@ export default function Textbook({ params }: { params: { classId: string, textbo
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [pageNumber, documents]);
+    }, [activeDocumentId, documents]);
 
     useEffect(() => {
         if (previewScrollRef.current) {
-            const activeThumb = previewScrollRef.current.querySelector(`[data-page="${pageNumber}"]`);
+            const activeThumb = previewScrollRef.current.querySelector(`[data-document="${activeDocumentId}"]`);
             if (activeThumb) {
                 activeThumb.scrollIntoView({
                     behavior: 'smooth',
@@ -127,8 +132,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                 });
             }
         }
-    }, [pageNumber]);
-
+    }, [activeDocumentId]);
 
     return (
         <>
@@ -137,7 +141,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}/lecture`}>
+                            <Link href={`/classes/${classId}/textbook`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>{textbook?.title}</Text>
@@ -161,19 +165,14 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                         }}
                                     >
                                         <Image
-                                            src={getActiveImage(pageNumber)}
-                                            alt={`Page ${pageNumber + 1}`}
+                                            src={getActiveImage(activeDocumentId)}
+                                            alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
                                             fill
                                             style={{ objectFit: 'contain' }}
                                             sizes="100vw"
                                         />
-                                        {!loadingFigures && figures?.filter(figure => {
-                                            const activeDocument = documents?.find(doc => doc.page === pageNumber);
-                                            return figure.document === activeDocument?.id;
-                                        }).map(figure => {
-                                            // Calculate if the figure is in the bottom half of the image
+                                        {!loadingFigures && figures?.filter(figure => figure.document === activeDocumentId).map(figure => {
                                             const isBottomHalf = (figure.y_min / 1000) > 0.5;
-                                            
                                             return (
                                                 <Box
                                                     key={figure.id}
@@ -183,10 +182,10 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                                         transition: 'opacity 0.3s ease',
                                                         cursor: 'pointer',
                                                         zIndex: 50,
-                                                        left: `${(figure.y_min / 1000) * 100}%`,
-                                                        top: `${(figure.x_min / 1000) * 100}%`,
-                                                        width: `${((figure.y_max - figure.y_min) / 1000) * 100}%`,
-                                                        height: `${((figure.x_max - figure.x_min) / 1000) * 100}%`,
+                                                        left: `${(figure.x_min / 1000) * 100}%`,
+                                                        top: `${(figure.y_min / 1000) * 100}%`,
+                                                        width: `${((figure.x_max - figure.x_min) / 1000) * 100}%`,
+                                                        height: `${((figure.y_max - figure.y_min) / 1000) * 100}%`,
                                                         opacity: hoveredFigure === figure.id ? 0.8 : 0.2,
                                                     }}
                                                     onMouseEnter={() => setHoveredFigure(figure.id)}
@@ -227,9 +226,14 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                                 transform: 'translateY(-50%)',
                                                 zIndex: 100,
                                             }}
-                                            onClick={() => handlePageClick(pageNumber - 1)}
-                                            disabled={pageNumber === 1}
-                                            aria-label="Previous Slide"
+                                            onClick={() => {
+                                                const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                                if (currentIndex > 0 && documents) {
+                                                    handlePageClick(documents[currentIndex - 1].id);
+                                                }
+                                            }}
+                                            disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === 0}
+                                            aria-label="Previous Page"
                                         >
                                             <IconArrowLeft size={32} />
                                         </ActionIcon>
@@ -244,9 +248,14 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                                 transform: 'translateY(-50%)',
                                                 zIndex: 100,
                                             }}
-                                            onClick={() => handlePageClick(pageNumber + 1)}
-                                            disabled={pageNumber === (documents ? documents.length : 0)}
-                                            aria-label="Next Slide"
+                                            onClick={() => {
+                                                const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                                if (documents && currentIndex < documents.length - 1) {
+                                                    handlePageClick(documents[currentIndex + 1].id);
+                                                }
+                                            }}
+                                            disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === documents.length - 1}
+                                            aria-label="Next Page"
                                         >
                                             <IconArrowRight size={32} />
                                         </ActionIcon>
@@ -260,7 +269,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                             zIndex: 100,
                                         }}
                                     >
-                                        <Text size="sm">Slide {pageNumber}</Text>
+                                        <Text size="sm">Page {documents?.find(doc => doc.id === activeDocumentId)?.page}</Text>
                                     </Box>
                                 </Card>
 
@@ -275,19 +284,19 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                     {documents?.map((doc) => (
                                         <Box
                                             key={doc.id}
-                                            data-page={doc.page}
+                                            data-document={doc.id}
                                             style={{
                                                 cursor: 'pointer',
-                                                border: `2px solid ${doc.page === pageNumber ? 'blue' : 'transparent'}`,
+                                                border: `2px solid ${doc.id === activeDocumentId ? 'blue' : 'transparent'}`,
                                                 width: 50,
                                                 height: 50,
                                                 position: 'relative',
                                                 flexShrink: 0,
                                             }}
-                                            onClick={() => handlePageClick(doc.page)}
+                                            onClick={() => handlePageClick(doc.id)}
                                         >
                                             <Image
-                                                src={`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/slides/${classId}/textbooks/${textbookId}/images/${doc.page}.png`}
+                                                src={getActiveImage(doc.id)}
                                                 alt={`Page ${doc.page}`}
                                                 fill
                                                 style={{ objectFit: 'cover' }}
@@ -300,13 +309,12 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                         </Grid.Col>
                         <Grid.Col span={isMobile ? 12 : 6}>
                             <Text fw={500} size="lg">
-                                <Latex>{documents?.find((doc) => doc.page === pageNumber)?.description ?? ""}</Latex>
+                                <Latex>{documents?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
                             </Text>
                         </Grid.Col>
                     </Grid>
                 </Stack>
             </Container>
-
         </>
     );
 }
