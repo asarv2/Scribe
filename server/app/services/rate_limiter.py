@@ -1,6 +1,6 @@
 import asyncio
 import time
-from typing import Dict, Literal
+from typing import Dict
 from collections import deque
 import threading
 
@@ -80,49 +80,47 @@ class ModelRateLimiter:
         print(f"Request {request_id} queued. Position: {queue_position}")
 
         try:
+            # Removed the timeout context, simply proceed.
             async with self._get_semaphore():
                 current_time = time.time()
-                    
+                
                 with self._last_call_lock:
                     last_call_time = self._last_call[model]
-                        
+                    
                     # Calculate minimum wait time based on RPM
                     rpm = self.get_rpm(model)
                     min_interval = 60.0 / rpm  # seconds between requests
-                        
+                    
                     # Calculate wait time
                     wait_time = last_call_time + min_interval - current_time
                     if wait_time > 0:
                         print(f"Request {request_id} waiting for {wait_time:.2f} seconds")
                         await asyncio.sleep(wait_time)
-                        
+                    
                     # Update last call time
                     self._last_call[model] = time.time()
-                    
+                
                 # Only remove from queue after successful processing
                 with self._queue_lock:
                     # Convert deque to list temporarily for removal
                     queue_list = list(self._request_queue)
-                    # Find the request
-                    for i, (rid, _) in enumerate(queue_list):
+                    for i, (rid, timestamp) in enumerate(queue_list):
                         if rid == request_id:
-                            # Remove from deque
-                            self._request_queue.remove((rid, queue_list[i][1]))
+                            self._request_queue.remove((rid, timestamp))
                             break
                     remaining = len(self._request_queue)
                 print(f"Request {request_id} for {model} starting. Remaining queue: {remaining}")
-                    
+                
                 # Clean up old requests periodically
                 await self.cleanup_old_requests()
-                    
+                
         except Exception as e:
-            # Remove request from queue if there's any other error
+            # Remove request from queue if there's any error
             with self._queue_lock:
-                # Convert deque to list temporarily for removal
                 queue_list = list(self._request_queue)
-                for i, (rid, _) in enumerate(queue_list):
+                for i, (rid, timestamp) in enumerate(queue_list):
                     if rid == request_id:
-                        self._request_queue.remove((rid, queue_list[i][1]))
+                        self._request_queue.remove((rid, timestamp))
                         break
             raise e
 
@@ -141,7 +139,6 @@ class ModelRateLimiter:
         current_time = time.time()
         if current_time - self._last_cleanup > self._cleanup_interval:
             with self._queue_lock:
-                # Convert to list to find old requests
                 queue_list = list(self._request_queue)
                 for rid, timestamp in queue_list:
                     if current_time - timestamp > self.QUEUE_TIMEOUT:
