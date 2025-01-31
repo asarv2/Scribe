@@ -361,10 +361,10 @@ async def parse_textbook():
                 # Insert new figures
                 figures_data = [
                     {
-                        "y_min": figure.bbox[0],
-                        "x_min": figure.bbox[1],
-                        "y_max": figure.bbox[2],
-                        "x_max": figure.bbox[3],
+                        "y_min": int(figure.bbox[0]),
+                        "x_min": int(figure.bbox[1]),
+                        "y_max": int(figure.bbox[2]),
+                        "x_max": int(figure.bbox[3]),
                         "description": figure.description,
                         "document": document_id
                     }

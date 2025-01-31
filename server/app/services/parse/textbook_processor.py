@@ -12,11 +12,11 @@ class TextbookProcessor(BaseProcessor):
         self.notes: Dict[str, Dict[int, CleanedResponse]] = {}
         self.conversation_history: List[Union[HumanMessage, AIMessage]] = []
 
-    def parse_bbox(self, bbox: str) -> List[float]:
+    def parse_bbox(self, bbox: str) -> List[int]:
         bbox = bbox.strip().replace('[', '').replace(']', '')
         try:
             ymin, xmin, ymax, xmax = map(
-                lambda x: float(x.strip()),
+                lambda x: int(x.strip()),
                 bbox.split(',')
             )
             return [ymin, xmin, ymax, xmax]
@@ -49,7 +49,19 @@ class TextbookProcessor(BaseProcessor):
                 for match in figure_matches
             ]
         else:
-            figures = image_bboxes
+            # Convert image_bboxes to Figure objects
+            figures = [
+                Figure(
+                    bbox=[
+                        float(bbox['bbox'][0]),
+                        float(bbox['bbox'][1]),
+                        float(bbox['bbox'][2]),
+                        float(bbox['bbox'][3])
+                    ],
+                    description=str(bbox['description'])
+                )
+                for bbox in image_bboxes
+            ]
 
         description_match = re.search(
             r'<DESCRIPTION>(.*?)</DESCRIPTION>',

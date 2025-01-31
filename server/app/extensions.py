@@ -56,27 +56,30 @@ try:
             model_path,
             local_files_only=True
         )
+        print(f"DeepSeek model initialized on device: {device}")
     else:
-        if os.getenv('DOCKER_ENV'):
-            print("Local model not found, downloading from Hugging Face...")
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-            deepseek_model = AutoModelForCausalLM.from_pretrained(
-                "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-                trust_remote_code=True
-            ).to(device)
-            deepseek_tokenizer = AutoTokenizer.from_pretrained(
-                "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
-            )
+        print("Skipping model download")
+        # if os.getenv('DOCKER_ENV'):
+        #     print("Local model not found, downloading from Hugging Face...")
+        #     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        #     deepseek_model = AutoModelForCausalLM.from_pretrained(
+        #         "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+        #         trust_remote_code=True
+        #     ).to(device)
+        #     deepseek_tokenizer = AutoTokenizer.from_pretrained(
+        #         "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+        #     )
             
-            # Save the model locally for future use
-            print(f"Saving model to {model_path}")
-            os.makedirs(model_path, exist_ok=True)
-            deepseek_model.save_pretrained(model_path)
-            deepseek_tokenizer.save_pretrained(model_path)
-        else:
-            print("Local model not found, not downloading.")
+        #     # Save the model locally for future use
+        #     print(f"Saving model to {model_path}")
+        #     os.makedirs(model_path, exist_ok=True)
+        #     deepseek_model.save_pretrained(model_path)
+        #     deepseek_tokenizer.save_pretrained(model_path)
+
+        #     print(f"DeepSeek model initialized on device: {device}")
+        # else:
+        #     print("Local model not found, not downloading.")
         
-    print(f"DeepSeek model initialized on device: {device}")
 except Exception as e:
     print(f"Failed to initialize DeepSeek model: {e}")
     deepseek_model = None
