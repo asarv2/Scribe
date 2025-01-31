@@ -80,52 +80,41 @@ class ModelRateLimiter:
         print(f"Request {request_id} queued. Position: {queue_position}")
 
         try:
-            async with asyncio.timeout(self.QUEUE_TIMEOUT):
-                async with self._get_semaphore():
-                    current_time = time.time()
+            async with self._get_semaphore():
+                current_time = time.time()
                     
-                    with self._last_call_lock:
-                        last_call_time = self._last_call[model]
+                with self._last_call_lock:
+                    last_call_time = self._last_call[model]
                         
-                        # Calculate minimum wait time based on RPM
-                        rpm = self.get_rpm(model)
-                        min_interval = 60.0 / rpm  # seconds between requests
+                    # Calculate minimum wait time based on RPM
+                    rpm = self.get_rpm(model)
+                    min_interval = 60.0 / rpm  # seconds between requests
                         
-                        # Calculate wait time
-                        wait_time = last_call_time + min_interval - current_time
-                        if wait_time > 0:
-                            print(f"Request {request_id} waiting for {wait_time:.2f} seconds")
-                            await asyncio.sleep(wait_time)
+                    # Calculate wait time
+                    wait_time = last_call_time + min_interval - current_time
+                    if wait_time > 0:
+                        print(f"Request {request_id} waiting for {wait_time:.2f} seconds")
+                        await asyncio.sleep(wait_time)
                         
-                        # Update last call time
-                        self._last_call[model] = time.time()
+                    # Update last call time
+                    self._last_call[model] = time.time()
                     
-                    # Only remove from queue after successful processing
-                    with self._queue_lock:
-                        # Convert deque to list temporarily for removal
-                        queue_list = list(self._request_queue)
-                        # Find the request
-                        for i, (rid, _) in enumerate(queue_list):
-                            if rid == request_id:
-                                # Remove from deque
-                                self._request_queue.remove((rid, queue_list[i][1]))
-                                break
-                        remaining = len(self._request_queue)
-                    print(f"Request {request_id} for {model} starting. Remaining queue: {remaining}")
+                # Only remove from queue after successful processing
+                with self._queue_lock:
+                    # Convert deque to list temporarily for removal
+                    queue_list = list(self._request_queue)
+                    # Find the request
+                    for i, (rid, _) in enumerate(queue_list):
+                        if rid == request_id:
+                            # Remove from deque
+                            self._request_queue.remove((rid, queue_list[i][1]))
+                            break
+                    remaining = len(self._request_queue)
+                print(f"Request {request_id} for {model} starting. Remaining queue: {remaining}")
                     
-                    # Clean up old requests periodically
-                    await self.cleanup_old_requests()
+                # Clean up old requests periodically
+                await self.cleanup_old_requests()
                     
-        except asyncio.TimeoutError:
-            # Remove request from queue if it times out
-            with self._queue_lock:
-                # Convert deque to list temporarily for removal
-                queue_list = list(self._request_queue)
-                for i, (rid, _) in enumerate(queue_list):
-                    if rid == request_id:
-                        self._request_queue.remove((rid, queue_list[i][1]))
-                        break
-            raise Exception("Request timed out waiting for rate limit")
         except Exception as e:
             # Remove request from queue if there's any other error
             with self._queue_lock:
