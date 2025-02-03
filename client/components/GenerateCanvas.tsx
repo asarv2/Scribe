@@ -170,7 +170,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
             });
             queryClient.invalidateQueries({ queryKey: ["problemGenerations", classId] });
             // do not wait for response
-            router.push(`/classes/${classId}/generate/problems`);
+            router.push(`/classes/${classId}/generate/`);
         } catch (error) {
             console.error("Error generating summary:", error);
         } finally {
@@ -633,7 +633,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
                                     </Stack>
                                 </Grid.Col>
                                 <Grid.Col span={4}>
-                                    <Stack>
+                                    {/* <Stack>
                                         <Switch
                                             label="MCQ"
                                             checked={problem.isMCQ}
@@ -655,7 +655,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
                                                 isComputational: e.currentTarget.checked
                                             })}
                                         />
-                                    </Stack>
+                                    </Stack> */}
                                 </Grid.Col>
                             </Grid>
 
@@ -747,7 +747,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
                             </Card>
                         )}
 
-                        {map && hasMatchingTopics(map) && (
+                        {/* {map && hasMatchingTopics(map) && (
                             <Card shadow="sm" p="md">
                                 <Group mb={expandedSections.has('topics') ? "md" : 0}>
                                     <ActionIcon
@@ -768,7 +768,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
                                     </Stack>
                                 )}
                             </Card>
-                        )}
+                        )} */}
                     </Stack>
                 </ScrollArea.Autosize>
             </Stack>
@@ -791,7 +791,7 @@ export default function GenerateCanvas({ classId }: GenerateCanvasProps) {
             <Stack>
                 <Flex justify="space-between" align="center">
                     <Group>
-                        <Link href={`/classes/${classId}/generate/problems`}>
+                        <Link href={`/classes/${classId}/generate`}>
                             <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                         </Link>
                         <TextInput

@@ -24,16 +24,14 @@ import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
-import DeleteLectureModal from "@/components/DeleteLectureModal";
+import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import DeleteGenerationModal from "@/components/DeleteGenerationModal";
-import QuestionSolutionLecture from "@/components/QuestionSolutionSlide";
-import NotesSummary from "@/components/NotesSummary";
+import DeleteGenerationModal from "@/components/Delete/DeleteGenerationModal";
 import Questions from "@/components/Questions";
 import { getGeneration } from "@/utils/queries/get-generation";
 import { getGenerationProblems } from "@/utils/queries/get-generation-problems";
 import { getGenerationSummaries } from "@/utils/queries/get-generation-summaries";
-import DownloadGenerationModal from "@/components/DownloadGenerationModal";
+import DownloadGenerationModal from "@/components/Download/DownloadGenerationModal";
 import { Question } from "@/types";
 import { updateQuestionStatus } from "@/utils/services/questions";
 import Latex from "@/components/Latex";
@@ -196,7 +194,7 @@ export default function Generation({ params }: { params: { classId: string, gene
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}/generate/problems`}>
+                            <Link href={`/classes/${classId}/generate/`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>{generation?.name}</Text>

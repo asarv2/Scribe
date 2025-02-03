@@ -8,18 +8,15 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "../../../utils/supabase/supabase-browser";
-import { Button, Center, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Button, Center, Container, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme, Card, Image, Badge, Group } from "@mantine/core";
 import { Suspense, useEffect, useState } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { HeaderSimple } from "../../../components/HeaderSimple";
-import { flattenMapNode, Map } from '@/components/Map'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NodeDetail } from "@/components/NodeDetail";
 import { getUser } from "@/utils/queries/get-user";
 import { getMap } from "@/utils/queries/get-map";
 import Latex from "@/components/Latex";
-import { NodeImages } from "@/components/NodeImages";
 import { updateTopicPosition } from "@/utils/services/topics";
 import { getClass } from "@/utils/queries/get-class";
 
@@ -55,77 +52,85 @@ export default function Class({ params }: { params: { classId: string } }) {
     return (
         <>
             <HeaderSimple />
-            <div style={{ width: "100vw", height: "100vh" }} key="map">
-                {map && <Map
-                    user={user ?? undefined}
-                    classId={classId}
-                    rootNode={map}
-                    onNodeClick={(topicId, label, description) => {
-                        setOpenNodeId(topicId)
-                        setOpenNodeLabel(label)
-                        setOpenNodeDescription(description)
-                        open()
-                    }}
-                    onNodePositionChange={async (nodes) => {
-                        try {
-                            const { success, error } = await updateTopicPosition(nodes.map(node => ({ ...node, class: classId })))
-                            if (success) {
-                                console.log('Node position changed:', nodes)
-                                queryClient.invalidateQueries({ queryKey: ["map", classId] })
-                            } else {
-                                throw new Error(error)
-                            }
-                        } catch (error) {
-                            console.error('Error updating node position:', error)
-                        }
-                    }}
-                />}
-            </div>
-
-            <Modal
-                opened={opened}
-                onClose={close}
-                title={<Text size="lg" fw={700}><Latex key={"Label"}>{openNodeLabel as string}</Latex></Text>}
-                centered
-                overlayProps={{
-                    color:
-                        theme.primaryColor === 'dark'
-                            ? theme.colors.dark[9]
-                            : theme.colors.gray[2],
-                    opacity: 0.25,
-                    blur: 2,
-                }}
-                transitionProps={{ transition: 'fade', duration: 200 }}
-            >
+            <Container size="lg" py="xl">
                 <Stack>
-                    {
-                        <Suspense
-                            fallback={
-                                <Center>
-                                    <Loader />
-                                </Center>
-                            }
-                        >
-                            {openNodeId && map && <NodeImages visuals={flattenMapNode(map).find((node) => node.id === openNodeId)?.visuals ?? []} />}
-                        </Suspense>
-                    }
-                    <Latex key={"Description"}>{openNodeDescription as string}</Latex>
-                    {
-                        <Suspense
-                            fallback={
-                                <Center>
-                                    <Loader />
-                                </Center>
-                            }
-                        >
-                            {openNodeId && map && <NodeDetail lectureIds={flattenMapNode(map).find((node) => node.id === openNodeId)?.lectures ?? []} />}
-                        </Suspense>
-                    }
-                    <Link href={`${pathname}/generate/problems/new?topic=${openNodeId}`}>
-                        <Button onClick={close} style={{ width: "100%" }}>Generate Problems</Button>
-                    </Link>
+                    <Text size="xl" fw={700} ta="center" mb="xl">
+                        {classData?.title}
+                    </Text>
+
+                    <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Card.Section>
+                                <Image
+                                    src="/images/lecture.jpeg"
+                                    height={160}
+                                    alt="Lectures"
+                                    fallbackSrc="https://placehold.co/600x400?text=Lectures"
+                                />
+                            </Card.Section>
+
+                            <Group justify="space-between" mt="md" mb="xs">
+                                <Text fw={500}>Lectures</Text>
+                            </Group>
+
+                            <Text size="sm" c="dimmed" mb="md">
+                                Access all lecture materials, slides, and recordings for this course
+                            </Text>
+
+                            <Button component={Link} href={`${pathname}/lecture`} color="blue" fullWidth radius="md">
+                                View Lectures
+                            </Button>
+                        </Card>
+
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Card.Section>
+                                <Image
+                                    src="/images/textbook.webp"
+                                    height={160}
+                                    alt="Textbooks"
+                                    fallbackSrc="https://placehold.co/600x400?text=Textbooks"
+                                />
+                            </Card.Section>
+
+                            <Group justify="space-between" mt="md" mb="xs">
+                                <Text fw={500}>Textbooks</Text>
+                            </Group>
+
+                            <Text size="sm" c="dimmed" mb="md">
+                                Browse and access course textbooks and reading materials
+                            </Text>
+
+                            <Button component={Link} href={`${pathname}/textbook`} color="blue" fullWidth radius="md">
+                                View Textbooks
+                            </Button>
+                        </Card>
+
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Card.Section>
+                                <Image
+                                    src="/images/homework.jpg"
+                                    height={160}
+                                    alt="Homework"
+                                    fallbackSrc="https://placehold.co/600x400?text=Homework"
+                                />
+                            </Card.Section>
+
+                            <Group justify="space-between" mt="md" mb="xs">
+                                <Text fw={500}>Homework</Text>
+                                <Badge color="yellow">Coming Soon</Badge>
+                            </Group>
+
+                            <Text size="sm" c="dimmed" mb="md">
+                                Assignments and homework management features coming soon
+                            </Text>
+
+                            <Button color="gray" fullWidth radius="md" disabled>
+                                Coming Soon
+                            </Button>
+                        </Card>
+                    </SimpleGrid>
                 </Stack>
-            </Modal>
+            </Container>
         </>
     );
 }

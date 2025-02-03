@@ -13,14 +13,12 @@ else:
 from app.extensions import app
 from app.routes.parse import parse_bp
 from app.routes.evaluate import evaluate_bp
-from app.routes.batch import batch_bp
 from app.routes.generate import generate_bp
 from app.routes.upload import upload_bp
 
 # Register blueprints
 app.register_blueprint(parse_bp, url_prefix='/parse')
 app.register_blueprint(evaluate_bp, url_prefix='/evaluate')
-app.register_blueprint(batch_bp, url_prefix='/batch')
 app.register_blueprint(generate_bp, url_prefix='/generate')
 app.register_blueprint(upload_bp, url_prefix='/upload')
 

@@ -47,22 +47,23 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         queryFn: () => getClass(supabase, classId)
     })
 
-    const { data: summariesGenerations, isLoading: loadingSummariesGenerations } = useQuery({
-        queryKey: ["summariesGenerations", classId],
-        queryFn: () => getGenerations(supabase, classId, "summary")
+    const { data: problemGenerations, isLoading: loadingProblemGenerations } = useQuery({
+        queryKey: ["problemGenerations", classId],
+        queryFn: () => getGenerations(supabase, classId, "problem")
     })
 
-    const { data: generationSummaries, isLoading: loadingGenerationSummaries } = useQuery({
-        queryKey: ["generationSummaries", classId, summariesGenerations],
-        queryFn: () => getGenerationSummaries(supabase, summariesGenerations ?? []),
-        enabled: !!summariesGenerations
+    const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({
+        queryKey: ["generationProblems", classId, problemGenerations],
+        queryFn: () => getGenerationProblems(supabase, problemGenerations ?? []),
+        enabled: !!problemGenerations
     })
 
-    const { data: generationDocuments, isLoading: loadingGenerationDocuments } = useQuery({
-        queryKey: ["generationSummariesDocuments", classId, summariesGenerations],
-        queryFn: () => getGenerationDocuments(supabase, generationSummaries ? generationSummaries.map(summary => summary.documents).flat() : []),
-        enabled: !!generationSummaries
+    const { data: generationProblemsDocuments, isLoading: loadingGenerationProblemsDocuments } = useQuery({
+        queryKey: ["generationProblemsDocuments", classId, generationProblems],
+        queryFn: () => getGenerationDocuments(supabase, generationProblems ? generationProblems.map(problem => problem.documents).flat() : []),
+        enabled: !!generationProblems
     })
+
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -71,8 +72,8 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     const handleRetry = async (classId: string, generation: Generation) => {
         try {
-            // invoke the generate/summary endpoint, do not wait for response
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summary`, {
+            // invoke the generate/problems endpoint, do not wait for response
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +83,8 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     generation_id: generation.id,
                 })
             });
-            queryClient.invalidateQueries({ queryKey: ["summariesGenerations", classId] });
+
+            queryClient.invalidateQueries({ queryKey: ["generationProblems", classId, problemGenerations] });
         } catch (error) {
             console.error('Error retrying:', error);
             notifications.show({
@@ -96,7 +98,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     useEffect(() => {
         const channel = supabase
-            .channel('realtime-generations')
+            .channel(`realtime-generations-${classId}`)
             .on(
                 'postgres_changes',
                 {
@@ -106,48 +108,51 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                     filter: `class=eq.${classId}`
                 },
                 (payload) => {
+                    console.log("Received realtime payload:", payload);
                     if (payload.eventType === 'INSERT') {
                         const newGeneration = payload.new as Generation;
-                        console.log("Generation:", newGeneration);
-                        // Update your lectures state with the new data
-                        queryClient.setQueryData(["summariesGenerations", classId], (oldData: Generation[] = []) => {
-                            return [...oldData, newGeneration];
-                        });
+                        queryClient.setQueryData(
+                            ["problemGenerations", classId], 
+                            (oldData: Generation[] = []) => [...oldData, newGeneration]
+                        );
                     } else if (payload.eventType === 'UPDATE') {
                         const updatedGeneration = payload.new as Generation;
-                        console.log("Updated Generation:", updatedGeneration);
-                        queryClient.setQueryData(["summariesGenerations", classId], (oldData: Generation[] = []) => {
-                            return oldData?.map(generation =>
-                                generation.id === updatedGeneration.id ? updatedGeneration : generation
-                            ) || [];
-                        });
+                        queryClient.setQueryData(
+                            ["problemGenerations", classId], 
+                            (oldData: Generation[] = []) => 
+                                oldData?.map(generation =>
+                                    generation.id === updatedGeneration.id ? updatedGeneration : generation
+                                ) || []
+                        );
                     }
                 }
             )
             .subscribe();
 
+        console.log("Subscribed to realtime channel:", channel.state);
+
         return () => {
+            console.log("Unsubscribing from channel");
             supabase.removeChannel(channel);
         };
     }, [classId, supabase, queryClient]);
 
     useEffect(() => {
-        if (!summariesGenerations) return;
+        if (!problemGenerations) return;
         const channel = supabase
-            .channel('realtime-summaries')
+            .channel('realtime-problems')
             .on(
                 'postgres_changes',
                 {
                     event: '*',
                     schema: 'prod',
-                    table: 'summaries',
-                    filter: `generation=in.(${summariesGenerations.map(generation => generation.id).join(',')})`
+                    table: 'questions',
+                    filter: `generation=in.(${problemGenerations.map(generation => generation.id).join(',')})`
                 },
                 (payload) => {
-                    console.log("Summary change:", payload);
-
+                    console.log("Problem change:", payload);
                     // Update documents in React Query cache
-                    queryClient.setQueryData(["generationSummaries", classId], (oldData: Summary[] = []) => {
+                    queryClient.setQueryData(["generationProblems", classId, problemGenerations], (oldData: Question[] = []) => {
                         let newData;
                         if (payload.eventType === 'INSERT') {
                             newData = [...oldData, payload.new];
@@ -169,13 +174,13 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [classId, supabase, summariesGenerations, queryClient]);
+    }, [classId, supabase, generationProblems, queryClient]);
 
     const getDocument = (generation: Generation): Document | undefined => {
         // first find the summary or question that matches the generation
-        const summary = generationSummaries?.find(summary => summary.generation === generation.id);
-        if (summary) {
-            return generationDocuments?.filter(document => summary.documents.includes(document.id))[0]
+        const question = generationProblems?.find(question => question.generation === generation.id);
+        if (question) {
+            return generationProblemsDocuments?.filter(document => question.documents.includes(document.id))[0]
         }
         return undefined;
     }
@@ -196,22 +201,22 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                             {/* <Link href={`/`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
                             </Link> */}
-                            <Text size="xl" fw={700} mb={6} pl={4}>Summaries</Text>
+                            <Text size="xl" fw={700} mb={6} pl={4}>Generations</Text>
                         </Group>
                         <Group>
-                            <Link href={`/classes/${classId}/generate/summary/new`}>
-                                <Button>Generate</Button>
+                            <Link href={`/classes/${classId}/generate/new`}>
+                                <Button>Generate Problems</Button>
                             </Link>
                         </Group>
                     </Flex>
 
                     <Stack>
-                        {(summariesGenerations && classData) && summariesGenerations.length > 0 && summariesGenerations.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((generation) => {
+                        {(problemGenerations && classData) && problemGenerations.length > 0 && problemGenerations.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((generation) => {
                             const document = getDocument(generation);
                             if (generation.generation_status !== "complete") {
                                 const progress = generation.progress * 100
                                 let estimatedSeconds = 0;
-                                estimatedSeconds = 20 * (1 - generation.progress) // takes 20 seconds to generate a summary
+                                estimatedSeconds = ((generation.single ? 10 : 20) * (1 - generation.progress)) * (generation.num_questions) // takes 5 seconds per question
                                 return (
                                     document && <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">
@@ -244,7 +249,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                                     />
                                                     {(generation.generation_status === 'generating') && (
                                                         <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{estimatedSeconds} seconds
+                                                            Estimated time remaining: ~{Math.round(estimatedSeconds)} seconds
                                                         </Text>
                                                     )}
                                                 </Stack>
@@ -268,7 +273,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                             }
                             return (
                                 document && <Link
-                                    href={`/classes/${classId}/generate/summary/past/${generation.id}`}
+                                    href={`/classes/${classId}/generate/past/${generation.id}`}
                                     key={generation.id}
                                     style={{ textDecoration: 'none' }}
                                 >

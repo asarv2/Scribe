@@ -11,7 +11,6 @@ import json
 from app.extensions import app
 import requests
 import asyncio
-from app.routes.batch import batch_topics  # Import the function directly
 
 parse_bp = Blueprint('parse', __name__)
 
@@ -68,9 +67,8 @@ async def parse_lecture():
             batch = documents_to_process[i:i + batch_size]
             print("Processing batch:", batch)
 
-            # Get images and figures from supabase
+            # Get images from supabase
             images = []
-            figures = []
             
             try:
                 for doc in batch:
@@ -91,30 +89,8 @@ async def parse_lecture():
                     images.append(response)
                     print(f"Successfully downloaded image {doc['page']}")
 
-                    # Get figures
-                    figures_response = supabase.table("figures").select("*").eq("document", doc['id']).execute()
-                    figures_data = figures_response.data
-                    if not figures_data:
-                        print(f"No figures found for document {doc['id']}")
-                        figures.append([])
-                        continue
-
-                    formatted_figures = [
-                        {
-                            "bbox": [
-                                float(fig['y_min']), 
-                                float(fig['x_min']), 
-                                float(fig['y_max']), 
-                                float(fig['x_max'])
-                            ],
-                            "description": str(fig['description'])
-                        }
-                        for fig in figures_data
-                    ]
-                    figures.append(formatted_figures)
-
             except Exception as error:
-                print("Error in image/figures download process:", error)
+                print("Error in image download process:", error)
                 raise error
 
             print("Total images downloaded:", len(images))
@@ -125,9 +101,8 @@ async def parse_lecture():
                     "page": doc["page"],
                     "image": img,
                     "text": doc.get("text", ""),
-                    "image_bboxes": figs
                 }
-                for doc, img, figs in zip(batch, images, figures)
+                for doc, img in zip(batch, images)
             ]
             print("Processed documents:", processed_documents)
 
@@ -145,26 +120,9 @@ async def parse_lecture():
 
                 # Update document
                 supabase.table("documents").update({
-                    "latex": result.latex,
                     "description": result.description,
                     "processed": True
                 }).eq("id", document_id).execute()
-
-                # Insert new figures
-                figures_data = [
-                    {
-                        "y_min": figure.bbox[0],
-                        "x_min": figure.bbox[1],
-                        "y_max": figure.bbox[2],
-                        "x_max": figure.bbox[3],
-                        "description": figure.description,
-                        "document": document_id
-                    }
-                    for figure in result.figures
-                ]
-                
-                if figures_data:
-                    supabase.table("figures").insert(figures_data).execute()
                 
                 print("Document inserted:", result.description)
 
@@ -180,15 +138,7 @@ async def parse_lecture():
             serializable_results = [
                 {
                     "page": result.page,
-                    "latex": result.latex,
                     "description": result.description,
-                    "figures": [
-                        {
-                            "bbox": figure.bbox,
-                            "description": figure.description
-                        }
-                        for figure in result.figures
-                    ]
                 }
                 for result in results
             ]
@@ -276,9 +226,8 @@ async def parse_textbook():
             batch = documents_to_process[i:i + batch_size]
             print("Processing batch:", batch)
 
-            # Get images and figures from supabase
+            # Get images from supabase
             images = []
-            figures = []
             
             try:
                 for doc in batch:
@@ -299,30 +248,8 @@ async def parse_textbook():
                     images.append(response)
                     print(f"Successfully downloaded image {doc['page']}")
 
-                    # Get figures
-                    figures_response = supabase.table("figures").select("*").eq("document", doc['id']).execute()
-                    figures_data = figures_response.data
-                    if not figures_data:
-                        print(f"No figures found for document {doc['id']}")
-                        figures.append([])
-                        continue
-
-                    formatted_figures = [
-                        {
-                            "bbox": [
-                                float(fig['y_min']), 
-                                float(fig['x_min']), 
-                                float(fig['y_max']), 
-                                float(fig['x_max'])
-                            ],
-                            "description": str(fig['description'])
-                        }
-                        for fig in figures_data
-                    ]
-                    figures.append(formatted_figures)
-
             except Exception as error:
-                print("Error in image/figures download process:", error)
+                print("Error in image download process:", error)
                 raise error
 
             print("Total images downloaded:", len(images))
@@ -333,9 +260,8 @@ async def parse_textbook():
                     "page": doc["page"],
                     "image": img,
                     "text": doc.get("text", ""),
-                    "image_bboxes": figs
                 }
-                for doc, img, figs in zip(batch, images, figures)
+                for doc, img in zip(batch, images)
             ]
             print("Processed documents:", processed_documents)
 
@@ -353,26 +279,10 @@ async def parse_textbook():
 
                 # Update document
                 supabase.table("documents").update({
-                    "latex": result.latex,
                     "description": result.description,
                     "processed": True
                 }).eq("id", document_id).execute()
 
-                # Insert new figures
-                figures_data = [
-                    {
-                        "y_min": int(figure.bbox[0]),
-                        "x_min": int(figure.bbox[1]),
-                        "y_max": int(figure.bbox[2]),
-                        "x_max": int(figure.bbox[3]),
-                        "description": figure.description,
-                        "document": document_id
-                    }
-                    for figure in result.figures
-                ]
-                
-                if figures_data:
-                    supabase.table("figures").insert(figures_data).execute()
                 
                 print("Document inserted:", result.description)
 
@@ -388,15 +298,7 @@ async def parse_textbook():
             serializable_results = [
                 {
                     "page": result.page,
-                    "latex": result.latex,
                     "description": result.description,
-                    "figures": [
-                        {
-                            "bbox": figure.bbox,
-                            "description": figure.description
-                        }
-                        for figure in result.figures
-                    ]
                 }
                 for result in results
             ]

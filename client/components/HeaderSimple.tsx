@@ -47,22 +47,28 @@ export function HeaderSimple() {
         //         : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a', // default class
         //     label: 'Topics'
         // },
+        // {
+        //     link: currentClassId
+        //         ? `/classes/${currentClassId}/lecture`
+        //         : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/lecture',
+        //     label: 'Lectures'
+        // },
+        // {
+        //     link: currentClassId
+        //         ? `/classes/${currentClassId}/textbook`
+        //         : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/textbook',
+        //     label: 'Textbooks'
+        // },
         {
             link: currentClassId
-                ? `/classes/${currentClassId}/lecture`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/lecture',
-            label: 'Lectures'
+                ? `/classes/${currentClassId}`
+                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf',
+            label: 'Home'
         },
         {
             link: currentClassId
-                ? `/classes/${currentClassId}/textbook`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/textbook',
-            label: 'Textbooks'
-        },
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}/generate/problems`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate/problems',
+                ? `/classes/${currentClassId}/generate`
+                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate',
             label: 'Generate'
         },
     ];
@@ -159,7 +165,7 @@ export function HeaderSimple() {
                                                     <Menu.Item
                                                         key={classItem.id}
                                                         component={Link}
-                                                        href={`/classes/${classItem.id}/lecture`}
+                                                        href={`/classes/${classItem.id}`}
                                                     >
                                                         {classItem.label}
                                                     </Menu.Item>
@@ -190,13 +196,13 @@ export function HeaderSimple() {
                                         <Menu.Dropdown>
                                             <Menu.Label>{user.email}</Menu.Label>
                                             <Menu.Divider />
-                                            <Menu.Item
+                                            {/* <Menu.Item
                                                 color="blue"
                                                 component={Link}
                                                 href="/login"
                                             >
                                                 Account
-                                            </Menu.Item>
+                                            </Menu.Item> */}
                                             <Menu.Item
                                                 color="red"
                                                 onClick={async () => {
@@ -264,7 +270,7 @@ export function HeaderSimple() {
                                 <>
                                     {navigationItems}
                                     <Divider my="sm" />
-                                    <Box p={2}>
+                                    {/* <Box p={2}>
                                         <Link
                                             href="/login"
                                             className={classes.link}
@@ -272,7 +278,7 @@ export function HeaderSimple() {
                                         >
                                             Account
                                         </Link>
-                                    </Box>
+                                    </Box> */}
                                 </>
                             ) : (
                                 <>

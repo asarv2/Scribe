@@ -20,16 +20,9 @@ import threading
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from app.extensions import deepseek_model, deepseek_tokenizer
 
-class Figure:
-    def __init__(self, bbox: List[int], description: str):
-        self.bbox = bbox
-        self.description = description
-
 class CleanedResponse:
-    def __init__(self, page: int, latex: str, figures: List[Figure], description: str):
+    def __init__(self, page: int, description: str):
         self.page = page
-        self.latex = latex
-        self.figures = figures
         self.description = description
 
 class ContentType(Enum):

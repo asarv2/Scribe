@@ -24,7 +24,7 @@ import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
-import DeleteLectureModal from "@/components/DeleteLectureModal";
+import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import Latex from "@/components/Latex";
 import DeleteTextbookModal from "@/components/Delete/DeleteTextbookModal";
@@ -171,7 +171,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                             style={{ objectFit: 'contain' }}
                                             sizes="100vw"
                                         />
-                                        {!loadingFigures && figures?.filter(figure => figure.document === activeDocumentId).map(figure => {
+                                        {/* {!loadingFigures && figures?.filter(figure => figure.document === activeDocumentId).map(figure => {
                                             const isBottomHalf = (figure.y_min / 1000) > 0.5;
                                             return (
                                                 <Box
@@ -214,7 +214,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                                     )}
                                                 </Box>
                                             );
-                                        })}
+                                        })} */}
                                         <ActionIcon
                                             size="xl"
                                             variant="filled"

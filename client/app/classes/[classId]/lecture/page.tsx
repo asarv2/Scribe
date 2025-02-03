@@ -24,7 +24,7 @@ import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
-import DeleteLectureModal from "@/components/DeleteLectureModal";
+import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { Text, Card, Image as MantineImage } from "@mantine/core";
@@ -655,9 +655,9 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            {/* <Link href={`/`}>
+                            <Link href={`/classes/${classId}`}>
                                 <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
-                            </Link> */}
+                            </Link>
                             <Text size="xl" fw={700} mb={6} pl={4}>Lectures</Text>
                         </Group>
                         <Group>

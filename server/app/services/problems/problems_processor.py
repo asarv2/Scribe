@@ -4,11 +4,6 @@ from app.services.base_processor import BaseProcessor
 from langchain_core.messages import HumanMessage
 import re
 
-class Rubric(TypedDict):
-    standard: str
-    content: str
-    points: int
-
 class QuestionPrompt(TypedDict):
     id: str
     mcq: bool
@@ -31,11 +26,9 @@ class FRQQuestion(TypedDict):
     solution: str
     tags: List[str]
     slides: Dict[str, List[int]]  # lecture_id -> slide numbers
-    rubric: List[Rubric]
 
 class ProblemsContent(TypedDict):
-    figures: Dict[int, List[str]]
-    content: str
+    content: str  # Remove figures field
 
 class ProblemsProcessor(BaseProcessor):
     def __init__(
@@ -257,10 +250,8 @@ class ProblemsProcessor(BaseProcessor):
         WHAT TO DO:
         1. Put the question in <QUESTION> and </QUESTION> tags.
         2. Put the solution in <SOLUTION> and </SOLUTION> tags.
-        3. You should create a rubric for the question in <RUBRIC> and </RUBRIC> tags. You should create certain standards for the question, and then create points for each standard. Use <STANDARD x> and </STANDARD x> tags for each standard, where x is the standard name. Inside of each of the standards, use <POINT x> and </POINT x> tags for each point, where x is the amount of points the point is worth. Inside of each of the point tags, include the textual description of what will earn that point.
-        4. Ensure that all the points on the rubric add up to 10. There should not be any 0 point rubric items, answers can only earn positive points.
-        5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
-        6. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution."""
+        3. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        4. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution."""
 
         multi_part_prompt = f"""TASK: You will be generating multi-part questions to test comprehension of the material. 
         
@@ -268,10 +259,8 @@ class ProblemsProcessor(BaseProcessor):
         1. You must generate exactly 3 parts.
         2. Put each of the questions in <QUESTION> and </QUESTION> tags.
         3. Put the solution in <SOLUTION> and </SOLUTION> tags.
-        4. You should create a rubric for the question in <RUBRIC> and </RUBRIC> tags. You should create certain standards for the question, and then create points for each standard. Use <STANDARD x> and </STANDARD x> tags for each standard, where x is the standard name. Inside of each of the standards, use <POINT x> and </POINT x> tags for each point, where x is the amount of points the point is worth. Inside of each of the point tags, include the textual description of what will earn that point.
-        5. Ensure that all the points on the rubric add up to 10. There should not be any 0 point rubric items, answers can only earn positive points.
-        6. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
-        7. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution."""
+        4. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question. You should encapsulate all of the slide tags for a given lecture in <LECTURE y> and </LECTURE> tags, where y is the lecture number. An example is <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>.
+        5. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question and solution."""
 
 
         single_part_conceptual_prompt = f"""IMPORTANT: In addition, you should aim to generate conceptual questions, where the answer is a single step or a series of steps that are part of the computational process. Here is a full example output, generating 1 single-part conceptual practice problem for the Simplex Method.
@@ -279,8 +268,6 @@ class ProblemsProcessor(BaseProcessor):
         OUTPUT: <OUTPUT><QUESTION>Explain how degeneracy can lead to cycling in the Simplex Method, and name at least one strategy (or pivot rule) used to avoid cycling. Provide a concise but thorough explanation, using geometric and algebraic reasoning to illustrate your answer.</QUESTION>
 
         <SOLUTION>Definition of Degeneracy\nA Basic Feasible Solution (BFS) is degenerate if at least one of the basic variables is zero. Equivalently, more constraints are "active" at the same vertex of the feasible region than strictly necessary.\nIn geometric terms, degeneracy happens when multiple edges (or faces) of the feasible region intersect at a single point, potentially causing more constraints than needed to be tight at a vertex.\nHow Degeneracy Can Cause Cycling\nIn a non-degenerate iteration, each pivot typically improves the objective (or at least changes the BFS). In a degenerate situation, it is possible to pivot from one BFS to another BFS that has exactly the same objective value—and possibly even the same BFS if the pivot reintroduces the identical set of basic variables in a different order. Algebraically, a zero basic variable might remain at zero after a pivot step if the entering variable does not actually change in value (due to ratio tests matching up in a way that yields no net change). When this happens repeatedly, the Simplex Method might "cycle" through a sequence of BFSs (or effectively come back to the same BFS configuration), preventing forward progress.\nAnti-Cycling Strategies\nBland's Rule: Pick the entering and leaving variables by the smallest index among the candidates, which guarantees the algorithm will not cycle.\nOther strategies include Lexicographic ordering, Perturbation methods, etc.\nFinal Summary\nDegeneracy is not uncommon and doesn't always lead to cycling, but it can. \nHow Degeneracy Can Cause Cycling. In a non-degenerate iteration, each pivot typically improves the objective (or at least changes the BFS). In a degenerate situation, it is possible to pivot from one BFS to another BFS that has exactly the same objective value—and possibly even the same BFS if the pivot reintroduces the identical set of basic variables in a different order. Algebraically, a zero basic variable might remain at zero after a pivot step if the entering variable does not actually change in value (due to ratio tests matching up in a way that yields no net change). When this happens repeatedly, the Simplex Method might "cycle" through a sequence of BFSs (or effectively come back to the same BFS configuration), preventing forward progress. Anti-Cycling Strategies\nBland's Rule: Pick the entering and leaving variables by the smallest index among the candidates, which guarantees the algorithm will not cycle. Other strategies include Lexicographic ordering, Perturbation methods, etc.\nFinal Summary\nDegeneracy is not uncommon and doesn't always lead to cycling, but it can. Pivot rules that systematically break ties (like Bland's rule) ensure eventual progress toward an optimal solution.</SOLUTION>
-
-        <RUBRIC><STANDARD Definition of Degeneracy><POINT 1>For stating that degeneracy involves a BFS with one or more basic variables at zero.</POINT><POINT 1>For mentioning that more constraints are active at a vertex than the dimension requires.</POINT></STANDARD><STANDARD Explanation of Cycling><POINT 1>For mentioning that in a degenerate pivot, the objective might not change.</POINT><POINT 2>For clarifying how the algorithm can revisit the same BFS or bounce among a set of BFSs without progress.</POINT></STANDARD><STANDARD Geometric & Algebraic Reasoning><POINT 1>For describing degeneracy in geometric terms (multiple edges/faces intersecting at one point).</POINT><POINT 1>For mentioning the algebraic perspective (zero pivot steps, repeated BFS).</POINT></STANDARD><STANDARD Anti-Cycling Strategy><POINT 1>For naming a specific strategy (e.g., Bland's rule).</POINT><POINT 1>For briefly explaining how that strategy prevents cycling (e.g., systematic tie-breaking).</POINT><POINT 1>For overall clarity and completeness in linking degeneracy to the need for such rules.</POINT></STANDARD></RUBRIC>
         <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </OUTPUT>"""
 
@@ -337,7 +324,6 @@ class ProblemsProcessor(BaseProcessor):
         - Leaving variable: $s_2$
         </SOLUTION>
 
-        <RUBRIC><STANDARD Setup with Slack Variables><POINT 1>For correctly adding slack variables $s_1$ and $s_2$ to the constraints.</POINT><POINT 1>For stating the initial BFS $(x_1, x_2, s_1, s_2) = (0, 0, 4, 6)$.</POINT></STANDARD><STANDARD Initial Tableau & Objective Function><POINT 1>For correctly placing coefficients into the tableau.</POINT><POINT 1>For indicating the correct $-z$ row (or equivalent representation).</POINT><POINT 1>For identifying negative coefficients (the "most negative" approach for pivot).</POINT></STANDARD><STANDARD Pivot Column Selection><POINT 2>For correctly naming which $x_i$ has the most negative reduced cost and thus enters.</POINT></STANDARD><STANDARD Minimum Ratio Test & Pivot Row><POINT 2>For correctly applying the ratio test to find the leaving variable, showing the numeric comparison.</POINT></STANDARD><STANDARD Presentation & Correct Conclusion><POINT 1>For stating the final result clearly: "$x_1$ enters, $s_2$ leaves" (or the appropriate pair).</POINT></STANDARD></RUBRIC>
         <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </OUTPUT>"""
 
@@ -350,7 +336,6 @@ class ProblemsProcessor(BaseProcessor):
         In particular, for "$\geq$" constraints (or "$=$" constraints), the usual trick of adding slack variables does not yield an immediate BFS. Instead, we add artificial variables to create a system we can solve easily as the initial step.
         The objective in Phase I is to minimize the sum of these artificial variables, ideally driving them all to zero, proving feasibility.</SOLUTION>
 
-        <RUBRIC><STANDARD Purpose of Phase I><POINT 1>For mentioning infeasibility or complicated constraints ("$\geq$" or "$=$").</POINT><POINT 1>For explaining how Phase I finds an initial feasible solution.</POINT><POINT 1>For stating the goal: minimize the sum of artificial variables.</POINT></STANDARD></RUBRIC>
         <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </PART_A>
 
@@ -359,7 +344,6 @@ class ProblemsProcessor(BaseProcessor):
         <SOLUTION>For a constraint like $2x_1 + 3x_2 - s_1 = 10$ or $2x_1 + 3x_2 \geq 10$, we can't treat the added variable ($s_1$) as a "slack" that is automatically the BFS. Instead, we add an artificial variable $a_1$ to rewrite it as $2x_1 + 3x_2 - s_1 + a_1 = 10$.
         The artificial variable $a_1$ starts as the basic variable with value $10$. Phase I attempts to drive $a_1$ to zero (if feasible). If $a_1$ remains positive in the best solution, it signals infeasibility.</SOLUTION>
         
-        <RUBRIC><STANDARD Artificial Variables><POINT 1>For explaining how artificial variables are introduced when no obvious BFS is available.</POINT><POINT 1>For correctly describing how artificial variables are added (especially with "$\geq$" or "$=$" constraints).</POINT><POINT 1>For explaining why artificial variables need to be driven to zero in Phase I.</POINT></STANDARD></RUBRIC>
         <LECTURE 1><SLIDE 6><SLIDE 7><SLIDE 8></LECTURE>
         </PART_B>
 
@@ -369,7 +353,6 @@ class ProblemsProcessor(BaseProcessor):
         Conclusion: The original problem is infeasible because there is no way to satisfy the constraints (at least one constraint physically cannot be satisfied simultaneously with the others).
         Algebraically, that leftover positive artificial variable is the proof that no feasible solution exists.</SOLUTION>
 
-        <RUBRIC><STANDARD Conclusion if Sum of Artificial Vars > 0><POINT 2>For stating it means the original LP is infeasible.</POINT><POINT 1>For explaining that at least one artificial variable remains positive, violating feasibility.</POINT><POINT 1>For overall clarity in connecting the final value of artificial variables to feasibility.</POINT></STANDARD></RUBRIC>
         <LECTURE 1><SLIDE 9><SLIDE 12></LECTURE>
         </PART_C>
         </OUTPUT>"""
@@ -407,7 +390,6 @@ class ProblemsProcessor(BaseProcessor):
         \end{array}$
         </SOLUTION>
 
-        <RUBRIC><STANDARD Correct Setup><POINT 1>For correctly rewriting constraints with slack variables $s_1, s_2$.</POINT><POINT 1>For stating the initial BFS $(x_1, x_2, s_1, s_2) = (0, 0, 5, 12)$.</POINT><POINT 1>For correctly writing the objective function in a form suitable for the tableau (e.g., $-z + 4x_1 + x_2 = 0$).</POINT></STANDARD></RUBRIC>
         <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>
         </PART_A>
         <PART_B>
@@ -429,7 +411,6 @@ class ProblemsProcessor(BaseProcessor):
         Use Row Operations to eliminate $x_1$ in Row 1 and the $-4$ in the $-z$ row. Details (omitted for brevity) yield the new BFS. Let's say after pivot, the new BFS is $(x_1=4, x_2=0, s_1=1, s_2=0)$.
         </SOLUTION>
 
-        <RUBRIC><STANDARD One Pivot Step><POINT 1>For identifying the pivot column (most negative in the $-z$ row).</POINT><POINT 1>For ratio test on each row and picking the correct pivot row.</POINT><POINT 1>For correct row operations to pivot.</POINT><POINT 1>For stating the updated BFS (which variable replaced which slack).</POINT></STANDARD></RUBRIC>
         <LECTURE 1><SLIDE 6><SLIDE 7><SLIDE 8></LECTURE>
         </PART_B>
         <PART_C>
@@ -442,13 +423,6 @@ class ProblemsProcessor(BaseProcessor):
         In many cases, after the first pivot, you might see a $-1$ or $-\frac{2}{3}$ for $x_2$ in the objective row, indicating you can bring $x_2$ in next. You'd do another iteration, repeating the ratio test, etc., until no negative coefficients remain.
         </SOLUTION>
 
-        <RUBRIC>
-        <STANDARD Optimality Check>
-        <POINT 1>For verifying if any negative coefficients remain in the objective row.</POINT>
-        <POINT 1>For concluding whether the BFS is optimal or not.</POINT>
-        <POINT 1>For describing the next step (e.g., pivot again if negative coefficients remain).</POINT>
-        </STANDARD>
-        </RUBRIC>
         <LECTURE 1><SLIDE 9><SLIDE 11><SLIDE 12></LECTURE>
         </PART_C>
         </OUTPUT>"""
@@ -687,29 +661,6 @@ class ProblemsProcessor(BaseProcessor):
             return None
         solution = solution_match.group(1).strip()
 
-        # Extract rubric
-        rubric: List[Rubric] = []
-        rubric_match = re.search(r'<RUBRIC>(.*?)</RUBRIC>', block, re.DOTALL)
-
-        if rubric_match:
-            standard_matches = re.finditer(r'<STANDARD(?:\s+([^>]*))?>(.*?)</STANDARD>', rubric_match.group(1), re.DOTALL)
-            
-            for match in standard_matches:
-                standard_name = match.group(1).strip() if match.group(1) else match.group(2).strip()
-                standard_content = match.group(0)
-                
-                point_matches = re.finditer(r'<POINT\s+(\d+)>(.*?)</POINT>', standard_content, re.DOTALL)
-                
-                for point_match in point_matches:
-                    points = int(point_match.group(1))
-                    content = point_match.group(2).strip()
-                    
-                    rubric.append({
-                        "standard": standard_name,
-                        "content": content,
-                        "points": points
-                    })
-
         # Extract lecture and slides information
         lecture_slides: Dict[str, List[int]] = {}
         lecture_matches = re.finditer(r'<LECTURE\s+(\d+)>(.*?)</LECTURE>', block, re.DOTALL)
@@ -736,10 +687,8 @@ class ProblemsProcessor(BaseProcessor):
             "question": question,
             "solution": solution,
             "tags": tags,
-            "slides": lecture_slides,
-            "rubric": rubric
-        } 
-    
+            "slides": lecture_slides
+        }
 
     async def process_problems(
         self,
