@@ -616,7 +616,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                             <Text size="xl" fw={700} mb={6} pl={4}>Textbooks</Text>
                         </Group>
                         <Group>
-                            <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Textbooks</Button>
+                            <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Textbook</Button>
                             <FileInput
                                 ref={fileInputRef}
                                 placeholder="Upload PDFs"
@@ -632,8 +632,6 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                     <Stack>
                         {(textbooks && classData) && textbooks.length > 0 && textbooks.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((textbook) => {
                             if (textbook.parse_status !== "complete") {
-                                const progress = getProgress(textbook.id, parsingTextbooks.has(textbook.id));
-                                const estimatedMinutes = getEstimatedTime(textbook.id, parsingTextbooks.has(textbook.id));
                                 return (
                                     <Card withBorder key={textbook.id}>
                                         <Group align="flex-start" justify="space-between">

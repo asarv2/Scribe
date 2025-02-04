@@ -9,6 +9,44 @@ export type Json =
 export type Database = {
   prod: {
     Tables: {
+      chapters: {
+        Row: {
+          chapter_number: number
+          created_at: string
+          end_page: number
+          id: string
+          start_page: number
+          textbook: string
+          title: string
+        }
+        Insert: {
+          chapter_number?: number
+          created_at?: string
+          end_page?: number
+          id?: string
+          start_page?: number
+          textbook: string
+          title?: string
+        }
+        Update: {
+          chapter_number?: number
+          created_at?: string
+          end_page?: number
+          id?: string
+          start_page?: number
+          textbook?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapters_textbook_fkey"
+            columns: ["textbook"]
+            isOneToOne: false
+            referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       classes: {
         Row: {
           brightspace_course_descriptor: string | null
@@ -49,9 +87,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string
-          figures: Json[]
           id: string
-          latex: string
           lecture: string | null
           page: number
           processed: boolean
@@ -61,9 +97,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string
-          figures?: Json[]
           id?: string
-          latex?: string
           lecture?: string | null
           page: number
           processed?: boolean
@@ -73,9 +107,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
-          figures?: Json[]
           id?: string
-          latex?: string
           lecture?: string | null
           page?: number
           processed?: boolean
@@ -119,6 +151,7 @@ export type Database = {
           lecture: string | null
           novelty: number
           novelty_explanation: string
+          textbook: string | null
         }
         Insert: {
           accuracy?: number
@@ -139,6 +172,7 @@ export type Database = {
           lecture?: string | null
           novelty?: number
           novelty_explanation?: string
+          textbook?: string | null
         }
         Update: {
           accuracy?: number
@@ -159,6 +193,7 @@ export type Database = {
           lecture?: string | null
           novelty?: number
           novelty_explanation?: string
+          textbook?: string | null
         }
         Relationships: [
           {
@@ -173,6 +208,48 @@ export type Database = {
             columns: ["lecture"]
             isOneToOne: false
             referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluations_textbook_fkey"
+            columns: ["textbook"]
+            isOneToOne: false
+            referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercises: {
+        Row: {
+          chapter: string
+          created_at: string
+          end_page: number
+          exercise_number: number
+          id: string
+          start_page: number
+        }
+        Insert: {
+          chapter: string
+          created_at?: string
+          end_page?: number
+          exercise_number?: number
+          id?: string
+          start_page?: number
+        }
+        Update: {
+          chapter?: string
+          created_at?: string
+          end_page?: number
+          exercise_number?: number
+          id?: string
+          start_page?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercises_chapter_fkey"
+            columns: ["chapter"]
+            isOneToOne: false
+            referencedRelation: "chapters"
             referencedColumns: ["id"]
           },
         ]
@@ -563,6 +640,7 @@ export type Database = {
           pages: number
           parse_error: string | null
           parse_status: Database["prod"]["Enums"]["parse_status"]
+          response_url: string
           title: string
         }
         Insert: {
@@ -574,6 +652,7 @@ export type Database = {
           pages?: number
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
+          response_url?: string
           title?: string
         }
         Update: {
@@ -585,6 +664,7 @@ export type Database = {
           pages?: number
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
+          response_url?: string
           title?: string
         }
         Relationships: [

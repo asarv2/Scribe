@@ -49,7 +49,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     const { data: problemGenerations, isLoading: loadingProblemGenerations } = useQuery({
         queryKey: ["problemGenerations", classId],
-        queryFn: () => getGenerations(supabase, classId, "problem")
+        queryFn: () => getGenerations(supabase, classId)
     })
 
     const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({
@@ -57,6 +57,8 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         queryFn: () => getGenerationProblems(supabase, problemGenerations ?? []),
         enabled: !!problemGenerations
     })
+
+    console.log(generationProblems)
 
     const { data: generationProblemsDocuments, isLoading: loadingGenerationProblemsDocuments } = useQuery({
         queryKey: ["generationProblemsDocuments", classId, generationProblems],
@@ -185,7 +187,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         return undefined;
     }
 
-    const getActiveImage = (document: Document) => {
+    const getActiveImage = (document: Document | undefined) => {
         if (!document) return "/placeholder_image.svg";
         return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
     }
@@ -218,7 +220,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                 let estimatedSeconds = 0;
                                 estimatedSeconds = ((generation.single ? 10 : 20) * (1 - generation.progress)) * (generation.num_questions) // takes 5 seconds per question
                                 return (
-                                    document && <Card withBorder key={generation.id}>
+                                    <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">
                                             <Group align="flex-start">
                                                 <MantineImage
@@ -272,7 +274,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                 )
                             }
                             return (
-                                document && <Link
+                                <Link
                                     href={`/classes/${classId}/generate/past/${generation.id}`}
                                     key={generation.id}
                                     style={{ textDecoration: 'none' }}

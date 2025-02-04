@@ -1,12 +1,13 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getTextbookDocuments(client: TypedSupabaseClient, textbookId: string) {
+export async function getTextbookDocuments(client: TypedSupabaseClient, textbookId: string, startPage: number = 0, endPage: number = 10000) {
     const {data, error} = await client
         .from("documents")
         .select("*")
         .eq("textbook", textbookId)
         .order("page", {ascending: true})
-    
+        .gte("page", startPage)
+        .lte("page", endPage)
     if (error) {
         throw new Error(error.message);
     }

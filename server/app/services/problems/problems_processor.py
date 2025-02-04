@@ -439,28 +439,35 @@ class ProblemsProcessor(BaseProcessor):
         additional_info: str
     ) -> str:
         """Process a batch of questions"""
-        flat_questions = [
-            q["question"]
-            for questions in self.questions.values()
-            for group in questions
-            for q in group
-        ]
-        flat_questions_str = "\n".join(flat_questions)
+        try:
+            flat_questions = [
+                q["question"]
+                for questions in self.questions.values()
+                for group in questions
+                for q in group
+            ]
+            flat_questions_str = "\n".join(flat_questions)
 
-        message = HumanMessage(content=[
-            {"type": "text", "text": prompt + "\n\nVERY IMPORTANT: Follow these additonal instructions in the generation of the problems: " + additional_info},
-            {
-                "type": "text",
-                "text": "The following questions have already been generated. Do not repeat them: " + flat_questions_str
-            },
-            {
-                "type": "text",
-                "text": f"You should generate 1 new questions for: {name}. INPUT: {content}\n\nYOUR OUTPUT: "
-            }
-        ])
-        response = await self.robust_generate(message, model="gemini-1.5-pro")
-        print("RESPONSE: ", response)
-        return response
+            message = HumanMessage(content=[
+                {"type": "text", "text": prompt + "\n\nVERY IMPORTANT: Follow these additonal instructions in the generation of the problems: " + additional_info},
+                {
+                    "type": "text",
+                    "text": "The following questions have already been generated. Do not repeat them: " + flat_questions_str
+                },
+                {
+                    "type": "text",
+                    "text": f"You should generate 1 new questions for: {name}. INPUT: {content}\n\nYOUR OUTPUT: "
+                }
+            ])
+            
+            # Use a faster model with higher RPM
+            response = await self.robust_generate(message, model="gemini-1.5-flash")
+            print(f"Successfully generated response for {name}")
+            return response
+            
+        except Exception as e:
+            print(f"Error in process_batch: {str(e)}")
+            raise
 
     def clean_result(
         self,
