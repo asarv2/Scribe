@@ -1,13 +1,11 @@
-import multiprocessing
-
 # Server socket
 bind = "0.0.0.0:5000"
 
 # For GPU workloads, we want fewer workers
 workers = 2  # Start with 2 workers since GPU operations are heavy
 
-# Use uvicorn worker for better async support
-worker_class = 'uvicorn.workers.UvicornWorker'
+# Remove the uvicorn worker and use sync worker
+worker_class = 'sync'
 
 # Threads per worker
 threads = 4
@@ -19,4 +17,4 @@ timeout = 300
 keepalive = 65
 
 def when_ready(server):
-    print(f"Gunicorn server is ready. Running {workers} workers with uvicorn")
+    print(f"Gunicorn server is ready. Running {workers} workers")
