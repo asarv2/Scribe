@@ -1,13 +1,5 @@
-# Use NVIDIA's PyTorch base image with Python 3.10, we'll upgrade Python later
-FROM nvcr.io/nvidia/pytorch:24.01-py3
-
-# Upgrade to Python 3.12
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    && add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update \
-    && apt-get install -y python3.12 python3.12-dev python3.12-distutils \
-    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
+# Use NVIDIA's PyTorch image instead
+FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -18,8 +10,10 @@ ENV FLASK_DEBUG=false
 # Add environment variable to indicate Docker environment
 ENV DOCKER_ENV=true
 
-# Install system dependencies
-RUN apt-get install -y \
+# Install Python and required system dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
     ffmpeg \
     curl \
     texlive-latex-base \
@@ -40,8 +34,8 @@ WORKDIR /app
 # Copy single requirements file
 COPY app/requirements.txt app/
 
-# Install all Python dependencies including torch
-RUN pip3 install --no-cache-dir -r app/requirements.txt
+# Install dependencies (excluding torch since it's in the base image)
+RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt)
 
 # Create uploads directory with proper permissions
 RUN mkdir -p /app/uploads && \
