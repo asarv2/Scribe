@@ -4,7 +4,6 @@ import traceback
 from typing import Dict, List, Any, Union, TypedDict
 from app.extensions import supabase
 from app.services.problems.problems_processor import (
-    ProblemsContent,
     QuestionPrompt,
     MCQQuestion,
     FRQQuestion,
@@ -46,6 +45,16 @@ async def generate_problems():
         class_title = class_response.data.get('title')
         print("Class response:", class_response)
 
+        # Get all lectures
+        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
+        all_lectures = lectures_response.data or []
+        print("Lectures:", all_lectures)
+
+        # Get all textbooks 
+        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).execute()
+        all_textbooks = textbooks_response.data or []
+        print("Textbooks:", all_textbooks)
+
         question_prompts_raw = supabase.table("questions").select("*").eq("generation", generation_id).execute().data
         question_prompts: List[QuestionPrompt] = []
         for prompt in question_prompts_raw:
@@ -55,85 +64,30 @@ async def generate_problems():
                 "multi_part": prompt.get('multipart') is not None,
                 "computational": not prompt.get('conceptual'),
                 "additional_info": prompt.get('additional_info'),
-                "topics": prompt.get('topics'),
-                "lectures": prompt.get('lectures')
+                "references": prompt.get('references')
             })
         print("Question prompts:", question_prompts)
-
-        names: List[str] = []
-
-        # Get all lectures
-        all_lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
-        all_lectures = [{
-            'id': lecture.get('id'),
-            'name': lecture.get('name'),
-            'note_number': lecture.get('note_number')
-        } for lecture in (all_lectures_response.data or [])]
-        print("All Lectures:", all_lectures)
-
-        # Get all topics
-        all_topics_response = supabase.table("topics").select("*").eq("class", class_id).execute()
-        all_topics = all_topics_response.data or []
-        print("All Topics:", all_topics)
-
-        lecture_names = []
-        topic_names = []
-        lecture_ids = {}
-
-        for question_prompt in question_prompts:
-            # getting lecture names and topic names
-            question_topics = [topic for topic in all_topics if topic.get('id') in question_prompt.get('topics')]
-            question_lectures = [lecture for lecture in all_lectures if lecture.get('id') in question_prompt.get('lectures')]
-            lecture_names.append([lecture.get('name') for lecture in question_lectures])
-            topic_names.append([topic.get('title') for topic in question_topics])
-
-            # adding lecture ids for topics and lectures
-            lecture_ids[question_prompt.get('id')] = [topic.get('lectures') for topic in question_topics]
-            lecture_ids[question_prompt.get('id')] = [lecture.get('id') for lecture in question_lectures]
-
-        print("Lecture names:", lecture_names)
-        print("Topic names:", topic_names)
-        print("Lecture IDs:", lecture_ids)
-
-        # Get documents
-        lecture_ids_flattened = [lecture_id for lecture_ids in lecture_ids.values() for lecture_id in lecture_ids]
-        documents_response = supabase.table("documents").select("*").in_("lecture", lecture_ids_flattened).execute()
+        references: Dict[str, List[str]] = {prompt.get('id'): prompt.get('references') for prompt in question_prompts}
+        documents_response = supabase.table("documents").select("*").in_("id", references).execute()
         documents = documents_response.data or []
         print("Documents:", documents)
 
-        # Process lectures content
-        question_lectures_processed: Dict[str, Dict] = {}
-        for question_id, question_lecture_ids in lecture_ids.items():
-            lectures_processed: Dict[str, Dict] = {}
-            for lecture_id in question_lecture_ids:
-                lecture = next((l for l in all_lectures if l.get('id') == lecture_id), None)
-                if not lecture:
-                    continue
-
-                # Build lecture content
-                lecture_content = []
-                for doc in [d for d in documents if d.get('lecture') == lecture_id]:
+        question_data: Dict[str, List[str]] = {}
+        for prompt in question_prompts:
+            prompt_id = prompt.get('id')
+            question_data[prompt_id] = []
+            documents = references[prompt.get('id')]
+            for doc in documents:
+                if (doc.get('lecture') is not None):
                     page = str(doc.get('page'))
-                    content = f"SLIDE {page}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
-                    lecture_content.append(content)
-
-                final_content = f"LECTURE NAME: {lecture.get('name')} | LECTURE NUMBER: {lecture.get('note_number')}\n"
-                final_content += "\n\n".join(lecture_content) + "\n\n"
-                
-                lectures_processed[lecture_id] = {
-                    'content': final_content
-                }
-
-            # Combine all content
-            content: ProblemsContent = {
-                'content': ''
-            }
-            for lecture_data in lectures_processed.values():
-                content['content'] += lecture_data['content']
-            
-            question_lectures_processed[question_id] = content
-
-        print("Question lectures processed:", question_lectures_processed)
+                    lecture_name = next((l.get('name') for l in all_lectures if l.get('id') == doc.get('lecture')), None)
+                    content = f"LECTURE {lecture_name} SLIDE {page}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
+                    question_data[prompt_id].append(content)
+                elif (doc.get('textbook') is not None):
+                    page = str(doc.get('page'))
+                    textbook_name = next((t.get('title') for t in all_textbooks if t.get('id') == doc.get('textbook')), None)
+                    content = f"TEXTBOOK {textbook_name} PAGE {page}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
+                    question_data[prompt_id].append(content)
 
         async def on_batch_complete(questions: List[List[Union[MCQQuestion, FRQQuestion]]]):
             print("Generated questions for batch:", questions)
@@ -160,14 +114,14 @@ async def generate_problems():
                             "explanation_c": question["explanations"]["C"],
                             "explanation_d": question["explanations"]["D"],
                             "explanation_e": question["explanations"]["E"],
-                            "documents": question_document_ids
+                            "references": question_document_ids
                         }
                     else:
                         # FRQ Question
                         question_data = {
                             "question": question["question"],
                             "solution": question["solution"],
-                            "documents": question_document_ids
+                            "references": question_document_ids
                         }
                     
                     problems_data.append(question_data)
@@ -187,13 +141,11 @@ async def generate_problems():
 
         processor = ProblemsProcessor(
             course_title=class_title,
-            names=names,
-            items=question_lectures_processed,
+            items=question_data,
         )
         print("Processor created")
         questions = await processor.process_problems(
             question_prompts=question_prompts,
-            all_lectures=all_lectures,
             on_batch_complete=on_batch_complete
         )
         print("Questions:", questions)

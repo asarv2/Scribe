@@ -5,7 +5,7 @@
  * 01.03.2025
  */
 "use client"
-import GenerateCanvas from "@/components/GenerateCanvas";
+import GenerateCanvas from "@/components/Generate/GenerateCanvas";
 
 export default function GenerateProblemsPage({ params }: { params: { classId: string} }) {
     const classId = params.classId;

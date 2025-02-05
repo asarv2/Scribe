@@ -1,7 +1,6 @@
 import asyncio
 import time
 from typing import Dict
-import threading
 
 class ModelRateLimiter:
     _instance = None
@@ -32,9 +31,9 @@ class ModelRateLimiter:
                 "deepseek-r1-7b": 30  # Local model can handle more
             }
             
-            # Last request timestamp per model
+            # Last request timestamp per model using an asyncio lock
             self._last_request = {}
-            self._last_request_lock = threading.Lock()
+            self._last_request_lock = asyncio.Lock()
             
             ModelRateLimiter._initialized = True
 
@@ -47,18 +46,21 @@ class ModelRateLimiter:
         rpm = self._rpm_limits[model]
         min_interval = 60.0 / rpm
 
-        # Check and update last request time
-        current_time = time.time()
-        with self._last_request_lock:
+        # Check and update last request time in an async-safe manner
+        async with self._last_request_lock:
+            current_time = time.time()
             last_time = self._last_request.get(model, 0)
             wait_time = max(0, min_interval - (current_time - last_time))
             
             if wait_time > 0:
+                # Release the lock before awaiting if needed (optional optimization)
+                # Alternatively, you can await within the async with block,
+                # since asyncio.Lock supports it.
                 await asyncio.sleep(wait_time)
             
-            self._last_request[model] = current_time
+            self._last_request[model] = time.time()  # update after sleep
 
-        # Acquire the semaphore
+        # Acquire the semaphore for the model
         await self._locks[model].acquire()
         return True
 

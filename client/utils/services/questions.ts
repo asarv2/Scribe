@@ -39,7 +39,7 @@ export const updateQuestionStatus = async (questionId: string, approved: boolean
     return { success: true, error: "" };
 }
 
-export const createQuestions = async (questions: { generation: string, mcq: boolean, conceptual: boolean, multipart?: string, additional_info: string, topics: string[], lectures: string[] }[]) => {
+export const createQuestions = async (questions: { generation: string, mcq: boolean, conceptual: boolean, multipart?: string, additional_info: string, references: string[] }[]) => {
     const supabase = useSupabaseServer(cookies());
     const { error } = await supabase
         .from("questions")

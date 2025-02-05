@@ -24,7 +24,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
 
     const { data: chapters } = useQuery({
         queryKey: ['chapters'],
-        queryFn: () => getChapters(supabase, textbookId)
+        queryFn: () => getChapters(supabase, [textbookId])
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({

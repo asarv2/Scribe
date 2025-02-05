@@ -27,20 +27,15 @@ class FRQQuestion(TypedDict):
     tags: List[str]
     slides: Dict[str, List[int]]  # lecture_id -> slide numbers
 
-class ProblemsContent(TypedDict):
-    content: str  # Remove figures field
-
 class ProblemsProcessor(BaseProcessor):
     def __init__(
         self,
         course_title: str,
-        names: List[str],
-        items: Dict[str, ProblemsContent],
+        items: Dict[str, List[str]],
     ):
         super().__init__()
         self.course_title = course_title
         self.questions: Dict[str, List[List[Union[MCQQuestion, FRQQuestion]]]] = {}
-        self.names = names
         self.items = items
 
 
@@ -433,7 +428,7 @@ class ProblemsProcessor(BaseProcessor):
 
     async def process_batch(
         self,
-        name: str,
+        question_id: str,
         content: str,
         prompt: str,
         additional_info: str
@@ -456,13 +451,13 @@ class ProblemsProcessor(BaseProcessor):
                 },
                 {
                     "type": "text",
-                    "text": f"You should generate 1 new questions for: {name}. INPUT: {content}\n\nYOUR OUTPUT: "
+                    "text": f"You should generate 1 new question. INPUT: {content}\n\nYOUR OUTPUT: "
                 }
             ])
             
             # Use a faster model with higher RPM
             response = await self.robust_generate(message, model="gemini-1.5-flash")
-            print(f"Successfully generated response for {name}")
+            print(f"Successfully generated response for {question_id}")
             return response
             
         except Exception as e:
@@ -474,21 +469,19 @@ class ProblemsProcessor(BaseProcessor):
         question_id: str,
         question_type: str,
         result: str,
-        name: str,
         tags: List[str],
         lectures: List[Dict[str, Union[str, int]]]
     ) -> None:
         """Clean the result based on question type"""
         if question_type == "mcq":
-            self.clean_mcq_result(question_id, result, name, tags, lectures)
+            self.clean_mcq_result(question_id, result, tags, lectures)
         else:
-            self.clean_frq_result(question_id, result, name, tags, lectures)
+            self.clean_frq_result(question_id, result, tags, lectures)
 
     def clean_mcq_result(
         self,
         question_id: str,
         result: str,
-        name: str,
         tags: List[str],
         lectures: List[Dict[str, Union[str, int]]]
     ) -> None:
@@ -519,16 +512,16 @@ class ProblemsProcessor(BaseProcessor):
                     
                     # Only add if we have all parts
                     if len(multi_part_question_obj) == 3:
-                        if name not in self.questions:
-                            self.questions[name] = []
-                        self.questions[name].append(multi_part_question_obj)
+                        if question_id not in self.questions:
+                            self.questions[question_id] = []
+                        self.questions[question_id].append(multi_part_question_obj)
                 else:
                     # Handle single-part questions
                     question_obj = self.process_mcq_block(question_id, block, tags, lectures)
                     if question_obj:
-                        if name not in self.questions:
-                            self.questions[name] = []
-                        self.questions[name].append([question_obj])
+                        if question_id not in self.questions:
+                            self.questions[question_id] = []
+                        self.questions[question_id].append([question_obj])
                         
             except Exception as e:
                 print(f"Error processing question block: {str(e)}")
@@ -537,7 +530,6 @@ class ProblemsProcessor(BaseProcessor):
         self,
         question_id: str,
         result: str,
-        name: str,
         tags: List[str],
         lectures: List[Dict[str, Union[str, int]]]
     ) -> None:
@@ -568,16 +560,16 @@ class ProblemsProcessor(BaseProcessor):
                     
                     # Only add if we have all parts
                     if len(multi_part_question_obj) == 3:
-                        if name not in self.questions:
-                            self.questions[name] = []
-                        self.questions[name].append(multi_part_question_obj)
+                        if question_id not in self.questions:
+                            self.questions[question_id] = []
+                        self.questions[question_id].append(multi_part_question_obj)
                 else:
                     # Handle single-part questions
                     question_obj = self.process_frq_block(question_id, block, tags, lectures)
                     if question_obj:
-                        if name not in self.questions:
-                            self.questions[name] = []
-                        self.questions[name].append([question_obj])
+                        if question_id not in self.questions:
+                            self.questions[question_id] = []
+                        self.questions[question_id].append([question_obj])
                         
             except Exception as e:
                 print(f"Error processing question block: {str(e)}")
@@ -705,8 +697,7 @@ class ProblemsProcessor(BaseProcessor):
     ) -> List[List[Union[MCQQuestion, FRQQuestion]]]:
         """Process problems for lectures"""
         
-        name = ", ".join(self.names)
-        print(f"Generating {len(question_prompts)} questions for {name}")
+        print(f"Generating {len(question_prompts)} questions")
 
         mcq_prompts = self.initialize_mcq_prompts()
         frq_prompts = self.initialize_frq_prompts()
@@ -750,14 +741,14 @@ class ProblemsProcessor(BaseProcessor):
                 continue
 
             result = await self.process_batch(
-                    name,
-                    self.items[question_id]['content'],
+                    question_id,
+                    "\n".join(self.items[question_id]),
                     prompt,
                     question_prompt.get('additional_info')
                 )
-            self.clean_result(question_id, "mcq" if question_prompt.get('mcq') else "frq", result, name, tags, all_lectures)
+            self.clean_result(question_id, "mcq" if question_prompt.get('mcq') else "frq", result, tags, all_lectures)
 
             if on_batch_complete:
-                await on_batch_complete(self.questions[name])
+                await on_batch_complete(self.questions[question_id])
 
-        return self.questions[name]
+        return self.questions[question_id]
