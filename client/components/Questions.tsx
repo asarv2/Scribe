@@ -168,20 +168,25 @@ export default function Questions({ questions, onUpdateStatus }: QuestionsProps)
                                 (item, index) => {
                                     if (Array.isArray(item)) {
                                         return (
-                                            <Box key={index}>
-                                                <h3><Latex>{`${index + 1}.`}</Latex></h3>
+                                            <Box key={index} className="multipart-question">
+                                                <h3 className="question-number"><Latex>{`${index + 1}.`}</Latex></h3>
                                                 {item.map((question, subIndex) => (
-                                                    <Box key={`${index}-${subIndex}`} style={{ paddingLeft: "3rem", marginTop: "-1rem" }}>
+                                                    <Box 
+                                                        key={`${index}-${subIndex}`} 
+                                                        className="question-container"
+                                                    >
                                                         <Flex justify="space-between" align="center">
-                                                            <h3><Latex>{`${String.fromCharCode(97 + subIndex)}) ${question.question}`}</Latex></h3>
+                                                            <h3 className="question-text">
+                                                                <Latex>{`${String.fromCharCode(97 + subIndex)}) ${question.question}`}</Latex>
+                                                            </h3>
                                                             <QuestionActions question={question} />
                                                         </Flex>
-                                                        <Box style={{ paddingLeft: "3rem", marginTop: "-1rem" }}>
-                                                            {question.option_a && <h4><Latex>{`A. ${question.option_a || ""}`}</Latex></h4>}
-                                                            {question.option_b && <h4><Latex>{`B. ${question.option_b || ""}`}</Latex></h4>}
-                                                            {question.option_c && <h4><Latex>{`C. ${question.option_c || ""}`}</Latex></h4>}
-                                                            {question.option_d && <h4><Latex>{`D. ${question.option_d || ""}`}</Latex></h4>}
-                                                            {question.option_e && <h4><Latex>{`E. ${question.option_e || ""}`}</Latex></h4>}
+                                                        <Box className="options-container">
+                                                            {question.option_a && <h4><Latex>{`A. ${question.option_a}`}</Latex></h4>}
+                                                            {question.option_b && <h4><Latex>{`B. ${question.option_b}`}</Latex></h4>}
+                                                            {question.option_c && <h4><Latex>{`C. ${question.option_c}`}</Latex></h4>}
+                                                            {question.option_d && <h4><Latex>{`D. ${question.option_d}`}</Latex></h4>}
+                                                            {question.option_e && <h4><Latex>{`E. ${question.option_e}`}</Latex></h4>}
                                                         </Box>
                                                     </Box>
                                                 ))}
@@ -189,7 +194,7 @@ export default function Questions({ questions, onUpdateStatus }: QuestionsProps)
                                         );
                                     } else {
                                         return (
-                                            <Box key={index}>
+                                            <Box key={index} className="single-question">
                                                 <Flex justify="space-between" align="center">
                                                     <h3><Latex>{`${index + 1}. ${item.question}`}</Latex></h3>
                                                     <QuestionActions question={item} />

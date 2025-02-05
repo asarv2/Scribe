@@ -134,81 +134,43 @@ class BaseProcessor:
         self,
         message: Union[HumanMessage, AIMessage],
         model: Literal["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro", "deepseek-r1-7b"] = "gemini-1.5-flash-8b",
-        retries: int = 5,
+        retries: int = 3,
         initial_wait: int = 5
     ) -> str:
-        # Add check for DeepSeek availability
-        if model == "deepseek-r1-7b" and (deepseek_model is None or deepseek_tokenizer is None):
-            print("DeepSeek model not available, falling back to Gemini Flash-8B...")
-            model = "gemini-1.5-flash-8b"
-
-        # Check circuit breaker
-        with self._circuit_breaker_lock:
-            current_time = time.time()
-            if (self._circuit_breaker["failures"] >= self._circuit_breaker["threshold"] and 
-                current_time - self._circuit_breaker["last_failure"] < self._circuit_breaker["cooldown"]):
-                raise Exception("Circuit breaker open - too many recent failures")
-
-        last_error = None
-
-        for attempt in range(retries):
+        try:
+            # Acquire rate limiter permission
+            await rate_limiter.acquire(model)
+            
             try:
-                # Acquire rate limiter permission
-                await rate_limiter.acquire(model)
+                if model == "deepseek-r1-7b":
+                    response = await self.generate_deepseek_r1_7b(message)
+                    return response
                 
-                try:
-                    # Try Gemini Flash first
-                    if model == "gemini-1.5-flash-8b":
-                        response = await self.llm_gemini_flash8b.agenerate([[message]])
-                    elif model == "gemini-1.5-flash":
-                        response = await self.llm_gemini_flash.agenerate([[message]])
-                    elif model == "gemini-2.0-flash-exp":
-                        response = await self.llm_gemini_flash_exp.agenerate([[message]])
-                    elif model == "gemini-1.5-pro":
-                        response = await self.llm_gemini_pro.agenerate([[message]])
-                    elif model == "deepseek-r1-7b":
-                        response = await self.generate_deepseek_r1_7b(message)
-                    else:
-                        raise ValueError(f"Invalid model: {model}")
-
-                    return response.generations[0][0].text
-
-                except Exception as flash_error:
-                    # If Flash fails with RECITATION error, try Pro
-                    if "RECITATION" in str(flash_error):
-                        print("Gemini Flash blocked due to RECITATION, trying Gemini Pro...")
-                        # Acquire rate limiter for Pro model
-                        await rate_limiter.acquire("gemini-1.5-pro")
-                        pro_response = await self.llm_gemini_pro.agenerate([[message]])
-                        return pro_response.generations[0][0].text
-                    raise flash_error  # Re-throw if it's not a RECITATION error
-
-            except Exception as error:
-                last_error = error
-                error_msg = str(error).lower()
-
-                should_retry = any(
-                    msg in error_msg for msg in [
-                        "resourceexhausted",
-                        "rate_limit",
-                        "too many requests",
-                        "quota exceeded"
-                    ]
+                llm = {
+                    "gemini-1.5-flash-8b": self.llm_gemini_flash8b,
+                    "gemini-1.5-flash": self.llm_gemini_flash,
+                    "gemini-2.0-flash-exp": self.llm_gemini_flash_exp,
+                    "gemini-1.5-pro": self.llm_gemini_pro
+                }[model]
+                
+                response = await llm.agenerate([[message]])
+                return response.generations[0][0].text
+                
+            finally:
+                # Always release the rate limiter
+                rate_limiter.release(model)
+                
+        except Exception as error:
+            # Handle retries if needed
+            if retries > 0:
+                await asyncio.sleep(initial_wait)
+                return await self.robust_generate(
+                    message,
+                    model,
+                    retries - 1,
+                    initial_wait * 1.5
                 )
-
-                if should_retry and attempt < retries - 1:
-                    wait_time = initial_wait * (1.5 ** attempt)
-                    print(f"Attempt {attempt + 1}/{retries} failed. Retrying in {wait_time:.1f} seconds...")
-                    print(f"Error: {str(error)}")
-                    await asyncio.sleep(wait_time)
-                    continue
-                break
-
-        with self._circuit_breaker_lock:
-            self._circuit_breaker["failures"] += 1
-            self._circuit_breaker["last_failure"] = current_time
-
-        raise Exception(f"Failed after {retries} attempts. Last error: {str(last_error)}")
+            raise error
 
     # Common utility methods
     def format_url_for_latex(self, url: str) -> str:

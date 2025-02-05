@@ -3,15 +3,20 @@ import multiprocessing
 # Server socket
 bind = "0.0.0.0:5000"
 
-# Worker processes - recommended formula for concurrent requests
-workers = multiprocessing.cpu_count() * 2 + 1
+# For GPU workloads, we want fewer workers
+workers = 2  # Start with 2 workers since GPU operations are heavy
 
-# Use gevent worker for async support
-worker_class = 'gevent'
-worker_connections = 1000
+# Use uvicorn worker for better async support
+worker_class = 'uvicorn.workers.UvicornWorker'
 
-# Basic timeout config
+# Threads per worker
+threads = 4
+
+# Longer timeout for GPU operations
 timeout = 300
 
+# Keep-alive settings
+keepalive = 65
+
 def when_ready(server):
-    print(f"Gunicorn server is ready. Running {workers} workers with gevent")
+    print(f"Gunicorn server is ready. Running {workers} workers with uvicorn")
