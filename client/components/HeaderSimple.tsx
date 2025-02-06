@@ -13,10 +13,13 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { IconChevronDown, IconMessage, IconUser } from '@tabler/icons-react';
 import { getUser } from '@/utils/queries/get-user';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import type { User } from '@supabase/supabase-js';
 import { isProfessor } from '@/utils/lecture/isProfessor';
+import { notifications } from '@mantine/notifications';
+import { logout } from '@/utils/services/auth';
+import { useState } from 'react';
 
 const classNav = [
     { id: 'c770c9bb-4de1-44be-aacb-b4bea3efbacf', label: 'MA 421' },
@@ -33,6 +36,8 @@ export function HeaderSimple() {
     const supabase = useSupabaseBrowser();
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const pathname = usePathname();
+    const queryClient = useQueryClient();
+    const [loading, setLoading] = useState(false);
 
     // Get current class from URL
     const currentClassId = pathname.split('/classes/')[1]?.split('/')[0];
@@ -132,6 +137,37 @@ export function HeaderSimple() {
         </Box>
     ));
 
+    const handleLogout = async () => {
+        setLoading(true)
+        try {
+            // Logout logic here
+            const { success, error } = await logout()
+            if (!success) {
+                throw new Error(error)
+            } else {
+                queryClient.invalidateQueries({
+                    queryKey: ["user"]
+                })
+            }
+
+            notifications.show({
+                title: 'Success',
+                message: 'Logged out',
+                color: 'green',
+            });
+
+        } catch (e: any) {
+            console.error(e)
+            notifications.show({
+                title: 'Error',
+                message: e.message,
+                color: 'red',
+            });
+        } finally {
+            setLoading(false)
+        }
+    }
+
 
     return (
         <>
@@ -205,10 +241,7 @@ export function HeaderSimple() {
                                             </Menu.Item> */}
                                             <Menu.Item
                                                 color="red"
-                                                onClick={async () => {
-                                                    await supabase.auth.signOut();
-                                                    window.location.reload();
-                                                }}
+                                                onClick={handleLogout}
                                             >
                                                 Logout
                                             </Menu.Item>

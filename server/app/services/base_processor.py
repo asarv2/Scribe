@@ -21,9 +21,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from app.extensions import deepseek_model, deepseek_tokenizer
 
 class CleanedResponse:
-    def __init__(self, page: int, description: str):
+    def __init__(self, page: int, description: str, text: str):
         self.page = page
         self.description = description
+        self.text = text
 
 class ContentType(Enum):
     LECTURE = "lecture"

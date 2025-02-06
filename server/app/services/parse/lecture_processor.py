@@ -28,10 +28,12 @@ class LectureProcessor(BaseProcessor):
         response: str,
         lecture_name: str,
         page_number: int,
+        text: str
     ) -> CleanedResponse:
         cleaned_response = CleanedResponse(
             page=page_number,
-            description=response.strip()  # Treat entire response as description
+            description=response.strip(),
+            text=text
         )
 
         if lecture_name not in self.notes:
@@ -74,7 +76,7 @@ class LectureProcessor(BaseProcessor):
             # Generate response using AI with increased retries and wait time
             response = await self.robust_generate(
                 message,
-                model="gemini-1.5-flash",
+                model="gemini-1.5-flash-8b",
             )
             
             if not response:
@@ -89,6 +91,7 @@ class LectureProcessor(BaseProcessor):
                 response,
                 lecture_name,
                 page_number,
+                text
             )
 
         except Exception as error:

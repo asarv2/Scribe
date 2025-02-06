@@ -486,36 +486,200 @@ export default function LecturePage({ params }: { params: { classId: string } })
     }
 
     const processLectureMP4 = async (file: File, classId: string) => {
-        const formData = new FormData();
-        formData.append('video', file);
         try {
-            // Calculate expected number of pages (1 page per 20 seconds)
+            // Create video element for processing
             const video = document.createElement('video');
             video.preload = 'metadata';
+            
+            // Get video duration and create object URL
+            const videoUrl = URL.createObjectURL(file);
             const duration = await new Promise<number>((resolve) => {
                 video.onloadedmetadata = () => resolve(video.duration);
-                video.src = URL.createObjectURL(file);
+                video.src = videoUrl;
             });
-            const numPages = Math.ceil(duration / 20);
+
+            // Calculate samples (2 frames per minute)
+            const numSamples = Math.max(2 * Math.ceil(duration / 60), 1);
+            const sampleInterval = duration / numSamples;
 
             // Create lecture entry first
             const lecture = await createLecture(
                 classId,
                 file.name.split(".")[0],
                 (lectures?.length ?? 0) + 1,
-                numPages,
-                0,
+                numSamples,
+                1,
                 `${process.env.NEXT_PUBLIC_API_URL}`
             );
 
-            formData.append('lecture_id', lecture.id);
+            // Create AudioContext and source
+            const audioContext = new AudioContext();
+            const audioBuffer = await file.arrayBuffer()
+                .then(buffer => audioContext.decodeAudioData(buffer));
 
-            // don't wait for the response
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/video`, {
-                method: 'POST',
-                body: formData,
-                // Remove Content-Type header to let browser set it with boundary
+            // Create canvas for frame extraction
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d')!;
+
+            // Function to extract frame at specific timestamp
+            const extractFrame = async (timestamp: number): Promise<Blob> => {
+                return new Promise((resolve, reject) => {
+                    video.currentTime = timestamp;
+                    video.onseeked = async () => {
+                        try {
+                            const { width: targetWidth, height: targetHeight } = calculateResizedDimensions(
+                                video.videoWidth,
+                                video.videoHeight
+                            );
+
+                            canvas.width = 1000;
+                            canvas.height = 1000;
+                            ctx.fillStyle = 'white';
+                            ctx.fillRect(0, 0, 1000, 1000);
+
+                            const offsetX = Math.floor((1000 - targetWidth) / 2);
+                            const offsetY = Math.floor((1000 - targetHeight) / 2);
+
+                            ctx.drawImage(video, offsetX, offsetY, targetWidth, targetHeight);
+
+                            canvas.toBlob(
+                                (blob) => blob ? resolve(blob) : reject('Failed to create blob'),
+                                'image/png',
+                                0.8
+                            );
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                });
+            };
+
+            // Function to extract audio chunk
+            const extractAudioChunk = async (startTime: number, endTime: number): Promise<Blob> => {
+                const startSample = Math.floor(startTime * audioContext.sampleRate);
+                const endSample = Math.floor(endTime * audioContext.sampleRate);
+                const numberOfChannels = audioBuffer.numberOfChannels;
+                
+                // Create new buffer for the chunk
+                const chunkBuffer = audioContext.createBuffer(
+                    numberOfChannels,
+                    endSample - startSample,
+                    audioContext.sampleRate
+                );
+
+                // Copy data from original buffer to chunk
+                for (let channel = 0; channel < numberOfChannels; channel++) {
+                    const channelData = audioBuffer.getChannelData(channel);
+                    const chunkData = chunkBuffer.getChannelData(channel);
+                    for (let i = 0; i < chunkBuffer.length; i++) {
+                        chunkData[i] = channelData[i + startSample];
+                    }
+                }
+
+                // Convert buffer to WAV blob
+                const offlineContext = new OfflineAudioContext(
+                    numberOfChannels,
+                    chunkBuffer.length,
+                    audioContext.sampleRate
+                );
+                
+                const source = offlineContext.createBufferSource();
+                source.buffer = chunkBuffer;
+                source.connect(offlineContext.destination);
+                source.start();
+
+                const renderedBuffer = await offlineContext.startRendering();
+                
+                // Convert to WAV
+                const wavBlob = await new Promise<Blob>((resolve) => {
+                    const numberOfChannels = renderedBuffer.numberOfChannels;
+                    const length = renderedBuffer.length * numberOfChannels * 2;
+                    const buffer = new ArrayBuffer(44 + length);
+                    const view = new DataView(buffer);
+                    
+                    // WAV header
+                    writeString(view, 0, 'RIFF');
+                    view.setUint32(4, 36 + length, true);
+                    writeString(view, 8, 'WAVE');
+                    writeString(view, 12, 'fmt ');
+                    view.setUint32(16, 16, true);
+                    view.setUint16(20, 1, true);
+                    view.setUint16(22, numberOfChannels, true);
+                    view.setUint32(24, audioContext.sampleRate, true);
+                    view.setUint32(28, audioContext.sampleRate * numberOfChannels * 2, true);
+                    view.setUint16(32, numberOfChannels * 2, true);
+                    view.setUint16(34, 16, true);
+                    writeString(view, 36, 'data');
+                    view.setUint32(40, length, true);
+
+                    // Audio data
+                    const offset = 44;
+                    for (let i = 0; i < renderedBuffer.length; i++) {
+                        for (let channel = 0; channel < numberOfChannels; channel++) {
+                            const sample = renderedBuffer.getChannelData(channel)[i];
+                            const value = Math.max(-1, Math.min(1, sample));
+                            view.setInt16(offset + (i * numberOfChannels + channel) * 2, value * 0x7FFF, true);
+                        }
+                    }
+
+                    resolve(new Blob([buffer], { type: 'audio/wav' }));
+                });
+
+                return wavBlob;
+            };
+
+            // Helper function for WAV header
+            const writeString = (view: DataView, offset: number, string: string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+
+            // Process frames and audio chunks
+            for (let i = 0; i < numSamples; i++) {
+                const startTime = i * sampleInterval;
+                const endTime = Math.min((i + 1) * sampleInterval, duration);
+
+                // Create document for this segment
+                const document = await createLectureDocument(lecture.id, i + 1, "");
+                if (!document.success || !document.documentId) {
+                    throw new Error(`Failed to create document for segment ${i + 1}`);
+                }
+
+                // Extract and upload frame
+                const frameBlob = await extractFrame(startTime);
+                const frameUploadPath = `${classId}/${lecture.id}/${document.documentId}.png`;
+                await supabase.storage
+                    .from("lectures")
+                    .upload(frameUploadPath, frameBlob, {
+                        cacheControl: '3600',
+                        upsert: true
+                    });
+
+                // Extract and upload audio chunk
+                const audioBlob = await extractAudioChunk(startTime, endTime);
+                const audioUploadPath = `${classId}/${lecture.id}/${document.documentId}.wav`;
+                await supabase.storage
+                    .from("lectures")
+                    .upload(audioUploadPath, audioBlob, {
+                        cacheControl: '3600',
+                        upsert: true
+                    });
+            }
+            // dont wait for this to finish
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/video`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    class_id: classId,
+                    lecture_id: lecture.id,
+                    handwritten: true
+                })
             });
+
+            // Cleanup
+            URL.revokeObjectURL(videoUrl);
+            await audioContext.close();
 
             return lecture.id;
 
