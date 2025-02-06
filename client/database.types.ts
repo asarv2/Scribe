@@ -408,6 +408,7 @@ export type Database = {
           class: string
           created_at: string
           deleted: boolean
+          has_audio: boolean
           id: string
           last_parse_attempt: string | null
           last_upload_attempt: string | null
@@ -424,6 +425,7 @@ export type Database = {
           class: string
           created_at?: string
           deleted?: boolean
+          has_audio?: boolean
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null
@@ -440,6 +442,7 @@ export type Database = {
           class?: string
           created_at?: string
           deleted?: boolean
+          has_audio?: boolean
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null

@@ -25,7 +25,7 @@ const classNav = [
     { id: 'c770c9bb-4de1-44be-aacb-b4bea3efbacf', label: 'MA 421' },
     // { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA 421' },
     // { id: '15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
-    { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
+    // { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
     // { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
     // { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
     { id: 'ae333215-2914-4026-8aae-418f1255cdd0', label: 'ECE 20007' },
@@ -75,6 +75,12 @@ export function HeaderSimple() {
                 ? `/classes/${currentClassId}/generate`
                 : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate',
             label: 'Generate'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/chat`
+                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/chat',
+            label: 'Chat'
         },
     ];
 

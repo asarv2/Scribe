@@ -1,7 +1,6 @@
 from typing import Dict, List, TypedDict, Optional, Union, TypedDict, Callable, Awaitable
 from enum import Enum
-from app.services.base_processor import BaseProcessor
-from langchain_core.messages import HumanMessage
+from app.services.base_processor import BaseProcessor, Message
 import re
 
 class QuestionPrompt(TypedDict):
@@ -443,7 +442,7 @@ class ProblemsProcessor(BaseProcessor):
             ]
             flat_questions_str = "\n".join(flat_questions)
 
-            message = HumanMessage(content=[
+            message = Message(content=[
                 {"type": "text", "text": prompt + "\n\nVERY IMPORTANT: Follow these additonal instructions in the generation of the problems: " + additional_info},
                 {
                     "type": "text",

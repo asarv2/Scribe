@@ -1,7 +1,6 @@
 import time
 from flask import Blueprint, request
 import traceback
-from langchain_google_genai import ChatGoogleGenerativeAI
 from app.services.evaluate.accuracy import AccuracyEvaluator
 from app.services.evaluate.adherence import AdherenceEvaluator
 # from app.services.evaluate.clarity import ClarityEvaluator

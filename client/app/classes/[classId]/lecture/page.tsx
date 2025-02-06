@@ -156,7 +156,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
         const numPages = pdf.numPages;
         console.log("Number of pages:", numPages);
 
-        const lecture = await createLecture(classId, file_name, (lectures?.length ?? 0) + 1, numPages, 1, `${process.env.NEXT_PUBLIC_API_URL}`);
+        const lecture = await createLecture(classId, file_name, (lectures?.length ?? 0) + 1, numPages, 1, `${process.env.NEXT_PUBLIC_API_URL}`, false);
         console.log("Lecture ID:", lecture.id);
 
         const pages = [];
@@ -196,9 +196,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                class_id: classId,
                 lecture_id: lecture.id,
-                handwritten: true
             })
         });
         queryClient.invalidateQueries({ queryKey: ["lectures", classId] });
@@ -509,7 +507,8 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 (lectures?.length ?? 0) + 1,
                 numSamples,
                 1,
-                `${process.env.NEXT_PUBLIC_API_URL}`
+                `${process.env.NEXT_PUBLIC_API_URL}`,
+                true
             );
 
             // Create AudioContext and source
@@ -667,13 +666,11 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     });
             }
             // dont wait for this to finish
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/video`, {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    class_id: classId,
                     lecture_id: lecture.id,
-                    handwritten: true
                 })
             });
 
@@ -717,9 +714,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    class_id: classId,
                     lecture_id: lecture.id,
-                    handwritten: true
                 })
             });
 
@@ -744,7 +739,9 @@ export default function LecturePage({ params }: { params: { classId: string } })
 
     const getDocumentImage = (lectureId: string) => {
         if (!lectureId) return '/placeholder_image.svg';
-        const document = documents?.find(document => document.lecture === lectureId);
+        const filteredDocuments = documents?.filter(document => document?.lecture === lectureId);
+        if (!filteredDocuments) return '/placeholder_image.svg';
+        const document = filteredDocuments.length > 1 ? filteredDocuments[1] : filteredDocuments[0]; // using the second page if it exists since first one is the cover page
         if (!document) return '/placeholder_image.svg';
         return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
     }

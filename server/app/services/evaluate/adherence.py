@@ -3,10 +3,10 @@ import re
 from typing import Literal
 from supabase.client import Client
 from app.utils.convert_generation_example import GenerationFormatter
-from app.services.base_processor import BaseProcessor
-from langchain_core.messages import HumanMessage
+from app.services.base_processor import BaseProcessor, Message, LiteralModel
+
 class AdherenceEvaluator(object):
-    def __init__(self, supabase: Client, llm: Literal["deepseek-r1-7b", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"], generation_id: str):
+    def __init__(self, supabase: Client, llm: LiteralModel, generation_id: str):
         '''
         Class for all evaluating a how well the model adhered to the given input.
         
@@ -60,7 +60,7 @@ class AdherenceEvaluator(object):
         for attempt in range(retries):
             try:
                 response = await self.base_processor.robust_generate(
-                    HumanMessage(content=message),
+                    Message(content=[{"type": "text", "text": message}]),
                     model=self.llm
                 )
 
@@ -128,8 +128,7 @@ class AdherenceEvaluator(object):
         3. Whether the output solutions are correct and relevant to the given topics and class.
         """
         
-        example = """
-        FORMATTING:
+        example = """FORMATTING:
         1. In your response, use <OUTPUT>x</OUTPUT> tags to encapsulate the output of the rating of the generation, where x is the rating of the generation.
         2. In your response, use <WHY>x</WHY> tags to encapsulate the reasoning behind the rating of the generation, where x is the reasoning behind the rating of the generation.
         

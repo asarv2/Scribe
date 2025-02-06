@@ -1,15 +1,13 @@
-from typing import List, Dict, Any, Optional, Callable, Union
-from langchain_core.messages import AIMessage, HumanMessage
+from typing import List, Dict, Any, Optional, Callable
 import base64
-from app.services.base_processor import BaseProcessor, CleanedResponse
+from app.services.base_processor import BaseProcessor, CleanedResponse, Message
 
 class LectureProcessor(BaseProcessor):
-    def __init__(self, course_title: str, handwritten: bool = False):
+    def __init__(self, course_title: str):
         super().__init__()
         self.course_title = course_title
-        self.handwritten = handwritten
         self.notes: Dict[str, Dict[int, CleanedResponse]] = {}
-        self.conversation_history: List[Union[HumanMessage, AIMessage]] = []
+        self.conversation_history: List[Message] = []
 
     def parse_bbox(self, bbox: str) -> List[int]:
         bbox = bbox.strip().replace('[', '').replace(']', '')
@@ -58,7 +56,7 @@ class LectureProcessor(BaseProcessor):
             base_prompt = self._get_base_prompt()
             additional_prompt = self._get_additional_prompt(page_number, num_pages)
 
-            message = HumanMessage(content=[
+            message = Message(content=[
                 {
                     "type": "image_url",
                     "image_url": f"data:image/png;base64,{base64_image}"
@@ -76,7 +74,7 @@ class LectureProcessor(BaseProcessor):
             # Generate response using AI with increased retries and wait time
             response = await self.robust_generate(
                 message,
-                model="gemini-1.5-flash-8b",
+                model="gemini-2.0-flash",
             )
             
             if not response:
@@ -85,7 +83,7 @@ class LectureProcessor(BaseProcessor):
             print(f"Successfully processed page {page_number}")
 
             # Add AI response to conversation history
-            self.conversation_history.append(AIMessage(content=response))
+            self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
 
             return self.clean_response(
                 response,
@@ -126,7 +124,7 @@ class LectureProcessor(BaseProcessor):
     def _get_base_prompt(self) -> str:
         example_description = '''This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points. The proof is outlined, focusing on one direction of the implication. It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\leq t \\leq 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex. The underlining highlights the key steps and conclusions of the proof. The notation "pf" indicates "proof," and the double-headed arrow indicates the "if and only if" nature of the theorem. The term "conv. comb." is an abbreviation for "convex combination." The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.'''
 
-        instructions = f'''Provide a detailed description of the content from the {"handwritten notes" if self.handwritten else "lecture slides"}, in the context of the course: ${self.course_title}.
+        instructions = f'''Provide a detailed description of the content from the lecture slides, in the context of the course: ${self.course_title}.
 
         Describe what you see, including specific details that would not be known unless you were given the context of the slide. Be very detailed and specific, but make sure to stay concise and to the point. Use LaTeX notation (enclosed in $ signs) to describe any mathematical content you see on the slide.
 

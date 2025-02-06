@@ -3,11 +3,10 @@ from typing import Literal
 from supabase.client import Client
 import re
 from app.utils.convert_generation_example import GenerationFormatter
-from app.services.base_processor import BaseProcessor
-from langchain_core.messages import HumanMessage
+from app.services.base_processor import BaseProcessor, Message, LiteralModel
 
 class NoveltyEvaluator(object):
-    def __init__(self, supabase: Client, llm: Literal["deepseek-r1-7b", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"], generation_id: str):
+    def __init__(self, supabase: Client, llm: LiteralModel, generation_id: str):
         """
         Evaluates the novelty of a generation, based on the diveristy of the questions, and how much it is different from the example text.
         """
@@ -44,8 +43,7 @@ class NoveltyEvaluator(object):
         3. But, it should not be too different from the example text, as it should be relevant to the course.
         """
         
-        example = """
-        FORMATTING:
+        example = """FORMATTING:
         1. Use <OUTPUT>x</OUTPUT> tags to encapsulate the output of the rating of the generation, where x is the rating of the generation.
         2. Add a <WHY>x</WHY> tags to encapsulate the reasoning behind the rating of the generation, where x is the reasoning behind the rating of the generation.
         
@@ -93,7 +91,7 @@ class NoveltyEvaluator(object):
         """
         
         response = await self.base_processor.robust_generate(
-            HumanMessage(content=final_prompt),
+            Message(content=[{"type": "text", "text": final_prompt}]),
             model=self.llm
         )
 

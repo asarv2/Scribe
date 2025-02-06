@@ -2,11 +2,10 @@ from supabase.client import Client
 import re
 
 from app.utils.convert_generation_example import GenerationFormatter
-from app.services.base_processor import BaseProcessor
-from typing import Literal
-from langchain_core.messages import HumanMessage
+from app.services.base_processor import BaseProcessor, Message, LiteralModel
+
 class ComplexityEvaluator(object):
-    def __init__(self, supabase: Client, llm: Literal["deepseek-r1-7b", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"], generation_id: str):
+    def __init__(self, supabase: Client, llm: LiteralModel, generation_id: str):
         """
         Evaluates the complexity of a generation, based on the number of steps it took to solve it, the audience it is for, and if the LLM got the correct answer.
         """
@@ -43,9 +42,7 @@ class ComplexityEvaluator(object):
         2. The audience it is for
         3. Solve the question on your own, and compare it to the steps that were taken in the generation. 
         """
-        
-        example = """
-        FORMATTING:
+        example = """FORMATTING:
         1. Use <OUTPUT>x</OUTPUT> tags to encapsulate the output of the rating of the generation, where x is the rating of the generation.
         2. Add a <WHY>x</WHY> tags to encapsulate the reasoning behind the rating of the generation, where x is the reasoning behind the rating of the generation.
         
@@ -93,7 +90,7 @@ class ComplexityEvaluator(object):
         """
         
         response = await self.base_processor.robust_generate(
-            HumanMessage(content=final_prompt),
+            Message(content=[{"type": "text", "text": final_prompt}]),
             model=self.llm
         )
 

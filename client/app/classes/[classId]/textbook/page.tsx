@@ -194,9 +194,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                class_id: classId,
                 textbook_id: textbook.id,
-                handwritten: false
             })
         });
         queryClient.invalidateQueries({ queryKey: ["textbooks", classId] });
@@ -511,9 +509,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    class_id: classId,
                     textbook_id: textbook.id,
-                    handwritten: false
                 })
             });
             queryClient.invalidateQueries({ queryKey: ["textbooks", classId] });

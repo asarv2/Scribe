@@ -1,24 +1,22 @@
 # base_processor.py
-from datetime import datetime
 from enum import Enum
 import re
 import os
 from pylatex import Document, Section, Subsection, Command, Package
-from pylatex.base_classes import Container
 from pylatex.utils import NoEscape, bold
 from pylatex.base_classes import Environment
-from typing import Dict, List, Union, Optional, Literal
-from langchain_google_genai import ChatGoogleGenerativeAI
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage, AIMessage
-import time
+from typing import List, Union, Literal, Dict
 import asyncio
-
-import torch
 from app.services.rate_limiter import rate_limiter
-import threading
-from transformers import AutoModelForCausalLM, AutoTokenizer
 from app.extensions import deepseek_model, deepseek_tokenizer
+import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
+from dataclasses import dataclass
+
+type LiteralModel = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b", "deepseek-r1-7b"]
+@dataclass
+class Message:
+    content: List[Dict[str, str]]
 
 class CleanedResponse:
     def __init__(self, page: int, description: str, text: str):
@@ -35,81 +33,71 @@ class BaseProcessor:
         """
         Initialize the BaseProcessor and create all the models.
         """
-        # Initialize LangChain models
-        # 2 Requests per minute
-        self.llm_gemini_pro = ChatGoogleGenerativeAI(
-            model='gemini-1.5-pro',
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2
-        )
-
-        self.llm_gemini_flash_2 = ChatGoogleGenerativeAI(
-            model='gemini-2.0-flash-001',
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2
-        )
-
-        self.llm_gemini_flash_lite = ChatGoogleGenerativeAI(
-            model='gemini-2.0-flash-lite-preview-02-05',
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2
-        )
-
-        # 15 Requests per minute
-        self.llm_gemini_flash = ChatGoogleGenerativeAI(
-            model='gemini-1.5-flash',
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2
-        )
-
-        # 10 Requests per minute
-        self.llm_gemini_flash_exp = ChatGoogleGenerativeAI(
-            model='gemini-2.0-flash-exp',
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2
-        )
+        # Configure the Gemini API
+        genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
         
-        # 15 Requests per minute
-        self.llm_gemini_flash8b = ChatGoogleGenerativeAI(
-            model='gemini-1.5-flash-8b',
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2
-        )
-
-        # Add circuit breaker state
-        self._circuit_breaker = {
-            "failures": 0,
-            "last_failure": 0,
-            "threshold": 5,
-            "cooldown": 60  # seconds
+        # Configure safety settings
+        self.safety_settings = {
+            HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
         }
-        self._circuit_breaker_lock = threading.Lock()
+
+        # Initialize model configurations
+        self.model_configs = {
+            "gemini-2.0-flash": genai.GenerativeModel(
+                model_name="gemini-2.0-flash-001",
+                generation_config={"temperature": 0},
+                safety_settings=self.safety_settings
+            ),
+            "gemini-2.0-flash-lite": genai.GenerativeModel(
+                model_name="gemini-2.0-flash-lite-preview-02-05",
+                generation_config={"temperature": 0},
+                safety_settings=self.safety_settings
+            ),
+            "gemini-1.5-pro": genai.GenerativeModel(
+                model_name="gemini-1.5-pro",
+                generation_config={"temperature": 0},
+                safety_settings=self.safety_settings
+            ),
+            "gemini-1.5-flash": genai.GenerativeModel(
+                model_name="gemini-1.5-flash",
+                generation_config={"temperature": 0},
+                safety_settings=self.safety_settings
+            ),
+            "gemini-1.5-flash-8b": genai.GenerativeModel(
+                model_name="gemini-1.5-flash-8b",
+                generation_config={"temperature": 0},
+                safety_settings=self.safety_settings
+            ),
+            # Add other models as needed
+        }
 
     async def prepare_conversation_history(
         self,
-        messages: List[Union[HumanMessage, AIMessage]],
+        messages: List[Message],
         max_tokens: int = 1048576
-    ) -> List[Union[HumanMessage, AIMessage]]:
-        # Simple character-based estimation (approximately 4 characters per token)
+    ) -> List[Message]:
+        """
+        Trim conversation history to stay within token limits.
+        Estimates token count for both text and images.
+        """
         CHARS_PER_TOKEN = 4
+        IMAGE_TOKEN_ESTIMATE = 1024  # Conservative estimate for image tokens
         token_count = 0
-        trimmed_messages: List[Union[HumanMessage, AIMessage]] = []
+        trimmed_messages: List[Message] = []
 
         for message in reversed(messages):
-            # Estimate tokens based on character count
-            message_tokens = len(message.content) // CHARS_PER_TOKEN
+            message_tokens = 0
+            
+            # Calculate tokens for each content part
+            for part in message.content:
+                if part["type"] == "text":
+                    message_tokens += len(part["text"]) // CHARS_PER_TOKEN
+                elif part["type"] == "image_url":
+                    message_tokens += IMAGE_TOKEN_ESTIMATE
+
             if token_count + message_tokens > max_tokens:
                 break
 
@@ -125,23 +113,25 @@ class BaseProcessor:
     
 
     async def get_rpm(self, model: str) -> int:
-        if model == "gemini-1.5-flash-8b":
+        if model == "gemini-2.0-flash":
             return 15
-        elif model == "gemini-1.5-flash":
-            return 15
-        elif model == "gemini-1.5-flash-exp":
-            return 10
+        elif model == "gemini-2.0-flash-lite":
+            return 30
         elif model == "gemini-1.5-pro":
             return 2
+        elif model == "gemini-1.5-flash":   
+            return 15
+        elif model == "gemini-1.5-flash-8b":
+            return 15
         else:
             raise ValueError(f"Invalid model: {model}")
         
-    async def generate_deepseek_r1_7b(self, message: Union[HumanMessage, AIMessage]) -> str:
+    async def generate_deepseek_r1_7b(self, message: Message) -> str:
         if deepseek_model is None or deepseek_tokenizer is None:
             # Fallback to Gemini if DeepSeek is not available
             print("DeepSeek model not available, falling back to Gemini Flash-8B...")
-            response = await self.llm_gemini_flash8b.agenerate([[message]])
-            return response.generations[0][0].text
+            response = await self.model_configs["gemini-1.5-flash-8b"].generate_content([message])
+            return response.text
             
         inputs = deepseek_tokenizer(message.content, return_tensors="pt", truncation=True, max_length=1024)
         outputs = deepseek_model.generate(**inputs, max_length=1024)
@@ -149,8 +139,8 @@ class BaseProcessor:
 
     async def robust_generate(
         self,
-        message: Union[HumanMessage, AIMessage],
-        model: Literal["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro", "deepseek-r1-7b", "gemini-2.0-flash-001", "gemini-2.0-flash-lite-preview-02-05"] = "gemini-1.5-flash-8b",
+        message: Message,
+        model: LiteralModel = "gemini-2.0-flash",
         retries: int = 3,
         initial_wait: int = 5
     ) -> str:
@@ -160,27 +150,37 @@ class BaseProcessor:
             
             try:
                 if model == "deepseek-r1-7b":
-                    response = await self.generate_deepseek_r1_7b(message)
-                    return response
+                    return await self.generate_deepseek_r1_7b(message)
                 
-                llm = {
-                    "gemini-1.5-flash-8b": self.llm_gemini_flash8b,
-                    "gemini-1.5-flash": self.llm_gemini_flash,
-                    "gemini-2.0-flash-exp": self.llm_gemini_flash_exp,
-                    "gemini-1.5-pro": self.llm_gemini_pro,
-                    "gemini-2.0-flash-001": self.llm_gemini_flash_2,
-                    "gemini-2.0-flash-lite-preview-02-05": self.llm_gemini_flash_lite
-                }[model]
+                model_instance = self.model_configs[model]
                 
-                response = await llm.agenerate([[message]])
-                return response.generations[0][0].text
+                # Extract content parts from the message
+                content_parts = []
+                for part in message.content:
+                    if part["type"] == "text":
+                        content_parts.append(part["text"])
+                    elif part["type"] == "image_url":
+                        # Use the correct key structure for inline_data
+                        content_parts.append({
+                            "inline_data": {  # Changed from inlineData to inline_data
+                                "mime_type": "image/png",  # Changed from mimeType to mime_type
+                                "data": part["image_url"].split(",")[1]  # Remove the "data:image/png;base64," prefix
+                            }
+                        })
+                
+                # Generate response
+                response = model_instance.generate_content(
+                    content_parts,
+                    stream=False
+                )
+                
+                return response.text
                 
             finally:
                 # Always release the rate limiter
                 rate_limiter.release(model)
                 
         except Exception as error:
-            # Handle retries if needed
             if retries > 0:
                 await asyncio.sleep(initial_wait)
                 return await self.robust_generate(

@@ -3,8 +3,6 @@ from google.generativeai import GenerativeModel
 import google.generativeai as genai
 import os
 
-from langchain_google_genai import ChatGoogleGenerativeAI
-
 from dotenv import load_dotenv
 
 class AccuracyEvaluator(object):

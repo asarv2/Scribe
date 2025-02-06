@@ -1,14 +1,12 @@
 import re
 import time
-import re
 from supabase.client import Client
 from typing import Literal
 from app.utils.convert_generation_example import GenerationFormatter
-from app.services.base_processor import BaseProcessor
-from langchain_core.messages import HumanMessage
+from app.services.base_processor import BaseProcessor, Message, LiteralModel
 
 class ClarityEvaluator(object):
-    def __init__(self, supabase: Client, llm: Literal["deepseek-r1-7b", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"], generation_id: str):
+    def __init__(self, supabase: Client, llm: LiteralModel, generation_id: str):
         '''
         Class for all evaluating a how clear a generation is.
         
@@ -57,7 +55,7 @@ class ClarityEvaluator(object):
         for attempt in range(retries):
             try:
                 response = await self.base_processor.robust_generate(
-                    HumanMessage(content=message),
+                    Message(content=[{"type": "text", "text": message}]),
                     model=self.llm
                 )
 
