@@ -5,7 +5,7 @@ import os
 from pylatex import Document, Section, Subsection, Command, Package
 from pylatex.utils import NoEscape, bold
 from pylatex.base_classes import Environment
-from typing import List, Union, Literal, Dict
+from typing import List, Union, Literal, Dict, TypeAlias
 import asyncio
 from app.services.rate_limiter import rate_limiter
 from app.extensions import deepseek_model, deepseek_tokenizer
@@ -13,7 +13,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from dataclasses import dataclass
 
-type LiteralModel = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b", "deepseek-r1-7b"]
+LiteralModel: TypeAlias = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b", "deepseek-r1-7b"]
 @dataclass
 class Message:
     content: List[Dict[str, str]]

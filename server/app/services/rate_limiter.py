@@ -1,8 +1,8 @@
 import asyncio
 import time
-from typing import Literal
+from typing import Literal, TypeAlias
 
-type LiteralModel = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b", "deepseek-r1-7b"]
+LiteralModel: TypeAlias = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b", "deepseek-r1-7b"]
 
 class ModelRateLimiter:
     _instance = None
