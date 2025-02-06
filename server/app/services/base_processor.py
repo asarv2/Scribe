@@ -43,7 +43,23 @@ class BaseProcessor:
             timeout=None,
             max_retries=2
         )
-        
+
+        self.llm_gemini_flash_2 = ChatGoogleGenerativeAI(
+            model='gemini-2.0-flash-001',
+            temperature=0,
+            max_tokens=None,
+            timeout=None,
+            max_retries=2
+        )
+
+        self.llm_gemini_flash_lite = ChatGoogleGenerativeAI(
+            model='gemini-2.0-flash-lite-preview-02-05',
+            temperature=0,
+            max_tokens=None,
+            timeout=None,
+            max_retries=2
+        )
+
         # 15 Requests per minute
         self.llm_gemini_flash = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash',
@@ -133,7 +149,7 @@ class BaseProcessor:
     async def robust_generate(
         self,
         message: Union[HumanMessage, AIMessage],
-        model: Literal["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro", "deepseek-r1-7b"] = "gemini-1.5-flash-8b",
+        model: Literal["gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro", "deepseek-r1-7b", "gemini-2.0-flash-001", "gemini-2.0-flash-lite-preview-02-05"] = "gemini-1.5-flash-8b",
         retries: int = 3,
         initial_wait: int = 5
     ) -> str:
@@ -150,7 +166,9 @@ class BaseProcessor:
                     "gemini-1.5-flash-8b": self.llm_gemini_flash8b,
                     "gemini-1.5-flash": self.llm_gemini_flash,
                     "gemini-2.0-flash-exp": self.llm_gemini_flash_exp,
-                    "gemini-1.5-pro": self.llm_gemini_pro
+                    "gemini-1.5-pro": self.llm_gemini_pro,
+                    "gemini-2.0-flash-001": self.llm_gemini_flash_2,
+                    "gemini-2.0-flash-lite-preview-02-05": self.llm_gemini_flash_lite
                 }[model]
                 
                 response = await llm.agenerate([[message]])

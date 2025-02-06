@@ -27,6 +27,10 @@ async def generate_problems():
         class_id = data.get('class_id')
         generation_id = data.get('generation_id')
 
+        generation_response = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
+        generation = generation_response.data
+        generation_additional_info = generation.get('additional_info')
+
         print("Request params:", {
             "class_id": class_id,
             "generation_id": generation_id,
@@ -63,20 +67,22 @@ async def generate_problems():
                 "mcq": prompt.get('mcq'),
                 "multi_part": prompt.get('multipart') is not None,
                 "computational": not prompt.get('conceptual'),
-                "additional_info": prompt.get('additional_info'),
+                "additional_info": prompt.get('additional_info') + generation_additional_info,
                 "references": prompt.get('references')
             })
         print("Question prompts:", question_prompts)
         references: Dict[str, List[str]] = {prompt.get('id'): prompt.get('references') for prompt in question_prompts}
-        documents_response = supabase.table("documents").select("*").in_("id", references).execute()
-        documents = documents_response.data or []
-        print("Documents:", documents)
+        all_documents: Dict[str, List[Any]] = {}
+        for prompt_id, reference in references.items():
+            documents_response = supabase.table("documents").select("*").in_("id", reference).execute()
+            all_documents[prompt_id] = documents_response.data or []
+        print("Documents:", all_documents)
 
         question_data: Dict[str, List[str]] = {}
         for prompt in question_prompts:
             prompt_id = prompt.get('id')
             question_data[prompt_id] = []
-            documents = references[prompt.get('id')]
+            documents = all_documents.get(prompt_id)
             for doc in documents:
                 if (doc.get('lecture') is not None):
                     page = str(doc.get('page'))

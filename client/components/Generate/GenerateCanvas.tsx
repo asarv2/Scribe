@@ -25,6 +25,8 @@ import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getChapters } from "@/utils/queries/get-chapters";
 import { getExercises } from "@/utils/queries/get-exercises";
+import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
+import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 
 export interface ProblemCard {
     id: number;
@@ -78,10 +80,22 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
         queryFn: () => getLectures(supabase, classId)
     });
 
+    const { data: lectureDocuments, isLoading: loadingLectureDocuments } = useQuery({
+        queryKey: ["lectureDocuments", classId],
+        queryFn: () => getLectureDocuments(supabase, lectures?.map(lecture => lecture.id) ?? []),
+        enabled: !!lectures
+    })
+
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
         queryFn: () => getTextbooks(supabase, classId),
     });
+
+    const { data: textbookDocuments, isLoading: loadingTextbookDocuments } = useQuery({
+        queryKey: ["textbookDocuments", classId],
+        queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
+        enabled: !!textbooks
+    })
 
     const { data: chapters } = useQuery({
         queryKey: ["chapters", classId],
@@ -101,6 +115,21 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
         }
     }, [textbooks]);
 
+    const getReferences = (problem: ProblemCard) => {
+        const lectureReferences = lectureDocuments?.filter(document => problem.context.lectures.includes(document.lecture ?? "")) ?? [];
+        const textbookReferences = textbookDocuments?.filter(document => problem.context.textbooks.includes(document.textbook ?? "")) ?? [];
+        const chapterReferences = textbookDocuments?.filter(document => {
+            const chapter = chapters?.find(c => c.id === document.textbook);
+            return chapter && problem.context.chapters.includes(chapter.id);
+        }) ?? [];
+        const exerciseReferences = textbookDocuments?.filter(document => {
+            const chapter = chapters?.find(c => c.id === document.textbook);
+            const exercise = exercises?.find(e => e.chapter === chapter?.id && problem.context.exercises.includes(e.id));
+            return exercise && chapter;
+        }) ?? [];
+        return [...lectureReferences, ...textbookReferences, ...chapterReferences, ...exerciseReferences];
+    }
+
 
 
 
@@ -113,6 +142,7 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
             const generation = await createGeneration(classId, generationName, 'problem', `${process.env.NEXT_PUBLIC_API_URL}`);
 
             const multipartQuestions = problems.filter(problem => problem.isMultiPart).map(problem => {
+                const references = getReferences(problem);
                 const multipart_uuid = uuidv4();
                 return Array(3).fill({
                     generation: generation.id,
@@ -120,24 +150,27 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
                     conceptual: problem.isComputational,
                     multipart: multipart_uuid,
                     additional_info: problem.prompt,
-                    context: problem.context
+                    references: references.map(reference => reference.id),
                 });
             }).flat();
 
-            const singleQuestions = problems.filter(problem => !problem.isMultiPart).map(problem => ({
-                generation: generation.id,
-                mcq: problem.isMCQ,
-                conceptual: problem.isComputational,
-                additional_info: problem.prompt,
-                context: problem.context
-            }));
+            const singleQuestions = problems.filter(problem => !problem.isMultiPart).map(problem => {
+                const references = getReferences(problem);
+                return {
+                    generation: generation.id,
+                    mcq: problem.isMCQ,
+                    conceptual: problem.isComputational,
+                    additional_info: problem.prompt,
+                    references: references.map(reference => reference.id),
+                };
+            });
 
             const { success, error } = await createQuestions([...singleQuestions, ...multipartQuestions]);
             if (!success) {
                 throw new Error(error);
             }
-
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
+            // dont wait for response
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/problems`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -251,7 +284,7 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
 
         const newSelectedProblemIds = new Set(selectedProblemIds);
         newSelectedProblemIds.delete(problemToDelete);
-        
+
         if (expandedProblemId === problemToDelete) {
             const firstProblem = reorderedProblems[0];
             if (firstProblem) {

@@ -106,7 +106,6 @@ class TextbookProcessor(BaseProcessor):
                     document['page'],
                     textbook_name,
                     num_pages,
-                    document['image_bboxes']
                 )
                 results.append(result)
                 await after_generate(result)

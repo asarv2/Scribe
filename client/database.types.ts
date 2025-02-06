@@ -486,6 +486,7 @@ export type Database = {
           option_e: string | null
           question: string
           reason: string
+          references: string[]
           solution: string
           topics: string[]
           updated_at: string
@@ -513,6 +514,7 @@ export type Database = {
           option_e?: string | null
           question?: string
           reason?: string
+          references?: string[]
           solution?: string
           topics?: string[]
           updated_at?: string
@@ -540,6 +542,7 @@ export type Database = {
           option_e?: string | null
           question?: string
           reason?: string
+          references?: string[]
           solution?: string
           topics?: string[]
           updated_at?: string

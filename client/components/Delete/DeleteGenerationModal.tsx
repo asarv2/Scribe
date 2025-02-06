@@ -40,12 +40,12 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
                 throw new Error(error);
             } else {
                 queryClient.invalidateQueries({
-                    queryKey: [type === "summary" ? "generationSummaries" : "generationProblems", classId]
+                    queryKey: ["generationProblems", classId]
                 });
                 queryClient.invalidateQueries({ 
-                    queryKey: [type === "summary" ? "summariesGenerations" : "problemsGenerations", classId]
+                    queryKey: ["problemGenerations", classId]
                 });
-                router.push(`/classes/${classId}/generate/${type === "summary" ? "summary" : "problems"}`);
+                router.push(`/classes/${classId}/generate`);
             }
             notifications.show({
                 title: "Generation deleted",

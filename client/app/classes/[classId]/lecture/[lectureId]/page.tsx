@@ -54,7 +54,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
         queryKey: ["lectureDocuments", lectureId],
-        queryFn: () => getLectureDocuments(supabase, lectureId)
+        queryFn: () => getLectureDocuments(supabase, [lectureId])
     })
 
     const { data: lecture, isLoading: loadingLecture } = useQuery({

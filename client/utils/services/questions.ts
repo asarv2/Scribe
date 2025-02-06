@@ -43,7 +43,7 @@ export const createQuestions = async (questions: { generation: string, mcq: bool
     const supabase = useSupabaseServer(cookies());
     const { error } = await supabase
         .from("questions")
-        .insert(questions as any)
+        .insert(questions)
         .select()
     if (error) {
         return { success: false, error: error.message };

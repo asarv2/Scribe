@@ -6,7 +6,7 @@
  */
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Markdown from 'markdown-to-jsx'
@@ -58,11 +58,10 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         enabled: !!problemGenerations
     })
 
-    console.log(generationProblems)
 
     const { data: generationProblemsDocuments, isLoading: loadingGenerationProblemsDocuments } = useQuery({
         queryKey: ["generationProblemsDocuments", classId, generationProblems],
-        queryFn: () => getGenerationDocuments(supabase, generationProblems ? generationProblems.map(problem => problem.documents).flat() : []),
+        queryFn: () => getGenerationDocuments(supabase, generationProblems!.map(problem => problem.references).flat()),
         enabled: !!generationProblems
     })
 
@@ -182,15 +181,31 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         // first find the summary or question that matches the generation
         const question = generationProblems?.find(question => question.generation === generation.id);
         if (question) {
-            return generationProblemsDocuments?.filter(document => question.documents.includes(document.id))[0]
+            return generationProblemsDocuments?.filter(document => question.references.includes(document.id))[0]
         }
         return undefined;
     }
 
     const getActiveImage = (document: Document | undefined) => {
         if (!document) return "/placeholder_image.svg";
-        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
+        if (document.lecture) {
+            console.log(`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`)
+            return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
+        } else if (document.textbook) {
+            console.log(`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${document.textbook}/${document.id}.png`)
+            return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${document.textbook}/${document.id}.png`
+        }
+        return "/placeholder_image.svg";
     }
+
+    const getEstimatedTime = useMemo(() => {
+        return (generation: Generation) => {
+            if (!generationProblems) return 0;
+            const genProblems = generationProblems.filter(problem => problem.generation === generation.id);
+            // takes 10 seconds per question 
+            return genProblems.length * 10 * (1 - generation.progress);
+        };
+    }, [generationProblems]);
 
 
     return (
@@ -235,7 +250,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                                     <Text size="lg" fw={500}>{generation.name}</Text>
                                                     <Text size="sm" c="dimmed">
                                                         {generation.generation_status === 'generating' ? 'Generating...' :
-                                                            generation.generation_status === 'error' ? 'Generation failed' : generation.generation_status === 'idle' ? 'Waiting to generate' : 'Waiting to generate'}
+                                                            generation.generation_status === 'error' ? 'Generation failed' : generation.generation_status === 'idle' ? 'Waiting to generate' : generation.generation_status === 'generating' ? "Generating..." : 'Waiting to generate'}
                                                     </Text>
                                                     {generation.generation_error && (
                                                         <Text size="sm" c="red">
@@ -251,7 +266,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                                     />
                                                     {(generation.generation_status === 'generating') && (
                                                         <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{Math.round(estimatedSeconds)} seconds
+                                                            Estimated time remaining: ~{getEstimatedTime(generation)} seconds
                                                         </Text>
                                                     )}
                                                 </Stack>
