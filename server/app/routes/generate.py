@@ -10,6 +10,7 @@ from app.services.problems.problems_processor import (
     ProblemsProcessor
 )
 import uuid
+from app.services.chat.chat_processor import ChatProcessor, ChatMessage
 
 generate_bp = Blueprint('generate', __name__)
 
@@ -17,6 +18,9 @@ class ProblemRequest(TypedDict):
     class_id: str
     generation_id: str
     additional_instructions: str
+
+class ChatRequest(TypedDict):
+    generation_id: str
 
 @generate_bp.route('/problems', methods=['POST'])
 async def generate_problems():
@@ -186,3 +190,146 @@ async def generate_problems():
             "stack": traceback.format_exc(),
             "name": type(error).__name__
         }), 500
+    
+
+@generate_bp.route('/chat', methods=['POST'])
+async def generate_chat():
+    """Generate chat for a class."""
+    try:
+        print("Starting generate-chat function...")
+        data: ChatRequest = request.get_json()
+        generation_id = data.get('generation_id')
+
+        generation_response = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
+        generation = generation_response.data
+        class_id = generation.get('class')
+
+        # Get class info
+        class_response = supabase.table("classes").select(
+            "title, course_description, map"
+        ).eq("id", class_id).single().execute()
+        class_title = class_response.data.get('title')
+        print("Class response:", class_response)
+
+        # Get all lectures
+        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
+        all_lectures = lectures_response.data or []
+        print("Lectures:", all_lectures)
+
+        # Get all textbooks
+        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).execute()
+        all_textbooks = textbooks_response.data or []
+        print("Textbooks:", all_textbooks)
+
+        messages_prompts_raw = supabase.table("messages").select("*").eq("generation", generation_id).execute().data
+        messages_prompts: List[QuestionPrompt] = []
+        for prompt in messages_prompts_raw:
+            messages_prompts.append({
+                "id": prompt.get('id'),
+                "question": prompt.get('question'),
+                "references": prompt.get('references')
+            })
+        print("Messages prompts:", messages_prompts)
+        references: Dict[str, List[str]] = {prompt.get('id'): prompt.get('references') for prompt in messages_prompts}
+        all_documents: Dict[str, List[Any]] = {}
+        for prompt_id, reference in references.items():
+            documents_response = supabase.table("documents").select("*").in_("id", reference).execute()
+            all_documents[prompt_id] = documents_response.data or []
+        print("Documents:", all_documents)
+
+        messages_data: Dict[str, List[str]] = {}
+        for prompt in messages_prompts:
+            prompt_id = prompt.get('id')
+            messages_data[prompt_id] = []
+            documents = all_documents.get(prompt_id)
+            for doc in documents:
+                if (doc.get('lecture') is not None):
+                    page = str(doc.get('page'))
+                    lecture_name = next((l.get('name') for l in all_lectures if l.get('id') == doc.get('lecture')), None)
+                    content = f"LECTURE {lecture_name} SLIDE {page}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
+                    messages_data[prompt_id].append(content)
+                elif (doc.get('textbook') is not None):
+                    page = str(doc.get('page'))
+                    textbook_name = next((t.get('title') for t in all_textbooks if t.get('id') == doc.get('textbook')), None)
+                    content = f"TEXTBOOK {textbook_name} PAGE {page}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
+                    messages_data[prompt_id].append(content)
+
+        async def on_batch_complete(messages: List[ChatMessage]):
+            print("Generated messages for batch:", messages)
+
+            messages_data = []
+            for message in messages:
+                message_id = message.get('id')
+                documents = all_documents.get(message_id, [])
+                document_ids = [doc.get('id') for doc in documents]
+                
+                messages_data.append({
+                    "id": message_id,
+                    "question": message.get('question'),
+                    "response": message.get('response'),
+                    "documents": document_ids
+                })
+
+            # Update messages
+            for message_data in messages_data:
+                supabase.table("messages").update({
+                    "response": message_data["response"],
+                    "documents": message_data["documents"]
+                }).eq("id", message_data["id"]).execute()
+
+            # Update progress
+            progress = min(0.9, len(messages) / len(messages_prompts))
+            supabase.table("generations").update({
+                "progress": progress
+            }).eq("id", generation_id).execute()
+
+        # Generate responses
+        processor = ChatProcessor(
+            course_title=class_title,
+            items=messages_data,
+        )
+        print("Processor created")
+        
+        messages = await processor.process_messages(
+            message_prompts=messages_prompts,
+            on_batch_complete=on_batch_complete
+        )
+        print("Messages:", messages)
+
+        if not messages:
+            raise ValueError("No messages generated")
+
+        # Update generation status to complete
+        supabase.table("generations").update({
+            "generation_status": "complete",
+            "progress": 1,
+            "generation_error": None
+        }).eq("id", generation_id).execute()
+
+        return jsonify({"messages": messages}), 200
+
+    except Exception as error:
+        print("Error in generate-chat function:", {
+            "name": type(error).__name__,
+            "message": str(error),
+            "stack": traceback.format_exc()
+        })
+        
+        # Update generation status to error
+        supabase.table("generations").update({
+            "generation_status": "error",
+            "generation_error": str(error)
+        }).eq("id", generation_id).execute()
+
+        return jsonify({
+            "error": str(error),
+            "stack": traceback.format_exc(),
+            "name": type(error).__name__
+        }), 500
+        
+
+        
+        
+
+
+

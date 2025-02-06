@@ -49,7 +49,7 @@ export default function GeneratePage({ params }: { params: { classId: string } }
 
     const { data: problemGenerations, isLoading: loadingProblemGenerations } = useQuery({
         queryKey: ["problemGenerations", classId],
-        queryFn: () => getGenerations(supabase, classId)
+        queryFn: () => getGenerations(supabase, classId, 'problem')
     })
 
     const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({

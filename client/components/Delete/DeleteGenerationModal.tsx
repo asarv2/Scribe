@@ -17,13 +17,13 @@ import { useRouter } from "next/navigation"
 import { isProfessor } from "@/utils/lecture/isProfessor"
 import { deleteLecture } from "@/utils/services/lecture"
 import { deleteGeneration } from "@/utils/services/generation"
-
+import { GenerationType } from "@/types"
 type DeleteGenerationModalProps = {
     classId: string
     generationId: string
     generationTitle: string
     user: User | undefined
-    type: "summary" | "problems"
+    type: GenerationType
 }
 
 export default function DeleteGenerationModal({ generationId, user, generationTitle, classId, type }: DeleteGenerationModalProps) {
@@ -32,7 +32,7 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
     const [loading, setLoading] = useState(false);
     const router = useRouter()
 
-    const handleDeleteClass = async () => {
+    const handleDeleteProblem = async () => {
         setLoading(true);
         try {
             const { success, error } = await deleteGeneration(generationId);
@@ -66,6 +66,40 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
 
     }
 
+    const handleDeleteChat = async () => {
+        setLoading(true);
+        try {
+            const { success, error } = await deleteGeneration(generationId);
+            if (!success) {
+                throw new Error(error);
+            } else {
+                queryClient.invalidateQueries({
+                    queryKey: ["generationChats", classId]
+                });
+                queryClient.invalidateQueries({ 
+                    queryKey: ["chatGenerations", classId]
+                });
+                router.push(`/classes/${classId}/chat`);
+            }
+            notifications.show({
+                title: "Generation deleted",
+                message: "You have successfully deleted " + generationTitle,
+                color: "blue",
+            });
+        } catch (error: any) {
+            console.error(error);
+            notifications.show({
+                title: "Failed to delete generation",
+                message: error.message,
+                color: "red",
+            })
+        } finally {
+            setLoading(false);
+            close();
+        }
+
+    }
+
     return (
         <>
             {isProfessor(user, classId) && <Tooltip label="Delete Generation"><IconTrash size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
@@ -73,7 +107,8 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
             <Modal opened={opened} onClose={close} title="Delete Generation" centered>
                 <Stack>
                     <Text>Are you sure you want to remove {generationTitle}?</Text>
-                    <Button onClick={handleDeleteClass} loading={loading} color="red">Delete</Button>
+                    {type === "problem" && <Button onClick={handleDeleteProblem} loading={loading} color="red">Delete</Button>}
+                    {type === "chat" && <Button onClick={handleDeleteChat} loading={loading} color="red">Delete</Button>}
                 </Stack>
             </Modal>
         </>
