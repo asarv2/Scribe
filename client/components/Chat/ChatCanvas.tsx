@@ -5,7 +5,7 @@
  * 02.06.2025
  */
 
-import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, Loader } from "@mantine/core";
+import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, Loader, Avatar } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import { Container, Flex } from "@mantine/core";
@@ -518,29 +518,37 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                             </Card>
 
                                             {/* AI response */}
-                                            <Card
-                                                padding="sm"
-                                                radius="md"
-                                                style={{
-                                                    alignSelf: "flex-start",
-                                                    maxWidth: "70%",
-                                                    backgroundColor: "#f1f3f5",
-                                                    minWidth: "200px"
-                                                }}
-                                            >
-                                                {message.response === "" ? (
-                                                    <Group align="center">
-                                                        <Loader size="sm" color="blue" />
-                                                        <Text c="dimmed" size="sm">
-                                                            AI is generating response...
+                                            <Group align="flex-start">
+                                                <Avatar
+                                                    src="/images/yip.jpg"
+                                                    size="md"
+                                                    radius="xl"
+                                                    alt="AI Assistant"
+                                                />
+                                                <Card
+                                                    padding="sm"
+                                                    radius="md"
+                                                    style={{
+                                                        alignSelf: "flex-start",
+                                                        maxWidth: "70%",
+                                                        backgroundColor: "#f1f3f5",
+                                                        minWidth: "200px"
+                                                    }}
+                                                >
+                                                    {message.response === "" ? (
+                                                        <Group align="center">
+                                                            <Loader size="sm" color="blue" />
+                                                            <Text c="dimmed" size="sm">
+                                                                AI is generating response...
+                                                            </Text>
+                                                        </Group>
+                                                    ) : (
+                                                        <Text style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                                                            {message.response}
                                                         </Text>
-                                                    </Group>
-                                                ) : (
-                                                    <Text style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                                                        {message.response}
-                                                    </Text>
-                                                )}
-                                            </Card>
+                                                    )}
+                                                </Card>
+                                            </Group>
                                         </Stack>
                                     ))}
                                     {/* Invisible div for scrolling */}
