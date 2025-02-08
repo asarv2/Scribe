@@ -465,6 +465,44 @@ export type Database = {
           },
         ]
       }
+      messages: {
+        Row: {
+          created_at: string
+          documents: string[]
+          generation: string
+          id: string
+          question: string
+          references: string[]
+          response: string
+        }
+        Insert: {
+          created_at?: string
+          documents?: string[]
+          generation: string
+          id?: string
+          question?: string
+          references?: string[]
+          response?: string
+        }
+        Update: {
+          created_at?: string
+          documents?: string[]
+          generation?: string
+          id?: string
+          question?: string
+          references?: string[]
+          response?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_generation_fkey"
+            columns: ["generation"]
+            isOneToOne: false
+            referencedRelation: "generations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       questions: {
         Row: {
           additional_info: string
@@ -769,7 +807,7 @@ export type Database = {
     }
     Enums: {
       generation_status: "idle" | "error" | "complete" | "generating"
-      generation_type: "problem" | "summary"
+      generation_type: "problem" | "summary" | "chat"
       parse_status: "parsing" | "batching" | "complete" | "idle" | "error"
       topic_type: "group" | "term" | "problem" | "algorithm"
     }

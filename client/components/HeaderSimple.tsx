@@ -28,6 +28,7 @@ const classNav = [
     // { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
     // { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
     // { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
+    { id: '9ebca7a7-5792-456a-ab55-03801ba710e5', label: 'MA 351' }, // MJ's professor
     { id: 'ae333215-2914-4026-8aae-418f1255cdd0', label: 'ECE 20007' },
     { id: "11d5b457-6f87-4ea3-94ec-c04b2138ceb3", label: "CS 253" }
 ];

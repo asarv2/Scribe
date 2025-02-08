@@ -16,5 +16,6 @@ export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"]
 export type Chapter = Database[SchemaName]["Tables"]["chapters"]["Row"]
 
 export type Generation = Database[SchemaName]["Tables"]["generations"]["Row"]
-export type GenerationType = "problem" | "summary"
+export type GenerationType = Database[SchemaName]["Enums"]["generation_type"]
 export type Evaluation = Database[SchemaName]["Tables"]["evaluations"]["Row"]
+export type Message = Database[SchemaName]["Tables"]["messages"]["Row"]

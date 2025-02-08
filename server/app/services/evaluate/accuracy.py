@@ -52,7 +52,7 @@ class AccuracyEvaluator(object):
         """
         issues = []
         actual_question_count = len(self.questions)
-        total_possible = actual_question_count * 4  # 4 points per question
+        total_possible = (actual_question_count * 4) + 1  # 4 points per question + 1 point for the title
         score = 0
 
         # Check each question (up to 4 points each)

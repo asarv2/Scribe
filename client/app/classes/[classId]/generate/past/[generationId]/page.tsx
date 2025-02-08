@@ -202,7 +202,7 @@ export default function Generation({ params }: { params: { classId: string, gene
                         <Group>
                             {generation && <RegenerateGenerationModal generation={generation} evaluations={evaluations ?? []} problems={generationProblems ?? []} />}
                             <DownloadGenerationModal generationId={generationId} generationTitle={`${generation?.name ?? ""} - ${generation?.type === "summary" ? "Summary" : "Questions"}`} user={user ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
-                            <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} type="problems" />
+                            <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} type={generation?.type ?? "problem"} />
                         </Group>
                     </Flex>
                     <Stack>
