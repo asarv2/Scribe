@@ -56,12 +56,12 @@ async def generate_problems():
         # Get all lectures
         lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
         all_lectures = lectures_response.data or []
-        print("Lectures:", all_lectures)
+        # print("Lectures:", all_lectures)
 
         # Get all textbooks 
         textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).execute()
         all_textbooks = textbooks_response.data or []
-        print("Textbooks:", all_textbooks)
+        # print("Textbooks:", all_textbooks)
 
         question_prompts_raw = supabase.table("questions").select("*").eq("generation", generation_id).execute().data
         question_prompts: List[QuestionPrompt] = []
@@ -80,7 +80,7 @@ async def generate_problems():
         for prompt_id, reference in references.items():
             documents_response = supabase.table("documents").select("*").in_("id", reference).execute()
             all_documents[prompt_id] = documents_response.data or []
-        print("Documents:", all_documents)
+        # print("Documents:", all_documents)
 
         question_data: Dict[str, List[str]] = {}
         for prompt in question_prompts:
@@ -214,14 +214,16 @@ async def generate_chat():
         # Get all lectures
         lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
         all_lectures = lectures_response.data or []
-        print("Lectures:", all_lectures)
+        # print("Lectures:", all_lectures)
 
         # Get all textbooks
         textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).execute()
         all_textbooks = textbooks_response.data or []
-        print("Textbooks:", all_textbooks)
+        # print("Textbooks:", all_textbooks)
 
         messages_prompts_raw = supabase.table("messages").select("*").eq("generation", generation_id).execute().data
+        # Before adding the additional info to the messages, we need to prompt the LLM to act as a profesor in office hours
+        
         messages_prompts: List[QuestionPrompt] = []
         for prompt in messages_prompts_raw:
             messages_prompts.append({
@@ -235,7 +237,7 @@ async def generate_chat():
         for prompt_id, reference in references.items():
             documents_response = supabase.table("documents").select("*").in_("id", reference).execute()
             all_documents[prompt_id] = documents_response.data or []
-        print("Documents:", all_documents)
+        # print("Documents:", all_documents)
 
         messages_data: Dict[str, List[str]] = {}
         for prompt in messages_prompts:
@@ -292,7 +294,10 @@ async def generate_chat():
         
         messages = await processor.process_messages(
             message_prompts=messages_prompts,
-            on_batch_complete=on_batch_complete
+            on_batch_complete=on_batch_complete,
+            all_lectures=all_lectures,
+            all_textbooks=all_textbooks,
+            all_documents=all_documents
         )
         print("Messages:", messages)
 

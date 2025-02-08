@@ -121,6 +121,9 @@ async def evaluate_generation():
         # get generation
         generation = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
         print(f"Generation: {generation}")
+
+        if generation.data['type'] != 'chat':
+            return 'Evaluation skipped', 200
         
         # latency
         created_at = datetime.strptime(generation.data['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
