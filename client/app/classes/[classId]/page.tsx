@@ -8,7 +8,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "../../../utils/supabase/supabase-browser";
-import { Button, Center, Container, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme, Card, Image, Badge, Group } from "@mantine/core";
+import { Button, Center, Container, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme, Card, Badge, Group } from "@mantine/core";
 import { Suspense, useEffect, useState } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { HeaderSimple } from "../../../components/HeaderSimple";
@@ -19,6 +19,7 @@ import { getMap } from "@/utils/queries/get-map";
 import Latex from "@/components/Latex";
 import { updateTopicPosition } from "@/utils/services/topics";
 import { getClass } from "@/utils/queries/get-class";
+import Image from "next/image";
 
 
 export default function Class({ params }: { params: { classId: string } }) {
@@ -64,8 +65,12 @@ export default function Class({ params }: { params: { classId: string } }) {
                                 <Image
                                     src="/images/lecture.jpeg"
                                     height={160}
+                                    width={600}
                                     alt="Lectures"
-                                    fallbackSrc="https://placehold.co/600x400?text=Lectures"
+                                    style={{
+                                        objectFit: 'cover',
+                                        width: '100%'
+                                    }}
                                 />
                             </Card.Section>
 
@@ -87,8 +92,12 @@ export default function Class({ params }: { params: { classId: string } }) {
                                 <Image
                                     src="/images/textbook.webp"
                                     height={160}
+                                    width={600}
                                     alt="Textbooks"
-                                    fallbackSrc="https://placehold.co/600x400?text=Textbooks"
+                                    style={{
+                                        objectFit: 'cover',
+                                        width: '100%'
+                                    }}
                                 />
                             </Card.Section>
 
@@ -110,22 +119,29 @@ export default function Class({ params }: { params: { classId: string } }) {
                                 <Image
                                     src="/images/homework.jpg"
                                     height={160}
+                                    width={600}
                                     alt="Homework"
-                                    fallbackSrc="https://placehold.co/600x400?text=Homework"
+                                    style={{
+                                        objectFit: 'cover',
+                                        width: '100%'
+                                    }}
                                 />
                             </Card.Section>
 
                             <Group justify="space-between" mt="md" mb="xs">
                                 <Text fw={500}>Homework</Text>
-                                <Badge color="yellow">Coming Soon</Badge>
+                                {/* <Badge color="yellow">Coming Soon</Badge> */}
                             </Group>
 
                             <Text size="sm" c="dimmed" mb="md">
-                                Assignments and homework management features coming soon
+                                Assignments and homework management features
                             </Text>
 
-                            <Button color="gray" fullWidth radius="md" disabled>
+                            {/* <Button color="gray" fullWidth radius="md" disabled>
                                 Coming Soon
+                            </Button> */}
+                            <Button component={Link} href={`${pathname}/homework`} color="blue" fullWidth radius="md">
+                                View Homework
                             </Button>
                         </Card>
                     </SimpleGrid>

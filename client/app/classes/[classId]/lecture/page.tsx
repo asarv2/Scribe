@@ -9,7 +9,6 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
-import Markdown from 'markdown-to-jsx'
 import Image from "next/image";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { HeaderSimple } from "@/components/HeaderSimple";
@@ -27,7 +26,7 @@ import { Container } from "@mantine/core";
 import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getLectures } from "@/utils/queries/get-lectures";
-import { Text, Card, Image as MantineImage } from "@mantine/core";
+import { Text, Card } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import { createLecture } from "@/utils/services/lecture";
@@ -842,13 +841,12 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                     <Card withBorder key={lecture.id}>
                                         <Group align="flex-start" justify="space-between">
                                             <Group align="flex-start">
-                                                <MantineImage
+                                                <Image
                                                     src={getDocumentImage(lecture.id)}
                                                     alt={`First page of ${lecture.name}`}
                                                     width={200}
                                                     height={150}
-                                                    fit="contain"
-                                                    fallbackSrc="/placeholder_image.svg"
+                                                    style={{ objectFit: "contain" }}
                                                 />
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{lecture.name}</Text>
@@ -902,13 +900,12 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                 >
                                     <Card withBorder>
                                         <Group align="flex-start">
-                                            <MantineImage
+                                            <Image
                                                 src={getDocumentImage(lecture.id)}
                                                 alt={`First page of ${lecture.name}`}
                                                 width={200}
                                                 height={150}
-                                                fit="contain"
-                                                fallbackSrc="/placeholder_image.svg" // You might want to add a placeholder image
+                                                style={{ objectFit: "contain" }}
                                             />
                                             <Stack gap="xs">
                                                 <Text size="lg" fw={500}>{lecture.name}</Text>

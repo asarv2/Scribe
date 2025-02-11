@@ -11,7 +11,7 @@ import { getUser } from "@/utils/queries/get-user";
 import { ActionIcon, Box, Button, Center, em, Flex, Group, Stack } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Container } from "@mantine/core";
-import { Text, Card, Image as MantineImage } from "@mantine/core";
+import { Text, Card } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Progress } from "@mantine/core";
 import { getGenerations } from "@/utils/queries/get-generations";
@@ -19,6 +19,7 @@ import { Document, Generation, Message } from "@/types";
 import { getGenerationDocuments } from "@/utils/queries/get-generation-documents";
 import { getGenerationMessages } from "@/utils/queries/get-generation-messages";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
+import Image from "next/image";
 
 export default function ChatPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -88,7 +89,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                     event: '*',
                     schema: 'prod',
                     table: 'generations',
-                    filter: `class=eq.${classId} and type=eq.chat`
+                    filter: `class=eq.${classId}`
                 },
                 (payload) => {
                     console.log("Received realtime payload:", payload);
@@ -210,13 +211,12 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                         <Card withBorder key={generation.id}>
                                             <Group align="flex-start" justify="space-between">
                                                 <Group align="flex-start">
-                                                    <MantineImage
+                                                    <Image
                                                         src={getActiveImage(document)}
                                                         alt={`Chat context`}
+                                                        style={{ objectFit: "contain" }}
                                                         width={200}
                                                         height={150}
-                                                        fit="contain"
-                                                        fallbackSrc="/placeholder_image.svg"
                                                     />
                                                     <Stack gap="xs">
                                                         <Text size="lg" fw={500}>{generation.name}</Text>
@@ -269,13 +269,12 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                     >
                                         <Card withBorder>
                                             <Group align="flex-start">
-                                                <MantineImage
+                                                <Image
                                                     src={getActiveImage(document)}
                                                     alt={`Chat context`}
                                                     width={200}
                                                     height={150}
-                                                    fit="contain"
-                                                    fallbackSrc="/placeholder_image.svg"
+                                                    style={{ objectFit: "contain" }}
                                                 />
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{generation.name}</Text>

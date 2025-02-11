@@ -8,18 +8,21 @@
 "use client"
 
 import { HeaderSimple } from "@/components/HeaderSimple"
-import { Button, Center, Container, Input, Stack, Text } from "@mantine/core"
+import { Button, Center, Container, Divider, Input, Stack, Text } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
 import { login, logout } from "@/utils/services/auth";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser } from "@/utils/queries/get-user";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
 
     const queryClient = useQueryClient()
     const supabase = useSupabaseBrowser();
+    const router = useRouter()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -45,6 +48,10 @@ export default function Login() {
                 queryClient.invalidateQueries({
                     queryKey: ["user"]
                 })
+                queryClient.invalidateQueries({
+                    queryKey: ["profile"]
+                })
+                router.push("/")
             }
 
             notifications.show({
@@ -103,6 +110,8 @@ export default function Login() {
 
 
 
+
+
     return (
         <>
             <HeaderSimple />
@@ -116,6 +125,10 @@ export default function Login() {
                         <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                         <Input placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                         <Button color="teal" onClick={handleLogin} loading={loading}>Login</Button>
+                        <Divider />
+                        <Link href="/login/student" style={{ width: "100%" }}>
+                            <Button color="blue" style={{ width: "100%" }}>I'm a Student</Button>
+                        </Link>
                     </Stack>}
                 </Center>
             </Container>

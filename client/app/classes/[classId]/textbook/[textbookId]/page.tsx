@@ -11,9 +11,10 @@ import { Chapter } from '@/types';
 import { getChapters } from '@/utils/queries/get-chapters';
 import { getDocumentsTextbook } from '@/utils/queries/get-documents-textbook';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
-import { Card, Group, Stack, Text, Image as MantineImage, Container, Flex, Button } from '@mantine/core';
+import { Card, Group, Stack, Text, Container, Flex, Button } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -63,13 +64,12 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                             >
                                 <Card withBorder>
                                     <Group align="flex-start">
-                                        <MantineImage
+                                        <Image
                                             src={getChapterImage(chapter.id)}
                                             alt={`Page ${chapter.chapter_number}`}
                                             width={200}
                                             height={150}
-                                            fit="contain"
-                                            fallbackSrc="/placeholder_image.svg"
+                                            style={{ objectFit: "contain" }}
                                         />
                                         <Stack gap="xs">
                                             <Text size="lg" fw={500}>{chapter.title}</Text>

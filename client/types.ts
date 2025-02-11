@@ -19,3 +19,7 @@ export type Generation = Database[SchemaName]["Tables"]["generations"]["Row"]
 export type GenerationType = Database[SchemaName]["Enums"]["generation_type"]
 export type Evaluation = Database[SchemaName]["Tables"]["evaluations"]["Row"]
 export type Message = Database[SchemaName]["Tables"]["messages"]["Row"]
+export type Class = Database[SchemaName]["Tables"]["classes"]["Row"]
+export type Profile = Database[SchemaName]["Tables"]["profiles"]["Row"]
+
+export type Code = Database[SchemaName]["Tables"]["codes"]["Row"]

@@ -83,6 +83,27 @@ export type Database = {
         }
         Relationships: []
       }
+      codes: {
+        Row: {
+          classes: string[]
+          code: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          classes?: string[]
+          code: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          classes?: string[]
+          code?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           created_at: string
@@ -227,6 +248,7 @@ export type Database = {
           exercise_number: number
           id: string
           start_page: number
+          title: string
         }
         Insert: {
           chapter: string
@@ -235,6 +257,7 @@ export type Database = {
           exercise_number?: number
           id?: string
           start_page?: number
+          title?: string
         }
         Update: {
           chapter?: string
@@ -243,6 +266,7 @@ export type Database = {
           exercise_number?: number
           id?: string
           start_page?: number
+          title?: string
         }
         Relationships: [
           {
@@ -503,6 +527,36 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          admin: boolean
+          classes: string[]
+          created_at: string
+          first_name: string
+          id: string
+          last_name: string
+          professor: boolean
+        }
+        Insert: {
+          admin?: boolean
+          classes?: string[]
+          created_at?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          professor?: boolean
+        }
+        Update: {
+          admin?: boolean
+          classes?: string[]
+          created_at?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          professor?: boolean
+        }
+        Relationships: []
+      }
       questions: {
         Row: {
           additional_info: string
@@ -629,6 +683,44 @@ export type Database = {
             columns: ["question"]
             isOneToOne: false
             referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subchapters: {
+        Row: {
+          chapter: string
+          created_at: string
+          end_page: number
+          id: string
+          start_page: number
+          subchapter_number: number
+          title: string
+        }
+        Insert: {
+          chapter: string
+          created_at?: string
+          end_page?: number
+          id?: string
+          start_page?: number
+          subchapter_number?: number
+          title?: string
+        }
+        Update: {
+          chapter?: string
+          created_at?: string
+          end_page?: number
+          id?: string
+          start_page?: number
+          subchapter_number?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subchapters_chapter_fkey"
+            columns: ["chapter"]
+            isOneToOne: false
+            referencedRelation: "chapters"
             referencedColumns: ["id"]
           },
         ]

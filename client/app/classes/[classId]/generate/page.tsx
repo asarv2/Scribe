@@ -25,7 +25,7 @@ import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
 
-import { Text, Card, Image as MantineImage } from "@mantine/core";
+import { Text, Card } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import { getGenerations } from "@/utils/queries/get-generations";
@@ -238,13 +238,12 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                     <Card withBorder key={generation.id}>
                                         <Group align="flex-start" justify="space-between">
                                             <Group align="flex-start">
-                                                <MantineImage
+                                                <Image
                                                     src={getActiveImage(document)}
                                                     alt={`Page ${document?.page} of ${document?.lecture}`}
                                                     width={200}
                                                     height={150}
-                                                    fit="contain"
-                                                    fallbackSrc="/placeholder_image.svg"
+                                                    style={{ objectFit: "contain" }}
                                                 />
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{generation.name}</Text>
@@ -296,13 +295,12 @@ export default function GeneratePage({ params }: { params: { classId: string } }
                                 >
                                     <Card withBorder>
                                         <Group align="flex-start">
-                                            <MantineImage
+                                            <Image
                                                 src={getActiveImage(document)}
                                                 alt={`Page ${document?.page} of ${document?.lecture}`}
                                                 width={200}
                                                 height={150}
-                                                fit="contain"
-                                                fallbackSrc="/placeholder_image.svg" // You might want to add a placeholder image
+                                                style={{ objectFit: "contain" }}
                                             />
                                             <Stack gap="xs">
                                                 <Text size="lg" fw={500}>{generation.name}</Text>

@@ -520,7 +520,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                             {/* AI response */}
                                             <Group align="flex-start">
                                                 <Avatar
-                                                    src="/images/yip.jpg"
+                                                    src="/images/professors/yip.jpg"
                                                     size="md"
                                                     radius="xl"
                                                     alt="AI Assistant"

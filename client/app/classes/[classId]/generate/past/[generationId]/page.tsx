@@ -9,8 +9,6 @@
 import { useEffect, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
-import Markdown from 'markdown-to-jsx'
-import Image from "next/image";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import Link from "next/link";

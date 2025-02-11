@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import jsonify
+from flask import jsonify, send_from_directory
 
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
@@ -35,6 +35,19 @@ def health():
             "error": str(error),
             "name": type(error).__name__
         }), 500
+
+@app.route('/files/<path:filepath>')
+def serve_file(filepath):
+    """
+    Serve files from the uploads directory.
+    Supports nested folder structures through the filepath parameter.
+    Access like: /files/folder1/folder2/image.jpg
+    """
+    uploads_dir = os.path.join(BASE_DIR, 'uploads')
+    try:
+        return send_from_directory(uploads_dir, filepath)
+    except FileNotFoundError:
+        return {"error": "File not found"}, 404
 
 # Add error handler for Supabase connection issues
 @app.errorhandler(Exception)

@@ -20,14 +20,11 @@ import { isProfessor } from '@/utils/lecture/isProfessor';
 import { notifications } from '@mantine/notifications';
 import { logout } from '@/utils/services/auth';
 import { useState } from 'react';
-
+import { getProfile } from '@/utils/queries/get-profile';
+import { getClasses } from '@/utils/queries/get-classes';
+import { Profile, Class } from '@/types';
 const classNav = [
     { id: 'c770c9bb-4de1-44be-aacb-b4bea3efbacf', label: 'MA 421' },
-    // { id: 'ef85b3e5-3a62-41a4-8db1-98e5f201779a', label: 'MA 421' },
-    // { id: '15e71fef-c23e-4173-a883-f6d08834f858', label: 'MA 351' },
-    // { id: '9f0fbba6-ac01-4d13-a7c8-58c08b09859f', label: 'MA 543' },
-    // { id: 'e63bc478-1126-4068-ae56-a91ce1463671', label: 'CS 242' },
-    // { id: 'c068ccf8-4892-45b3-8dab-04d5d3aa85ad', label: 'CS 243' },
     { id: '9ebca7a7-5792-456a-ab55-03801ba710e5', label: 'MA 351' }, // MJ's professor
     { id: 'ae333215-2914-4026-8aae-418f1255cdd0', label: 'ECE 20007' },
     { id: "11d5b457-6f87-4ea3-94ec-c04b2138ceb3", label: "CS 253" }
@@ -45,94 +42,57 @@ export function HeaderSimple() {
     const currentClass = classNav.find(c => c.id === currentClassId);
     const displayText = currentClass ? currentClass.label : 'Select Class';
 
-    // Modify navigation links to be dynamic based on current class
-    const navigationLinks = [
-        // {
-        //     link: currentClassId
-        //         ? `/classes/${currentClassId}`
-        //         : '/classes/ef85b3e5-3a62-41a4-8db1-98e5f201779a', // default class
-        //     label: 'Topics'
-        // },
-        // {
-        //     link: currentClassId
-        //         ? `/classes/${currentClassId}/lecture`
-        //         : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/lecture',
-        //     label: 'Lectures'
-        // },
-        // {
-        //     link: currentClassId
-        //         ? `/classes/${currentClassId}/textbook`
-        //         : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/textbook',
-        //     label: 'Textbooks'
-        // },
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf',
-            label: 'Home'
-        },
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}/generate`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate',
-            label: 'Generate'
-        },
-        {
-            link: currentClassId
-                ? `/classes/${currentClassId}/chat`
-                : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/chat',
-            label: 'Chat'
-        },
-    ];
-
-    // const MA421NavigationLinks = [
-    //     {
-    //         link: currentClassId
-    //             ? `/classes/${currentClassId}/lecture`
-    //             : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/lecture',
-    //         label: 'Lectures'
-    //     },
-    //     {
-    //         link: currentClassId
-    //             ? `/classes/${currentClassId}/textbook`
-    //             : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/textbook',
-    //         label: 'Textbooks'
-    //     },
-    //     {
-    //         link: currentClassId
-    //             ? `/classes/${currentClassId}/generate/problems`
-    //             : '/classes/c770c9bb-4de1-44be-aacb-b4bea3efbacf/generate/problems',
-    //         label: 'Problems'
-    //     },
-    // ]
-
-    // const ECE20007NavigationLinks = [
-    //     {
-    //         link: currentClassId
-    //             ? `/classes/${currentClassId}/lecture`
-    //             : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/lecture',
-    //         label: 'Lectures'
-    //     },
-    //     {
-    //         link: currentClassId
-    //             ? `/classes/${currentClassId}/chat`
-    //             : '/classes/11d5b457-6f87-4ea3-94ec-c04b2138ceb3/chat',
-    //         label: 'Chat'
-    //     },
-    // ]
-
-    const classNavigationLinks = {
-        // "ef85b3e5-3a62-41a4-8db1-98e5f201779a": MA421NavigationLinks,
-        // "ae333215-2914-4026-8aae-418f1255cdd0": ECE20007NavigationLinks
-    } as { [key: string]: { link: string; label: string; }[] }
-
     const { data: user } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
     })
 
+    const { data: profile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
 
-    const navigationItems = (user && classNavigationLinks[currentClassId] ? classNavigationLinks[currentClassId] : navigationLinks).map((link) => (
+    const { data: classData } = useQuery({
+        queryKey: ["classes"],
+        queryFn: () => getClasses(supabase),
+        enabled: !!user
+    })
+
+    const getFilteredClasses = () => {
+        if (!profile || !classData) return [];
+        
+        // Show all classes if user is admin
+        if (profile.admin) {
+            return classNav;
+        }
+
+        // Filter classes based on profile.classes
+        return classNav.filter(classItem => 
+            profile.classes?.includes(classItem.id)
+        );
+    };
+
+    // Get the default class ID (first available class from filtered list)
+    const defaultClassId = getFilteredClasses()[0]?.id || '';
+
+    // Modify navigation links to use defaultClassId when no class is selected
+    const navigationLinks = [
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}`
+                : `/classes/${defaultClassId}`,
+            label: 'Home'
+        },
+        {
+            link: currentClassId
+                ? `/classes/${currentClassId}/chat`
+                : `/classes/${defaultClassId}/chat`,
+            label: 'Chat'
+        },
+    ];
+
+    const navigationItems = (navigationLinks).map((link) => (
         <Box p={2} key={link.label}>
             <Link
                 href={link.link}
@@ -202,19 +162,15 @@ export function HeaderSimple() {
                                     </Menu.Target>
 
                                     <Menu.Dropdown>
-                                        {classNav.map((classItem) => {
-                                            if (isProfessor(user, classItem.id)) {
-                                                return (
-                                                    <Menu.Item
-                                                        key={classItem.id}
-                                                        component={Link}
-                                                        href={`/classes/${classItem.id}`}
-                                                    >
-                                                        {classItem.label}
-                                                    </Menu.Item>
-                                                )
-                                            }
-                                        })}
+                                        {profile && classData && getFilteredClasses().map((classItem) => (
+                                            <Menu.Item
+                                                key={classItem.id}
+                                                component={Link}
+                                                href={`/classes/${classItem.id}`}
+                                            >
+                                                {classItem.label}
+                                            </Menu.Item>
+                                        ))}
                                     </Menu.Dropdown>
                                 </Menu>
                             )}
@@ -237,7 +193,7 @@ export function HeaderSimple() {
                                         </Menu.Target>
 
                                         <Menu.Dropdown>
-                                            <Menu.Label>{user.email}</Menu.Label>
+                                            <Menu.Label>{profile?.first_name} {profile?.last_name}</Menu.Label>
                                             <Menu.Divider />
                                             {/* <Menu.Item
                                                 color="blue"
