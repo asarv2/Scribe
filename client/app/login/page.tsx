@@ -80,10 +80,19 @@ export default function Login() {
             // Logout logic here
             const { success, error } = await logout()
             if (!success) {
+                queryClient.invalidateQueries({
+                    queryKey: ["user"]
+                })
+                queryClient.invalidateQueries({
+                    queryKey: ["profile"]
+                })
                 throw new Error(error)
             } else {
                 queryClient.invalidateQueries({
                     queryKey: ["user"]
+                })
+                queryClient.invalidateQueries({
+                    queryKey: ["profile"]
                 })
                 router.push("/")
             }

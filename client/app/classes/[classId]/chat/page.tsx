@@ -20,6 +20,7 @@ import { getGenerationDocuments } from "@/utils/queries/get-generation-documents
 import { getGenerationMessages } from "@/utils/queries/get-generation-messages";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import Image from "next/image";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export default function ChatPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -34,9 +35,21 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         queryFn: () => getClass(supabase, classId)
     })
 
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
+
     const { data: chatGenerations, isLoading: loadingChatGenerations } = useQuery({
-        queryKey: ["chatGenerations", classId],
-        queryFn: () => getGenerations(supabase, classId, 'chat')
+        queryKey: ["chatGenerations", classId, profile?.id],
+        queryFn: () => getGenerations(supabase, classId, 'chat', profile?.admin ? null : profile!.id),
+        enabled: !!profile
     })
 
     const { data: generationMessages, isLoading: loadingGenerationMessages } = useQuery({
@@ -49,11 +62,6 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         queryKey: ["generationMessagesDocuments", classId, generationMessages],
         queryFn: () => getGenerationDocuments(supabase, generationMessages!.map(message => message.documents).flat()),
         enabled: !!generationMessages
-    })
-
-    const { data: user, isLoading: loadingUser } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase),
     })
 
     const handleRetry = async (classId: string, generation: Generation) => {

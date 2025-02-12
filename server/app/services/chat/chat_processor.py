@@ -18,9 +18,33 @@ class ChatProcessor(BaseProcessor):
         self.course_title = course_title
         self.messages: Dict[str, List[ChatMessage]] = {}
         self.items = items
+        self.chat_histories: Dict[str, List[str]] = {}  # Add chat history storage
 
     def initialize_prompt(self) -> str:
         return "You are a helpful assistant that can answer questions about the course. Using the provided context, answer the question."
+
+    def format_conversation(self, messages: List[str]) -> str:
+        """Format the conversation to help maintain context"""
+        context_summary = ""
+        
+        # Add pairs of messages with context
+        for i in range(0, len(messages)-1, 2):
+            user_msg = messages[i]
+            assistant_msg = messages[i+1] if i+1 < len(messages) else None
+            
+            if assistant_msg:
+                context_summary += f"\nStudent asked: {user_msg}\nYou explained: {assistant_msg}\n"
+        
+        return f"""
+        Previous conversation context:
+        {context_summary}
+        
+        Based on this context, respond to the student's latest message.
+        Remember to:
+        1. Be consistent with previous explanations
+        2. Build upon what the student has understood
+        3. Address any misconceptions from earlier in the conversation
+        """
 
     async def process_batch(
         self,
@@ -33,18 +57,33 @@ class ChatProcessor(BaseProcessor):
     ) -> str:
         """Process a chat message"""
         try:
+            # Initialize chat history if not exists
+            if message_id not in self.chat_histories:
+                self.chat_histories[message_id] = []
+            
+            # Add question to chat history
+            self.chat_histories[message_id].append(question)
+            
+            # Build conversation context
+            conversation_context = ""
+            if len(self.chat_histories[message_id]) > 1:
+                conversation_context = self.format_conversation(self.chat_histories[message_id])
+
             message = Message(content=[
                 {"type": "text", "text": self.initialize_prompt()},
                 {"type": "text", "text": f"Context:\n{content}"},
+                {"type": "text", "text": conversation_context},  # Add conversation context
                 {"type": "text", "text": f"Question: {question}\n\nAnswer:"}
             ])
             
-            response = await self.robust_generate(message, model="gemini-1.5-flash")
+            response = await self.robust_generate(message, model="gemini-2.0-flash")
             print(f"Successfully generated response for {message_id}")
+
+            # Add response to chat history
+            self.chat_histories[message_id].append(response)
 
             message_obj = self.clean_result(message_id, question, response, all_lectures, all_textbooks, all_documents)
             
-            # Store the message
             if message_id not in self.messages:
                 self.messages[message_id] = []
             
@@ -69,7 +108,25 @@ class ChatProcessor(BaseProcessor):
         print(f"Processing {len(message_prompts)} messages")
 
         system_prompt = """
-        You are an AI assistant designed to act as a college office hours tutor. Your goal is to help students understand concepts by guiding them through discussions rather than overwhelming them with information.
+        You are a helpful and patient Teaching Assistant at a university.
+        
+        Important guidelines for your responses:
+        1. Maintain consistent knowledge throughout the conversation
+        2. If a student says they don't understand something, help explain it again
+        3. If a student makes a mistake, point out specifically what's wrong
+        4. Keep track of what has been explained and what hasn't
+        5. When a student says they understand something, build upon that in next responses
+        6. If a student contradicts their earlier understanding, kindly point it out
+        
+        Remember the conversation context:
+        - What concepts have been explained
+        - What the student has understood
+        - What the student is still struggling with
+        
+        Keep responses conversational but precise.
+        DON'T SHOW THE ANSWER, just help guide the student to the correct answer.
+        Once you've helped guide the student to the correct answer, end the conversation in a nice way and DONT ASK ANY MORE QUESTIONS.
+        SAy something nice at the end like, glad I could help, or great job, or something like that.
 
         **Guidelines for Responses:**
         1. Keep explanations **concise and to the point**. Avoid large blocks of text.
@@ -180,3 +237,8 @@ class ChatProcessor(BaseProcessor):
             response=cleaned_result.strip(),
             documents=list(set(document_ids))
         )
+
+    def clear_chat_history(self, message_id: str) -> None:
+        """Clear the chat history for a specific message ID"""
+        if message_id in self.chat_histories:
+            del self.chat_histories[message_id]

@@ -27,12 +27,12 @@ export default function Latex({ children }: { children: string }) {
                 }
                 
                 .latex-paragraph {
-                    margin-bottom: 1rem;
-                    white-space: pre-line;
+                    margin-bottom: 0.5rem;
+                    white-space: pre-wrap;
                 }
 
                 .katex-display {
-                    margin: 1.5rem 0 !important;
+                    margin: 0.5rem 0 !important;
                     overflow-x: auto;
                     overflow-y: hidden;
                 }
@@ -40,6 +40,10 @@ export default function Latex({ children }: { children: string }) {
                 .katex {
                     text-rendering: auto;
                     padding: 0 0.2em;
+                }
+
+                .latex-paragraph + .latex-paragraph {
+                    margin-top: 0;
                 }
             `}</style>
         </div>

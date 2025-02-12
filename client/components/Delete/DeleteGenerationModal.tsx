@@ -101,9 +101,11 @@ export default function DeleteGenerationModal({ generationId, profile, generatio
 
     return (
         <>
-            {profile && isProfessor(profile, classId) && <Tooltip label="Delete Generation"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {profile && isProfessor(profile, classId) && <Tooltip label={type === "problem" ? "Delete Generation" : "Delete Chat"}>
+                <IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} />
+            </Tooltip>}
 
-            <Modal opened={opened} onClose={close} title="Delete Generation" centered>
+            <Modal opened={opened} onClose={close} title={type === "problem" ? "Delete Generation" : "Delete Chat"} centered>
                 <Stack>
                     <Text>Are you sure you want to remove {generationTitle}?</Text>
                     {type === "problem" && <Button onClick={handleDeleteProblem} loading={loading} color="red">Delete</Button>}

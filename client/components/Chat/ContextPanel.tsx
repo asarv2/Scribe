@@ -11,6 +11,7 @@ import { IconSearch, IconPresentation, IconBook } from "@tabler/icons-react";
 import { LectureList } from "./LectureList";
 import { TextbookTree } from "./TextbookTree";
 import { ChatMessage } from "./ChatCanvas";
+import { useState, useEffect } from "react";
 
 interface ContextPanelProps {
     classId: string;
@@ -37,8 +38,20 @@ export function ContextPanel({
     toggleNode,
     activeChat
 }: ContextPanelProps) {
-
     const { colorScheme } = useMantineColorScheme();
+    const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
+
+    useEffect(() => {
+        setLocalSearchQuery(searchQuery);
+    }, [searchQuery]);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setSearchQuery(localSearchQuery);
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [localSearchQuery, setSearchQuery]);
 
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId);
@@ -51,8 +64,8 @@ export function ContextPanel({
         <Stack>
             <TextInput
                 placeholder="Search context..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={localSearchQuery}
+                onChange={(e) => setLocalSearchQuery(e.target.value)}
                 leftSection={<IconSearch size={16} />}
                 styles={(theme) => ({
                     input: {

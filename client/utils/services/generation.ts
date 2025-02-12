@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 import { GenerationType } from "@/types";
 
-export const createGeneration = async (classId: string, generationTitle: string, generationType: GenerationType, response_url: string, base_generation_id: string | null = null, version: number | null = null) => {
+export const createGeneration = async (classId: string, generationTitle: string, generationType: GenerationType, response_url: string, base_generation_id: string | null = null, version: number | null = null, profileId: string | null = null) => {
     const supabase = useSupabaseServer(cookies());
     const updates = {
         class: classId,
@@ -21,6 +21,9 @@ export const createGeneration = async (classId: string, generationTitle: string,
     }
     if (version) {
         updates["version"] = version;
+    }
+    if (profileId) {
+        updates["profile"] = profileId;
     }
     const { data, error } = await supabase
         .from("generations")

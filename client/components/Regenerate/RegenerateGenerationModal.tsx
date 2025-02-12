@@ -10,13 +10,15 @@ import { useDisclosure } from "@mantine/hooks"
 import { IconRefresh } from "@tabler/icons-react"
 import { useState } from "react"
 import { notifications } from "@mantine/notifications"
-import { useQueryClient } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { createGeneration } from "@/utils/services/generation"
 import { Evaluation, Generation, Question } from "@/types"
 import { getEvaluationAsText } from "@/utils/services/evaluations"
 import { createQuestions } from "@/utils/services/questions"
-
+import { getUser } from "@/utils/queries/get-user"
+import { getProfile } from "@/utils/queries/get-profile"
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
 type RegenerateGenerationModalProps = {
     generation: Generation
     problems: Question[]
@@ -24,6 +26,7 @@ type RegenerateGenerationModalProps = {
 }
 
 export default function RegenerateGenerationModal({ generation, evaluations, problems }: RegenerateGenerationModalProps) {
+    const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
@@ -39,11 +42,23 @@ export default function RegenerateGenerationModal({ generation, evaluations, pro
     const [additionalInfo, setAdditionalInfo] = useState(generation.additional_info);
     const router = useRouter();
 
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user!.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
+
     const handleRegenerateGeneration = async () => {
         setLoading(true);
         try {
+            let profileId = profile?.admin ? null : profile?.id;
             const finalComments = `${additionalInfo}\n${getEvaluationComments()}`
-            const newGeneration = await createGeneration(generation.class, generation.name, generation.type, `${process.env.NEXT_PUBLIC_API_URL}`, generation.id, generation.version);
+            const newGeneration = await createGeneration(generation.class, generation.name, generation.type, `${process.env.NEXT_PUBLIC_API_URL}`, generation.id, generation.version, profileId);
 
             const questions = problems.map(problem => ({
                 generation: newGeneration.id,

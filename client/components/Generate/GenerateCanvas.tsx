@@ -27,6 +27,8 @@ import { getChapters } from "@/utils/queries/get-chapters";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
+import { getUser } from "@/utils/queries/get-user";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export interface ProblemCard {
     id: number;
@@ -76,6 +78,16 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
 
     const { colorScheme } = useMantineColorScheme();
 
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user!.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
 
     const { data: lectures } = useQuery({
         queryKey: ["lectures", classId],
@@ -140,8 +152,10 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
         try {
             setLoading(true);
 
+            let profileId = profile?.admin ? null : profile?.id;
+
             // creating generation
-            const generation = await createGeneration(classId, generationName, 'problem', `${process.env.NEXT_PUBLIC_API_URL}`);
+            const generation = await createGeneration(classId, generationName, 'problem', `${process.env.NEXT_PUBLIC_API_URL}`, null, null, profileId);
 
             const multipartQuestions = problems.filter(problem => problem.isMultiPart).map(problem => {
                 const references = getReferences(problem);

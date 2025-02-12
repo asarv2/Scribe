@@ -33,6 +33,7 @@ import { Document, Generation, Lecture, Question, Summary } from "@/types";
 import { getGenerationDocuments } from "@/utils/queries/get-generation-documents";
 import { getGenerationSummaries } from "@/utils/queries/get-generation-summaries";
 import { getGenerationProblems } from "@/utils/queries/get-generation-problems";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export default function GeneratePage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -47,9 +48,21 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         queryFn: () => getClass(supabase, classId)
     })
 
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user!.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
+
     const { data: problemGenerations, isLoading: loadingProblemGenerations } = useQuery({
-        queryKey: ["problemGenerations", classId],
-        queryFn: () => getGenerations(supabase, classId, 'problem')
+        queryKey: ["problemGenerations", classId, profile!.id],
+        queryFn: () => getGenerations(supabase, classId, 'problem', profile?.admin ? null : profile!.id),
+        enabled: !!profile
     })
 
     const { data: generationProblems, isLoading: loadingGenerationProblems } = useQuery({
@@ -65,11 +78,6 @@ export default function GeneratePage({ params }: { params: { classId: string } }
         enabled: !!generationProblems
     })
 
-
-    const { data: user, isLoading: loadingUser } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase),
-    })
 
     const handleRetry = async (classId: string, generation: Generation) => {
         try {

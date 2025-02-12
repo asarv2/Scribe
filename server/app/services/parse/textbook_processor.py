@@ -27,10 +27,12 @@ class TextbookProcessor(BaseProcessor):
         response: str,
         textbook_name: str,
         page_number: int,
+        text: str,
     ) -> CleanedResponse:
         cleaned_response = CleanedResponse(
             page=page_number,
-            description=response.strip()  # Treat entire response as description
+            description=response.strip(),  # Treat entire response as description
+            text=text
         )
 
         if textbook_name not in self.notes:
@@ -82,6 +84,7 @@ class TextbookProcessor(BaseProcessor):
                 response,
                 textbook_name,
                 page_number,
+                text
             )
 
         except Exception as error:

@@ -32,9 +32,11 @@ import { getGeneration } from "@/utils/queries/get-generation";
 import { getGenerationMessages } from "@/utils/queries/get-generation-messages";
 import DeleteGenerationModal from "../Delete/DeleteGenerationModal";
 import { getUser } from "@/utils/queries/get-user";
-import { Message, Profile } from "@/types";
+import { Document, Message, Profile } from "@/types";
 import { getProfile } from "@/utils/queries/get-profile";
 import Latex from "../Latex";
+import { getSubchapters } from "@/utils/queries/get-subchapters";
+import { getProfessor } from "@/utils/queries/get-professor";
 
 export interface ChatMessage {
     id: number;
@@ -44,6 +46,7 @@ export interface ChatMessage {
         lectures: string[];     // lecture IDs
         textbooks: string[];   // textbook IDs
         chapters: string[];    // chapter IDs
+        subchapters: string[]; // subchapter IDs
         exercises: string[];   // exercise IDs
     };
 }
@@ -59,6 +62,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
             lectures: [],
             textbooks: [],
             chapters: [],
+            subchapters: [],
             exercises: [],
         }
     });
@@ -94,22 +98,10 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         queryFn: () => getLectures(supabase, classId)
     });
 
-    const { data: lectureDocuments, isLoading: loadingLectureDocuments } = useQuery({
-        queryKey: ["lectureDocuments", classId],
-        queryFn: () => getLectureDocuments(supabase, lectures?.map(lecture => lecture.id) ?? []),
-        enabled: !!lectures
-    })
-
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
         queryFn: () => getTextbooks(supabase, classId),
     });
-
-    const { data: textbookDocuments, isLoading: loadingTextbookDocuments } = useQuery({
-        queryKey: ["textbookDocuments", classId],
-        queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
-        enabled: !!textbooks
-    })
 
     const { data: chapters } = useQuery({
         queryKey: ["chapters", classId],
@@ -117,11 +109,25 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         enabled: !!textbooks
     });
 
+    const { data: subchapters } = useQuery({
+        queryKey: ["subchapters", classId],
+        queryFn: () => getSubchapters(supabase, chapters!.map(c => c.id)),
+        enabled: !!chapters
+    });
+
     const { data: exercises } = useQuery({
         queryKey: ["exercises", classId],
         queryFn: () => getExercises(supabase, chapters!.map(c => c.id)),
         enabled: !!chapters
     });
+
+    const { data: professor } = useQuery({
+        queryKey: ["professor", classId],
+        queryFn: () => getProfessor(supabase, classId),
+    })
+
+    console.log("Professor", professor)
+
 
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -133,6 +139,18 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         queryKey: ["profile", user?.id],
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user
+    })
+
+    const { data: textbookDocuments, isLoading: loadingTextbookDocuments } = useQuery({
+        queryKey: ["textbookDocuments", classId],
+        queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
+        enabled: !!textbooks
+    })
+
+    const { data: lectureDocuments, isLoading: loadingLectureDocuments } = useQuery({
+        queryKey: ["lectureDocuments", classId],
+        queryFn: () => getLectureDocuments(supabase, lectures?.map(lecture => lecture.id) ?? []),
+        enabled: !!lectures
     })
 
     // Ref for message container
@@ -163,33 +181,33 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                 },
                 async (payload) => {
                     console.log("Received message update:", payload);
-                    
+
                     // Immediately update the cache with the new data
                     queryClient.setQueryData(
                         ["generationMessages", generationId],
                         (oldData: any) => {
                             if (!oldData) return [payload.new];
-                            
+
                             // For INSERT, add the new message
                             if (payload.eventType === 'INSERT') {
                                 return [...oldData, payload.new];
                             }
-                            
+
                             // For UPDATE, update the existing message
                             if (payload.eventType === 'UPDATE') {
                                 return oldData.map((message: any) =>
                                     message.id === payload.new.id ? payload.new : message
                                 );
                             }
-                            
+
                             return oldData;
                         }
                     );
 
                     // Then trigger a refetch to ensure we're in sync
-                    await queryClient.invalidateQueries({ 
+                    await queryClient.invalidateQueries({
                         queryKey: ["generationMessages", generationId],
-                        exact: true 
+                        exact: true
                     });
                 }
             )
@@ -211,15 +229,20 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
 
     const getReferences = () => {
         // Previous document references from context
-        const lectureReferences = lectureDocuments?.filter(document => 
+        const lectureReferences = lectureDocuments?.filter(document =>
             activeChat.context.lectures.includes(document.lecture ?? "")
         ) ?? [];
-        const textbookReferences = textbookDocuments?.filter(document => 
+        const textbookReferences = textbookDocuments?.filter(document =>
             activeChat.context.textbooks.includes(document.textbook ?? "")
         ) ?? [];
         const chapterReferences = textbookDocuments?.filter(document => {
             const chapter = chapters?.find(c => c.id === document.textbook);
             return chapter && activeChat.context.chapters.includes(chapter.id);
+        }) ?? [];
+        const subchapterReferences = textbookDocuments?.filter(document => {
+            const chapter = chapters?.find(c => c.id === document.textbook);
+            const subchapter = subchapters?.find(s => s.chapter === chapter?.id && activeChat.context.subchapters.includes(s.id));
+            return subchapter && chapter;
         }) ?? [];
         const exerciseReferences = textbookDocuments?.filter(document => {
             const chapter = chapters?.find(c => c.id === document.textbook);
@@ -228,22 +251,23 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         }) ?? [];
 
         // Previous message references
-        const previousMessagesReferences = messages?.flatMap(message => 
+        const previousMessagesReferences = messages?.flatMap(message =>
             // Check if references exists and is an array before accessing
             Array.isArray(message.references) ? message.references : []
         ) ?? [];
 
         // Get the actual documents from the references
-        const messageReferences = ([...textbookDocuments ?? [], ...lectureDocuments ?? []]).filter(document => 
+        const messageReferences = ([...textbookDocuments ?? [], ...lectureDocuments ?? []]).filter(document =>
             previousMessagesReferences.includes(document.id)
         ) ?? [];
 
         // Combine all references, removing duplicates
         return Array.from(new Set([
-            ...lectureReferences, 
-            ...textbookReferences, 
-            ...chapterReferences, 
-            ...exerciseReferences, 
+            ...lectureReferences,
+            ...textbookReferences,
+            ...chapterReferences,
+            ...subchapterReferences,
+            ...exerciseReferences,
             ...messageReferences
         ]));
     }
@@ -252,11 +276,17 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${profile.id}.png`
     }
 
+    const getProfessorAvatarUrl = () => {
+        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${professor?.id}.png`
+    }
+
     const handleChat = async () => {
         if (!activeChat.prompt.trim()) return;
 
         try {
             setLoading(true);
+
+            let profileId = profile?.admin ? null : profile?.id;
 
             if (generationId === "new") {
                 // Create new generation
@@ -264,7 +294,10 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                     classId,
                     activeChat.title,
                     'chat',
-                    `${process.env.NEXT_PUBLIC_API_URL}`
+                    `${process.env.NEXT_PUBLIC_API_URL}`,
+                    null,
+                    null,
+                    profileId
                 );
 
                 // Update URL without refresh
@@ -286,7 +319,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                 queryClient.invalidateQueries({
                     queryKey: ["generationMessages", generationId]
                 });
-                
+
 
                 // Trigger generation
                 fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
@@ -324,7 +357,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                 });
             }
 
-            setActiveChat({ ...activeChat, prompt: "", context: { lectures: [], textbooks: [], chapters: [], exercises: [] } });
+            setActiveChat({ ...activeChat, prompt: "", context: { lectures: [], textbooks: [], chapters: [], exercises: [], subchapters: [] } });
             queryClient.invalidateQueries({ queryKey: ["chatGenerations", classId] });
 
         } catch (error) {
@@ -469,10 +502,106 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                 />
                             }
                         >
-                            {`Exercise ${chapter.chapter_number}.${exercise.exercise_number}`}
+                            {exercise.title !== "" ? exercise.title : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`}
                         </Badge>
                     );
                 })}
+                {chat.context.subchapters.map(subchapterId => {
+                    const subchapter = subchapters?.find(s => s.id === subchapterId);
+                    return subchapter && (
+                        <Badge
+                            key={subchapterId}
+                            color="purple"
+                            rightSection={
+                                <IconX
+                                    size={14}
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeContextFromChat('subchapters', subchapterId);
+                                    }}
+                                />
+                            }
+                        >
+                            {`Subchapter ${subchapter.subchapter_number}: ${subchapter.title}`}
+                        </Badge>
+                    );
+                })}
+            </Group>
+        );
+    };
+
+    const renderDocuments = (lectureDocuments: Document[], textbookDocuments: Document[], chatDocuments: string[]) => {
+        // Add safety check
+        if (!Array.isArray(lectureDocuments) || !Array.isArray(textbookDocuments)) {
+            return null;
+        }
+
+        const documents = [...lectureDocuments, ...textbookDocuments];
+        // Filter to only matching documents
+        const matchingDocs = documents.filter(doc => chatDocuments.includes(doc.id));
+
+        // Group documents by source (lecture/textbook) and sort by page
+        const groupedDocs = matchingDocs.reduce((acc, doc) => {
+            const key = doc.lecture ?
+                `lecture-${doc.lecture}` :
+                `textbook-${doc.textbook}`;
+
+            if (!acc[key]) acc[key] = [];
+            acc[key].push(doc);
+            return acc;
+        }, {} as Record<string, typeof documents>);
+
+        // Process each group to combine consecutive pages
+        const processedDocs = Object.entries(groupedDocs).flatMap(([key, docs]) => {
+            docs.sort((a, b) => a.page - b.page);
+
+            const ranges: { start: number; end: number; doc: any; }[] = [];
+            let current = { start: docs[0].page, end: docs[0].page, doc: docs[0] };
+
+            for (let i = 1; i < docs.length; i++) {
+                if (docs[i].page === current.end + 1) {
+                    current.end = docs[i].page;
+                } else {
+                    ranges.push({ ...current });
+                    current = { start: docs[i].page, end: docs[i].page, doc: docs[i] };
+                }
+            }
+            ranges.push(current);
+
+            return ranges.map(range => ({
+                ...range.doc,
+                pageRange: range.start === range.end ?
+                    `p.${range.start}` :
+                    `pp.${range.start}-${range.end}`
+            }));
+        });
+
+        // Take only the 3 most important documents (prioritizing shorter page ranges)
+        const topDocs = processedDocs
+            .sort((a, b) => {
+                const aPages = a.pageRange.includes('-') ?
+                    Number(a.pageRange.split('-')[1]) - Number(a.pageRange.split('-')[0]) :
+                    0;
+                const bPages = b.pageRange.includes('-') ?
+                    Number(b.pageRange.split('-')[1]) - Number(b.pageRange.split('-')[0]) :
+                    0;
+                return aPages - bPages;
+            })
+            .slice(0, 3);
+
+        return (
+            <Group>
+                {topDocs.map(doc => (
+                    <Link href={`/classes/${classId}/lecture/${doc.lecture}?page=${doc.page}`} key={doc.id}>
+                        <Badge key={doc.id}>
+                            {doc.lecture ?
+                                `${lectures?.find(l => l.id === doc.lecture)?.name} ${doc.pageRange}` :
+                                `${textbooks?.find(t => t.id === doc.textbook)?.title} ${doc.pageRange}`
+                            }
+                        </Badge>
+                    </Link>
+                ))}
             </Group>
         );
     };
@@ -499,7 +628,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                             />}
                         </Group>
                         <Group>
-                            <DeleteGenerationModal generationId={generationId} generationTitle={existingGeneration?.name ?? ""} profile={profile ?? undefined} classId={classId} type={existingGeneration?.type ?? "problem"} />
+                            {existingGeneration && <DeleteGenerationModal generationId={generationId} generationTitle={existingGeneration?.name ?? ""} profile={profile ?? undefined} classId={classId} type={existingGeneration?.type ?? "chat"} />}
                         </Group>
                     </Flex>
                     <Grid>
@@ -507,10 +636,10 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                         <Grid.Col span={isMobile ? 12 : 8}>
                             <Card shadow="sm" padding="lg" radius="md" withBorder style={{ height: "80vh", display: "flex", flexDirection: "column" }}>
                                 {/* Messages Area */}
-                                <Stack 
-                                    style={{ 
-                                        flex: 1, 
-                                        overflowY: "auto", 
+                                <Stack
+                                    style={{
+                                        flex: 1,
+                                        overflowY: "auto",
                                         marginBottom: "1rem",
                                         maxHeight: "calc(80vh - 150px)"
                                     }}
@@ -543,7 +672,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                             {/* AI response */}
                                             <Group align="flex-start">
                                                 <Avatar
-                                                    src="/images/professors/yip.jpg"
+                                                    src={professor ? getProfessorAvatarUrl() : undefined}
                                                     size="md"
                                                     radius="xl"
                                                     alt="AI Assistant"
@@ -569,6 +698,13 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                                     ) : (
                                                         <Text style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }} c={colorScheme === "dark" ? "white" : "black"}>
                                                             <Latex>{message.response}</Latex>
+                                                            {message.documents && lectureDocuments && textbookDocuments &&
+                                                                renderDocuments(
+                                                                    lectureDocuments ?? [],
+                                                                    textbookDocuments ?? [],
+                                                                    message.documents
+                                                                )
+                                                            }
                                                         </Text>
                                                     )}
                                                 </Card>
