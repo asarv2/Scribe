@@ -11,6 +11,8 @@ import { IconChevronDown, IconChevronRight, IconPlus } from "@tabler/icons-react
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getLectures } from "@/utils/queries/get-lectures";
+import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
+import { getSummaries } from "@/utils/queries/get-summary";
 import { ChatMessage } from "./ChatCanvas";
 import { useMantineColorScheme } from '@mantine/core';
 
@@ -38,6 +40,42 @@ export function LectureList({
     });
 
     const { colorScheme } = useMantineColorScheme();
+    // Fetch documents for all lectures
+    const { data: lectureDocuments } = useQuery({
+        queryKey: ["lectureDocuments", classId],
+        queryFn: async () => {
+            const documents: Record<string, any[]> = {};
+            if (lectures) {
+                for (const lecture of lectures) {
+                    documents[lecture.id] = await getLectureDocuments(supabase, [lecture.id]);
+                }
+            }
+            console.log('📚 LECTURE DOCUMENTS:', documents);
+            return documents;
+        },
+        enabled: !!lectures
+    });
+
+    // Fetch summaries for all documents
+    const { data: documentSummaries } = useQuery({
+        queryKey: ["documentSummaries", classId],
+        queryFn: async () => {
+            const summaries: Record<string, Record<string, any[]>> = {};
+            if (lectureDocuments) {
+                for (const [lectureId, docs] of Object.entries(lectureDocuments)) {
+                    summaries[lectureId] = {};
+                    for (const doc of docs) {
+                        summaries[lectureId][doc.id] = await getSummaries(supabase, lectureId);
+                    }
+                }
+            }
+            return summaries;
+        },
+        enabled: !!lectureDocuments
+    });
+    // console.log('📝 DOCUMENT SUMMARIES:', documentSummaries);
+
+    // we now have a list of summaries for each document of each lecture
 
     const filteredLectures = lectures?.filter(lecture => {
         // Check if the lecture is already in the active chat's context
@@ -46,8 +84,25 @@ export function LectureList({
         // If it's already selected, filter it out
         if (isAlreadySelected) return false;
 
-        // Apply search filter
-        return lecture.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        const searchQueryLower = searchQuery.toLowerCase();
+
+        // Check lecture name
+        if (lecture.name?.toLowerCase().includes(searchQueryLower)) {
+            return true;
+        }
+
+        // Check summaries for all documents under this lecture
+        const documents = lectureDocuments?.[lecture.id] || [];
+        for (const doc of documents) {
+            const summaries = documentSummaries?.[lecture.id]?.[doc.id] || [];
+            for (const summary of summaries) {
+                if (summary.description?.toLowerCase().includes(searchQueryLower)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     });
 
     if (!filteredLectures?.length) return null;
@@ -110,4 +165,3 @@ export function LectureList({
         </Card>
     );
 }
-

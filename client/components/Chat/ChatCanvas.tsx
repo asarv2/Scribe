@@ -19,7 +19,6 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { v4 as uuidv4 } from 'uuid';
 import { createGeneration } from "@/utils/services/generation";
 import { createQuestions } from "@/utils/services/questions";
-import Latex from "../Latex";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getChapters } from "@/utils/queries/get-chapters";
@@ -35,6 +34,7 @@ import DeleteGenerationModal from "../Delete/DeleteGenerationModal";
 import { getUser } from "@/utils/queries/get-user";
 import { Message, Profile } from "@/types";
 import { getProfile } from "@/utils/queries/get-profile";
+import Latex from "../Latex";
 
 export interface ChatMessage {
     id: number;
@@ -527,7 +527,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                                         backgroundColor: "#228be6"
                                                     }}
                                                 >
-                                                    <Text c="white">{message.question}</Text>
+                                                    <Text c="white"><Latex>{message.question}</Latex></Text>
                                                 </Card>
                                                 <Avatar
                                                     src={profile ? getAvatarUrl(profile) : undefined}
