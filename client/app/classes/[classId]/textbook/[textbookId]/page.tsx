@@ -11,7 +11,7 @@ import { Chapter } from '@/types';
 import { getChapters } from '@/utils/queries/get-chapters';
 import { getDocumentsTextbook } from '@/utils/queries/get-documents-textbook';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
-import { Card, Group, Stack, Text, Container, Flex, Button } from '@mantine/core';
+import { Card, Group, Stack, Text, Container, Flex, Button, useMantineColorScheme } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -22,6 +22,8 @@ export default function Textbook({ params }: { params: { classId: string, textbo
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
     const textbookId = params.textbookId;
+
+    const { colorScheme } = useMantineColorScheme();
 
     const { data: chapters } = useQuery({
         queryKey: ['chapters'],
@@ -50,7 +52,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${classId}/textbook`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6} pl={4}>Chapters</Text>
                         </Group>
@@ -67,9 +69,9 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                         <Image
                                             src={getChapterImage(chapter.id)}
                                             alt={`Page ${chapter.chapter_number}`}
-                                            width={200}
+                                            width={150}
                                             height={150}
-                                            style={{ objectFit: "contain" }}
+                                            style={{ objectFit: "contain", borderRadius: "10px" }}
                                         />
                                         <Stack gap="xs">
                                             <Text size="lg" fw={500}>{chapter.title}</Text>

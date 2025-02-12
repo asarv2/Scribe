@@ -6,7 +6,7 @@
 
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
-import { Code } from "@/types";
+import { Code, Profile } from "@/types";
 export const login = async (email: string, password: string): Promise<{ success: boolean, error: string }> => {
     const supabase = useSupabaseServer(cookies());
     const { error } = await supabase.auth.signInWithPassword({
@@ -61,4 +61,8 @@ export const logout = async (): Promise<{ success: boolean, error: string }> => 
     } else {
         return { success: true, error: "" };
     }
+}
+
+export const isProfessor = (profile: Profile, classId: string) => {
+    return (profile.professor && profile.classes.includes(classId)) || profile.admin;
 }

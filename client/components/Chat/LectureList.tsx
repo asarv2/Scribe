@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { ChatMessage } from "./ChatCanvas";
+import { useMantineColorScheme } from '@mantine/core';
 
 interface LectureListProps {
     classId: string;
@@ -36,6 +37,8 @@ export function LectureList({
         queryFn: () => getLectures(supabase, classId)
     });
 
+    const { colorScheme } = useMantineColorScheme();
+
     const filteredLectures = lectures?.filter(lecture => {
         // Check if the lecture is already in the active chat's context
         const isAlreadySelected = activeChat.context.lectures.includes(lecture.id);
@@ -50,11 +53,18 @@ export function LectureList({
     if (!filteredLectures?.length) return null;
 
     return (
-        <Card p="md">
+        <Card 
+            p="md"
+            style={{
+                backgroundColor: colorScheme === "dark" ? "#2C2E33" : "#f8f9fa",
+                border: `1px solid ${colorScheme === "dark" ? "#373A40" : "#e9ecef"}`
+            }}
+        >
             <Group mb={expandedSections.has('lectures') ? "md" : 0}>
                 <ActionIcon
                     variant="subtle"
                     onClick={() => toggleSection('lectures')}
+                    color={colorScheme === "dark" ? "gray.4" : "gray.7"}
                 >
                     {expandedSections.has('lectures') ? (
                         <IconChevronDown size={16} />
@@ -62,7 +72,7 @@ export function LectureList({
                         <IconChevronRight size={16} />
                     )}
                 </ActionIcon>
-                <Text fw={700}>Lectures</Text>
+                <Text fw={700} c={colorScheme === "dark" ? "gray.1" : "gray.8"}>Lectures</Text>
             </Group>
             {expandedSections.has('lectures') && (
                 <Group align="flex-start" style={{ flexWrap: 'wrap' }}>
@@ -75,19 +85,23 @@ export function LectureList({
                             withBorder
                             style={{
                                 marginBottom: '8px',
-                                width: 'fit-content'
+                                width: 'fit-content',
+                                backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
+                                borderColor: colorScheme === "dark" ? "#373A40" : "#e9ecef"
                             }}
                         >
                             <Group>
                                 <ActionIcon
-                                    variant="light"
+                                    variant={colorScheme === "dark" ? "filled" : "light"}
                                     color="blue"
                                     onClick={() => addContextToChat('lectures', lecture.id)}
                                     title="Add lecture to chat context"
                                 >
                                     <IconPlus size={16} />
                                 </ActionIcon>
-                                <Text size="sm">{lecture.name}</Text>
+                                <Text size="sm" c={colorScheme === "dark" ? "gray.3" : "gray.7"}>
+                                    {lecture.name}
+                                </Text>
                             </Group>
                         </Card>
                     ))}

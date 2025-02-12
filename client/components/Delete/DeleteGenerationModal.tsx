@@ -5,32 +5,31 @@
  * 11-15-2024
  */
 
-import { Button, Input, Modal, Stack, Text, Tooltip } from "@mantine/core"
+import { Button, Modal, Stack, Text, Tooltip, useMantineColorScheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-import { User } from "@supabase/supabase-js"
-import { IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconTrash } from "@tabler/icons-react"
 import { useState } from "react"
 import { notifications } from "@mantine/notifications"
-import { uploadLectureImages } from "@/utils/services/storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { isProfessor } from "@/utils/lecture/isProfessor"
-import { deleteLecture } from "@/utils/services/lecture"
+import { isProfessor } from "@/utils/services/auth"
 import { deleteGeneration } from "@/utils/services/generation"
-import { GenerationType } from "@/types"
+import { GenerationType, Profile } from "@/types"
 type DeleteGenerationModalProps = {
     classId: string
     generationId: string
     generationTitle: string
-    user: User | undefined
+    profile: Profile | undefined
     type: GenerationType
 }
 
-export default function DeleteGenerationModal({ generationId, user, generationTitle, classId, type }: DeleteGenerationModalProps) {
+export default function DeleteGenerationModal({ generationId, profile, generationTitle, classId, type }: DeleteGenerationModalProps) {
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
+
+    const { colorScheme } = useMantineColorScheme();
 
     const handleDeleteProblem = async () => {
         setLoading(true);
@@ -102,7 +101,7 @@ export default function DeleteGenerationModal({ generationId, user, generationTi
 
     return (
         <>
-            {isProfessor(user, classId) && <Tooltip label="Delete Generation"><IconTrash size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {profile && isProfessor(profile, classId) && <Tooltip label="Delete Generation"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
             <Modal opened={opened} onClose={close} title="Delete Generation" centered>
                 <Stack>

@@ -5,30 +5,31 @@
  * 11-15-2024
  */
 
-import { Button, Input, Modal, Stack, Text, Tooltip } from "@mantine/core"
+import { Button, Input, Modal, Stack, Text, Tooltip, useMantineColorScheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-import { User } from "@supabase/supabase-js"
-import { IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconTrash } from "@tabler/icons-react"
 import { useState } from "react"
 import { notifications } from "@mantine/notifications"
-import { uploadLectureImages } from "@/utils/services/storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { isProfessor } from "@/utils/lecture/isProfessor"
 import { deleteLecture } from "@/utils/services/lecture"
+import { Profile } from "@/types"
+import { isProfessor } from "@/utils/services/auth"
 
 type DeleteLectureModalProps = {
     classId: string
     lectureId: string
     lectureTitle: string
-    user: User | undefined
+    profile: Profile | undefined
 }
 
-export default function DeleteLectureModal({ lectureId, user, lectureTitle, classId }: DeleteLectureModalProps) {
+export default function DeleteLectureModal({ lectureId, profile, lectureTitle, classId }: DeleteLectureModalProps) {
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
+
+    const { colorScheme } = useMantineColorScheme();
 
     const handleDeleteClass = async () => {
         setLoading(true);
@@ -66,7 +67,7 @@ export default function DeleteLectureModal({ lectureId, user, lectureTitle, clas
 
     return (
         <>
-            {isProfessor(user, classId) && <Tooltip label="Delete Lecture"><IconTrash size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {profile && isProfessor(profile, classId) && <Tooltip label="Delete Lecture"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
             <Modal opened={opened} onClose={close} title="Delete Lecture" centered>
                 <Stack>

@@ -16,7 +16,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -30,12 +30,15 @@ import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { getTextbook } from "@/utils/queries/get-textbook";
 import { getFigures } from "@/utils/queries/get-figures";
 import { getChapter } from "@/utils/queries/get-chapter";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export default function Chapter({ params }: { params: { classId: string, textbookId: string, chapterId: string } }) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [hoveredFigure, setHoveredFigure] = useState<string | null>(null);
     const previewScrollRef = useRef<HTMLDivElement>(null);
+
+    const { colorScheme } = useMantineColorScheme();
 
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
@@ -78,6 +81,12 @@ export default function Chapter({ params }: { params: { classId: string, textboo
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
     })
 
 
@@ -150,12 +159,12 @@ export default function Chapter({ params }: { params: { classId: string, textboo
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${classId}/textbook/${textbookId}`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>{textbook?.title + " - " + chapter?.title}</Text>
                         </Group>
                         <Group>
-                            <DeleteTextbookModal textbookId={textbookId} textbookTitle={textbook?.title ?? ""} user={user ?? undefined} classId={textbook?.class ?? ""} />
+                            <DeleteTextbookModal textbookId={textbookId} textbookTitle={textbook?.title ?? ""} profile={profile ?? undefined} classId={textbook?.class ?? ""} />
                         </Group>
                     </Flex>
                     <Grid>
@@ -163,7 +172,15 @@ export default function Chapter({ params }: { params: { classId: string, textboo
                             <Stack>
                                 <Card padding="md" pos="relative" withBorder>
                                     <Box
-                                        style={{ position: 'relative', width: '100%', height: 500 }}
+                                        style={{ 
+                                            position: 'relative', 
+                                            width: '100%', 
+                                            height: 500,
+                                            overflow: "hidden",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center"
+                                        }}
                                         onTouchStart={(e) => {
                                             setTouchStartX(e.changedTouches[0].clientX);
                                         }}
@@ -175,8 +192,13 @@ export default function Chapter({ params }: { params: { classId: string, textboo
                                         <Image
                                             src={getActiveImage(activeDocumentId)}
                                             alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
-                                            fill
-                                            style={{ objectFit: 'contain' }}
+                                            width={500}
+                                            height={500}
+                                            style={{ 
+                                                maxWidth: '100%',
+                                                maxHeight: '100%',
+                                                borderRadius: "10px"
+                                            }}
                                             sizes="100vw"
                                         />
                                         {/* {!loadingFigures && figures?.filter(figure => figure.document === activeDocumentId).map(figure => {
@@ -295,19 +317,25 @@ export default function Chapter({ params }: { params: { classId: string, textboo
                                             data-document={doc.id}
                                             style={{
                                                 cursor: 'pointer',
-                                                border: `2px solid ${doc.id === activeDocumentId ? 'blue' : 'transparent'}`,
                                                 width: 50,
                                                 height: 50,
                                                 position: 'relative',
                                                 flexShrink: 0,
+                                                borderRadius: '4px',
+                                                overflow: 'hidden',
                                             }}
                                             onClick={() => handlePageClick(doc.id)}
                                         >
                                             <Image
                                                 src={getActiveImage(doc.id)}
                                                 alt={`Page ${doc.page}`}
-                                                fill
-                                                style={{ objectFit: 'cover' }}
+                                                width={50}
+                                                height={50}
+                                                style={{ 
+                                                    objectFit: 'cover',
+                                                    outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                                                    outlineOffset: '-2px',
+                                                }}
                                                 sizes="100vw"
                                             />
                                         </Box>

@@ -5,17 +5,13 @@
  * 11-15-2024
  */
 
-import { Button, Input, Modal, Stack, Text, Textarea, Tooltip } from "@mantine/core"
+import { Button, Input, Modal, Stack, Text, Textarea, Tooltip, useMantineColorScheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-import { User } from "@supabase/supabase-js"
-import { IconPlus, IconRefresh, IconTrash } from "@tabler/icons-react"
+import { IconRefresh } from "@tabler/icons-react"
 import { useState } from "react"
 import { notifications } from "@mantine/notifications"
-import { uploadLectureImages } from "@/utils/services/storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { isProfessor } from "@/utils/lecture/isProfessor"
-import { deleteLecture } from "@/utils/services/lecture"
 import { createGeneration } from "@/utils/services/generation"
 import { Evaluation, Generation, Question } from "@/types"
 import { getEvaluationAsText } from "@/utils/services/evaluations"
@@ -31,6 +27,8 @@ export default function RegenerateGenerationModal({ generation, evaluations, pro
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
+
+    const { colorScheme } = useMantineColorScheme();
 
     const getEvaluationComments = () => {
         const comments = evaluations.map(evaluation => getEvaluationAsText(evaluation)).join("\n");
@@ -94,7 +92,7 @@ export default function RegenerateGenerationModal({ generation, evaluations, pro
 
     return (
         <>
-            <Tooltip label="Regenerate"><IconRefresh size={24} color="black" style={{ cursor: "pointer" }} onClick={open} /></Tooltip>
+            <Tooltip label="Regenerate"><IconRefresh size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>
 
             <Modal opened={opened} onClose={close} title="Regenerate Generation" centered>
                 <Stack>

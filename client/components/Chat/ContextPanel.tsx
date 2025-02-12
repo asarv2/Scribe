@@ -6,8 +6,8 @@
  * 02.05.2025
  */
 
-import { Card, TextInput, Group, Stack, ScrollArea } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { Card, TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon } from "@mantine/core";
+import { IconSearch, IconPresentation, IconBook } from "@tabler/icons-react";
 import { LectureList } from "./LectureList";
 import { TextbookTree } from "./TextbookTree";
 import { ChatMessage } from "./ChatCanvas";
@@ -37,47 +37,76 @@ export function ContextPanel({
     toggleNode,
     activeChat
 }: ContextPanelProps) {
+
+    const { colorScheme } = useMantineColorScheme();
+
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <Stack>
-            <Card
-                shadow="sm"
-                p="md"
-                style={{
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 2,
-                    backgroundColor: 'white'
-                }}
-            >
-                <TextInput
-                    placeholder="Search context..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    leftSection={<IconSearch size={16} />}
-                />
-            </Card>
+            <TextInput
+                placeholder="Search context..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                leftSection={<IconSearch size={16} />}
+                styles={(theme) => ({
+                    input: {
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
+                        borderColor: colorScheme === "dark" ? "#373A40" : undefined
+                    }
+                })}
+            />
+            <Group>
+                <Tooltip label="Jump to Lectures">
+                    <ActionIcon
+                        variant="subtle"
+                        onClick={() => scrollToSection('lectures-section')}
+                        aria-label="Jump to lectures"
+                    >
+                        <IconPresentation size={20} />
+                    </ActionIcon>
+                </Tooltip>
+                <Tooltip label="Jump to Textbooks">
+                    <ActionIcon
+                        variant="subtle"
+                        onClick={() => scrollToSection('textbooks-section')}
+                        aria-label="Jump to textbooks"
+                    >
+                        <IconBook size={20} />
+                    </ActionIcon>
+                </Tooltip>
+            </Group>
 
             <ScrollArea.Autosize mah={isMobile ? 400 : "calc(100vh - 250px)"}>
-                <Stack gap={0}>
-                    <LectureList
-                        classId={classId}
-                        searchQuery={searchQuery}
-                        expandedSections={expandedSections}
-                        toggleSection={toggleSection}
-                        addContextToChat={addContextToChat}
-                        activeChat={activeChat}
-                    />
+                <Stack gap="xs">
+                    <div id="lectures-section">
+                        <LectureList
+                            classId={classId}
+                            searchQuery={searchQuery}
+                            expandedSections={expandedSections}
+                            toggleSection={toggleSection}
+                            addContextToChat={addContextToChat}
+                            activeChat={activeChat}
+                        />
+                    </div>
 
-                    <TextbookTree
-                        classId={classId}
-                        searchQuery={searchQuery}
-                        expandedSections={expandedSections}
-                        toggleSection={toggleSection}
-                        addContextToChat={addContextToChat}
-                        expandedNodes={expandedNodes}
-                        toggleNode={toggleNode}
-                        activeChat={activeChat}
-                    />
+                    <div id="textbooks-section">
+                        <TextbookTree
+                            classId={classId}
+                            searchQuery={searchQuery}
+                            expandedSections={expandedSections}
+                            toggleSection={toggleSection}
+                            addContextToChat={addContextToChat}
+                            expandedNodes={expandedNodes}
+                            toggleNode={toggleNode}
+                            activeChat={activeChat}
+                        />
+                    </div>
                 </Stack>
             </ScrollArea.Autosize>
         </Stack>

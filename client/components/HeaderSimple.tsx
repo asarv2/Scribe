@@ -5,7 +5,7 @@
  * 09.01.2024
  */
 
-import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box, Menu } from '@mantine/core';
+import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box, Menu, useMantineColorScheme, Button, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
@@ -15,14 +15,13 @@ import { IconChevronDown, IconMessage, IconUser } from '@tabler/icons-react';
 import { getUser } from '@/utils/queries/get-user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
-import type { User } from '@supabase/supabase-js';
-import { isProfessor } from '@/utils/lecture/isProfessor';
 import { notifications } from '@mantine/notifications';
 import { logout } from '@/utils/services/auth';
 import { useState } from 'react';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getClasses } from '@/utils/queries/get-classes';
-import { Profile, Class } from '@/types';
+
+
 const classNav = [
     { id: 'c770c9bb-4de1-44be-aacb-b4bea3efbacf', label: 'MA 421' },
     { id: '9ebca7a7-5792-456a-ab55-03801ba710e5', label: 'MA 351' }, // MJ's professor
@@ -36,6 +35,8 @@ export function HeaderSimple() {
     const pathname = usePathname();
     const queryClient = useQueryClient();
     const [loading, setLoading] = useState(false);
+
+    const { colorScheme } = useMantineColorScheme();
 
     // Get current class from URL
     const currentClassId = pathname.split('/classes/')[1]?.split('/')[0];
@@ -61,14 +62,14 @@ export function HeaderSimple() {
 
     const getFilteredClasses = () => {
         if (!profile || !classData) return [];
-        
+
         // Show all classes if user is admin
         if (profile.admin) {
             return classNav;
         }
 
         // Filter classes based on profile.classes
-        return classNav.filter(classItem => 
+        return classNav.filter(classItem =>
             profile.classes?.includes(classItem.id)
         );
     };
@@ -144,7 +145,7 @@ export function HeaderSimple() {
                         <Group align="center">
                             <Link href="/">
                                 <Image
-                                    src="/images/logo.png"
+                                    src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
                                     priority
                                     alt="Logo"
                                     width={100}
@@ -157,7 +158,7 @@ export function HeaderSimple() {
                                 <Menu shadow="md" width={200}>
                                     <Menu.Target>
                                         <button className={classes.classSelector}>
-                                            {displayText} <IconChevronDown size={16} />
+                                            {displayText} <IconChevronDown size={16} color={colorScheme === "dark" ? "white" : "black"} />
                                         </button>
                                     </Menu.Target>
 
@@ -188,23 +189,23 @@ export function HeaderSimple() {
                                     <Menu shadow="md" width={200}>
                                         <Menu.Target>
                                             <button className={classes.profileButton}>
-                                                <IconUser size={20} />
+                                                <IconUser size={20} color={colorScheme === "dark" ? "white" : "black"} />
                                             </button>
                                         </Menu.Target>
 
                                         <Menu.Dropdown>
-                                            <Menu.Label>{profile?.first_name} {profile?.last_name}</Menu.Label>
-                                            <Menu.Divider />
-                                            {/* <Menu.Item
-                                                color="blue"
+                                            <Menu.Item
                                                 component={Link}
                                                 href="/login"
+                                                style={{ color: colorScheme === "dark" ? "white" : "inherit" }}
                                             >
                                                 Account
-                                            </Menu.Item> */}
+                                            </Menu.Item>
+                                            <Menu.Divider />
                                             <Menu.Item
                                                 color="red"
                                                 onClick={handleLogout}
+                                                style={{ color: colorScheme === "dark" ? "white" : "inherit" }}
                                             >
                                                 Logout
                                             </Menu.Item>
@@ -213,7 +214,7 @@ export function HeaderSimple() {
 
                                     <Link href="/feedback">
                                         <button className={classes.feedbackButton}>
-                                            <IconMessage size={20} />
+                                            <IconMessage size={20} color={colorScheme === "dark" ? "white" : "black"} />
                                         </button>
                                     </Link>
                                 </>
@@ -230,7 +231,13 @@ export function HeaderSimple() {
                             )}
                         </Group>
 
-                        <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="xs" size="sm" />
+                        <Burger
+                            opened={drawerOpened}
+                            onClick={toggleDrawer}
+                            hiddenFrom="xs"
+                            size="sm"
+                            color={colorScheme === "dark" ? "white" : "black"}
+                        />
                     </Group>
                 </Container>
             </header>
@@ -249,7 +256,7 @@ export function HeaderSimple() {
                         <Drawer.Title>
                             <Link href="/" passHref>
                                 <Image
-                                    src="/images/logo.png"
+                                    src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
                                     priority
                                     alt="Logo"
                                     width={100}
@@ -266,7 +273,16 @@ export function HeaderSimple() {
                                 <>
                                     {navigationItems}
                                     <Divider my="sm" />
-                                    {/* <Box p={2}>
+                                    <Box p={2}>
+                                        <Link
+                                            href="/feedback"
+                                            className={classes.link}
+                                            data-active={pathname === "/feedback" || undefined}
+                                        >
+                                            Feedback
+                                        </Link>
+                                    </Box>
+                                    <Box p={2}>
                                         <Link
                                             href="/login"
                                             className={classes.link}
@@ -274,7 +290,7 @@ export function HeaderSimple() {
                                         >
                                             Account
                                         </Link>
-                                    </Box> */}
+                                    </Box>
                                 </>
                             ) : (
                                 <>

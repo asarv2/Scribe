@@ -214,8 +214,8 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                                     <Image
                                                         src={getActiveImage(document)}
                                                         alt={`Chat context`}
-                                                        style={{ objectFit: "contain" }}
-                                                        width={200}
+                                                        style={{ objectFit: "contain", borderRadius: "10px" }}
+                                                        width={150}
                                                         height={150}
                                                     />
                                                     <Stack gap="xs">
@@ -272,9 +272,9 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                                 <Image
                                                     src={getActiveImage(document)}
                                                     alt={`Chat context`}
-                                                    width={200}
+                                                    width={150}
                                                     height={150}
-                                                    style={{ objectFit: "contain" }}
+                                                    style={{ objectFit: "contain", borderRadius: "10px" }}
                                                 />
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{generation.name}</Text>

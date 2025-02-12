@@ -6,12 +6,14 @@
  */
 "use client"
 import { HeaderSimple } from "../components/HeaderSimple";
-import { Box, Button, Center, Container, Input, Space, Stack, Text } from "@mantine/core";
+import { Box, Button, Center, Container, Input, Space, Stack, Text, Flex, Group, Grid, Title, List, ThemeIcon, useMantineColorScheme } from "@mantine/core";
 import Link from "next/link";
-import { IconAt } from '@tabler/icons-react';
+import { IconAt, IconCheck } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useState } from "react";
 import { joinWaitlist } from "../utils/services/waitlist";
+import Image from "next/image";
+import classes from "../components/Landing.module.css";
 
 export default function Landing() {
   const [value, setValue] = useState("");
@@ -24,7 +26,7 @@ export default function Landing() {
         throw new Error("Please enter a valid Purdue email address");
       }
 
-      const {success, error} = await joinWaitlist(value)
+      const { success, error } = await joinWaitlist(value)
       if (!success) {
         if (error === "duplicate key value violates unique constraint \"waitlist_pkey\"") {
           throw new Error("You have already joined the waitlist");
@@ -53,17 +55,62 @@ export default function Landing() {
   return (
     <>
       <HeaderSimple />
-      <Container fluid style={{ marginTop: "30px" }}>
-        <Center>
-          <Space h={500} />
-          <Stack>
-            <Text size="xl" fw={700}>Scribe Waitlist</Text>
-            <Input placeholder="Your Purdue email" leftSection={<IconAt size={16} />} value={value} onChange={(e) => {
-              setValue(e.currentTarget.value);
-            }}/>
-            <Button onClick={handleClick} loading={isLoading}>Join</Button>
-          </Stack>
-        </Center>
+      <Container size="lg">
+        <div className={classes.inner}>
+          <div className={classes.content}>
+            <Title className={classes.title}>
+              Welcome to <span className={classes.highlight}>Scribe.AI</span>
+            </Title>
+            <Text c="dimmed" mt="md">
+              Join the future of learning. An AI-powered chatbot that takes burden off professors and students.
+            </Text>
+
+            <List
+              mt={30}
+              spacing="sm"
+              size="sm"
+              icon={
+                <ThemeIcon size={20} radius="xl">
+                  <IconCheck size={12} stroke={1.5} />
+                </ThemeIcon>
+              }
+            >
+              <List.Item>
+                <b>Transcribe Anything</b> - Automatically transcribe your lectures, textbooks, and homework files.
+              </List.Item>
+              <List.Item>
+                <b>24/7 Availability</b> - Get help with your classes anytime, anywhere
+              </List.Item>
+              <List.Item>
+                <b>Private and Secure</b> - Students must have a code provided by professors to use the service.
+              </List.Item>
+            </List>
+
+            <Group mt={30}>
+              <Input
+                placeholder="Your Purdue email"
+                leftSection={<IconAt size={16} />}
+                value={value}
+                onChange={(e) => setValue(e.currentTarget.value)}
+                style={{ width: '300px' }}
+              />
+              <Button onClick={handleClick} loading={isLoading}>
+                Join Waitlist
+              </Button>
+            </Group>
+          </div>
+
+          <Image
+            src="/images/hero.png"
+            alt="Scribe Hero"
+            width={500}
+            height={500}
+            className={classes.heroImage}
+            style={{
+              borderRadius: "10px",
+            }}
+          />
+        </div>
       </Container>
     </>
   );

@@ -18,6 +18,9 @@ import { getUser } from "@/utils/queries/get-user";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Code } from "@/types";
+import { getProfile } from "@/utils/queries/get-profile";
+import { ProfilePage } from "@/components/Profile";
+
 export default function Login() {
 
     const queryClient = useQueryClient()
@@ -141,33 +144,40 @@ export default function Login() {
         queryFn: () => getUser(supabase),
     })
 
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
+
 
 
     return (
         <>
             <HeaderSimple />
             <Container fluid style={{ marginTop: "30px" }}>
-                <Center key={String(loadingUser)}>
-                    {user ? <Stack>
-                        <Text>Logged in as {user.email}</Text>
-                        <Button color="red" onClick={handleLogout} loading={loading}>Logout</Button>
-                    </Stack> : <Stack>
-                        <Text size="xl">Student Login</Text>
-                        {codeValid ? <Stack>
-                            <Input placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                            <Input placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                            <Button color="teal" onClick={handleCreateAnonymousUser} loading={loading}>Create Account</Button>
-                        </Stack> : <Stack>
-                            <Input placeholder="Enter Code" value={code} onChange={(e) => setCode(e.target.value)} />
-                            <Button color="teal" onClick={handleCheckCode} loading={loading}>Submit</Button>
-                        </Stack>}
-                        {errorText && <Text color="red">{errorText}</Text>}
-                        <Divider />
-                        <Link href="/login" style={{ width: "100%" }}>
-                            <Button color="blue" style={{ width: "100%" }}>I'm a Professor</Button>
-                        </Link>
-                    </Stack>}
-                </Center>
+                <div key={String(loadingUser)}>
+                    {user && profile ? <ProfilePage user={user} profile={profile} handleLogout={handleLogout} loading={loading} /> :
+                        <Center>
+                            <Stack>
+                                <Text size="xl">Student Login</Text>
+                                {codeValid ? <Stack>
+                                    <Input placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                                    <Input placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                                    <Button color="teal" onClick={handleCreateAnonymousUser} loading={loading}>Create Account</Button>
+                                </Stack> : <Stack>
+                                    <Input placeholder="Enter Code" value={code} onChange={(e) => setCode(e.target.value)} />
+                                    <Button color="teal" onClick={handleCheckCode} loading={loading}>Submit</Button>
+                                </Stack>}
+                                {errorText && <Text color="red">{errorText}</Text>}
+                                <Divider />
+                                <Link href="/login" style={{ width: "100%" }}>
+                                    <Button color="blue" style={{ width: "100%" }}>I'm a Professor</Button>
+                                </Link>
+                            </Stack>
+                        </Center>
+                    }
+                </div>
             </Container>
         </>
     )

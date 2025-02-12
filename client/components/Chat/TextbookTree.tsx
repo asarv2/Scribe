@@ -14,6 +14,7 @@ import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getChapters } from "@/utils/queries/get-chapters";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { ChatMessage } from "./ChatCanvas";
+import { useMantineColorScheme } from '@mantine/core';
 
 interface TextbookTreeProps {
     classId: string;
@@ -37,6 +38,7 @@ export function TextbookTree({
     activeChat
 }: TextbookTreeProps) {
     const supabase = useSupabaseBrowser();
+    const { colorScheme } = useMantineColorScheme();
 
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
@@ -124,7 +126,9 @@ export function TextbookTree({
                     style={{
                         marginLeft: depth * 20,
                         width: 'auto',
-                        display: 'inline-flex'
+                        display: 'inline-flex',
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
+                        borderColor: colorScheme === "dark" ? "#373A40" : "#e9ecef"
                     }}
                 >
                     <Group>
@@ -132,7 +136,8 @@ export function TextbookTree({
                             <ActionIcon
                                 size="sm"
                                 onClick={() => toggleNode(node.id)}
-                                variant="outline"
+                                variant={colorScheme === "dark" ? "filled" : "outline"}
+                                color={colorScheme === "dark" ? "gray.6" : "blue"}
                             >
                                 {isExpanded ? (
                                     <IconChevronDown size={16} />
@@ -142,7 +147,7 @@ export function TextbookTree({
                             </ActionIcon>
                         )}
                         <ActionIcon
-                            variant="light"
+                            variant={colorScheme === "dark" ? "filled" : "light"}
                             color="blue"
                             onClick={() => {
                                 const contextType = isTextbook ? 'textbooks' : 
@@ -154,7 +159,10 @@ export function TextbookTree({
                         >
                             <IconPlus size={16} />
                         </ActionIcon>
-                        <Text size="sm">
+                        <Text 
+                            size="sm" 
+                            c={colorScheme === "dark" ? "gray.3" : "dark"}
+                        >
                             {isChapter ? 
                                 `Chapter ${node.chapter_number}: ${node.title}` :
                                 isTextbook ? 
@@ -180,11 +188,19 @@ export function TextbookTree({
     if (!textbooks?.length) return null;
 
     return (
-        <Card shadow="sm" p="md">
+        <Card 
+            shadow="sm" 
+            p="md"
+            style={{
+                backgroundColor: colorScheme === "dark" ? "#2C2E33" : "#f8f9fa",
+                border: `1px solid ${colorScheme === "dark" ? "#373A40" : "#e9ecef"}`
+            }}
+        >
             <Group mb={expandedSections.has('textbooks') ? "md" : 0}>
                 <ActionIcon
                     variant="subtle"
                     onClick={() => toggleSection('textbooks')}
+                    color={colorScheme === "dark" ? "gray.4" : "gray.7"}
                 >
                     {expandedSections.has('textbooks') ? (
                         <IconChevronDown size={16} />
@@ -192,7 +208,7 @@ export function TextbookTree({
                         <IconChevronRight size={16} />
                     )}
                 </ActionIcon>
-                <Text fw={700}>Textbooks</Text>
+                <Text fw={700} c={colorScheme === "dark" ? "gray.1" : "dark"}>Textbooks</Text>
             </Group>
             {expandedSections.has('textbooks') && (
                 <Stack align="flex-start">

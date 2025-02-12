@@ -16,20 +16,40 @@
 }
 
 .classSelector {
+    border: none;
+    background: transparent;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 8px 12px;
-    border: none;
-    background: none;
+    gap: 4px;
     cursor: pointer;
+    color: var(--mantine-color-text);
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
     font-size: var(--mantine-font-size-sm);
-    color: var(--mantine-color-gray-7);
-    border-radius: var(--mantine-radius-sm);
-    
-    &:hover {
-        background-color: var(--mantine-color-gray-0);
-    }
+}
+
+.classSelector:hover {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
+}
+
+.profileButton, .feedbackButton {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    color: var(--mantine-color-text);
+    transition: background-color 0.2s;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileButton:hover, .feedbackButton:hover {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
 }
 
 .link {
@@ -38,48 +58,16 @@
     padding: 8px 12px;
     border-radius: var(--mantine-radius-sm);
     text-decoration: none;
-    color: var(--mantine-color-gray-7);
+    color: var(--mantine-color-text);
     font-size: var(--mantine-font-size-sm);
     font-weight: 500;
-
-    &:hover {
-        background-color: var(--mantine-color-gray-0);
-    }
-
-    &[data-active] {
-        background-color: var(--mantine-color-blue-0);
-        color: var(--mantine-color-blue-7);
-    }
 }
 
-.profileButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--mantine-color-gray-7);
-    border-radius: var(--mantine-radius-sm);
-    
-    &:hover {
-        background-color: var(--mantine-color-gray-0);
-    }
+.link:hover {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
 }
 
-.feedbackButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--mantine-color-gray-7);
-    border-radius: var(--mantine-radius-sm);
-    
-    &:hover {
-        background-color: var(--mantine-color-gray-0);
-    }
+.link[data-active] {
+    background-color: var(--mantine-color-blue-filled);
+    color: var(--mantine-color-white);
 }

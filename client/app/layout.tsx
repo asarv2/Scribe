@@ -6,6 +6,7 @@
  */
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/dropzone/styles.css';
 
 import { ColorSchemeScript } from '@mantine/core';
 import type { Metadata } from "next";
@@ -27,7 +28,9 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-          <Providers>{children}</Providers>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

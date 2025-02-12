@@ -18,7 +18,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -29,12 +29,15 @@ import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import Latex from "@/components/Latex";
 import { Document } from "@/types";
 import { getFigures } from "@/utils/queries/get-figures";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export default function Lecture({ params }: { params: { classId: string, lectureId: string } }) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [hoveredFigure, setHoveredFigure] = useState<string | null>(null);
     const previewScrollRef = useRef<HTMLDivElement>(null);
+
+    const { colorScheme } = useMantineColorScheme();
 
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
@@ -65,6 +68,12 @@ export default function Lecture({ params }: { params: { classId: string, lecture
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
     })
 
     const { data: figures, isLoading: loadingFigures } = useQuery({
@@ -141,12 +150,12 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${classId}/lecture`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
                         </Group>
                         <Group>
-                            <DeleteLectureModal lectureId={lectureId} lectureTitle={lecture?.name ?? ""} user={user ?? undefined} classId={lecture?.class ?? ""} />
+                            <DeleteLectureModal lectureId={lectureId} lectureTitle={lecture?.name ?? ""} profile={profile ?? undefined} classId={lecture?.class ?? ""} />
                         </Group>
                     </Flex>
                     <Grid>
@@ -154,7 +163,15 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                             <Stack>
                                 <Card padding="md" pos="relative" withBorder>
                                     <Box
-                                        style={{ position: 'relative', width: '100%', height: 500 }}
+                                        style={{ 
+                                            position: 'relative', 
+                                            width: '100%', 
+                                            height: 500,
+                                            overflow: "hidden",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center"
+                                        }}
                                         onTouchStart={(e) => {
                                             setTouchStartX(e.changedTouches[0].clientX);
                                         }}
@@ -166,8 +183,13 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                         <Image
                                             src={getActiveImage(activeDocumentId)}
                                             alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
-                                            fill
-                                            style={{ objectFit: 'contain' }}
+                                            width={500}
+                                            height={500}
+                                            style={{ 
+                                                maxWidth: '100%',
+                                                maxHeight: '100%',
+                                                borderRadius: "10px"
+                                            }}
                                             sizes="100vw"
                                         />
                                         {/* {!loadingFigures && figures?.filter(figure => figure.document === activeDocumentId).map(figure => {
@@ -218,7 +240,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                         <ActionIcon
                                             size="xl"
                                             variant="filled"
-                                            color="gray"
+                                            color={colorScheme === "dark" ? "gray" : "dark"}
                                             style={{
                                                 position: 'absolute',
                                                 top: '50%',
@@ -235,7 +257,7 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                             disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === 0}
                                             aria-label="Previous Slide"
                                         >
-                                            <IconArrowLeft size={32} />
+                                            <IconArrowLeft size={32} color={colorScheme === "dark" ? "white" : "black"} />
                                         </ActionIcon>
                                         <ActionIcon
                                             size="xl"
@@ -287,19 +309,25 @@ export default function Lecture({ params }: { params: { classId: string, lecture
                                             data-document={doc.id}
                                             style={{
                                                 cursor: 'pointer',
-                                                border: `2px solid ${doc.id === activeDocumentId ? 'blue' : 'transparent'}`,
                                                 width: 50,
                                                 height: 50,
                                                 position: 'relative',
                                                 flexShrink: 0,
+                                                borderRadius: '4px',
+                                                overflow: 'hidden',
                                             }}
                                             onClick={() => handlePageClick(doc.id)}
                                         >
                                             <Image
                                                 src={getActiveImage(doc.id)}
                                                 alt={`Page ${doc.page}`}
-                                                fill
-                                                style={{ objectFit: 'cover' }}
+                                                width={50}
+                                                height={50}
+                                                style={{ 
+                                                    objectFit: 'cover',
+                                                    outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                                                    outlineOffset: '-2px',
+                                                }}
                                                 sizes="100vw"
                                             />
                                         </Box>

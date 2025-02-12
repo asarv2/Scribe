@@ -130,19 +130,19 @@ export default function Class({ params }: { params: { classId: string } }) {
 
                             <Group justify="space-between" mt="md" mb="xs">
                                 <Text fw={500}>Homework</Text>
-                                {/* <Badge color="yellow">Coming Soon</Badge> */}
+                                <Badge color="yellow">Coming Soon</Badge>
                             </Group>
 
                             <Text size="sm" c="dimmed" mb="md">
                                 Assignments and homework management features
                             </Text>
 
-                            {/* <Button color="gray" fullWidth radius="md" disabled>
+                            <Button color="gray" fullWidth radius="md" disabled>
                                 Coming Soon
-                            </Button> */}
-                            <Button component={Link} href={`${pathname}/homework`} color="blue" fullWidth radius="md">
-                                View Homework
                             </Button>
+                            {/* <Button component={Link} href={`${pathname}/homework`} color="blue" fullWidth radius="md">
+                                View Homework
+                            </Button> */}
                         </Card>
                     </SimpleGrid>
                 </Stack>

@@ -18,7 +18,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname } from "next/navigation";
 import { IconArrowLeft, IconArrowRight, IconUpload, IconRefresh } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Button, em, Group, Loader, Stack } from "@mantine/core";
+import { ActionIcon, Box, Button, em, Group, Loader, Stack, useMantineColorScheme } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
@@ -42,6 +42,8 @@ export default function TextbookPage({ params }: { params: { classId: string } }
     const fileInputRef = useRef<HTMLButtonElement>(null);
     const classId = params.classId;
     const router = useRouter();
+
+    const { colorScheme } = useMantineColorScheme();
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
@@ -607,7 +609,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${classId}`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6} pl={4}>Textbooks</Text>
                         </Group>
@@ -635,9 +637,9 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                                                 <Image
                                                     src={getDocumentImage(textbook.id)}
                                                     alt={`First page of ${textbook.title}`}
-                                                    width={200}
+                                                    width={150}
                                                     height={150}
-                                                    style={{ objectFit: "contain" }}
+                                                    style={{ objectFit: "contain", borderRadius: "10px" }}
                                                 />
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{textbook.title}</Text>
@@ -694,9 +696,9 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                                             <Image
                                                 src={getDocumentImage(textbook.id)}
                                                 alt={`First page of ${textbook.title}`}
-                                                width={200}
+                                                width={150}
                                                 height={150}
-                                                style={{ objectFit: "contain" }}
+                                                style={{ objectFit: "contain", borderRadius: "10px" }}
                                             />
                                             <Stack gap="xs">
                                                 <Text size="lg" fw={500}>{textbook.title}</Text>

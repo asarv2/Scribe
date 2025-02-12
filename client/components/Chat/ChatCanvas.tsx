@@ -5,7 +5,7 @@
  * 02.06.2025
  */
 
-import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, Loader, Avatar } from "@mantine/core";
+import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, Loader, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import { Container, Flex } from "@mantine/core";
@@ -33,7 +33,8 @@ import { getGeneration } from "@/utils/queries/get-generation";
 import { getGenerationMessages } from "@/utils/queries/get-generation-messages";
 import DeleteGenerationModal from "../Delete/DeleteGenerationModal";
 import { getUser } from "@/utils/queries/get-user";
-import { Message } from "@/types";
+import { Message, Profile } from "@/types";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export interface ChatMessage {
     id: number;
@@ -71,6 +72,8 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
     const queryClient = useQueryClient();
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    const { colorScheme } = useMantineColorScheme();
 
     // Add query for existing chat if generationId is not "new"
     const { data: existingGeneration } = useQuery({
@@ -124,6 +127,12 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
     })
 
     // Ref for message container
@@ -237,6 +246,10 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
             ...exerciseReferences, 
             ...messageReferences
         ]));
+    }
+
+    const getAvatarUrl = (profile: Profile) => {
+        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${profile.id}.png`
     }
 
     const handleChat = async () => {
@@ -472,7 +485,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${classId}/chat`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
                             {existingGeneration && <Text size="xl" fw={700} mb={6}>{existingGeneration.name}</Text>}
                             {!existingGeneration && <TextInput
@@ -486,7 +499,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                             />}
                         </Group>
                         <Group>
-                            <DeleteGenerationModal generationId={generationId} generationTitle={existingGeneration?.name ?? ""} user={user ?? undefined} classId={classId} type={existingGeneration?.type ?? "problem"} />
+                            <DeleteGenerationModal generationId={generationId} generationTitle={existingGeneration?.name ?? ""} profile={profile ?? undefined} classId={classId} type={existingGeneration?.type ?? "problem"} />
                         </Group>
                     </Flex>
                     <Grid>
@@ -505,17 +518,27 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                     {messages?.map((message) => (
                                         <Stack key={message.id}>
                                             {/* User message */}
-                                            <Card
-                                                padding="sm"
-                                                radius="md"
-                                                style={{
-                                                    alignSelf: "flex-end",
-                                                    maxWidth: "70%",
-                                                    backgroundColor: "#228be6"
-                                                }}
-                                            >
-                                                <Text c="white">{message.question}</Text>
-                                            </Card>
+                                            <Group align="flex-start" justify="flex-end">
+                                                <Card
+                                                    padding="sm"
+                                                    radius="md"
+                                                    style={{
+                                                        maxWidth: "70%",
+                                                        backgroundColor: "#228be6"
+                                                    }}
+                                                >
+                                                    <Text c="white">{message.question}</Text>
+                                                </Card>
+                                                <Avatar
+                                                    src={profile ? getAvatarUrl(profile) : undefined}
+                                                    radius="xl"
+                                                    size="md"
+                                                    alt={`${profile?.first_name} ${profile?.last_name}`}
+                                                >
+                                                    {/* Fallback to initials if no avatar */}
+                                                    {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
+                                                </Avatar>
+                                            </Group>
 
                                             {/* AI response */}
                                             <Group align="flex-start">
@@ -531,8 +554,9 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                                     style={{
                                                         alignSelf: "flex-start",
                                                         maxWidth: "70%",
-                                                        backgroundColor: "#f1f3f5",
-                                                        minWidth: "200px"
+                                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                                        minWidth: "200px",
+                                                        border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
                                                     }}
                                                 >
                                                     {message.response === "" ? (
@@ -543,8 +567,8 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                                             </Text>
                                                         </Group>
                                                     ) : (
-                                                        <Text style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                                                            {message.response}
+                                                        <Text style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }} c={colorScheme === "dark" ? "white" : "black"}>
+                                                            <Latex>{message.response}</Latex>
                                                         </Text>
                                                     )}
                                                 </Card>

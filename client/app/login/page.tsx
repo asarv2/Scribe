@@ -8,7 +8,7 @@
 "use client"
 
 import { HeaderSimple } from "@/components/HeaderSimple"
-import { Button, Center, Container, Divider, Input, Stack, Text } from "@mantine/core"
+import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
 import { login, logout } from "@/utils/services/auth";
@@ -17,6 +17,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser } from "@/utils/queries/get-user";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getProfile } from "@/utils/queries/get-profile";
+import { ProfilePage } from "@/components/Profile";
 
 export default function Login() {
 
@@ -83,6 +85,7 @@ export default function Login() {
                 queryClient.invalidateQueries({
                     queryKey: ["user"]
                 })
+                router.push("/")
             }
 
             notifications.show({
@@ -108,6 +111,12 @@ export default function Login() {
         queryFn: () => getUser(supabase),
     })
 
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
+
 
 
 
@@ -116,21 +125,22 @@ export default function Login() {
         <>
             <HeaderSimple />
             <Container fluid style={{ marginTop: "30px" }}>
-                <Center key={String(loadingUser)}>
-                    {user ? <Stack>
-                        <Text>Logged in as {user.email}</Text>
-                        <Button color="red" onClick={handleLogout} loading={loading}>Logout</Button>
-                    </Stack> : <Stack>
-                        <Text size="xl">Professor Login</Text>
-                        <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                        <Input placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        <Button color="teal" onClick={handleLogin} loading={loading}>Login</Button>
-                        <Divider />
-                        <Link href="/login/student" style={{ width: "100%" }}>
-                            <Button color="blue" style={{ width: "100%" }}>I'm a Student</Button>
-                        </Link>
-                    </Stack>}
-                </Center>
+                <div key={String(loadingUser)}>
+                    {user && profile ? <ProfilePage user={user} profile={profile} handleLogout={handleLogout} loading={loading} /> :
+                        <Center>
+                            <Stack>
+                                <Text size="xl">Professor Login</Text>
+                                <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <PasswordInput placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                <Button color="teal" onClick={handleLogin} loading={loading}>Login</Button>
+                                <Divider />
+                                <Link href="/login/student" style={{ width: "100%" }}>
+                                    <Button color="blue" style={{ width: "100%" }}>I'm a Student</Button>
+                                </Link>
+                            </Stack>
+                        </Center>
+                    }
+                </div>
             </Container>
         </>
     )

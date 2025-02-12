@@ -16,16 +16,15 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Skeleton, Stack, Text, Title, useMantineColorScheme } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
-import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
-import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import DeleteGenerationModal from "@/components/Delete/DeleteGenerationModal";
-import Questions from "@/components/Questions";
+import Questions from "@/components/Questions"; 
+import { getProfile } from "@/utils/queries/get-profile";
 import { getGeneration } from "@/utils/queries/get-generation";
 import { getGenerationProblems } from "@/utils/queries/get-generation-problems";
 import { getGenerationSummaries } from "@/utils/queries/get-generation-summaries";
@@ -40,6 +39,8 @@ export default function Generation({ params }: { params: { classId: string, gene
     const queryClient = useQueryClient();
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [pageNumber, setPageNumber] = useState<number>(1);
+
+    const { colorScheme } = useMantineColorScheme();
 
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
@@ -72,6 +73,12 @@ export default function Generation({ params }: { params: { classId: string, gene
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
     })
 
     const onUpdateStatus = async (questionId: string, approved: boolean, rejectionReason?: string) => {
@@ -193,14 +200,14 @@ export default function Generation({ params }: { params: { classId: string, gene
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${classId}/generate/`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
                             <Text size="xl" fw={700} mb={6}>{generation?.name}</Text>
                         </Group>
                         <Group>
                             {generation && <RegenerateGenerationModal generation={generation} evaluations={evaluations ?? []} problems={generationProblems ?? []} />}
-                            <DownloadGenerationModal generationId={generationId} generationTitle={`${generation?.name ?? ""} - ${generation?.type === "summary" ? "Summary" : "Questions"}`} user={user ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
-                            <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} user={user ?? undefined} classId={classId} type={generation?.type ?? "problem"} />
+                            <DownloadGenerationModal generationId={generationId} generationTitle={`${generation?.name ?? ""} - ${generation?.type === "summary" ? "Summary" : "Questions"}`} profile={profile ?? undefined} classId={classId} generationLatex={getGenerationLatex()} />
+                            <DeleteGenerationModal generationId={generationId} generationTitle={generation?.name ?? ""} profile={profile ?? undefined} classId={classId} type={generation?.type ?? "problem"} />
                         </Group>
                     </Flex>
                     <Stack>

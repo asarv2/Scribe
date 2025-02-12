@@ -5,7 +5,7 @@
  * 01.30.2025
  */
 
-import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon } from "@mantine/core";
+import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, useMantineColorScheme } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import { Container, Flex } from "@mantine/core";
@@ -73,6 +73,8 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
     const queryClient = useQueryClient();
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    const { colorScheme } = useMantineColorScheme();
 
 
     const { data: lectures } = useQuery({
@@ -619,7 +621,7 @@ export default function GenerateCanvas({ classId }: { classId: string }) {
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Link href={`/classes/${classId}/generate`}>
-                                <IconArrowLeft size={24} color="black" style={{ cursor: "pointer" }} />
+                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
                             <TextInput
                                 placeholder="Enter generation name"
