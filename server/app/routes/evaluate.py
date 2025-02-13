@@ -133,56 +133,56 @@ async def evaluate_generation():
         latency_ms = latency_seconds * 1000
         print(f"Latency: {latency_ms} ms")
         
-        # certainty
-        certainty_evaluator = CertaintyEvaluator(supabase, generation_id)
-        print("Certainty evaluator created")
-        certainty_score, certainty_explanation = certainty_evaluator.evaluate_certainty()
-        print(f"Certainty score and explanation calculated: Score: {certainty_score}, Explanation: {certainty_explanation}")
-        # accuracy
-        accuracy_evaluator = AccuracyEvaluator(supabase, generation_id)
-        print("Accuracy evaluator created")
-        accuracy_explanation, accuracy_score = accuracy_evaluator.evaluate_accuracy()
-        print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
+        # # certainty
+        # certainty_evaluator = CertaintyEvaluator(supabase, generation_id)
+        # print("Certainty evaluator created")
+        # certainty_score, certainty_explanation = certainty_evaluator.evaluate_certainty()
+        # print(f"Certainty score and explanation calculated: Score: {certainty_score}, Explanation: {certainty_explanation}")
+        # # accuracy
+        # accuracy_evaluator = AccuracyEvaluator(supabase, generation_id)
+        # print("Accuracy evaluator created")
+        # accuracy_explanation, accuracy_score = accuracy_evaluator.evaluate_accuracy()
+        # print(f"Accuracy score and explanation calculated: Score: {accuracy_score}, Explanation: {accuracy_explanation}")
         
-        # adherence
-        adherence_evaluator = AdherenceEvaluator(supabase, "deepseek-r1-7b", generation_id)
-        print("Adherence evaluator created")
-        adherence_explanation, adherence_score = await adherence_evaluator.evaluate_adherence()
-        print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
+        # # adherence
+        # adherence_evaluator = AdherenceEvaluator(supabase, "deepseek-r1-7b", generation_id)
+        # print("Adherence evaluator created")
+        # adherence_explanation, adherence_score = await adherence_evaluator.evaluate_adherence()
+        # print(f"Adherence score and explanation calculated: Score: {adherence_score}, Explanation: {adherence_explanation}")
 
-        # clarity
-        # clarity_evaluator = ClarityEvaluator(supabase, llm, generation_id)
-        # print("Clarity evaluator created")
-        # clarity_explanation, clarity_score = clarity_evaluator.evaluate_clarity()
-        # print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
+        # # clarity
+        # # clarity_evaluator = ClarityEvaluator(supabase, llm, generation_id)
+        # # print("Clarity evaluator created")
+        # # clarity_explanation, clarity_score = clarity_evaluator.evaluate_clarity()
+        # # print(f"Clarity score and explanation calculated: Score: {clarity_score}, Explanation: {clarity_explanation}")
         
-        # complexity
-        complexity_evaluator = ComplexityEvaluator(supabase, "deepseek-r1-7b", generation_id)
-        print("Complexity evaluator created")
-        complexity_explanation, complexity_score = await complexity_evaluator.evaluate_complexity()
-        print(f"Complexity score and explanation calculated: Score: {complexity_score}, Explanation: {complexity_explanation}")
+        # # complexity
+        # complexity_evaluator = ComplexityEvaluator(supabase, "deepseek-r1-7b", generation_id)
+        # print("Complexity evaluator created")
+        # complexity_explanation, complexity_score = await complexity_evaluator.evaluate_complexity()
+        # print(f"Complexity score and explanation calculated: Score: {complexity_score}, Explanation: {complexity_explanation}")
         
-        # novelty
-        novelty_evaluator = NoveltyEvaluator(supabase, "deepseek-r1-7b", generation_id)
-        print("Novelty evaluator created")
-        novelty_explanation, novelty_score = await novelty_evaluator.evaluate_novelty()
-        print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
+        # # novelty
+        # novelty_evaluator = NoveltyEvaluator(supabase, "deepseek-r1-7b", generation_id)
+        # print("Novelty evaluator created")
+        # novelty_explanation, novelty_score = await novelty_evaluator.evaluate_novelty()
+        # print(f"Novelty score and explanation calculated: Score: {novelty_score}, Explanation: {novelty_explanation}")
         
         
         # uploading to supabase
         response = supabase.table("evaluations").insert({
             "generation": generation_id,
             "latency": latency_ms,
-            "certainty": certainty_score,
-            "certainty_explanation": certainty_explanation,
-            "complexity": complexity_score,
-            "complexity_explanation": complexity_explanation,
-            "adherence": adherence_score,
-            "adherence_explanation": adherence_explanation,
-            "accuracy": accuracy_score,
-            "accuracy_explanation": accuracy_explanation,
-            "novelty": novelty_score,
-            "novelty_explanation": novelty_explanation,
+            "certainty": 0,
+            "certainty_explanation": "Not implemented",
+            "complexity": 0,
+            "complexity_explanation": "Not implemented",
+            "adherence": 0,
+            "adherence_explanation": "Not implemented",
+            "accuracy": 0,
+            "accuracy_explanation": "Not implemented",
+            "novelty": 0,
+            "novelty_explanation": "Not implemented",
             "clarity": 0,
             "clarity_explanation": "Not implemented"
         }).execute()
