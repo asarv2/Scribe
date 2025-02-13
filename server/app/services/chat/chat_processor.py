@@ -173,7 +173,7 @@ class ChatProcessor(BaseProcessor):
                 print(f"Skipping message - missing id or question")
                 continue
 
-            context = f"{system_prompt}\n\nCourse Materials:\n{'\n'.join(self.items[message_id])}"
+            context = system_prompt + "\n\nCourse Materials:\n" + "\n".join(self.items[message_id])
             
             result = await self.process_batch(
                 message_id,
