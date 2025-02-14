@@ -7,6 +7,7 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 import { Code, Profile } from "@/types";
+
 export const login = async (email: string, password: string): Promise<{ success: boolean, error: string }> => {
     const supabase = useSupabaseServer(cookies());
     const { error } = await supabase.auth.signInWithPassword({
@@ -56,6 +57,18 @@ export const createAnonymousUser = async (firstName: string, lastName: string, c
 export const logout = async (): Promise<{ success: boolean, error: string }> => {
     const supabase = useSupabaseServer(cookies());
     const { error } = await supabase.auth.signOut();
+    if (error) {
+        return { success: false, error: error.message };
+    } else {
+        return { success: true, error: "" };
+    }
+}
+
+export const updatePassword = async (userId: string, newPassword: string) => {
+    const supabase = useSupabaseServer(cookies(), true);
+    const { error } = await supabase.auth.admin.updateUserById(userId, {
+        password: newPassword,
+    });
     if (error) {
         return { success: false, error: error.message };
     } else {

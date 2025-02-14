@@ -48,7 +48,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
 
     const { data: chatGenerations, isLoading: loadingChatGenerations } = useQuery({
         queryKey: ["chatGenerations", classId, profile?.id],
-        queryFn: () => getGenerations(supabase, classId, 'chat', profile?.admin ? null : profile!.id),
+        queryFn: () => getGenerations(supabase, classId, 'chat', (profile?.admin || profile?.professor) ? null : profile!.id),
         enabled: !!profile
     })
 

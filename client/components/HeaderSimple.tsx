@@ -9,7 +9,7 @@ import { Container, Group, Burger, Divider, ScrollArea, Drawer, rem, Box, Menu, 
 import { useDisclosure } from '@mantine/hooks';
 import classes from "./HeaderSimple.module.css"
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { IconChevronDown, IconMessage, IconUser } from '@tabler/icons-react';
 import { getUser } from '@/utils/queries/get-user';
@@ -37,6 +37,8 @@ export function HeaderSimple() {
     const [loading, setLoading] = useState(false);
 
     const { colorScheme } = useMantineColorScheme();
+
+    const router = useRouter();
 
     // Get current class from URL
     const currentClassId = pathname.split('/classes/')[1]?.split('/')[0];
@@ -113,16 +115,19 @@ export function HeaderSimple() {
             if (!success) {
                 throw new Error(error)
             } else {
+                notifications.show({
+                    title: 'Success',
+                    message: 'Logged out',
+                    color: 'green',
+                });
+
                 queryClient.invalidateQueries({
                     queryKey: ["user"]
                 })
+                router.push("/login")
             }
 
-            notifications.show({
-                title: 'Success',
-                message: 'Logged out',
-                color: 'green',
-            });
+
 
         } catch (e: any) {
             console.error(e)
@@ -196,7 +201,7 @@ export function HeaderSimple() {
                                         <Menu.Dropdown>
                                             <Menu.Item
                                                 component={Link}
-                                                href="/login"
+                                                href="/account"
                                                 style={{ color: colorScheme === "dark" ? "white" : "inherit" }}
                                             >
                                                 Account
@@ -284,9 +289,9 @@ export function HeaderSimple() {
                                     </Box>
                                     <Box p={2}>
                                         <Link
-                                            href="/login"
+                                            href="/account"
                                             className={classes.link}
-                                            data-active={pathname === "/login" || undefined}
+                                            data-active={pathname === "/account" || undefined}
                                         >
                                             Account
                                         </Link>

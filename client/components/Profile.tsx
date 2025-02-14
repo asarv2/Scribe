@@ -17,29 +17,38 @@ import {
     Text,
     Title,
     useMantineColorScheme,
-    useMantineTheme
+    useMantineTheme,
+    PasswordInput
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
 import { IconMoon, IconSun, IconUpload, IconUser, IconX } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 import { Dropzone, FileWithPath } from '@mantine/dropzone';
 import { updateAvatar } from "@/utils/services/profile";
+import { logout, updatePassword } from "@/utils/services/auth";
+import { useQueryClient } from "@tanstack/react-query";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
+
 type ProfileProps = {
     user: User;
     profile: Profile;
-    handleLogout: () => void;
-    loading: boolean;
 }
 
 export function ProfilePage({
     user,
     profile,
-    handleLogout,
-    loading,
 }: ProfileProps) {
     const { colorScheme, setColorScheme } = useMantineColorScheme();
     const openRef = useRef<() => void>(null);
+    const [loading, setLoading] = useState(false);
     const [uploadLoading, setUploadLoading] = useState(false);
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const queryClient = useQueryClient();
+    const router = useRouter();
 
     const toggleColorScheme = () => {
         setColorScheme(colorScheme === 'dark' ? 'light' : 'dark');
@@ -62,6 +71,86 @@ export function ProfilePage({
             setUploadLoading(false);
         }
     };
+
+    const handlePasswordUpdate = async () => {
+        if (newPassword !== confirmPassword) {
+            setPasswordError('New passwords do not match');
+            return;
+        }
+
+        if (newPassword.length < 8) {
+            setPasswordError('Password must be at least 8 characters long');
+            return;
+        }
+
+        setPasswordLoading(true);
+        setPasswordError('');
+
+        try {
+            const { success, error } = await logout()
+            if (!success) {
+                throw new Error(error)
+            } else {
+                const { success, error } = await updatePassword(user.id, newPassword);
+                if (!success) {
+                    setPasswordError(error);
+                } else {
+                    notifications.show({
+                        title: 'Password updated',
+                        message: 'Password updated successfully',
+                        color: 'green'
+                    })
+                    queryClient.invalidateQueries({
+                        queryKey: ["user"]
+                    })
+                    queryClient.invalidateQueries({
+                        queryKey: ["profile", user.id]
+                    })
+                    router.push("/login")
+                }
+            }
+        } catch (error) {
+            setPasswordError('Failed to update password');
+        } finally {
+            setPasswordLoading(false);
+            // Clear fields on success
+            if (!passwordError) {
+                setNewPassword('');
+                setConfirmPassword('');
+            }
+        }
+    };
+
+    const handleLogout = async () => {
+        setLoading(true)
+        try {
+            const { success, error } = await logout()
+            if (!success) {
+                throw new Error(error)
+            } else {
+                notifications.show({
+                    title: 'Success',
+                    message: 'Logged out',
+                    color: 'green'
+                })
+                queryClient.invalidateQueries({
+                    queryKey: ["user"]
+                })
+                queryClient.invalidateQueries({
+                    queryKey: ["profile", user.id]
+                })
+                router.push("/login")
+            }
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            })
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const getAvatarUrl = (profile: Profile) => {
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${profile.id}.png`
@@ -150,6 +239,36 @@ export function ProfilePage({
                         )}
                     </Stack>
                 </Paper>
+
+                {user.email && (
+                    <Paper withBorder p="md" radius="md">
+                        <Stack>
+                            <Text size="sm" fw={500}>Change Password</Text>
+                            <Text size="xs" color="dimmed">You will be logged out upon updating your password.</Text>
+                            <PasswordInput
+                                label="New Password"
+                                value={newPassword}
+                                onChange={(event) => setNewPassword(event.currentTarget.value)}
+                                required
+                            />
+                            <PasswordInput
+                                label="Confirm New Password"
+                                value={confirmPassword}
+                                onChange={(event) => setConfirmPassword(event.currentTarget.value)}
+                                required
+                            />
+                            {passwordError && (
+                                <Text color="red" size="sm">{passwordError}</Text>
+                            )}
+                            <Button
+                                onClick={handlePasswordUpdate}
+                                loading={passwordLoading}
+                            >
+                                Update Password
+                            </Button>
+                        </Stack>
+                    </Paper>
+                )}
 
                 <Button
                     color="red"
