@@ -197,11 +197,11 @@ export default function GeneratePage({ params }: { params: { classId: string } }
     const getActiveImage = (document: Document | undefined) => {
         if (!document) return "/placeholder_image.svg";
         if (document.lecture) {
-            console.log(`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`)
-            return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
+            console.log(`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${document.lecture}/${document.id}.png`)
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${document.lecture}/${document.id}.png`
         } else if (document.textbook) {
-            console.log(`https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${document.textbook}/${document.id}.png`)
-            return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${document.textbook}/${document.id}.png`
+            console.log(`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`)
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`
         }
         return "/placeholder_image.svg";
     }

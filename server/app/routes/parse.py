@@ -1,30 +1,26 @@
-import math
-from flask import Blueprint, request, jsonify, current_app, url_for
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import List, Dict, Any
+import traceback
 from app.extensions import supabase
 from app.services.parse.lecture_processor import LectureProcessor
 from app.services.parse.textbook_processor import TextbookProcessor
-import os
-from datetime import datetime
-import traceback
-import json
-from app.extensions import app
-import requests
-import asyncio
-
 from app.services.parse.audio_processor import AudioProcessor
+from datetime import datetime
 
-parse_bp = Blueprint('parse', __name__)
+router = APIRouter()
 
-@parse_bp.route('/lecture', methods=['POST'])
-async def parse_lecture():
-    """
-    Parse a lecture and return the documents.
-    """
+# Define request models
+class ParseRequest(BaseModel):
+    lecture_id: str | None = None
+    textbook_id: str | None = None
+
+@router.post('/lecture')
+async def parse_lecture(request: ParseRequest):
+    """Parse a lecture and return the documents."""
     try:
         print("Starting parse-lecture function...")
-        data = request.get_json()
-        lecture_id = data.get('lecture_id')
-        
+        lecture_id = request.lecture_id
         print("Request params:", {"lecture_id": lecture_id})
 
         # Update lecture status to parsing
@@ -46,13 +42,11 @@ async def parse_lecture():
         class_title = class_response.data.get('title')
         print("Class query response:", class_response)
 
-
-
         # Get existing documents
         documents_response = supabase.table("documents").select("*").eq("lecture", lecture_id).execute()
         documents = documents_response.data
         if not documents:
-            raise Exception("No documents found")
+            raise HTTPException(status_code=404, detail="No documents found")
 
         # Filter out processed documents
         documents_to_process = [doc for doc in documents if not doc.get('processed', False)]
@@ -182,7 +176,7 @@ async def parse_lecture():
             "parse_error": None
         }).eq("id", lecture_id).execute()
 
-        return jsonify({"results": batch_results}), 200
+        return {"results": batch_results}
 
     except Exception as error:
         print("Error in parse-lecture function:", {
@@ -197,22 +191,18 @@ async def parse_lecture():
             "parse_error": str(error)
         }).eq("id", lecture_id).execute()
 
-        return jsonify({
+        raise HTTPException(status_code=500, detail={
             "error": str(error),
             "stack": traceback.format_exc(),
             "name": type(error).__name__
-        }), 500
-    
-@parse_bp.route('/textbook', methods=['POST'])
-async def parse_textbook():
-    """
-    Parse a textbook and return the documents.
-    """
+        })
+
+@router.post('/textbook')
+async def parse_textbook(request: ParseRequest):
+    """Parse a textbook and return the documents."""
     try:
         print("Starting parse-textbook function...")
-        data = request.get_json()
-        textbook_id = data.get('textbook_id')
-        
+        textbook_id = request.textbook_id
         print("Request params:", {"textbook_id": textbook_id})
 
         # Update textbook status to parsing
@@ -222,7 +212,7 @@ async def parse_textbook():
             "last_parse_attempt": datetime.now().isoformat()
         }).eq("id", textbook_id).execute()
 
-                # Get textbook info
+        # Get textbook info
         textbook_response = supabase.table("textbooks").select("*").eq("id", textbook_id).single().execute()
         num_pages = textbook_response.data.get('pages')
         class_id = textbook_response.data.get('class')
@@ -233,12 +223,11 @@ async def parse_textbook():
         class_title = class_response.data.get('title')
         print("Class query response:", class_response)
 
-
         # Get existing documents
         documents_response = supabase.table("documents").select("*").eq("textbook", textbook_id).execute()
         documents = documents_response.data
         if not documents:
-            raise Exception("No documents found")
+            raise HTTPException(status_code=404, detail="No documents found")
 
         # Filter out processed documents
         documents_to_process = [doc for doc in documents if not doc.get('processed', False)]
@@ -342,7 +331,7 @@ async def parse_textbook():
             "parse_error": None
         }).eq("id", textbook_id).execute()
 
-        return jsonify({"results": batch_results}), 200
+        return {"results": batch_results}
 
     except Exception as error:
         print("Error in parse-textbook function:", {
@@ -357,8 +346,8 @@ async def parse_textbook():
             "parse_error": str(error)
         }).eq("id", textbook_id).execute()
 
-        return jsonify({
+        raise HTTPException(status_code=500, detail={
             "error": str(error),
             "stack": traceback.format_exc(),
             "name": type(error).__name__
-        }), 500
+        })

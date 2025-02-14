@@ -41,7 +41,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
         const filteredDocuments = documents?.filter(document => document.page >= chapter.start_page && document.page <= chapter.end_page);
         if (!filteredDocuments) return '/placeholder_image.svg';
         const document = filteredDocuments[0];
-        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${textbookId}/${document.id}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookId}/${document.id}.png`
     }
 
     return (

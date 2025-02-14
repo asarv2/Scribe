@@ -64,7 +64,7 @@ export function ProfilePage({
     };
 
     const getAvatarUrl = (profile: Profile) => {
-        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${profile.id}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${profile.id}.png`
     }
 
     return (

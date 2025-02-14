@@ -535,7 +535,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         if (!textbookId) return '/placeholder_image.svg';
         const document = documents?.find(document => document.textbook === textbookId);
         if (!document) return '/placeholder_image.svg';
-        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${document.textbook}/${document.id}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`
     }
 
     useEffect(() => {

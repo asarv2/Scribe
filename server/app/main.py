@@ -1,7 +1,9 @@
 import os
 import sys
 
-from flask import jsonify, send_from_directory
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
@@ -10,53 +12,72 @@ if not os.getenv('DOCKER_ENV'):
 else:
     BASE_DIR = '/app'
 
-from app.extensions import app
-from app.routes.parse import parse_bp
-from app.routes.evaluate import evaluate_bp
-from app.routes.generate import generate_bp
+# Create FastAPI app
+app = FastAPI(title="Scribe API")
 
-# Register blueprints
-app.register_blueprint(parse_bp, url_prefix='/parse')
-app.register_blueprint(evaluate_bp, url_prefix='/evaluate')
-app.register_blueprint(generate_bp, url_prefix='/generate')
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.route('/')
-def index():
+# Import routers after app creation
+from app.routes.parse import router as parse_router
+from app.routes.evaluate import router as evaluate_router
+from app.routes.generate import router as generate_router
+
+# Include routers
+app.include_router(parse_router, prefix="/parse")
+app.include_router(evaluate_router, prefix="/evaluate")
+app.include_router(generate_router, prefix="/generate")
+
+@app.get("/", response_class=HTMLResponse)
+async def index():
     return "<h1>This is the Scribe API.</h1>"
 
-@app.route('/health', methods=['GET'], strict_slashes=False)
-def health():
+@app.get("/health")
+async def health():
     """Check if the server is healthy."""
     try:
-        return jsonify({"status": "healthy"}), 200
+        return {"status": "healthy"}
     except Exception as error:
-        # Errorjsonifyng logic
-        return jsonify({
-            "error": str(error),
-            "name": type(error).__name__
-        }), 500
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": str(error),
+                "name": type(error).__name__
+            }
+        )
 
-@app.route('/files/<path:filepath>')
-def serve_file(filepath):
+@app.get("/files/{filepath:path}")
+async def serve_file(filepath: str):
     """
     Serve files from the uploads directory.
     Supports nested folder structures through the filepath parameter.
     Access like: /files/folder1/folder2/image.jpg
     """
     uploads_dir = os.path.join(BASE_DIR, 'uploads')
-    try:
-        return send_from_directory(uploads_dir, filepath)
-    except FileNotFoundError:
-        return {"error": "File not found"}, 404
+    file_path = os.path.join(uploads_dir, filepath)
+    
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+        
+    return FileResponse(file_path)
 
-# Add error handler for Supabase connection issues
-@app.errorhandler(Exception)
-def handle_error(error):
-    return {"error": str(error)}, 500
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"error": str(exc)}
+    )
 
 if __name__ == "__main__":
+    import uvicorn
     print("Server starting up...")
     print("Supabase connection established...")
     
     port = 5000 if os.getenv('DOCKER_ENV') else 8000
-    app.run(host='0.0.0.0', port=port, debug=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

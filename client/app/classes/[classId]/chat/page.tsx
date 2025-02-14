@@ -176,9 +176,9 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
     const getActiveImage = (document: Document | undefined) => {
         if (!document) return "/placeholder_image.svg";
         if (document.lecture) {
-            return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${document.lecture}/${document.id}.png`
         } else if (document.textbook) {
-            return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${document.textbook}/${document.id}.png`
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`
         }
         return "/placeholder_image.svg";
     }

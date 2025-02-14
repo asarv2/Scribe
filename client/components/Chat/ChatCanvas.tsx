@@ -51,6 +51,12 @@ export interface ChatMessage {
     };
 }
 
+// Add a new type for streaming state
+type StreamingState = {
+    messageId: string;
+    content: string;
+};
+
 export default function ChatCanvas({ classId, generationId }: { classId: string, generationId: string }) {
     const supabase = useSupabaseBrowser();
 
@@ -67,6 +73,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         }
     });
     const [loading, setLoading] = useState(false);
+    const [streamingState, setStreamingState] = useState<StreamingState | null>(null);
 
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
@@ -125,8 +132,6 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         queryKey: ["professor", classId],
         queryFn: () => getProfessor(supabase, classId),
     })
-
-    console.log("Professor", professor)
 
 
 
@@ -273,11 +278,11 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
     }
 
     const getAvatarUrl = (profile: Profile) => {
-        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${profile.id}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${profile.id}.png`
     }
 
     const getProfessorAvatarUrl = () => {
-        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${professor?.id}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${professor?.id}.png`
     }
 
     const handleChat = async () => {
@@ -285,8 +290,8 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
 
         try {
             setLoading(true);
-
             let profileId = profile?.admin ? null : profile?.id;
+            let newGenerationId = generationId;
 
             if (generationId === "new") {
                 // Create new generation
@@ -299,69 +304,115 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                     null,
                     profileId
                 );
-
-                // Update URL without refresh
+                newGenerationId = generation.id;
                 router.replace(`/classes/${classId}/chat/${generation.id}`);
-
-                // Create the first message
-                const newMessage = {
-                    generation: generation.id,
-                    question: activeChat.prompt,
-                    references: getReferences().map(ref => ref.id)
-                };
-
-                const { success, error } = await createMessages([newMessage]);
-                if (!success) {
-                    throw new Error(error);
-                }
-
-                // Invalidate queries to show new message
-                queryClient.invalidateQueries({
-                    queryKey: ["generationMessages", generationId]
-                });
-
-
-                // Trigger generation
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        generation_id: generation.id,
-                    })
-                });
-            } else {
-                // Add message to existing chat
-                const newMessage = {
-                    generation: generationId,
-                    question: activeChat.prompt,
-                    references: getReferences().map(ref => ref.id)
-                };
-
-                const { success, error } = await createMessages([newMessage]);
-                if (!success) {
-                    throw new Error(error);
-                }
-
-                // Invalidate queries to show new message
-                queryClient.invalidateQueries({
-                    queryKey: ["generationMessages", generationId]
-                });
-
-                // Trigger generation
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        generation_id: generationId,
-                    })
-                });
             }
 
+            // Create the message
+            const newMessage = {
+                generation: newGenerationId,
+                question: activeChat.prompt,
+                references: getReferences().map(ref => ref.id)
+            };
+
+            const { data: messageData, error } = await supabase
+                .from('messages')
+                .insert([newMessage])
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // Start streaming
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    generation_id: newGenerationId,
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+
+            if (!reader) {
+                throw new Error('No reader available');
+            }
+
+            // Initialize streaming state before starting the stream
+            setStreamingState({
+                messageId: messageData.id,
+                content: ''
+            });
+
+            console.log("Starting stream reading...");
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) {
+                    console.log("Stream complete");
+                    break;
+                }
+
+                const chunk = decoder.decode(value);
+                console.log("Raw chunk received:", chunk);
+                const lines = chunk.split('\n');
+
+                for (const line of lines) {
+                    if (line.trim() && line.startsWith('data: ')) {
+                        try {
+                            const data = JSON.parse(line.slice(6));
+                            console.log("Parsed data:", data);
+
+                            if (data.error) {
+                                console.error('Error:', data.error);
+                                notifications.show({
+                                    title: "Error",
+                                    message: "Failed to generate response. Please try again.",
+                                    color: "red"
+                                });
+                                break;
+                            }
+
+                            if (data.chunk) {
+                                console.log("Processing chunk:", data.chunk);
+                                
+                                // Use a Promise to ensure state updates are processed sequentially
+                                await new Promise<void>(resolve => {
+                                    setStreamingState((prev) => {
+                                        const nextState = !prev
+                                            ? { messageId: messageData.id, content: data.chunk }
+                                            : { ...prev, content: prev.content + data.chunk };
+                                        console.log("Updated streaming state:", nextState);
+                                        return nextState;
+                                    });
+                                    
+                                    // Give React time to process the state update
+                                    setTimeout(resolve, 10);
+                                });
+                            }
+
+                            if (data.done) {
+                                console.log("Received done signal");
+                                break;
+                            }
+                        } catch (e) {
+                            console.error('Error parsing SSE data:', e);
+                            console.log('Problematic line:', line);
+                        }
+                    }
+                }
+            }
+
+            // Reset states
             setActiveChat({ ...activeChat, prompt: "", context: { lectures: [], textbooks: [], chapters: [], exercises: [], subchapters: [] } });
             queryClient.invalidateQueries({ queryKey: ["chatGenerations", classId] });
 
         } catch (error) {
-            console.error("Error in chat:", error);
+            console.error("Error in stream processing:", error);
             notifications.show({
                 title: "Error",
                 message: "Failed to send message. Please try again.",
@@ -369,6 +420,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
             });
         } finally {
             setLoading(false);
+            setStreamingState(null);
         }
     };
 
@@ -606,6 +658,89 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         );
     };
 
+    // Modify the messages rendering to include streaming state
+    const renderMessages = () => {
+        return messages?.map((message) => (
+            <Stack key={message.id}>
+                {/* User message */}
+                <Group align="flex-start" justify="flex-end">
+                    <Card
+                        padding="sm"
+                        radius="md"
+                        style={{
+                            maxWidth: "70%",
+                            backgroundColor: "#228be6"
+                        }}
+                    >
+                        <Text c="white"><Latex>{message.question}</Latex></Text>
+                    </Card>
+                    <Avatar
+                        src={profile ? getAvatarUrl(profile) : undefined}
+                        radius="xl"
+                        size="md"
+                        alt={`${profile?.first_name} ${profile?.last_name}`}
+                    >
+                        {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
+                    </Avatar>
+                </Group>
+
+                {/* AI response */}
+                <Group align="flex-start">
+                    <Avatar
+                        src={professor ? getProfessorAvatarUrl() : undefined}
+                        size="md"
+                        radius="xl"
+                        alt="AI Assistant"
+                    />
+                    <Card
+                        padding="sm"
+                        radius="md"
+                        style={{
+                            alignSelf: "flex-start",
+                            maxWidth: "70%",
+                            backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                            minWidth: "200px",
+                            border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                        }}
+                    >
+                        {message.response === "" ? (
+                            streamingState?.messageId === message.id ? (
+                                // Show streaming content
+                                <Text>
+                                    <Latex>{streamingState.content || ''}</Latex>
+                                </Text>
+                            ) : (
+                                // Show loading state
+                                <Group align="center">
+                                    <Loader size="sm" color="blue" />
+                                    <Text c="dimmed" size="sm">
+                                        AI is generating response...
+                                    </Text>
+                                </Group>
+                            )
+                        ) : (
+                            // Show completed response
+                            <Text>
+                                <Latex>{message.response}</Latex>
+                                {message.documents && lectureDocuments && textbookDocuments &&
+                                    renderDocuments(
+                                        lectureDocuments ?? [],
+                                        textbookDocuments ?? [],
+                                        message.documents
+                                    )
+                                }
+                            </Text>
+                        )}
+                    </Card>
+                </Group>
+            </Stack>
+        ));
+    };
+
+    useEffect(() => {
+        console.log("Streaming state changed:", streamingState);
+      }, [streamingState]);
+
     return (
         <>
             <HeaderSimple />
@@ -644,74 +779,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                                         maxHeight: "calc(80vh - 150px)"
                                     }}
                                 >
-                                    {messages?.map((message) => (
-                                        <Stack key={message.id}>
-                                            {/* User message */}
-                                            <Group align="flex-start" justify="flex-end">
-                                                <Card
-                                                    padding="sm"
-                                                    radius="md"
-                                                    style={{
-                                                        maxWidth: "70%",
-                                                        backgroundColor: "#228be6"
-                                                    }}
-                                                >
-                                                    <Text c="white"><Latex>{message.question}</Latex></Text>
-                                                </Card>
-                                                <Avatar
-                                                    src={profile ? getAvatarUrl(profile) : undefined}
-                                                    radius="xl"
-                                                    size="md"
-                                                    alt={`${profile?.first_name} ${profile?.last_name}`}
-                                                >
-                                                    {/* Fallback to initials if no avatar */}
-                                                    {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
-                                                </Avatar>
-                                            </Group>
-
-                                            {/* AI response */}
-                                            <Group align="flex-start">
-                                                <Avatar
-                                                    src={professor ? getProfessorAvatarUrl() : undefined}
-                                                    size="md"
-                                                    radius="xl"
-                                                    alt="AI Assistant"
-                                                />
-                                                <Card
-                                                    padding="sm"
-                                                    radius="md"
-                                                    style={{
-                                                        alignSelf: "flex-start",
-                                                        maxWidth: "70%",
-                                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                                                        minWidth: "200px",
-                                                        border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
-                                                    }}
-                                                >
-                                                    {message.response === "" ? (
-                                                        <Group align="center">
-                                                            <Loader size="sm" color="blue" />
-                                                            <Text c="dimmed" size="sm">
-                                                                AI is generating response...
-                                                            </Text>
-                                                        </Group>
-                                                    ) : (
-                                                        <Text style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }} c={colorScheme === "dark" ? "white" : "black"}>
-                                                            <Latex>{message.response}</Latex>
-                                                            {message.documents && lectureDocuments && textbookDocuments &&
-                                                                renderDocuments(
-                                                                    lectureDocuments ?? [],
-                                                                    textbookDocuments ?? [],
-                                                                    message.documents
-                                                                )
-                                                            }
-                                                        </Text>
-                                                    )}
-                                                </Card>
-                                            </Group>
-                                        </Stack>
-                                    ))}
-                                    {/* Invisible div for scrolling */}
+                                    {renderMessages()}
                                     <div ref={messagesEndRef} />
                                 </Stack>
 

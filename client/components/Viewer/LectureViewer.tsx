@@ -86,7 +86,7 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
 
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !lecture || !documentId) return "/placeholder_image.svg";
-        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${lectureId}/${documentId}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${documentId}.png`
     }
 
     const handleSwipe = (touchEndX: number) => {

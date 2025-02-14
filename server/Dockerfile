@@ -5,9 +5,6 @@ FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
-ENV FLASK_DEBUG=false
-
-# Add environment variable to indicate Docker environment
 ENV DOCKER_ENV=true
 
 # Install Python and required system dependencies
@@ -54,8 +51,8 @@ RUN mkdir -p /var/log/gunicorn && \
 # Create directory for local model storage
 RUN mkdir -p /app/models/deepseek-r1-7b
 
-# Expose the Flask port
+# Expose the FastAPI port
 EXPOSE 5000
 
-# Run with debugging enabled
+# Run with uvicorn workers
 CMD ["gunicorn", "--config", "gunicorn.conf.py", "app.main:app"]

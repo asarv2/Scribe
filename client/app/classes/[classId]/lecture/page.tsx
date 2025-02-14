@@ -744,7 +744,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
         if (!filteredDocuments) return '/placeholder_image.svg';
         const document = (filteredDocuments.length > 1 && classId === "ae333215-2914-4026-8aae-418f1255cdd0") ? filteredDocuments[1] : filteredDocuments[0]; // using the second page if it exists since first one is the cover page
         if (!document) return '/placeholder_image.svg';
-        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/lectures/${classId}/${document.lecture}/${document.id}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${document.lecture}/${document.id}.png`
     }
 
     useEffect(() => {

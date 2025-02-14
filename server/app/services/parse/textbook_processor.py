@@ -73,7 +73,7 @@ class TextbookProcessor(BaseProcessor):
             self.conversation_history.append(message)
 
             # Generate response using AI
-            response = await self.robust_generate(message, model="gemini-2.0-flash")
+            response = await self.robust_generate(message, model="gemini-2.0-flash-lite")
             print("Response:", response)
 
             if response:

@@ -5,7 +5,7 @@ import os
 from pylatex import Document, Section, Subsection, Command, Package
 from pylatex.utils import NoEscape, bold
 from pylatex.base_classes import Environment
-from typing import List, Union, Literal, Dict, TypeAlias
+from typing import List, Union, Literal, Dict, TypeAlias, AsyncGenerator
 import asyncio
 from app.services.rate_limiter import rate_limiter
 from app.extensions import deepseek_model, deepseek_tokenizer
@@ -136,6 +136,8 @@ class BaseProcessor:
         inputs = deepseek_tokenizer(message.content, return_tensors="pt", truncation=True, max_length=1024)
         outputs = deepseek_model.generate(**inputs, max_length=1024)
         return deepseek_tokenizer.decode(outputs[0], skip_special_tokens=True)
+    
+    
 
     async def robust_generate(
         self,
@@ -189,6 +191,69 @@ class BaseProcessor:
                     retries - 1,
                     initial_wait * 1.5
                 )
+            raise error
+        
+
+    async def robust_generate_stream(
+        self,
+        message: Message,
+        model: LiteralModel = "gemini-2.0-flash",
+        retries: int = 3,
+        initial_wait: int = 5
+    ) -> AsyncGenerator[str, None]:
+        """
+        A streaming version of robust_generate that yields chunks of the response.
+        """
+        try:
+            # Acquire rate limiter permission
+            await rate_limiter.acquire(model)
+            
+            try:
+                if model == "deepseek-r1-7b":
+                    # If you need streaming for deepseek, implement it here
+                    raise NotImplementedError("Streaming not implemented for deepseek-r1-7b")
+                
+                model_instance = self.model_configs[model]
+                
+                # Extract content parts from the message
+                content_parts = []
+                for part in message.content:
+                    if part["type"] == "text":
+                        content_parts.append(part["text"])
+                    elif part["type"] == "image_url":
+                        content_parts.append({
+                            "inline_data": {
+                                "mime_type": "image/png",
+                                "data": part["image_url"].split(",")[1]
+                            }
+                        })
+                
+                # Generate response with streaming
+                response = model_instance.generate_content(
+                    content_parts,
+                    stream=True
+                )
+                
+                # Properly iterate over the chunks
+                for chunk in response:
+                    if chunk.text:
+                        yield chunk.text
+                
+            finally:
+                # Always release the rate limiter
+                rate_limiter.release(model)
+                
+        except Exception as error:
+            if retries > 0:
+                await asyncio.sleep(initial_wait)
+                async for chunk in self.robust_generate_stream(
+                    message,
+                    model,
+                    retries - 1,
+                    initial_wait * 1.5
+                ):
+                    yield chunk
+                return
             raise error
 
     # Common utility methods

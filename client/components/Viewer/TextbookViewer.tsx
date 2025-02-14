@@ -97,7 +97,7 @@ export default function TextbookViewer({ classId, textbookId, chapterId }: Textb
 
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !textbook || !documentId) return "/placeholder_image.svg";
-        return `https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/textbooks/${classId}/${textbookId}/${documentId}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookId}/${documentId}.png`
     }
 
     const handleSwipe = (touchEndX: number) => {

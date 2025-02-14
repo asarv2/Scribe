@@ -10,12 +10,12 @@ export default function Latex({ children }: { children: string }) {
                 remarkPlugins={[RemarkMathPlugin]} 
                 rehypePlugins={[RehypeKatex]}
                 components={{
-                    p: ({children}) => <p className="latex-paragraph mb-4">{children}</p>,
-                    h1: ({children}) => <h1 className="mb-4">{children}</h1>,
-                    h2: ({children}) => <h2 className="mb-3">{children}</h2>,
-                    br: () => <br />,
-                    ul: ({children}) => <ul className="mb-4 ml-6">{children}</ul>,
-                    ol: ({children}) => <ol className="mb-4 ml-6">{children}</ol>,
+                    p: ({children}) => <p className="prose-p">{children}</p>,
+                    h1: ({children}) => <h1 className="prose-h1">{children}</h1>,
+                    h2: ({children}) => <h2 className="prose-h2">{children}</h2>,
+                    ul: ({children}) => <ul className="prose-ul">{children}</ul>,
+                    ol: ({children}) => <ol className="prose-ol">{children}</ol>,
+                    li: ({children}) => <li className="prose-li">{children}</li>,
                 }}
             >
                 {children}
@@ -23,27 +23,42 @@ export default function Latex({ children }: { children: string }) {
             <style jsx global>{`
                 .latex-container {
                     font-size: 1rem;
-                    line-height: 1.6;
+                    line-height: 1.75;
+                    max-width: 65ch;
                 }
                 
-                .latex-paragraph {
-                    margin-bottom: 0.5rem;
-                    white-space: pre-wrap;
+                .prose-p {
+                    margin: 1.25em 0;
+                }
+
+                .prose-h1 {
+                    margin: 2em 0 1em;
+                    font-size: 2em;
+                }
+
+                .prose-h2 {
+                    margin: 1.5em 0 0.75em;
+                    font-size: 1.5em;
+                }
+
+                .prose-ul, .prose-ol {
+                    margin: 1.25em 0;
+                    padding-left: 1.625em;
+                }
+
+                .prose-li {
+                    margin: 0.5em 0;
+                    padding-left: 0.375em;
                 }
 
                 .katex-display {
-                    margin: 0.5rem 0 !important;
+                    margin: 1em 0 !important;
                     overflow-x: auto;
                     overflow-y: hidden;
                 }
 
                 .katex {
                     text-rendering: auto;
-                    padding: 0 0.2em;
-                }
-
-                .latex-paragraph + .latex-paragraph {
-                    margin-top: 0;
                 }
             `}</style>
         </div>

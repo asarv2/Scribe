@@ -4,8 +4,8 @@ bind = "0.0.0.0:5000"
 # For GPU workloads, we want fewer workers
 workers = 2  # Start with 2 workers since GPU operations are heavy
 
-# Remove the uvicorn worker and use sync worker
-worker_class = 'sync'
+# Use uvicorn worker for FastAPI
+worker_class = 'uvicorn.workers.UvicornWorker'
 
 # Threads per worker
 threads = 4

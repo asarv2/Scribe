@@ -1,5 +1,6 @@
 import time
-from flask import Blueprint, request
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 import traceback
 from app.services.evaluate.accuracy import AccuracyEvaluator
 from app.services.evaluate.adherence import AdherenceEvaluator
@@ -11,30 +12,32 @@ from app.services.evaluate.novelty import NoveltyEvaluator
 from app.extensions import supabase
 from datetime import datetime
 
-evaluate_bp = Blueprint('evaluate', __name__)
+# Define request models
+class EvaluationRequest(BaseModel):
+    lecture_id: str | None = None
+    textbook_id: str | None = None
+    generation_id: str | None = None
 
-@evaluate_bp.route('/lecture', methods=['POST'])
-def evaluate_lecture():
+router = APIRouter()
+
+@router.post('/lecture')
+async def evaluate_lecture(request: EvaluationRequest):
     """Evaluate a lecture and return the documents."""
-    data = request.get_json()
-    lecture_id = data['lecture_id']
-    
     try:
         # get lecture
-        lecture = supabase.table("lectures").select("*").eq("id", lecture_id).execute()
+        lecture = supabase.table("lectures").select("*").eq("id", request.lecture_id).execute()
         print(f"Lecture: {lecture}")
         
         # latency
         created_at = datetime.strptime(lecture.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
         created_at_timestamp = created_at.timestamp()
         end_time = time.time()
-        latency_seconds = end_time - created_at_timestamp
-        latency_ms = latency_seconds * 1000
+        latency_ms = (end_time - created_at_timestamp) * 1000
         print(f"Latency: {latency_ms} ms")
 
         # uploading to supabase
         response = supabase.table("evaluations").insert({
-            "lecture": lecture_id,
+            "lecture": request.lecture_id,
             "latency": latency_ms,
             "certainty": 0,
             "certainty_explanation": "Not implemented",
@@ -53,37 +56,32 @@ def evaluate_lecture():
         
     except Exception as e:
         print(f"Error uploading evaluation to Supabase:")
-        print(f"Lecture ID: {lecture_id}")
+        print(f"Lecture ID: {request.lecture_id}")
         print(f"Error details: {str(e)}")
         print(f"Error type: {type(e).__name__}")
         print(f"Traceback: ", traceback.format_exc())
-        return f'Error uploading evaluation: {type(e).__name__} - {str(e)}', 500
+        raise HTTPException(status_code=500, detail=f'Error uploading evaluation: {type(e).__name__} - {str(e)}')
     
-    return 'Evaluation uploaded', 200
+    return {'message': 'Evaluation uploaded'}
 
-
-@evaluate_bp.route('/textbook', methods=['POST'])
-def evaluate_textbook():
+@router.post('/textbook')
+async def evaluate_textbook(request: EvaluationRequest):
     """Evaluate a textbook and return the documents."""
-    data = request.get_json()
-    textbook_id = data['textbook_id']
-    
     try:
         # get textbook
-        textbook = supabase.table("textbooks").select("*").eq("id", textbook_id).execute()
+        textbook = supabase.table("textbooks").select("*").eq("id", request.textbook_id).execute()
         print(f"Textbook: {textbook}")
         
         # latency
         created_at = datetime.strptime(textbook.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
         created_at_timestamp = created_at.timestamp()
         end_time = time.time()
-        latency_seconds = end_time - created_at_timestamp
-        latency_ms = latency_seconds * 1000
+        latency_ms = (end_time - created_at_timestamp) * 1000
         print(f"Latency: {latency_ms} ms")
 
         # uploading to supabase
         response = supabase.table("evaluations").insert({
-            "textbook": textbook_id,
+            "textbook": request.textbook_id,
             "latency": latency_ms,
             "certainty": 0,
             "certainty_explanation": "Not implemented",
@@ -102,35 +100,30 @@ def evaluate_textbook():
         
     except Exception as e:
         print(f"Error uploading evaluation to Supabase:")
-        print(f"Textbook ID: {textbook_id}")
+        print(f"Textbook ID: {request.textbook_id}")
         print(f"Error details: {str(e)}")
         print(f"Error type: {type(e).__name__}")
         print(f"Traceback: ", traceback.format_exc())
-        return f'Error uploading evaluation: {type(e).__name__} - {str(e)}', 500
+        raise HTTPException(status_code=500, detail=f'Error uploading evaluation: {type(e).__name__} - {str(e)}')
     
-    return 'Evaluation uploaded', 200
+    return {'message': 'Evaluation uploaded'}
 
-
-@evaluate_bp.route('/generation', methods=['POST'])
-async def evaluate_generation():
+@router.post('/generation')
+async def evaluate_generation(request: EvaluationRequest):
     """Evaluate a generation and return the documents."""
-    data = request.get_json()
-    generation_id = data['generation_id']
-    
     try:
         # get generation
-        generation = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
+        generation = supabase.table("generations").select("*").eq("id", request.generation_id).single().execute()
         print(f"Generation: {generation}")
 
         if generation.data['type'] != 'chat':
-            return 'Evaluation skipped', 200
+            return {'message': 'Evaluation skipped'}
         
         # latency
         created_at = datetime.strptime(generation.data['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
         created_at_timestamp = created_at.timestamp()
         end_time = time.time()
-        latency_seconds = end_time - created_at_timestamp
-        latency_ms = latency_seconds * 1000
+        latency_ms = (end_time - created_at_timestamp) * 1000
         print(f"Latency: {latency_ms} ms")
         
         # # certainty
@@ -171,7 +164,7 @@ async def evaluate_generation():
         
         # uploading to supabase
         response = supabase.table("evaluations").insert({
-            "generation": generation_id,
+            "generation": request.generation_id,
             "latency": latency_ms,
             "certainty": 0,
             "certainty_explanation": "Not implemented",
@@ -190,11 +183,11 @@ async def evaluate_generation():
         
     except Exception as e:
         print(f"Error uploading evaluation to Supabase:")
-        print(f"Generation ID: {generation_id}")
+        print(f"Generation ID: {request.generation_id}")
         print(f"Error details: {str(e)}")
         print(f"Error type: {type(e).__name__}")
         print(f"Traceback: ", traceback.format_exc())
-        return f'Error uploading evaluation: {type(e).__name__} - {str(e)}', 500
+        raise HTTPException(status_code=500, detail=f'Error uploading evaluation: {type(e).__name__} - {str(e)}')
     
-    return 'Evaluation uploaded', 200
+    return {'message': 'Evaluation uploaded'}
 
