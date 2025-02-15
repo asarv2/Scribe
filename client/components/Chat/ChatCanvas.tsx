@@ -17,8 +17,6 @@ import { useMediaQuery } from "@mantine/hooks";
 import { em } from "@mantine/core";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { v4 as uuidv4 } from 'uuid';
-import { createGeneration } from "@/utils/services/generation";
-import { createQuestions } from "@/utils/services/questions";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getChapters } from "@/utils/queries/get-chapters";
@@ -28,15 +26,18 @@ import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { ContextPanel } from "./ContextPanel";
 import { notifications } from "@mantine/notifications";
 import { createMessages } from "@/utils/services/messages";
-import { getGeneration } from "@/utils/queries/get-generation";
-import { getGenerationMessages } from "@/utils/queries/get-generation-messages";
-import DeleteGenerationModal from "../Delete/DeleteGenerationModal";
 import { getUser } from "@/utils/queries/get-user";
 import { Document, Message, Profile } from "@/types";
 import { getProfile } from "@/utils/queries/get-profile";
 import Latex from "../Latex";
 import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getProfessor } from "@/utils/queries/get-professor";
+import { getHomework } from "@/utils/queries/get-homework";
+import { getProblems } from "@/utils/queries/get-problems";
+import { getChat } from "@/utils/queries/get-chat";
+import { getMessages } from "@/utils/queries/get-messages";
+import DeleteChatModal from "../Delete/DeleteChatModal";
+import { createChat } from "@/utils/services/chat";
 
 export interface ChatMessage {
     id: number;
@@ -48,6 +49,8 @@ export interface ChatMessage {
         chapters: string[];    // chapter IDs
         subchapters: string[]; // subchapter IDs
         exercises: string[];   // exercise IDs
+        homework: string[];   // homework IDs
+        problems: string[];   // problem IDs
     };
 }
 
@@ -57,7 +60,7 @@ type StreamingState = {
     content: string;
 };
 
-export default function ChatCanvas({ classId, generationId }: { classId: string, generationId: string }) {
+export default function ChatCanvas({ classId, chatId }: { classId: string, chatId: string }) {
     const supabase = useSupabaseBrowser();
 
     const [activeChat, setActiveChat] = useState<ChatMessage>({
@@ -70,6 +73,8 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
             chapters: [],
             subchapters: [],
             exercises: [],
+            homework: [],
+            problems: [],
         }
     });
     const [loading, setLoading] = useState(false);
@@ -78,7 +83,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
-    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures', 'textbooks']));
+    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures', 'textbooks', 'homework']));
 
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -86,18 +91,17 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
 
     const { colorScheme } = useMantineColorScheme();
 
-    // Add query for existing chat if generationId is not "new"
-    const { data: existingGeneration } = useQuery({
-        queryKey: ["generation", generationId],
-        queryFn: () => getGeneration(supabase, generationId),
-        enabled: generationId !== "new"
+    const { data: existingChat } = useQuery({
+        queryKey: ["chat", chatId],
+        queryFn: () => getChat(supabase, chatId),
+        enabled: chatId !== "new"
     });
 
     // Single source of truth for messages
     const { data: messages } = useQuery({
-        queryKey: ["generationMessages", generationId],
-        queryFn: () => getGenerationMessages(supabase, existingGeneration ? [existingGeneration] : []),
-        enabled: !!existingGeneration
+        queryKey: ["messages", chatId],
+        queryFn: () => getMessages(supabase, [chatId]),
+        enabled: !!existingChat
     });
 
     const { data: lectures } = useQuery({
@@ -128,11 +132,21 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         enabled: !!chapters
     });
 
+    const { data: homeworkData } = useQuery({
+        queryKey: ["homework", classId],
+        queryFn: () => getHomework(supabase, classId),
+    });
+
+    const { data: problems } = useQuery({
+        queryKey: ["problems", classId],
+        queryFn: () => getProblems(supabase, homeworkData!.map(h => h.id)),
+        enabled: !!homeworkData
+    });
+
     const { data: professor } = useQuery({
         queryKey: ["professor", classId],
         queryFn: () => getProfessor(supabase, classId),
     })
-
 
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -172,24 +186,24 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
 
     // Set up realtime subscription for messages
     useEffect(() => {
-        if (generationId === "new") return;
+        if (chatId === "new") return;
 
         const channel = supabase
-            .channel(`realtime-messages-${generationId}`)
+            .channel(`realtime-messages-${chatId}`)
             .on(
                 'postgres_changes',
                 {
                     event: '*',
                     schema: 'prod',
                     table: 'messages',
-                    filter: `generation=eq.${generationId}`
+                    filter: `chat=eq.${chatId}`
                 },
                 async (payload) => {
                     console.log("Received message update:", payload);
 
                     // Immediately update the cache with the new data
                     queryClient.setQueryData(
-                        ["generationMessages", generationId],
+                        ["messages", chatId],
                         (oldData: any) => {
                             if (!oldData) return [payload.new];
 
@@ -211,20 +225,20 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
 
                     // Then trigger a refetch to ensure we're in sync
                     await queryClient.invalidateQueries({
-                        queryKey: ["generationMessages", generationId],
+                        queryKey: ["messages", chatId],
                         exact: true
                     });
                 }
             )
             .subscribe();
 
-        console.log("Subscribed to channel:", `realtime-messages-${generationId}`);
+        console.log("Subscribed to channel:", `realtime-messages-${chatId}`);
 
         return () => {
-            console.log("Unsubscribing from channel:", `realtime-messages-${generationId}`);
+            console.log("Unsubscribing from channel:", `realtime-messages-${chatId}`);
             supabase.removeChannel(channel);
         };
-    }, [generationId, queryClient, supabase]);
+    }, [chatId, queryClient, supabase]);
 
     useEffect(() => {
         if (textbooks) {
@@ -232,48 +246,48 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         }
     }, [textbooks]);
 
-    const getReferences = () => {
+    const getDocuments = () => {
         // Previous document references from context
-        const lectureReferences = lectureDocuments?.filter(document =>
+        const lectureDocs = lectureDocuments?.filter(document =>
             activeChat.context.lectures.includes(document.lecture ?? "")
         ) ?? [];
-        const textbookReferences = textbookDocuments?.filter(document =>
+        const textbookDocs = textbookDocuments?.filter(document =>
             activeChat.context.textbooks.includes(document.textbook ?? "")
         ) ?? [];
-        const chapterReferences = textbookDocuments?.filter(document => {
+        const chapterDocs = textbookDocuments?.filter(document => {
             const chapter = chapters?.find(c => c.id === document.textbook);
             return chapter && activeChat.context.chapters.includes(chapter.id);
         }) ?? [];
-        const subchapterReferences = textbookDocuments?.filter(document => {
+        const subchapterDocs = textbookDocuments?.filter(document => {
             const chapter = chapters?.find(c => c.id === document.textbook);
             const subchapter = subchapters?.find(s => s.chapter === chapter?.id && activeChat.context.subchapters.includes(s.id));
             return subchapter && chapter;
         }) ?? [];
-        const exerciseReferences = textbookDocuments?.filter(document => {
+        const exerciseDocs = textbookDocuments?.filter(document => {
             const chapter = chapters?.find(c => c.id === document.textbook);
             const exercise = exercises?.find(e => e.chapter === chapter?.id && activeChat.context.exercises.includes(e.id));
             return exercise && chapter;
         }) ?? [];
 
         // Previous message references
-        const previousMessagesReferences = messages?.flatMap(message =>
+        const previousMessagesDocs = messages?.flatMap(message =>
             // Check if references exists and is an array before accessing
-            Array.isArray(message.references) ? message.references : []
+            Array.isArray(message.documents) ? message.documents : []
         ) ?? [];
 
         // Get the actual documents from the references
-        const messageReferences = ([...textbookDocuments ?? [], ...lectureDocuments ?? []]).filter(document =>
-            previousMessagesReferences.includes(document.id)
+        const messageDocuments = ([...textbookDocuments ?? [], ...lectureDocuments ?? []]).filter(document =>
+            previousMessagesDocs.includes(document.id)
         ) ?? [];
 
         // Combine all references, removing duplicates
         return Array.from(new Set([
-            ...lectureReferences,
-            ...textbookReferences,
-            ...chapterReferences,
-            ...subchapterReferences,
-            ...exerciseReferences,
-            ...messageReferences
+            ...lectureDocs,
+            ...textbookDocs,
+            ...chapterDocs,
+            ...subchapterDocs,
+            ...exerciseDocs,
+            ...messageDocuments
         ]));
     }
 
@@ -291,44 +305,44 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
         try {
             setLoading(true);
             let profileId = profile?.admin ? null : profile?.id;
-            let newGenerationId = generationId;
+            let newChatId = chatId;
 
-            if (generationId === "new") {
+            if (chatId === "new") {
                 // Create new generation
-                const generation = await createGeneration(
+                const chat = await createChat(
                     classId,
                     activeChat.title,
-                    'chat',
-                    `${process.env.NEXT_PUBLIC_API_URL}`,
-                    null,
-                    null,
                     profileId
                 );
-                newGenerationId = generation.id;
-                router.replace(`/classes/${classId}/chat/${generation.id}`);
+                newChatId = chat.id;
+                router.replace(`/classes/${classId}/chat/${chat.id}`);
             }
 
             // Create the message
             const newMessage = {
-                generation: newGenerationId,
+                chat: newChatId,
                 question: activeChat.prompt,
-                references: getReferences().map(ref => ref.id)
+                response_url:`${process.env.NEXT_PUBLIC_API_URL}`,
+                documents: getDocuments().map(doc => doc.id)
             };
 
-            const { data: messageData, error } = await supabase
-                .from('messages')
-                .insert([newMessage])
-                .select()
-                .single();
+            const {success, error, data: messagesData} = await createMessages([newMessage]);
+            if (!success) {
+                throw new Error(error);
+            }
 
-            if (error) throw error;
+            const messageData = messagesData?.[0];
+            if (!messageData) {
+                throw new Error("No message data returned");
+            }
 
             // Start streaming
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    generation_id: newGenerationId,
+                    chat_id: newChatId,
+                    message_id: messageData.id
                 })
             });
 
@@ -408,8 +422,8 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
             }
 
             // Reset states
-            setActiveChat({ ...activeChat, prompt: "", context: { lectures: [], textbooks: [], chapters: [], exercises: [], subchapters: [] } });
-            queryClient.invalidateQueries({ queryKey: ["chatGenerations", classId] });
+            setActiveChat({ ...activeChat, prompt: "", context: { lectures: [], textbooks: [], chapters: [], exercises: [], subchapters: [], homework: [], problems: [] } });
+            queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
 
         } catch (error) {
             console.error("Error in stream processing:", error);
@@ -579,6 +593,50 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                         </Badge>
                     );
                 })}
+                {chat.context.homework.map(homeworkId => {
+                    const homework = homeworkData?.find(h => h.id === homeworkId);
+                    return homework && (
+                        <Badge
+                            key={homeworkId}
+                            color="orange"
+                            rightSection={
+                                <IconX
+                                    size={14}
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeContextFromChat('homework', homeworkId);
+                                    }}
+                                />
+                            }
+                        >
+                            {`${homework.title}`}
+                        </Badge>
+                    );
+                })}
+                {chat.context.problems.map(problemId => {
+                    const problem = problems?.find(p => p.id === problemId);
+                    const homework = homeworkData?.find(h => h.id === problem?.homework);
+                    return problem && homework && (
+                        <Badge
+                            key={problemId}
+                            color="cyan"
+                            rightSection={
+                                <IconX
+                                    size={14}
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeContextFromChat('problems', problemId);
+                                    }}
+                                />
+                            }
+                        >
+                            {`${homework.title}: Problem ${problem.problem_number}`}
+                        </Badge>
+                    );
+                })}
+                
             </Group>
         );
     };
@@ -722,11 +780,11 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                             // Show completed response
                             <Text>
                                 <Latex>{message.response}</Latex>
-                                {message.documents && lectureDocuments && textbookDocuments &&
+                                {message.references && lectureDocuments && textbookDocuments &&
                                     renderDocuments(
                                         lectureDocuments ?? [],
                                         textbookDocuments ?? [],
-                                        message.documents
+                                        message.references
                                     )
                                 }
                             </Text>
@@ -751,8 +809,8 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                             <Link href={`/classes/${classId}/chat`}>
                                 <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
-                            {existingGeneration && <Text size="xl" fw={700} mb={6}>{existingGeneration.name}</Text>}
-                            {!existingGeneration && <TextInput
+                            {existingChat && <Text size="xl" fw={700} mb={6}>{existingChat.name}</Text>}
+                            {!existingChat && <TextInput
                                 placeholder="Enter chat name"
                                 value={activeChat.title}
                                 onChange={(e) => setActiveChat({ ...activeChat, title: e.target.value })}
@@ -763,7 +821,7 @@ export default function ChatCanvas({ classId, generationId }: { classId: string,
                             />}
                         </Group>
                         <Group>
-                            {existingGeneration && <DeleteGenerationModal generationId={generationId} generationTitle={existingGeneration?.name ?? ""} profile={profile ?? undefined} classId={classId} type={existingGeneration?.type ?? "chat"} />}
+                            {existingChat && <DeleteChatModal chatId={chatId} chatTitle={existingChat?.name ?? ""} profile={profile ?? undefined} classId={classId} />}
                         </Group>
                     </Flex>
                     <Grid>

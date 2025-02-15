@@ -28,34 +28,34 @@ Deno.serve(async (req) => {
   console.log("Supabase client created");
 
   let data;
-  if (type === "generation") {
-    const { data: generation, error } = await supabase.from("generations")
+  if (type === "message") {
+    const { data: message, error } = await supabase.from("messages")
       .select("response_url").eq("id", evaluation_id).single();
 
     if (error) {
-      console.error("Error fetching generation:", error);
+      console.error("Error fetching message:", error);
       return new Response(
-        JSON.stringify({ error: "Failed to fetch generation" }),
+        JSON.stringify({ error: "Failed to fetch message" }),
         { status: 500 },
       );
     }
 
-    if (!generation) {
-      console.error("Generation not found");
-      return new Response(JSON.stringify({ error: "Generation not found" }), {
+    if (!message) {
+      console.error("Message not found");
+      return new Response(JSON.stringify({ error: "Message not found" }), {
         status: 404,
       });
     }
 
-    const server_url = generation.response_url;
+    const server_url = message.response_url;
 
-    // call the server to evaluate the generation
-    const response = await fetch(`${server_url}/evaluate/generation`, {
+    // call the server to evaluate the message
+    const response = await fetch(`${server_url}/evaluate/message`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ generation_id: evaluation_id }),
+      body: JSON.stringify({ message_id: evaluation_id }),
     });
 
     data = await response.json();
@@ -123,7 +123,39 @@ Deno.serve(async (req) => {
     });
 
     data = await response.json();
-  } else {
+  } else if (type === "homework") {
+    const { data: homework, error } = await supabase.from("homeworks").select(
+      "response_url",
+    ).eq("id", evaluation_id).single();
+
+    if (error) {
+      console.error("Error fetching homework:", error);
+      return new Response(
+        JSON.stringify({ error: "Failed to fetch homework" }),
+        { status: 500 },
+      );
+    }
+
+    if (!homework) {
+      console.error("Homework not found");
+      return new Response(JSON.stringify({ error: "Homework not found" }), {
+        status: 404,
+      });
+    }
+
+    const server_url = homework.response_url;
+
+    // call the server to evaluate the homework
+    const response = await fetch(`${server_url}/evaluate/homework`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ homework_id: evaluation_id }),
+    });
+
+    data = await response.json();
+  } else  {
     console.error("Invalid type:", type);
     return new Response(JSON.stringify({ error: "Invalid type" }), {
       status: 400,

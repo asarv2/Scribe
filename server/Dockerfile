@@ -13,16 +13,6 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     ffmpeg \
     curl \
-    texlive-latex-base \
-    texlive-latex-extra \
-    texlive-latex-recommended \
-    texlive-pictures \
-    texlive-science \
-    texlive-fonts-recommended \
-    latexmk \
-    cm-super \
-    dvipng \
-    ghostscript \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container
@@ -47,9 +37,6 @@ COPY gunicorn.conf.py .
 # Create directory for gunicorn logs
 RUN mkdir -p /var/log/gunicorn && \
     chmod 777 /var/log/gunicorn
-
-# Create directory for local model storage
-RUN mkdir -p /app/models/deepseek-r1-7b
 
 # Expose the FastAPI port
 EXPOSE 5000

@@ -8,14 +8,14 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
-export const createMessages = async (messages: { generation: string, question: string, references: string[] }[]) => {
+export const createMessages = async (messages: { chat: string, question: string, documents: string[], response_url: string }[]) => {
     const supabase = useSupabaseServer(cookies());
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from("messages")
         .insert(messages)
-        .select()
+        .select("id")
     if (error) {
-        return { success: false, error: error.message };
+        return { success: false, error: error.message, data: null };
     }
-    return { success: true, error: "" };
+    return { success: true, error: "", data: data };
 }

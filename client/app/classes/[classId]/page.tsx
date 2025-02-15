@@ -15,9 +15,6 @@ import { HeaderSimple } from "../../../components/HeaderSimple";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getUser } from "@/utils/queries/get-user";
-import { getMap } from "@/utils/queries/get-map";
-import Latex from "@/components/Latex";
-import { updateTopicPosition } from "@/utils/services/topics";
 import { getClass } from "@/utils/queries/get-class";
 import Image from "next/image";
 
@@ -37,12 +34,6 @@ export default function Class({ params }: { params: { classId: string } }) {
     const { data: classData } = useQuery({
         queryKey: ["class", classId],
         queryFn: () => getClass(supabase, classId)
-    })
-
-    const { data: map, isLoading: loadingMap } = useQuery({
-        queryKey: ["map", classId],
-        queryFn: () => getMap(supabase, classId, classData!.map),
-        enabled: !!classData
     })
 
     const { data: user } = useQuery({

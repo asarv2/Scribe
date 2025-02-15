@@ -1,10 +1,10 @@
 import { Generation, TypedSupabaseClient } from "../../types";
 
-export async function getGenerationMessages(client: TypedSupabaseClient, generations: Generation[]) {
+export async function getMessages(client: TypedSupabaseClient, chatIds: string[]) {
     const { data, error } = await client
         .from("messages")
         .select("*")
-        .in("generation", generations.map(generation => generation.id))
+        .in("chat", chatIds)
         .order("created_at", { ascending: true })
 
     if (error) {

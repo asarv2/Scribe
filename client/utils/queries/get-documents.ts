@@ -1,15 +1,12 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getGeneration(client: TypedSupabaseClient, generationId: string) {
+export async function getDocuments(client: TypedSupabaseClient, documentIds: string[]) {
     const { data, error } = await client
-        .from("generations")
+        .from("documents")
         .select("*")
-        .eq("id", generationId)
-        .single()
-
+        .in("id", documentIds)
     if (error) {
         throw new Error(error.message);
     }
-
     return data;
 }

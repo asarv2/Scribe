@@ -1,12 +1,15 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getGenerationDocuments(client: TypedSupabaseClient, documentIds: string[]) {
+export async function getChat(client: TypedSupabaseClient, chatId: string) {
     const { data, error } = await client
-        .from("documents")
+        .from("chats")
         .select("*")
-        .in("id", documentIds)
+        .eq("id", chatId)
+        .single()
+
     if (error) {
         throw new Error(error.message);
     }
+
     return data;
 }

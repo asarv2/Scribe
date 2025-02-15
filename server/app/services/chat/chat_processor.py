@@ -14,13 +14,11 @@ class ChatProcessor(BaseProcessor):
         course_title: str,
         message_id: str,
         question: str,
-        documents_context: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
     ):
         super().__init__()
         self.course_title = course_title
         self.message_id = message_id
-        self.documents_context = documents_context
         self.current_question = question
         self.chat_history = []
         
@@ -123,8 +121,7 @@ class ChatProcessor(BaseProcessor):
 
             message = Message(content=[
                 {"type": "text", "text": system_prompt},
-                {"type": "text", "text": f"Context:\n{complete_context}"},
-                {"type": "text", "text": conversation_context},
+                {"type": "text", "text": f"Previous conversation context:\n{complete_context}\nCurrent conversation context:\n{conversation_context}"},
                 {"type": "text", "text": f"Question: {self.current_question}\n\nAnswer:"}
             ])
             

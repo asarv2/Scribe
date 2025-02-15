@@ -25,7 +25,6 @@ import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import Latex from "@/components/Latex";
 import { Document } from "@/types";
-import { getFigures } from "@/utils/queries/get-figures";
 import { getProfile } from "@/utils/queries/get-profile";
 
 type LectureViewerProps = {
@@ -77,12 +76,6 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user
     })
-
-    const { data: figures, isLoading: loadingFigures } = useQuery({
-        queryKey: ["figures", lectureId],
-        queryFn: () => getFigures(supabase, documents?.map((doc) => doc.id) ?? []),
-        enabled: !!documents
-    });
 
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !lecture || !documentId) return "/placeholder_image.svg";
@@ -207,51 +200,6 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
                                             }}
                                             sizes="100vw"
                                         />
-                                        {/* {!loadingFigures && figures?.filter(figure => figure.document === activeDocumentId).map(figure => {
-                                            const isBottomHalf = (figure.y_min / 1000) > 0.5;
-
-                                            return (
-                                                <Box
-                                                    key={figure.id}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        border: '2px solid #4CAF50',
-                                                        transition: 'opacity 0.3s ease',
-                                                        cursor: 'pointer',
-                                                        zIndex: 50,
-                                                        left: `${(figure.x_min / 1000) * 100}%`,
-                                                        top: `${(figure.y_min / 1000) * 100}%`,
-                                                        width: `${((figure.x_max - figure.x_min) / 1000) * 100}%`,
-                                                        height: `${((figure.y_max - figure.y_min) / 1000) * 100}%`,
-                                                        opacity: hoveredFigure === figure.id ? 0.8 : 0.2,
-                                                    }}
-                                                    onMouseEnter={() => setHoveredFigure(figure.id)}
-                                                    onMouseLeave={() => setHoveredFigure(null)}
-                                                >
-                                                    {hoveredFigure === figure.id && (
-                                                        <Text style={{
-                                                            position: 'absolute',
-                                                            [isBottomHalf ? 'bottom' : 'top']: '100%',
-                                                            left: '0',
-                                                            backgroundColor: 'rgba(76, 175, 80, 0.8)',
-                                                            color: 'white',
-                                                            padding: '2px 6px',
-                                                            fontSize: '12px',
-                                                            borderRadius: '4px',
-                                                            marginTop: isBottomHalf ? undefined : '4px',
-                                                            marginBottom: isBottomHalf ? '4px' : undefined,
-                                                            zIndex: 51,
-                                                            maxWidth: '200px',
-                                                            wordWrap: 'break-word',
-                                                            overflowWrap: 'break-word',
-                                                            whiteSpace: 'normal',
-                                                        }}>
-                                                            <Latex>{figure.description}</Latex>
-                                                        </Text>
-                                                    )}
-                                                </Box>
-                                            );
-                                        })} */}
                                         <ActionIcon
                                             size="xl"
                                             variant="filled"

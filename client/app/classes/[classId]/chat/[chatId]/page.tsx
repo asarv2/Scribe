@@ -9,9 +9,9 @@
 "use client";
 import ChatCanvas from "@/components/Chat/ChatCanvas";
 
-export default function ChatPage({ params }: { params: { classId: string, generationId: string } }) {
+export default function ChatPage({ params }: { params: { classId: string, chatId: string } }) {
     const classId = params.classId;
-    const generationId = params.generationId; // "new" or an actual generation ID
-    return <ChatCanvas classId={classId} generationId={generationId} />;
+    const chatId = params.chatId;
+    return <ChatCanvas classId={classId} chatId={chatId} />;
 }
 
