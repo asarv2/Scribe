@@ -10,6 +10,7 @@ class EvaluationRequest(BaseModel):
     lecture_id: str | None = None
     textbook_id: str | None = None
     generation_id: str | None = None
+    message_id: str | None = None
 
 router = APIRouter()
 
@@ -19,7 +20,6 @@ async def evaluate_lecture(request: EvaluationRequest):
     try:
         # get lecture
         lecture = supabase.table("lectures").select("*").eq("id", request.lecture_id).execute()
-        print(f"Lecture: {lecture}")
         
         # latency
         created_at = datetime.strptime(lecture.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
@@ -51,7 +51,6 @@ async def evaluate_textbook(request: EvaluationRequest):
     try:
         # get textbook
         textbook = supabase.table("textbooks").select("*").eq("id", request.textbook_id).execute()
-        print(f"Textbook: {textbook}")
         
         # latency
         created_at = datetime.strptime(textbook.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
@@ -82,8 +81,7 @@ async def evaluate_homework(request: EvaluationRequest):
     """Evaluate a homework and return the documents."""
     try:
         # get textbook
-        homework = supabase.table("homeworks").select("*").eq("id", request.homework_id).execute()
-        print(f"Homework: {homework}")
+        homework = supabase.table("homework").select("*").eq("id", request.homework_id).execute()
         
         # latency
         created_at = datetime.strptime(homework.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
@@ -115,7 +113,6 @@ async def evaluate_message(request: EvaluationRequest):
     try:
         # get message
         message = supabase.table("messages").select("*").eq("id", request.message_id).execute()
-        print(f"Message: {message}")
         
         # latency
         created_at = datetime.strptime(message.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")
