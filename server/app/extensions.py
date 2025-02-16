@@ -27,3 +27,7 @@ UPLOAD_FOLDER = "/app/uploads" if os.getenv('DOCKER_ENV') else os.path.join(os.p
 # Ensure upload directory exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# make messages directory if it doesn't exist, under the uploads directory
+MESSAGES_DIR = os.path.join(UPLOAD_FOLDER, 'messages')
+os.makedirs(MESSAGES_DIR, exist_ok=True)
+

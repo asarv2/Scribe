@@ -28,8 +28,6 @@ RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt)
 RUN mkdir -p /app/uploads && \
     chmod 777 /app/uploads
 
-# Copy .env file
-COPY .env app/
 
 # Copy application code
 COPY app/ app/

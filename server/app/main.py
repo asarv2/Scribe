@@ -8,13 +8,10 @@ if not os.getenv('DOCKER_ENV'):
 else:
     BASE_DIR = '/app'
 
-# Export BASE_DIR as environment variable so other modules can access it
-os.environ['BASE_DIR'] = BASE_DIR
-
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import UPLOADS_DIR
+from app.extensions import UPLOAD_FOLDER
 
 # Create FastAPI app
 app = FastAPI(title="Scribe API")
@@ -63,7 +60,7 @@ async def serve_file(filepath: str):
     Supports nested folder structures through the filepath parameter.
     Access like: /files/folder1/folder2/image.jpg
     """
-    file_path = os.path.join(UPLOADS_DIR, filepath)
+    file_path = os.path.join(UPLOAD_FOLDER, filepath)
     
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")

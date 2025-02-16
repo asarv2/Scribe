@@ -3,8 +3,7 @@ from app.services.base_processor import BaseProcessor, Message
 import re
 from datetime import datetime
 import os
-from app.config import MESSAGES_DIR
-
+from app.extensions import MESSAGES_DIR
 class ChatMessage(TypedDict):
     id: str
     question: str
