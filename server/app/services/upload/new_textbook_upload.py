@@ -95,10 +95,14 @@ class TOCExtractor:
         """Extract text from the first n pages of a PDF file."""
         try:
             text = []
+            page_labels = self.get_page_labels()
             
             # Add 1 to end_page to make it inclusive
             for page_num in range(start_page, end_page + 1):
                 page_text = self.reader.pages[page_num - 1].extract_text()
+                # filter out the number of the page, page_num
+                page_num_to_remove = page_labels[page_num - 1]
+                page_text = re.sub(r'\b' + str(page_num_to_remove) + r'\b', '', page_text)
                 text.append(page_text)
             
             return text
@@ -274,24 +278,62 @@ class TOCExtractor:
         """Parse the XML exercises into a structured format.
         Returns a dictionary containing chapter information and their structure."""
         try:
-            root = ET.fromstring(xml_string)
+            # Check if xml_string is empty or invalid
+            if not xml_string or not xml_string.strip():
+                print("Warning: Empty XML string received")
+                return {"exercises": []}
+
+            # Clean up incomplete XML by finding complete exercises
+            exercise_pattern = r'<EXERCISE>.*?</EXERCISE>'
+            complete_exercises = re.findall(exercise_pattern, xml_string, re.DOTALL)
+            
+            # Create a new valid XML string with only complete exercises
+            cleaned_xml = f"<CHAPTER>{''.join(complete_exercises)}</CHAPTER>"
+            
+            root = ET.fromstring(cleaned_xml)
             
             exercise_structure = {
                 "exercises": []
             }
 
             for exercise in root.findall('EXERCISE'):
-                exercise_info = {
-                    "title": exercise.find('TITLE').text.strip(),
-                    "page": int(exercise.find('PAGE').text),
-                    "type": exercise.find('TYPE').text.strip()
-                }
-                exercise_structure["exercises"].append(exercise_info)
+                try:
+                    title_elem = exercise.find('TITLE')
+                    page_elem = exercise.find('PAGE')
+                    type_elem = exercise.find('TYPE')
+
+                    if title_elem is None or page_elem is None or type_elem is None:
+                        print(f"Warning: Missing required elements in exercise")
+                        continue
+
+                    # Additional validation for element text
+                    if not all(elem.text and elem.text.strip() for elem in [title_elem, page_elem, type_elem]):
+                        print(f"Warning: Empty text in required elements")
+                        continue
+
+                    exercise_info = {
+                        "title": title_elem.text.strip(),
+                        "page": int(page_elem.text),
+                        "type": type_elem.text.strip()
+                    }
+                    exercise_structure["exercises"].append(exercise_info)
+                except (AttributeError, ValueError) as e:
+                    print(f"Warning: Error processing exercise: {str(e)}")
+                    continue
+
+            if not exercise_structure["exercises"]:
+                print("Warning: No valid exercises found after parsing")
+            else:
+                print(f"Successfully parsed {len(exercise_structure['exercises'])} exercises")
 
             return exercise_structure
         
+        except ET.ParseError as e:
+            print(f"Warning: XML parsing error: {str(e)}")
+            return {"exercises": []}
         except Exception as e:
-            raise Exception(f"Error parsing exercise XML: {str(e)}")
+            print(f"Warning: Unexpected error parsing exercise XML: {str(e)}")
+            return {"exercises": []}
 
 
 def clean_unicode(obj):
@@ -438,11 +480,12 @@ def main2(pdf_filename: str):
             sub_offset = page_labels.index(str(supposed_sub_start)) + 1 - supposed_sub_start
             subchapter['start_page'] = supposed_sub_start + sub_offset
             
-            # End page is start of next subchapter or chapter exercises
+            # End page is start of next subchapter or chapter end page
             if j < len(chapter['subchapters']) - 1:
-                subchapter['end_page'] = chapter['subchapters'][j + 1]['page'] - 1 + sub_offset
+                next_sub_start = chapter['subchapters'][j + 1]['page']
+                subchapter['end_page'] = min(next_sub_start - 1 + sub_offset, chapter['end_page'])
             else:
-                subchapter['end_page'] = supposed_exercises_start - 1 + sub_offset
+                subchapter['end_page'] = chapter['end_page']
             
             # Remove redundant page attribute
             del subchapter['page']
@@ -467,22 +510,26 @@ def main2(pdf_filename: str):
         exercise_pages = "".join(exercise_pages)
 
         # Get exercise structure from Gemini
-        exercise_xml = extractor.get_exercise_pages(exercise_pages, chapter_title)
-        parsed_exercises = extractor.parse_exercise_xml(exercise_xml)
-        
-        # Add exercises to chapter with proper page numbers
-        chapter['exercises'] = []
-        for exercise in parsed_exercises['exercises']:
-            supposed_ex_page = exercise['page']
-            try:
-                ex_offset = page_labels.index(str(supposed_ex_page)) + 1 - supposed_ex_page
-            except ValueError:
-                ex_offset = 0
-            chapter['exercises'].append({
-                'title': f"{exercise['title']} ({exercise['type']})",
-                'start_page': supposed_ex_page + ex_offset,
-                'end_page': supposed_ex_page + ex_offset
-            })
+        try:
+            exercise_xml = extractor.get_exercise_pages(exercise_pages, chapter_title)
+            print("exercise_xml: ", exercise_xml)
+            parsed_exercises = extractor.parse_exercise_xml(exercise_xml)
+            
+            if not parsed_exercises["exercises"]:
+                print(f"Warning: No exercises found for chapter '{chapter_title}'")
+            
+            # Add exercises to chapter with proper page numbers
+            chapter['exercises'] = []
+            for exercise in parsed_exercises['exercises']:
+                supposed_ex_page = exercise['page']
+                chapter['exercises'].append({
+                    'title': f"{exercise['title']} ({exercise['type']})",
+                    'start_page': supposed_ex_page,  # Using raw page number without conversion!
+                    'end_page': supposed_ex_page     # Using raw page number without conversion!
+                })
+        except Exception as e:
+            print(f"Error processing exercises for chapter '{chapter_title}': {str(e)}")
+            chapter['exercises'] = []  # Set empty exercises list on error
 
         # Remove redundant page and exercises_page attributes from chapter
         del chapter['page']
@@ -495,15 +542,11 @@ def main2(pdf_filename: str):
     return toc
 
 
-def main3(pdf_filename: str):
+def main3(pdf_filename: str, class_id: str, textbook_id: str, uploaded = False):
     supabase_url = os.getenv("SUPABASE_URL")
     supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
     opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
     supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
-
-    # Define base directory and uploads path
-    if not os.getenv('DOCKER_ENV'):
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
     # Define base directory and uploads path
     if not os.getenv('DOCKER_ENV'):
@@ -520,48 +563,104 @@ def main3(pdf_filename: str):
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF file not found at {pdf_path}")
     
-    # get table of contents
-    toc_path = os.path.join(UPLOADS_DIR, f'toc_{pdf_filename}.json')
-    with open(toc_path, 'r') as f:
-        toc = json.load(f)
+    if not uploaded:
+        # get table of contents
+        toc_path = os.path.join(UPLOADS_DIR, f'toc_{pdf_filename}.json')
+        with open(toc_path, 'r') as f:
+            toc = json.load(f)
+        
+        # upload chapters to supabase
+        for i, chapter in enumerate(toc['chapters']):
+            response = supabase.table('chapters').insert({
+                'title': chapter['title'],
+                'start_page': chapter['start_page'],
+                'end_page': chapter['end_page'],
+                'chapter_number': i + 1,
+                'textbook': textbook_id
+            }).execute()
+            chapter['id'] = response.data[0]['id']
+
+        # upload subchapters to supabase
+        for chapter in toc['chapters']:
+            for j, subchapter in enumerate(chapter['subchapters']):
+                response = supabase.table('subchapters').insert({
+                    'title': subchapter['title'],
+                    'start_page': subchapter['start_page'],
+                    'end_page': subchapter['end_page'],
+                    'subchapter_number': j + 1,
+                    'chapter': chapter['id']
+                }).execute()
+                subchapter['id'] = response.data[0]['id']
+
+        # upload exercises to supabase
+        for chapter in toc['chapters']:
+            for j, exercise in enumerate(chapter['exercises']):
+                response = supabase.table('exercises').insert({
+                    'title': exercise['title'],
+                    'start_page': exercise['start_page'],
+                    'end_page': exercise['end_page'],
+                    'exercise_number': j + 1,
+                    'chapter': chapter['id']
+                }).execute()
+                exercise['id'] = response.data[0]['id']
+    else:
+        # get chapters, subchapters, and exercises from supabase
+        chapters = supabase.table('chapters').select('*').eq('textbook', textbook_id).execute()
+        print(f"Found {len(chapters.data)} chapters")
+        subchapters = supabase.table('subchapters').select('*').in_('chapter', [chapter['id'] for chapter in chapters.data]).execute()
+        print(f"Found {len(subchapters.data)} subchapters")
+        toc = {
+            'chapters': chapters.data,
+            'subchapters': subchapters.data,
+        }
     
-    # upload chapters to supabase
-    for i, chapter in enumerate(toc['chapters']):
-        response = supabase.table('chapters').insert({
-            'title': chapter['title'],
-            'start_page': chapter['start_page'],
-            'end_page': chapter['end_page'],
-            'chapter_number': i + 1,
-            'textbook': 'f945ef59-cabe-40e1-b38f-17e05400cb7e'
-        }).execute()
-        chapter['id'] = response.data[0]['id']
+    homeworks = supabase.table('homework').select('*').eq('class', class_id).eq('deleted', False).execute()
+    print(f"Found {len(homeworks.data)} homework")
+    problems = supabase.table('problems').select('*').in_('homework', [homework['id'] for homework in homeworks.data]).execute()
+    print(f"Found {len(problems.data)} problems")
+    exercises = supabase.table('exercises').select('*').in_('id', [problem['exercise'] for problem in problems.data]).execute()
+    for exercise in exercises.data:
+        exercise['homework'] = [problem['homework'] for problem in problems.data if problem['exercise'] == exercise['id']][0]
+    print(f"Found {len(exercises.data)} exercises")
+    toc['exercises'] = exercises.data
 
-    # upload subchapters to supabase
-    for chapter in toc['chapters']:
-        for j, subchapter in enumerate(chapter['subchapters']):
-            supabase.table('subchapters').insert({
-                'title': subchapter['title'],
-                'start_page': subchapter['start_page'],
-                'end_page': subchapter['end_page'],
-                'subchapter_number': j + 1,
-                'chapter': chapter['id']
-            }).execute()
-
-    # upload exercises to supabase
-    for chapter in toc['chapters']:
-        for j, exercise in enumerate(chapter['exercises']):
-            supabase.table('exercises').insert({
-                'title': exercise['title'],
-                'start_page': exercise['start_page'],
-                'end_page': exercise['end_page'],
-                'exercise_number': j + 1,
-                'chapter': chapter['id']
-            }).execute()
-
+    # update all the documents with corresponding chapter, subchapter, and exercise ids
+    documents = supabase.table('documents').select('*').eq('textbook', textbook_id).execute()
+    for document in tqdm(documents.data, total=len(documents.data), desc="Updating documents"):
+        page = document['page']
+        
+        # Find matching chapter
+        chapter_id = None
+        subchapter_id = None
+        for chapter in toc['chapters']:
+            if chapter.get('start_page') <= page <= chapter.get('end_page'):
+                chapter_id = chapter.get('id')
+                
+                # Find matching subchapter within this chapter
+                for subchapter in toc['subchapters']:
+                    if subchapter.get('start_page') <= page <= subchapter.get('end_page') and subchapter.get('chapter') == chapter_id:
+                        subchapter_id = subchapter.get('id')
+                        break
+                        
+                break
+        
+        # find the homework that has an exercise on the page
+        homework_id = None
+        for exercise in toc['exercises']:
+            if exercise.get('start_page') <= page <= exercise.get('end_page'):
+                homework_id = exercise.get('homework')
+                break
+        
+        supabase.table('documents').update({
+            'chapter': chapter_id,
+            'subchapter': subchapter_id,
+            'homework': homework_id,
+        }).eq('id', document['id']).execute()
+    
 if __name__ == "__main__":
     # main('LinAlg.pdf')
-    main2('V.pdf')
-    # main3('LinAlg.pdf')
+    # main2('LinAlg.pdf')
+    main3('LinAlg.pdf', "9ebca7a7-5792-456a-ab55-03801ba710e5", "f945ef59-cabe-40e1-b38f-17e05400cb7e", True)
 
     # # Define base directory and uploads path
     # if not os.getenv('DOCKER_ENV'):

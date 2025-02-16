@@ -1,10 +1,10 @@
 /**
- * app/classes/[classId]/chat/[generationId]/page.tsx
+ * app/classes/[classId]/chat/[chatId]/page.tsx
  * 
  * This page is used to chat with the AI, which looks similar to the GenerateCanvas page, but instead with a chat interface.
  * 
  * @AshokSaravanan222
- * 07.02.2025
+ * 16.02.2025
  */
 "use client";
 import ChatCanvas from "@/components/Chat/ChatCanvas";

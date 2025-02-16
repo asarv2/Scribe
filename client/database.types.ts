@@ -52,31 +52,25 @@ export type Database = {
           class: string
           created_at: string
           deleted: boolean
-          generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
           name: string
           profile: string | null
-          response_url: string
         }
         Insert: {
           class: string
           created_at?: string
           deleted?: boolean
-          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
           name?: string
           profile?: string | null
-          response_url?: string
         }
         Update: {
           class?: string
           created_at?: string
           deleted?: boolean
-          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
           name?: string
           profile?: string | null
-          response_url?: string
         }
         Relationships: [
           {
@@ -157,41 +151,71 @@ export type Database = {
       }
       documents: {
         Row: {
+          chapter: string | null
           created_at: string
           description: string
+          homework: string | null
           id: string
           lecture: string | null
           page: number
           processed: boolean
+          subchapter: string | null
           text: string
           textbook: string | null
         }
         Insert: {
+          chapter?: string | null
           created_at?: string
           description?: string
+          homework?: string | null
           id?: string
           lecture?: string | null
           page: number
           processed?: boolean
+          subchapter?: string | null
           text?: string
           textbook?: string | null
         }
         Update: {
+          chapter?: string | null
           created_at?: string
           description?: string
+          homework?: string | null
           id?: string
           lecture?: string | null
           page?: number
           processed?: boolean
+          subchapter?: string | null
           text?: string
           textbook?: string | null
         }
         Relationships: [
           {
+            foreignKeyName: "documents_chapter_fkey"
+            columns: ["chapter"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_homework_fkey"
+            columns: ["homework"]
+            isOneToOne: false
+            referencedRelation: "homework"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "documents_lecture_fkey"
             columns: ["lecture"]
             isOneToOne: false
             referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_subchapter_fkey"
+            columns: ["subchapter"]
+            isOneToOne: false
+            referencedRelation: "subchapters"
             referencedColumns: ["id"]
           },
           {
@@ -673,43 +697,58 @@ export type Database = {
       }
       messages: {
         Row: {
+          bare_question: string
+          bare_response: string
           chat: string | null
           created_at: string
           documents: string[]
+          exercises: string[]
           generation: string | null
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
           last_generation_attempt: string | null
+          problems: string[]
           question: string
           references: string[]
           response: string
+          response_url: string
         }
         Insert: {
+          bare_question?: string
+          bare_response?: string
           chat?: string | null
           created_at?: string
           documents?: string[]
+          exercises?: string[]
           generation?: string | null
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
           last_generation_attempt?: string | null
+          problems?: string[]
           question?: string
           references?: string[]
           response?: string
+          response_url?: string
         }
         Update: {
+          bare_question?: string
+          bare_response?: string
           chat?: string | null
           created_at?: string
           documents?: string[]
+          exercises?: string[]
           generation?: string | null
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
           last_generation_attempt?: string | null
+          problems?: string[]
           question?: string
           references?: string[]
           response?: string
+          response_url?: string
         }
         Relationships: [
           {
@@ -849,6 +888,7 @@ export type Database = {
           parse_error: string | null
           parse_status: Database["prod"]["Enums"]["parse_status"]
           response_url: string
+          textbook_number: number
           title: string
         }
         Insert: {
@@ -861,6 +901,7 @@ export type Database = {
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
           response_url?: string
+          textbook_number?: number
           title?: string
         }
         Update: {
@@ -873,6 +914,7 @@ export type Database = {
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
           response_url?: string
+          textbook_number?: number
           title?: string
         }
         Relationships: [

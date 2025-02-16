@@ -39,36 +39,70 @@ class BaseProcessor:
             HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
         }
 
-        # Initialize model configurations
-        self.model_configs = {
-            "gemini-2.0-flash": genai.GenerativeModel(
-                model_name="gemini-2.0-flash-001",
-                generation_config={"temperature": 0},
-                safety_settings=self.safety_settings
-            ),
-            "gemini-2.0-flash-lite": genai.GenerativeModel(
-                model_name="gemini-2.0-flash-lite-preview-02-05",
-                generation_config={"temperature": 0},
-                safety_settings=self.safety_settings
-            ),
-            "gemini-1.5-pro": genai.GenerativeModel(
-                model_name="gemini-1.5-pro",
-                generation_config={"temperature": 0},
-                safety_settings=self.safety_settings
-            ),
-            "gemini-1.5-flash": genai.GenerativeModel(
-                model_name="gemini-1.5-flash",
-                generation_config={"temperature": 0},
-                safety_settings=self.safety_settings
-            ),
-            "gemini-1.5-flash-8b": genai.GenerativeModel(
-                model_name="gemini-1.5-flash-8b",
-                generation_config={"temperature": 0},
-                safety_settings=self.safety_settings
-            ),
-            # Add other models as needed
-        }
-
+    async def get_model_instance(self, model: LiteralModel, system_instruction: str | None = None) -> genai.GenerativeModel:
+        if system_instruction:
+            model_configs = {
+                "gemini-2.0-flash": genai.GenerativeModel(
+                    model_name="gemini-2.0-flash-001",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                    system_instruction=system_instruction
+                ),
+                "gemini-2.0-flash-lite": genai.GenerativeModel(
+                    model_name="gemini-2.0-flash-lite-preview-02-05",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                    system_instruction=system_instruction
+                ),
+                "gemini-1.5-pro": genai.GenerativeModel(
+                    model_name="gemini-1.5-pro",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                    system_instruction=system_instruction
+                ),
+                "gemini-1.5-flash": genai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                    system_instruction=system_instruction
+                ),
+                "gemini-1.5-flash-8b": genai.GenerativeModel(
+                    model_name="gemini-1.5-flash-8b",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                    system_instruction=system_instruction
+                ),
+            }
+            return model_configs[model]
+        else:
+            model_configs = {
+                "gemini-2.0-flash": genai.GenerativeModel(
+                    model_name="gemini-2.0-flash-001",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                ),
+                "gemini-2.0-flash-lite": genai.GenerativeModel(
+                    model_name="gemini-2.0-flash-lite-preview-02-05",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                ),
+                "gemini-1.5-pro": genai.GenerativeModel(
+                    model_name="gemini-1.5-pro",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                ),
+                "gemini-1.5-flash": genai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                ),
+                "gemini-1.5-flash-8b": genai.GenerativeModel(
+                    model_name="gemini-1.5-flash-8b",
+                    generation_config={"temperature": 0},
+                    safety_settings=self.safety_settings,
+                ),
+            }
+            return model_configs[model]
     async def prepare_conversation_history(
         self,
         messages: List[Message],
@@ -135,7 +169,7 @@ class BaseProcessor:
             await rate_limiter.acquire(model)
             
             try:
-                model_instance = self.model_configs[model]
+                model_instance = await self.get_model_instance(model)
                 
                 # Extract content parts from the message
                 content_parts = []
@@ -177,6 +211,7 @@ class BaseProcessor:
 
     async def robust_generate_stream(
         self,
+        system_instruction: str,
         message: Message,
         model: LiteralModel = "gemini-2.0-flash",
         retries: int = 3,
@@ -190,7 +225,7 @@ class BaseProcessor:
             await rate_limiter.acquire(model)
             
             try:
-                model_instance = self.model_configs[model]
+                model_instance = await self.get_model_instance(model, system_instruction)
                 
                 # Extract content parts from the message
                 content_parts = []
@@ -224,6 +259,7 @@ class BaseProcessor:
             if retries > 0:
                 await asyncio.sleep(initial_wait)
                 async for chunk in self.robust_generate_stream(
+                    system_instruction,
                     message,
                     model,
                     retries - 1,

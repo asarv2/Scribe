@@ -1,16 +1,20 @@
 import os
 import sys
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
-from fastapi.middleware.cors import CORSMiddleware
-
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(BASE_DIR)
 else:
     BASE_DIR = '/app'
+
+# Export BASE_DIR as environment variable so other modules can access it
+os.environ['BASE_DIR'] = BASE_DIR
+
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from app.config import UPLOADS_DIR
 
 # Create FastAPI app
 app = FastAPI(title="Scribe API")
@@ -59,8 +63,7 @@ async def serve_file(filepath: str):
     Supports nested folder structures through the filepath parameter.
     Access like: /files/folder1/folder2/image.jpg
     """
-    uploads_dir = os.path.join(BASE_DIR, 'uploads')
-    file_path = os.path.join(uploads_dir, filepath)
+    file_path = os.path.join(UPLOADS_DIR, filepath)
     
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")

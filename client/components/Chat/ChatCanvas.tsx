@@ -9,7 +9,7 @@ import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, 
 import { useRouter } from "next/navigation";
 import { HeaderSimple } from "@/components/HeaderSimple";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconPlus, IconCopy, IconTrash, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconPlus, IconCopy, IconTrash, IconX, IconAlertCircle } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -54,12 +54,6 @@ export interface ChatMessage {
     };
 }
 
-// Add a new type for streaming state
-type StreamingState = {
-    messageId: string;
-    content: string;
-};
-
 export default function ChatCanvas({ classId, chatId }: { classId: string, chatId: string }) {
     const supabase = useSupabaseBrowser();
 
@@ -78,7 +72,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     });
     const [loading, setLoading] = useState(false);
-    const [streamingState, setStreamingState] = useState<StreamingState | null>(null);
 
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
@@ -240,6 +233,55 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         };
     }, [chatId, queryClient, supabase]);
 
+
+    // Set up realtime subscription for chat
+    useEffect(() => {
+        const channel = supabase
+            .channel(`realtime-chats-${chatId}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'chats',
+                    filter: `id=eq.${chatId}`
+                },
+                async (payload) => {
+                    console.log("Received chat update:", payload);
+
+                    // Immediately update the cache with the new data
+                    queryClient.setQueryData(
+                        ["chat", chatId],
+                        (oldData: any) => {
+                            // The existing chat data is a single object, not an array
+                            if (!oldData) return payload.new;  // Return single object, not array
+
+                            // For UPDATE, just return the new data
+                            if (payload.eventType === 'UPDATE') {
+                                return payload.new;
+                            }
+
+                            return oldData;
+                        }
+                    );
+
+                    // Then trigger a refetch to ensure we're in sync
+                    await queryClient.invalidateQueries({
+                        queryKey: ["chat", chatId],
+                        exact: true
+                    });
+                }
+            )
+            .subscribe();
+
+        console.log("Subscribed to channel:", `realtime-chats-${chatId}`);
+
+        return () => {
+            console.log("Unsubscribing from channel:", `realtime-chats-${chatId}`);
+            supabase.removeChannel(channel);
+        };
+    }, [chatId, queryClient, supabase]);
+
     useEffect(() => {
         if (textbooks) {
             setExpandedNodes(new Set(textbooks.map(t => t.id)));
@@ -255,18 +297,49 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             activeChat.context.textbooks.includes(document.textbook ?? "")
         ) ?? [];
         const chapterDocs = textbookDocuments?.filter(document => {
-            const chapter = chapters?.find(c => c.id === document.textbook);
-            return chapter && activeChat.context.chapters.includes(chapter.id);
+            // Find the chapters that are in our context
+            const activeChapters = chapters?.filter(c =>
+                activeChat.context.chapters.includes(c.id)
+            );
+            // Check if the document's page falls within any active chapter's page range
+            return activeChapters?.some(chapter =>
+                document.textbook === chapter.textbook &&
+                document.page >= chapter.start_page &&
+                document.page <= chapter.end_page
+            );
         }) ?? [];
         const subchapterDocs = textbookDocuments?.filter(document => {
-            const chapter = chapters?.find(c => c.id === document.textbook);
-            const subchapter = subchapters?.find(s => s.chapter === chapter?.id && activeChat.context.subchapters.includes(s.id));
-            return subchapter && chapter;
+            const activeSubchapters = subchapters?.filter(s =>
+                activeChat.context.subchapters.includes(s.id)
+            );
+            // Check if document's page falls within any active subchapter's range
+            return activeSubchapters?.some(subchapter => {
+                const parentChapter = chapters?.find(c => c.id === subchapter.chapter);
+                return parentChapter?.textbook === document.textbook &&
+                    document.page >= subchapter.start_page &&
+                    document.page <= subchapter.end_page;
+            });
         }) ?? [];
         const exerciseDocs = textbookDocuments?.filter(document => {
-            const chapter = chapters?.find(c => c.id === document.textbook);
-            const exercise = exercises?.find(e => e.chapter === chapter?.id && activeChat.context.exercises.includes(e.id));
-            return exercise && chapter;
+            const activeExercises = exercises?.filter(e =>
+                activeChat.context.exercises.includes(e.id)
+            );
+            // Check if document's page falls within any active exercise's range
+            return activeExercises?.some(exercise => {
+                const parentChapter = chapters?.find(c => c.id === exercise.chapter);
+                return parentChapter?.textbook === document.textbook &&
+                    document.page >= exercise.start_page &&
+                    document.page <= exercise.end_page;
+            });
+        }) ?? [];
+        const homeworkDocs = textbookDocuments?.filter(document => {
+            const homework = homeworkData?.find(h => h.id === document.homework);
+            return homework && activeChat.context.homework.includes(homework.id);
+        }) ?? [];
+        const problemDocs = textbookDocuments?.filter(document => {
+            const homework = homeworkData?.find(h => h.id === document.homework);
+            const problem = problems?.find(p => p.homework === homework?.id && activeChat.context.problems.includes(p.id));
+            return problem && homework && activeChat.context.problems.includes(problem.id);
         }) ?? [];
 
         // Previous message references
@@ -287,6 +360,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             ...chapterDocs,
             ...subchapterDocs,
             ...exerciseDocs,
+            ...homeworkDocs,
+            ...problemDocs,
             ...messageDocuments
         ]));
     }
@@ -298,6 +373,79 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     const getProfessorAvatarUrl = () => {
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${professor?.id}.png`
     }
+
+    const getAdditionalContextForBareQuestion = () => {
+        const contextParts: string[] = [];
+
+        // Add lecture context
+        activeChat.context.lectures.forEach(lectureId => {
+            const lecture = lectures?.find(l => l.id === lectureId);
+            if (lecture) {
+                contextParts.push(`Lecture: ${lecture.name}`);
+            }
+        });
+
+        // Add textbook context
+        activeChat.context.textbooks.forEach(textbookId => {
+            const textbook = textbooks?.find(t => t.id === textbookId);
+            if (textbook) {
+                contextParts.push(`Textbook: ${textbook.title}`);
+            }
+        });
+
+        // Add chapter context
+        activeChat.context.chapters.forEach(chapterId => {
+            const chapter = chapters?.find(c => c.id === chapterId);
+            if (chapter) {
+                contextParts.push(`Chapter ${chapter.chapter_number}: ${chapter.title}`);
+            }
+        });
+
+        // Add exercise context
+        activeChat.context.exercises.forEach(exerciseId => {
+            const exercise = exercises?.find(e => e.id === exerciseId);
+            const chapter = exercise ? chapters?.find(c => c.id === exercise.chapter) : null;
+            if (exercise && chapter) {
+                const exerciseTitle = exercise.title !== ""
+                    ? exercise.title
+                    : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`;
+                contextParts.push(`Exercise: ${exerciseTitle}`);
+            }
+        });
+
+        // Add subchapter context
+        activeChat.context.subchapters.forEach(subchapterId => {
+            const subchapter = subchapters?.find(s => s.id === subchapterId);
+            if (subchapter) {
+                contextParts.push(`Subchapter ${subchapter.subchapter_number}: ${subchapter.title}`);
+            }
+        });
+
+        // Add homework context
+        activeChat.context.homework.forEach(homeworkId => {
+            const homework = homeworkData?.find(h => h.id === homeworkId);
+            if (homework) {
+                contextParts.push(`Homework: ${homework.title}`);
+            }
+        });
+
+        // Add problem context
+        activeChat.context.problems.forEach(problemId => {
+            const problem = problems?.find(p => p.id === problemId);
+            const homework = homeworkData?.find(h => h.id === problem?.homework);
+            const exercise = exercises?.find(e => e.id === problem?.exercise);
+            if (problem && homework) {
+                contextParts.push(`Problem: ${homework.title} - Problem ${problem.problem_number}, Exercise ${exercise?.title} .${exercise?.exercise_number} (${exercise?.type})`);
+            }
+        });
+
+        // If there's any context, add a prefix
+        if (contextParts.length > 0) {
+            return `\n\nContext:\n${contextParts.join('\n')}`;
+        }
+
+        return '';
+    };
 
     const handleChat = async () => {
         if (!activeChat.prompt.trim()) return;
@@ -318,15 +466,20 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 router.replace(`/classes/${classId}/chat/${chat.id}`);
             }
 
+            const additionalContextForBareQuestion = getAdditionalContextForBareQuestion();
+
             // Create the message
             const newMessage = {
                 chat: newChatId,
+                bare_question: activeChat.prompt + additionalContextForBareQuestion,
                 question: activeChat.prompt,
-                response_url:`${process.env.NEXT_PUBLIC_API_URL}`,
-                documents: getDocuments().map(doc => doc.id)
+                response_url: `${process.env.NEXT_PUBLIC_API_URL}`,
+                documents: getDocuments().map(doc => doc.id),
+                exercises: activeChat.context.exercises, // these can stay as they are
+                problems: activeChat.context.problems, // these can stay as they are
             };
 
-            const {success, error, data: messagesData} = await createMessages([newMessage]);
+            const { success, error, data: messagesData } = await createMessages([newMessage]);
             if (!success) {
                 throw new Error(error);
             }
@@ -336,8 +489,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 throw new Error("No message data returned");
             }
 
-            // Start streaming
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
+            // Trigger generation, no need to wait for response
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -346,87 +499,23 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 })
             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const reader = response.body?.getReader();
-            const decoder = new TextDecoder();
-
-            if (!reader) {
-                throw new Error('No reader available');
-            }
-
-            // Initialize streaming state before starting the stream
-            setStreamingState({
-                messageId: messageData.id,
-                content: ''
+            // Reset states
+            setActiveChat({
+                ...activeChat,
+                prompt: "",
+                context: {
+                    lectures: [],
+                    textbooks: [],
+                    chapters: [],
+                    exercises: [],
+                    subchapters: [],
+                    homework: [],
+                    problems: []
+                }
             });
 
-            console.log("Starting stream reading...");
-            while (true) {
-                const { value, done } = await reader.read();
-                if (done) {
-                    console.log("Stream complete");
-                    break;
-                }
-
-                const chunk = decoder.decode(value);
-                console.log("Raw chunk received:", chunk);
-                const lines = chunk.split('\n');
-
-                for (const line of lines) {
-                    if (line.trim() && line.startsWith('data: ')) {
-                        try {
-                            const data = JSON.parse(line.slice(6));
-                            console.log("Parsed data:", data);
-
-                            if (data.error) {
-                                console.error('Error:', data.error);
-                                notifications.show({
-                                    title: "Error",
-                                    message: "Failed to generate response. Please try again.",
-                                    color: "red"
-                                });
-                                break;
-                            }
-
-                            if (data.chunk) {
-                                console.log("Processing chunk:", data.chunk);
-                                
-                                // Use a Promise to ensure state updates are processed sequentially
-                                await new Promise<void>(resolve => {
-                                    setStreamingState((prev) => {
-                                        const nextState = !prev
-                                            ? { messageId: messageData.id, content: data.chunk }
-                                            : { ...prev, content: prev.content + data.chunk };
-                                        console.log("Updated streaming state:", nextState);
-                                        return nextState;
-                                    });
-                                    
-                                    // Give React time to process the state update
-                                    setTimeout(resolve, 10);
-                                });
-                            }
-
-                            if (data.done) {
-                                console.log("Received done signal");
-                                break;
-                            }
-                        } catch (e) {
-                            console.error('Error parsing SSE data:', e);
-                            console.log('Problematic line:', line);
-                        }
-                    }
-                }
-            }
-
-            // Reset states
-            setActiveChat({ ...activeChat, prompt: "", context: { lectures: [], textbooks: [], chapters: [], exercises: [], subchapters: [], homework: [], problems: [] } });
-            queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
-
         } catch (error) {
-            console.error("Error in stream processing:", error);
+            console.error("Error in message processing:", error);
             notifications.show({
                 title: "Error",
                 message: "Failed to send message. Please try again.",
@@ -434,7 +523,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             });
         } finally {
             setLoading(false);
-            setStreamingState(null);
         }
     };
 
@@ -636,7 +724,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         </Badge>
                     );
                 })}
-                
+
             </Group>
         );
     };
@@ -703,7 +791,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         return (
             <Group>
                 {topDocs.map(doc => (
-                    <Link href={`/classes/${classId}/lecture/${doc.lecture}?page=${doc.page}`} key={doc.id}>
+                    <Link href={doc.lecture ? `/classes/${classId}/lecture/${doc.lecture}?page=${doc.page}` : `/classes/${classId}/textbook/${doc.textbook}/chapter/${doc.chapter}?page=${doc.page}`} key={doc.id}>
                         <Badge key={doc.id}>
                             {doc.lecture ?
                                 `${lectures?.find(l => l.id === doc.lecture)?.name} ${doc.pageRange}` :
@@ -716,89 +804,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         );
     };
 
-    // Modify the messages rendering to include streaming state
-    const renderMessages = () => {
-        return messages?.map((message) => (
-            <Stack key={message.id}>
-                {/* User message */}
-                <Group align="flex-start" justify="flex-end">
-                    <Card
-                        padding="sm"
-                        radius="md"
-                        style={{
-                            maxWidth: "70%",
-                            backgroundColor: "#228be6"
-                        }}
-                    >
-                        <Text c="white"><Latex>{message.question}</Latex></Text>
-                    </Card>
-                    <Avatar
-                        src={profile ? getAvatarUrl(profile) : undefined}
-                        radius="xl"
-                        size="md"
-                        alt={`${profile?.first_name} ${profile?.last_name}`}
-                    >
-                        {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
-                    </Avatar>
-                </Group>
-
-                {/* AI response */}
-                <Group align="flex-start">
-                    <Avatar
-                        src={professor ? getProfessorAvatarUrl() : undefined}
-                        size="md"
-                        radius="xl"
-                        alt="AI Assistant"
-                    />
-                    <Card
-                        padding="sm"
-                        radius="md"
-                        style={{
-                            alignSelf: "flex-start",
-                            maxWidth: "70%",
-                            backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                            minWidth: "200px",
-                            border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
-                        }}
-                    >
-                        {message.response === "" ? (
-                            streamingState?.messageId === message.id ? (
-                                // Show streaming content
-                                <Text>
-                                    <Latex>{streamingState.content || ''}</Latex>
-                                </Text>
-                            ) : (
-                                // Show loading state
-                                <Group align="center">
-                                    <Loader size="sm" color="blue" />
-                                    <Text c="dimmed" size="sm">
-                                        AI is generating response...
-                                    </Text>
-                                </Group>
-                            )
-                        ) : (
-                            // Show completed response
-                            <Text>
-                                <Latex>{message.response}</Latex>
-                                {message.references && lectureDocuments && textbookDocuments &&
-                                    renderDocuments(
-                                        lectureDocuments ?? [],
-                                        textbookDocuments ?? [],
-                                        message.references
-                                    )
-                                }
-                            </Text>
-                        )}
-                    </Card>
-                </Group>
-            </Stack>
-        ));
-    };
-
-    useEffect(() => {
-        console.log("Streaming state changed:", streamingState);
-      }, [streamingState]);
-
     return (
         <>
             <HeaderSimple />
@@ -809,16 +814,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                             <Link href={`/classes/${classId}/chat`}>
                                 <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
                             </Link>
-                            {existingChat && <Text size="xl" fw={700} mb={6}>{existingChat.name}</Text>}
-                            {!existingChat && <TextInput
-                                placeholder="Enter chat name"
-                                value={activeChat.title}
-                                onChange={(e) => setActiveChat({ ...activeChat, title: e.target.value })}
-                                style={{ flex: 1 }}
-                                fw={600}
-                                size="md"
-                                mb={6}
-                            />}
+                            <Text size="xl" fw={700} mb={6}>{existingChat ? existingChat.name : activeChat.title}</Text>
                         </Group>
                         <Group>
                             {existingChat && <DeleteChatModal chatId={chatId} chatTitle={existingChat?.name ?? ""} profile={profile ?? undefined} classId={classId} />}
@@ -837,7 +833,78 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                         maxHeight: "calc(80vh - 150px)"
                                     }}
                                 >
-                                    {renderMessages()}
+                                    {messages?.map((message, index) => (
+                                        <Stack key={`${message.id}`}>
+                                            {/* User message */}
+                                            <Group align="flex-start" justify="flex-end">
+                                                <Card
+                                                    padding="sm"
+                                                    radius="md"
+                                                    style={{
+                                                        maxWidth: "70%",
+                                                        backgroundColor: "#228be6"
+                                                    }}
+                                                >
+                                                    <Text c="white"><Latex>{message.question}</Latex></Text>
+                                                </Card>
+                                                <Avatar
+                                                    src={profile ? getAvatarUrl(profile) : undefined}
+                                                    radius="xl"
+                                                    size="md"
+                                                    alt={`${profile?.first_name} ${profile?.last_name}`}
+                                                >
+                                                    {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
+                                                </Avatar>
+                                            </Group>
+
+                                            {/* AI response */}
+                                            <Group align="flex-start">
+                                                <Avatar
+                                                    src={professor ? getProfessorAvatarUrl() : undefined}
+                                                    size="md"
+                                                    radius="xl"
+                                                    alt="AI Assistant"
+                                                />
+                                                <Card
+                                                    padding="sm"
+                                                    radius="md"
+                                                    style={{
+                                                        alignSelf: "flex-start",
+                                                        maxWidth: "70%",
+                                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                                        minWidth: "200px",
+                                                        border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                                                    }}
+                                                >
+                                                    <Text>
+                                                        {message.generation_status === "idle" ?
+                                                            <Group>
+                                                                <Loader size="sm" />
+                                                                <Text>Generating response...</Text>
+                                                            </Group>
+                                                            : message.generation_status === "error" ?
+                                                                <Group>
+                                                                    <IconAlertCircle size={16} />
+                                                                    <Text>{message.generation_error === null || message.generation_error === undefined || message.generation_error === "" ? "An error occurred while generating the response. Please try again." : message.generation_error}</Text>
+                                                                </Group>
+                                                                : (
+                                                                    <Latex>
+                                                                        {message.response}
+                                                                    </Latex>
+                                                                )}
+                                                        {message.references && lectureDocuments && textbookDocuments &&
+                                                            renderDocuments(
+                                                                lectureDocuments ?? [],
+                                                                textbookDocuments ?? [],
+                                                                message.references
+                                                            )
+                                                        }
+                                                    </Text>
+                                                </Card>
+                                            </Group>
+                                        </Stack>
+                                    )
+                                    )}
                                     <div ref={messagesEndRef} />
                                 </Stack>
 
