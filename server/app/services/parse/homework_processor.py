@@ -9,7 +9,7 @@ from xml.etree import ElementTree as ET
 from dotenv import load_dotenv
 from supabase import Client, ClientOptions, create_client
 
-load_dotenv()
+# load_dotenv()
 
 class HomeworkExtractor:
     def __init__(self, api_key: str, pdf_path: str):
@@ -248,7 +248,7 @@ def upload_homework_and_problems_to_supabase(homework_data: dict, pdf_filename: 
     
     
 
-if __name__ == "__main__":
-    homework = process_homework('HW1.pdf')
-    print(json.dumps(homework, indent=2))
-    upload_homework_and_problems_to_supabase(homework, 'HW1.pdf')
+# if __name__ == "__main__":
+#     homework = process_homework('HW1.pdf')
+#     print(json.dumps(homework, indent=2))
+#     upload_homework_and_problems_to_supabase(homework, 'HW1.pdf')

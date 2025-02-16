@@ -657,22 +657,22 @@ def main3(pdf_filename: str, class_id: str, textbook_id: str, uploaded = False):
             'homework': homework_id,
         }).eq('id', document['id']).execute()
     
-if __name__ == "__main__":
-    # main('LinAlg.pdf')
-    # main2('LinAlg.pdf')
-    main3('LinAlg.pdf', "9ebca7a7-5792-456a-ab55-03801ba710e5", "f945ef59-cabe-40e1-b38f-17e05400cb7e", True)
+# if __name__ == "__main__":
+#     # main('LinAlg.pdf')
+#     # main2('LinAlg.pdf')
+#     main3('LinAlg.pdf', "9ebca7a7-5792-456a-ab55-03801ba710e5", "f945ef59-cabe-40e1-b38f-17e05400cb7e", True)
 
-    # # Define base directory and uploads path
-    # if not os.getenv('DOCKER_ENV'):
-    #     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-    # else:
-    #     BASE_DIR = '/app'
+#     # # Define base directory and uploads path
+#     # if not os.getenv('DOCKER_ENV'):
+#     #     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+#     # else:
+#     #     BASE_DIR = '/app'
     
-    # UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
+#     # UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
     
-    # # Get PDF path from uploads directory
-    # pdf_path = os.path.join(UPLOADS_DIR, 'LinAlg.pdf')
+#     # # Get PDF path from uploads directory
+#     # pdf_path = os.path.join(UPLOADS_DIR, 'LinAlg.pdf')
 
-    # API_KEY = os.getenv('GOOGLE_API_KEY')
-    # extractor = TOCExtractor(API_KEY, pdf_path)
-    # print(extractor.get_page_labels())
+#     # API_KEY = os.getenv('GOOGLE_API_KEY')
+#     # extractor = TOCExtractor(API_KEY, pdf_path)
+#     # print(extractor.get_page_labels())
