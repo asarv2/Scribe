@@ -172,7 +172,8 @@ async def handle_message(request: ChatRequest):
                 problem_homework_id = next((h.get('id') for h in all_homeworks if h.get('id') == problem.get('homework')), None)
                 problem_homework_number = next((h.get('homework_number') for h in all_homeworks if h.get('id') == problem_homework_id), None)
                 problem_exercise = next((e for e in all_exercises if e.get('id') == problem.get('exercise')), None)
-                message_context.append(f"PROBLEM: {problem_number} ON HOMEWORK {problem_homework_number} WITH INFO: {problem.get('additional_info')} {"" if problem_exercise is None else "AND" + get_exercise_info(problem_exercise)}\n")
+                exercise_info = "" if problem_exercise is None else " AND " + get_exercise_info(problem_exercise)
+                message_context.append(f"PROBLEM: {problem_number} ON HOMEWORK {problem_homework_number} WITH INFO: {problem.get('additional_info')}{exercise_info}\n")
 
         processor = ChatProcessor(
             course_title=class_title,
