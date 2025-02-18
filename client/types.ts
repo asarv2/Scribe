@@ -8,11 +8,7 @@ export type TypedSupabaseClient = SupabaseClient<Database>
 
 export type Lecture = Database[SchemaName]["Tables"]["lectures"]["Row"]
 export type Textbook = Database[SchemaName]["Tables"]["textbooks"]["Row"]
-export type Topic = Database[SchemaName]["Tables"]["topics"]["Row"]
-export type Question = Database[SchemaName]["Tables"]["questions"]["Row"]
-export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"]
 export type Document = Database[SchemaName]["Tables"]["documents"]["Row"]
-export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"]
 export type Chapter = Database[SchemaName]["Tables"]["chapters"]["Row"]
 
 export type Generation = Database[SchemaName]["Tables"]["generations"]["Row"]
@@ -21,5 +17,7 @@ export type Evaluation = Database[SchemaName]["Tables"]["evaluations"]["Row"]
 export type Message = Database[SchemaName]["Tables"]["messages"]["Row"]
 export type Class = Database[SchemaName]["Tables"]["classes"]["Row"]
 export type Profile = Database[SchemaName]["Tables"]["profiles"]["Row"]
+
+export type Chat = Database[SchemaName]["Tables"]["chats"]["Row"]
 
 export type Code = Database[SchemaName]["Tables"]["codes"]["Row"]

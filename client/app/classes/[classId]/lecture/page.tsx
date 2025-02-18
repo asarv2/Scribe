@@ -31,11 +31,9 @@ import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import { createLecture } from "@/utils/services/lecture";
 import * as pdfjs from 'pdfjs-dist';
-import { Document, Lecture, Topic } from "@/types";
-import { getTopics } from "@/utils/queries/get-topics";
+import { Document, Lecture } from "@/types";
 import { getDocumentsLecture } from "@/utils/queries/get-documents-lecture";
 import { createLectureDocument, createTextbookDocument } from "@/utils/services/document";
-import { createFigures } from "@/utils/services/figures";
 import { createTextbook } from "@/utils/services/textbook";
 import { calculateResizedDimensions } from "@/utils/services/resize";
 
@@ -365,12 +363,7 @@ export default function LecturePage({ params }: { params: { classId: string } })
                             description: "",
                             document: documentId
                         }));
-
-                        await withTimeout(
-                            createFigures(figures),
-                            10000, // 10 second timeout for creating figures
-                            'Creating figures'
-                        );
+                        console.log("Figures:", figures);
                     } catch (figuresError) {
                         console.warn(`Skipping figures creation for page ${pageIndex + 1}:`, figuresError);
                     }

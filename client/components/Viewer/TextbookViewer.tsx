@@ -28,7 +28,6 @@ import Latex from "@/components/Latex";
 import DeleteTextbookModal from "@/components/Delete/DeleteTextbookModal";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { getTextbook } from "@/utils/queries/get-textbook";
-import { getFigures } from "@/utils/queries/get-figures";
 import { getChapter } from "@/utils/queries/get-chapter";
 import { getProfile } from "@/utils/queries/get-profile";
 
@@ -69,12 +68,6 @@ export default function TextbookViewer({ classId, textbookId, chapterId }: Textb
         queryKey: ["chapterTextbookDocuments", textbookId, chapterId],
         queryFn: () => getTextbookDocuments(supabase, textbookId, chapter?.start_page, chapter?.end_page),
         enabled: !!chapter
-    })
-
-    const { data: figures, isLoading: loadingFigures } = useQuery({
-        queryKey: ["figures", textbookId],
-        queryFn: () => getFigures(supabase, documents?.map((doc) => doc.id) ?? []),
-        enabled: !!documents
     })
 
     const { data: textbook, isLoading: loadingTextbook } = useQuery({

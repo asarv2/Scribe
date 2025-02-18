@@ -14,13 +14,14 @@ import { Container } from "@mantine/core";
 import { Text, Card } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Progress } from "@mantine/core";
-import { getGenerations } from "@/utils/queries/get-generations";
 import { Document, Generation, Message } from "@/types";
-import { getGenerationDocuments } from "@/utils/queries/get-generation-documents";
-import { getGenerationMessages } from "@/utils/queries/get-generation-messages";
+import { getDocuments } from "@/utils/queries/get-documents";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import Image from "next/image";
 import { getProfile } from "@/utils/queries/get-profile";
+import { getChats } from "@/utils/queries/get-chats";
+import { getMessages } from "@/utils/queries/get-messages";
+import { getDocument } from "pdfjs-dist";
 
 export default function ChatPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -46,46 +47,23 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         enabled: !!user
     })
 
-    const { data: chatGenerations, isLoading: loadingChatGenerations } = useQuery({
-        queryKey: ["chatGenerations", classId, profile?.id],
-        queryFn: () => getGenerations(supabase, classId, 'chat', (profile?.admin || profile?.professor) ? null : profile!.id),
+    const { data: chats, isLoading: loadingChats } = useQuery({
+        queryKey: ["chats", classId, profile?.id],
+        queryFn: () => getChats(supabase, classId, (profile?.admin || profile?.professor) ? null : profile!.id),
         enabled: !!profile
     })
 
-    const { data: generationMessages, isLoading: loadingGenerationMessages } = useQuery({
-        queryKey: ["generationMessages", classId, chatGenerations],
-        queryFn: () => getGenerationMessages(supabase, chatGenerations ?? []),
-        enabled: !!chatGenerations
+    const { data: messages, isLoading: loadingMessages } = useQuery({
+        queryKey: ["messages", classId, chats],
+        queryFn: () => getMessages(supabase, chats ? chats.map(chat => chat.id) : []),
+        enabled: !!chats
     })
 
-    const { data: generationMessagesDocuments, isLoading: loadingGenerationMessagesDocuments } = useQuery({
-        queryKey: ["generationMessagesDocuments", classId, generationMessages],
-        queryFn: () => getGenerationDocuments(supabase, generationMessages!.map(message => message.documents).flat()),
-        enabled: !!generationMessages
+    const { data: messagesReferences, isLoading: loadingMessagesReferences } = useQuery({
+        queryKey: ["messagesReferences", classId, messages],
+        queryFn: () => getDocuments(supabase, messages!.map(message => message.references).flat()),
+        enabled: !!messages
     })
-
-    const handleRetry = async (classId: string, generation: Generation) => {
-        try {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    generation_id: generation.id,
-                })
-            });
-
-            queryClient.invalidateQueries({ queryKey: ["generationMessages", classId, chatGenerations] });
-        } catch (error) {
-            console.error('Error retrying:', error);
-            notifications.show({
-                title: 'Error',
-                message: `Failed to retry chat generation. Please try again.`,
-                color: 'red'
-            });
-        }
-    };
 
     // Realtime subscription for generations
     useEffect(() => {
@@ -128,7 +106,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
 
     // Realtime subscription for messages
     useEffect(() => {
-        if (!chatGenerations) return;
+        if (!chats) return;
         const channel = supabase
             .channel('realtime-messages')
             .on(
@@ -137,11 +115,11 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                     event: '*',
                     schema: 'prod',
                     table: 'messages',
-                    filter: `generation=in.(${chatGenerations.map(generation => generation.id).join(',')})`
+                    filter: `chat=in.(${chats.map(chat => chat.id).join(',')})`
                 },
                 (payload) => {
                     console.log("Message change:", payload);
-                    queryClient.setQueryData(["generationMessages", classId, chatGenerations], (oldData: Message[] = []) => {
+                    queryClient.setQueryData(["messages", classId, chats], (oldData: Message[] = []) => {
                         let newData;
                         if (payload.eventType === 'INSERT') {
                             newData = [...oldData, payload.new];
@@ -163,12 +141,12 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [classId, supabase, chatGenerations, queryClient]);
+    }, [classId, supabase, chats, queryClient]);
 
-    const getDocument = (generation: Generation): Document | undefined => {
-        const message = generationMessages?.find(message => message.generation === generation.id);
-        if (message) {
-            return generationMessagesDocuments?.filter(document => message.documents.includes(document.id))[0]
+    const getReferences = (message: Message): Document[] | undefined => {
+        const references = messagesReferences?.filter(document => message.references.includes(document.id));
+        if (references) {
+            return references;
         }
         return undefined;
     }
@@ -183,14 +161,6 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         return "/placeholder_image.svg";
     }
 
-    const getEstimatedTime = useMemo(() => {
-        return (generation: Generation) => {
-            if (!generationMessages) return 0;
-            const genMessages = generationMessages.filter(message => message.generation === generation.id);
-            // takes 5 seconds per message
-            return genMessages.length * 5 * (1 - generation.progress);
-        };
-    }, [generationMessages]);
 
     return (
         <>
@@ -209,85 +179,31 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                     </Flex>
 
                     <Stack>
-                        {(chatGenerations && classData) && chatGenerations.length > 0 && chatGenerations
+                        {(chats && classData) && chats.length > 0 && chats
                             .sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime())
-                            .map((generation) => {
-                                const document = getDocument(generation);
-                                if (generation.generation_status !== "complete") {
-                                    const progress = generation.progress * 100;
-                                    return (
-                                        <Card withBorder key={generation.id}>
-                                            <Group align="flex-start" justify="space-between">
-                                                <Group align="flex-start">
-                                                    <Image
-                                                        src={getActiveImage(document)}
-                                                        alt={`Chat context`}
-                                                        style={{ objectFit: "contain", borderRadius: "10px" }}
-                                                        width={150}
-                                                        height={150}
-                                                    />
-                                                    <Stack gap="xs">
-                                                        <Text size="lg" fw={500}>{generation.name}</Text>
-                                                        <Text size="sm" c="dimmed">
-                                                            {generation.generation_status === 'generating' ? 'Generating response...' :
-                                                                generation.generation_status === 'error' ? 'Generation failed' : 
-                                                                generation.generation_status === 'idle' ? 'Waiting to generate' : 
-                                                                'Processing...'}
-                                                        </Text>
-                                                        {generation.generation_error && (
-                                                            <Text size="sm" c="red">
-                                                                Error: {generation.generation_error}
-                                                            </Text>
-                                                        )}
-                                                        <Progress
-                                                            value={progress}
-                                                            size="sm"
-                                                            color={'blue'}
-                                                            animated={generation.generation_status === 'generating'}
-                                                            striped={generation.generation_status === 'generating'}
-                                                        />
-                                                        {(generation.generation_status === 'generating') && (
-                                                            <Text size="sm" c="dimmed">
-                                                                Estimated time remaining: ~{getEstimatedTime(generation)} seconds
-                                                            </Text>
-                                                        )}
-                                                    </Stack>
-                                                </Group>
-                                                <Button
-                                                    variant="light"
-                                                    color={'blue'}
-                                                    onClick={() => handleRetry(classId, generation)}
-                                                    leftSection={<IconRefresh size={16} />}
-                                                    disabled={generation.generation_status === 'generating' || generation.generation_status === 'idle'}
-                                                    loading={generation.generation_status === 'generating'}
-                                                >
-                                                    {generation.generation_status === 'generating' ? 'Processing...' :
-                                                        generation.generation_status === 'error' ? 'Retry' :
-                                                        'Retry'}
-                                                </Button>
-                                            </Group>
-                                        </Card>
-                                    )
-                                }
+                            .map((chat) => {
+                                const messagesForChat = messages?.filter(message => message.chat === chat.id) ?? [];
+                                const references = messagesForChat.map(message => getReferences(message) ?? []).flat()
+                                const context = references?.[0]
                                 return (
                                     <Link
-                                        href={`/classes/${classId}/chat/${generation.id}`}
-                                        key={generation.id}
+                                        href={`/classes/${classId}/chat/${chat.id}`}
+                                        key={chat.id}
                                         style={{ textDecoration: 'none' }}
                                     >
                                         <Card withBorder>
                                             <Group align="flex-start">
                                                 <Image
-                                                    src={getActiveImage(document)}
+                                                    src={getActiveImage(context)}
                                                     alt={`Chat context`}
                                                     width={150}
                                                     height={150}
                                                     style={{ objectFit: "contain", borderRadius: "10px" }}
                                                 />
                                                 <Stack gap="xs">
-                                                    <Text size="lg" fw={500}>{generation.name}</Text>
+                                                    <Text size="lg" fw={500}>{chat.name}</Text>
                                                     <Text size="sm" c="dimmed">
-                                                        Created {new Date(generation.created_at ?? "").toLocaleDateString()}
+                                                        Created {new Date(chat.created_at ?? "").toLocaleDateString()}
                                                     </Text>
                                                 </Stack>
                                             </Group>

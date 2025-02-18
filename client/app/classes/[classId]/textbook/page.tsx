@@ -27,13 +27,11 @@ import { Text, Card } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import * as pdfjs from 'pdfjs-dist';
-import { Document, Textbook, Topic } from "@/types";
-import { getTopics } from "@/utils/queries/get-topics";
+import { Document, Textbook } from "@/types";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { createTextbook } from "@/utils/services/textbook";
 import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
 import { createTextbookDocument } from "@/utils/services/document";
-import { createFigures } from "@/utils/services/figures";
 import { calculateResizedDimensions } from "@/utils/services/resize";
 
 export default function TextbookPage({ params }: { params: { classId: string } }) {
@@ -61,12 +59,6 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         queryKey: ["textbookDocuments", classId],
         queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
         enabled: !!textbooks
-    })
-
-    const { data: topics, isLoading: loadingTopics } = useQuery({
-        queryKey: ["topics", classId],
-        queryFn: () => getTopics(supabase, classId, classData!.map),
-        enabled: !!classData
     })
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -364,12 +356,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                             description: "",
                             document: documentId
                         }));
-
-                        await withTimeout(
-                            createFigures(figures),
-                            10000, // 10 second timeout for creating figures
-                            'Creating figures'
-                        );
+                        console.log("Figures:", figures);
                     } catch (figuresError) {
                         console.warn(`Skipping figures creation for page ${pageIndex + 1}:`, figuresError);
                     }

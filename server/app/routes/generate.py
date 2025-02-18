@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from datetime import datetime
@@ -5,203 +6,34 @@ import traceback
 from typing import Dict, List, Any, Union, Optional
 from pydantic import BaseModel
 from app.extensions import supabase
-from app.services.problems.problems_processor import (
-    QuestionPrompt,
-    MCQQuestion,
-    FRQQuestion,
-    ProblemsProcessor
-)
-import uuid
 from app.services.chat.chat_processor import ChatProcessor, ChatMessage
 import json
-import asyncio
+import re
 
 router = APIRouter()
 
-# Define request models
-class ProblemRequest(BaseModel):
-    class_id: str
-    generation_id: str
-    additional_instructions: Optional[str] = None
-
 class ChatRequest(BaseModel):
-    generation_id: str
-
-@router.post('/problems')
-async def generate_problems(request: ProblemRequest):
-    """Generate problems for a class."""
-    try:
-        print("Starting generate-problems function...")
-        data: ProblemRequest = request.dict()
-        class_id = data.get('class_id')
-        generation_id = data.get('generation_id')
-
-        generation_response = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
-        generation = generation_response.data
-        generation_additional_info = generation.get('additional_info')
-
-        print("Request params:", {
-            "class_id": class_id,
-            "generation_id": generation_id,
-        })
-
-        # Update generation status to generating
-        supabase.table("generations").update({
-            "generation_status": "generating",
-            "generation_error": None
-        }).eq("id", generation_id).execute()
-
-        # Get class info
-        class_response = supabase.table("classes").select(
-            "title, course_description, map"
-        ).eq("id", class_id).single().execute()
-        class_title = class_response.data.get('title')
-
-        # Get all lectures
-        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
-        all_lectures = lectures_response.data or []
-        # print("Lectures:", all_lectures)
-
-        # Get all textbooks 
-        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).execute()
-        all_textbooks = textbooks_response.data or []
-        # print("Textbooks:", all_textbooks)
-
-        question_prompts_raw = supabase.table("questions").select("*").eq("generation", generation_id).execute().data
-        question_prompts: List[QuestionPrompt] = []
-        for prompt in question_prompts_raw:
-            question_prompts.append({
-                "id": prompt.get('id'),
-                "mcq": prompt.get('mcq'),
-                "multi_part": prompt.get('multipart') is not None,
-                "computational": not prompt.get('conceptual'),
-                "additional_info": prompt.get('additional_info') + generation_additional_info,
-                "references": prompt.get('references')
-            })
-        print("Question prompts:", question_prompts)
-        references: Dict[str, List[str]] = {prompt.get('id'): prompt.get('references') for prompt in question_prompts}
-        all_documents: Dict[str, List[Any]] = {}
-        for prompt_id, reference in references.items():
-            documents_response = supabase.table("documents").select("*").in_("id", reference).execute()
-            all_documents[prompt_id] = documents_response.data or []
-        # print("Documents:", all_documents)
-
-        question_data: Dict[str, List[str]] = {}
-        for prompt in question_prompts:
-            prompt_id = prompt.get('id')
-            question_data[prompt_id] = []
-            documents = all_documents.get(prompt_id)
-            for doc in documents:
-                if (doc.get('lecture') is not None):
-                    page = str(doc.get('page'))
-                    lecture_name = next((l.get('name') for l in all_lectures if l.get('id') == doc.get('lecture')), None)
-                    content = f"LECTURE {lecture_name} SLIDE {page}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
-                    question_data[prompt_id].append(content)
-                elif (doc.get('textbook') is not None):
-                    page = str(doc.get('page'))
-                    textbook_name = next((t.get('title') for t in all_textbooks if t.get('id') == doc.get('textbook')), None)
-                    content = f"TEXTBOOK {textbook_name} PAGE {page}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
-                    question_data[prompt_id].append(content)
-
-        async def on_batch_complete(questions: List[List[Union[MCQQuestion, FRQQuestion]]]):
-            print("Generated questions for batch:", questions)
-            
-            problems_data = []
-            for question_group in questions: 
-                for question in question_group:
-                    question_id = question.get('id')
-                    question_document_ids = [doc.get('id') for doc in documents]
-                    
-                    if isinstance(question, dict) and "options" in question:
-                        # MCQ Question
-                        correct_answer = next((opt for opt, is_correct in question["answers"].items() if is_correct), None)
-                        question_data = {
-                            "question": question["question"],
-                            "option_a": question["options"]["A"],
-                            "option_b": question["options"]["B"],
-                            "option_c": question["options"]["C"],
-                            "option_d": question["options"]["D"],
-                            "option_e": question["options"]["E"],
-                            "solution": correct_answer,
-                            "explanation_a": question["explanations"]["A"],
-                            "explanation_b": question["explanations"]["B"],
-                            "explanation_c": question["explanations"]["C"],
-                            "explanation_d": question["explanations"]["D"],
-                            "explanation_e": question["explanations"]["E"],
-                            "references": question_document_ids
-                        }
-                    else:
-                        # FRQ Question
-                        question_data = {
-                            "question": question["question"],
-                            "solution": question["solution"],
-                            "references": question_document_ids
-                        }
-                    
-                    problems_data.append(question_data)
-
-            # Insert questions
-            questions_response = supabase.table("questions").update(problems_data).eq("id", question_id).execute()
-            print("Questions response:", questions_response)
-
-            # Update progress
-            progress = min(0.9, len(questions) / len(question_prompts))
-            supabase.table("generations").update({
-                "progress": progress
-            }).eq("id", generation_id).execute()
-
-        # Generate questions
-        questions: List[List[Union[MCQQuestion, FRQQuestion]]] = []
-
-        processor = ProblemsProcessor(
-            course_title=class_title,
-            items=question_data,
-        )
-        print("Processor created")
-        questions = await processor.process_problems(
-            question_prompts=question_prompts,
-            on_batch_complete=on_batch_complete
-        )
-        print("Questions:", questions)
-
-        if not questions:
-            raise ValueError("No problems generated")
-
-        # Update generation status to complete
-        supabase.table("generations").update({
-            "generation_status": "complete",
-            "progress": 1,
-            "generation_error": None
-        }).eq("id", generation_id).execute()
-
-        return {"problems": questions}, 200
-
-    except Exception as error:
-        print("Error in generate-problems function:", {
-            "name": type(error).__name__,
-            "message": str(error),
-            "stack": traceback.format_exc()
-        })
-        
-        # Update generation status to error
-        supabase.table("generations").update({
-            "generation_status": "error",
-            "generation_error": str(error)
-        }).eq("id", generation_id).execute()
-
-        raise HTTPException(status_code=500, detail=str(error))
-    
+    chat_id: str
+    message_id: str
 
 @router.post('/chat')
-async def generate_chat(request: ChatRequest):
-    """Generate chat for a class with streaming support."""
+async def handle_message(request: ChatRequest):
+    """Handle chat for a class with streaming support."""
     try:
-        print("Starting generate-chat function...")
-        generation_id = request.generation_id
+        print("Starting handle-chat function...")
+        chat_id = request.chat_id
+        message_id = request.message_id
 
-        generation_response = supabase.table("generations").select("*").eq("id", generation_id).single().execute()
-        generation = generation_response.data
-        class_id = generation.get('class')
+        # Mark message as generating
+        supabase.table("messages").update({
+            "generation_status": "generating",
+            "generation_error": "",
+            "last_generation_attempt": datetime.now().isoformat()
+        }).eq("id", message_id).execute()
+
+        chat_response = supabase.table("chats").select("*").eq("id", chat_id).single().execute()
+        chat = chat_response.data
+        class_id = chat.get('class')
 
         # Get class info
         class_response = supabase.table("classes").select(
@@ -210,133 +42,250 @@ async def generate_chat(request: ChatRequest):
         class_title = class_response.data.get('title')
 
         # Get all lectures
-        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
+        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).order("note_number", desc=False).execute()
         all_lectures = lectures_response.data or []
-        # print("Lectures:", all_lectures)
 
         # Get all textbooks
-        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).execute()
+        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).order("textbook_number", desc=False).execute()
         all_textbooks = textbooks_response.data or []
-        # print("Textbooks:", all_textbooks)
+
+        # Get all chapters
+        chapters_response = supabase.table("chapters").select("*").in_("textbook", [t.get('id') for t in all_textbooks]).order("chapter_number", desc=False).execute()
+        all_chapters = chapters_response.data or []
+
+        # Get all subchapters
+        subchapters_response = supabase.table("subchapters").select("*").in_("chapter", [c.get('id') for c in all_chapters]).order("subchapter_number", desc=False).execute()
+        all_subchapters = subchapters_response.data or []
+
+        # Get all exercises
+        exercises_response = supabase.table("exercises").select("*").in_("chapter", [c.get('id') for c in all_chapters]).order("exercise_number", desc=False).execute()
+        all_exercises = exercises_response.data or []
+
+        # Get all homeworks
+        homeworks_response = supabase.table("homework").select("*").eq("class", class_id).order("homework_number", desc=False).execute()
+        all_homeworks = homeworks_response.data or []
+
+        # get all problems
+        problems_response = supabase.table("problems").select("*").in_("homework", [h.get('id') for h in all_homeworks]).order("problem_number", desc=False).execute()
+        all_problems = problems_response.data or []
 
         # Get all messages for this generation, ordered by creation time
-        messages_response = supabase.table("messages").select("*").order("created_at", desc=True).eq("generation", generation_id).execute()
+        messages_response = supabase.table("messages").select("*").order("created_at", desc=False).eq("chat", chat_id).execute()
         messages = messages_response.data
 
         # Get the first message (the one we need to process)
-        current_message = messages[0]
+        current_message = next((msg for msg in messages if msg['id'] == message_id), None)
         
         # Format past messages for context
-        past_messages = [(msg['id'], msg['question'], msg.get('response', '')) for msg in messages[:-1]]
+        past_messages = [(msg['id'], msg['bare_question'], msg.get('bare_response', '')) for msg in messages if msg['id'] != message_id]
 
         # Get documents for the current message
-        current_documents_response = supabase.table("documents").select("*").in_("id", current_message.get('references', [])).execute()
+        current_documents_response = supabase.table("documents").select("*").in_("id", current_message.get('documents', [])).order("page", desc=False).execute()
         current_documents = current_documents_response.data or []
+
+        # Get all exercises for the current message
+        current_exercises_response = supabase.table("exercises").select("*").in_("id", current_message.get('exercises', [])).order("exercise_number", desc=False).execute()
+        current_exercises = current_exercises_response.data or []
+
+        # Get all problems for the current message
+        current_problems_response = supabase.table("problems").select("*").in_("id", current_message.get('problems', [])).order("problem_number", desc=False).execute()
+        current_problems = current_problems_response.data or []
+
+        # Sort documents by lecture number and page number
+        current_documents = sorted(current_documents, 
+            key=lambda doc: (
+                next((l.get('note_number') for l in all_lectures if l.get('id') == doc.get('lecture')), float('inf')),
+                doc.get('page', float('inf'))
+            ) if doc.get('lecture') is not None else (float('inf'), float('inf'))
+        )
 
         # Format the context for the current message
         message_context = []
         for doc in current_documents:
+            content = ""
+            
+            # Start with document type and number
             if doc.get('lecture') is not None:
-                lecture_name = next((l.get('name') for l in all_lectures if l.get('id') == doc.get('lecture')), None)
-                content = f"LECTURE {lecture_name} SLIDE {doc.get('page')}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
-                message_context.append(content)
-            elif doc.get('textbook') is not None:
-                textbook_name = next((t.get('title') for t in all_textbooks if t.get('id') == doc.get('textbook')), None)
-                content = f"TEXTBOOK {textbook_name} PAGE {doc.get('page')}\nContent: {doc.get('text')}\nDescription: {doc.get('description')}\n"
-                message_context.append(content)
-
-        async def stream_generator():
-            try:
-                processor = ChatProcessor(
-                    course_title=class_title,
-                    message_id=current_message['id'],
-                    question=current_message['question'],
-                    documents_context="\n".join(message_context),
-                    past_messages=past_messages
-                )
-
-                total_response = ""
-                chunk_count = 0
-                estimated_total_chunks = 100  # Heuristic: assume ~100 chunks per response
-
-                async def stream_callback(chunk: str):
-                    nonlocal total_response, chunk_count
-                    total_response += chunk
-                    chunk_count += 1
+                lecture_number = next((l.get('note_number') for l in all_lectures if l.get('id') == doc.get('lecture')), None)
+                content = f"\nLECTURE NUMBER: {lecture_number} SLIDE: {doc.get('page')}\n"
+            if doc.get('textbook') is not None:
+                textbook_number = next((t.get('textbook_number') for t in all_textbooks if t.get('id') == doc.get('textbook')), None)
+                content = f"\nTEXTBOOK NUMBER: {textbook_number} PAGE: {doc.get('page')}\n"
+            
+            # Add chapter, subchapter, and homework info if available
+            if (doc.get('chapter') is not None):
+                chapter_name = next((str(c.get('chapter_number')) + ": " + c.get('title') for c in all_chapters if c.get('id') == doc.get('chapter')), None)
+                content += f"CHAPTER {chapter_name}\n"
+            if (doc.get('subchapter') is not None):
+                subchapter_name = next((str(s.get('subchapter_number')) + ": " + s.get('title') for s in all_subchapters if s.get('id') == doc.get('subchapter')), None)
+                content += f"SUBCHAPTER {subchapter_name}\n"
+            if (doc.get('homework') is not None):
+                # First get the basic homework info
+                homework = next((h for h in all_homeworks if h.get('id') == doc.get('homework')), None)
+                if homework:
+                    # Sanitize additional info to be on one line
+                    additional_info = homework.get('additional_info', '').replace('\n', ' ').strip()
+                    content += f"HOMEWORK {homework.get('homework_number')}: {homework.get('title')}, WITH INFO: {additional_info}\n"
                     
-                    # Update progress based on chunks (max 90% until complete)
-                    progress = min(0.9, chunk_count / estimated_total_chunks)
-                    supabase.table("generations").update({
-                        "progress": progress
-                    }).eq("id", generation_id).execute()
+                    # Find problems for this homework that are on this page
+                    homework_problems = [p for p in all_problems 
+                                      if p.get('homework') == homework.get('id')
+                                      and p.get('exercise') is not None]
                     
-                    # Return the chunk as a string, not a dict
-                    return chunk
+                    for problem in homework_problems:
+                        problem_exercise = next((e for e in all_exercises 
+                                              if e.get('id') == problem.get('exercise')), None)
+                        
+                        # Only show problems whose exercises are on this page
+                        if (problem_exercise and 
+                            problem_exercise.get('start_page') <= doc.get('page') and 
+                            problem_exercise.get('end_page') >= doc.get('page')):
+                            
+                            content += f"\tPROBLEM {problem.get('problem_number')}: {problem.get('additional_info', '')}"
+                            if problem_exercise:
+                                content += f" (Exercise: {problem_exercise.get('title')})"
+                            content += "\n"
+            
+            # Add main content and description last
+            if doc.get('text') is not None and doc.get('text') != "":
+                content += f"\nContent: {doc.get('text')}\n"
+            if doc.get('description') is not None and doc.get('description') != "":
+                content += f"\nDescription: {doc.get('description')}\n"
+            
+            message_context.append(content)
 
-                async for chunk in processor.process_message(
-                    complete_context="\n".join(message_context),
-                    all_lectures=all_lectures,
-                    all_textbooks=all_textbooks,
-                    all_documents=current_documents,
-                    stream_callback=stream_callback
-                ):
-                    # Properly format the chunk as a SSE message
-                    yield f"data: {json.dumps({'chunk': chunk})}\n\n".encode('utf-8')
 
-                # Clean the response and extract document references
-                cleaned_result = processor.clean_result(
-                    total_response,
-                    all_lectures,
-                    all_textbooks,
-                    current_documents
-                )
+        def get_exercise_info(exercise: dict) -> str:
+            exercise_chapter_textbook_id = next((c.get('textbook') for c in all_chapters if c.get('id') == exercise.get('chapter')), None)
+            exercise_textbook_number = next((t.get('textbook_number') for t in all_textbooks if exercise_chapter_textbook_id == t.get('id')), None)
+            exercise_name = next((e.get('title') for e in all_exercises if e.get('id') == exercise.get('exercise')), None)
+            return f"EXERCISE: {exercise_name} ON TEXTBOOK {exercise_textbook_number} START PAGE: {exercise.get('start_page')} END PAGE: {exercise.get('end_page')}\n"
 
-                # Update the message in Supabase with the complete response
-                supabase.table("messages").update({
-                    "response": cleaned_result['response'],
-                    "documents": cleaned_result['documents']
-                }).eq("id", current_message['id']).execute()
+        # add additional information to the message context.
+        for exercise in current_exercises:
+            if (exercise.get('exercise') is not None):
+                message_context.append(get_exercise_info(exercise))
 
-                # Send completion event
-                yield f"data: {json.dumps({'done': True})}\n\n".encode('utf-8')
+        for problem in current_problems:
+            if (problem.get('problem') is not None):
+                problem_number = next((p.get('problem_number') for p in all_problems if p.get('id') == problem.get('problem')), None)
+                problem_homework_id = next((h.get('id') for h in all_homeworks if h.get('id') == problem.get('homework')), None)
+                problem_homework_number = next((h.get('homework_number') for h in all_homeworks if h.get('id') == problem_homework_id), None)
+                problem_exercise = next((e for e in all_exercises if e.get('id') == problem.get('exercise')), None)
+                exercise_info = "" if problem_exercise is None else " AND " + get_exercise_info(problem_exercise)
+                message_context.append(f"PROBLEM: {problem_number} ON HOMEWORK {problem_homework_number} WITH INFO: {problem.get('additional_info')}{exercise_info}\n")
 
-                # Update generation status to complete
-                supabase.table("generations").update({
-                    "generation_status": "complete",
-                    "progress": 1,
-                    "generation_error": None
-                }).eq("id", generation_id).execute()
-
-            except Exception as error:
-                error_data = {
-                    "error": str(error),
-                    "stack": traceback.format_exc(),
-                    "name": type(error).__name__
-                }
-                yield f"data: {json.dumps({'error': error_data})}\n\n".encode('utf-8')
-                
-                # Update generation status to error
-                supabase.table("generations").update({
-                    "generation_status": "error",
-                    "generation_error": str(error)
-                }).eq("id", generation_id).execute()
-
-        return StreamingResponse(
-            stream_generator(),
-            media_type='text/event-stream',
-            headers={
-                'Cache-Control': 'no-cache',
-                'Connection': 'keep-alive',
-                'X-Accel-Buffering': 'no'
-            }
+        processor = ChatProcessor(
+            course_title=class_title,
+            message_id=message_id,
+            question=current_message['bare_question'],
+            past_messages=past_messages
         )
 
+        total_response = ""
+
+        def sanitize_for_supabase(text: str) -> str:
+            """
+            Sanitizes text for Supabase storage by removing incomplete tags.
+            Uses similar regex approach as clean_result function.
+            """
+            # First remove any incomplete tags at the end
+            # This looks for any < that isn't followed by a > before the end of the string
+            if '<' in text:
+                last_complete_tag = text.rfind('>')
+                last_open_tag = text.rfind('<')
+                if last_open_tag > last_complete_tag:
+                    text = text[:last_open_tag]
+
+            # Remove the entire title section (tags and content)
+            text = re.sub(r'<TITLE>[^<]+</TITLE>', '', text)
+            
+            # Remove any malformed closing tags without matching opening tags
+            text = re.sub(r'</(?:SLIDE|LECTURE|TEXTBOOK|PAGE|TITLE)>', '', text)
+
+            
+            # Remove any malformed opening tags without matching closing tags
+            tag_patterns = {
+                'LECTURE': r'<LECTURE ([^>]+)>(?!(?:.*?</LECTURE>))',
+                'TEXTBOOK': r'<TEXTBOOK ([^>]+)>(?!(?:.*?</TEXTBOOK>))',
+                'SLIDE': r'<SLIDE ([^>]+)>(?!(?:.*?</SLIDE>))',
+                'PAGE': r'<PAGE ([^>]+)>(?!(?:.*?</PAGE>))',
+            }
+            
+            for pattern in tag_patterns.values():
+                text = re.sub(pattern, '', text)
+            
+            # Remove any remaining valid tags
+            cleaned_result = re.sub(r'<(LECTURE|TEXTBOOK|SLIDE|PAGE)[^>]*>', '', text)
+            cleaned_result = re.sub(r'</(LECTURE|TEXTBOOK|SLIDE|PAGE)>', '', cleaned_result)
+
+            return cleaned_result.strip()
+
+        async def update_callback(chunk: str):
+            nonlocal total_response
+            total_response += chunk
+            
+            # Create sanitized version for Supabase
+            sanitized_response = sanitize_for_supabase(total_response)
+            
+            # Update Supabase with the sanitized version
+            supabase.table("messages").update({
+                "bare_response": total_response,
+                "response": sanitized_response,
+                "generation_status": "generating"
+            }).eq("id", message_id).execute()
+            
+            return chunk
+
+        try:
+            async for _ in processor.process_message(
+                complete_context="\n".join(message_context),
+                all_lectures=all_lectures,
+                all_textbooks=all_textbooks,
+                all_documents=current_documents,
+                stream_callback=update_callback
+            ):
+                pass  # We're handling updates in the callback
+
+            # Clean the response and extract document references
+            cleaned_result = processor.clean_result(
+                total_response,
+                all_lectures,
+                all_textbooks,
+                current_documents
+            )
+
+            if cleaned_result.get('title') is not None:
+                supabase.table("chats").update({
+                    "name": cleaned_result['title']
+                }).eq("id", chat_id).execute()
+
+            # Final update to the message in Supabase
+            supabase.table("messages").update({
+                "bare_response": total_response,
+                "response": cleaned_result['response'],
+                "references": cleaned_result['references'],
+                "generation_status": "complete",
+                "generation_error": ""
+            }).eq("id", message_id).execute()
+
+            return {"status": "success", "message_id": message_id}
+
+        except Exception as error:
+            # throw the error to the outside block
+            raise error
     except Exception as error:
         print("Error in generate-chat function:", {
             "name": type(error).__name__,
             "message": str(error),
             "stack": traceback.format_exc()
         })
+
+        # Update message status to error
+        supabase.table("messages").update({
+            "generation_status": "error",
+            "generation_error": str(error),
+        }).eq("id", message_id).execute()
         
         raise HTTPException(
             status_code=500,

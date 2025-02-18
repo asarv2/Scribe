@@ -6,12 +6,13 @@
  * 02.05.2025
  */
 
-import { Card, TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon } from "@mantine/core";
-import { IconSearch, IconPresentation, IconBook } from "@tabler/icons-react";
+import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon } from "@mantine/core";
+import { IconSearch, IconPresentation, IconBook, IconFile } from "@tabler/icons-react";
 import { LectureList } from "./LectureList";
 import { TextbookTree } from "./TextbookTree";
 import { ChatMessage } from "./ChatCanvas";
 import { useState, useEffect } from "react";
+import { HomeworkTree } from "./HomeworkTree";
 
 interface ContextPanelProps {
     classId: string;
@@ -93,6 +94,15 @@ export function ContextPanel({
                         <IconBook size={20} />
                     </ActionIcon>
                 </Tooltip>
+                <Tooltip label="Jump to Homework">
+                    <ActionIcon
+                        variant="subtle"
+                        onClick={() => scrollToSection('homework-section')}
+                        aria-label="Jump to homework"
+                    >
+                        <IconFile size={20} />
+                    </ActionIcon>
+                </Tooltip>
             </Group>
 
             <ScrollArea.Autosize mah={isMobile ? 400 : "calc(100vh - 250px)"}>
@@ -110,6 +120,19 @@ export function ContextPanel({
 
                     <div id="textbooks-section">
                         <TextbookTree
+                            classId={classId}
+                            searchQuery={searchQuery}
+                            expandedSections={expandedSections}
+                            toggleSection={toggleSection}
+                            addContextToChat={addContextToChat}
+                            expandedNodes={expandedNodes}
+                            toggleNode={toggleNode}
+                            activeChat={activeChat}
+                        />
+                    </div>
+                    
+                    <div id="homework-section">
+                        <HomeworkTree
                             classId={classId}
                             searchQuery={searchQuery}
                             expandedSections={expandedSections}

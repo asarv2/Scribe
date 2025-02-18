@@ -1,20 +1,14 @@
-import { TypedSupabaseClient, GenerationType, Generation } from "../../types";
 import { PostgrestError } from "@supabase/supabase-js";
+import { Chat, TypedSupabaseClient } from "../../types";
 
-export async function getGenerations(
-    client: TypedSupabaseClient,
-    classId: string,
-    type: GenerationType,
-    userId: string | null = null
-) {
-    let data: Generation[] | null = null;
+export async function getChats(client: TypedSupabaseClient, classId: string, userId: string | null) {
+    let data: Chat[] | null = null;
     let error: PostgrestError | null = null;
     if (userId) {
         const { data: userData, error: userError } = await client
-            .from("generations")
+            .from("chats")
             .select("*")
             .eq("class", classId)
-            .eq("type", type)
             .eq("deleted", false)
             .eq("profile", userId)
             .order("created_at", { ascending: false });
@@ -22,10 +16,9 @@ export async function getGenerations(
         error = userError ?? null;
     } else {
         const { data: adminData, error: adminError } = await client
-            .from("generations")
+            .from("chats")
             .select("*")
             .eq("class", classId)
-            .eq("type", type)
             .eq("deleted", false)
             .is("profile", null)
             .order("created_at", { ascending: false });
@@ -39,4 +32,3 @@ export async function getGenerations(
 
     return data;
 }
-

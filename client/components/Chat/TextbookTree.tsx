@@ -161,8 +161,6 @@ export function TextbookTree({
         const shouldAutoExpand = searchQuery && (matchesSearch(node) || hasMatchingChildren(node));
         const isExpanded = shouldAutoExpand || expandedNodes.has(node.id);
 
-        const { matchDetails } = getSearchScore(node, debouncedSearch);
-
         const getExerciseLabel = (exercise: any) => {
             const parentChapter = chapters?.find(c => c.id === exercise.chapter);
             return exercise.title !== "" ? exercise.title : parentChapter ? 
@@ -235,11 +233,6 @@ export function TextbookTree({
                                 }
                             </Text>
                         </Group>
-                        {/* {matchDetails && matchDetails.length > 0 && searchQuery && (
-                            <Text size="xs" c="dimmed" ml={isExerciseGroup ? 24 : 48}>
-                                Matches: {matchDetails.join(', ')}
-                            </Text>
-                        )} */}
                     </Stack>
                 </Card>
                 {(isExpanded || shouldAutoExpand) && (

@@ -7,8 +7,6 @@ torch==2.5.1
 google-generativeai==0.8.4
 python-dotenv==1.0.1
 supabase==2.12.0
-pylatex==1.4.2
 requests>=2.31.0
-transformers==4.38.2
 pypdf==4.0.2
 tqdm==4.66.2

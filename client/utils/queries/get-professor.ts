@@ -6,11 +6,10 @@ export async function getProfessor(client: TypedSupabaseClient, classId: string)
         .select("*")
         .eq("professor", true)
         .contains("classes", [classId])
-        .single()
 
-    if (error) {
-        throw new Error(error.message);
+    if (error || data?.length === 0) {
+        throw new Error(error?.message ?? "No professor found");
     }
 
-    return data;
+    return data[0];
 }
