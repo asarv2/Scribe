@@ -249,6 +249,6 @@ def upload_homework_and_problems_to_supabase(homework_data: dict, pdf_filename: 
     
 
 if __name__ == "__main__":
-    homework = process_homework('HW1.pdf')
+    homework = process_homework('HW2.pdf')
     print(json.dumps(homework, indent=2))
     upload_homework_and_problems_to_supabase(homework, 'HW1.pdf')
