@@ -33,9 +33,10 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
         enabled: !!homeworks
     });
 
-    const { data: exercises, isLoading: loadingExercises } = useQuery({
-        queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, problems?.map(p => p.exercise).filter(e => e !== null) ?? [])
+    const { data: problemExercises } = useQuery({
+        queryKey: ["problemExercises", classId],
+        queryFn: () => getExercises(supabase, problems?.map(p => p.exercise).filter(e => e !== null) ?? []),
+        enabled: !!problems
     });
 
     const toggleHomework = (homeworkId: string) => {
@@ -79,7 +80,7 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
 
     const getExerciseTitle = (exerciseId: string | null) => {
         if (!exerciseId) return "Unknown Exercise";
-        return exercises?.find(e => e.id === exerciseId)?.title ?? "Unknown Exercise";
+        return problemExercises?.find(e => e.id === exerciseId)?.title ?? "Unknown Exercise";
     };
 
     return (
@@ -151,7 +152,7 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
                                                                     size="sm"
                                                                     defaultChecked={problem.answer_enabled}
                                                                     onChange={(event) => handleProblemAnswerEnabledChange(problem.id, event.target.checked)}
-                                                                    style={{ flexShrink: 0 }}
+                                                                    style={{ flexShrink: 0}}
                                                                 />
                                                             </Flex>
                                                         </Card>

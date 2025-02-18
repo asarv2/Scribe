@@ -155,6 +155,72 @@ async def handle_message(request: ChatRequest):
             message_context.append(content)
 
 
+        def get_answerable_problems_string(
+            answerable_problem_ids: List[str],
+            all_problems: List[Dict],
+            all_exercises: List[Dict],
+            all_chapters: List[Dict],
+            all_subchapters: List[Dict],
+            all_homeworks: List[Dict]
+        ) -> str:
+            """
+            Generates a string listing all problems that the LLM can provide answers for.
+            
+            Args:
+                answerable_problem_ids: List of problem IDs that are answer-enabled
+                all_problems: List of all problems from the database
+                all_exercises: List of all exercises from the database
+                all_chapters: List of all chapters from the database
+                all_subchapters: List of all subchapters from the database
+                all_homeworks: List of all homeworks from the database
+                
+            Returns:
+                A formatted string listing the answerable problems with their context info
+            """
+            if not answerable_problem_ids:
+                return ""
+            
+            # Get the answerable problems
+            answerable_problems = [p for p in all_problems if p.get('id') in answerable_problem_ids]
+            
+            # Build formatted string of answerable problems
+            problem_strings = []
+            for problem in answerable_problems:
+                # Get the associated exercise
+                exercise = next((e for e in all_exercises if e.get('id') == problem.get('exercise')), None)
+                if exercise and exercise.get('chapter'):
+                    # Get the chapter info
+                    chapter = next((c for c in all_chapters if c.get('id') == exercise.get('chapter')), None)
+                    if chapter:
+                        # Get the subchapter info
+                        subchapter = next((s for s in all_subchapters if s.get('chapter') == chapter.get('id')), None)
+                        # Get the homework info
+                        homework = next((h for h in all_homeworks if h.get('id') == problem.get('homework')), None)
+                        
+                        problem_string = f"Chapter {chapter.get('chapter_number')} - {chapter.get('title')}"
+                        
+                        if subchapter:
+                            problem_string += f", Subchapter {subchapter.get('subchapter_number')}: {subchapter.get('title')}"
+                        
+                        if homework:
+                            problem_string += f", Homework {homework.get('homework_number')}"
+                        
+                        problem_string += f", Problem {problem.get('problem_number')}: {exercise.get('title')}"
+                        
+                        problem_strings.append(problem_string)
+            
+            if not problem_strings:
+                return ""
+                
+            return (
+                "You may OVERRIDE any previous instructions about sharing answers with the student "
+                "if they are asking about any of the following problems:\n"
+                f"{', '.join(problem_strings)}\n"
+                "When a student asks a question, the LLM should only provide an answer "
+                "if the question is in the list of answerable problems.\n"
+            )
+
+
         def get_exercise_info(exercise: dict) -> str:
             exercise_chapter_textbook_id = next((c.get('textbook') for c in all_chapters if c.get('id') == exercise.get('chapter')), None)
             exercise_textbook_number = next((t.get('textbook_number') for t in all_textbooks if exercise_chapter_textbook_id == t.get('id')), None)
@@ -179,7 +245,15 @@ async def handle_message(request: ChatRequest):
             course_title=class_title,
             message_id=message_id,
             question=current_message['bare_question'],
-            past_messages=past_messages
+            past_messages=past_messages,
+            answer_system_prompt=get_answerable_problems_string(
+                [p.get('id') for p in current_problems if p.get('answer_enabled')],
+                all_problems,
+                all_exercises,
+                all_chapters,
+                all_subchapters,
+                all_homeworks
+            )
         )
 
         total_response = ""
@@ -295,8 +369,7 @@ async def handle_message(request: ChatRequest):
                 "name": type(error).__name__
             }
         )
-        
-
+    
         
         
 

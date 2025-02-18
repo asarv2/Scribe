@@ -38,6 +38,7 @@ import DeleteChatModal from "../Delete/DeleteChatModal";
 import { createChat } from "@/utils/services/chat";
 import { ClassLayout } from "../Class/ClassLayout";
 import { getChapterExercises } from "@/utils/queries/get-chapter-exercises";
+import { getExercises } from "@/utils/queries/get-exercises";
 
 export interface ChatMessage {
     id: number;
@@ -119,12 +120,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         enabled: !!chapters
     });
 
-    const { data: exercises } = useQuery({
-        queryKey: ["chapterExercises", classId],
-        queryFn: () => getChapterExercises(supabase, chapters!.map(c => c.id)),
-        enabled: !!chapters
-    });
-
     const { data: homeworkData } = useQuery({
         queryKey: ["homeworks", classId],
         queryFn: () => getHomeworks(supabase, classId),
@@ -140,6 +135,24 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         queryKey: ["professor", classId],
         queryFn: () => getProfessor(supabase, classId),
     })
+
+    const { data: problemExercises } = useQuery({
+        queryKey: ["problemExercises", classId],
+        queryFn: () => getExercises(supabase, problems?.map(p => p.exercise).filter(e => e !== null) ?? []),
+        enabled: !!problems
+    });
+
+    const { data: chapterExercises } = useQuery({
+        queryKey: ["chapterExercises", classId],
+        queryFn: () => getChapterExercises(supabase, chapters?.map(c => c.id) ?? []),
+        enabled: !!chapters
+    });
+
+    const { data: exercises } = useQuery({
+        queryKey: ["exercises", classId],
+        queryFn: () => [...(problemExercises ?? []), ...(chapterExercises ?? [])],
+        enabled: !!problemExercises && !!chapterExercises
+    });
 
 
     const { data: user, isLoading: loadingUser } = useQuery({
