@@ -14,8 +14,7 @@ import React, { useMemo, useCallback, useState, useEffect } from "react";
 import { useDebouncedValue } from '@mantine/hooks';
 import { ChatMessage } from "./ChatCanvas";
 import { getProblems } from "@/utils/queries/get-problems";
-import { getHomework } from "@/utils/queries/get-homework";
-
+import { getHomeworks } from "@/utils/queries/get-homeworks";
 interface HomeworkTreeProps {
     classId: string;
     searchQuery: string;
@@ -43,15 +42,15 @@ export function HomeworkTree({
     const [isSearching, setIsSearching] = useState(false);
     const [debouncedSearch] = useDebouncedValue(searchQuery, 300);
 
-    const { data: homework } = useQuery({
-        queryKey: ["homework", classId],
-        queryFn: () => getHomework(supabase, classId)
+    const { data: homeworks } = useQuery({
+        queryKey: ["homeworks", classId],
+        queryFn: () => getHomeworks(supabase, classId)
     });
 
     const { data: problems } = useQuery({
         queryKey: ["problems", classId],
-        queryFn: () => getProblems(supabase, homework!.map(h => h.id)),
-        enabled: !!homework
+        queryFn: () => getProblems(supabase, homeworks!.map(h => h.id)),
+        enabled: !!homeworks
     });
 
     useEffect(() => {
@@ -102,13 +101,13 @@ export function HomeworkTree({
         };
 
         // Pre-calculate all scores
-        homework?.forEach(hw => {
+        homeworks?.forEach(hw => {
             calculateNodeScore(hw);
             problems?.filter(p => p.homework === hw.id).forEach(calculateNodeScore);
         });
 
         return scores;
-    }, [debouncedSearch, homework, problems]);
+    }, [debouncedSearch, homeworks, problems]);
 
     const matchesSearch = useCallback((node: any): boolean => {
         if (!debouncedSearch) return true;
@@ -230,16 +229,16 @@ export function HomeworkTree({
         }
 
         const checkForVisibleNodes = () => {
-            const hasVisible = homework?.some(hw =>
+            const hasVisible = homeworks?.some(hw =>
                 shouldShowNode(hw) || hasMatchingChildren(hw)
             ) ?? false;
             setHasVisibleNodes(hasVisible);
         };
 
         checkForVisibleNodes();
-    }, [searchQuery, homework, debouncedSearch]);
+    }, [searchQuery, homeworks, debouncedSearch]);
 
-    if (!homework?.length) {
+    if (!homeworks?.length) {
         return null;
     }
 
@@ -271,7 +270,7 @@ export function HomeworkTree({
             </Group>
             {expandedSections.has('homework') && (
                 <Stack align="flex-start">
-                    {homework.map(hw => renderNode(hw))}
+                    {homeworks?.map(hw => renderNode(hw))}
                 </Stack>
             )}
         </Card>

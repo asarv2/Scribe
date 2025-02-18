@@ -227,7 +227,7 @@ def upload_homework_and_problems_to_supabase(homework_data: dict, pdf_filename: 
 
     try:
         # Insert into homework table
-        response = supabase.table('homework').insert(homework_record).execute()
+        response = supabase.table('homeworks').insert(homework_record).execute()
         homework_id = response.data[0]['id']
         # upload the problems to the problems table
         for problem in homework_data['problems']:

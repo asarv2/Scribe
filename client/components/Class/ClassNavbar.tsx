@@ -25,6 +25,7 @@ const data = [
     { link: '/chat', label: 'Chats', icon: IconMessage },
     { link: '/lecture', label: 'Lectures', icon: IconNotebook },
     { link: '/textbook', label: 'Textbooks', icon: IconBook },
+    { link: '/homework', label: 'Homework', icon: IconNotebook },
 ];
 
 interface ClassNavbarProps {

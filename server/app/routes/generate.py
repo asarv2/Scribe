@@ -62,7 +62,7 @@ async def handle_message(request: ChatRequest):
         all_exercises = exercises_response.data or []
 
         # Get all homeworks
-        homeworks_response = supabase.table("homework").select("*").eq("class", class_id).order("homework_number", desc=False).execute()
+        homeworks_response = supabase.table("homeworks").select("*").eq("class", class_id).order("homework_number", desc=False).execute()
         all_homeworks = homeworks_response.data or []
 
         # get all problems

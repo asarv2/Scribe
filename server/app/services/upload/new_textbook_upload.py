@@ -614,7 +614,7 @@ def main3(pdf_filename: str, class_id: str, textbook_id: str, uploaded = False):
             'subchapters': subchapters.data,
         }
     
-    homeworks = supabase.table('homework').select('*').eq('class', class_id).eq('deleted', False).execute()
+    homeworks = supabase.table('homeworks').select('*').eq('class', class_id).eq('deleted', False).execute()
     print(f"Found {len(homeworks.data)} homework")
     problems = supabase.table('problems').select('*').in_('homework', [homework['id'] for homework in homeworks.data]).execute()
     print(f"Found {len(problems.data)} problems")

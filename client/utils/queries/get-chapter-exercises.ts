@@ -1,10 +1,10 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getExercises(client: TypedSupabaseClient, exerciseIds: string[]) {
+export async function getChapterExercises(client: TypedSupabaseClient, chapterIds: string[]) {
     const {data, error} = await client
         .from("exercises")
         .select("*")
-        .in("id", exerciseIds)
+        .in("chapter", chapterIds)
         .order("exercise_number", {ascending: true})
     
     if (error) {

@@ -1,8 +1,8 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getHomework(client: TypedSupabaseClient, classId: string) {
+export async function getHomeworks(client: TypedSupabaseClient, classId: string) {
     const {data, error} = await client
-        .from("homework")
+        .from("homeworks")
         .select("*")
         .eq("class", classId)
         .eq("deleted", false)
