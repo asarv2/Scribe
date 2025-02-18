@@ -19,7 +19,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getChapters } from "@/utils/queries/get-chapters";
-import { getExercises } from "@/utils/queries/get-exercises";
 import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { ContextPanel } from "./ContextPanel";
@@ -31,13 +30,14 @@ import { getProfile } from "@/utils/queries/get-profile";
 import Latex from "../Latex";
 import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getProfessor } from "@/utils/queries/get-professor";
-import { getHomework } from "@/utils/queries/get-homework";
+import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getProblems } from "@/utils/queries/get-problems";
 import { getChat } from "@/utils/queries/get-chat";
 import { getMessages } from "@/utils/queries/get-messages";
 import DeleteChatModal from "../Delete/DeleteChatModal";
 import { createChat } from "@/utils/services/chat";
 import { ClassLayout } from "../Class/ClassLayout";
+import { getChapterExercises } from "@/utils/queries/get-chapter-exercises";
 
 export interface ChatMessage {
     id: number;
@@ -120,14 +120,14 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     });
 
     const { data: exercises } = useQuery({
-        queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, chapters!.map(c => c.id)),
+        queryKey: ["chapterExercises", classId],
+        queryFn: () => getChapterExercises(supabase, chapters!.map(c => c.id)),
         enabled: !!chapters
     });
 
     const { data: homeworkData } = useQuery({
-        queryKey: ["homework", classId],
-        queryFn: () => getHomework(supabase, classId),
+        queryKey: ["homeworks", classId],
+        queryFn: () => getHomeworks(supabase, classId),
     });
 
     const { data: problems } = useQuery({

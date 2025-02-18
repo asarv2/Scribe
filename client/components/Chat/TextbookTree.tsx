@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getChapters } from "@/utils/queries/get-chapters";
-import { getExercises } from "@/utils/queries/get-exercises";
+import { getChapterExercises } from "@/utils/queries/get-chapter-exercises";
 import { ChatMessage } from "./ChatCanvas";
 import { useMantineColorScheme } from '@mantine/core';
 import { getSubchapters } from "@/utils/queries/get-subchapters";
@@ -273,8 +273,8 @@ export function TextbookTree({
     });
 
     const { data: exercises } = useQuery({
-        queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, chapters!.map(c => c.id)),
+        queryKey: ["chapterExercises", classId],
+        queryFn: () => getChapterExercises(supabase, chapters!.map(c => c.id)),
         enabled: !!chapters
     });
 

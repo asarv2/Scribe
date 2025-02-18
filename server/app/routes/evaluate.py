@@ -81,7 +81,7 @@ async def evaluate_homework(request: EvaluationRequest):
     """Evaluate a homework and return the documents."""
     try:
         # get textbook
-        homework = supabase.table("homework").select("*").eq("id", request.homework_id).execute()
+        homework = supabase.table("homeworks").select("*").eq("id", request.homework_id).execute()
         
         # latency
         created_at = datetime.strptime(homework.data[0]['created_at'], "%Y-%m-%dT%H:%M:%S.%f%z")

@@ -204,7 +204,7 @@ export type Database = {
             foreignKeyName: "documents_homework_fkey"
             columns: ["homework"]
             isOneToOne: false
-            referencedRelation: "homework"
+            referencedRelation: "homeworks"
             referencedColumns: ["id"]
           },
           {
@@ -254,7 +254,7 @@ export type Database = {
             foreignKeyName: "evals_homework_homework_fkey"
             columns: ["homework"]
             isOneToOne: false
-            referencedRelation: "homework"
+            referencedRelation: "homeworks"
             referencedColumns: ["id"]
           },
         ]
@@ -586,7 +586,7 @@ export type Database = {
           },
         ]
       }
-      homework: {
+      homeworks: {
         Row: {
           additional_info: string
           class: string | null
@@ -773,6 +773,7 @@ export type Database = {
       problems: {
         Row: {
           additional_info: string
+          answer_enabled: boolean
           created_at: string
           exercise: string | null
           homework: string
@@ -781,6 +782,7 @@ export type Database = {
         }
         Insert: {
           additional_info?: string
+          answer_enabled?: boolean
           created_at?: string
           exercise?: string | null
           homework: string
@@ -789,6 +791,7 @@ export type Database = {
         }
         Update: {
           additional_info?: string
+          answer_enabled?: boolean
           created_at?: string
           exercise?: string | null
           homework?: string
@@ -807,7 +810,7 @@ export type Database = {
             foreignKeyName: "problems_homework_fkey"
             columns: ["homework"]
             isOneToOne: false
-            referencedRelation: "homework"
+            referencedRelation: "homeworks"
             referencedColumns: ["id"]
           },
         ]
