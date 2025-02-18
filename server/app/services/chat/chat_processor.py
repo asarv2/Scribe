@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 import os
 from app.extensions import MESSAGES_DIR
+from app.extensions import supabase
 class ChatMessage(TypedDict):
     id: str
     question: str
@@ -18,13 +19,14 @@ class ChatProcessor(BaseProcessor):
         message_id: str,
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
+        answerable_problems_ids: List[str] # List of problem IDs that the LLM should provide the answer for upon request
     ):
         super().__init__()
         self.course_title = course_title
         self.message_id = message_id
         self.current_question = question
         self.chat_history = []
-        
+        self.answerable_problems_ids = answerable_problems_ids
         # Format past messages into chat history
         for _, q, r in past_messages:
             if q and r:  # Only add complete message pairs
@@ -49,6 +51,50 @@ class ChatProcessor(BaseProcessor):
             "1. Be consistent with previous explanations\n"
             "2. Build upon what the student has understood\n"
             "3. Address any misconceptions from earlier in the conversation"
+        )
+
+    def generate_answerable_problems_prompt(self) -> str:
+        """
+        Generates a prompt that will be added to the system prompt that indicates 
+        which problems the LLM can provide an answer for
+
+        Input: IDs of the problems that the LLM should provide the answer for
+        Output: A prompt that will be added to the system prompt that indicates 
+        which problems the LLM can provide an answer for (include chapter number and problem number)
+        """
+        
+        if not self.answerable_problems_ids:
+            return ""
+        
+        # Get exercise details
+        exercises_response = supabase.table("exercises").select(
+            "id, title, chapter"
+        ).in_("id", self.answerable_problems_ids).execute()
+        
+        exercises = exercises_response.data
+        
+        # Get chapter details
+        chapter_ids = [e.get('chapter') for e in exercises if e.get('chapter')]
+        chapters_response = supabase.table("chapters").select(
+            "id, chapter_number, title"
+        ).in_("id", chapter_ids).execute()
+        
+        chapters = {c['id']: c for c in chapters_response.data}
+        
+        # Build formatted string of answerable problems
+        answerable_problems = []
+        for problem in exercises:
+            exercise = next((e for e in exercises if e['id'] == problem['exercise']), None)
+            if exercise and exercise['chapter'] in chapters:
+                chapter = chapters[exercise['chapter']]
+                answerable_problems.append(
+                    f"Chapter {chapter['chapter_number']} - {chapter['title']}, Problem {problem['problem_number']}: {exercise['title']}"
+                )
+
+        return (
+            "You may OVERRIDE any previous instructions about sharing answers with the student if they are asking about any of the following problems:\n"
+            f"{answerable_problems}\n"
+            "When a student asks a question, the LLM should only provide an answer if the question is in the list of answerable problems.\n"
         )
 
     async def process_message(
@@ -78,8 +124,13 @@ class ChatProcessor(BaseProcessor):
                 "- What the student is still struggling with\n\n"
                 "Keep responses conversational but precise.\n"
                 "DON'T SHOW THE ANSWER, just help guide the student to the correct answer.\n"
+            )
+
+            answerable_problems_prompt = self.generate_answerable_problems_prompt()
+
+            system_prompt_2 = (
                 "Once you've helped guide the student to the correct answer, end the conversation in a nice way and DONT ASK ANY MORE QUESTIONS.\n"
-                "SAy something nice at the end like, glad I could help, or great job, or something like that.\n\n"
+                "Say something nice at the end like, glad I could help, or great job, or something like that.\n\n"
                 "**Guidelines for Responses:**\n"
                 "1. Keep explanations **concise and to the point**. Avoid large blocks of text.\n"
                 "2. **Check for understanding** before moving forward by asking the student to summarize or apply the concept. Only do this when walking a student through a problem they want to solve.\n"
@@ -128,7 +179,7 @@ class ChatProcessor(BaseProcessor):
 
             # save input prompt to .txt file in uploads folder
             with open(os.path.join(MESSAGES_DIR, f"{self.message_id}.txt"), "w") as f:
-                f.write("BASE PROMPT: " + system_prompt + "\n\n" + "INPUT PROMPT: " + prompt)
+                f.write("BASE PROMPT: " + system_prompt + answerable_problems_prompt + system_prompt_2 + "\n\n" + "INPUT PROMPT: " + prompt)
 
             message = Message(content=[
                 {"type": "text", "text": prompt},
