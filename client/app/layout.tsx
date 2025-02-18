@@ -7,14 +7,15 @@
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/dropzone/styles.css';
+import '@mantine/charts/styles.css';
 
 import { ColorSchemeScript } from '@mantine/core';
 import type { Metadata } from "next";
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: "Scribe",
-  description: "A mission to build a groundbreaking lecture summarization tool",
+  title: "Xcrybe",
+  description: "Empowering students with AI-powered learning, backed by professors.",
 };
 
 export default function RootLayout({

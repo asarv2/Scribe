@@ -6,7 +6,6 @@
  */
 "use client"
 
-import { HeaderSimple } from '@/components/HeaderSimple';
 import { Chapter } from '@/types';
 import { getChapters } from '@/utils/queries/get-chapters';
 import { getDocumentsTextbook } from '@/utils/queries/get-documents-textbook';
@@ -17,7 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-
+import { ClassLayout } from '@/components/Class/ClassLayout';
 export default function Textbook({ params }: { params: { classId: string, textbookId: string } }) {
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
@@ -45,15 +44,14 @@ export default function Textbook({ params }: { params: { classId: string, textbo
     }
 
     return (
-        <>
-            <HeaderSimple />
+        <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}/textbook`}>
+                            {/* <Link href={`/classes/${classId}/textbook`}>
                                 <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
-                            </Link>
+                            </Link> */}
                             <Text size="xl" fw={700} mb={6} pl={4}>Chapters</Text>
                         </Group>
                     </Flex>
@@ -86,6 +84,6 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                     </Stack>
                 </Stack>
             </Container>
-        </>
+        </ClassLayout>
     );
 }

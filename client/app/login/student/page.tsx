@@ -7,7 +7,6 @@
 
 "use client"
 
-import { HeaderSimple } from "@/components/HeaderSimple"
 import { Button, Center, Container, Divider, Input, Stack, Text } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
@@ -18,6 +17,7 @@ import { getUser } from "@/utils/queries/get-user";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Code } from "@/types";
+import { GeneralLayout } from "@/components/General/GeneralLayout";
 
 export default function Login() {
 
@@ -105,8 +105,7 @@ export default function Login() {
 
 
     return (
-        <>
-            <HeaderSimple />
+        <GeneralLayout>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Center>
                     <Stack>
@@ -127,6 +126,6 @@ export default function Login() {
                     </Stack>
                 </Center>
             </Container>
-        </>
+        </GeneralLayout >
     )
 }

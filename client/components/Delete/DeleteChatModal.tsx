@@ -40,7 +40,7 @@ export default function DeleteChatModal({ chatId, profile, chatTitle, classId }:
                 queryClient.invalidateQueries({
                     queryKey: ["chat", chatId]
                 });
-                router.push(`/classes/${classId}/chat`);
+                router.push(`/classes/c/${classId}/chat`);
             }
             notifications.show({
                 title: "Chat deleted",

@@ -5,8 +5,6 @@
  * 02-14-2025
  */
 "use client";
-
-import { HeaderSimple } from "@/components/HeaderSimple";
 import { ProfilePage } from "@/components/Profile";
 import { getProfile } from "@/utils/queries/get-profile";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +12,8 @@ import { getUser } from "@/utils/queries/get-user";
 import { logout } from "@/utils/services/auth";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Container, Center, Stack, Text } from "@mantine/core";
+import { GeneralLayout } from "@/components/General/GeneralLayout";
+
 export default function AccountPage() {
     const supabase = useSupabaseBrowser();
 
@@ -31,8 +31,7 @@ export default function AccountPage() {
 
 
     return (
-        <>
-            <HeaderSimple />
+        <GeneralLayout>
             <Container fluid style={{ marginTop: "30px" }}>
                 {user && profile ? <ProfilePage user={user} profile={profile} /> :
                     <Center>
@@ -42,7 +41,7 @@ export default function AccountPage() {
                     </Center>
                 }
             </Container>
-        </>
+        </GeneralLayout>
     )
 
 

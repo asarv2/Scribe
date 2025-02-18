@@ -1,18 +1,16 @@
-/*
- * app/classes/[classId]/textbook/page.tsx
- * This page is for showing the textbooks of the class. It will show all the textbooks of the class, and the option to upload textbooks manually.
+/**
+ * app/classes/[classId]/lecture/page.tsx
+ * This page is for showing the lectures of the class. It will show all the lectures of the class, and the option to upload lectures manually.
  * @AshokSaravanan222
  * 01.03.2025
  */
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
-import Markdown from 'markdown-to-jsx'
 import Image from "next/image";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { HeaderSimple } from "@/components/HeaderSimple";
 import Link from "next/link";
 import { getClass } from "@/utils/queries/get-class";;
 import { usePathname } from "next/navigation";
@@ -20,21 +18,26 @@ import { IconArrowLeft, IconArrowRight, IconUpload, IconRefresh } from '@tabler/
 import { getUser } from "@/utils/queries/get-user";
 import { ActionIcon, Box, Button, em, Group, Loader, Stack, useMantineColorScheme } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
+import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
+import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
+import { getLectures } from "@/utils/queries/get-lectures";
 import { Text, Card } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
+import { createLecture } from "@/utils/services/lecture";
 import * as pdfjs from 'pdfjs-dist';
-import { Document, Textbook } from "@/types";
-import { getTextbooks } from "@/utils/queries/get-textbooks";
+import { Document, Lecture } from "@/types";
+import { getDocumentsLecture } from "@/utils/queries/get-documents-lecture";
+import { createLectureDocument, createTextbookDocument } from "@/utils/services/document";
 import { createTextbook } from "@/utils/services/textbook";
-import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
-import { createTextbookDocument } from "@/utils/services/document";
 import { calculateResizedDimensions } from "@/utils/services/resize";
+import { ClassLayout } from "@/components/Class/ClassLayout";
 
-export default function TextbookPage({ params }: { params: { classId: string } }) {
+export default function LecturePage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const fileInputRef = useRef<HTMLButtonElement>(null);
@@ -50,24 +53,19 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         queryFn: () => getClass(supabase, classId)
     })
 
-    const { data: textbooks, isLoading: loadingTextbooks } = useQuery({
-        queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId)
+    const { data: lectures, isLoading: loadingLectures } = useQuery({
+        queryKey: ["lectures", classId],
+        queryFn: () => getLectures(supabase, classId, false)
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
-        queryKey: ["textbookDocuments", classId],
-        queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
-        enabled: !!textbooks
-    })
-
-    const { data: user, isLoading: loadingUser } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase),
+        queryKey: ["lectureDocuments", classId],
+        queryFn: () => getDocumentsLecture(supabase, lectures?.map(lecture => lecture.id) ?? []),
+        enabled: !!lectures
     })
 
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [parsingTextbooks, setParsingTextbooks] = useState<Set<string>>(new Set());
+    const [parsingLectures, setParsingLectures] = useState<Set<string>>(new Set());
 
     const handleFilesUpload = async (files: File[] | null) => {
         if (!files || files.length === 0) {
@@ -80,11 +78,11 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         }
 
         // check if the files are pdf or .mp4
-        const invalidFiles = files.filter(file => !file.type.includes('pdf'));
+        const invalidFiles = files.filter(file => !file.type.includes('pdf') && !file.type.includes('mp4'));
         if (invalidFiles.length > 0) {
             notifications.show({
                 title: 'Error',
-                message: 'Only PDF files are allowed',
+                message: 'Only PDF and MP4 files are allowed',
                 color: 'red'
             });
             return;
@@ -95,10 +93,19 @@ export default function TextbookPage({ params }: { params: { classId: string } }
 
             const uploadPromises = files.map(async (file) => {
                 try {
-                    await processTextbook(
-                        file,
-                        classId,
-                    );
+                    if (file.type.includes('pdf')) {
+                        await processLecturePDF(
+                            file,
+                            classId,
+                        );
+                    } else if (file.type.includes('mp4')) {
+                        await processLectureMP4(
+                            file,
+                            classId,
+                        );
+                    } else {
+                        throw new Error('Invalid file type');
+                    }
 
                     notifications.show({
                         title: 'Success',
@@ -129,7 +136,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         }
     };
 
-    const processTextbook = async (file: File, classId: string) => {
+    const processLecturePDF = async (file: File, classId: string) => {
         const file_name = file.name.split(".")[0];
         console.log("File name:", file_name);
 
@@ -148,8 +155,8 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         const numPages = pdf.numPages;
         console.log("Number of pages:", numPages);
 
-        const textbook = await createTextbook(classId, file_name, numPages, `${process.env.NEXT_PUBLIC_API_URL}`);
-        console.log("Textbook ID:", textbook.id);
+        const lecture = await createLecture(classId, file_name, (lectures?.length ?? 0) + 1, numPages, 1, `${process.env.NEXT_PUBLIC_API_URL}`, false);
+        console.log("Lecture ID:", lecture.id);
 
         const pages = [];
         for (let i = 0; i < numPages; i++) {
@@ -158,7 +165,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
 
                 // Add timeout protection
                 const pagePromise = Promise.race([
-                    processPage(pdf, i, textbook.id, classId),
+                    processPage(pdf, i, lecture.id, classId),
                     new Promise((_, reject) =>
                         setTimeout(() => reject(new Error('Page processing timeout')), 30000)
                     )
@@ -181,20 +188,20 @@ export default function TextbookPage({ params }: { params: { classId: string } }
 
         console.log("Pages processed:", pages);
 
-        // Call the parse-textbook endpoint, do not wait for response
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/textbook`, {
+        // Call the parse-lecture endpoint, do not wait for response
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                textbook_id: textbook.id,
+                lecture_id: lecture.id,
             })
         });
-        queryClient.invalidateQueries({ queryKey: ["textbooks", classId] });
+        queryClient.invalidateQueries({ queryKey: ["lectures", classId] });
     };
 
-    async function processPage(pdf: any, pageIndex: number, textbookId: string, classId: string) {
+    async function processPage(pdf: any, pageIndex: number, lectureId: string, classId: string) {
         let tempCanvas: HTMLCanvasElement | null = null;
         let finalCanvas: HTMLCanvasElement | null = null;
 
@@ -238,7 +245,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                 const pageText = textContent.items
                     .map((item: any) => item.str)
                     .join(' ');
-                const result = await createTextbookDocument(textbookId, pageIndex + 1, pageText);
+                const result = await createLectureDocument(lectureId, pageIndex + 1, pageText);
                 if (result.success && result.documentId) {
                     documentId = result.documentId;
                     console.log("Page text extracted successfully");
@@ -246,7 +253,7 @@ export default function TextbookPage({ params }: { params: { classId: string } }
             } catch (textError) {
                 console.warn(`Skipping text extraction for page ${pageIndex + 1}:`, textError);
                 // Create document with empty text if text extraction fails
-                const result = await createTextbookDocument(textbookId, pageIndex + 1, "");
+                const result = await createLectureDocument(lectureId, pageIndex + 1, "");
                 if (result.success && result.documentId) {
                     documentId = result.documentId;
                 }
@@ -312,10 +319,10 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                 );
 
                 // Upload the page image
-                const pageUploadPath = `${classId}/${textbookId}/${documentId}.png`;
+                const pageUploadPath = `${classId}/${lectureId}/${documentId}.png`;
                 await withTimeout(
                     supabase.storage
-                        .from("textbooks")
+                        .from("lectures")
                         .upload(pageUploadPath, pageBlob, {
                             cacheControl: '3600',
                             upsert: true
@@ -470,38 +477,244 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         return embeddedImagesInfo;
     }
 
-    const getProgress = useMemo(() => {
-        return (textbookId: string, uploading: boolean = false) => {
-            if (!documents || !textbooks) return 0;
-            const textbookDocuments = documents.filter(document =>
-                document.textbook === textbookId && (uploading || document.processed)
-            );
-            const textbook = textbooks.find(textbook => textbook.id === textbookId);
-            if (!textbook || textbook.pages === 0) return 0;
-            return (textbookDocuments.length / textbook.pages) * 100;
-        };
-    }, [documents, textbooks]);
-
-    const getEstimatedTime = useMemo(() => {
-        return (textbookId: string, uploading: boolean = false) => {
-            const textbook = textbooks?.find(textbook => textbook.id === textbookId);
-            if (!textbook || textbook.pages === 0) return 0;
-            return Number(((textbook.pages * 4)) * (100 - getProgress(textbookId, uploading)) / 100).toFixed(2);
-        };
-    }, [documents, textbooks]);
-
-    const handleRetry = async (classId: string, textbook: Textbook) => {
+    const processLectureMP4 = async (file: File, classId: string) => {
         try {
-            setParsingTextbooks(prev => new Set(prev).add(textbook.id));
-            // Call the parse-textbook endpoint, do not wait for response
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/textbook`, {
+            // Create video element for processing
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            
+            // Get video duration and create object URL
+            const videoUrl = URL.createObjectURL(file);
+            const duration = await new Promise<number>((resolve) => {
+                video.onloadedmetadata = () => resolve(video.duration);
+                video.src = videoUrl;
+            });
+
+            // Calculate samples (2 frames per minute)
+            const numSamples = Math.max(2 * Math.ceil(duration / 60), 1);
+            const sampleInterval = duration / numSamples;
+
+            // Create lecture entry first
+            const lecture = await createLecture(
+                classId,
+                file.name.split(".")[0],
+                (lectures?.length ?? 0) + 1,
+                numSamples,
+                1,
+                `${process.env.NEXT_PUBLIC_API_URL}`,
+                true
+            );
+
+            // Create AudioContext and source
+            const audioContext = new AudioContext();
+            const audioBuffer = await file.arrayBuffer()
+                .then(buffer => audioContext.decodeAudioData(buffer));
+
+            // Create canvas for frame extraction
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d')!;
+
+            // Function to extract frame at specific timestamp
+            const extractFrame = async (timestamp: number): Promise<Blob> => {
+                return new Promise((resolve, reject) => {
+                    video.currentTime = timestamp;
+                    video.onseeked = async () => {
+                        try {
+                            const { width: targetWidth, height: targetHeight } = calculateResizedDimensions(
+                                video.videoWidth,
+                                video.videoHeight
+                            );
+
+                            canvas.width = 1000;
+                            canvas.height = 1000;
+                            ctx.fillStyle = 'white';
+                            ctx.fillRect(0, 0, 1000, 1000);
+
+                            const offsetX = Math.floor((1000 - targetWidth) / 2);
+                            const offsetY = Math.floor((1000 - targetHeight) / 2);
+
+                            ctx.drawImage(video, offsetX, offsetY, targetWidth, targetHeight);
+
+                            canvas.toBlob(
+                                (blob) => blob ? resolve(blob) : reject('Failed to create blob'),
+                                'image/png',
+                                0.8
+                            );
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                });
+            };
+
+            // Function to extract audio chunk
+            const extractAudioChunk = async (startTime: number, endTime: number): Promise<Blob> => {
+                const startSample = Math.floor(startTime * audioContext.sampleRate);
+                const endSample = Math.floor(endTime * audioContext.sampleRate);
+                const numberOfChannels = audioBuffer.numberOfChannels;
+                
+                // Create new buffer for the chunk
+                const chunkBuffer = audioContext.createBuffer(
+                    numberOfChannels,
+                    endSample - startSample,
+                    audioContext.sampleRate
+                );
+
+                // Copy data from original buffer to chunk
+                for (let channel = 0; channel < numberOfChannels; channel++) {
+                    const channelData = audioBuffer.getChannelData(channel);
+                    const chunkData = chunkBuffer.getChannelData(channel);
+                    for (let i = 0; i < chunkBuffer.length; i++) {
+                        chunkData[i] = channelData[i + startSample];
+                    }
+                }
+
+                // Convert buffer to WAV blob
+                const offlineContext = new OfflineAudioContext(
+                    numberOfChannels,
+                    chunkBuffer.length,
+                    audioContext.sampleRate
+                );
+                
+                const source = offlineContext.createBufferSource();
+                source.buffer = chunkBuffer;
+                source.connect(offlineContext.destination);
+                source.start();
+
+                const renderedBuffer = await offlineContext.startRendering();
+                
+                // Convert to WAV
+                const wavBlob = await new Promise<Blob>((resolve) => {
+                    const numberOfChannels = renderedBuffer.numberOfChannels;
+                    const length = renderedBuffer.length * numberOfChannels * 2;
+                    const buffer = new ArrayBuffer(44 + length);
+                    const view = new DataView(buffer);
+                    
+                    // WAV header
+                    writeString(view, 0, 'RIFF');
+                    view.setUint32(4, 36 + length, true);
+                    writeString(view, 8, 'WAVE');
+                    writeString(view, 12, 'fmt ');
+                    view.setUint32(16, 16, true);
+                    view.setUint16(20, 1, true);
+                    view.setUint16(22, numberOfChannels, true);
+                    view.setUint32(24, audioContext.sampleRate, true);
+                    view.setUint32(28, audioContext.sampleRate * numberOfChannels * 2, true);
+                    view.setUint16(32, numberOfChannels * 2, true);
+                    view.setUint16(34, 16, true);
+                    writeString(view, 36, 'data');
+                    view.setUint32(40, length, true);
+
+                    // Audio data
+                    const offset = 44;
+                    for (let i = 0; i < renderedBuffer.length; i++) {
+                        for (let channel = 0; channel < numberOfChannels; channel++) {
+                            const sample = renderedBuffer.getChannelData(channel)[i];
+                            const value = Math.max(-1, Math.min(1, sample));
+                            view.setInt16(offset + (i * numberOfChannels + channel) * 2, value * 0x7FFF, true);
+                        }
+                    }
+
+                    resolve(new Blob([buffer], { type: 'audio/wav' }));
+                });
+
+                return wavBlob;
+            };
+
+            // Helper function for WAV header
+            const writeString = (view: DataView, offset: number, string: string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+
+            // Process frames and audio chunks
+            for (let i = 0; i < numSamples; i++) {
+                const startTime = i * sampleInterval;
+                const endTime = Math.min((i + 1) * sampleInterval, duration);
+
+                // Create document for this segment
+                const document = await createLectureDocument(lecture.id, i + 1, "");
+                if (!document.success || !document.documentId) {
+                    throw new Error(`Failed to create document for segment ${i + 1}`);
+                }
+
+                // Extract and upload frame
+                const frameBlob = await extractFrame(startTime);
+                const frameUploadPath = `${classId}/${lecture.id}/${document.documentId}.png`;
+                await supabase.storage
+                    .from("lectures")
+                    .upload(frameUploadPath, frameBlob, {
+                        cacheControl: '3600',
+                        upsert: true
+                    });
+
+                // Extract and upload audio chunk
+                const audioBlob = await extractAudioChunk(startTime, endTime);
+                const audioUploadPath = `${classId}/${lecture.id}/${document.documentId}.wav`;
+                await supabase.storage
+                    .from("lectures")
+                    .upload(audioUploadPath, audioBlob, {
+                        cacheControl: '3600',
+                        upsert: true
+                    });
+            }
+            // dont wait for this to finish
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    textbook_id: textbook.id,
+                    lecture_id: lecture.id,
                 })
             });
-            queryClient.invalidateQueries({ queryKey: ["textbooks", classId] });
+
+            // Cleanup
+            URL.revokeObjectURL(videoUrl);
+            await audioContext.close();
+
+            return lecture.id;
+
+        } catch (error) {
+            console.error('Upload failed:', error);
+            throw error;
+        }
+    };
+
+    const getProgress = useMemo(() => {
+        return (lectureId: string, uploading: boolean = false) => {
+            if (!documents || !lectures) return 0;
+            const lectureDocuments = documents.filter(document =>
+                document.lecture === lectureId && (uploading || document.processed)
+            );
+            const lecture = lectures.find(lecture => lecture.id === lectureId);
+            if (!lecture || lecture.pages === 0) return 0;
+            if (lecture.upload_progress !== 1) return lecture.upload_progress * 100;
+            return (lectureDocuments.length / lecture.pages) * 100;
+        };
+    }, [documents, lectures]);
+
+    const getEstimatedTime = useMemo(() => {
+        return (lectureId: string, uploading: boolean = false) => {
+            const lecture = lectures?.find(lecture => lecture.id === lectureId);
+            if (!lecture || lecture.pages === 0) return 0;
+            return Number(((lecture.pages * 4)) * (100 - getProgress(lectureId, uploading)) / 100).toFixed(2);
+        };
+    }, [documents, lectures]);
+
+    const handleRetry = async (classId: string, lecture: Lecture) => {
+        try {
+            setParsingLectures(prev => new Set(prev).add(lecture.id));
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    lecture_id: lecture.id,
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
         } catch (error) {
             console.error('Error retrying:', error);
             notifications.show({
@@ -510,45 +723,47 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                 color: 'red'
             });
         } finally {
-            setParsingTextbooks(prev => {
+            setParsingLectures(prev => {
                 const next = new Set(prev);
-                next.delete(textbook.id);
+                next.delete(lecture.id);
                 return next;
             });
         }
     };
 
-    const getDocumentImage = (textbookId: string) => {
-        if (!textbookId) return '/placeholder_image.svg';
-        const document = documents?.find(document => document.textbook === textbookId);
+    const getDocumentImage = (lectureId: string) => {
+        if (!lectureId) return '/placeholder_image.svg';
+        const filteredDocuments = documents?.filter(document => document?.lecture === lectureId);
+        if (!filteredDocuments) return '/placeholder_image.svg';
+        const document = (filteredDocuments.length > 1 && classId === "ae333215-2914-4026-8aae-418f1255cdd0") ? filteredDocuments[1] : filteredDocuments[0]; // using the second page if it exists since first one is the cover page
         if (!document) return '/placeholder_image.svg';
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${document.lecture}/${document.id}.png`
     }
 
     useEffect(() => {
         const channel = supabase
-            .channel('realtime-textbooks')
+            .channel('realtime-lectures')
             .on(
                 'postgres_changes',
                 {
                     event: '*',
                     schema: 'prod',
-                    table: 'textbooks',
+                    table: 'lectures',
                     filter: `class=eq.${classId}`
                 },
                 (payload) => {
                     if (payload.eventType === 'INSERT') {
-                        const newTextbook = payload.new as Textbook;
-                        console.log("Textbook:", newTextbook);
-                        // Update your textbooks state with the new data
-                        queryClient.setQueryData(["textbooks", classId], (oldData: Textbook[]) => {
-                            return [...oldData, newTextbook];
+                        const newLecture = payload.new as Lecture;
+                        console.log("Lecture:", newLecture);
+                        // Update your lectures state with the new data
+                        queryClient.setQueryData(["lectures", classId], (oldData: Lecture[]) => {
+                            return [...oldData, newLecture];
                         });
                     } else if (payload.eventType === 'UPDATE') {
-                        const updatedTextbook = payload.new as Textbook;
-                        console.log("Updated Textbook:", updatedTextbook);
-                        queryClient.setQueryData(["textbooks", classId], (oldData: Textbook[]) => {
-                            return oldData.map(textbook => textbook.id === updatedTextbook.id ? updatedTextbook : textbook);
+                        const updatedLecture = payload.new as Lecture;
+                        console.log("Updated Lecture:", updatedLecture);
+                        queryClient.setQueryData(["lectures", classId], (oldData: Lecture[]) => {
+                            return oldData.map(lecture => lecture.id === updatedLecture.id ? updatedLecture : lecture);
                         });
                     }
                 }
@@ -561,23 +776,23 @@ export default function TextbookPage({ params }: { params: { classId: string } }
     }, [classId, supabase]);
 
     useEffect(() => {
-        if (!textbooks) return;
+        if (!lectures) return;
         const channel = supabase
-            .channel('realtime-textbook-documents')
+            .channel('realtime-lecture-documents')
             .on(
                 'postgres_changes',
                 {
                     event: '*',
                     schema: 'prod',
                     table: 'documents',
-                    filter: `textbook=in.(${textbooks.map(textbook => textbook.id).join(',')})`
+                    filter: `lecture=in.(${lectures.map(lecture => lecture.id).join(',')})`
                 },
                 (payload) => {
                     console.log("Document change:", payload);
 
                     // Immediately invalidate the documents query to trigger a refresh
                     queryClient.invalidateQueries({
-                        queryKey: ["textbookDocuments", classId]
+                        queryKey: ["lectureDocuments", classId]
                     });
                 }
             )
@@ -586,22 +801,21 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [classId, supabase, textbooks, queryClient]);
+    }, [classId, supabase, lectures, queryClient]);
 
     return (
-        <>
-            <HeaderSimple />
+        <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}`}>
+                            {/* <Link href={`/classes/${classId}`}>
                                 <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
-                            </Link>
-                            <Text size="xl" fw={700} mb={6} pl={4}>Textbooks</Text>
+                            </Link> */}
+                            <Text size="xl" fw={700} mb={6} pl={4}>Lectures</Text>
                         </Group>
                         <Group>
-                            <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Textbook</Button>
+                            <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Lectures</Button>
                             <FileInput
                                 ref={fileInputRef}
                                 placeholder="Upload PDFs"
@@ -615,42 +829,42 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                     </Flex>
 
                     <Stack>
-                        {(textbooks && classData) && textbooks.length > 0 && textbooks.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((textbook) => {
-                            if (textbook.parse_status !== "complete") {
+                        {(lectures && documents && classData) && lectures.length > 0 && lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
+                            if (lecture.parse_status !== "complete") {
                                 return (
-                                    <Card withBorder key={textbook.id}>
+                                    <Card withBorder key={lecture.id}>
                                         <Group align="flex-start" justify="space-between">
                                             <Group align="flex-start">
                                                 <Image
-                                                    src={getDocumentImage(textbook.id)}
-                                                    alt={`First page of ${textbook.title}`}
+                                                    src={getDocumentImage(lecture.id)}
+                                                    alt={`First page of ${lecture.name}`}
                                                     width={150}
                                                     height={150}
                                                     style={{ objectFit: "contain", borderRadius: "10px" }}
                                                 />
                                                 <Stack gap="xs">
-                                                    <Text size="lg" fw={500}>{textbook.title}</Text>
+                                                    <Text size="lg" fw={500}>{lecture.name}</Text>
                                                     <Text size="sm" c="dimmed">
-                                                        {textbook.parse_status === 'parsing' ? 'Parsing...' :
-                                                            textbook.parse_status === 'error' ? 'Parse failed' : 
-                                                            textbook.parse_status === 'idle' ? 'Waiting to parse' : 
-                                                            'Could not find any topics.'}
+                                                        {lecture.parse_status === 'parsing' ? 'Parsing...' :
+                                                            lecture.parse_status === 'error' ? 'Parse failed' :
+                                                                lecture.parse_status === 'idle' ? 'Waiting to parse' :
+                                                                    'Could not find any topics.'}
                                                     </Text>
-                                                    {textbook.parse_error && (
+                                                    {lecture.parse_error && (
                                                         <Text size="sm" c="red">
-                                                            Error: {textbook.parse_error}
+                                                            Error: {lecture.parse_error}
                                                         </Text>
                                                     )}
                                                     <Progress
-                                                        value={getProgress(textbook.id, textbook.parse_status !== 'parsing')}
+                                                        value={getProgress(lecture.id, lecture.parse_status !== 'parsing')}
                                                         size="sm"
                                                         color="blue"
-                                                        animated={textbook.parse_status === 'parsing'}
-                                                        striped={textbook.parse_status === 'parsing'}
+                                                        animated={lecture.parse_status === 'parsing'}
+                                                        striped={lecture.parse_status === 'parsing'}
                                                     />
-                                                    {(textbook.parse_status === 'parsing') && (
+                                                    {(lecture.parse_status === 'parsing') && (
                                                         <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{getEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds
+                                                            Estimated time remaining: ~{getEstimatedTime(lecture.id, lecture.parse_status !== 'parsing')} seconds
                                                         </Text>
                                                     )}
                                                 </Stack>
@@ -658,15 +872,15 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                                             <Button
                                                 variant="light"
                                                 color="blue"
-                                                onClick={() => handleRetry(classId, textbook)}
+                                                onClick={() => handleRetry(classId, lecture)}
                                                 leftSection={<IconRefresh size={16} />}
-                                                disabled={textbook.parse_status === 'parsing' || textbook.parse_status === 'idle'}
-                                                loading={parsingTextbooks.has(textbook.id)}
+                                                disabled={lecture.parse_status === 'parsing' || lecture.parse_status === 'idle'}
+                                                loading={parsingLectures.has(lecture.id)}
                                             >
-                                                {parsingTextbooks.has(textbook.id) ? 'Retrying...' :
-                                                    textbook.parse_status === 'parsing' ? 'Parsing...' :
-                                                    textbook.parse_status === 'error' ? 'Retry Parse' :
-                                                    'Processing...'}
+                                                {parsingLectures.has(lecture.id) ? 'Retrying...' :
+                                                    lecture.parse_status === 'parsing' ? 'Parsing...' :
+                                                        lecture.parse_status === 'error' ? 'Retry' :
+                                                            'Processing...'}
                                             </Button>
                                         </Group>
                                     </Card>
@@ -674,23 +888,23 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                             }
                             return (
                                 <Link
-                                    href={`/classes/${classId}/textbook/${textbook.id}`}
-                                    key={textbook.id}
+                                    href={`/classes/c/${classId}/lecture/${lecture.id}`}
+                                    key={lecture.id}
                                     style={{ textDecoration: 'none' }}
                                 >
                                     <Card withBorder>
                                         <Group align="flex-start">
                                             <Image
-                                                src={getDocumentImage(textbook.id)}
-                                                alt={`First page of ${textbook.title}`}
+                                                src={getDocumentImage(lecture.id)}
+                                                alt={`First page of ${lecture.name}`}
                                                 width={150}
                                                 height={150}
                                                 style={{ objectFit: "contain", borderRadius: "10px" }}
                                             />
                                             <Stack gap="xs">
-                                                <Text size="lg" fw={500}>{textbook.title}</Text>
+                                                <Text size="lg" fw={500}>{lecture.name}</Text>
                                                 <Text size="sm" c="dimmed">
-                                                    Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
+                                                    Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
                                                 </Text>
                                             </Stack>
                                         </Group>
@@ -701,7 +915,6 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                     </Stack>
                 </Stack>
             </Container>
-
-        </>
+        </ClassLayout>
     );
 }

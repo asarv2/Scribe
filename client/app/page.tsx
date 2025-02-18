@@ -5,7 +5,6 @@
  * 09.01.2024
  */
 "use client"
-import { HeaderSimple } from "../components/HeaderSimple";
 import { Box, Button, Center, Container, Input, Space, Stack, Text, Flex, Group, Grid, Title, List, ThemeIcon, useMantineColorScheme } from "@mantine/core";
 import Link from "next/link";
 import { IconAt, IconCheck } from '@tabler/icons-react';
@@ -14,6 +13,7 @@ import { useState } from "react";
 import { joinWaitlist } from "../utils/services/waitlist";
 import Image from "next/image";
 import classes from "../components/Landing.module.css";
+import { HomeLayout } from "@/components/Home/HomeLayout";
 
 export default function Landing() {
   const [value, setValue] = useState("");
@@ -53,13 +53,15 @@ export default function Landing() {
   }
 
   return (
-    <>
-      <HeaderSimple />
+    <HomeLayout>
       <Container size="lg">
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-              Welcome to <span className={classes.highlight}>Scribe.AI</span>
+              Welcome to{' '}
+              <span className={classes.highlight}>
+                <span className={classes.x}>X</span>crybe
+              </span>
             </Title>
             <Text c="dimmed" mt="md">
               Join the future of learning. An AI-powered chatbot that takes burden off professors and students.
@@ -101,8 +103,8 @@ export default function Landing() {
           </div>
 
           <Image
-            src="/images/hero.png"
-            alt="Scribe Hero"
+            src="/images/xcrybe.png"
+            alt="Xcrybe Hero"
             width={500}
             height={500}
             className={classes.heroImage}
@@ -112,6 +114,6 @@ export default function Landing() {
           />
         </div>
       </Container>
-    </>
+    </HomeLayout>
   );
 }

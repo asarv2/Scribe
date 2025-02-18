@@ -7,7 +7,6 @@
 
 import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, Loader, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { HeaderSimple } from "@/components/HeaderSimple";
 import { Container, Flex } from "@mantine/core";
 import { IconArrowLeft, IconPlus, IconCopy, IconTrash, IconX, IconAlertCircle } from "@tabler/icons-react";
 import Link from "next/link";
@@ -38,6 +37,7 @@ import { getChat } from "@/utils/queries/get-chat";
 import { getMessages } from "@/utils/queries/get-messages";
 import DeleteChatModal from "../Delete/DeleteChatModal";
 import { createChat } from "@/utils/services/chat";
+import { ClassLayout } from "../Class/ClassLayout";
 
 export interface ChatMessage {
     id: number;
@@ -463,7 +463,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     profileId
                 );
                 newChatId = chat.id;
-                router.replace(`/classes/${classId}/chat/${chat.id}`);
+                router.replace(`/classes/c/${classId}/chat/${chat.id}`);
             }
 
             const additionalContextForBareQuestion = getAdditionalContextForBareQuestion();
@@ -791,7 +791,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         return (
             <Group>
                 {topDocs.map(doc => (
-                    <Link href={doc.lecture ? `/classes/${classId}/lecture/${doc.lecture}?page=${doc.page}` : `/classes/${classId}/textbook/${doc.textbook}/chapter/${doc.chapter}?page=${doc.page}`} key={doc.id}>
+                    <Link href={doc.lecture ? `/classes/c/${classId}/lecture/${doc.lecture}?page=${doc.page}` : `/classes/c/${classId}/textbook/${doc.textbook}/chapter/${doc.chapter}?page=${doc.page}`} key={doc.id}>
                         <Badge key={doc.id}>
                             {doc.lecture ?
                                 `${lectures?.find(l => l.id === doc.lecture)?.name} ${doc.pageRange}` :
@@ -805,15 +805,14 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     };
 
     return (
-        <>
-            <HeaderSimple />
+        <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}/chat`}>
+                            {/* <Link href={`/classes/${classId}/chat`}>
                                 <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
-                            </Link>
+                            </Link> */}
                             <Text size="xl" fw={700} mb={6}>{existingChat ? existingChat.name : activeChat.title}</Text>
                         </Group>
                         <Group>
@@ -955,6 +954,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     </Grid>
                 </Stack>
             </Container>
-        </>
+        </ClassLayout>
     );
 }
