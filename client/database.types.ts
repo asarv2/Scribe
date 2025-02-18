@@ -91,6 +91,7 @@ export type Database = {
       }
       classes: {
         Row: {
+          active: boolean
           brightspace_course_descriptor: string | null
           brightspace_course_id: number | null
           class_code: string | null
@@ -103,6 +104,7 @@ export type Database = {
           title: string | null
         }
         Insert: {
+          active?: boolean
           brightspace_course_descriptor?: string | null
           brightspace_course_id?: number | null
           class_code?: string | null
@@ -115,6 +117,7 @@ export type Database = {
           title?: string | null
         }
         Update: {
+          active?: boolean
           brightspace_course_descriptor?: string | null
           brightspace_course_id?: number | null
           class_code?: string | null
@@ -238,7 +241,7 @@ export type Database = {
           created_at?: string
           homework: string
           id?: string
-          latency?: number
+          latency: number
         }
         Update: {
           created_at?: string
@@ -266,7 +269,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          latency?: number
+          latency: number
           lecture: string
         }
         Update: {
@@ -295,7 +298,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          latency?: number
+          latency: number
           message: string
         }
         Update: {
@@ -324,7 +327,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          latency?: number
+          latency: number
           textbook?: string | null
         }
         Update: {

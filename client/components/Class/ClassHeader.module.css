@@ -6,6 +6,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100%;
 }
 
 .inner {
@@ -13,6 +14,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-inline: var(--mantine-spacing-md);
+    max-width: 100%;
 }
 
 .classSelector {

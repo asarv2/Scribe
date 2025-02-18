@@ -9,7 +9,6 @@ import { useEffect, useState, useRef } from "react";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { HeaderSimple } from "@/components/HeaderSimple";
 import Link from "next/link";
 import { getClass } from "@/utils/queries/get-class";;
 import { useSearchParams } from "next/navigation";
@@ -24,8 +23,8 @@ import { Container } from "@mantine/core";
 import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import Latex from "@/components/Latex";
-import { Document } from "@/types";
 import { getProfile } from "@/utils/queries/get-profile";
+import { ClassLayout } from "../Class/ClassLayout";
 
 type LectureViewerProps = {
     classId: string;
@@ -151,15 +150,14 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
     }, [activeDocumentId]);
 
     return (
-        <>
-            <HeaderSimple />
+        <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Link href={`/classes/${classId}/lecture`}>
+                            {/* <Link href={`/classes/${classId}/lecture`}>
                                 <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
-                            </Link>
+                            </Link> */}
                             <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
                         </Group>
                         <Group>
@@ -306,7 +304,6 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
                     </Grid>
                 </Stack>
             </Container>
-
-        </>
+        </ClassLayout>
     );
 }

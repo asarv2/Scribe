@@ -10,7 +10,7 @@ import { Button, Container, Stack, Textarea, Title } from '@mantine/core';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { submitFeedback } from '@/utils/services/feedback';
-import { HeaderSimple } from '@/components/HeaderSimple';
+import { GeneralLayout } from '@/components/General/GeneralLayout';
 
 export default function FeedbackPage() {
     const [likes, setLikes] = useState('');
@@ -44,8 +44,7 @@ export default function FeedbackPage() {
     };
 
     return (
-        <>
-            <HeaderSimple />
+        <GeneralLayout>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack p="xl">
                     <Title order={1}>Share Your Feedback</Title>
@@ -79,6 +78,6 @@ export default function FeedbackPage() {
                     </Button>
                 </Stack>
             </Container>
-        </>
+        </GeneralLayout>
     );
 }

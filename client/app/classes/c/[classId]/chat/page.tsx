@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
-import { HeaderSimple } from "@/components/HeaderSimple";
 import Link from "next/link";
 import { getClass } from "@/utils/queries/get-class";
 import { IconArrowLeft, IconRefresh } from '@tabler/icons-react';
@@ -22,6 +21,7 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getChats } from "@/utils/queries/get-chats";
 import { getMessages } from "@/utils/queries/get-messages";
 import { getDocument } from "pdfjs-dist";
+import { ClassLayout } from "@/components/Class/ClassLayout";
 
 export default function ChatPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -163,8 +163,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
 
 
     return (
-        <>
-            <HeaderSimple />
+        <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
@@ -172,7 +171,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                             <Text size="xl" fw={700} mb={6} pl={4}>Chats</Text>
                         </Group>
                         <Group>
-                            <Link href={`/classes/${classId}/chat/new`}>
+                            <Link href={`/classes/c/${classId}/chat/new`}>
                                 <Button>New Chat</Button>
                             </Link>
                         </Group>
@@ -187,7 +186,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                 const context = references?.[0]
                                 return (
                                     <Link
-                                        href={`/classes/${classId}/chat/${chat.id}`}
+                                        href={`/classes/c/${classId}/chat/${chat.id}`}
                                         key={chat.id}
                                         style={{ textDecoration: 'none' }}
                                     >
@@ -214,6 +213,6 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                     </Stack>
                 </Stack>
             </Container>
-        </>
+        </ClassLayout>   
     );
 }

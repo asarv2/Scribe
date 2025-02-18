@@ -44,7 +44,7 @@ export default function DeleteTextbookModal({ textbookId, profile, textbookTitle
                 queryClient.invalidateQueries({ 
                     queryKey: ["textbooks", classId]
                 });
-                router.push(`/classes/${classId}`);
+                router.push(`/classes/c/${classId}`);
             }
             notifications.show({
                 title: "Textbook deleted",

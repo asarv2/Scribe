@@ -44,7 +44,7 @@ export default function DeleteLectureModal({ lectureId, profile, lectureTitle, c
                 queryClient.invalidateQueries({ 
                     queryKey: ["lectures", classId]
                 });
-                router.push(`/classes/${classId}`);
+                router.push(`/classes/c/${classId}`);
             }
             notifications.show({
                 title: "Lecture deleted",
