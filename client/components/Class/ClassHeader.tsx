@@ -45,7 +45,6 @@ export function ClassHeader({ classId, mobileOpened, desktopOpened, toggleMobile
     const { data: classData } = useQuery({
         queryKey: ["classes"],
         queryFn: () => getClasses(supabase),
-        enabled: !!user
     })
 
     const getFilteredClasses = () => {
@@ -54,7 +53,7 @@ export function ClassHeader({ classId, mobileOpened, desktopOpened, toggleMobile
     };
 
     // Get current class from URL
-    const currentClass = classData?.find(c => c.id === classId);
+    const currentClass = getFilteredClasses()?.find(c => c.id === classId);
     const displayText = currentClass ? currentClass.class_code : 'Select Class';
 
     return (
@@ -119,8 +118,10 @@ export function ClassHeader({ classId, mobileOpened, desktopOpened, toggleMobile
                         ))}
                     </Menu.Dropdown>
                 </Menu> */}
-                <Link href="/feedback" className={classes.link}>
-                    Feedback
+                <Link href="/feedback">
+                    <Button size="sm">
+                        Feedback
+                    </Button>
                 </Link>
             </Group>
         </Group>

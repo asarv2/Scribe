@@ -20,6 +20,12 @@ const nextConfig = {
             port: '',
             pathname: '/storage/v1/object/public/profiles/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
+            port: '',
+            pathname: '/storage/v1/object/public/classes/**',
+          },
         ],
       },
     async headers() {

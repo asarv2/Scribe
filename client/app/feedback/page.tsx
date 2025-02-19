@@ -6,7 +6,7 @@
  * 3. feature they wish were here
  */
 "use client";
-import { Button, Container, Stack, Textarea, Title } from '@mantine/core';
+import { Button, Container, Stack, Textarea, Title, useMantineColorScheme } from '@mantine/core';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { submitFeedback } from '@/utils/services/feedback';
@@ -18,6 +18,8 @@ export default function FeedbackPage() {
     const [wishlist, setWishlist] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const { colorScheme } = useMantineColorScheme();
+
     const handleSubmit = async () => {
         setLoading(true);
         try {
@@ -28,6 +30,9 @@ export default function FeedbackPage() {
                     message: 'Thank you for your feedback!',
                     color: 'green',
                 });
+                setLikes('');
+                setDislikes('');
+                setWishlist('');
             } else {
                 throw new Error(error);
             }
@@ -45,36 +50,83 @@ export default function FeedbackPage() {
 
     return (
         <GeneralLayout>
-            <Container fluid style={{ marginTop: "30px" }}>
-                <Stack p="xl">
-                    <Title order={1}>Share Your Feedback</Title>
+            <Container size="md" py="xl">
+                <Stack gap="md">
+                    <Title 
+                        order={1} 
+                        styles={(theme) => ({
+                            root: {
+                                fontSize: '2.5rem',
+                                marginBottom: theme.spacing.xl,
+                                color: colorScheme === 'dark' ? theme.white : theme.black,
+                            }
+                        })}
+                    >
+                        Help Us Improve Scribe
+                    </Title>
 
                     <Textarea
                         label="What do you like about Scribe?"
-                        placeholder="Tell us what you enjoy..."
-                        minRows={3}
+                        placeholder="I really enjoy..."
+                        minRows={4}
                         value={likes}
                         onChange={(e) => setLikes(e.currentTarget.value)}
+                        styles={(theme) => ({
+                            label: {
+                                fontSize: theme.fontSizes.md,
+                                marginBottom: theme.spacing.xs,
+                            },
+                            description: {
+                                marginBottom: theme.spacing.xs,
+                            }
+                        })}
                     />
 
                     <Textarea
-                        label="What don't you like about Scribe?"
-                        placeholder="Tell us what could be improved..."
-                        minRows={3}
+                        label="What could be improved?"
+                        placeholder="I think it would be better if..."
+                        minRows={4}
                         value={dislikes}
                         onChange={(e) => setDislikes(e.currentTarget.value)}
-                    />
-    
-                    <Textarea
-                        label="What features do you wish were on Scribe?"
-                        placeholder="Tell us what features you'd like to see..."
-                        minRows={3}
-                        value={wishlist}
-                        onChange={(e) => setWishlist(e.currentTarget.value)}
+                        styles={(theme) => ({
+                            label: {
+                                fontSize: theme.fontSizes.md,
+                                marginBottom: theme.spacing.xs,
+                            },
+                            description: {
+                                marginBottom: theme.spacing.xs,
+                            }
+                        })}
                     />
 
-                    <Button onClick={handleSubmit} loading={loading}>
-                        Submit
+                    <Textarea
+                        label="What features would you like to see?"
+                        placeholder="It would be great to have..."
+                        minRows={4}
+                        value={wishlist}
+                        onChange={(e) => setWishlist(e.currentTarget.value)}
+                        styles={(theme) => ({
+                            label: {
+                                fontSize: theme.fontSizes.md,
+                                marginBottom: theme.spacing.xs,
+                            },
+                            description: {
+                                marginBottom: theme.spacing.xs,
+                            }
+                        })}
+                    />
+
+                    <Button
+                        onClick={handleSubmit}
+                        loading={loading}
+                        styles={(theme) => ({
+                            root: {
+                                marginTop: theme.spacing.md,
+                                width: '200px',
+                            }
+                        })}
+                    >
+                        Submit Feedback
                     </Button>
                 </Stack>
             </Container>

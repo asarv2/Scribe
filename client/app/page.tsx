@@ -60,7 +60,7 @@ export default function Landing() {
             <Title className={classes.title}>
               Welcome to{' '}
               <span className={classes.highlight}>
-                <span className={classes.x}>X</span>crybe
+                <span className={classes.x}>Scribe</span>
               </span>
             </Title>
             <Text c="dimmed" mt="md">
@@ -103,8 +103,8 @@ export default function Landing() {
           </div>
 
           <Image
-            src="/images/xcrybe.png"
-            alt="Xcrybe Hero"
+            src="/images/hero.png"
+            alt="Scribe Hero"
             width={500}
             height={500}
             className={classes.heroImage}

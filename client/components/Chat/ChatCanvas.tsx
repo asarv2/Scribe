@@ -39,6 +39,7 @@ import { createChat } from "@/utils/services/chat";
 import { ClassLayout } from "../Class/ClassLayout";
 import { getChapterExercises } from "@/utils/queries/get-chapter-exercises";
 import { getExercises } from "@/utils/queries/get-exercises";
+import { getAvatarUrl } from "@/utils/services/images";
 
 export interface ChatMessage {
     id: number;
@@ -377,14 +378,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             ...problemDocs,
             ...messageDocuments
         ]));
-    }
-
-    const getAvatarUrl = (profile: Profile) => {
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${profile.id}.png`
-    }
-
-    const getProfessorAvatarUrl = () => {
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${professor?.id}.png`
     }
 
     const getAdditionalContextForBareQuestion = () => {
@@ -860,7 +853,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                                     <Text c="white"><Latex>{message.question}</Latex></Text>
                                                 </Card>
                                                 <Avatar
-                                                    src={profile ? getAvatarUrl(profile) : undefined}
+                                                    src={profile ? getAvatarUrl(profile.id) : undefined}
                                                     radius="xl"
                                                     size="md"
                                                     alt={`${profile?.first_name} ${profile?.last_name}`}
@@ -872,7 +865,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                             {/* AI response */}
                                             <Group align="flex-start">
                                                 <Avatar
-                                                    src={professor ? getProfessorAvatarUrl() : undefined}
+                                                    src={professor ? getAvatarUrl(professor.id) : undefined}
                                                     size="md"
                                                     radius="xl"
                                                     alt="AI Assistant"

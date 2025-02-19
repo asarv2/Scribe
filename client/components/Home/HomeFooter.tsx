@@ -1,32 +1,34 @@
 import { Anchor, Container, Group } from '@mantine/core';
-import { MantineLogo } from '@mantinex/mantine-logo';
+import Image from "next/image";
+import { useMantineColorScheme } from "@mantine/core";
 import classes from './HomeFooter.module.css';
-
-const links = [
-  { link: '#', label: 'Contact' },
-  { link: '#', label: 'Privacy' },
-  { link: '#', label: 'Blog' },
-  { link: '#', label: 'Careers' },
-];
+import Link from "next/link";
 
 export function HomeFooter() {
-  const items = links.map((link) => (
-    <Anchor<'a'>
-      c="dimmed"
-      key={link.label}
-      href={link.link}
-      onClick={(event) => event.preventDefault()}
-      size="sm"
-    >
-      {link.label}
-    </Anchor>
-  ));
+  const { colorScheme } = useMantineColorScheme();
 
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
-        <MantineLogo size={28} />
-        <Group className={classes.links}>{items}</Group>
+        <Link href="/">
+          <Image
+            src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
+            priority
+            alt="Logo"
+            width={90}
+            height={20}
+          />
+        </Link>
+        <Group className={classes.links}>
+          <Anchor
+            component={Link}
+            href="/contact"
+            c="dimmed"
+            size="sm"
+          >
+            Contact
+          </Anchor>
+        </Group>
       </Container>
     </div>
   );

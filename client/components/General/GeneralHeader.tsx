@@ -46,17 +46,6 @@ export function GeneralHeader({
         enabled: !!user
     })
 
-    const { data: classData } = useQuery({
-        queryKey: ["classes"],
-        queryFn: () => getClasses(supabase),
-        enabled: !!user
-    })
-
-    const getFilteredClasses = () => {
-        if (!profile || !classData) return [];
-        return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
-    };
-
     return (
         <Group h="100%" px="md" w="100%" justify="space-between">
             <Group>
@@ -74,7 +63,7 @@ export function GeneralHeader({
                 /> */}
                 <Link href="/">
                     <Image
-                        src={colorScheme === "dark" ? "/images/xcrybe-dark.png" : "/images/xcrybe-light.png"}
+                        src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
                         priority
                         alt="Logo"
                         width={90}
@@ -101,8 +90,10 @@ export function GeneralHeader({
                         ))}
                     </Menu.Dropdown>
                 </Menu> */}
-                <Link href="/feedback" className={classes.link}>
-                    Feedback
+                <Link href="/feedback">
+                    <Button size="sm">
+                        Feedback
+                    </Button>
                 </Link>
             </Group>
         </Group>

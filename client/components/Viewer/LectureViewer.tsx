@@ -14,7 +14,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -76,23 +76,27 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
         enabled: !!user
     })
 
+    const showDelete = profile?.professor || profile?.admin;
+
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !lecture || !documentId) return "/placeholder_image.svg";
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${documentId}.png`
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${documentId}.png`;
     }
 
+    const filteredDocuments = documents?.filter(doc => !(classId === "ae333215-2914-4026-8aae-418f1255cdd0" && doc.page === 1));
+
     const handleSwipe = (touchEndX: number) => {
-        if (touchStartX !== null && documents) {
+        if (touchStartX !== null && filteredDocuments) {
             const deltaX = touchStartX - touchEndX;
             const minSwipeDistance = 50;
 
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
-            if (deltaX > minSwipeDistance && currentIndex < documents.length - 1) {
+            const currentIndex = filteredDocuments.findIndex(doc => doc.id === activeDocumentId);
+            if (deltaX > minSwipeDistance && currentIndex < filteredDocuments.length - 1) {
                 // Swipe left (next page)
-                handlePageClick(documents[currentIndex + 1].id);
+                handlePageClick(filteredDocuments[currentIndex + 1].id);
             } else if (deltaX < -minSwipeDistance && currentIndex > 0) {
                 // Swipe right (previous page)
-                handlePageClick(documents[currentIndex - 1].id);
+                handlePageClick(filteredDocuments[currentIndex - 1].id);
             }
         }
         setTouchStartX(null);
@@ -100,33 +104,33 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
 
     useEffect(() => {
         // Set initial active document based on URL page parameter
-        if (documents && documents.length > 0 && !activeDocumentId) {
+        if (filteredDocuments && filteredDocuments.length > 0 && !activeDocumentId) {
             if (page) {
                 // Handle both single page numbers and page ranges (e.g., "p.5" or "pp.5-7")
                 const pageNum = parseInt(page.replace(/[^0-9]/g, ''));
-                const matchingDoc = documents.find(doc => doc.page === pageNum);
+                const matchingDoc = filteredDocuments.find(doc => doc.page === pageNum);
                 if (matchingDoc) {
                     setActiveDocumentId(matchingDoc.id);
                 } else {
                     // Default to first page if specified page not found
-                    setActiveDocumentId(documents[0].id);
+                    setActiveDocumentId(filteredDocuments[0].id);
                 }
             } else {
                 // No page specified, default to first page
-                setActiveDocumentId(documents[0].id);
+                setActiveDocumentId(filteredDocuments[0].id);
             }
         }
-    }, [documents, activeDocumentId, page]);
+    }, [filteredDocuments, activeDocumentId, page]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (!documents) return;
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
+            if (!filteredDocuments) return;
+            const currentIndex = filteredDocuments.findIndex(doc => doc.id === activeDocumentId);
 
             if (event.key === 'ArrowLeft' && currentIndex > 0) {
-                handlePageClick(documents[currentIndex - 1].id);
-            } else if (event.key === 'ArrowRight' && currentIndex < documents.length - 1) {
-                handlePageClick(documents[currentIndex + 1].id);
+                handlePageClick(filteredDocuments[currentIndex - 1].id);
+            } else if (event.key === 'ArrowRight' && currentIndex < filteredDocuments.length - 1) {
+                handlePageClick(filteredDocuments[currentIndex + 1].id);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -134,7 +138,7 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [activeDocumentId, documents]);
+    }, [activeDocumentId, filteredDocuments]);
 
     useEffect(() => {
         if (previewScrollRef.current) {
@@ -149,157 +153,226 @@ export default function LectureViewer({ classId, lectureId }: LectureViewerProps
         }
     }, [activeDocumentId]);
 
+    // Add skeleton components
+    function MainViewerSkeleton() {
+        return (
+            <Card padding="md" pos="relative" withBorder>
+                <Box style={{ 
+                    position: 'relative', 
+                    width: '100%', 
+                    height: 500,
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}>
+                    <Skeleton height="100%" width="100%" radius="md" />
+                </Box>
+            </Card>
+        );
+    }
+
+    function PreviewStripSkeleton() {
+        return (
+            <Flex gap="0.5rem" style={{ padding: '0.5rem' }}>
+                {[...Array(8)].map((_, index) => (
+                    <Skeleton key={index} height={50} width={50} radius="sm" />
+                ))}
+            </Flex>
+        );
+    }
+
+    function DescriptionSkeleton() {
+        return (
+            <Stack>
+                <Skeleton height={20} width="90%" />
+                <Skeleton height={20} width="85%" />
+                <Skeleton height={20} width="70%" />
+            </Stack>
+        );
+    }
+
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            {/* <Link href={`/classes/${classId}/lecture`}>
-                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
-                            </Link> */}
-                            <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
+                            <Skeleton visible={loadingLecture} height={32} width={200}>
+                                <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
+                            </Skeleton>
                         </Group>
                         <Group>
-                            <DeleteLectureModal lectureId={lectureId} lectureTitle={lecture?.name ?? ""} profile={profile ?? undefined} classId={lecture?.class ?? ""} />
+                            {showDelete && (
+                                <DeleteLectureModal lectureId={lectureId} lectureTitle={lecture?.name ?? ""} profile={profile ?? undefined} classId={lecture?.class ?? ""} />
+                            )}
                         </Group>
                     </Flex>
                     <Grid>
                         <Grid.Col span={isMobile ? 12 : 6}>
                             <Stack>
-                                <Card padding="md" pos="relative" withBorder>
-                                    <Box
-                                        style={{ 
-                                            position: 'relative', 
-                                            width: '100%', 
-                                            height: 500,
-                                            overflow: "hidden",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center"
-                                        }}
-                                        onTouchStart={(e) => {
-                                            setTouchStartX(e.changedTouches[0].clientX);
-                                        }}
-                                        onTouchEnd={(e) => {
-                                            const touchEndX = e.changedTouches[0].clientX;
-                                            handleSwipe(touchEndX);
-                                        }}
-                                    >
-                                        <Image
-                                            src={getActiveImage(activeDocumentId)}
-                                            alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
-                                            width={500}
-                                            height={500}
-                                            style={{ 
-                                                maxWidth: '100%',
-                                                maxHeight: '100%',
-                                                borderRadius: "10px"
-                                            }}
-                                            sizes="100vw"
-                                        />
-                                        <ActionIcon
-                                            size="xl"
-                                            variant="filled"
-                                            color={colorScheme === "dark" ? "gray" : "dark"}
-                                            style={{
-                                                position: 'absolute',
-                                                top: '50%',
-                                                left: 10,
-                                                transform: 'translateY(-50%)',
-                                                zIndex: 100,
-                                            }}
-                                            onClick={() => {
-                                                const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                                                if (currentIndex > 0 && documents) {
-                                                    handlePageClick(documents[currentIndex - 1].id);
-                                                }
-                                            }}
-                                            disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === 0}
-                                            aria-label="Previous Slide"
-                                        >
-                                            <IconArrowLeft size={32} color={colorScheme === "dark" ? "white" : "black"} />
-                                        </ActionIcon>
-                                        <ActionIcon
-                                            size="xl"
-                                            variant="filled"
-                                            color="gray"
-                                            style={{
-                                                position: 'absolute',
-                                                top: '50%',
-                                                right: 10,
-                                                transform: 'translateY(-50%)',
-                                                zIndex: 100,
-                                            }}
-                                            onClick={() => {
-                                                const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                                                if (documents && currentIndex < documents.length - 1) {
-                                                    handlePageClick(documents[currentIndex + 1].id);
-                                                }
-                                            }}
-                                            disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === documents.length - 1}
-                                            aria-label="Next Slide"
-                                        >
-                                            <IconArrowRight size={32} />
-                                        </ActionIcon>
-                                    </Box>
-                                    <Box
-                                        pos="absolute"
-                                        bottom={10}
-                                        right={10}
-                                        p={2}
-                                        style={{
-                                            zIndex: 100,
-                                        }}
-                                    >
-                                        <Text size="sm">Page {documents?.find(doc => doc.id === activeDocumentId)?.page}</Text>
-                                    </Box>
-                                </Card>
-
-                                <Flex
-                                    ref={previewScrollRef}
-                                    gap="0.5rem"
-                                    style={{
-                                        overflowX: 'auto',
-                                        padding: '0.5rem',
-                                    }}
-                                >
-                                    {documents?.map((doc) => (
-                                        <Box
-                                            key={doc.id}
-                                            data-document={doc.id}
-                                            style={{
-                                                cursor: 'pointer',
-                                                width: 50,
-                                                height: 50,
-                                                position: 'relative',
-                                                flexShrink: 0,
-                                                borderRadius: '4px',
-                                                overflow: 'hidden',
-                                            }}
-                                            onClick={() => handlePageClick(doc.id)}
-                                        >
-                                            <Image
-                                                src={getActiveImage(doc.id)}
-                                                alt={`Page ${doc.page}`}
-                                                width={50}
-                                                height={50}
+                                {loadingDocuments ? (
+                                    <>
+                                        <MainViewerSkeleton />
+                                        <PreviewStripSkeleton />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Card padding="md" pos="relative" withBorder>
+                                            <Box
                                                 style={{ 
-                                                    objectFit: 'cover',
-                                                    outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
-                                                    outlineOffset: '-2px',
+                                                    position: 'relative', 
+                                                    width: '100%', 
+                                                    height: 500,
+                                                    overflow: "hidden",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center"
                                                 }}
-                                                sizes="100vw"
-                                            />
-                                        </Box>
-                                    ))}
-                                </Flex>
+                                                onTouchStart={(e) => {
+                                                    setTouchStartX(e.changedTouches[0].clientX);
+                                                }}
+                                                onTouchEnd={(e) => {
+                                                    const touchEndX = e.changedTouches[0].clientX;
+                                                    handleSwipe(touchEndX);
+                                                }}
+                                            >
+                                                <Image
+                                                    src={getActiveImage(activeDocumentId)}
+                                                    alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
+                                                    width={500}
+                                                    height={500}
+                                                    style={{ 
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%',
+                                                        borderRadius: "10px"
+                                                    }}
+                                                    sizes="100vw"
+                                                    placeholder="blur"
+                                                    blurDataURL={"/placeholder_image.svg"}
+                                                    
+                                                />
+                                                <ActionIcon
+                                                    size="xl"
+                                                    variant="filled"
+                                                    color={colorScheme === "dark" ? "gray" : "dark"}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: 10,
+                                                        transform: 'translateY(-50%)',
+                                                        zIndex: 100,
+                                                    }}
+                                                    onClick={() => {
+                                                        const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                                        if (currentIndex > 0 && filteredDocuments) {
+                                                            handlePageClick(filteredDocuments[currentIndex - 1].id);
+                                                        }
+                                                    }}
+                                                    disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
+                                                    aria-label="Previous Slide"
+                                                >
+                                                    <IconArrowLeft size={32} color={colorScheme === "dark" ? "white" : "black"} />
+                                                </ActionIcon>
+                                                <ActionIcon
+                                                    size="xl"
+                                                    variant="filled"
+                                                    color="gray"
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: 10,
+                                                        transform: 'translateY(-50%)',
+                                                        zIndex: 100,
+                                                    }}
+                                                    onClick={() => {
+                                                        const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                                        if (filteredDocuments && currentIndex < filteredDocuments.length - 1) {
+                                                            handlePageClick(filteredDocuments[currentIndex + 1].id);
+                                                        }
+                                                    }}
+                                                    disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
+                                                    aria-label="Next Slide"
+                                                >
+                                                    <IconArrowRight size={32} />
+                                                </ActionIcon>
+                                            </Box>
+                                            <Box
+                                                pos="absolute"
+                                                bottom={10}
+                                                right={10}
+                                                p={8}
+                                                style={{
+                                                    zIndex: 100,
+                                                    backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                                    borderRadius: "4px",
+                                                }}
+                                            >
+                                                <Text 
+                                                    size="sm" 
+                                                    fw={500}
+                                                    style={{ 
+                                                        color: colorScheme === "dark" ? "white" : "black",
+                                                        textShadow: colorScheme === "dark" ? 
+                                                            "0px 0px 4px rgba(0,0,0,0.5)" : 
+                                                            "0px 0px 4px rgba(255,255,255,0.5)"
+                                                    }}
+                                                >
+                                                    Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
+                                                </Text>
+                                            </Box>
+                                        </Card>
+
+                                        <Flex
+                                            ref={previewScrollRef}
+                                            gap="0.5rem"
+                                            style={{
+                                                overflowX: 'auto',
+                                                padding: '0.5rem',
+                                            }}
+                                        >
+                                            {filteredDocuments?.map((doc) => (
+                                                <Box
+                                                    key={doc.id}
+                                                    data-document={doc.id}
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                        width: 50,
+                                                        height: 50,
+                                                        position: 'relative',
+                                                        flexShrink: 0,
+                                                        borderRadius: '4px',
+                                                        overflow: 'hidden',
+                                                    }}
+                                                    onClick={() => handlePageClick(doc.id)}
+                                                >
+                                                    <Image
+                                                        src={getActiveImage(doc.id)}
+                                                        alt={`Page ${doc.page}`}
+                                                        width={50}
+                                                        height={50}
+                                                        style={{ 
+                                                            objectFit: 'cover',
+                                                            outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                                                            outlineOffset: '-2px',
+                                                        }}
+                                                        sizes="100vw"
+                                                    />
+                                                </Box>
+                                            ))}
+                                        </Flex>
+                                    </>
+                                )}
                             </Stack>
                         </Grid.Col>
                         <Grid.Col span={isMobile ? 12 : 6}>
-                            <Text fw={500} size="lg">
-                                <Latex>{documents?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
-                            </Text>
+                            {loadingDocuments ? (
+                                <DescriptionSkeleton />
+                            ) : (
+                                <Text fw={500} size="lg">
+                                    <Latex>{filteredDocuments?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
+                                </Text>
+                            )}
                         </Grid.Col>
                     </Grid>
                 </Stack>

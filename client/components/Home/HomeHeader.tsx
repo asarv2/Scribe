@@ -4,7 +4,7 @@
  * 17.02.2025
  */
 
-import { Group } from "@mantine/core";
+import { Button, Group } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
 import { useMantineColorScheme } from "@mantine/core";
@@ -26,7 +26,7 @@ export function HomeHeader() {
         <Group h="100%" px="md" justify="space-between" w="100%">
             <Link href="/">
                 <Image
-                    src={colorScheme === "dark" ? "/images/xcrybe-dark.png" : "/images/xcrybe-light.png"}
+                    src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
                     priority
                     alt="Logo"
                     width={90}
@@ -36,17 +36,21 @@ export function HomeHeader() {
 
             <Group>
                 {user ? (
-                    <Link href="/classes" className={classes.link}>
-                        Dashboard
+                    <Link href="/classes">
+                        <Button size="sm">
+                            Dashboard
+                        </Button>
                     </Link>
                 ) : (
                     <>
-                        <Link href="/login" className={classes.link}>
-                            Login
+                        <Link href="/login">
+                            <Button size="sm">
+                                Login
+                            </Button>
                         </Link>
-                        <Link href="/signup" className={classes.link}>
+                        {/* <Link href="/signup" className={classes.link}>
                             Sign Up
-                        </Link>
+                        </Link> */}
                     </>
                 )}
             </Group>

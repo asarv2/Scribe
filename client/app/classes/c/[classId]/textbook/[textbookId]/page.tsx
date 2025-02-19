@@ -10,13 +10,28 @@ import { Chapter } from '@/types';
 import { getChapters } from '@/utils/queries/get-chapters';
 import { getDocumentsTextbook } from '@/utils/queries/get-documents-textbook';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
-import { Card, Group, Stack, Text, Container, Flex, Button, useMantineColorScheme } from '@mantine/core';
+import { Card, Group, Stack, Text, Container, Flex, Button, useMantineColorScheme, Skeleton } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ClassLayout } from '@/components/Class/ClassLayout';
+
+function ChapterSkeleton() {
+    return (
+        <Card withBorder>
+            <Group align="flex-start">
+                <Skeleton height={150} width={150} radius="md" />
+                <Stack gap="xs">
+                    <Skeleton height={24} width={200} />
+                    <Skeleton height={20} width={120} />
+                </Stack>
+            </Group>
+        </Card>
+    );
+}
+
 export default function Textbook({ params }: { params: { classId: string, textbookId: string } }) {
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
@@ -56,31 +71,38 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                         </Group>
                     </Flex>
                     <Stack>
-                        {chapters && chapters.map((chapter) => (
-                            <Link
-                                href={`/classes/${classId}/textbook/${textbookId}/chapter/${chapter.id}`}
-                                key={chapter.id}
-                                style={{ textDecoration: 'none' }}
-                            >
-                                <Card withBorder>
-                                    <Group align="flex-start">
-                                        <Image
-                                            src={getChapterImage(chapter.id)}
-                                            alt={`Page ${chapter.chapter_number}`}
-                                            width={150}
-                                            height={150}
-                                            style={{ objectFit: "contain", borderRadius: "10px" }}
-                                        />
-                                        <Stack gap="xs">
-                                            <Text size="lg" fw={500}>{chapter.title}</Text>
-                                            <Text size="sm" c="dimmed">
-                                                Chapter {chapter.chapter_number}
-                                            </Text>
-                                        </Stack>
-                                    </Group>
-                                </Card>
-                            </Link>
-                        ))}
+                        {loadingDocuments ? (
+                            // Show 3 skeleton chapters while loading
+                            [...Array(3)].map((_, index) => (
+                                <ChapterSkeleton key={index} />
+                            ))
+                        ) : (
+                            chapters && chapters.map((chapter) => (
+                                <Link
+                                    href={`/classes/c/${classId}/textbook/${textbookId}/chapter/${chapter.id}`}
+                                    key={chapter.id}
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <Card withBorder>
+                                        <Group align="flex-start">
+                                            <Image
+                                                src={getChapterImage(chapter.id)}
+                                                alt={`Page ${chapter.chapter_number}`}
+                                                width={150}
+                                                height={150}
+                                                style={{ objectFit: "contain", borderRadius: "10px" }}
+                                            />
+                                            <Stack gap="xs">
+                                                <Text size="lg" fw={500}>{chapter.title}</Text>
+                                                <Text size="sm" c="dimmed">
+                                                    Chapter {chapter.chapter_number}
+                                                </Text>
+                                            </Stack>
+                                        </Group>
+                                    </Card>
+                                </Link>
+                            ))
+                        )}
                     </Stack>
                 </Stack>
             </Container>

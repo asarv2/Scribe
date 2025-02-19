@@ -14,7 +14,7 @@ import type { Metadata } from "next";
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: "Xcrybe",
+  title: "Scribe",
   description: "Empowering students with AI-powered learning, backed by professors.",
 };
 

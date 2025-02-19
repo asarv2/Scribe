@@ -96,6 +96,7 @@ export type Database = {
           brightspace_course_id: number | null
           class_code: string | null
           course_description: string | null
+          course_image: string
           course_link: string | null
           created_at: string | null
           deleted: boolean
@@ -109,6 +110,7 @@ export type Database = {
           brightspace_course_id?: number | null
           class_code?: string | null
           course_description?: string | null
+          course_image?: string
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
@@ -122,6 +124,7 @@ export type Database = {
           brightspace_course_id?: number | null
           class_code?: string | null
           course_description?: string | null
+          course_image?: string
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
@@ -149,6 +152,30 @@ export type Database = {
           code?: string
           created_at?: string
           id?: string
+        }
+        Relationships: []
+      }
+      contact: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
         }
         Relationships: []
       }

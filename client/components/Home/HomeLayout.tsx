@@ -17,8 +17,21 @@ export function HomeLayout({ children }: HomeLayoutProps) {
     return (
         <AppShell
             header={{ height: 60 }}
-            padding="md"
-            footer={{ height: 60 }}
+            padding={0}
+            styles={{
+                root: {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh',
+                },
+                main: {
+                    flex: 1,
+                    paddingTop: 60,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    width: '100%'
+                }
+            }}
         >
             <AppShell.Header>
                 <HomeHeader />
@@ -28,9 +41,7 @@ export function HomeLayout({ children }: HomeLayoutProps) {
                 {children}
             </AppShell.Main>
 
-            <AppShell.Footer>
-                <HomeFooter />
-            </AppShell.Footer>
+            <HomeFooter />
         </AppShell>
     );
 }

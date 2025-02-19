@@ -5,12 +5,12 @@ import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
 import { getClass } from "@/utils/queries/get-class";
-import { IconArrowLeft, IconRefresh } from '@tabler/icons-react';
+import { IconArrowLeft, IconMessageCirclePlus, IconPlus, IconRefresh } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Button, Center, em, Flex, Group, Stack } from "@mantine/core";
+import { ActionIcon, Box, Button, Center, em, Flex, Group, Stack, Skeleton, Card } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Container } from "@mantine/core";
-import { Text, Card } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Progress } from "@mantine/core";
 import { Document, Generation, Message } from "@/types";
@@ -22,6 +22,21 @@ import { getChats } from "@/utils/queries/get-chats";
 import { getMessages } from "@/utils/queries/get-messages";
 import { getDocument } from "pdfjs-dist";
 import { ClassLayout } from "@/components/Class/ClassLayout";
+
+// Add the skeleton component
+function ChatSkeleton() {
+    return (
+        <Card withBorder>
+            <Group align="flex-start">
+                <Skeleton height={150} width={150} radius="md" />
+                <Stack gap="xs">
+                    <Skeleton height={24} width={200} />
+                    <Skeleton height={16} width={150} />
+                </Stack>
+            </Group>
+        </Card>
+    );
+}
 
 export default function ChatPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -161,7 +176,6 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         return "/placeholder_image.svg";
     }
 
-
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -172,44 +186,54 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                         </Group>
                         <Group>
                             <Link href={`/classes/c/${classId}/chat/new`}>
-                                <Button>New Chat</Button>
+                                <Button leftSection={<IconMessageCirclePlus />}>New Chat</Button>
                             </Link>
                         </Group>
                     </Flex>
 
                     <Stack>
-                        {(chats && classData) && chats.length > 0 && chats
-                            .sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime())
-                            .map((chat) => {
-                                const messagesForChat = messages?.filter(message => message.chat === chat.id) ?? [];
-                                const references = messagesForChat.map(message => getReferences(message) ?? []).flat()
-                                const context = references?.[0]
-                                return (
-                                    <Link
-                                        href={`/classes/c/${classId}/chat/${chat.id}`}
-                                        key={chat.id}
-                                        style={{ textDecoration: 'none' }}
-                                    >
-                                        <Card withBorder>
-                                            <Group align="flex-start">
-                                                <Image
-                                                    src={getActiveImage(context)}
-                                                    alt={`Chat context`}
-                                                    width={150}
-                                                    height={150}
-                                                    style={{ objectFit: "contain", borderRadius: "10px" }}
-                                                />
-                                                <Stack gap="xs">
-                                                    <Text size="lg" fw={500}>{chat.name}</Text>
-                                                    <Text size="sm" c="dimmed">
-                                                        Created {new Date(chat.created_at ?? "").toLocaleDateString()}
-                                                    </Text>
-                                                </Stack>
-                                            </Group>
-                                        </Card>
-                                    </Link>
-                                );
-                        })}
+                        {loadingChats || loadingMessages || loadingMessagesReferences ? (
+                            <>
+                                <ChatSkeleton />
+                                <ChatSkeleton />
+                                <ChatSkeleton />
+                            </>
+                        ) : (chats && classData) && chats.length > 0 ? (
+                            chats
+                                .sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime())
+                                .map((chat) => {
+                                    const messagesForChat = messages?.filter(message => message.chat === chat.id) ?? [];
+                                    const references = messagesForChat.map(message => getReferences(message) ?? []).flat()
+                                    const context = references?.[0]
+                                    return (
+                                        <Link
+                                            href={`/classes/c/${classId}/chat/${chat.id}`}
+                                            key={chat.id}
+                                            style={{ textDecoration: 'none' }}
+                                        >
+                                            <Card withBorder>
+                                                <Group align="flex-start">
+                                                    <Image
+                                                        src={getActiveImage(context)}
+                                                        alt={`Chat context`}
+                                                        width={150}
+                                                        height={150}
+                                                        style={{ objectFit: "contain", borderRadius: "10px" }}
+                                                    />
+                                                    <Stack gap="xs">
+                                                        <Text size="lg" fw={500}>{chat.name}</Text>
+                                                        <Text size="sm" c="dimmed">
+                                                            Created {new Date(chat.created_at ?? "").toLocaleDateString()}
+                                                        </Text>
+                                                    </Stack>
+                                                </Group>
+                                            </Card>
+                                        </Link>
+                                    );
+                                })
+                        ) : (
+                            <Text c="dimmed" ta="center">No chats found</Text>
+                        )}
                     </Stack>
                 </Stack>
             </Container>

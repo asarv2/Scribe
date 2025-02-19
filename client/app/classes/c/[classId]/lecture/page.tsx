@@ -16,7 +16,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname } from "next/navigation";
 import { IconArrowLeft, IconArrowRight, IconUpload, IconRefresh } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Button, em, Group, Loader, Stack, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Box, Button, em, Group, Loader, Stack, useMantineColorScheme, Skeleton, Card } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -25,7 +25,7 @@ import { Container } from "@mantine/core";
 import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getLectures } from "@/utils/queries/get-lectures";
-import { Text, Card } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import { createLecture } from "@/utils/services/lecture";
@@ -36,6 +36,22 @@ import { createLectureDocument, createTextbookDocument } from "@/utils/services/
 import { createTextbook } from "@/utils/services/textbook";
 import { calculateResizedDimensions } from "@/utils/services/resize";
 import { ClassLayout } from "@/components/Class/ClassLayout";
+import { getProfile } from "@/utils/queries/get-profile";
+
+// Add this component for the skeleton
+function LectureSkeleton() {
+    return (
+        <Card withBorder>
+            <Group align="flex-start">
+                <Skeleton height={150} width={150} radius="md" />
+                <Stack gap="xs">
+                    <Skeleton height={24} width={200} />
+                    <Skeleton height={16} width={150} />
+                </Stack>
+            </Group>
+        </Card>
+    );
+}
 
 export default function LecturePage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -47,6 +63,19 @@ export default function LecturePage({ params }: { params: { classId: string } })
     const { colorScheme } = useMantineColorScheme();
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase)
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user?.id ?? ""),
+        enabled: !!user
+    })
+
+    const showUpload = profile?.professor || profile?.admin;
 
     const { data: classData, isLoading: loadingClassData } = useQuery({
         queryKey: ["class", classId],
@@ -815,7 +844,9 @@ export default function LecturePage({ params }: { params: { classId: string } })
                             <Text size="xl" fw={700} mb={6} pl={4}>Lectures</Text>
                         </Group>
                         <Group>
-                            <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Lectures</Button>
+                            {showUpload && (
+                                <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Lectures</Button>
+                            )}
                             <FileInput
                                 ref={fileInputRef}
                                 placeholder="Upload PDFs"
@@ -829,11 +860,77 @@ export default function LecturePage({ params }: { params: { classId: string } })
                     </Flex>
 
                     <Stack>
-                        {(lectures && documents && classData) && lectures.length > 0 && lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
-                            if (lecture.parse_status !== "complete") {
+                        {loadingLectures || loadingDocuments ? (
+                            <>
+                                <LectureSkeleton />
+                                <LectureSkeleton />
+                                <LectureSkeleton />
+                            </>
+                        ) : (lectures && documents && classData) && lectures.length > 0 ? (
+                            lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
+                                if (lecture.parse_status !== "complete") {
+                                    return (
+                                        <Card withBorder key={lecture.id}>
+                                            <Group align="flex-start" justify="space-between">
+                                                <Group align="flex-start">
+                                                    <Image
+                                                        src={getDocumentImage(lecture.id)}
+                                                        alt={`First page of ${lecture.name}`}
+                                                        width={150}
+                                                        height={150}
+                                                        style={{ objectFit: "contain", borderRadius: "10px" }}
+                                                    />
+                                                    <Stack gap="xs">
+                                                        <Text size="lg" fw={500}>{lecture.name}</Text>
+                                                        <Text size="sm" c="dimmed">
+                                                            {lecture.parse_status === 'parsing' ? 'Parsing...' :
+                                                                lecture.parse_status === 'error' ? 'Parse failed' :
+                                                                    lecture.parse_status === 'idle' ? 'Waiting to parse' :
+                                                                        'Could not find any topics.'}
+                                                        </Text>
+                                                        {lecture.parse_error && (
+                                                            <Text size="sm" c="red">
+                                                                Error: {lecture.parse_error}
+                                                            </Text>
+                                                        )}
+                                                        <Progress
+                                                            value={getProgress(lecture.id, lecture.parse_status !== 'parsing')}
+                                                            size="sm"
+                                                            color="blue"
+                                                            animated={lecture.parse_status === 'parsing'}
+                                                            striped={lecture.parse_status === 'parsing'}
+                                                        />
+                                                        {(lecture.parse_status === 'parsing') && (
+                                                            <Text size="sm" c="dimmed">
+                                                                Estimated time remaining: ~{getEstimatedTime(lecture.id, lecture.parse_status !== 'parsing')} seconds
+                                                            </Text>
+                                                        )}
+                                                    </Stack>
+                                                </Group>
+                                                <Button
+                                                    variant="light"
+                                                    color="blue"
+                                                    onClick={() => handleRetry(classId, lecture)}
+                                                    leftSection={<IconRefresh size={16} />}
+                                                    disabled={lecture.parse_status === 'parsing' || lecture.parse_status === 'idle'}
+                                                    loading={parsingLectures.has(lecture.id)}
+                                                >
+                                                    {parsingLectures.has(lecture.id) ? 'Retrying...' :
+                                                        lecture.parse_status === 'parsing' ? 'Parsing...' :
+                                                            lecture.parse_status === 'error' ? 'Retry' :
+                                                                'Processing...'}
+                                                </Button>
+                                            </Group>
+                                        </Card>
+                                    )
+                                }
                                 return (
-                                    <Card withBorder key={lecture.id}>
-                                        <Group align="flex-start" justify="space-between">
+                                    <Link
+                                        href={`/classes/c/${classId}/lecture/${lecture.id}`}
+                                        key={lecture.id}
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        <Card withBorder>
                                             <Group align="flex-start">
                                                 <Image
                                                     src={getDocumentImage(lecture.id)}
@@ -845,73 +942,17 @@ export default function LecturePage({ params }: { params: { classId: string } })
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{lecture.name}</Text>
                                                     <Text size="sm" c="dimmed">
-                                                        {lecture.parse_status === 'parsing' ? 'Parsing...' :
-                                                            lecture.parse_status === 'error' ? 'Parse failed' :
-                                                                lecture.parse_status === 'idle' ? 'Waiting to parse' :
-                                                                    'Could not find any topics.'}
+                                                        Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
                                                     </Text>
-                                                    {lecture.parse_error && (
-                                                        <Text size="sm" c="red">
-                                                            Error: {lecture.parse_error}
-                                                        </Text>
-                                                    )}
-                                                    <Progress
-                                                        value={getProgress(lecture.id, lecture.parse_status !== 'parsing')}
-                                                        size="sm"
-                                                        color="blue"
-                                                        animated={lecture.parse_status === 'parsing'}
-                                                        striped={lecture.parse_status === 'parsing'}
-                                                    />
-                                                    {(lecture.parse_status === 'parsing') && (
-                                                        <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{getEstimatedTime(lecture.id, lecture.parse_status !== 'parsing')} seconds
-                                                        </Text>
-                                                    )}
                                                 </Stack>
                                             </Group>
-                                            <Button
-                                                variant="light"
-                                                color="blue"
-                                                onClick={() => handleRetry(classId, lecture)}
-                                                leftSection={<IconRefresh size={16} />}
-                                                disabled={lecture.parse_status === 'parsing' || lecture.parse_status === 'idle'}
-                                                loading={parsingLectures.has(lecture.id)}
-                                            >
-                                                {parsingLectures.has(lecture.id) ? 'Retrying...' :
-                                                    lecture.parse_status === 'parsing' ? 'Parsing...' :
-                                                        lecture.parse_status === 'error' ? 'Retry' :
-                                                            'Processing...'}
-                                            </Button>
-                                        </Group>
-                                    </Card>
-                                )
-                            }
-                            return (
-                                <Link
-                                    href={`/classes/c/${classId}/lecture/${lecture.id}`}
-                                    key={lecture.id}
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    <Card withBorder>
-                                        <Group align="flex-start">
-                                            <Image
-                                                src={getDocumentImage(lecture.id)}
-                                                alt={`First page of ${lecture.name}`}
-                                                width={150}
-                                                height={150}
-                                                style={{ objectFit: "contain", borderRadius: "10px" }}
-                                            />
-                                            <Stack gap="xs">
-                                                <Text size="lg" fw={500}>{lecture.name}</Text>
-                                                <Text size="sm" c="dimmed">
-                                                    Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
-                                                </Text>
-                                            </Stack>
-                                        </Group>
-                                    </Card>
-                                </Link>
-                            );
-                        })}
+                                        </Card>
+                                    </Link>
+                                );
+                            })
+                        ) : (
+                            <Text c="dimmed" ta="center">No lectures found</Text>
+                        )}
                     </Stack>
                 </Stack>
             </Container>

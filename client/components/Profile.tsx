@@ -29,6 +29,7 @@ import { logout, updatePassword } from "@/utils/services/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
+import { getAvatarUrl } from "@/utils/services/images";
 
 type ProfileProps = {
     user: User;
@@ -100,12 +101,7 @@ export function ProfilePage({
                         message: 'Password updated successfully',
                         color: 'green'
                     })
-                    queryClient.invalidateQueries({
-                        queryKey: ["user"]
-                    })
-                    queryClient.invalidateQueries({
-                        queryKey: ["profile", user.id]
-                    })
+                    queryClient.clear();
                     router.push("/login")
                 }
             }
@@ -133,12 +129,7 @@ export function ProfilePage({
                     message: 'Logged out',
                     color: 'green'
                 })
-                queryClient.invalidateQueries({
-                    queryKey: ["user"]
-                })
-                queryClient.invalidateQueries({
-                    queryKey: ["profile", user.id]
-                })
+                queryClient.clear();
                 router.push("/login")
             }
         } catch (error: any) {
@@ -150,10 +141,6 @@ export function ProfilePage({
         } finally {
             setLoading(false);
         }
-    }
-
-    const getAvatarUrl = (profile: Profile) => {
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/profiles/${profile.id}.png`
     }
 
     return (
@@ -177,9 +164,9 @@ export function ProfilePage({
                     </ActionIcon>
                 )}
             </Group>
-            <Stack>
+            <Stack gap="xl">
                 <Group justify="center" style={{ width: '100%' }}>
-                    <Stack align="center">
+                    <Stack align="center" gap="md">
                         <Dropzone
                             openRef={openRef}
                             onDrop={handleDrop}
@@ -194,7 +181,7 @@ export function ProfilePage({
                             }}
                         >
                             <Avatar
-                                src={getAvatarUrl(profile)}
+                                src={getAvatarUrl(profile.id)}
                                 size={120}
                                 radius={120}
                                 style={{
@@ -216,7 +203,7 @@ export function ProfilePage({
                     </Stack>
                 </Group>
 
-                <Stack>
+                <Stack gap="md">
                     <Title order={4}>
                         {profile?.first_name} {profile?.last_name}
                     </Title>
@@ -225,7 +212,7 @@ export function ProfilePage({
                     </Text>
                 </Stack>
 
-                <Paper withBorder p="md" radius="md">
+                <Paper withBorder p="xl" radius="md">
                     <Stack>
                         <Text size="sm" fw={500}>Account Details</Text>
                         <Text size="sm">
@@ -241,8 +228,8 @@ export function ProfilePage({
                 </Paper>
 
                 {user.email && (
-                    <Paper withBorder p="md" radius="md">
-                        <Stack>
+                    <Paper withBorder p="xl" radius="md">
+                        <Stack gap="md">
                             <Text size="sm" fw={500}>Change Password</Text>
                             <Text size="xs" color="dimmed">You will be logged out upon updating your password.</Text>
                             <PasswordInput
@@ -274,6 +261,7 @@ export function ProfilePage({
                     color="red"
                     onClick={handleLogout}
                     loading={loading}
+                    mt="md"
                 >
                     Logout
                 </Button>

@@ -17,12 +17,12 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname } from "next/navigation";
 import { IconArrowLeft, IconArrowRight, IconUpload, IconRefresh } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Button, em, Group, Loader, Stack, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Box, Button, em, Group, Loader, Stack, useMantineColorScheme, Skeleton, Card } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
-import { Text, Card } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { FileInput, Progress } from "@mantine/core";
 import * as pdfjs from 'pdfjs-dist';
@@ -33,6 +33,7 @@ import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
 import { createTextbookDocument } from "@/utils/services/document";
 import { calculateResizedDimensions } from "@/utils/services/resize";
 import { ClassLayout } from "@/components/Class/ClassLayout";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export default function TextbookPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
@@ -44,6 +45,19 @@ export default function TextbookPage({ params }: { params: { classId: string } }
     const { colorScheme } = useMantineColorScheme();
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user?.id ?? ""),
+        enabled: !!user
+    })
+
+    const showUpload = profile?.professor || profile?.admin;
 
     const { data: classData, isLoading: loadingClassData } = useQuery({
         queryKey: ["class", classId],
@@ -59,11 +73,6 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         queryKey: ["textbookDocuments", classId],
         queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
         enabled: !!textbooks
-    })
-
-    const { data: user, isLoading: loadingUser } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase),
     })
 
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -588,6 +597,22 @@ export default function TextbookPage({ params }: { params: { classId: string } }
         };
     }, [classId, supabase, textbooks, queryClient]);
 
+    // Add the skeleton component
+    function TextbookSkeleton() {
+        return (
+            <Card withBorder>
+                <Group align="flex-start">
+                    <Skeleton height={150} width={150} radius="md" />
+                    <Stack gap="xs">
+                        <Skeleton height={24} width={200} />
+                        <Skeleton height={16} width={150} />
+                        <Skeleton height={8} width={300} radius="xl" />
+                    </Stack>
+                </Group>
+            </Card>
+        );
+    }
+
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -600,7 +625,9 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                             <Text size="xl" fw={700} mb={6} pl={4}>Textbooks</Text>
                         </Group>
                         <Group>
-                            <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Textbook</Button>
+                            {showUpload && (
+                                <Button onClick={() => fileInputRef.current?.click()} leftSection={<IconUpload size={14} />}>Upload Textbook</Button>
+                            )}
                             <FileInput
                                 ref={fileInputRef}
                                 placeholder="Upload PDFs"
@@ -614,11 +641,77 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                     </Flex>
 
                     <Stack>
-                        {(textbooks && classData) && textbooks.length > 0 && textbooks.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((textbook) => {
-                            if (textbook.parse_status !== "complete") {
+                        {loadingTextbooks || loadingDocuments ? (
+                            <>
+                                <TextbookSkeleton />
+                                <TextbookSkeleton />
+                                <TextbookSkeleton />
+                            </>
+                        ) : (textbooks && documents && classData) && textbooks.length > 0 ? (
+                            textbooks.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((textbook) => {
+                                if (textbook.parse_status !== "complete") {
+                                    return (
+                                        <Card withBorder key={textbook.id}>
+                                            <Group align="flex-start" justify="space-between">
+                                                <Group align="flex-start">
+                                                    <Image
+                                                        src={getDocumentImage(textbook.id)}
+                                                        alt={`First page of ${textbook.title}`}
+                                                        width={150}
+                                                        height={150}
+                                                        style={{ objectFit: "contain", borderRadius: "10px" }}
+                                                    />
+                                                    <Stack gap="xs">
+                                                        <Text size="lg" fw={500}>{textbook.title}</Text>
+                                                        <Text size="sm" c="dimmed">
+                                                            {textbook.parse_status === 'parsing' ? 'Parsing...' :
+                                                                textbook.parse_status === 'error' ? 'Parse failed' : 
+                                                                textbook.parse_status === 'idle' ? 'Waiting to parse' : 
+                                                                'Could not find any topics.'}
+                                                        </Text>
+                                                        {textbook.parse_error && (
+                                                            <Text size="sm" c="red">
+                                                                Error: {textbook.parse_error}
+                                                            </Text>
+                                                        )}
+                                                        <Progress
+                                                            value={getProgress(textbook.id, textbook.parse_status !== 'parsing')}
+                                                            size="sm"
+                                                            color="blue"
+                                                            animated={textbook.parse_status === 'parsing'}
+                                                            striped={textbook.parse_status === 'parsing'}
+                                                        />
+                                                        {(textbook.parse_status === 'parsing') && (
+                                                            <Text size="sm" c="dimmed">
+                                                                Estimated time remaining: ~{getEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds
+                                                            </Text>
+                                                        )}
+                                                    </Stack>
+                                                </Group>
+                                                <Button
+                                                    variant="light"
+                                                    color="blue"
+                                                    onClick={() => handleRetry(classId, textbook)}
+                                                    leftSection={<IconRefresh size={16} />}
+                                                    disabled={textbook.parse_status === 'parsing' || textbook.parse_status === 'idle'}
+                                                    loading={parsingTextbooks.has(textbook.id)}
+                                                >
+                                                    {parsingTextbooks.has(textbook.id) ? 'Retrying...' :
+                                                        textbook.parse_status === 'parsing' ? 'Parsing...' :
+                                                        textbook.parse_status === 'error' ? 'Retry Parse' :
+                                                        'Processing...'}
+                                                </Button>
+                                            </Group>
+                                        </Card>
+                                    )
+                                }
                                 return (
-                                    <Card withBorder key={textbook.id}>
-                                        <Group align="flex-start" justify="space-between">
+                                    <Link
+                                        href={`/classes/c/${classId}/textbook/${textbook.id}`}
+                                        key={textbook.id}
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        <Card withBorder>
                                             <Group align="flex-start">
                                                 <Image
                                                     src={getDocumentImage(textbook.id)}
@@ -630,73 +723,17 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                                                 <Stack gap="xs">
                                                     <Text size="lg" fw={500}>{textbook.title}</Text>
                                                     <Text size="sm" c="dimmed">
-                                                        {textbook.parse_status === 'parsing' ? 'Parsing...' :
-                                                            textbook.parse_status === 'error' ? 'Parse failed' : 
-                                                            textbook.parse_status === 'idle' ? 'Waiting to parse' : 
-                                                            'Could not find any topics.'}
+                                                        Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
                                                     </Text>
-                                                    {textbook.parse_error && (
-                                                        <Text size="sm" c="red">
-                                                            Error: {textbook.parse_error}
-                                                        </Text>
-                                                    )}
-                                                    <Progress
-                                                        value={getProgress(textbook.id, textbook.parse_status !== 'parsing')}
-                                                        size="sm"
-                                                        color="blue"
-                                                        animated={textbook.parse_status === 'parsing'}
-                                                        striped={textbook.parse_status === 'parsing'}
-                                                    />
-                                                    {(textbook.parse_status === 'parsing') && (
-                                                        <Text size="sm" c="dimmed">
-                                                            Estimated time remaining: ~{getEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds
-                                                        </Text>
-                                                    )}
                                                 </Stack>
                                             </Group>
-                                            <Button
-                                                variant="light"
-                                                color="blue"
-                                                onClick={() => handleRetry(classId, textbook)}
-                                                leftSection={<IconRefresh size={16} />}
-                                                disabled={textbook.parse_status === 'parsing' || textbook.parse_status === 'idle'}
-                                                loading={parsingTextbooks.has(textbook.id)}
-                                            >
-                                                {parsingTextbooks.has(textbook.id) ? 'Retrying...' :
-                                                    textbook.parse_status === 'parsing' ? 'Parsing...' :
-                                                    textbook.parse_status === 'error' ? 'Retry Parse' :
-                                                    'Processing...'}
-                                            </Button>
-                                        </Group>
-                                    </Card>
-                                )
-                            }
-                            return (
-                                <Link
-                                    href={`/classes/c/${classId}/textbook/${textbook.id}`}
-                                    key={textbook.id}
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    <Card withBorder>
-                                        <Group align="flex-start">
-                                            <Image
-                                                src={getDocumentImage(textbook.id)}
-                                                alt={`First page of ${textbook.title}`}
-                                                width={150}
-                                                height={150}
-                                                style={{ objectFit: "contain", borderRadius: "10px" }}
-                                            />
-                                            <Stack gap="xs">
-                                                <Text size="lg" fw={500}>{textbook.title}</Text>
-                                                <Text size="sm" c="dimmed">
-                                                    Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
-                                                </Text>
-                                            </Stack>
-                                        </Group>
-                                    </Card>
-                                </Link>
-                            );
-                        })}
+                                        </Card>
+                                    </Link>
+                                );
+                            })
+                        ) : (
+                            <Text c="dimmed" ta="center">No textbooks found</Text>
+                        )}
                     </Stack>
                 </Stack>
             </Container>

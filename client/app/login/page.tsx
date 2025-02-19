@@ -14,7 +14,7 @@ import { login } from "@/utils/services/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GeneralLayout } from "@/components/General/GeneralLayout";
+import { HomeLayout } from "@/components/Home/HomeLayout";
 
 export default function Login() {
 
@@ -45,7 +45,7 @@ export default function Login() {
                 queryClient.invalidateQueries({
                     queryKey: ["user"]
                 })
-                router.push("/")
+                router.push("/classes")
             }
 
             notifications.show({
@@ -68,7 +68,7 @@ export default function Login() {
 
 
     return (
-        <GeneralLayout>
+        <HomeLayout>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Center>
                     <Stack>
@@ -83,6 +83,6 @@ export default function Login() {
                     </Stack>
                 </Center>
             </Container>
-        </GeneralLayout>
+        </HomeLayout>
     )
 }
