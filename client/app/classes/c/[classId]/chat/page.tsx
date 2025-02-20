@@ -182,13 +182,13 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Text size="xl" fw={700} mb={6} pl={4}>Chats</Text>
+                            <Text size="xl" fw={700} mb={6} pl={4}>History</Text>
                         </Group>
-                        <Group>
+                        {/* <Group>
                             <Link href={`/classes/c/${classId}/chat/new`}>
                                 <Button leftSection={<IconMessageCirclePlus />}>New Chat</Button>
                             </Link>
-                        </Group>
+                        </Group> */}
                     </Flex>
 
                     <Stack>

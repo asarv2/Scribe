@@ -5,18 +5,13 @@
  * 02/20/2025
  */
 
-import { IconHome, IconBook, IconFileDescription, IconSettings, IconMessage } from '@tabler/icons-react';
+import { IconHome, IconBook, IconFileDescription, IconSettings, IconMessage, IconHistory } from '@tabler/icons-react';
 
 export const menuConfig = {
   home: {
     label: 'Home',
     icon: IconHome,
     link: '',
-  },
-  chat: {
-    label: 'Chat',
-    icon: IconMessage,
-    link: '/chat/new',
   },
   content: {
     label: 'Content',
@@ -27,14 +22,24 @@ export const menuConfig = {
       { link: '/homework', label: 'Homework' },
     ]
   },
-  settings: {
-    label: 'Settings',
-    icon: IconSettings,
-    links: [
-      { link: '/settings', label: 'General' },
-      { link: '/prompt', label: 'Prompts' },
-    ]
-  }
+  chat: {
+    label: 'Chat',
+    icon: IconMessage,
+    link: '/chat/new',
+  },
+  history: {
+    label: 'History',
+    icon: IconHistory,
+    link: '/chat',
+  },
+//   settings: {
+//     label: 'Settings',
+//     icon: IconSettings,
+//     links: [
+//       { link: '/settings', label: 'General' },
+//       { link: '/prompt', label: 'Prompts' },
+//     ]
+//   }
 } as const;
 
 export type MenuSection = keyof typeof menuConfig;

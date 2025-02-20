@@ -3,7 +3,7 @@ from app.services.base_processor import BaseProcessor, Message
 import re
 from datetime import datetime
 import os
-from app.extensions import MESSAGES_DIR
+from app.extensions import MESSAGES_DIR, UPLOAD_FOLDER
 from app.extensions import supabase
 class ChatMessage(TypedDict):
     id: str
@@ -11,6 +11,7 @@ class ChatMessage(TypedDict):
     response: str
     references: List[str]
     title: Optional[str]
+    figures: List[str]
 
 class ChatProcessor(BaseProcessor):
     def __init__(
@@ -95,7 +96,8 @@ class ChatProcessor(BaseProcessor):
                 "7. If the student asks for more detail, **expand gradually** instead of dumping too much information at once.\n"
                 "8. **Only use knowledge from the provided course materials**. Do not make up or assume information.\n"
                 "9. To provide the student with visualization for the concepts, use LaTeX formatting to display equations, diagrams, and graphs.\n"
-                "10. Use <TITLE>x</TITLE> tags to start your response with the summary title of the content that is relevant to the student's question, where x is the title. Only include the title tag if it is the first response you are giving to the student. If you see previous responses, do not include the title tag. For example, if the student asks about the concept of recursion in Python code, you should use the following tag: <TITLE>Recursion in Python Code</TITLE>. You should only enclose the title in the title tag, not anywhere else in your response.\n\n"
+                "10. Use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
+                "11. Use <TITLE>x</TITLE> tags to start your response with the summary title of the content that is relevant to the student's question, where x is the title. Only include the title tag if it is the first response you are giving to the student. If you see previous responses, do not include the title tag. For example, if the student asks about the concept of recursion in Python code, you should use the following tag: <TITLE>Recursion in Python Code</TITLE>. You should only enclose the title in the title tag, not anywhere else in your response.\n\n"
                 "CRITICAL INSTRUCTIONS:\n\n"
                 "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. Moreover, if you use the textbook, use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags, where x is the textbook number and a, b, c are the page numbers. Put this at the end of your response.\n\n"
                 "For example, if you use the lecture 4, slides 12, 13, and 14, you should use the following tags:\n"
@@ -124,6 +126,7 @@ class ChatProcessor(BaseProcessor):
                 "Here is the current conversation context:\n"
                 f"{complete_context}\n\n"
                 "CRITICAL INSTRUCTIONS:\n\n"
+                "When you would like to show a chart, use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
                 "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. "
                 "Moreover, if you use the textbook, use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags, where x is the textbook number and a, b, c are the page numbers. "
                 "Put this at the end of your response.\n\n"
@@ -151,14 +154,7 @@ class ChatProcessor(BaseProcessor):
             # Add response to chat history
             self.chat_history.extend([self.current_question, response_text])
 
-            cleaned_result = self.clean_result(
-                response_text, 
-                all_lectures, 
-                all_textbooks, 
-                all_documents
-            )
-
-            yield cleaned_result
+            yield response_text
             
         except Exception as e:
             print(f"Error in process_message: {str(e)}")
@@ -171,58 +167,72 @@ class ChatProcessor(BaseProcessor):
         all_textbooks: List[Dict[str, Any]],
         all_documents: List[Dict[str, Any]],
     ) -> ChatMessage:
-        """Clean chat results and extract document references from tags."""
+        """Clean chat results and extract document references and code blocks from tags."""
         document_ids = []
+        figure_ids = []
         
         # Extract title if present
         title = None
         title_match = re.search(r'<TITLE>([^<]+)</TITLE>', result)
         if title_match:
             title = title_match.group(1).strip()
-            # Remove the entire title section (tags and content)
             result = re.sub(r'<TITLE>[^<]+</TITLE>', '', result)
 
+        # Extract and process code blocks
+        code_matches = re.finditer(r'<CODE>(.*?)</CODE>', result, re.DOTALL)
+        for code_match in code_matches:
+            code_block = code_match.group(1).strip()
+            try:
+                # Create a synchronous version for now
+                figure_id = self._execute_and_save_plot_sync(code_block)
+                if figure_id:
+                    figure_ids.append(figure_id)
+                    # Replace code block with figure reference
+                    result = result.replace(code_match.group(0), f'<FIGURE>{figure_id}</FIGURE>')
+            except Exception as e:
+                print(f"Error executing code block: {str(e)}")
+                # Remove the code block if execution fails
+                result = result.replace(code_match.group(0), '')
+
+        # Process lectures and insert document tags
         lecture_matches = re.finditer(r'<LECTURE ([^>]+)>((?:<SLIDE \d+>)+)</LECTURE>', result)
         for lecture_match in lecture_matches:
             lecture_number = lecture_match.group(1)
             slide_nums = [int(num) for num in re.findall(r'<SLIDE (\d+)>', lecture_match.group(2))]
-
             lecture_id = next((lecture['id'] for lecture in all_lectures if lecture['note_number'] == int(lecture_number)), None)
             
-            # Debug prints
-            print(f"Found lecture number: {lecture_number}")
-            print(f"Found slide numbers: {slide_nums}")
-            print(f"Found lecture ID: {lecture_id}")
             # Find matching documents
             matching_docs = [
                 doc['id'] for doc in all_documents
                 if doc.get('page') in slide_nums 
                 and doc.get('lecture') == lecture_id
             ]
-            print(f"Matching documents found: {matching_docs}")
             document_ids.extend(matching_docs)
+            
+            # Replace the lecture tag with document tags
+            document_tags = ''.join([f'<DOCUMENT>{doc_id}</DOCUMENT>' for doc_id in matching_docs])
+            result = result.replace(lecture_match.group(0), document_tags)
 
+        # Process textbooks and insert document tags
         textbook_matches = re.finditer(r'<TEXTBOOK ([^>]+)>((?:<PAGE \d+>)+)</TEXTBOOK>', result)
         for textbook_match in textbook_matches:
             textbook_number = textbook_match.group(1)
             page_nums = [int(num) for num in re.findall(r'<PAGE (\d+)>', textbook_match.group(2))]
-
             textbook_id = next((textbook['id'] for textbook in all_textbooks if textbook['textbook_number'] == int(textbook_number)), None)
-
-            # Debug prints
-            print(f"Found textbook number: {textbook_number}")
-            print(f"Found page numbers: {page_nums}")
-            print(f"Found textbook ID: {textbook_id}")
+            
             # Find matching documents
             matching_docs = [
                 doc['id'] for doc in all_documents
                 if doc.get('page') in page_nums 
                 and doc.get('textbook') == textbook_id
             ]
-            print(f"Matching documents found: {matching_docs}")
             document_ids.extend(matching_docs)
+            
+            # Replace the textbook tag with document tags
+            document_tags = ''.join([f'<DOCUMENT>{doc_id}</DOCUMENT>' for doc_id in matching_docs])
+            result = result.replace(textbook_match.group(0), document_tags)
         
-        # Remove all tags from the result (including TITLE tags)
+        # Remove any remaining lecture/textbook related tags
         cleaned_result = re.sub(r'<(LECTURE|TEXTBOOK|SLIDE|PAGE|TITLE)[^>]*>', '', result)
         cleaned_result = re.sub(r'</(LECTURE|TEXTBOOK|TITLE)>', '', cleaned_result)
         
@@ -231,8 +241,75 @@ class ChatProcessor(BaseProcessor):
             question=self.current_question,
             response=cleaned_result.strip(),
             references=list(set(document_ids)),
-            title=title  # Add the title to the response
+            title=title,
+            figures=figure_ids
         )
+
+    def _execute_and_save_plot_sync(self, code_block: str) -> Optional[str]:
+        """Synchronous version of plot generation and saving."""
+        import io
+        import os
+        import matplotlib.pyplot as plt
+        import numpy as np
+        
+        try:
+            # Clear any existing plots
+            plt.close('all')
+            
+            # Create namespace with pre-imported modules and ensure plt.figure is called
+            namespace = {
+                'plt': plt,
+                'np': np,
+                'figure': plt.figure(),  # Create a new figure explicitly
+            }
+            
+            # Set non-interactive backend before executing code
+            plt.switch_backend('Agg')
+            
+            # Execute the code
+            exec(code_block, namespace)
+            
+            # Get the current figure (the one we're working with)
+            current_fig = plt.gcf()
+            
+            # Verify the figure has actual content
+            if len(current_fig.axes) == 0 or not any(ax.lines or ax.collections or ax.patches or ax.images for ax in current_fig.axes):
+                print("Figure exists but has no plotted content")
+                return None
+            
+            # Save to buffer for Supabase
+            buffer = io.BytesIO()
+            current_fig.savefig(buffer, format='png', bbox_inches='tight', dpi=300)
+            
+            # Insert metadata and upload to Supabase
+            figure_data = {
+                'message': self.message_id,
+                'code': code_block,
+            }
+            
+            figure_id = supabase.table('figures').insert(figure_data).execute().data[0]['id']
+
+            # Save to local file system for debugging
+            local_path = os.path.join(UPLOAD_FOLDER, f"{figure_id}.png")
+            current_fig.savefig(local_path, format='png', bbox_inches='tight', dpi=300)
+            
+            # Clean up
+            plt.close('all')
+            
+            buffer.seek(0)
+            supabase.storage.from_('figures').upload(
+                f"{figure_id}.png",
+                buffer.getvalue(),
+                {'content-type': 'image/png'}
+            )
+
+            print(f"Figure saved locally at: {local_path}")
+            return figure_id
+
+        except Exception as e:
+            print(f"Error in _execute_and_save_plot_sync: {str(e)}")
+            plt.close('all')  # Ensure cleanup even on error
+            return None
 
     def clear_chat_history(self, message_id: str) -> None:
         """Clear the chat history for a specific message ID"""

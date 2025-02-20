@@ -13,6 +13,10 @@ export const getCourseImageUrl = (classId: string) => {
     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/classes/home/${classId}.jpg`
 }
 
+export const getFigureUrl = (figureId: string) => {
+    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${figureId}.png`
+}
+
 
 
 
