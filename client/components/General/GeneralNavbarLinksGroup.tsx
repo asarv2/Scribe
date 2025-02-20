@@ -2,22 +2,26 @@ import { useState } from 'react';
 import { IconCalendarStats, IconChevronRight } from '@tabler/icons-react';
 import { Box, Collapse, Group, ThemeIcon, UnstyledButton } from '@mantine/core';
 import Link from 'next/link';
-import classes from './NavbarLinksGroup.module.css';
+import classes from './GeneralNavbarLinksGroup.module.css';
 import { usePathname } from 'next/navigation';
 
 interface LinksGroupProps {
   icon: React.FC<any>;
   label: string;
   link?: string;
-  initiallyOpened?: boolean;
+  opened: boolean;
   links?: { label: string; link: string }[];
+  onToggle?: () => void;
 }
 
-export function NavbarLinksGroup({ icon: Icon, label, initiallyOpened, links, link }: LinksGroupProps) {
+export function GeneralNavbarLinksGroup({ icon: Icon, label, opened, links, link, onToggle }: LinksGroupProps) {
   const hasLinks = Array.isArray(links);
-  const [opened, setOpened] = useState(initiallyOpened || false);
   const pathname = usePathname();
   
+  const handleClick = () => {
+    onToggle?.();
+  };
+
   const items = (hasLinks ? links : []).map((link) => (
     <Link
       href={link.link}
@@ -50,7 +54,7 @@ export function NavbarLinksGroup({ icon: Icon, label, initiallyOpened, links, li
 
   return (
     <>
-      <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
+      <UnstyledButton onClick={handleClick} className={classes.control}>
         <Group justify="space-between" gap={0}>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
             <ThemeIcon variant="light" size={30}>

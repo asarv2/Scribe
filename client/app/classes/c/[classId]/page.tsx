@@ -54,7 +54,7 @@ export default function Class({ params }: { params: { classId: string } }) {
 
     const { data: chats } = useQuery({
         queryKey: ["chats", classId, profile?.id],
-        queryFn: () => getChats(supabase, classId, (profile?.admin || profile?.professor) ? null : profile!.id),
+        queryFn: () => getChats(supabase, classId, profile!.id),
         enabled: !!profile
     })
 

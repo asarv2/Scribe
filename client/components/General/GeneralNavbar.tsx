@@ -19,7 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import classes from './GeneralNavbar.module.css';
 import { getClasses } from '@/utils/queries/get-classes';
-import { NavbarLinksGroup } from './NavbarLinksGroup';
+import { GeneralNavbarLinksGroup } from './GeneralNavbarLinksGroup';
 import { getUser } from '@/utils/queries/get-user';
 import { getProfile } from '@/utils/queries/get-profile';
 import { Profile } from '@/types';
@@ -55,7 +55,8 @@ export function GeneralNavbar() {
     const accountNavItem = useMemo(() => ({
         label: profile?.first_name + ' ' + profile?.last_name || 'Account',
         icon: () => <Avatar src={avatarUrl} size="sm" radius="xl" />,
-        link: '/account'
+        link: '/account',
+        opened: true
     }), [profile, avatarUrl]);
 
     // Generate navigation data structure
@@ -66,11 +67,11 @@ export function GeneralNavbar() {
         })) || [];
 
         return [
-            { label: 'Dashboard', icon: IconLayoutDashboard, link: '/classes' },
+            { label: 'Dashboard', icon: IconLayoutDashboard, link: '/classes', opened: true },
             {
                 label: 'Classes',
                 icon: IconBook,
-                initiallyOpened: true,
+                opened: true,
                 links: classLinks,
             },
             accountNavItem
@@ -78,7 +79,7 @@ export function GeneralNavbar() {
     };
 
     const links = generateNavData().map((item) => (
-        <NavbarLinksGroup {...item} key={item.label} />
+        <GeneralNavbarLinksGroup {...item} />
     ));
 
     // Add skeleton components

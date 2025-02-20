@@ -7,7 +7,7 @@
 
 import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, Loader, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { Container, Flex } from "@mantine/core";
+import { Container, Flex, Box } from "@mantine/core";
 import { IconArrowLeft, IconPlus, IconCopy, IconTrash, IconX, IconAlertCircle } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -40,6 +40,8 @@ import { ClassLayout } from "../Class/ClassLayout";
 import { getChapterExercises } from "@/utils/queries/get-chapter-exercises";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getAvatarUrl } from "@/utils/services/images";
+import LectureViewer from "../Viewer/LectureViewer";
+import TextbookViewer from '../Viewer/TextbookViewer';
 
 export interface ChatMessage {
     id: number;
@@ -458,7 +460,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
         try {
             setLoading(true);
-            let profileId = profile?.admin ? null : profile?.id;
+            let profileId = profile?.id;
             let newChatId = chatId;
 
             if (chatId === "new") {
@@ -477,6 +479,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             // Create the message
             const newMessage = {
                 chat: newChatId,
+                profile: profileId,
                 bare_question: activeChat.prompt + additionalContextForBareQuestion,
                 question: activeChat.prompt,
                 response_url: `${process.env.NEXT_PUBLIC_API_URL}`,
@@ -578,9 +581,17 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }));
     };
 
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     const renderContextBadges = (chat: ChatMessage) => {
-        return (
-            <Group>
+        // First render all active context badges
+        const activeBadges = (
+            <>
                 {chat.context.lectures.map(lectureId => {
                     const lecture = lectures?.find(l => l.id === lectureId);
                     return lecture && (
@@ -730,11 +741,79 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         </Badge>
                     );
                 })}
+            </>
+        );
 
+        // Then render all "Add X" badges
+        const addBadges = (
+            <>
+                {chat.context.lectures.length === 0 && lectures && lectures.length !== 0 && (
+                    <Badge 
+                        color="gray" 
+                        leftSection={<IconPlus size={12} />} 
+                        onClick={() => scrollToSection("lectures-section")} 
+                        style={{ cursor: "pointer" }}
+                    >
+                        Add Lectures
+                    </Badge>
+                )}
+                {chat.context.textbooks.length === 0 && textbooks && textbooks.length !== 0 && (
+                    <Badge 
+                        color="gray" 
+                        leftSection={<IconPlus size={12} />} 
+                        onClick={() => scrollToSection("textbooks-section")} 
+                        style={{ cursor: "pointer" }}
+                    >
+                        Add Textbooks
+                    </Badge>
+                )}
+                {chat.context.homework.length === 0 && homeworkData && homeworkData.length !== 0 && (
+                    <Badge 
+                        color="gray" 
+                        leftSection={<IconPlus size={12} />} 
+                        onClick={() => scrollToSection("homework-section")} 
+                        style={{ cursor: "pointer" }}
+                    >
+                        Add Homework
+                    </Badge>
+                )}
+            </>
+        );
+
+        return (
+            <Group>
+                {activeBadges}
+                {addBadges}
             </Group>
         );
     };
 
+    // Update viewer mode state to handle both types
+    const [viewerMode, setViewerMode] = useState<{
+        active: boolean;
+        documentId?: string;
+        lectureId?: string;
+        textbookId?: string;
+        chapterId?: string;
+    }>({
+        active: false
+    });
+
+    // Helper function to get viewer title
+    const getViewerTitle = () => {
+        if (viewerMode.lectureId) {
+            const lecture = lectures?.find(l => l.id === viewerMode.lectureId);
+            const document = lectureDocuments?.find(d => d.id === viewerMode.documentId);
+            return lecture ? `${lecture.name} (Page ${document?.page})` : "Lecture Viewer";
+        } else if (viewerMode.textbookId) {
+            const textbook = textbooks?.find(t => t.id === viewerMode.textbookId);
+            const document = textbookDocuments?.find(d => d.id === viewerMode.documentId);
+            return textbook ? `${textbook.title} (Page ${document?.page})` : "Textbook Viewer";
+        }
+        return "Document Viewer";
+    };
+
+    // Modify renderDocuments to handle both types
     const renderDocuments = (lectureDocuments: Document[], textbookDocuments: Document[], chatDocuments: string[]) => {
         // Add safety check
         if (!Array.isArray(lectureDocuments) || !Array.isArray(textbookDocuments)) {
@@ -795,16 +874,40 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             .slice(0, 3);
 
         return (
-            <Group>
+            <Group pt="sm">
                 {topDocs.map(doc => (
-                    <Link href={doc.lecture ? `/classes/c/${classId}/lecture/${doc.lecture}?page=${doc.page}` : `/classes/c/${classId}/textbook/${doc.textbook}/chapter/${doc.chapter}?page=${doc.page}`} key={doc.id}>
-                        <Badge key={doc.id}>
-                            {doc.lecture ?
-                                `${lectures?.find(l => l.id === doc.lecture)?.name} ${doc.pageRange}` :
-                                `${textbooks?.find(t => t.id === doc.textbook)?.title} ${doc.pageRange}`
+                    <Badge 
+                        key={doc.id}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                            if (doc.lecture) {
+                                setViewerMode({
+                                    active: true,
+                                    documentId: doc.id,
+                                    lectureId: doc.lecture,
+                                });
+                            } else if (doc.textbook) {
+                                const chapter = chapters?.find(c => 
+                                    doc.page >= c.start_page && 
+                                    doc.page <= c.end_page && 
+                                    c.textbook === doc.textbook
+                                );
+                                if (chapter) {
+                                    setViewerMode({
+                                        active: true,
+                                        documentId: doc.id,
+                                        textbookId: doc.textbook,
+                                        chapterId: chapter.id,
+                                    });
+                                }
                             }
-                        </Badge>
-                    </Link>
+                        }}
+                    >
+                        {doc.lecture ?
+                            `${lectures?.find(l => l.id === doc.lecture)?.name} ${doc.pageRange}` :
+                            `${textbooks?.find(t => t.id === doc.textbook)?.title} ${doc.pageRange}`
+                        }
+                    </Badge>
                 ))}
             </Group>
         );
@@ -816,13 +919,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            {/* <Link href={`/classes/${classId}/chat`}>
-                                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} />
-                            </Link> */}
                             <Text size="xl" fw={700} mb={6}>{existingChat ? existingChat.name : activeChat.title}</Text>
-                        </Group>
-                        <Group>
-                            {existingChat && <DeleteChatModal chatId={chatId} chatTitle={existingChat?.name ?? ""} profile={profile ?? undefined} classId={classId} />}
                         </Group>
                     </Flex>
                     <Grid>
@@ -841,62 +938,85 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     {messages?.map((message, index) => (
                                         <Stack key={`${message.id}`}>
                                             {/* User message */}
-                                            <Group align="flex-start" justify="flex-end">
-                                                <Card
-                                                    padding="sm"
-                                                    radius="md"
-                                                    style={{
-                                                        maxWidth: "70%",
-                                                        backgroundColor: "#228be6"
-                                                    }}
-                                                >
-                                                    <Text c="white"><Latex>{message.question}</Latex></Text>
-                                                </Card>
-                                                <Avatar
-                                                    src={profile ? getAvatarUrl(profile.id) : undefined}
-                                                    radius="xl"
-                                                    size="md"
-                                                    alt={`${profile?.first_name} ${profile?.last_name}`}
-                                                >
-                                                    {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
-                                                </Avatar>
-                                            </Group>
+                                            <Flex gap="md" justify="flex-end" align="flex-start">
+                                                <Stack gap="xs" align="flex-end">
+                                                    {/* User info container */}
+                                                    <Group gap="xs" align="center">
+                                                        <Text size="sm" c="dimmed">
+                                                            {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
+                                                        </Text>
+                                                        <Avatar
+                                                            src={profile ? getAvatarUrl(profile.id) : undefined}
+                                                            radius="xl"
+                                                            size="sm"
+                                                            alt={`${profile?.first_name} ${profile?.last_name}`}
+                                                        />
+                                                    </Group>
+
+                                                    {/* Message container */}
+                                                    <Card
+                                                        padding="sm"
+                                                        radius="md"
+                                                        style={{
+                                                            backgroundColor: "#228be6",
+                                                            maxWidth: "100%"
+                                                        }}
+                                                    >
+                                                        <Text c="white">
+                                                            <Latex>{message.question}</Latex>
+                                                        </Text>
+                                                    </Card>
+                                                </Stack>
+                                            </Flex>
 
                                             {/* AI response */}
-                                            <Group align="flex-start">
-                                                <Avatar
-                                                    src={professor ? getAvatarUrl(professor.id) : undefined}
-                                                    size="md"
-                                                    radius="xl"
-                                                    alt="AI Assistant"
-                                                />
-                                                <Card
-                                                    padding="sm"
-                                                    radius="md"
-                                                    style={{
-                                                        alignSelf: "flex-start",
-                                                        maxWidth: "70%",
-                                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                                                        minWidth: "200px",
-                                                        border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
-                                                    }}
-                                                >
-                                                    <Text>
-                                                        {message.generation_status === "idle" ?
-                                                            <Group>
-                                                                <Loader size="sm" />
-                                                                <Text>Generating response...</Text>
-                                                            </Group>
-                                                            : message.generation_status === "error" ?
+                                            <Flex gap="md" align="flex-start">
+                                                <Stack gap="xs" align="flex-start">
+                                                    {/* AI info container */}
+                                                    <Group gap="xs" align="center">
+                                                        <Avatar
+                                                            src={professor ? getAvatarUrl(professor.id) : undefined}
+                                                            size="sm"
+                                                            radius="xl"
+                                                            alt="AI Assistant"
+                                                        />
+                                                        <Text size="sm" c="dimmed">
+                                                            {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                                                        </Text>
+                                                    </Group>
+
+                                                    {/* Message container */}
+                                                    <Card
+                                                        padding="sm"
+                                                        radius="md"
+                                                        style={{
+                                                            backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                                            minWidth: "200px",
+                                                            maxWidth: "100%",
+                                                            border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                                                        }}
+                                                    >
+                                                        <Text>
+                                                            {message.generation_status === "idle" ? (
+                                                                <Group>
+                                                                    <Loader size="sm" />
+                                                                    <Text>Generating response...</Text>
+                                                                </Group>
+                                                            ) : message.generation_status === "error" ? (
                                                                 <Group>
                                                                     <IconAlertCircle size={16} />
-                                                                    <Text>{message.generation_error === null || message.generation_error === undefined || message.generation_error === "" ? "An error occurred while generating the response. Please try again." : message.generation_error}</Text>
+                                                                    <Text>
+                                                                        {message.generation_error === null ||
+                                                                            message.generation_error === undefined ||
+                                                                            message.generation_error === ""
+                                                                            ? "An error occurred while generating the response. Please try again."
+                                                                            : message.generation_error}
+                                                                    </Text>
                                                                 </Group>
-                                                                : (
-                                                                    <Latex>
-                                                                        {message.response}
-                                                                    </Latex>
-                                                                )}
+                                                            ) : (
+                                                                <Latex>{message.response}</Latex>
+                                                            )}
+                                                        </Text>
                                                         {message.references && lectureDocuments && textbookDocuments &&
                                                             renderDocuments(
                                                                 lectureDocuments ?? [],
@@ -904,58 +1024,102 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                                                 message.references
                                                             )
                                                         }
-                                                    </Text>
-                                                </Card>
-                                            </Group>
+                                                    </Card>
+                                                </Stack>
+                                            </Flex>
                                         </Stack>
-                                    )
-                                    )}
+                                    ))}
                                     <div ref={messagesEndRef} />
                                 </Stack>
 
-                                {/* Context Badges */}
-                                <Card p="xs" withBorder mb="sm">
-                                    <Group>
-                                        <Text fw={600}>Context: </Text>
-                                        {renderContextBadges(activeChat)}
-                                    </Group>
-                                </Card>
+                                <Stack>
+                                    {/* Context Badges */}
+                                    {renderContextBadges(activeChat)}
 
-                                {/* Input Area */}
-                                <Group align="flex-end">
-                                    <TextInput
-                                        placeholder="Type your message..."
-                                        value={activeChat.prompt}
-                                        onChange={(e) => setActiveChat({ ...activeChat, prompt: e.currentTarget.value })}
-                                        style={{ flex: 1 }}
-                                        onKeyPress={(e) => {
-                                            if (e.key === 'Enter' && !e.shiftKey) {
-                                                e.preventDefault();
-                                                handleChat();
-                                            }
-                                        }}
-                                    />
-                                    <Button onClick={handleChat} loading={loading}>
-                                        Send
-                                    </Button>
-                                </Group>
+                                    {/* Input Area */}
+                                    <Group align="flex-end" style={{ width: '100%' }}>
+                                        <Textarea
+                                            placeholder="Type your message..."
+                                            value={activeChat.prompt}
+                                            onChange={(e) => setActiveChat({ ...activeChat, prompt: e.currentTarget.value })}
+                                            minRows={1}
+                                            maxRows={5}
+                                            autosize
+                                            style={{ flex: 1 }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    if (!e.shiftKey) {
+                                                        e.preventDefault();
+                                                        handleChat();
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <Button onClick={handleChat} loading={loading}>
+                                            Send
+                                        </Button>
+                                    </Group>
+                                </Stack>
                             </Card>
                         </Grid.Col>
 
-                        {/* Context Panel */}
+                        {/* Context Panel or Document Viewer */}
                         <Grid.Col span={isMobile ? 12 : 4}>
-                            <ContextPanel
-                                classId={classId}
-                                isMobile={isMobile ?? false}
-                                searchQuery={searchQuery}
-                                setSearchQuery={setSearchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                expandedNodes={expandedNodes}
-                                toggleNode={toggleNode}
-                                activeChat={activeChat}
-                            />
+                            {viewerMode.active ? (
+                                <Card 
+                                    shadow="sm" 
+                                    padding="lg" 
+                                    radius="md" 
+                                    withBorder 
+                                    style={{ height: "80vh" }}
+                                >
+                                    <Stack style={{ height: "100%" }}>
+                                        <Group justify="space-between">
+                                            <Text size="lg" fw={700}>{getViewerTitle()}</Text>
+                                            <ActionIcon 
+                                                onClick={() => setViewerMode({ active: false })}
+                                                variant="subtle"
+                                            >
+                                                <IconX size={20} />
+                                            </ActionIcon>
+                                        </Group>
+                                        <Box style={{ flex: 1, overflow: 'hidden' }}>
+                                            {viewerMode.lectureId ? (
+                                                <LectureViewer 
+                                                    key={`${viewerMode.lectureId}-${viewerMode.documentId}`}
+                                                    classId={classId}
+                                                    lectureId={viewerMode.lectureId}
+                                                    initialDocumentId={viewerMode.documentId}
+                                                    embedded={true}
+                                                />
+                                            ) : viewerMode.textbookId && viewerMode.chapterId ? (
+                                                <TextbookViewer
+                                                    key={`${viewerMode.textbookId}-${viewerMode.documentId}`}
+                                                    classId={classId}
+                                                    textbookId={viewerMode.textbookId}
+                                                    chapterId={viewerMode.chapterId}
+                                                    initialDocumentId={viewerMode.documentId}
+                                                    embedded={true}
+                                                />
+                                            ) : null}
+                                        </Box>
+                                    </Stack>
+                                </Card>
+                            ) : (
+                                <ContextPanel
+                                    classId={classId}
+                                    isMobile={isMobile ?? false}
+                                    searchQuery={searchQuery}
+                                    setSearchQuery={setSearchQuery}
+                                    expandedSections={expandedSections}
+                                    toggleSection={toggleSection}
+                                    addContextToChat={addContextToChat}
+                                    expandedNodes={expandedNodes}
+                                    toggleNode={toggleNode}
+                                    activeChat={activeChat}
+                                    scrollToSection={scrollToSection}
+                                />
+                            )}
                         </Grid.Col>
                     </Grid>
                 </Stack>

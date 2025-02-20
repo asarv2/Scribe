@@ -37,7 +37,7 @@ async def handle_message(request: ChatRequest):
 
         # Get class info
         class_response = supabase.table("classes").select(
-            "title, course_description, map"
+            "title, course_description"
         ).eq("id", class_id).single().execute()
         class_title = class_response.data.get('title')
 

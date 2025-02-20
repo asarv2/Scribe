@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start All",
+            "dependsOn": ["Start Server", "Start Client", "Start Ngrok"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Server",
+            "type": "shell",
+            "command": "cd server/app && python main.py",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Client",
+            "type": "shell",
+            "command": "cd client && yarn run dev",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Ngrok",
+            "type": "shell",
+            "command": "ngrok http 8000 > ngrok.log 2>&1 & sleep 3 && NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url') && sed -i '' \"s|NEXT_PUBLIC_API_URL=.*|NEXT_PUBLIC_API_URL=\\\"$NGROK_URL\\\"|\" client/.env && echo \"Updated .env with new ngrok URL: $NGROK_URL\"",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

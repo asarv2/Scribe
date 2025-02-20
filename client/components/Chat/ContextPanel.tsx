@@ -25,6 +25,7 @@ interface ContextPanelProps {
     expandedNodes: Set<string>;
     toggleNode: (nodeId: string) => void;
     activeChat: ChatMessage;
+    scrollToSection: (sectionId: string) => void;
 }
 
 export function ContextPanel({
@@ -37,7 +38,8 @@ export function ContextPanel({
     addContextToChat,
     expandedNodes,
     toggleNode,
-    activeChat
+    activeChat,
+    scrollToSection
 }: ContextPanelProps) {
     const { colorScheme } = useMantineColorScheme();
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
@@ -54,13 +56,6 @@ export function ContextPanel({
         return () => clearTimeout(timeoutId);
     }, [localSearchQuery, setSearchQuery]);
 
-    const scrollToSection = (sectionId: string) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
     return (
         <Stack>
             <TextInput
@@ -75,7 +70,7 @@ export function ContextPanel({
                     }
                 })}
             />
-            <Group>
+            {/* <Group>
                 <Tooltip label="Jump to Lectures">
                     <ActionIcon
                         variant="subtle"
@@ -103,7 +98,7 @@ export function ContextPanel({
                         <IconFile size={20} />
                     </ActionIcon>
                 </Tooltip>
-            </Group>
+            </Group> */}
 
             <ScrollArea.Autosize mah={isMobile ? 400 : "calc(100vh - 250px)"}>
                 <Stack gap="xs">

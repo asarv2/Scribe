@@ -96,12 +96,11 @@ export type Database = {
           brightspace_course_id: number | null
           class_code: string | null
           course_description: string | null
-          course_image: string
           course_link: string | null
           created_at: string | null
           deleted: boolean
           id: string
-          map: string | null
+          menu: string[]
           title: string | null
         }
         Insert: {
@@ -110,12 +109,11 @@ export type Database = {
           brightspace_course_id?: number | null
           class_code?: string | null
           course_description?: string | null
-          course_image?: string
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
           id?: string
-          map?: string | null
+          menu?: string[]
           title?: string | null
         }
         Update: {
@@ -124,12 +122,11 @@ export type Database = {
           brightspace_course_id?: number | null
           class_code?: string | null
           course_description?: string | null
-          course_image?: string
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
           id?: string
-          map?: string | null
+          menu?: string[]
           title?: string | null
         }
         Relationships: []
@@ -373,94 +370,6 @@ export type Database = {
           },
         ]
       }
-      evaluations: {
-        Row: {
-          accuracy: number
-          accuracy_explanation: string
-          adherence: number
-          adherence_explanation: string
-          certainty: number
-          certainty_explanation: string
-          clarity: number
-          clarity_explanation: string
-          complexity: number
-          complexity_explanation: string
-          created_at: string
-          generation: string | null
-          id: string
-          latency: number
-          latex_compiles: boolean
-          lecture: string | null
-          novelty: number
-          novelty_explanation: string
-          textbook: string | null
-        }
-        Insert: {
-          accuracy?: number
-          accuracy_explanation?: string
-          adherence?: number
-          adherence_explanation?: string
-          certainty?: number
-          certainty_explanation?: string
-          clarity?: number
-          clarity_explanation?: string
-          complexity?: number
-          complexity_explanation?: string
-          created_at?: string
-          generation?: string | null
-          id?: string
-          latency?: number
-          latex_compiles?: boolean
-          lecture?: string | null
-          novelty?: number
-          novelty_explanation?: string
-          textbook?: string | null
-        }
-        Update: {
-          accuracy?: number
-          accuracy_explanation?: string
-          adherence?: number
-          adherence_explanation?: string
-          certainty?: number
-          certainty_explanation?: string
-          clarity?: number
-          clarity_explanation?: string
-          complexity?: number
-          complexity_explanation?: string
-          created_at?: string
-          generation?: string | null
-          id?: string
-          latency?: number
-          latex_compiles?: boolean
-          lecture?: string | null
-          novelty?: number
-          novelty_explanation?: string
-          textbook?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "evaluations_generation_fkey"
-            columns: ["generation"]
-            isOneToOne: false
-            referencedRelation: "generations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evaluations_lecture_fkey"
-            columns: ["lecture"]
-            isOneToOne: false
-            referencedRelation: "lectures"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evaluations_textbook_fkey"
-            columns: ["textbook"]
-            isOneToOne: false
-            referencedRelation: "textbooks"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       exercises: {
         Row: {
           chapter: string
@@ -525,93 +434,6 @@ export type Database = {
           positive?: string
         }
         Relationships: []
-      }
-      generations: {
-        Row: {
-          additional_info: string
-          base_generation_id: string | null
-          class: string
-          conceptual: boolean
-          created_at: string
-          deleted: boolean
-          generation_error: string | null
-          generation_status: Database["prod"]["Enums"]["generation_status"]
-          id: string
-          last_generation_attempt: string | null
-          lectures: string[]
-          mcq: boolean
-          name: string
-          num_questions: number
-          profile: string | null
-          progress: number
-          response_url: string
-          single: boolean
-          topics: string[]
-          type: Database["prod"]["Enums"]["generation_type"]
-          version: number
-        }
-        Insert: {
-          additional_info?: string
-          base_generation_id?: string | null
-          class: string
-          conceptual?: boolean
-          created_at?: string
-          deleted?: boolean
-          generation_error?: string | null
-          generation_status?: Database["prod"]["Enums"]["generation_status"]
-          id?: string
-          last_generation_attempt?: string | null
-          lectures?: string[]
-          mcq?: boolean
-          name?: string
-          num_questions?: number
-          profile?: string | null
-          progress?: number
-          response_url?: string
-          single?: boolean
-          topics?: string[]
-          type?: Database["prod"]["Enums"]["generation_type"]
-          version?: number
-        }
-        Update: {
-          additional_info?: string
-          base_generation_id?: string | null
-          class?: string
-          conceptual?: boolean
-          created_at?: string
-          deleted?: boolean
-          generation_error?: string | null
-          generation_status?: Database["prod"]["Enums"]["generation_status"]
-          id?: string
-          last_generation_attempt?: string | null
-          lectures?: string[]
-          mcq?: boolean
-          name?: string
-          num_questions?: number
-          profile?: string | null
-          progress?: number
-          response_url?: string
-          single?: boolean
-          topics?: string[]
-          type?: Database["prod"]["Enums"]["generation_type"]
-          version?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "generations_base_generation_id_fkey"
-            columns: ["base_generation_id"]
-            isOneToOne: false
-            referencedRelation: "generations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "generations_class_fkey"
-            columns: ["class"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       homeworks: {
         Row: {
@@ -733,12 +555,12 @@ export type Database = {
           created_at: string
           documents: string[]
           exercises: string[]
-          generation: string | null
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
           last_generation_attempt: string | null
           problems: string[]
+          profile: string | null
           question: string
           references: string[]
           response: string
@@ -751,12 +573,12 @@ export type Database = {
           created_at?: string
           documents?: string[]
           exercises?: string[]
-          generation?: string | null
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
           last_generation_attempt?: string | null
           problems?: string[]
+          profile?: string | null
           question?: string
           references?: string[]
           response?: string
@@ -769,12 +591,12 @@ export type Database = {
           created_at?: string
           documents?: string[]
           exercises?: string[]
-          generation?: string | null
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
           last_generation_attempt?: string | null
           problems?: string[]
+          profile?: string | null
           question?: string
           references?: string[]
           response?: string
@@ -786,13 +608,6 @@ export type Database = {
             columns: ["chat"]
             isOneToOne: false
             referencedRelation: "chats"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_generation_fkey"
-            columns: ["generation"]
-            isOneToOne: false
-            referencedRelation: "generations"
             referencedColumns: ["id"]
           },
         ]

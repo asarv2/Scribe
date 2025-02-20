@@ -13,7 +13,7 @@ import { Container } from "@mantine/core";
 import { Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Progress } from "@mantine/core";
-import { Document, Generation, Message } from "@/types";
+import { Chat, Document, Message } from "@/types";
 import { getDocuments } from "@/utils/queries/get-documents";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import Image from "next/image";
@@ -64,7 +64,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
 
     const { data: chats, isLoading: loadingChats } = useQuery({
         queryKey: ["chats", classId, profile?.id],
-        queryFn: () => getChats(supabase, classId, (profile?.admin || profile?.professor) ? null : profile!.id),
+        queryFn: () => getChats(supabase, classId, profile!.id),
         enabled: !!profile
     })
 
@@ -83,30 +83,30 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
     // Realtime subscription for generations
     useEffect(() => {
         const channel = supabase
-            .channel(`realtime-chat-generations-${classId}`)
+            .channel(`realtime-chats-${classId}`)
             .on(
                 'postgres_changes',
                 {
                     event: '*',
                     schema: 'prod',
-                    table: 'generations',
+                    table: 'chats',
                     filter: `class=eq.${classId}`
                 },
                 (payload) => {
                     console.log("Received realtime payload:", payload);
                     if (payload.eventType === 'INSERT') {
-                        const newGeneration = payload.new as Generation;
+                        const newChat = payload.new as Chat;
                         queryClient.setQueryData(
-                            ["chatGenerations", classId], 
-                            (oldData: Generation[] = []) => [...oldData, newGeneration]
+                            ["chats", classId, profile?.id], 
+                            (oldData: Chat[] = []) => [...oldData, newChat]
                         );
                     } else if (payload.eventType === 'UPDATE') {
-                        const updatedGeneration = payload.new as Generation;
+                        const updatedChat = payload.new as Chat;
                         queryClient.setQueryData(
-                            ["chatGenerations", classId], 
-                            (oldData: Generation[] = []) => 
-                                oldData?.map(generation =>
-                                    generation.id === updatedGeneration.id ? updatedGeneration : generation
+                            ["chats", classId, profile?.id], 
+                            (oldData: Chat[] = []) => 
+                                oldData?.map(chat =>
+                                    chat.id === updatedChat.id ? updatedChat : chat
                                 ) || []
                         );
                     }

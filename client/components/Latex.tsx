@@ -31,6 +31,14 @@ export default function Latex({ children }: { children: string }) {
                     margin: 1.25em 0;
                 }
 
+                .latex-container > :first-child {
+                    margin-top: 0;
+                }
+
+                .latex-container > :last-child {
+                    margin-bottom: 0;
+                }
+
                 .prose-h1 {
                     margin: 2em 0 1em;
                     font-size: 2em;
