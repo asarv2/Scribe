@@ -1,4 +1,4 @@
-import { Generation, TypedSupabaseClient } from "../../types";
+import { TypedSupabaseClient } from "../../types";
 
 export async function getMessages(client: TypedSupabaseClient, chatIds: string[]) {
     const { data, error } = await client
