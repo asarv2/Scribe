@@ -55,6 +55,7 @@ export type Database = {
           id: string
           name: string
           profile: string | null
+          type: Database["prod"]["Enums"]["chat_type"]
         }
         Insert: {
           class: string
@@ -63,6 +64,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          type?: Database["prod"]["Enums"]["chat_type"]
         }
         Update: {
           class?: string
@@ -71,6 +73,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          type?: Database["prod"]["Enums"]["chat_type"]
         }
         Relationships: [
           {
@@ -100,6 +103,7 @@ export type Database = {
           created_at: string | null
           deleted: boolean
           id: string
+          map: string | null
           menu: string[]
           title: string | null
         }
@@ -113,6 +117,7 @@ export type Database = {
           created_at?: string | null
           deleted?: boolean
           id?: string
+          map?: string | null
           menu?: string[]
           title?: string | null
         }
@@ -126,6 +131,7 @@ export type Database = {
           created_at?: string | null
           deleted?: boolean
           id?: string
+          map?: string | null
           menu?: string[]
           title?: string | null
         }
@@ -434,6 +440,35 @@ export type Database = {
           positive?: string
         }
         Relationships: []
+      }
+      figures: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          message: string | null
+        }
+        Insert: {
+          code?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "figures_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       homeworks: {
         Row: {
@@ -798,6 +833,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      chat_type: "homework" | "summary" | "conceptual" | "review" | "general"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
       parse_status: "parsing" | "batching" | "complete" | "idle" | "error"

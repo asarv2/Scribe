@@ -8,7 +8,7 @@
 import { Text, Card, TextInput, Button, Stack, Group, Grid, AspectRatio, Badge, Switch, Modal, Textarea, ActionIcon, Loader, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex, Box } from "@mantine/core";
-import { IconArrowLeft, IconPlus, IconCopy, IconTrash, IconX, IconAlertCircle } from "@tabler/icons-react";
+import { IconArrowLeft, IconPlus, IconCopy, IconTrash, IconX, IconAlertCircle, IconDragDrop } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ import { ContextPanel } from "./ContextPanel";
 import { notifications } from "@mantine/notifications";
 import { createMessages } from "@/utils/services/messages";
 import { getUser } from "@/utils/queries/get-user";
-import { Chapter, Document, Message, Profile } from "@/types";
+import { Chapter, ChatMessage, ChatType, Document, Message, Profile, Subchapter } from "@/types";
 import { getProfile } from "@/utils/queries/get-profile";
 import Latex from "../Latex";
 import { getSubchapters } from "@/utils/queries/get-subchapters";
@@ -43,21 +43,7 @@ import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
 import LectureViewer from "../Viewer/LectureViewer";
 import TextbookViewer from '../Viewer/TextbookViewer';
 import Image from "next/image";
-
-export interface ChatMessage {
-    id: number;
-    title: string
-    prompt: string;
-    context: {
-        lectures: string[];     // lecture IDs
-        textbooks: string[];   // textbook IDs
-        chapters: string[];    // chapter IDs
-        subchapters: string[]; // subchapter IDs
-        exercises: string[];   // exercise IDs
-        homework: string[];   // homework IDs
-        problems: string[];   // problem IDs
-    };
-}
+import { Droppable, DragDropContext, DropResult, Draggable, DragStart } from "@hello-pangea/dnd";
 
 // Add this function before the ChatCanvas component
 const filterCodeBlocks = (text: string): string => {
@@ -278,8 +264,82 @@ const splitTextByFigures = (text: string): { text: string; figureId: string | nu
     return result;
 };
 
+// Add this helper function near the other helper functions
+const handleContextClick = (
+    contextType: string,
+    contextId: string,
+    documents: Document[],
+    chapters: Chapter[] | undefined,
+    subchapters: Subchapter[] | undefined,
+    setViewerMode: Function
+) => {
+    // For lectures, find the first associated document
+    if (contextType === 'lectures') {
+        const doc = documents.find(d => d.lecture === contextId);
+        if (doc) {
+            setViewerMode({
+                active: true,
+                documentId: doc.id,
+                lectureId: doc.lecture,
+            });
+            return;
+        }
+    }
+
+    // For textbooks, chapters, subchapters
+    if (['textbooks', 'chapters', 'subchapters'].includes(contextType)) {
+        let textbookId = contextId;
+        let chapterId = contextId;
+
+        if (contextType === 'chapters' || contextType === 'subchapters') {
+            const chapter = chapters?.find(c => c.id === (
+                contextType === 'chapters' ? contextId :
+                    subchapters?.find(s => s.id === contextId)?.chapter
+            ));
+            if (chapter) {
+                textbookId = chapter.textbook;
+                chapterId = chapter.id;
+            }
+        }
+
+        // Find the first document for this textbook/chapter
+        const doc = documents.find(d => d.textbook === textbookId);
+        if (doc) {
+            setViewerMode({
+                active: true,
+                documentId: doc.id,
+                textbookId: textbookId,
+                chapterId: chapterId,
+            });
+            return;
+        }
+    }
+
+    // For homework and problems, default to textbook viewer if possible
+    if (['homework', 'problems', 'exercises'].includes(contextType)) {
+        const doc = documents.find(d => d.textbook);
+        if (doc && chapters) {
+            const chapter = chapters.find(c =>
+                doc.page >= c.start_page &&
+                doc.page <= c.end_page &&
+                c.textbook === doc.textbook
+            );
+            if (chapter) {
+                setViewerMode({
+                    active: true,
+                    documentId: doc.id,
+                    textbookId: doc.textbook,
+                    chapterId: chapter.id,
+                });
+            }
+        }
+    }
+};
+
 export default function ChatCanvas({ classId, chatId }: { classId: string, chatId: string }) {
     const supabase = useSupabaseBrowser();
+    const [showButtons, setShowButtons] = useState(true);
+    const [welcomeMessages, setWelcomeMessages] = useState({ followUp: false });
 
     const [activeChat, setActiveChat] = useState<ChatMessage>({
         id: 1,
@@ -291,16 +351,17 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             chapters: [],
             subchapters: [],
             exercises: [],
-            homework: [],
+            homeworks: [],
             problems: [],
-        }
+        },
+        chatType: 'general'
     });
     const [loading, setLoading] = useState(false);
 
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
-    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures', 'textbooks', 'homework']));
+    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures', 'textbooks', 'homeworks', 'chapters', 'subchapters', 'exercises', 'problems', 'homeworks']));
 
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -570,7 +631,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }) ?? [];
         const homeworkDocs = textbookDocuments?.filter(document => {
             const homework = homeworkData?.find(h => h.id === document.homework);
-            return homework && activeChat.context.homework.includes(homework.id);
+            return homework && activeChat.context.homeworks.includes(homework.id);
         }) ?? [];
         const problemDocs = textbookDocuments?.filter(document => {
             const homework = homeworkData?.find(h => h.id === document.homework);
@@ -650,7 +711,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         });
 
         // Add homework context
-        activeChat.context.homework.forEach(homeworkId => {
+        activeChat.context.homeworks.forEach(homeworkId => {
             const homework = homeworkData?.find(h => h.id === homeworkId);
             if (homework) {
                 contextParts.push(`Homework: ${homework.title}`);
@@ -675,6 +736,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         return '';
     };
 
+    const handleOptionClick = (type: ChatType) => {
+        setActiveChat(prev => ({ ...prev, chatType: type }));
+        setWelcomeMessages({ followUp: true });
+    };
+
     const handleChat = async () => {
         if (!activeChat.prompt.trim()) return;
 
@@ -684,11 +750,12 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             let newChatId = chatId;
 
             if (chatId === "new") {
-                // Create new generation
+                // Create new generation with type
                 const chat = await createChat(
                     classId,
                     activeChat.title,
-                    profileId
+                    profileId,
+                    activeChat.chatType
                 );
                 newChatId = chat.id;
                 router.replace(`/classes/c/${classId}/chat/${chat.id}`);
@@ -738,7 +805,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     chapters: [],
                     exercises: [],
                     subchapters: [],
-                    homework: [],
+                    homeworks: [],
                     problems: []
                 }
             });
@@ -788,6 +855,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 [contextType]: [...prev.context[contextType], contextId]
             }
         }));
+        setIsDragging(false);
+        setDraggedItem(null);
     };
 
     // Remove context from chat
@@ -809,7 +878,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     };
 
     const renderContextBadges = (chat: ChatMessage) => {
-        // First render all active context badges
+        const allDocuments = [...(lectureDocuments ?? []), ...(textbookDocuments ?? [])];
+
         const activeBadges = (
             <>
                 {chat.context.lectures.map(lectureId => {
@@ -818,6 +888,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         <Badge
                             key={lectureId}
                             color="blue"
+                            style={{ cursor: 'pointer' }}
                             rightSection={
                                 <IconX
                                     size={14}
@@ -828,6 +899,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     }}
                                 />
                             }
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
+                                    handleContextClick('lectures', lectureId, allDocuments, chapters, subchapters, setViewerMode);
+                                }
+                            }}
                         >
                             {lecture.name}
                         </Badge>
@@ -839,6 +915,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         <Badge
                             key={textbookId}
                             color="green"
+                            style={{ cursor: 'pointer' }}
                             rightSection={
                                 <IconX
                                     size={14}
@@ -849,6 +926,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     }}
                                 />
                             }
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
+                                    handleContextClick('textbooks', textbookId, allDocuments, chapters, subchapters, setViewerMode);
+                                }
+                            }}
                         >
                             {textbook.title}
                         </Badge>
@@ -860,6 +942,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         <Badge
                             key={chapterId}
                             color="orange"
+                            style={{ cursor: 'pointer' }}
                             rightSection={
                                 <IconX
                                     size={14}
@@ -870,6 +953,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     }}
                                 />
                             }
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
+                                    handleContextClick('chapters', chapterId, allDocuments, chapters, subchapters, setViewerMode);
+                                }
+                            }}
                         >
                             {`Chapter ${chapter.chapter_number}: ${chapter.title}`}
                         </Badge>
@@ -882,6 +970,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         <Badge
                             key={exerciseId}
                             color="cyan"
+                            style={{ cursor: 'pointer' }}
                             rightSection={
                                 <IconX
                                     size={14}
@@ -892,6 +981,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     }}
                                 />
                             }
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
+                                    handleContextClick('exercises', exerciseId, allDocuments, chapters, subchapters, setViewerMode);
+                                }
+                            }}
                         >
                             {exercise.title !== "" ? exercise.title : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`}
                         </Badge>
@@ -903,6 +997,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         <Badge
                             key={subchapterId}
                             color="purple"
+                            style={{ cursor: 'pointer' }}
                             rightSection={
                                 <IconX
                                     size={14}
@@ -913,27 +1008,38 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     }}
                                 />
                             }
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
+                                    handleContextClick('subchapters', subchapterId, allDocuments, chapters, subchapters, setViewerMode);
+                                }
+                            }}
                         >
                             {`Subchapter ${subchapter.subchapter_number}: ${subchapter.title}`}
                         </Badge>
                     );
                 })}
-                {chat.context.homework.map(homeworkId => {
+                {chat.context.homeworks.map(homeworkId => {
                     const homework = homeworkData?.find(h => h.id === homeworkId);
                     return homework && (
                         <Badge
                             key={homeworkId}
                             color="orange"
+                            style={{ cursor: 'pointer' }}
                             rightSection={
                                 <IconX
                                     size={14}
                                     style={{ cursor: 'pointer' }}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        removeContextFromChat('homework', homeworkId);
+                                        removeContextFromChat('homeworks', homeworkId);
                                     }}
                                 />
                             }
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
+                                    handleContextClick('homeworks', homeworkId, allDocuments, chapters, subchapters, setViewerMode);
+                                }
+                            }}
                         >
                             {`${homework.title}`}
                         </Badge>
@@ -946,6 +1052,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         <Badge
                             key={problemId}
                             color="cyan"
+                            style={{ cursor: 'pointer' }}
                             rightSection={
                                 <IconX
                                     size={14}
@@ -956,6 +1063,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     }}
                                 />
                             }
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
+                                    handleContextClick('problems', problemId, allDocuments, chapters, subchapters, setViewerMode);
+                                }
+                            }}
                         >
                             {`${homework.title}: Problem ${problem.problem_number}`}
                         </Badge>
@@ -987,11 +1099,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                         Add Textbooks
                     </Badge>
                 )}
-                {chat.context.homework.length === 0 && homeworkData && homeworkData.length !== 0 && (
+                {chat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
                     <Badge
                         color="gray"
                         leftSection={<IconPlus size={12} />}
-                        onClick={() => scrollToSection("homework-section")}
+                        onClick={() => scrollToSection("homeworks-section")}
                         style={{ cursor: "pointer" }}
                     >
                         Add Homework
@@ -1023,352 +1135,461 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     const getViewerTitle = () => {
         if (viewerMode.lectureId) {
             const lecture = lectures?.find(l => l.id === viewerMode.lectureId);
-            const document = lectureDocuments?.find(d => d.id === viewerMode.documentId);
-            return lecture ? `${lecture.name} (Page ${document?.page})` : "Lecture Viewer";
+            return lecture ? `${lecture.name}` : "Lecture Viewer";
         } else if (viewerMode.textbookId) {
             const textbook = textbooks?.find(t => t.id === viewerMode.textbookId);
-            const document = textbookDocuments?.find(d => d.id === viewerMode.documentId);
-            return textbook ? `${textbook.title} (Page ${document?.page})` : "Textbook Viewer";
+            return textbook ? `${textbook.title}` : "Textbook Viewer";
         }
         return "Document Viewer";
     };
 
-    // Modify renderDocuments to handle both types
-    const renderDocuments = (lectureDocuments: Document[], textbookDocuments: Document[], chatDocuments: string[]) => {
-        // Add safety check
-        if (!Array.isArray(lectureDocuments) || !Array.isArray(textbookDocuments)) {
-            return null;
-        }
+    // Add new state to track dragging
+    const [isDragging, setIsDragging] = useState(false);
+    const [draggedItem, setDraggedItem] = useState<{ type: string, id: string } | null>(null);
 
-        const documents = [...lectureDocuments, ...textbookDocuments];
-        // Filter to only matching documents
-        const matchingDocs = documents.filter(doc => chatDocuments.includes(doc.id));
+    // Add useEffect to handle mouse events
+    useEffect(() => {
+        const handleEnd = (e: MouseEvent | TouchEvent) => {
+            if (isDragging && draggedItem) {
+                // Get the touch or mouse coordinates
+                const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
+                const clientY = 'touches' in e ? e.changedTouches[0].clientY : e.clientY;
 
-        // Group documents by source (lecture/textbook) and sort by page
-        const groupedDocs = matchingDocs.reduce((acc, doc) => {
-            const key = doc.lecture ?
-                `lecture-${doc.lecture}` :
-                `textbook-${doc.textbook}`;
+                const dropTarget = document.elementFromPoint(clientX, clientY);
+                const chatInterface = dropTarget?.closest('[data-droppable-id="chat-interface"]');
 
-            if (!acc[key]) acc[key] = [];
-            acc[key].push(doc);
-            return acc;
-        }, {} as Record<string, typeof documents>);
-
-        // Process each group to combine consecutive pages
-        const processedDocs = Object.entries(groupedDocs).flatMap(([key, docs]) => {
-            docs.sort((a, b) => a.page - b.page);
-
-            const ranges: { start: number; end: number; doc: any; }[] = [];
-            let current = { start: docs[0].page, end: docs[0].page, doc: docs[0] };
-
-            for (let i = 1; i < docs.length; i++) {
-                if (docs[i].page === current.end + 1) {
-                    current.end = docs[i].page;
-                } else {
-                    ranges.push({ ...current });
-                    current = { start: docs[i].page, end: docs[i].page, doc: docs[i] };
+                if (chatInterface) {
+                    addContextToChat(
+                        draggedItem.type as keyof ChatMessage['context'],
+                        draggedItem.id
+                    );
                 }
             }
-            ranges.push(current);
+        };
 
-            return ranges.map(range => ({
-                ...range.doc,
-                pageRange: range.start === range.end ?
-                    `p.${range.start}` :
-                    `pp.${range.start}-${range.end}`
-            }));
-        });
+        // Add both mouse and touch event listeners
+        document.addEventListener('mouseup', handleEnd);
+        document.addEventListener('touchend', handleEnd);
 
-        // Take only the 3 most important documents (prioritizing shorter page ranges)
-        const topDocs = processedDocs
-            .sort((a, b) => {
-                const aPages = a.pageRange.includes('-') ?
-                    Number(a.pageRange.split('-')[1]) - Number(a.pageRange.split('-')[0]) :
-                    0;
-                const bPages = b.pageRange.includes('-') ?
-                    Number(b.pageRange.split('-')[1]) - Number(b.pageRange.split('-')[0]) :
-                    0;
-                return aPages - bPages;
-            })
-            .slice(0, 3);
+        return () => {
+            document.removeEventListener('mouseup', handleEnd);
+            document.removeEventListener('touchend', handleEnd);
+        };
+    }, [isDragging, draggedItem]);
 
-        return (
-            <Group pt="sm">
-                {topDocs.map(doc => (
-                    <Badge
-                        key={doc.id}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                            if (doc.lecture) {
-                                setViewerMode({
-                                    active: true,
-                                    documentId: doc.id,
-                                    lectureId: doc.lecture,
-                                });
-                            } else if (doc.textbook) {
-                                const chapter = chapters?.find(c =>
-                                    doc.page >= c.start_page &&
-                                    doc.page <= c.end_page &&
-                                    c.textbook === doc.textbook
-                                );
-                                if (chapter) {
-                                    setViewerMode({
-                                        active: true,
-                                        documentId: doc.id,
-                                        textbookId: doc.textbook,
-                                        chapterId: chapter.id,
-                                    });
-                                }
-                            }
-                        }}
-                    >
-                        {doc.lecture ?
-                            `${lectures?.find(l => l.id === doc.lecture)?.name} ${doc.pageRange}` :
-                            `${textbooks?.find(t => t.id === doc.textbook)?.title} ${doc.pageRange}`
-                        }
-                    </Badge>
-                ))}
-            </Group>
-        );
+    // Modify your existing handleDragEnd to work with the new system
+    const handleDragStart = (initial: DragStart) => {
+        const [contextType, contextId] = initial.draggableId.split('*');
+        setIsDragging(true);
+        setDraggedItem({ type: contextType, id: contextId });
     };
 
     return (
         <ClassLayout classId={classId}>
-            <Container fluid style={{ marginTop: "30px" }}>
-                <Stack>
-                    <Flex justify="space-between" align="center">
-                        <Group>
-                            <Text size="xl" fw={700} mb={6}>{existingChat ? existingChat.name : activeChat.title}</Text>
-                        </Group>
-                    </Flex>
-                    <Grid>
-                        {/* Chat Section */}
-                        <Grid.Col span={isMobile ? 12 : 8}>
-                            <Card shadow="sm" padding="lg" radius="md" withBorder style={{ height: "80vh", display: "flex", flexDirection: "column" }}>
-                                {/* Messages Area */}
-                                <Stack
-                                    style={{
-                                        flex: 1,
-                                        overflowY: "auto",
-                                        marginBottom: "1rem",
-                                        maxHeight: "calc(80vh - 150px)"
-                                    }}
-                                >
-                                    {messages?.map((message, index) => (
-                                        <Stack key={`${message.id}`}>
-                                            {/* User message */}
-                                            <Flex gap="md" justify="flex-end" align="flex-start">
-                                                <Stack gap="xs" align="flex-end">
-                                                    {/* User info container */}
-                                                    <Group gap="xs" align="center">
-                                                        <Text size="sm" c="dimmed">
-                                                            {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
-                                                        </Text>
-                                                        <Avatar
-                                                            src={profile ? getAvatarUrl(profile.id) : undefined}
-                                                            radius="xl"
-                                                            size="sm"
-                                                            alt={`${profile?.first_name} ${profile?.last_name}`}
-                                                        />
-                                                    </Group>
+            <DragDropContext
+                onDragStart={handleDragStart}
+                onDragEnd={() => { }}
+            >
+                <Container fluid style={{ marginTop: "30px" }}>
+                    <Stack>
+                        <Flex justify="space-between" align="center">
+                            <Group>
+                                <Text size="xl" fw={700} mb={6}>{existingChat ? existingChat.name : activeChat.title}</Text>
+                                {existingChat?.type && existingChat.type !== 'general' && (
+                                    <Badge
+                                        color={
+                                            existingChat.type === 'homework' ? 'blue' :
+                                            existingChat.type === 'conceptual' ? 'cyan' :
+                                            existingChat.type === 'review' ? 'teal' :
+                                            existingChat.type === 'summary' ? 'violet' :
+                                                    'gray'
+                                        }
+                                    >
+                                        {existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
+                                    </Badge>
+                                )}
+                            </Group>
+                        </Flex>
 
-                                                    {/* Message container */}
-                                                    <Card
-                                                        padding="sm"
-                                                        radius="md"
-                                                        style={{
-                                                            backgroundColor: "#228be6",
-                                                            maxWidth: "100%"
-                                                        }}
-                                                    >
-                                                        <Text c="white">
-                                                            <Latex>{message.question}</Latex>
-                                                        </Text>
-                                                    </Card>
-                                                </Stack>
-                                            </Flex>
+                        <Droppable droppableId="chat-interface">
+                            {(provided, snapshot) => (
+                                <Grid>
+                                    {/* Chat Section */}
+                                    <Grid.Col span={isMobile ? 12 : 8}>
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                            data-droppable-id="chat-interface"
+                                            style={{
+                                                transition: 'background-color 0.2s ease',
+                                                backgroundColor: (isDragging && snapshot.isDraggingOver) ? 'rgba(51, 154, 240, 0.1)' : 'transparent',
+                                                borderRadius: '8px'
+                                            }}
+                                        >
+                                            <Card
+                                                shadow="sm"
+                                                padding="lg"
+                                                radius="md"
+                                                withBorder
+                                                style={{
+                                                    height: "80vh",
+                                                    transition: 'border-color 0.2s ease',
+                                                    borderColor: (isDragging && snapshot.isDraggingOver) ? '#339af0' : undefined
+                                                }}
+                                            >
+                                                {/* Messages Area */}
+                                                <Stack
+                                                    style={{
+                                                        flex: 1,
+                                                        overflowY: "auto",
+                                                        marginBottom: "1rem",
+                                                        maxHeight: "calc(80vh - 150px)"
+                                                    }}
+                                                >
+                                                    {/* Welcome Message */}
+                                                    {chatId === "new" && (
+                                                        <Flex gap="md" align="flex-start">
+                                                            <Stack gap="xs" align="flex-start">
+                                                                {/* AI info container */}
+                                                                <Group gap="xs" align="center">
+                                                                    <Avatar
+                                                                        src={professor ? getAvatarUrl(professor.id) : undefined}
+                                                                        size="sm"
+                                                                        radius="xl"
+                                                                        alt="AI Assistant"
+                                                                    />
+                                                                    <Text size="sm" c="dimmed">
+                                                                        {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                                                                    </Text>
+                                                                </Group>
 
-                                            {/* AI response */}
-                                            <Flex gap="md" align="flex-start">
-                                                <Stack gap="xs" align="flex-start">
-                                                    {/* AI info container */}
-                                                    <Group gap="xs" align="center">
-                                                        <Avatar
-                                                            src={professor ? getAvatarUrl(professor.id) : undefined}
-                                                            size="sm"
-                                                            radius="xl"
-                                                            alt="AI Assistant"
-                                                        />
-                                                        <Text size="sm" c="dimmed">
-                                                            {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                                                        </Text>
-                                                    </Group>
+                                                                {/* Message container */}
+                                                                <Card
+                                                                    padding="sm"
+                                                                    radius="md"
+                                                                    style={{
+                                                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                                                        minWidth: "200px",
+                                                                        maxWidth: "100%",
+                                                                        border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                                                                    }}
+                                                                >
+                                                                    <Stack gap="xs">
+                                                                        <Text c="dimmed">Hi {profile?.first_name || 'there'}, how can I assist you today?</Text>
+                                                                        <Group align="center" gap="xs">
+                                                                            <Button
+                                                                                variant="light"
+                                                                                color="blue"
+                                                                                onClick={() => handleOptionClick('homework')}
+                                                                            >
+                                                                                Homework Help
+                                                                            </Button>
+                                                                            <Button
+                                                                                variant="light"
+                                                                                color="cyan"
+                                                                                onClick={() => handleOptionClick('conceptual')}
+                                                                            >
+                                                                                Conceptual Understanding
+                                                                            </Button>
+                                                                            <Button
+                                                                                variant="light"
+                                                                                color="teal"
+                                                                                onClick={() => handleOptionClick('review')}
+                                                                            >
+                                                                                Content Review
+                                                                            </Button>
+                                                                            <Button
+                                                                                variant="light"
+                                                                                color="violet"
+                                                                                onClick={() => handleOptionClick('summary')}
+                                                                            >
+                                                                                Summary
+                                                                            </Button>
+                                                                        </Group>
+                                                                    </Stack>
+                                                                </Card>
+                                                            </Stack>
+                                                        </Flex>
+                                                    )}
 
-                                                    {/* Message container */}
-                                                    <Card
-                                                        padding="sm"
-                                                        radius="md"
-                                                        style={{
-                                                            backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                                                            minWidth: "200px",
-                                                            maxWidth: "100%",
-                                                            border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
-                                                        }}
-                                                    >
-                                                        <Stack gap="xs">
-                                                            {groupConsecutiveDocuments(
-                                                                splitTextByDocuments(
-                                                                    splitTextByFigures(filterCodeBlocks(message.response))
-                                                                        .map(segment => segment.figureId 
-                                                                            ? `<FIGURE>${segment.figureId}</FIGURE>` 
-                                                                            : segment.text)
-                                                                        .join('')
-                                                                ),
-                                                                [...(lectureDocuments ?? []), ...(textbookDocuments ?? [])]
-                                                            ).map((group, index) => (
-                                                                <Box key={index}>
-                                                                    {group.text && (
+                                                    {welcomeMessages.followUp && (
+                                                        <Flex gap="md" align="flex-start">
+                                                            <Stack gap="xs" align="flex-start">
+                                                                {/* AI info container */}
+                                                                <Group gap="xs" align="center">
+                                                                    <Avatar
+                                                                        src={professor ? getAvatarUrl(professor.id) : undefined}
+                                                                        size="sm"
+                                                                        radius="xl"
+                                                                        alt="AI Assistant"
+                                                                    />
+                                                                    <Text size="sm" c="dimmed">
+                                                                        {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                                                                    </Text>
+                                                                </Group>
+
+                                                                {/* Message container */}
+                                                                <Card
+                                                                    padding="sm"
+                                                                    radius="md"
+                                                                    style={{
+                                                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                                                        minWidth: "200px",
+                                                                        maxWidth: "100%",
+                                                                        border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                                                                    }}
+                                                                >
+                                                                    <Stack gap="xs">
+                                                                        <Text>
+                                                                            Sounds good! I can definitely help you with{' '}
+                                                                            {activeChat.chatType === 'homework' ? (
+                                                                                <Text span fw={600} c="blue">your homework</Text>
+                                                                            ) : activeChat.chatType === 'conceptual' ? (
+                                                                                <Text span fw={600} c="cyan">understanding concepts</Text>
+                                                                            ) : activeChat.chatType === 'review' ? (
+                                                                                <Text span fw={600} c="teal">reviewing the content</Text>
+                                                                            ) : (
+                                                                                <Text span fw={600} c="violet">creating a summary</Text>
+                                                                            )}. What specific {activeChat.chatType === 'homework' ? 'problem' :
+                                                                            activeChat.chatType === 'conceptual' ? 'topic' :
+                                                                            'material'} would you like to go over?
+                                                                        </Text>
+                                                                    </Stack>
+                                                                </Card>
+                                                            </Stack>
+                                                        </Flex>
+                                                    )}
+
+                                                    {messages?.map((message, index) => (
+                                                        <Stack key={`${message.id}`}>
+                                                            {/* User message */}
+                                                            <Flex gap="md" justify="flex-end" align="flex-start">
+                                                                <Stack gap="xs" align="flex-end">
+                                                                    {/* User info container */}
+                                                                    <Group gap="xs" align="center">
+                                                                        <Text size="sm" c="dimmed">
+                                                                            {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
+                                                                        </Text>
+                                                                        <Avatar
+                                                                            src={profile ? getAvatarUrl(profile.id) : undefined}
+                                                                            radius="xl"
+                                                                            size="sm"
+                                                                            alt={`${profile?.first_name} ${profile?.last_name}`}
+                                                                        />
+                                                                    </Group>
+
+                                                                    {/* Message container */}
+                                                                    <Card
+                                                                        padding="sm"
+                                                                        radius="md"
+                                                                        style={{
+                                                                            backgroundColor: "#228be6",
+                                                                            maxWidth: "100%"
+                                                                        }}
+                                                                    >
+                                                                        <Text c="white">
+                                                                            {message.question}
+                                                                        </Text>
+                                                                    </Card>
+                                                                </Stack>
+                                                            </Flex>
+
+                                                            {/* AI response */}
+                                                            <Flex gap="md" align="flex-start">
+                                                                <Stack gap="xs" align="flex-start">
+                                                                    {/* AI info container */}
+                                                                    <Group gap="xs" align="center">
+                                                                        <Avatar
+                                                                            src={professor ? getAvatarUrl(professor.id) : undefined}
+                                                                            size="sm"
+                                                                            radius="xl"
+                                                                            alt="AI Assistant"
+                                                                        />
+                                                                        <Text size="sm" c="dimmed">
+                                                                            {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                                                                        </Text>
+                                                                    </Group>
+
+                                                                    {/* Message container */}
+                                                                    <Card
+                                                                        padding="sm"
+                                                                        radius="md"
+                                                                        style={{
+                                                                            backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                                                            minWidth: "200px",
+                                                                            maxWidth: "100%",
+                                                                            border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                                                                        }}
+                                                                    >
                                                                         <Stack gap="xs">
-                                                                            {splitTextByFigures(group.text).map((segment, figIndex) => (
-                                                                                <Box key={figIndex}>
-                                                                                    {segment.text && <Latex>{segment.text}</Latex>}
-                                                                                    {segment.figureId && (
-                                                                                        <Box p="xl">
-                                                                                            <Image
-                                                                                                src={getFigureUrl(segment.figureId)}
-                                                                                                alt="Figure"
-                                                                                                width={800}
-                                                                                                height={600}
-                                                                                                style={{
-                                                                                                    width: '70%',
-                                                                                                    height: 'auto',
-                                                                                                    borderRadius: '10px'
-                                                                                                }}
-                                                                                                priority={false}
-                                                                                            />
-                                                                                        </Box>
+                                                                            {groupConsecutiveDocuments(
+                                                                                splitTextByDocuments(
+                                                                                    splitTextByFigures(filterCodeBlocks(message.response))
+                                                                                        .map(segment => segment.figureId
+                                                                                            ? `<FIGURE>${segment.figureId}</FIGURE>`
+                                                                                            : segment.text)
+                                                                                        .join('')
+                                                                                ),
+                                                                                [...(lectureDocuments ?? []), ...(textbookDocuments ?? [])]
+                                                                            ).map((group, index) => (
+                                                                                <Box key={index}>
+                                                                                    {group.text && (
+                                                                                        <Stack gap="xs">
+                                                                                            {splitTextByFigures(group.text).map((segment, figIndex) => (
+                                                                                                <Box key={figIndex}>
+                                                                                                    {segment.text && <Latex>{segment.text}</Latex>}
+                                                                                                    {segment.figureId && (
+                                                                                                        <Box p="xl">
+                                                                                                            <Image
+                                                                                                                src={getFigureUrl(segment.figureId)}
+                                                                                                                alt="Figure"
+                                                                                                                width={800}
+                                                                                                                height={600}
+                                                                                                                style={{
+                                                                                                                    width: '70%',
+                                                                                                                    height: 'auto',
+                                                                                                                    borderRadius: '10px'
+                                                                                                                }}
+                                                                                                                priority={false}
+                                                                                                            />
+                                                                                                        </Box>
+                                                                                                    )}
+                                                                                                </Box>
+                                                                                            ))}
+                                                                                        </Stack>
+                                                                                    )}
+                                                                                    {group.documents.length > 0 && (
+                                                                                        <Group gap="xs" pt={group.text ? "xs" : 0}>
+                                                                                            {group.documents.map((doc, docIndex) => (
+                                                                                                <Badge
+                                                                                                    key={docIndex}
+                                                                                                    style={{ cursor: 'pointer' }}
+                                                                                                    onClick={() => handleDocumentClick(doc, chapters ?? [], setViewerMode)}
+                                                                                                >
+                                                                                                    {getDocumentLabel(doc, lectures ?? [], textbooks ?? [])}
+                                                                                                </Badge>
+                                                                                            ))}
+                                                                                        </Group>
                                                                                     )}
                                                                                 </Box>
                                                                             ))}
                                                                         </Stack>
-                                                                    )}
-                                                                    {group.documents.length > 0 && (
-                                                                        <Group gap="xs" pt={group.text ? "xs" : 0}>
-                                                                            {group.documents.map((doc, docIndex) => (
-                                                                                <Badge
-                                                                                    key={docIndex}
-                                                                                    style={{ cursor: 'pointer' }}
-                                                                                    onClick={() => handleDocumentClick(doc, chapters ?? [], setViewerMode)}
-                                                                                >
-                                                                                    {getDocumentLabel(doc, lectures ?? [], textbooks ?? [])}
-                                                                                </Badge>
-                                                                            ))}
-                                                                        </Group>
-                                                                    )}
-                                                                </Box>
-                                                            ))}
+                                                                    </Card>
+                                                                </Stack>
+                                                            </Flex>
                                                         </Stack>
-                                                    </Card>
+                                                    ))}
+                                                    <div ref={messagesEndRef} />
                                                 </Stack>
-                                            </Flex>
-                                        </Stack>
-                                    ))}
-                                    <div ref={messagesEndRef} />
-                                </Stack>
 
-                                <Stack>
-                                    {/* Context Badges */}
-                                    {renderContextBadges(activeChat)}
+                                                <Stack>
+                                                    {/* Context Badges */}
+                                                    {renderContextBadges(activeChat)}
 
-                                    {/* Input Area */}
-                                    <Group align="flex-end" style={{ width: '100%' }}>
-                                        <Textarea
-                                            placeholder="Type your message..."
-                                            value={activeChat.prompt}
-                                            onChange={(e) => setActiveChat({ ...activeChat, prompt: e.currentTarget.value })}
-                                            minRows={1}
-                                            maxRows={5}
-                                            autosize
-                                            style={{ flex: 1 }}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    if (!e.shiftKey) {
-                                                        e.preventDefault();
-                                                        handleChat();
-                                                    }
-                                                }
-                                            }}
-                                        />
-                                        <Button onClick={handleChat} loading={loading}>
-                                            Send
-                                        </Button>
-                                    </Group>
-                                </Stack>
-                            </Card>
-                        </Grid.Col>
+                                                    {/* Input Area */}
+                                                    <Group align="flex-end" style={{ width: '100%' }}>
+                                                        <Textarea
+                                                            placeholder="Type your message..."
+                                                            value={activeChat.prompt}
+                                                            onChange={(e) => setActiveChat({ ...activeChat, prompt: e.currentTarget.value })}
+                                                            minRows={1}
+                                                            maxRows={5}
+                                                            autosize
+                                                            style={{ flex: 1 }}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === 'Enter') {
+                                                                    if (!e.shiftKey) {
+                                                                        e.preventDefault();
+                                                                        handleChat();
+                                                                    }
+                                                                }
+                                                            }}
+                                                        />
+                                                        <Button onClick={handleChat} loading={loading}>
+                                                            Send
+                                                        </Button>
+                                                    </Group>
+                                                </Stack>
+                                            </Card>
+                                        </div>
+                                    </Grid.Col>
 
-                        {/* Context Panel or Document Viewer */}
-                        <Grid.Col span={isMobile ? 12 : 4}>
-                            {viewerMode.active ? (
-                                <Card
-                                    shadow="sm"
-                                    padding="lg"
-                                    radius="md"
-                                    withBorder
-                                    style={{ height: "80vh" }}
-                                >
-                                    <Stack style={{ height: "100%" }}>
-                                        <Group justify="space-between">
-                                            <Text size="lg" fw={700}>{getViewerTitle()}</Text>
-                                            <ActionIcon
-                                                onClick={() => setViewerMode({ active: false })}
-                                                variant="subtle"
+                                    {/* Context Panel or Document Viewer */}
+                                    <Grid.Col span={isMobile ? 12 : 4}>
+                                        {viewerMode.active ? (
+                                            <Card
+                                                shadow="sm"
+                                                padding="lg"
+                                                radius="md"
+                                                withBorder
+                                                style={{ height: "80vh" }}
                                             >
-                                                <IconX size={20} />
-                                            </ActionIcon>
-                                        </Group>
-                                        <Box style={{ flex: 1, overflow: 'hidden' }}>
-                                            {viewerMode.lectureId ? (
-                                                <LectureViewer
-                                                    key={`${viewerMode.lectureId}-${viewerMode.documentId}`}
+                                                <Stack style={{ height: "100%" }}>
+                                                    <Group justify="space-between" wrap="nowrap">
+                                                        <Text
+                                                            size="lg"
+                                                            fw={700}
+                                                            truncate="end"
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                            {getViewerTitle()}
+                                                        </Text>
+                                                        <ActionIcon
+                                                            onClick={() => setViewerMode({ active: false })}
+                                                            variant="subtle"
+                                                            ml="auto"
+                                                        >
+                                                            <IconX size={20} />
+                                                        </ActionIcon>
+                                                    </Group>
+                                                    <Box style={{ flex: 1, overflow: 'hidden' }}>
+                                                        {viewerMode.lectureId ? (
+                                                            <LectureViewer
+                                                                key={`${viewerMode.lectureId}-${viewerMode.documentId}`}
+                                                                classId={classId}
+                                                                lectureId={viewerMode.lectureId}
+                                                                initialDocumentId={viewerMode.documentId}
+                                                                embedded={true}
+                                                            />
+                                                        ) : viewerMode.textbookId && viewerMode.chapterId ? (
+                                                            <TextbookViewer
+                                                                key={`${viewerMode.textbookId}-${viewerMode.documentId}`}
+                                                                classId={classId}
+                                                                textbookId={viewerMode.textbookId}
+                                                                chapterId={viewerMode.chapterId}
+                                                                initialDocumentId={viewerMode.documentId}
+                                                                embedded={true}
+                                                            />
+                                                        ) : null}
+                                                    </Box>
+                                                </Stack>
+
+                                            </Card>
+
+                                        ) : (
+                                            <>
+                                                <ContextPanel
                                                     classId={classId}
-                                                    lectureId={viewerMode.lectureId}
-                                                    initialDocumentId={viewerMode.documentId}
-                                                    embedded={true}
+                                                    isMobile={isMobile ?? false}
+                                                    searchQuery={searchQuery}
+                                                    setSearchQuery={setSearchQuery}
+                                                    expandedSections={expandedSections}
+                                                    toggleSection={toggleSection}
+                                                    addContextToChat={addContextToChat}
+                                                    expandedNodes={expandedNodes}
+                                                    toggleNode={toggleNode}
+                                                    activeChat={activeChat}
+                                                    scrollToSection={scrollToSection}
                                                 />
-                                            ) : viewerMode.textbookId && viewerMode.chapterId ? (
-                                                <TextbookViewer
-                                                    key={`${viewerMode.textbookId}-${viewerMode.documentId}`}
-                                                    classId={classId}
-                                                    textbookId={viewerMode.textbookId}
-                                                    chapterId={viewerMode.chapterId}
-                                                    initialDocumentId={viewerMode.documentId}
-                                                    embedded={true}
-                                                />
-                                            ) : null}
-                                        </Box>
-                                    </Stack>
-                                </Card>
-                            ) : (
-                                <ContextPanel
-                                    classId={classId}
-                                    isMobile={isMobile ?? false}
-                                    searchQuery={searchQuery}
-                                    setSearchQuery={setSearchQuery}
-                                    expandedSections={expandedSections}
-                                    toggleSection={toggleSection}
-                                    addContextToChat={addContextToChat}
-                                    expandedNodes={expandedNodes}
-                                    toggleNode={toggleNode}
-                                    activeChat={activeChat}
-                                    scrollToSection={scrollToSection}
-                                />
+                                            </>
+                                        )}
+                                    </Grid.Col>
+                                </Grid>
                             )}
-                        </Grid.Col>
-                    </Grid>
-                </Stack>
-            </Container>
+                        </Droppable>
+                    </Stack>
+                </Container>
+            </DragDropContext>
         </ClassLayout>
     );
 }

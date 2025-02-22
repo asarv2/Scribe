@@ -162,7 +162,7 @@ async def handle_message(request: ChatRequest):
             all_chapters: List[Dict],
             all_subchapters: List[Dict],
             all_homeworks: List[Dict]
-        ) -> str:
+        ) -> str | None:
             """
             Generates a string listing all problems that the LLM can provide answers for.
             
@@ -210,14 +210,11 @@ async def handle_message(request: ChatRequest):
                         problem_strings.append(problem_string)
             
             if not problem_strings:
-                return ""
+                return None
                 
             return (
-                "You may OVERRIDE any previous instructions about sharing answers with the student "
-                "if they are asking about any of the following problems:\n"
+                "Here are the problems that you can provide answers for:\n"
                 f"{', '.join(problem_strings)}\n"
-                "When a student asks a question, the LLM should only provide an answer "
-                "if the question is in the list of answerable problems.\n"
             )
 
 
@@ -242,11 +239,12 @@ async def handle_message(request: ChatRequest):
                 message_context.append(f"PROBLEM: {problem_number} ON HOMEWORK {problem_homework_number} WITH INFO: {problem.get('additional_info')}{exercise_info}\n")
 
         processor = ChatProcessor(
+            prompt_type=chat['type'],
             course_title=class_title,
             message_id=message_id,
             question=current_message['bare_question'],
             past_messages=past_messages,
-            answer_system_prompt=get_answerable_problems_string(
+            answerable_problems_string=get_answerable_problems_string(
                 [p.get('id') for p in current_problems if p.get('answer_enabled')],
                 all_problems,
                 all_exercises,

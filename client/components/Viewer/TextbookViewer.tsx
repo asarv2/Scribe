@@ -111,7 +111,7 @@ export default function TextbookViewer({
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
         queryKey: ["chapterTextbookDocuments", textbookId, chapterId],
-        queryFn: () => getTextbookDocuments(supabase, textbookId, chapter?.start_page, chapter?.end_page),
+        queryFn: () => getTextbookDocuments(supabase, [textbookId], chapter?.start_page, chapter?.end_page),
         enabled: !!chapter
     })
 

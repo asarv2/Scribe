@@ -6,13 +6,15 @@
 
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
+import { ChatType } from "@/types";
 
-export const createChat = async (classId: string, chatTitle: string, userId: string | null = null) => {
+export const createChat = async (classId: string, chatTitle: string, userId: string | null = null, chatType: ChatType) => {
     const supabase = useSupabaseServer(cookies());
     console.log("Creating chat", classId, chatTitle);
     const updates = {
         class: classId,
         name: chatTitle,
+        type: chatType,
     } as any;
     if (userId) {
         updates["profile"] = userId;

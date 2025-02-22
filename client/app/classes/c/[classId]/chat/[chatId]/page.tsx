@@ -7,7 +7,8 @@
  * 16.02.2025
  */
 "use client";
-import ChatCanvas from "@/components/Chat/ChatCanvas";
+
+import ChatCanvas from "@/components/Chat/Canvas/ChatCanvas";
 
 export default function ChatPage({ params }: { params: { classId: string, chatId: string } }) {
     const classId = params.classId;

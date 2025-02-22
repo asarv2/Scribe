@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 from app.extensions import MESSAGES_DIR, UPLOAD_FOLDER
 from app.extensions import supabase
+from app.services.chat.prompts import get_homework_prompt, get_summary_prompt, get_conceptual_prompt, get_general_prompt, get_review_prompt
 class ChatMessage(TypedDict):
     id: str
     question: str
@@ -16,18 +17,20 @@ class ChatMessage(TypedDict):
 class ChatProcessor(BaseProcessor):
     def __init__(
         self,
+        prompt_type: str,
         course_title: str,
         message_id: str,
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
-        answer_system_prompt: str,
+        answerable_problems_string: str | None,
     ):
         super().__init__()
+        self.prompt_type = prompt_type
         self.course_title = course_title
         self.message_id = message_id
         self.current_question = question
         self.chat_history = []
-        self.answer_system_prompt = answer_system_prompt
+        self.answerable_problems_string = answerable_problems_string
         # Format past messages into chat history
         for _, q, r in past_messages:
             if q and r:  # Only add complete message pairs
@@ -66,59 +69,21 @@ class ChatProcessor(BaseProcessor):
         try:
             conversation_context = self.format_conversation()
 
-            base_system_prompt = (
-                "You are a helpful and patient Teaching Assistant at a university.\n\n"
-                "Important guidelines for your responses:\n"
-                "1. Maintain consistent knowledge throughout the conversation\n"
-                "2. If a student says they don't understand something, help explain it again\n"
-                "3. If a student makes a mistake, point out specifically what's wrong\n"
-                "4. Keep track of what has been explained and what hasn't\n"
-                "5. When a student says they understand something, build upon that in next responses\n"
-                "6. If a student contradicts their earlier understanding, kindly point it out\n\n"
-                "Remember the conversation context:\n"
-                "- What concepts have been explained\n"
-                "- What the student has understood\n"
-                "- What the student is still struggling with\n\n"
-                "Keep responses conversational but precise.\n"
-                "DON'T SHOW THE ANSWER, just help guide the student to the correct answer.\n"
-            )
-
-            additional_system_prompt = (
-                "Once you've helped guide the student to the correct answer, end the conversation in a nice way and DONT ASK ANY MORE QUESTIONS.\n"
-                "Say something nice at the end like, glad I could help, or great job, or something like that.\n\n"
-                "**Guidelines for Responses:**\n"
-                "1. Keep explanations **concise and to the point**. Avoid large blocks of text.\n"
-                "2. **Check for understanding** before moving forward by asking the student to summarize or apply the concept. Only do this when walking a student through a problem they want to solve.\n"
-                "3. Instead of directly giving answers, **ask guiding questions** to help the student think through problems.\n"
-                "4. Use simple, **real-world analogies** when appropriate to clarify concepts.\n"
-                "5. If the student is struggling, **break down the explanation into smaller steps**.\n"
-                "6. Validate student responses and encourage them to refine their thinking when needed.\n"
-                "7. If the student asks for more detail, **expand gradually** instead of dumping too much information at once.\n"
-                "8. **Only use knowledge from the provided course materials**. Do not make up or assume information.\n"
-                "9. To provide the student with visualization for the concepts, use LaTeX formatting to display equations, diagrams, and graphs.\n"
-                "10. Use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
-                "11. Use <TITLE>x</TITLE> tags to start your response with the summary title of the content that is relevant to the student's question, where x is the title. Only include the title tag if it is the first response you are giving to the student. If you see previous responses, do not include the title tag. For example, if the student asks about the concept of recursion in Python code, you should use the following tag: <TITLE>Recursion in Python Code</TITLE>. You should only enclose the title in the title tag, not anywhere else in your response.\n\n"
-                "CRITICAL INSTRUCTIONS:\n\n"
-                "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. Moreover, if you use the textbook, use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags, where x is the textbook number and a, b, c are the page numbers. Put this at the end of your response.\n\n"
-                "For example, if you use the lecture 4, slides 12, 13, and 14, you should use the following tags:\n"
-                "<LECTURE 4><SLIDE 12><SLIDE 13><SLIDE 14></LECTURE>\n\n"
-                "If you use the textbook 1, pages 45, 46, and 47, you should use the following tags:\n"
-                "<TEXTBOOK 1><PAGE 45><PAGE 46><PAGE 47></TEXTBOOK>\n\n"
-                "REFRAIN FROM USING ANY OTHER TAGS.\n\n"
-                "---\n\n"
-                "### **Example Interaction:**\n\n"
-                "**Student:** \"I don't understand how recursion works.\"\n\n"
-                "**You (AI):** <TITLE>Recursion in Python Code</TITLE> \"Recursion is when a function calls itself to solve a smaller piece of the problem. Have you worked with loops before?\"\n"
-                "<LECTURE 4><SLIDE 12><SLIDE 13><SLIDE 14></LECTURE>\n\n"
-                "**Student:** \"Yeah, I know loops.\"\n\n"
-                "**You (AI):** \"Great! Recursion is similar to a loop, but instead of repeating an action with a `for` or `while` statement, the function calls itself with a slightly smaller input. What do you think happens if a recursive function never stops calling itself?\"\n"
-                "<TEXTBOOK 1><PAGE 45></TEXTBOOK>\n\n"
-                "**Student:** \"It would go on forever?\"\n\n"
-                "**You (AI):** \"Exactly! That's why recursion needs a **base case**—a condition where it stops. Would you like to see an example with factorial calculation?\n"
-                "<LECTURE 4><SLIDE 12><SLIDE 13><SLIDE 14></LECTURE>\n"
-                "<TEXTBOOK 1><PAGE 46></TEXTBOOK>\n\n"
-                "---\n"
-            )
+            system_prompt = ""
+            match self.prompt_type:
+                case "homework":
+                    if self.answerable_problems_string is None:
+                        system_prompt = get_homework_prompt(solution=False)
+                    else:
+                        system_prompt = get_homework_prompt(solution=True) + self.answerable_problems_string
+                case "summary":
+                    system_prompt = get_summary_prompt()
+                case "conceptual":
+                    system_prompt = get_conceptual_prompt()
+                case "general":
+                    system_prompt = get_general_prompt()
+                case "review":
+                    system_prompt = get_review_prompt()
 
             prompt = (
                 "### **Now, continue the conversation using this style.**\n\n"
@@ -126,7 +91,7 @@ class ChatProcessor(BaseProcessor):
                 "Here is the current conversation context:\n"
                 f"{complete_context}\n\n"
                 "CRITICAL INSTRUCTIONS:\n\n"
-                "When you would like to show a chart, use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
+                "Only if you find it usefule, or the student asks use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
                 "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. "
                 "Moreover, if you use the textbook, use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags, where x is the textbook number and a, b, c are the page numbers. "
                 "Put this at the end of your response.\n\n"
@@ -137,16 +102,14 @@ class ChatProcessor(BaseProcessor):
 
             # save input prompt to .txt file in uploads folder
             with open(os.path.join(MESSAGES_DIR, f"{self.message_id}.txt"), "w") as f:
-                f.write("BASE PROMPT: " + base_system_prompt + "\n\n" + "ADDITIONAL PROMPT: " + additional_system_prompt + "\n\n" + "ANSWER SYSTEM PROMPT: " + self.answer_system_prompt + "\n\n" + "INPUT PROMPT: " + prompt)
+                f.write("SYSTEM PROMPT: " + system_prompt + "\n\n" + "INPUT PROMPT: " + prompt)
 
             message = Message(content=[
                 {"type": "text", "text": prompt},
             ])
 
-            final_system_prompt = base_system_prompt + additional_system_prompt + self.answer_system_prompt
-            
             response_text = ""
-            async for chunk in self.robust_generate_stream(final_system_prompt, message, "gemini-2.0-flash"):
+            async for chunk in self.robust_generate_stream(system_prompt, message, "gemini-2.0-flash"):
                 response_text += chunk
                 if stream_callback:
                     yield await stream_callback(chunk)
