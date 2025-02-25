@@ -388,34 +388,49 @@ export type Database = {
       }
       exercises: {
         Row: {
-          chapter: string
+          answer_enabled: boolean
+          chapter: string | null
           created_at: string
           end_page: number
           exercise_number: number
+          given: string
           homework: string | null
           id: string
+          info: string
+          problem_number: number
+          problem_part_number: number
           start_page: number
           title: string
           type: string
         }
         Insert: {
-          chapter: string
+          answer_enabled?: boolean
+          chapter?: string | null
           created_at?: string
           end_page?: number
           exercise_number?: number
+          given?: string
           homework?: string | null
           id?: string
+          info?: string
+          problem_number?: number
+          problem_part_number?: number
           start_page?: number
           title?: string
           type?: string
         }
         Update: {
-          chapter?: string
+          answer_enabled?: boolean
+          chapter?: string | null
           created_at?: string
           end_page?: number
           exercise_number?: number
+          given?: string
           homework?: string | null
           id?: string
+          info?: string
+          problem_number?: number
+          problem_part_number?: number
           start_page?: number
           title?: string
           type?: string
@@ -496,6 +511,7 @@ export type Database = {
           class: string | null
           created_at: string
           deleted: boolean
+          due: string | null
           homework_number: number
           id: string
           last_parse_attempt: string | null
@@ -509,6 +525,7 @@ export type Database = {
           class?: string | null
           created_at?: string
           deleted?: boolean
+          due?: string | null
           homework_number?: number
           id?: string
           last_parse_attempt?: string | null
@@ -522,6 +539,7 @@ export type Database = {
           class?: string | null
           created_at?: string
           deleted?: boolean
+          due?: string | null
           homework_number?: number
           id?: string
           last_parse_attempt?: string | null

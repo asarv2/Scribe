@@ -14,16 +14,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 class TableOfContentsExtractor:
-    def __init__(self, api_key: str, pdf_path: str):
+    def __init__(self, api_key: str, pdf_path: str, custom_page_labels: List[str] = None):
         """Initialize the TOC extractor with Gemini API key."""
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel('gemini-2.0-flash-001')
         self.reader = PdfReader(pdf_path)
         self.num_pages = len(self.reader.pages)
         self.pdf_path = pdf_path
-
+        self.custom_page_labels = custom_page_labels
 
     def get_page_labels(self):
+        if self.custom_page_labels:
+            return self.custom_page_labels
+
         page_labels = []
 
         try:
@@ -79,7 +82,7 @@ class TableOfContentsExtractor:
             
             if not final_labels:
                 raise Exception("No page labels found, using default numbering")
-                
+            
             return final_labels
             
         except Exception as e:
@@ -98,6 +101,7 @@ class TableOfContentsExtractor:
         try:
             text = []
             page_labels = self.get_page_labels()
+            print("PAGE LABELS: ", page_labels)
             
             # Add 1 to end_page to make it inclusive
             for page_num in range(start_page, end_page + 1):

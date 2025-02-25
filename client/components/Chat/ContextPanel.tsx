@@ -8,10 +8,7 @@
 
 import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon } from "@mantine/core";
 import { IconSearch, IconPresentation, IconBook, IconFile } from "@tabler/icons-react";
-import { LectureList } from "./LectureList";
-import { TextbookTree } from "./TextbookTree";
 import { useState, useEffect } from "react";
-import { HomeworkTree } from "./HomeworkTree";
 import { ContentList } from "./ContentList";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { useQuery } from "@tanstack/react-query";
@@ -113,16 +110,24 @@ export function ContextPanel({
 
 
     const getLectureImageUrl = (item: Lecture, documentId: string) => {
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${item.id}/${documentId}.png`;
+        if (documentId.length > 0) {
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${item.id}/${documentId}.png`;
+        }
+        return "/placeholder_image.svg";
     }
 
     const getTextbookImageUrl = (item: Textbook, documentId: string) => {
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.id}/${documentId}.png`;
+        // if (documentId.length > 0) {
+        //     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.id}/${documentId}.png`;
+        // }
+        return "/placeholder_image.svg";
     }
 
     const getChapterImageUrl = (item: Chapter, documentId: string) => {
-        console.log(`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.textbook}/${documentId}.png`);
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.textbook}/${documentId}.png`;
+        // if (documentId.length > 0) {
+        //     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.textbook}/${documentId}.png`;
+        // }
+        return "/placeholder_image.svg";
     }
 
     // const getChapterImageUrl = (item: Chapter, documentId: string) => {
@@ -257,7 +262,7 @@ export function ContextPanel({
                             sectionKey="homeworks"
                             items={homeworks?.map(h => ({
                                 ...h,
-                                newName: h.title + " - " + h.homework_number,
+                                newName: h.title,
                                 imageUrl: getHomeworkImageUrl(h, textbookDocuments?.find(t => {
                                     const exercise = exercises?.find(e => e.homework === h.id);
                                     return exercise !== undefined && t.page >= exercise.start_page && t.page <= exercise.end_page;

@@ -9,12 +9,12 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
-export const updateProblemAnswerEnabled = async (enabled: boolean, problemId: string) => {
+export const updateExerciseAnswerEnabled = async (enabled: boolean, exerciseId: string) => {
     const supabase = useSupabaseServer(cookies());
     const { error } = await supabase
-        .from("problems")
+        .from("exercises")
         .update({ answer_enabled: enabled })
-        .eq("id", problemId);
+        .eq("id", exerciseId);
 
     if (error) {
         return {success: false, error: error.message};

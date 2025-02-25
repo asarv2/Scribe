@@ -149,8 +149,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     const { data: exercises } = useQuery({
         queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, problems?.map(p => p.exercise).filter(e => e !== null) ?? []),
-        enabled: !!problems
+        queryFn: () => getExercises(supabase, chapters?.map(c => c.id) ?? [], homeworkData?.map(h => h.id) ?? []),
+        enabled: !!chapters && !!homeworkData
     });
 
     // Combine all loading states

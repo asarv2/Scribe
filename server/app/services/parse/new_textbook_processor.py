@@ -16,18 +16,28 @@ import logging
 from exercise_extractor import ExerciseExtractor
 from supabase import create_client, ClientOptions, Client
 
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,  # Set to DEBUG to see all messages
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # Output to console
+        logging.FileHandler('textbook_processing.log')  # Also save to a file
+    ]
+)
+
 logger = logging.getLogger(__name__)
 
 
 class NewTextbookProcessor:
-    def __init__(self, pdf_path: str, api_key: str):
+    def __init__(self, pdf_path: str, api_key: str, custom_page_labels: List[str] = None, extra_top_padding: int = 0):
         self.pdf_path = pdf_path
         self.pdf_document = fitz.open(pdf_path)
         self.pdf_filename = os.path.basename(pdf_path)
         
         # Initialize extractors
-        self.toc_extractor = TableOfContentsExtractor(api_key, pdf_path)
-        self.exercise_extractor = ExerciseExtractor(api_key, pdf_path)
+        self.toc_extractor = TableOfContentsExtractor(api_key, pdf_path, custom_page_labels)
+        self.exercise_extractor = ExerciseExtractor(api_key, pdf_path, extra_top_padding)
 
     def extract_exercises(self, max_chapters: int = None) -> List[Dict[str, Any]]:
         """Main method to extract exercises from the textbook
@@ -48,9 +58,7 @@ class NewTextbookProcessor:
         # Filter chapters that need processing
         chapters_to_process = [
             chapter for chapter in toc_structure["chapters"]
-            if ("actual_exercises_page" in chapter and 
-                chapter["actual_exercises_page"] is not None and 
-                chapter["title"] not in processed_chapters)
+            if (chapter["title"] not in processed_chapters)
         ]
         
         # Limit chapters if max_chapters is specified
@@ -63,6 +71,9 @@ class NewTextbookProcessor:
                 # Use pre-calculated actual exercise page numbers
                 exercises_start = chapter["actual_exercises_page"]
                 
+                if exercises_start is None:
+                    exercises_start = chapter["actual_page"] # start at the beginning of the chapter
+
                 # Determine exercises end page using actual pages
                 chapter_idx = toc_structure["chapters"].index(chapter)
                 if chapter_idx < len(toc_structure["chapters"]) - 1:
@@ -70,12 +81,12 @@ class NewTextbookProcessor:
                 else:
                     next_section_index = len(page_labels)
                     while (next_section_index > 0 and 
-                           not page_labels[next_section_index - 1].isdigit()):
+                        not page_labels[next_section_index - 1].isdigit()):
                         next_section_index -= 1
                     exercises_end = int(page_labels[next_section_index - 1])
                 
                 # process all pages at once for a chapter
-                chapter_exercises = self._process_exercise_pages(exercises_start, exercises_end, chapter["title"])
+                chapter_exercises = self._process_exercise_pages(exercises_start, exercises_end, chapter["title"], chapter["page"]) # adding the page in case gemini finds the actual page numbers
                 
                 # Add chapter exercises to main list
                 exercises_list.extend(chapter_exercises)
@@ -89,7 +100,7 @@ class NewTextbookProcessor:
         
         return exercises_list
 
-    def _process_exercise_pages(self, exercises_start: int, exercises_end: int, chapter_title: str) -> List[Dict[str, Any]]:
+    def _process_exercise_pages(self, exercises_start: int, exercises_end: int, chapter_title: str, chapter_page: int) -> List[Dict[str, Any]]:
         """Process a single page containing exercises"""
         try:
             logger.debug(f"Processing chapter {chapter_title} from page {exercises_start} to {exercises_end}")
@@ -98,7 +109,7 @@ class NewTextbookProcessor:
                 page = self.pdf_document[page_num - 1]
                 pages.append(page)
                 logger.debug(f"Added page {page_num} with dimensions: {page.rect}")
-            return self.exercise_extractor.process_exercise_pages(pages, chapter_title)
+            return self.exercise_extractor.process_exercise_pages(pages, chapter_title, chapter_page)
         except Exception as e:
             logger.error(f"Error in _process_exercise_pages: {str(e)}", exc_info=True)
             return []
@@ -119,17 +130,36 @@ class NewTextbookProcessor:
             chapters = []
             for chapter in toc_structure["chapters"]:
                 # Get chapter exercises
-                chapter_exercises = [
-                    {
-                        "title": ex["number"],
-                        "start_page": ex["start_page"] + chapter["actual_exercises_page"] - 1,
-                        "end_page": ex["end_page"] + chapter["actual_exercises_page"] - 1,
-                        "image_path": ex["image_path"],
-                        "text_content": ex["text_content"]
-                    }
-                    for ex in exercises_list
+                chapter_exercises_list = [
+                    ex for ex in exercises_list
                     if ex["chapter_title"] == chapter["title"]
                 ]
+
+                offset = False
+                if chapter.get("actual_exercises_page", None) is None:
+                    chapter["actual_exercises_page"] = exercises_list[0]["start_page"] + chapter["actual_page"] - 1
+                    offset = True
+                
+                # Create exercise entries for this chapter
+                chapter_exercises = []
+                for ex in chapter_exercises_list:
+                    # if it does not exist, use the first exercise page
+                    start_page = ex["start_page"]
+                    end_page = ex["end_page"]
+                    if offset:
+                        start_page += chapter["actual_page"] - 1
+                        end_page += chapter["actual_page"] - 1
+                    else:
+                        start_page += chapter["actual_exercises_page"] - 1
+                        end_page += chapter["actual_exercises_page"] - 1
+
+                    chapter_exercises.append({
+                        "title": ex["number"],
+                        "start_page": start_page,
+                        "end_page": end_page,
+                        "image_path": ex["image_path"],
+                        "text_content": ex["text_content"]
+                    })
                 
                 chapter_data = {
                     "title": chapter["title"],
@@ -345,7 +375,7 @@ class NewTextbookProcessor:
             raise
 
 if __name__ == "__main__": 
-    textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/Vanderbei.pdf"
+    textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/Chvatal.pdf"
     api_key = os.getenv('GOOGLE_API_KEY')
     class_id = "c770c9bb-4de1-44be-aacb-b4bea3efbacf"  # Replace with actual class ID
 
@@ -355,12 +385,17 @@ if __name__ == "__main__":
     opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
     supabase = create_client(supabase_url, supabase_private_key, options=opts)
 
-    processor = NewTextbookProcessor(textbook_path, api_key)
+
+    # custom page labels for chvatal textbook. nothing for the first 16 entries. Then 1 to the end for the rest. But keep everything as a string.
+    c_page_labels = [str(i) for i in range(1, 484)]
+    c_page_labels = ['0' for _ in range(16)] + c_page_labels
+
+    processor = NewTextbookProcessor(textbook_path, api_key, custom_page_labels=c_page_labels, extra_top_padding=10)
     # Process textbook and get ID
-    exercises = processor.extract_exercises()
+    exercises = processor.extract_exercises(3)
     combined_data = processor.create_combined_textbook_json()
-    textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
+    # textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
     
-    # Upload images
-    processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
-    processor.upload_exercise_images(class_id, chapters_id, exercises_id, supabase)
+    # # Upload images
+    # processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
+    # processor.upload_exercise_images(class_id, chapters_id, exercises_id, supabase)

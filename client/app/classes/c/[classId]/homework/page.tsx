@@ -10,10 +10,8 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { useState } from "react";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
-import { getProblems } from "@/utils/queries/get-problems";
-import { updateProblemAnswerEnabled } from "@/utils/services/problems";
+import { updateExerciseAnswerEnabled } from "@/utils/services/exercises";
 import { notifications } from "@mantine/notifications";
-import { getChapterExercises } from "@/utils/queries/get-chapter-exercises";
 import { getExercises } from "@/utils/queries/get-exercises";
 
 export default function HomeworkPage({ params }: { params: { classId: string } }) {
@@ -27,16 +25,10 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
         queryFn: () => getHomeworks(supabase, classId)
     });
 
-    const { data: problems, isLoading: loadingProblems } = useQuery({
-        queryKey: ["problems", classId],
-        queryFn: () => getProblems(supabase, homeworks?.map(h => h.id) ?? []),
+    const {data: exercises, isLoading: loadingExercises} = useQuery({
+        queryKey: ["exercises", classId],
+        queryFn: () => getExercises(supabase, [], homeworks?.map(h => h.id) ?? []),
         enabled: !!homeworks
-    });
-
-    const { data: problemExercises } = useQuery({
-        queryKey: ["problemExercises", classId],
-        queryFn: () => getExercises(supabase, problems?.map(p => p.exercise).filter(e => e !== null) ?? []),
-        enabled: !!problems
     });
 
     const toggleHomework = (homeworkId: string) => {
@@ -51,13 +43,9 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
         });
     };
 
-    const getProblemsForHomework = (homeworkId: string) => {
-        return problems?.filter(problem => problem.homework === homeworkId) ?? [];
-    };
-
-    const handleProblemAnswerEnabledChange = async (problemId: string, enabled: boolean) => {
+    const handleProblemAnswerEnabledChange = async (exerciseId: string, enabled: boolean) => {
         try {
-            const {success, error} = await updateProblemAnswerEnabled(enabled, problemId);
+            const {success, error} = await updateExerciseAnswerEnabled(enabled, exerciseId);
             if (!success) {
                 throw new Error(error);
             }
@@ -80,7 +68,7 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
 
     const getExerciseTitle = (exerciseId: string | null) => {
         if (!exerciseId) return "Unknown Exercise";
-        return problemExercises?.find(e => e.id === exerciseId)?.title ?? "Unknown Exercise";
+        return exercises?.find(e => e.id === exerciseId)?.title ?? "Unknown Exercise";
     };
 
     return (
@@ -127,31 +115,31 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
                                         {/* Problems list */}
                                         {expandedHomeworks.has(homework.id) && (
                                             <Stack pl={36} mt="xs">
-                                                {loadingProblems ? (
+                                                {loadingExercises ? (
                                                     <Text size="sm">Loading problems...</Text>
-                                                ) : getProblemsForHomework(homework.id).length === 0 ? (
+                                                ) : exercises?.filter(e => e.homework === homework.id).length === 0 ? (
                                                     <Text size="sm" c="dimmed">No problems added yet</Text>
                                                 ) : (
-                                                    getProblemsForHomework(homework.id).map((problem) => (
+                                                    exercises?.filter(e => e.homework === homework.id).map((exercise) => (
                                                         <Card 
-                                                            key={problem.id} 
+                                                            key={exercise.id} 
                                                             withBorder 
                                                             padding="xs"
                                                         >
                                                             <Flex justify="space-between" align="center" gap="md">
                                                                 <Flex direction="column" style={{ flex: 1, minWidth: 0 }}>
                                                                     <Text fw={500} truncate>
-                                                                        Problem {problem.problem_number} - {getExerciseTitle(problem.exercise)}
+                                                                        Exercise {exercise.exercise_number} - {getExerciseTitle(exercise.id)}
                                                                     </Text>
                                                                     <Text size="sm" c="dimmed" truncate>
-                                                                        {problem.additional_info}
+                                                                        {exercise.info}
                                                                     </Text>
                                                                 </Flex>
                                                                 <Switch
                                                                     label="Allow chat to give answer"
                                                                     size="sm"
-                                                                    defaultChecked={problem.answer_enabled}
-                                                                    onChange={(event) => handleProblemAnswerEnabledChange(problem.id, event.target.checked)}
+                                                                    defaultChecked={exercise.answer_enabled}
+                                                                    onChange={(event) => handleProblemAnswerEnabledChange(exercise.id, event.target.checked)}
                                                                     style={{ flexShrink: 0}}
                                                                 />
                                                             </Flex>

@@ -85,8 +85,8 @@ export const ContextBadges = memo(({
 
     const { data: exercises } = useQuery({
         queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, problems?.map(p => p.exercise).filter(e => e !== null) ?? []),
-        enabled: !!problems
+        queryFn: () => getExercises(supabase, chapters?.map(c => c.id) ?? [], homeworkData?.map(h => h.id) ?? []),
+        enabled: !!chapters && !!homeworkData
     });
 
     // Render active badges
