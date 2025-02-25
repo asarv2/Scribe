@@ -8,29 +8,39 @@ import { IconX } from "@tabler/icons-react";
 import LectureViewer from "../../Viewer/LectureViewer";
 import TextbookViewer from "../../Viewer/TextbookViewer";
 import { memo } from "react";
-
+import { Lecture, Textbook, ViewerMode } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { getLectures } from "@/utils/queries/get-lectures";
+import { getTextbooks } from "@/utils/queries/get-textbooks";
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 interface ViewerPanelProps {
-    viewerMode: {
-        active: boolean;
-        documentId?: string;
-        lectureId?: string;
-        textbookId?: string;
-        chapterId?: string;
-    };
-    setViewerMode: (mode: {
-        active: boolean;
-        documentId?: string;
-        lectureId?: string;
-        textbookId?: string;
-        chapterId?: string;
-    }) => void;
+    viewerMode: ViewerMode;
+    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
     classId: string;
 }
 
-export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId }: ViewerPanelProps) => {
+export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPanelProps) => {
+    const supabase = useSupabaseBrowser();
+
+    const { data: lectures } = useQuery({
+        queryKey: ["lectures", classId],
+        queryFn: () => getLectures(supabase, classId)
+    });
+
+    const { data: textbooks } = useQuery({
+        queryKey: ["textbooks", classId],
+        queryFn: () => getTextbooks(supabase, classId),
+    });
+
+    // Helper function to get viewer title
     const getViewerTitle = () => {
-        if (viewerMode.lectureId) return "Lecture Viewer";
-        if (viewerMode.textbookId) return "Textbook Viewer";
+        if (viewerMode.lectureId) {
+            const lecture = lectures?.find(l => l.id === viewerMode.lectureId);
+            return lecture ? `${lecture.name}` : "Lecture Viewer";
+        } else if (viewerMode.textbookId) {
+            const textbook = textbooks?.find(t => t.id === viewerMode.textbookId);
+            return textbook ? `${textbook.title}` : "Textbook Viewer";
+        }
         return "Document Viewer";
     };
 

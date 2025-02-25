@@ -39,3 +39,11 @@ export interface ChatMessage {
     };
     chatType: ChatType;
 }
+
+export interface ViewerMode {
+    active: boolean;
+    documentId?: string;
+    lectureId?: string;
+    textbookId?: string;
+    chapterId?: string;
+}

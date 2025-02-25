@@ -15,34 +15,17 @@ import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getProblems } from "@/utils/queries/get-problems";
 import { getExercises } from "@/utils/queries/get-exercises";
-import { Chapter, Subchapter, ChatMessage, Document } from "@/types";
+import { Chapter, Subchapter, ChatMessage, Document, ViewerMode } from "@/types";
+import { handleDocumentClick } from "@/utils/chat/chat-helpers";
+import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
+import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 
 interface ContextBadgesProps {
     activeChat: ChatMessage;
     classId: string;
     onRemoveContext?: (contextType: keyof ChatMessage['context'], contextId: string) => void;
     onScrollToSection?: (sectionId: string) => void;
-    handleContextClick?: (
-        contextType: string,
-        contextId: string,
-        documents: Document[],
-        chapters: Chapter[],
-        subchapters: Subchapter[],
-        setViewerMode: React.Dispatch<React.SetStateAction<{
-            active: boolean;
-            documentId?: string;
-            lectureId?: string;
-            textbookId?: string;
-            chapterId?: string;
-        }>>
-    ) => void;
-    setViewerMode?: React.Dispatch<React.SetStateAction<{
-        active: boolean;
-        documentId?: string;
-        lectureId?: string;
-        textbookId?: string;
-        chapterId?: string;
-    }>>;
+    setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
 }
 
 export const ContextBadges = memo(({
@@ -50,7 +33,6 @@ export const ContextBadges = memo(({
     classId,
     onRemoveContext,
     onScrollToSection,
-    handleContextClick,
     setViewerMode
 }: ContextBadgesProps) => {
     const supabase = useSupabaseBrowser();
@@ -61,9 +43,21 @@ export const ContextBadges = memo(({
         queryFn: () => getLectures(supabase, classId)
     });
 
+    const { data: lectureDocuments } = useQuery({
+        queryKey: ["lectureDocuments", classId],
+        queryFn: () => getLectureDocuments(supabase, lectures!.map(l => l.id)),
+        enabled: !!lectures
+    });
+
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
         queryFn: () => getTextbooks(supabase, classId),
+    });
+
+    const { data: textbookDocuments } = useQuery({
+        queryKey: ["textbookDocuments", classId],
+        queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
+        enabled: !!textbooks
     });
 
     const { data: chapters } = useQuery({
@@ -116,8 +110,11 @@ export const ContextBadges = memo(({
                             />
                         )}
                         onClick={(e) => {
-                            if (handleContextClick && setViewerMode && !(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
-                                handleContextClick('lectures', lectureId, [], chapters ?? [], subchapters ?? [], setViewerMode);
+                            if (setViewerMode) {
+                                const document = lectureDocuments?.find(d => d.lecture === lectureId)
+                                if (document) {
+                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                }
                             }
                         }}
                     >
@@ -144,8 +141,11 @@ export const ContextBadges = memo(({
                             />
                         )}
                         onClick={(e) => {
-                            if (handleContextClick && setViewerMode && !(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
-                                handleContextClick('textbooks', textbookId, [], chapters ?? [], subchapters ?? [], setViewerMode);
+                            if (setViewerMode) {
+                                const document = textbookDocuments?.find(d => d.textbook === textbookId)
+                                if (document) {
+                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                }
                             }
                         }}
                     >
@@ -172,8 +172,11 @@ export const ContextBadges = memo(({
                             />
                         )}
                         onClick={(e) => {
-                            if (handleContextClick && setViewerMode && !(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
-                                handleContextClick('chapters', chapterId, [], chapters ?? [], subchapters ?? [], setViewerMode);
+                            if (setViewerMode) {
+                                const document = textbookDocuments?.find(d => d.textbook === chapter.textbook)
+                                if (document) {
+                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                }
                             }
                         }}
                     >
@@ -201,8 +204,11 @@ export const ContextBadges = memo(({
                             />
                         )}
                         onClick={(e) => {
-                            if (handleContextClick && setViewerMode && !(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
-                                handleContextClick('exercises', exerciseId, [], chapters ?? [], subchapters ?? [], setViewerMode);
+                            if (setViewerMode) {
+                                const document = textbookDocuments?.find(d => d.textbook === chapter?.textbook)
+                                if (document) {
+                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                }
                             }
                         }}
                     >
@@ -213,7 +219,8 @@ export const ContextBadges = memo(({
 
             {activeChat.context.subchapters.map(subchapterId => {
                 const subchapter = subchapters?.find(s => s.id === subchapterId);
-                return subchapter && (
+                const chapter = subchapter ? chapters?.find(c => c.id === subchapter.chapter) : null;
+                return subchapter && chapter && (
                     <Badge
                         key={subchapterId}
                         color="purple"
@@ -229,8 +236,11 @@ export const ContextBadges = memo(({
                             />
                         )}
                         onClick={(e) => {
-                            if (handleContextClick && setViewerMode && !(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
-                                handleContextClick('subchapters', subchapterId, [], chapters ?? [], subchapters ?? [], setViewerMode);
+                            if (setViewerMode) {
+                                const document = textbookDocuments?.find(d => d.textbook === chapter?.textbook)
+                                if (document) {
+                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                }
                             }
                         }}
                     >
@@ -241,6 +251,8 @@ export const ContextBadges = memo(({
 
             {activeChat.context.homeworks.map(homeworkId => {
                 const homework = homeworkData?.find(h => h.id === homeworkId);
+                const homeworkProblems = problems?.filter(p => p.homework === homeworkId);
+                const homeworkExercises = homeworkProblems?.map(p => exercises?.find(e => e.id === p.exercise));
                 return homework && (
                     <Badge
                         key={homeworkId}
@@ -257,8 +269,11 @@ export const ContextBadges = memo(({
                             />
                         )}
                         onClick={(e) => {
-                            if (handleContextClick && setViewerMode && !(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
-                                handleContextClick('homeworks', homeworkId, [], chapters ?? [], subchapters ?? [], setViewerMode);
+                            if (setViewerMode) {
+                                const document = textbookDocuments?.find(d => homeworkExercises?.some(e => e?.start_page && e?.end_page && e.start_page <= d.page && e.end_page >= d.page))
+                                if (document) {
+                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                }
                             }
                         }}
                     >
@@ -269,6 +284,7 @@ export const ContextBadges = memo(({
 
             {activeChat.context.problems.map(problemId => {
                 const problem = problems?.find(p => p.id === problemId);
+                const exercise = exercises?.find(e => e.id === problem?.exercise);
                 const homework = homeworkData?.find(h => h.id === problem?.homework);
                 return problem && homework && (
                     <Badge
@@ -286,8 +302,11 @@ export const ContextBadges = memo(({
                             />
                         )}
                         onClick={(e) => {
-                            if (handleContextClick && setViewerMode && !(e.target as HTMLElement).closest('.mantine-Badge-rightSection')) {
-                                handleContextClick('problems', problemId, [], chapters ?? [], subchapters ?? [], setViewerMode);
+                            if (setViewerMode) {
+                                const document = textbookDocuments?.find(d => exercise?.start_page && exercise?.end_page && exercise.start_page <= d.page && exercise.end_page >= d.page)
+                                if (document) {
+                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                }
                             }
                         }}
                     >
@@ -305,7 +324,14 @@ export const ContextBadges = memo(({
                 <Badge
                     color="gray"
                     leftSection={<IconPlus size={12} />}
-                    onClick={() => onScrollToSection?.("lectures-section")}
+                    onClick={() => {
+                        onScrollToSection?.("lectures-section")
+                        if (setViewerMode) {
+                            setViewerMode({
+                                active: false,
+                            });
+                        }
+                    }}
                     style={{ cursor: "pointer" }}
                 >
                     Add Lectures
@@ -316,7 +342,14 @@ export const ContextBadges = memo(({
                 <Badge
                     color="gray"
                     leftSection={<IconPlus size={12} />}
-                    onClick={() => onScrollToSection?.("textbooks-section")}
+                    onClick={() => {
+                        onScrollToSection?.("textbooks-section")
+                        if (setViewerMode) {
+                            setViewerMode({
+                                active: false,
+                            });
+                        }
+                    }}
                     style={{ cursor: "pointer" }}
                 >
                     Add Textbooks

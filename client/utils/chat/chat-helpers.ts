@@ -1,4 +1,5 @@
-import { Chapter, Document } from "@/types";
+import { Chapter, Document, ViewerMode } from "@/types";
+import { Dispatch, SetStateAction } from "react";
 
 // Filter out code blocks from text
 export const filterCodeBlocks = (text: string): string => {
@@ -205,13 +206,7 @@ export const getDocumentLabel = (
 export const handleDocumentClick = (
     doc: Document, 
     chapters: Chapter[], 
-    setViewerMode: (mode: {
-        active: boolean;
-        documentId?: string;
-        lectureId?: string;
-        textbookId?: string;
-        chapterId?: string;
-    }) => void
+    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
 ) => {
     if (doc.lecture) {
         setViewerMode({

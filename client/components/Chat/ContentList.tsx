@@ -8,11 +8,12 @@
 import { Card, Group, Text, Stack, Loader } from "@mantine/core";
 import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 import { useMantineColorScheme } from '@mantine/core';
-import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
-import React from "react";
-import classes from './ContentList.module.css';
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
+import React, { useState } from "react";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
 import Image from 'next/image';
+import { DragOverlay } from '@dnd-kit/core';
 
 interface ContentItem {
     id: string;
@@ -53,6 +54,43 @@ export function ContentList<T extends ContentItem & (Lecture | Textbook | Chapte
 
     if (!items.length) return null;
 
+    const ItemCard = ({ item }: { item: T }) => (
+        <Card
+            shadow="xs"
+            p="xs"
+            radius="md"
+            withBorder
+            style={{
+                marginBottom: '8px',
+                backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
+                borderColor: colorScheme === "dark" ? "#373A40" : "#e9ecef",
+                opacity: activeContextIds.includes(item.id) ? 0.5 : 1,
+                cursor: activeContextIds.includes(item.id) ? 'not-allowed' : 'pointer',
+            }}
+            onClick={() => {
+                if (!activeContextIds.includes(item.id)) {
+                    addContextToChat(contextType, item.id);
+                }
+            }}
+        >
+            <Group>
+                <Image
+                    src={item.imageUrl}
+                    alt={item.newName}
+                    width={40}
+                    height={40}
+                    style={{ objectFit: 'cover', borderRadius: '4px' }}
+                />
+                <Stack style={{ flex: 1 }}>
+                    <Text size="sm" c={colorScheme === "dark" ? "gray.3" : "gray.7"}>
+                        {item.newName}
+                    </Text>
+                    {renderExtraContent && renderExtraContent(item)}
+                </Stack>
+            </Group>
+        </Card>
+    );
+
     return (
         <Card 
             p="md"
@@ -80,56 +118,11 @@ export function ContentList<T extends ContentItem & (Lecture | Textbook | Chapte
 
             {expandedSections.has(sectionKey) && (
                 <div>
-                    {items.filter(item => !activeContextIds.includes(item.id)).map((item, index) => (
-                        <Draggable 
-                            key={item.id}
-                            draggableId={`${sectionKey}*${item.id}`}
-                            index={index}
-                            isDragDisabled={activeContextIds.includes(item.id)}
-                        >
-                            {(provided, snapshot) => (
-                                <Card
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    shadow="xs"
-                                    p="xs"
-                                    radius="md"
-                                    withBorder
-                                    className={snapshot.isDragging ? classes.itemDragging : ''}
-                                    style={{
-                                        ...provided.draggableProps.style,
-                                        marginBottom: '8px',
-                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
-                                        borderColor: colorScheme === "dark" ? "#373A40" : "#e9ecef",
-                                        opacity: activeContextIds.includes(item.id) ? 0.5 : 1,
-                                        cursor: activeContextIds.includes(item.id) ? 'not-allowed' : 'grab'
-                                    }}
-                                    onClick={() => {
-                                        if (!activeContextIds.includes(item.id)) {
-                                            addContextToChat(contextType, item.id);
-                                        }
-                                    }}
-                                >
-                                    <Group>
-                                        <Image
-                                            src={item.imageUrl}
-                                            alt={item.newName}
-                                            width={40}
-                                            height={40}
-                                            style={{ objectFit: 'cover', borderRadius: '4px' }}
-                                        />
-                                        <Stack style={{ flex: 1 }}>
-                                            <Text size="sm" c={colorScheme === "dark" ? "gray.3" : "gray.7"}>
-                                                {item.newName}
-                                            </Text>
-                                            {renderExtraContent && renderExtraContent(item)}
-                                        </Stack>
-                                    </Group>
-                                </Card>
-                            )}
-                        </Draggable>
-                    ))}
+                    {items
+                        .filter(item => !activeContextIds.includes(item.id))
+                        .map((item) => (
+                            <ItemCard key={item.id} item={item} />
+                        ))}
                 </div>
             )}
         </Card>

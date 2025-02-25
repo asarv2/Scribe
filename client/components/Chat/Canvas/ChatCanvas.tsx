@@ -6,7 +6,7 @@
 import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconRefresh, IconX } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMediaQuery } from "@mantine/hooks";
@@ -18,16 +18,14 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getProfessor } from "@/utils/queries/get-professor";
 import { createChat } from "@/utils/services/chat";
 import { getAvatarUrl } from "@/utils/services/images";
-import { DragDropContext, DragStart, Droppable } from "@hello-pangea/dnd";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
 
-import { Chapter, ChatMessage, ChatType, Subchapter, Document } from "@/types";
+import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode } from "@/types";
 import { getUser } from "@/utils/queries/get-user";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { ContextPanel } from "../ContextPanel";
 import { ViewerPanel } from "./ViewerPanel";
-import { WelcomeMessage } from './WelcomeMessage';
 import { notifications } from "@mantine/notifications";
 import { createMessages } from "@/utils/services/messages";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
@@ -43,17 +41,8 @@ import { getTextbooks } from "@/utils/queries/get-textbooks";
 export default function ChatCanvas({ classId, chatId }: { classId: string, chatId: string }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
-    const [showButtons, setShowButtons] = useState(true);
-    const [welcomeMessages, setWelcomeMessages] = useState({ followUp: false });
-    const [isDragging, setIsDragging] = useState(false);
-    const [draggedItem, setDraggedItem] = useState<{ type: string; id: string } | null>(null);
-    const [viewerMode, setViewerMode] = useState<{
-        active: boolean;
-        documentId?: string;
-        lectureId?: string;
-        textbookId?: string;
-        chapterId?: string;
-    }>({
+    const [welcomeMessages, setWelcomeMessages] = useState({ followUp: chatId === "new" ? false : true });
+    const [viewerMode, setViewerMode] = useState<ViewerMode>({
         active: false
     });
 
@@ -164,6 +153,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         enabled: !!problems
     });
 
+    // Combine all loading states
+    const isInitializing = !user || !profile || !professor || !lectures || !textbooks;
 
     const getDocuments = () => {
         // Previous document references from context
@@ -426,7 +417,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         });
     };
 
-    // Add context to chat
+    // Modify addContextToChat to remove drag-related state updates
     const addContextToChat = (contextType: keyof ChatMessage['context'], contextId: string) => {
         setActiveChat(prev => ({
             ...prev,
@@ -435,8 +426,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 [contextType]: [...prev.context[contextType], contextId]
             }
         }));
-        setIsDragging(false);
-        setDraggedItem(null);
     };
 
     // Remove context from chat
@@ -474,16 +463,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     }, []);
 
-    const handleDragStart = useCallback((initial: DragStart) => {
-        const [contextType, contextId] = initial.draggableId.split('*');
-        setIsDragging(true);
-        setDraggedItem({ type: contextType, id: contextId });
-    }, []);
-
     const handleOptionClick = useCallback((type: ChatType) => {
         setActiveChat(prev => ({ ...prev, chatType: type }));
         setWelcomeMessages({ followUp: true });
-        setShowButtons(false);
     }, []);
 
     const handleContextClick = useCallback((
@@ -632,118 +614,94 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     return (
         <ClassLayout classId={classId}>
-            <DragDropContext onDragStart={handleDragStart} onDragEnd={() => { }}>
-                <Container fluid style={{ marginTop: "30px" }}>
-                    <Stack>
-                        <Flex justify="space-between" align="center">
-                            <Group>
-                                <Text size="xl" fw={700} mb={6}>
-                                    {existingChat ? existingChat.name : activeChat.title}
-                                </Text>
-                                {existingChat?.type && existingChat.type !== 'general' && (
-                                    <Badge color={
-                                        existingChat.type === 'homework' ? 'blue' :
-                                            existingChat.type === 'conceptual' ? 'cyan' :
-                                                existingChat.type === 'review' ? 'teal' :
-                                                    existingChat.type === 'summary' ? 'violet' : 'gray'
-                                    }>
-                                        {existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
-                                    </Badge>
-                                )}
-                            </Group>
-                        </Flex>
-
-                        <Droppable droppableId="chat-interface">
-                            {(provided, snapshot) => (
-                                <Grid>
-                                    {/* Chat Section */}
-                                    <Grid.Col span={isMobile ? 12 : 8}>
-                                        <div
-                                            ref={provided.innerRef}
-                                            {...provided.droppableProps}
-                                            style={{
-                                                transition: 'background-color 0.2s ease',
-                                                backgroundColor: (isDragging && snapshot.isDraggingOver) ? 'rgba(51, 154, 240, 0.1)' : 'transparent',
-                                                borderRadius: '8px'
-                                            }}
-                                        >
-                                            <Card
-                                                shadow="sm"
-                                                padding="lg"
-                                                radius="md"
-                                                withBorder
-                                                style={{
-                                                    height: "80vh",
-                                                    transition: 'border-color 0.2s ease',
-                                                    borderColor: (isDragging && snapshot.isDraggingOver) ? '#339af0' : undefined
-                                                }}
-                                            >
-                                                <WelcomeMessage
-                                                    professor={professor ?? null}
-                                                    showButtons={true}
-                                                    followUp={welcomeMessages.followUp}
-                                                    activeChat={activeChat}
-                                                    colorScheme={colorScheme}
-                                                    onOptionClick={handleOptionClick}
-                                                />
-                                                <MessageList
-                                                    messages={messages ?? []}
-                                                    professor={professor ?? null}
-                                                    profile={profile ?? null}
-                                                    colorScheme={colorScheme}
-                                                    setViewerMode={setViewerMode}
-                                                    lectures={lectures ?? []}
-                                                    textbooks={textbooks ?? []}
-                                                    chapters={chapters ?? []}
-                                                    lectureDocuments={lectureDocuments ?? []}
-                                                    textbookDocuments={textbookDocuments ?? []}
-                                                />
-
-                                                <ChatInput
-                                                    activeChat={activeChat}
-                                                    loading={loading}
-                                                    classId={classId}
-                                                    onPromptChange={handlePromptChange}
-                                                    onSend={handleChat}
-                                                    onRemoveContext={handleRemoveContext}
-                                                    onScrollToSection={handleScrollToSection}
-                                                    handleContextClick={handleContextClick}
-                                                    setViewerMode={setViewerMode}
-                                                />
-                                            </Card>
-                                        </div>
-                                    </Grid.Col>
-
-                                    {/* Context Panel or Document Viewer */}
-                                    <Grid.Col span={isMobile ? 12 : 4}>
-                                        {viewerMode.active ? (
-                                            <ViewerPanel
-                                                viewerMode={viewerMode}
-                                                setViewerMode={setViewerMode}
-                                                classId={classId}
-                                            />
-                                        ) : (
-                                            <ContextPanel
-                                                classId={classId}
-                                                isMobile={isMobile ?? false}
-                                                searchQuery={searchQuery}
-                                                setSearchQuery={setSearchQuery}
-                                                expandedSections={expandedSections}
-                                                toggleSection={toggleSection}
-                                                addContextToChat={addContextToChat}
-                                                expandedNodes={expandedNodes}
-                                                toggleNode={toggleNode}
-                                                activeChat={activeChat}
-                                                scrollToSection={scrollToSection}
-                                            />
-                                        )}
-                                    </Grid.Col>
-                                </Grid>
+            <Container fluid style={{ marginTop: "30px" }}>
+                <Stack>
+                    <Flex justify="space-between" align="center">
+                        <Group>
+                            <Text size="xl" fw={700} mb={6}>
+                                {existingChat ? existingChat.name : activeChat.title}
+                            </Text>
+                            {existingChat?.type && existingChat.type !== 'general' && (
+                                <Badge color={
+                                    existingChat.type === 'homework' ? 'blue' :
+                                        existingChat.type === 'conceptual' ? 'cyan' :
+                                            existingChat.type === 'review' ? 'teal' :
+                                                existingChat.type === 'summary' ? 'violet' : 'gray'
+                                }>
+                                    {existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
+                                </Badge>
                             )}
-                        </Droppable>
-                    </Stack>
-                </Container>
-            </DragDropContext>
+                        </Group>
+                        <Group>
+                            {/* TODO: Add an option to rate out of 5 starts */}
+                        </Group>
+                    </Flex>
+
+                    <Grid>
+                        <Grid.Col span={isMobile ? 12 : 8}>
+                            <Card
+                                shadow="sm"
+                                padding="lg"
+                                radius="md"
+                                withBorder
+                                style={{
+                                    height: "80vh"
+                                }}
+                            >
+                                <MessageList
+                                    chatId={chatId}
+                                    classId={classId}
+                                    colorScheme={colorScheme}
+                                    showWelcome={existingChat && existingChat.type === 'general' ? false : true}
+                                    welcomeFollowUp={existingChat && existingChat.type === 'general' ? false : welcomeMessages.followUp}
+                                    existingChat={existingChat ?? null}
+                                    activeChat={activeChat}
+                                    onOptionClick={handleOptionClick}
+                                    setViewerMode={setViewerMode}
+                                    isInitializing={isInitializing}
+                                />
+
+                                <ChatInput
+                                    activeChat={activeChat}
+                                    loading={loading}
+                                    classId={classId}
+                                    onPromptChange={handlePromptChange}
+                                    onSend={handleChat}
+                                    onRemoveContext={handleRemoveContext}
+                                    onScrollToSection={handleScrollToSection}
+                                    handleContextClick={handleContextClick}
+                                    setViewerMode={setViewerMode}
+                                />
+                            </Card>
+                        </Grid.Col>
+
+                        {/* Context Panel or Document Viewer */}
+                        <Grid.Col span={isMobile ? 12 : 4}>
+                            {viewerMode.active ? (
+                                <ViewerPanel
+                                    viewerMode={viewerMode}
+                                    setViewerMode={setViewerMode}
+                                    classId={classId}
+                                />
+                            ) : (
+                                <ContextPanel
+                                    classId={classId}
+                                    isMobile={isMobile ?? false}
+                                    searchQuery={searchQuery}
+                                    setSearchQuery={setSearchQuery}
+                                    expandedSections={expandedSections}
+                                    toggleSection={toggleSection}
+                                    addContextToChat={addContextToChat}
+                                    expandedNodes={expandedNodes}
+                                    toggleNode={toggleNode}
+                                    activeChat={activeChat}
+                                    scrollToSection={scrollToSection}
+                                />
+                            )}
+                        </Grid.Col>
+                    </Grid>
+                </Stack>
+            </Container>
         </ClassLayout>
     );
 } 

@@ -11,3 +11,4 @@ requests>=2.31.0
 pypdf==4.0.2
 tqdm==4.66.2
 matplotlib==3.8.3
+PyMuPDF==1.21.1

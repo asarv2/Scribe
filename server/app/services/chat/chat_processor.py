@@ -141,6 +141,14 @@ class ChatProcessor(BaseProcessor):
             title = title_match.group(1).strip()
             result = re.sub(r'<TITLE>[^<]+</TITLE>', '', result)
 
+        # Convert markdown-style code blocks (both with and without python tag) to CODE tags
+        result = re.sub(
+            r'```(?:python)?\n(.*?)```',
+            lambda m: f'<CODE>{m.group(1).strip()}</CODE>',
+            result,
+            flags=re.DOTALL
+        )
+
         # Extract and process code blocks
         code_matches = re.finditer(r'<CODE>(.*?)</CODE>', result, re.DOTALL)
         for code_match in code_matches:

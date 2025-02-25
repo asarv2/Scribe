@@ -1,4 +1,4 @@
-import { ChatMessage, Subchapter, Document } from "@/types";
+import { ChatMessage, Subchapter, Document, ViewerMode } from "@/types";
 import { Textarea, Button, Group, Stack } from "@mantine/core";
 import { ContextBadges } from "./ContextBadges";
 import { memo } from "react";
@@ -13,26 +13,14 @@ interface ChatInputProps {
   onRemoveContext: (contextType: keyof ChatMessage['context'], contextId: string) => void;
   onScrollToSection: (sectionId: string) => void;
   handleContextClick?: (
-    contextType: string,
+    contextType: keyof ChatMessage['context'],
     contextId: string,
     documents: Document[],
     chapters: Chapter[],
     subchapters: Subchapter[],
-    setViewerMode: React.Dispatch<React.SetStateAction<{
-      active: boolean;
-      documentId?: string;
-      lectureId?: string;
-      textbookId?: string;
-      chapterId?: string;
-    }>>
+    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
   ) => void;
-  setViewerMode?: React.Dispatch<React.SetStateAction<{
-    active: boolean;
-    documentId?: string;
-    lectureId?: string;
-    textbookId?: string;
-    chapterId?: string;
-  }>>;
+  setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
 }
 
 export const ChatInput = memo(({ 
@@ -53,7 +41,6 @@ export const ChatInput = memo(({
         classId={classId}
         onRemoveContext={onRemoveContext}
         onScrollToSection={onScrollToSection}
-        handleContextClick={handleContextClick}
         setViewerMode={setViewerMode}
       />
       

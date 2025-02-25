@@ -187,6 +187,7 @@ export type Database = {
           chapter: string | null
           created_at: string
           description: string
+          exercise: string | null
           homework: string | null
           id: string
           lecture: string | null
@@ -200,6 +201,7 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           description?: string
+          exercise?: string | null
           homework?: string | null
           id?: string
           lecture?: string | null
@@ -213,6 +215,7 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           description?: string
+          exercise?: string | null
           homework?: string | null
           id?: string
           lecture?: string | null
@@ -228,6 +231,13 @@ export type Database = {
             columns: ["chapter"]
             isOneToOne: false
             referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_exercise_fkey"
+            columns: ["exercise"]
+            isOneToOne: false
+            referencedRelation: "exercises"
             referencedColumns: ["id"]
           },
           {
@@ -382,6 +392,7 @@ export type Database = {
           created_at: string
           end_page: number
           exercise_number: number
+          homework: string | null
           id: string
           start_page: number
           title: string
@@ -392,6 +403,7 @@ export type Database = {
           created_at?: string
           end_page?: number
           exercise_number?: number
+          homework?: string | null
           id?: string
           start_page?: number
           title?: string
@@ -402,6 +414,7 @@ export type Database = {
           created_at?: string
           end_page?: number
           exercise_number?: number
+          homework?: string | null
           id?: string
           start_page?: number
           title?: string
@@ -413,6 +426,13 @@ export type Database = {
             columns: ["chapter"]
             isOneToOne: false
             referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_homework_fkey"
+            columns: ["homework"]
+            isOneToOne: false
+            referencedRelation: "homeworks"
             referencedColumns: ["id"]
           },
         ]

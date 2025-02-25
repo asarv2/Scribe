@@ -8,8 +8,13 @@ from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
 from tqdm import tqdm
 from supabase import Client, ClientOptions, create_client
-
+from exercise_image_processor import process_exercises
+from PIL import Image
+from pydantic import BaseModel
 load_dotenv()
+
+import logging
+logger = logging.getLogger(__name__)
 
 class TOCExtractor:
     def __init__(self, api_key: str, pdf_path: str):
@@ -230,6 +235,116 @@ class TOCExtractor:
             raise Exception(f"Error parsing TOC XML: {str(e)}")
         
 
+
+    def get_exercise_pages_with_bounding_boxes(self, text_dict: Dict[Any, str], chapter_title: str, batch_size: int = 5) -> str:
+        """Get the pages of the exercises for a given chapter in batches"""
+
+        # Define system prompt
+        system_prompt = """You are an expert at analyzing textbook exercises and determining their exact location on the page. Your task is to identify individual exercises and their bounding boxes from textbook pages. Always output in valid XML format using only the specified tags. Be precise with bounding box coordinates to capture the complete exercise content."""
+
+        # Create a new model instance with specific configuration
+        new_model = genai.GenerativeModel(
+            model_name="gemini-2.0-pro-exp-02-05",
+            generation_config={
+                "temperature": 0,  # Use deterministic outputs
+                "candidate_count": 1,
+                "max_output_tokens": 2048,
+            },
+            system_instruction=system_prompt
+        )
+
+        # Define user prompt template
+        user_prompt = f"""The chapter title is "{chapter_title}".
+        Please analyze the following text and images to extract exercises in this exact format:
+        1. Enclose your response in <CHAPTER> </CHAPTER> tags.
+        2. Use <EXERCISE> and </EXERCISE> tags to start and end the exercises.
+        3. Use <TITLE>y</TITLE> tags to enclose the title of each exercise, where y is the title.
+        4. Use <BBOX>z[x_min, y_min, x_max, y_max]</BBOX> tags to enclose the bounding box of each exercise, 
+        where z is the page number where the exercise starts. If you find that the exercise spans multiple 
+        pages, add more <BBOX> tags. 
+        <CHAPTER>
+        <EXERCISE>
+            <TITLE>1.1</TITLE>
+            <BBOX>30[100, 200, 900, 300]</BBOX>
+        </EXERCISE>
+        <EXERCISE>
+            <TITLE>1.2</TITLE>
+            <BBOX>30[100, 350, 900, 450]</BBOX>
+            <BBOX>31[100, 150, 900, 250]</BBOX>
+        </EXERCISE>
+        ...
+        </CHAPTER>
+
+        Now, it is your turn to analyze the following text and extract the exercises in the exact format 
+        specified above. Only output the exercises for the given chapter, nothing else. Do not use any other 
+        tags than the ones specified above. 
+
+        If you see any leading exercises, ignore them, as they are probably a part of the subchapter 
+        exercises, not the chapter exercises. Look for a title like "Exercises" (the most main title) to 
+        start the exercises, do not include things like Projects or Explorations.
+        """
+
+        try:
+            all_exercises = []
+            
+            # Process in batches
+            for page, text in text_dict.items():
+                # Prepare images
+                image_parts = []
+                image_path = os.path.join(self.images_dir, f'page_{page}.png')
+                if os.path.exists(image_path):
+                    with open(image_path, 'rb') as img_file:
+                            image_parts.append({
+                                "data": img_file.read(),
+                                "mime_type": "image/png"
+                            })
+                else:
+                    logger.warning(f"Image not found for page {page}")
+
+                # Combine prompts and content
+                contents = [
+                    {"text": f"{system_prompt}\n\n{user_prompt}\n\nContent to analyze:\n{text}"}
+                ]
+                contents.extend([{"image": img} for img in image_parts])
+                
+                # Log the prompt for debugging
+                logger.info("Sending prompt to model:")
+                logger.info(f"System prompt: {system_prompt}")
+                logger.info(f"User prompt: {user_prompt}")
+                logger.info(f"Number of images: {len(image_parts)}")
+                
+                # Get model response
+                response = new_model.generate_content(contents)
+                
+                # Log the response
+                logger.info("Model response:")
+                logger.info(response.text)
+                
+                if response.text and '<CHAPTER>' in response.text:
+                    all_exercises.append(response.text.strip())
+            
+            # Combine and clean results
+            if not all_exercises:
+                logger.warning("No exercises found in chapter")
+                return ""
+            
+            # Extract and combine exercise elements
+            combined_exercises = []
+            for batch in all_exercises:
+                if match := re.search(r'<CHAPTER>(.*?)</CHAPTER>', batch, re.DOTALL):
+                    exercises = re.findall(r'<EXERCISE>.*?</EXERCISE>', match.group(1), re.DOTALL)
+                    combined_exercises.extend(exercises)
+            
+            final_xml = f"<CHAPTER>{''.join(combined_exercises)}</CHAPTER>"
+            logger.info("Final combined XML:")
+            logger.info(final_xml)
+            
+            return final_xml
+
+        except Exception as e:
+            logger.error(f"Error processing exercises: {str(e)}")
+            raise
+
     def get_exercise_pages(self, text: str, chapter_title: str) -> Tuple[int, int]:
         """Get the pages of the exercises for a given chapter"""
         prompt = """
@@ -325,6 +440,68 @@ class TOCExtractor:
                 print("Warning: No valid exercises found after parsing")
             else:
                 print(f"Successfully parsed {len(exercise_structure['exercises'])} exercises")
+
+            return exercise_structure
+        
+        except ET.ParseError as e:
+            print(f"Warning: XML parsing error: {str(e)}")
+            return {"exercises": []}
+        except Exception as e:
+            print(f"Warning: Unexpected error parsing exercise XML: {str(e)}")
+            return {"exercises": []}
+        
+    def parse_exercise_xml_with_bounding_boxes(self, xml_string: str) -> Dict[str, Dict]:
+        """Parse the XML exercises into a structured format.
+        Returns a dictionary containing chapter information and their structure."""
+        try:
+            # Check if xml_string is empty or invalid
+            if not xml_string or not xml_string.strip():
+                print("Warning: Empty XML string received")
+                return {"exercises": []}
+
+            # Clean up incomplete XML by finding complete exercises
+            exercise_pattern = r'<EXERCISE>.*?</EXERCISE>'
+            complete_exercises = re.findall(exercise_pattern, xml_string, re.DOTALL)
+            
+            # Create a new valid XML string with only complete exercises
+            cleaned_xml = f"<CHAPTER>{''.join(complete_exercises)}</CHAPTER>"
+            
+            root = ET.fromstring(cleaned_xml)
+            
+            exercise_structure = {
+                "exercises": []
+            }
+
+            for exercise in root.findall('EXERCISE'):
+                try:
+                    title_elem = exercise.find('TITLE')
+                    page_elem = exercise.find('PAGE')
+                    type_elem = exercise.find('TYPE')
+
+                    if title_elem is None or page_elem is None or type_elem is None:
+                        print(f"Warning: Missing required elements in exercise")
+                        continue
+
+                    # Additional validation for element text
+                    if not all(elem.text and elem.text.strip() for elem in [title_elem, page_elem, type_elem]):
+                        print(f"Warning: Empty text in required elements")
+                        continue
+
+                    exercise_info = {
+                        "title": title_elem.text.strip(),
+                        "page": int(page_elem.text),
+                        "type": type_elem.text.strip()
+                    }
+                    exercise_structure["exercises"].append(exercise_info)
+                except (AttributeError, ValueError) as e:
+                    print(f"Warning: Error processing exercise: {str(e)}")
+                    continue
+
+            if not exercise_structure["exercises"]:
+                print("Warning: No valid exercises found after parsing")
+            else:
+                print(f"Successfully parsed {len(exercise_structure['exercises'])} exercises")
+                print(exercise_structure)
 
             return exercise_structure
         
@@ -505,30 +682,27 @@ def main2(pdf_filename: str):
 
         # Extract and format exercise text
         exercise_text = extractor.extract_text_from_pdf(exercises_start, exercises_end)
-        exercise_pages = [f"<PAGE {i + exercises_start}>\n{page_text}\n</PAGE {i + exercises_start}>\n\n" 
-                         for i, page_text in enumerate(exercise_text)]
-        exercise_pages = "".join(exercise_pages)
+        
+        exercise_pages = {i + exercises_start : f"<PAGE {i + exercises_start}>\n{page_text}\n</PAGE {i + exercises_start}>\n\n" for i, page_text in enumerate(exercise_text)}
 
         # Get exercise structure from Gemini
         try:
-            exercise_xml = extractor.get_exercise_pages(exercise_pages, chapter_title)
-            print("exercise_xml: ", exercise_xml)
-            parsed_exercises = extractor.parse_exercise_xml(exercise_xml)
+            exercise_xml = extractor.get_exercise_pages_with_bounding_boxes(exercise_pages, chapter_title)
+            logger.info("exercise_xml: %s", exercise_xml)
+
+
             
-            if not parsed_exercises["exercises"]:
-                print(f"Warning: No exercises found for chapter '{chapter_title}'")
+            if exercise_xml:  # Check if we got a valid response
+                # Use the new processor to handle both parsing and image cropping
+                cropped_paths = process_exercises(pdf_filename, exercise_xml)
+                
+                if not cropped_paths:
+                    logger.warning(f"No exercises found for chapter '{chapter_title}'")
+            else:
+                logger.warning(f"No exercise XML returned for chapter '{chapter_title}'")
             
-            # Add exercises to chapter with proper page numbers
-            chapter['exercises'] = []
-            for exercise in parsed_exercises['exercises']:
-                supposed_ex_page = exercise['page']
-                chapter['exercises'].append({
-                    'title': f"{exercise['title']} ({exercise['type']})",
-                    'start_page': supposed_ex_page,  # Using raw page number without conversion!
-                    'end_page': supposed_ex_page     # Using raw page number without conversion!
-                })
         except Exception as e:
-            print(f"Error processing exercises for chapter '{chapter_title}': {str(e)}")
+            logger.error(f"Error processing exercises for chapter '{chapter_title}': {str(e)}")
             chapter['exercises'] = []  # Set empty exercises list on error
 
         # Remove redundant page and exercises_page attributes from chapter
@@ -538,6 +712,8 @@ def main2(pdf_filename: str):
         # Save progress after each chapter
         with open(toc_path, 'w') as f:
             json.dump(toc, f, indent=2)
+        
+        break # only do one chapter for now
 
     return toc
 
@@ -656,23 +832,23 @@ def main3(pdf_filename: str, class_id: str, textbook_id: str, uploaded = False):
             'subchapter': subchapter_id,
             'homework': homework_id,
         }).eq('id', document['id']).execute()
-    
-# if __name__ == "__main__":
-#     # main('LinAlg.pdf')
-#     # main2('LinAlg.pdf')
-#     main3('LinAlg.pdf', "9ebca7a7-5792-456a-ab55-03801ba710e5", "f945ef59-cabe-40e1-b38f-17e05400cb7e", True)
 
-#     # # Define base directory and uploads path
-#     # if not os.getenv('DOCKER_ENV'):
-#     #     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-#     # else:
-#     #     BASE_DIR = '/app'
-    
-#     # UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
-    
-#     # # Get PDF path from uploads directory
-#     # pdf_path = os.path.join(UPLOADS_DIR, 'LinAlg.pdf')
+if __name__ == "__main__":
+    # main('LinAlg.pdf')
+    main2('V.pdf')
+    # main3('LinAlg.pdf', "9ebca7a7-5792-456a-ab55-03801ba710e5", "f945ef59-cabe-40e1-b38f-17e05400cb7e", True)
 
-#     # API_KEY = os.getenv('GOOGLE_API_KEY')
-#     # extractor = TOCExtractor(API_KEY, pdf_path)
-#     # print(extractor.get_page_labels())
+    # # Define base directory and uploads path
+    # if not os.getenv('DOCKER_ENV'):
+    #     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    # else:
+    #     BASE_DIR = '/app'
+    
+    # UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
+    
+    # # Get PDF path from uploads directory
+    # pdf_path = os.path.join(UPLOADS_DIR, 'LinAlg.pdf')
+
+    # API_KEY = os.getenv('GOOGLE_API_KEY')
+    # extractor = TOCExtractor(API_KEY, pdf_path)
+    # print(extractor.get_page_labels())

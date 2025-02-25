@@ -86,40 +86,17 @@ export function ContextPanel({
         enabled: !!textbooks
     });
 
-    const { data: subchapters } = useQuery({
-        queryKey: ["subchapters", classId],
-        queryFn: () => getSubchapters(supabase, chapters!.map(c => c.id)),
-        enabled: !!chapters
-    });
-
     const { data: homeworks } = useQuery({
         queryKey: ["homeworks", classId],
         queryFn: () => getHomeworks(supabase, classId),
     });
 
-    const { data: problems } = useQuery({
-        queryKey: ["problems", classId],
-        queryFn: () => getProblems(supabase, homeworks!.map(h => h.id)),
-        enabled: !!homeworks
-    });
-
-    const { data: problemExercises } = useQuery({
-        queryKey: ["problemExercises", classId],
-        queryFn: () => getExercises(supabase, problems?.map(p => p.exercise).filter(e => e !== null) ?? []),
-        enabled: !!problems
-    });
-
-    const { data: chapterExercises } = useQuery({
-        queryKey: ["chapterExercises", classId],
-        queryFn: () => getChapterExercises(supabase, chapters?.map(c => c.id) ?? []),
-        enabled: !!chapters
-    });
-
     const { data: exercises } = useQuery({
         queryKey: ["exercises", classId],
-        queryFn: () => [...(problemExercises ?? []), ...(chapterExercises ?? [])],
-        enabled: !!problemExercises && !!chapterExercises
+        queryFn: () => getExercises(supabase, chapters!.map(c => c.id), homeworks!.map(h => h.id)),
     });
+
+    console.log("Exercises", exercises);
 
     useEffect(() => {
         setLocalSearchQuery(searchQuery);
@@ -144,16 +121,26 @@ export function ContextPanel({
     }
 
     const getChapterImageUrl = (item: Chapter, documentId: string) => {
+        console.log(`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.textbook}/${documentId}.png`);
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.textbook}/${documentId}.png`;
     }
 
-    const getSubchapterImageUrl = (item: Subchapter, documentId: string) => {
-        const document = textbookDocuments?.find(d => d.id === documentId);
-        if (document) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
-        }
-        return "/placeholder_image.svg";
-    }
+    // const getChapterImageUrl = (item: Chapter, documentId: string) => {
+    //     const chapter = chapters?.find(chapter => chapter.id === item.id);
+    //     if (!chapter) return '/placeholder_image.svg';
+    //     const filteredDocuments = textbookDocuments?.filter(document => document.page >= chapter.start_page && document.page <= chapter.end_page);
+    //     if (!filteredDocuments) return '/placeholder_image.svg';
+    //     const document = filteredDocuments.find(d => d.id === documentId);
+    //     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${document.id}.png`
+    // }
+
+    // const getSubchapterImageUrl = (item: Subchapter, documentId: string) => {
+    //     const document = textbookDocuments?.find(d => d.id === documentId);
+    //     if (document) {
+    //         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
+    //     }
+    //     return "/placeholder_image.svg";
+    // }
 
     const getExerciseImageUrl = (item: Exercise, documentId: string) => {
         const document = textbookDocuments?.find(d => d.id === documentId);
@@ -171,15 +158,15 @@ export function ContextPanel({
         return "/placeholder_image.svg";
     }
 
-    const getProblemImageUrl = (item: Problem, documentId: string) => {
-        const document = textbookDocuments?.find(d => d.id === documentId);
-        if (document) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
-        }
-        return "/placeholder_image.svg";
-    }
-    
-    
+    // const getProblemImageUrl = (item: Problem, documentId: string) => {
+    //     const document = textbookDocuments?.find(d => d.id === documentId);
+    //     if (document) {
+    //         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
+    //     }
+    //     return "/placeholder_image.svg";
+    // }
+
+
 
     return (
         <Stack>
@@ -263,6 +250,29 @@ export function ContextPanel({
                             activeContextIds={activeChat.context.textbooks}
                         />
                     </div>
+
+                    <div id="homeworks-section">
+                        <ContentList
+                            title="Homeworks"
+                            sectionKey="homeworks"
+                            items={homeworks?.map(h => ({
+                                ...h,
+                                newName: h.title + " - " + h.homework_number,
+                                imageUrl: getHomeworkImageUrl(h, textbookDocuments?.find(t => {
+                                    const exercise = exercises?.find(e => e.homework === h.id);
+                                    return exercise !== undefined && t.page >= exercise.start_page && t.page <= exercise.end_page;
+                                })?.id ?? "")
+                            })) || []}
+                            isSearching={false}
+                            searchActive={!!searchQuery}
+                            expandedSections={expandedSections}
+                            toggleSection={toggleSection}
+                            addContextToChat={addContextToChat}
+                            contextType="homeworks"
+                            activeContextIds={activeChat.context.homeworks}
+                        />
+                    </div>
+
                     <div id="chapters-section">
                         <ContentList
                             title="Chapters"
@@ -270,7 +280,7 @@ export function ContextPanel({
                             items={chapters?.map(c => ({
                                 ...c,
                                 newName: c.title,
-                                imageUrl: getChapterImageUrl(c, textbookDocuments?.find(d => d.id === c.textbook)?.id ?? "")
+                                imageUrl: getChapterImageUrl(c, textbookDocuments?.find(d => d.textbook === c.textbook && d.page >= c.start_page && d.page <= c.end_page)?.id ?? "")
                             })) || []}
                             isSearching={false}
                             searchActive={!!searchQuery}
@@ -281,7 +291,7 @@ export function ContextPanel({
                             activeContextIds={activeChat.context.chapters}
                         />
                     </div>
-                    <div id="subchapters-section">
+                    {/* <div id="subchapters-section">
                         <ContentList
                             title="Subchapters"
                             sectionKey="subchapters"
@@ -301,7 +311,7 @@ export function ContextPanel({
                             contextType="subchapters"
                             activeContextIds={activeChat.context.subchapters}
                         />
-                    </div>
+                    </div> */}
 
                     <div id="exercises-section">
                         <ContentList
@@ -311,8 +321,7 @@ export function ContextPanel({
                                 ...e,
                                 newName: e.title,
                                 imageUrl: getExerciseImageUrl(e, textbookDocuments?.find(t => {
-                                    const chapter = chapters?.find(c => c.id === e.chapter);
-                                    return chapter?.textbook === t.textbook;
+                                    return t.page >= e.start_page && t.page <= e.end_page;
                                 })?.id ?? "")
                             })) || []}
                             isSearching={false}
@@ -325,30 +334,7 @@ export function ContextPanel({
                         />
                     </div>
 
-                    <div id="homeworks-section">
-                        <ContentList
-                            title="Homeworks"
-                            sectionKey="homeworks"
-                            items={homeworks?.map(h => ({
-                                ...h,
-                                newName: h.title + " - " + h.homework_number,
-                                imageUrl: getHomeworkImageUrl(h, textbookDocuments?.find(t => {
-                                    const problemsForHomework = problems?.filter(p => p.homework === h.id);
-                                    const exercisesForHomework = exercises?.filter(e => problemsForHomework?.some(p => p.exercise === e.id));
-                                    return exercisesForHomework?.some(e => t.page >= e.start_page && t.page <= e.end_page);
-                                })?.id ?? "")
-                            })) || []}
-                            isSearching={false}
-                            searchActive={!!searchQuery}
-                            expandedSections={expandedSections}
-                            toggleSection={toggleSection}
-                            addContextToChat={addContextToChat}
-                            contextType="homeworks"
-                            activeContextIds={activeChat.context.homeworks}
-                        />
-                    </div>
-
-                    <div id="problems-section">
+                    {/* <div id="problems-section">
                         <ContentList
                             title="Problems"
                             sectionKey="problems"
@@ -369,7 +355,7 @@ export function ContextPanel({
                             contextType="problems"
                             activeContextIds={activeChat.context.problems}
                         />
-                    </div>
+                    </div> */}
 
                     {/* <div id="textbooks-section">
                         <TextbookTree

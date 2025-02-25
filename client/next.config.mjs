@@ -32,6 +32,12 @@ const nextConfig = {
             port: '',
             pathname: '/storage/v1/object/public/figures/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'api.ashoksaravanan.com',
+            port: '',
+            pathname: '/storage/files/scribe/**',
+          },
         ],
       },
     async headers() {
