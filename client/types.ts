@@ -30,12 +30,9 @@ export interface ChatMessage {
     prompt: string;
     context: {
         lectures: string[];     // lecture IDs
-        textbooks: string[];   // textbook IDs
         chapters: string[];    // chapter IDs
-        subchapters: string[]; // subchapter IDs
         exercises: string[];   // exercise IDs
         homeworks: string[];   // homework IDs
-        problems: string[];   // problem IDs
     };
     chatType: ChatType;
 }

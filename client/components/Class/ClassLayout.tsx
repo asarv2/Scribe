@@ -5,47 +5,49 @@
  */
 
 import { AppShell, Group } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { ClassNavbar } from "./ClassNavbar";
 import { ClassHeader } from "./ClassHeader";
 import { ClassMenuProvider } from "./ClassMenuContext";
+import { NAVBAR_CONSTANTS } from './ClassHeader';
 
 interface ClassLayoutProps {
     children: ReactNode;
-    classId: string;
+    classId: string | null
 }
 
 export function ClassLayout({ children, classId }: ClassLayoutProps) {
-    const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(true);
-    const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     return (
         <ClassMenuProvider classId={classId}>
             <AppShell
                 header={{ height: 60 }}
                 navbar={{
-                    width: { base: 300, expanded: 300 },
+                    width: {
+                        base: NAVBAR_CONSTANTS.COLLAPSED_WIDTH,
+                        expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
+                    },
                     breakpoint: 'sm',
-                    collapsed: {
-                        desktop: !desktopOpened,
-                        mobile: !mobileOpened,
-                    }
                 }}
                 padding="md"
+                styles={(theme) => ({
+                    navbar: {
+                        border: 'none'
+                    }
+                })}
             >
                 <AppShell.Header>
-                    <ClassHeader
-                        classId={classId}
-                        mobileOpened={mobileOpened}
-                        desktopOpened={desktopOpened}
-                        toggleMobile={toggleMobile}
-                        toggleDesktop={toggleDesktop}
-                    />
+                    <ClassHeader classId={classId} />
                 </AppShell.Header>
 
                 <AppShell.Navbar>
-                    <ClassNavbar basePath={`/classes/c/${classId}`} />
+                    <ClassNavbar
+                        classId={classId}
+                        basePath={`/classes/c/${classId}`}
+                        isExpanded={isExpanded}
+                        onExpandedChange={setIsExpanded}
+                    />
                 </AppShell.Navbar>
 
                 <AppShell.Main>

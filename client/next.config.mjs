@@ -34,9 +34,9 @@ const nextConfig = {
           },
           {
             protocol: 'https',
-            hostname: 'api.ashoksaravanan.com',
+            hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
             port: '',
-            pathname: '/storage/files/scribe/**',
+            pathname: '/storage/v1/object/public/exercises/**',
           },
         ],
       },

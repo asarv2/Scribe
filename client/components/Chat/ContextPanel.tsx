@@ -7,7 +7,7 @@
  */
 
 import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon } from "@mantine/core";
-import { IconSearch, IconPresentation, IconBook, IconFile } from "@tabler/icons-react";
+import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil } from "@tabler/icons-react";
 import { useState, useEffect } from "react";
 import { ContentList } from "./ContentList";
 import { getLectures } from "@/utils/queries/get-lectures";
@@ -174,7 +174,7 @@ export function ContextPanel({
 
 
     return (
-        <Stack>
+        <Stack style={{ height: "80vh" }}>
             <TextInput
                 placeholder="Search context..."
                 value={localSearchQuery}
@@ -217,12 +217,13 @@ export function ContextPanel({
                 </Tooltip>
             </Group> */}
 
-            <ScrollArea.Autosize mah={isMobile ? 400 : "calc(100vh - 250px)"}>
+            <ScrollArea.Autosize>
                 <Stack gap="xs">
                     <div id="lectures-section">
                         <ContentList
                             title="Lectures"
                             sectionKey="lectures"
+                            icon={IconPresentation}
                             items={lectures?.map(l => ({
                                 ...l,
                                 newName: l.name ?? "",
@@ -237,29 +238,31 @@ export function ContextPanel({
                             activeContextIds={activeChat.context.lectures}
                         />
                     </div>
-                    <div id="textbooks-section">
+                    <div id="chapters-section">
                         <ContentList
-                            title="Textbooks"
-                            sectionKey="textbooks"
-                            items={textbooks?.map(t => ({
-                                ...t,
-                                newName: t.title,
-                                imageUrl: getTextbookImageUrl(t, textbookDocuments?.find(d => d.textbook === t.id)?.id ?? "")
+                            title="Chapters"
+                            sectionKey="chapters"
+                            icon={IconBook}
+                            items={chapters?.map(c => ({
+                                ...c,
+                                newName: c.title,
+                                imageUrl: getChapterImageUrl(c, textbookDocuments?.find(d => d.textbook === c.textbook && d.page >= c.start_page && d.page <= c.end_page)?.id ?? "")
                             })) || []}
                             isSearching={false}
                             searchActive={!!searchQuery}
                             expandedSections={expandedSections}
                             toggleSection={toggleSection}
                             addContextToChat={addContextToChat}
-                            contextType="textbooks"
-                            activeContextIds={activeChat.context.textbooks}
+                            contextType="chapters"
+                            activeContextIds={activeChat.context.chapters}
                         />
                     </div>
-
+                    
                     <div id="homeworks-section">
                         <ContentList
                             title="Homeworks"
                             sectionKey="homeworks"
+                            icon={IconNotebook}
                             items={homeworks?.map(h => ({
                                 ...h,
                                 newName: h.title,
@@ -278,50 +281,11 @@ export function ContextPanel({
                         />
                     </div>
 
-                    <div id="chapters-section">
-                        <ContentList
-                            title="Chapters"
-                            sectionKey="chapters"
-                            items={chapters?.map(c => ({
-                                ...c,
-                                newName: c.title,
-                                imageUrl: getChapterImageUrl(c, textbookDocuments?.find(d => d.textbook === c.textbook && d.page >= c.start_page && d.page <= c.end_page)?.id ?? "")
-                            })) || []}
-                            isSearching={false}
-                            searchActive={!!searchQuery}
-                            expandedSections={expandedSections}
-                            toggleSection={toggleSection}
-                            addContextToChat={addContextToChat}
-                            contextType="chapters"
-                            activeContextIds={activeChat.context.chapters}
-                        />
-                    </div>
-                    {/* <div id="subchapters-section">
-                        <ContentList
-                            title="Subchapters"
-                            sectionKey="subchapters"
-                            items={subchapters?.map(s => ({
-                                ...s,
-                                newName: s.title,
-                                imageUrl: getSubchapterImageUrl(s, textbookDocuments?.find(t => {
-                                    const chapter = chapters?.find(c => c.id === s.chapter);
-                                    return chapter?.textbook === t.textbook;
-                                })?.id ?? "")
-                            })) || []}
-                            isSearching={false}
-                            searchActive={!!searchQuery}
-                            expandedSections={expandedSections}
-                            toggleSection={toggleSection}
-                            addContextToChat={addContextToChat}
-                            contextType="subchapters"
-                            activeContextIds={activeChat.context.subchapters}
-                        />
-                    </div> */}
-
                     <div id="exercises-section">
                         <ContentList
                             title="Exercises"
                             sectionKey="exercises"
+                            icon={IconPencil}
                             items={exercises?.map(e => ({
                                 ...e,
                                 newName: e.title,

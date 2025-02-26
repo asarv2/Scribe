@@ -12,7 +12,7 @@ import { getUser } from "@/utils/queries/get-user";
 import { logout } from "@/utils/services/auth";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Container, Center, Stack, Text } from "@mantine/core";
-import { GeneralLayout } from "@/components/General/GeneralLayout";
+import { ClassLayout } from "@/components/Class/ClassLayout";
 
 export default function AccountPage() {
     const supabase = useSupabaseBrowser();
@@ -31,7 +31,7 @@ export default function AccountPage() {
 
 
     return (
-        <GeneralLayout>
+        <ClassLayout classId={null}>
             <Container fluid style={{ marginTop: "30px" }}>
                 {user && profile ? <ProfilePage user={user} profile={profile} /> :
                     <Center>
@@ -41,7 +41,7 @@ export default function AccountPage() {
                     </Center>
                 }
             </Container>
-        </GeneralLayout>
+        </ClassLayout>
     )
 
 

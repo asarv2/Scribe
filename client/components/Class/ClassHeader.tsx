@@ -5,31 +5,34 @@
  * 09.01.2024
  */
 
-import { Burger, Button, Container, Group } from '@mantine/core';
+import { Button, Container, Group } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { IconChevronDown } from '@tabler/icons-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getUser } from '@/utils/queries/get-user';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getClasses } from '@/utils/queries/get-classes';
-import { Menu, useMantineColorScheme } from '@mantine/core';
-
+import { Menu, useMantineColorScheme, Avatar } from '@mantine/core';
+import { getAvatarUrl } from '@/utils/services/images';
+import { notifications } from '@mantine/notifications';
+import { useState } from 'react';
+import { logout } from '@/utils/services/auth';
+import { AccountMenu } from '../AccountMenu';
 interface ClassHeaderProps {
-    classId: string;
-    mobileOpened: boolean;
-    desktopOpened: boolean;
-    toggleMobile: () => void;
-    toggleDesktop: () => void;
+    classId: string | null
 }
 
-export function ClassHeader({ classId, mobileOpened, desktopOpened, toggleMobile, toggleDesktop }: ClassHeaderProps) {
+export function ClassHeader({ classId }: ClassHeaderProps) {
+    const [loading, setLoading] = useState(false);
     const supabase = useSupabaseBrowser();
     const pathname = usePathname();
     const { colorScheme } = useMantineColorScheme();
+    const queryClient = useQueryClient();
+    const router = useRouter();
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -59,47 +62,16 @@ export function ClassHeader({ classId, mobileOpened, desktopOpened, toggleMobile
     return (
         <Group h="100%" px="md" w="100%" justify="space-between">
             <Group>
-                <Burger
-                    opened={mobileOpened}
-                    onClick={toggleMobile}
-                    hiddenFrom="sm"
-                    size="sm"
-                />
-                <Burger
-                    opened={desktopOpened}
-                    onClick={toggleDesktop}
-                    visibleFrom="sm"
-                    size="sm"
-                />
-                {/* <Link href="/classes">
+            <Link href="/">
                     <Image
-                        src={colorScheme === "dark" ? "/images/xcrybe-dark.png" : "/images/xcrybe-light.png"}
+                        src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
                         priority
                         alt="Logo"
                         width={90}
                         height={20}
+                        style={{ marginTop: '4px' }}
                     />
-                </Link> */}
-                <Menu shadow="md" width={200}>
-                    <Menu.Target>
-                        <button className={classes.classSelector}>
-                            {displayText} <IconChevronDown size={16} color={colorScheme === "dark" ? "white" : "black"} />
-                        </button>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        {profile && classData && getFilteredClasses().map((classItem) => (
-                            <Menu.Item
-                                key={classItem.id}
-                                component={Link}
-                                href={`/classes/c/${classItem.id}`}
-                            >
-                                {classItem.class_code}
-                            </Menu.Item>
-                        ))}
-                    </Menu.Dropdown>
-                </Menu>
-            </Group>
-            <Group>
+                </Link>
                 {/* <Menu shadow="md" width={200}>
                     <Menu.Target>
                         <button className={classes.classSelector}>
@@ -118,12 +90,17 @@ export function ClassHeader({ classId, mobileOpened, desktopOpened, toggleMobile
                         ))}
                     </Menu.Dropdown>
                 </Menu> */}
-                <Link href="/feedback">
-                    <Button size="sm">
-                        Feedback
-                    </Button>
-                </Link>
+            </Group>
+            <Group>
+                <AccountMenu profile={profile} />
             </Group>
         </Group>
     );
 }
+
+export const NAVBAR_CONSTANTS = {
+    COLLAPSED_WIDTH: 70,
+    EXPANDED_WIDTH: 250,
+    TRANSITION_DURATION: '0.2s',
+    Z_INDEX: 1000,  // High enough to overlay content
+} as const;

@@ -146,7 +146,7 @@ export function ProfilePage({
     return (
         <Card withBorder shadow="sm" radius="md" p="xl" style={{ maxWidth: 600, margin: '0 auto' }}>
             <Group justify="flex-end" mb="md">
-                {colorScheme === 'dark' ? (
+                {/* {colorScheme === 'dark' ? (
                     <ActionIcon
                         variant="light"
                         color="yellow"
@@ -162,7 +162,7 @@ export function ProfilePage({
                     >
                         <IconMoon size={24} />
                     </ActionIcon>
-                )}
+                )} */}
             </Group>
             <Stack gap="xl">
                 <Group justify="center" style={{ width: '100%' }}>
@@ -257,14 +257,14 @@ export function ProfilePage({
                     </Paper>
                 )}
 
-                <Button
+                {/* <Button
                     color="red"
                     onClick={handleLogout}
                     loading={loading}
                     mt="md"
                 >
                     Logout
-                </Button>
+                </Button> */}
             </Stack>
         </Card>
     );

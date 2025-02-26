@@ -10,7 +10,7 @@ import { Button, Container, Stack, Textarea, Title, useMantineColorScheme } from
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { submitFeedback } from '@/utils/services/feedback';
-import { GeneralLayout } from '@/components/General/GeneralLayout';
+import { ClassLayout } from '@/components/Class/ClassLayout';
 
 export default function FeedbackPage() {
     const [likes, setLikes] = useState('');
@@ -49,7 +49,7 @@ export default function FeedbackPage() {
     };
 
     return (
-        <GeneralLayout>
+        <ClassLayout classId={null}>
             <Container size="md" py="xl">
                 <Stack gap="md">
                     <Title 
@@ -130,6 +130,6 @@ export default function FeedbackPage() {
                     </Button>
                 </Stack>
             </Container>
-        </GeneralLayout>
+        </ClassLayout>
     );
 }

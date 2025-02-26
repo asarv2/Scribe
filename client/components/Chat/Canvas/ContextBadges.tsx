@@ -123,43 +123,12 @@ export const ContextBadges = memo(({
                 );
             })}
 
-            {activeChat.context.textbooks.map(textbookId => {
-                const textbook = textbooks?.find(t => t.id === textbookId);
-                return textbook && (
-                    <Badge
-                        key={textbookId}
-                        color="green"
-                        style={{ cursor: 'pointer' }}
-                        rightSection={onRemoveContext && (
-                            <IconX
-                                size={14}
-                                style={{ cursor: 'pointer' }}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRemoveContext('textbooks', textbookId);
-                                }}
-                            />
-                        )}
-                        onClick={(e) => {
-                            if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.textbook === textbookId)
-                                if (document) {
-                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
-                                }
-                            }
-                        }}
-                    >
-                        {textbook.title}
-                    </Badge>
-                );
-            })}
-
             {activeChat.context.chapters.map(chapterId => {
                 const chapter = chapters?.find(c => c.id === chapterId);
                 return chapter && (
                     <Badge
                         key={chapterId}
-                        color="orange"
+                        color="green"
                         style={{ cursor: 'pointer' }}
                         rightSection={onRemoveContext && (
                             <IconX
@@ -217,38 +186,6 @@ export const ContextBadges = memo(({
                 );
             })}
 
-            {activeChat.context.subchapters.map(subchapterId => {
-                const subchapter = subchapters?.find(s => s.id === subchapterId);
-                const chapter = subchapter ? chapters?.find(c => c.id === subchapter.chapter) : null;
-                return subchapter && chapter && (
-                    <Badge
-                        key={subchapterId}
-                        color="purple"
-                        style={{ cursor: 'pointer' }}
-                        rightSection={onRemoveContext && (
-                            <IconX
-                                size={14}
-                                style={{ cursor: 'pointer' }}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRemoveContext('subchapters', subchapterId);
-                                }}
-                            />
-                        )}
-                        onClick={(e) => {
-                            if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.textbook === chapter?.textbook)
-                                if (document) {
-                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
-                                }
-                            }
-                        }}
-                    >
-                        {`Subchapter ${subchapter.subchapter_number}: ${subchapter.title}`}
-                    </Badge>
-                );
-            })}
-
             {activeChat.context.homeworks.map(homeworkId => {
                 const homework = homeworkData?.find(h => h.id === homeworkId);
                 const homeworkProblems = problems?.filter(p => p.homework === homeworkId);
@@ -281,39 +218,6 @@ export const ContextBadges = memo(({
                     </Badge>
                 );
             })}
-
-            {activeChat.context.problems.map(problemId => {
-                const problem = problems?.find(p => p.id === problemId);
-                const exercise = exercises?.find(e => e.id === problem?.exercise);
-                const homework = homeworkData?.find(h => h.id === problem?.homework);
-                return problem && homework && (
-                    <Badge
-                        key={problemId}
-                        color="cyan"
-                        style={{ cursor: 'pointer' }}
-                        rightSection={onRemoveContext && (
-                            <IconX
-                                size={14}
-                                style={{ cursor: 'pointer' }}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRemoveContext('problems', problemId);
-                                }}
-                            />
-                        )}
-                        onClick={(e) => {
-                            if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => exercise?.start_page && exercise?.end_page && exercise.start_page <= d.page && exercise.end_page >= d.page)
-                                if (document) {
-                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
-                                }
-                            }
-                        }}
-                    >
-                        {`${homework.title}: Problem ${problem.problem_number}`}
-                    </Badge>
-                );
-            })}
         </>
     );
 
@@ -338,12 +242,12 @@ export const ContextBadges = memo(({
                 </Badge>
             )}
 
-            {activeChat.context.textbooks.length === 0 && textbooks && textbooks.length !== 0 && (
+            {activeChat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
                 <Badge
                     color="gray"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
-                        onScrollToSection?.("textbooks-section")
+                        onScrollToSection?.("homeworks-section")
                         if (setViewerMode) {
                             setViewerMode({
                                 active: false,
@@ -352,18 +256,41 @@ export const ContextBadges = memo(({
                     }}
                     style={{ cursor: "pointer" }}
                 >
-                    Add Textbooks
+                    Add Homeworks
                 </Badge>
             )}
-
-            {activeChat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
+            {activeChat.context.chapters.length === 0 && chapters && chapters.length !== 0 && (
                 <Badge
                     color="gray"
                     leftSection={<IconPlus size={12} />}
-                    onClick={() => onScrollToSection?.("homeworks-section")}
+                    onClick={() => {
+                        onScrollToSection?.("chapters-section")
+                        if (setViewerMode) {
+                            setViewerMode({
+                                active: false,
+                            });
+                        }
+                    }}
                     style={{ cursor: "pointer" }}
                 >
-                    Add Homework
+                    Add Chapters
+                </Badge>
+            )}
+            {activeChat.context.exercises.length === 0 && exercises && exercises.length !== 0 && (
+                <Badge
+                    color="gray"
+                    leftSection={<IconPlus size={12} />}
+                    onClick={() => {
+                        onScrollToSection?.("exercises-section")
+                        if (setViewerMode) {
+                            setViewerMode({
+                                active: false,
+                            });
+                        }
+                    }}
+                    style={{ cursor: "pointer" }}
+                >
+                    Add Exercises
                 </Badge>
             )}
         </>

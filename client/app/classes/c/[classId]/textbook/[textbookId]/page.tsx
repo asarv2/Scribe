@@ -25,7 +25,7 @@ function ChapterSkeleton() {
                 <Skeleton height={150} width={150} radius="md" />
                 <Stack gap="xs">
                     <Skeleton height={24} width={200} />
-                    <Skeleton height={20} width={120} />
+                    <Skeleton height={16} width={150} />
                 </Stack>
             </Group>
         </Card>

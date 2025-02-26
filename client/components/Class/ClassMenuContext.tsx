@@ -15,7 +15,7 @@ const ClassMenuContext = createContext<ClassMenuContextType | undefined>(undefin
 // Update MENU_SECTIONS to use the config
 const MENU_SECTIONS = Object.keys(menuConfig) as MenuSection[];
 
-export const ClassMenuProvider: React.FC<{ classId: string; children: React.ReactNode }> = ({ classId, children }) => {
+export const ClassMenuProvider: React.FC<{ classId: string | null; children: React.ReactNode }> = ({ classId, children }) => {
   const pathname = usePathname();
   const storageKey = `class-navbar-sections-${classId}`;
   

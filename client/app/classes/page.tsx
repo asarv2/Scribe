@@ -18,6 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getCourseImageUrl } from "@/utils/services/images";
+import { ClassLayout } from "@/components/Class/ClassLayout";
 
 export default function ClassesPage() {
     const supabase = useSupabaseBrowser();
@@ -62,7 +63,7 @@ export default function ClassesPage() {
     }
 
     return (
-        <GeneralLayout>
+        <ClassLayout classId={null}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     {(loadingUser || loadingProfile || !classes) ? (
@@ -136,6 +137,6 @@ export default function ClassesPage() {
                     )}
                 </Stack>
             </Container>
-        </GeneralLayout>
+        </ClassLayout>
     );
 }

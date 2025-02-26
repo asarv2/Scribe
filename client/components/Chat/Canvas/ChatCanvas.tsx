@@ -52,12 +52,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         prompt: "",
         context: {
             lectures: [],
-            textbooks: [],
             chapters: [],
-            subchapters: [],
             exercises: [],
             homeworks: [],
-            problems: [],
         },
         chatType: 'general'
     });
@@ -161,9 +158,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         const lectureDocs = lectureDocuments?.filter(document =>
             activeChat.context.lectures.includes(document.lecture ?? "")
         ) ?? [];
-        const textbookDocs = textbookDocuments?.filter(document =>
-            activeChat.context.textbooks.includes(document.textbook ?? "")
-        ) ?? [];
         const chapterDocs = textbookDocuments?.filter(document => {
             // Find the chapters that are in our context
             const activeChapters = chapters?.filter(c =>
@@ -175,18 +169,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 document.page >= chapter.start_page &&
                 document.page <= chapter.end_page
             );
-        }) ?? [];
-        const subchapterDocs = textbookDocuments?.filter(document => {
-            const activeSubchapters = subchapters?.filter(s =>
-                activeChat.context.subchapters.includes(s.id)
-            );
-            // Check if document's page falls within any active subchapter's range
-            return activeSubchapters?.some(subchapter => {
-                const parentChapter = chapters?.find(c => c.id === subchapter.chapter);
-                return parentChapter?.textbook === document.textbook &&
-                    document.page >= subchapter.start_page &&
-                    document.page <= subchapter.end_page;
-            });
         }) ?? [];
         const exerciseDocs = textbookDocuments?.filter(document => {
             const activeExercises = exercises?.filter(e =>
@@ -204,11 +186,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             const homework = homeworkData?.find(h => h.id === document.homework);
             return homework && activeChat.context.homeworks.includes(homework.id);
         }) ?? [];
-        const problemDocs = textbookDocuments?.filter(document => {
-            const homework = homeworkData?.find(h => h.id === document.homework);
-            const problem = problems?.find(p => p.homework === homework?.id && activeChat.context.problems.includes(p.id));
-            return problem && homework && activeChat.context.problems.includes(problem.id);
-        }) ?? [];
 
         // Previous message references
         const previousMessagesDocs = messages?.flatMap(message =>
@@ -224,12 +201,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         // Combine all references, removing duplicates
         return Array.from(new Set([
             ...lectureDocs,
-            ...textbookDocs,
             ...chapterDocs,
-            ...subchapterDocs,
             ...exerciseDocs,
             ...homeworkDocs,
-            ...problemDocs,
             ...messageDocuments
         ]));
     }
@@ -242,14 +216,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             const lecture = lectures?.find(l => l.id === lectureId);
             if (lecture) {
                 contextParts.push(`Lecture: ${lecture.name}`);
-            }
-        });
-
-        // Add textbook context
-        activeChat.context.textbooks.forEach(textbookId => {
-            const textbook = textbooks?.find(t => t.id === textbookId);
-            if (textbook) {
-                contextParts.push(`Textbook: ${textbook.title}`);
             }
         });
 
@@ -273,29 +239,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             }
         });
 
-        // Add subchapter context
-        activeChat.context.subchapters.forEach(subchapterId => {
-            const subchapter = subchapters?.find(s => s.id === subchapterId);
-            if (subchapter) {
-                contextParts.push(`Subchapter ${subchapter.subchapter_number}: ${subchapter.title}`);
-            }
-        });
-
         // Add homework context
         activeChat.context.homeworks.forEach(homeworkId => {
             const homework = homeworkData?.find(h => h.id === homeworkId);
             if (homework) {
                 contextParts.push(`Homework: ${homework.title}`);
-            }
-        });
-
-        // Add problem context
-        activeChat.context.problems.forEach(problemId => {
-            const problem = problems?.find(p => p.id === problemId);
-            const homework = homeworkData?.find(h => h.id === problem?.homework);
-            const exercise = exercises?.find(e => e.id === problem?.exercise);
-            if (problem && homework) {
-                contextParts.push(`Problem: ${homework.title} - Problem ${problem.problem_number}, Exercise ${exercise?.title} .${exercise?.exercise_number} (${exercise?.type})`);
             }
         });
 
@@ -343,7 +291,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 response_url: `${process.env.NEXT_PUBLIC_API_URL}`,
                 documents: getDocuments().map(doc => doc.id),
                 exercises: activeChat.context.exercises, // these can stay as they are
-                problems: activeChat.context.problems, // these can stay as they are
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -372,12 +319,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 prompt: "",
                 context: {
                     lectures: [],
-                    textbooks: [],
                     chapters: [],
                     exercises: [],
-                    subchapters: [],
                     homeworks: [],
-                    problems: []
                 }
             });
 

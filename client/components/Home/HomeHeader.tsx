@@ -12,30 +12,42 @@ import classes from "../Class/ClassHeader.module.css";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getUser } from "@/utils/queries/get-user";
+import { AccountMenu } from "../AccountMenu";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export function HomeHeader() {
     const { colorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
-    
+
     const { data: user } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
     });
 
+    const { data: profile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    });
+
     return (
         <Group h="100%" px="md" justify="space-between" w="100%">
-            <Link href="/">
-                <Image
-                    src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
-                    priority
-                    alt="Logo"
-                    width={90}
-                    height={20}
-                />
-            </Link>
+            <Group>
+                <Link href="/">
+                    <Image
+                        src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
+                        priority
+                        alt="Logo"
+                        width={90}
+                        height={20}
+                        style={{ marginTop: '4px' }}
+                    />
+                </Link>
+            </Group>
 
             <Group>
                 {user ? (
+                    // <AccountMenu profile={profile} />
                     <Link href="/classes">
                         <Button size="sm">
                             Dashboard

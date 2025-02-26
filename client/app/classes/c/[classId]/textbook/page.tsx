@@ -606,7 +606,6 @@ export default function TextbookPage({ params }: { params: { classId: string } }
                     <Stack gap="xs">
                         <Skeleton height={24} width={200} />
                         <Skeleton height={16} width={150} />
-                        <Skeleton height={8} width={300} radius="xl" />
                     </Stack>
                 </Group>
             </Card>
