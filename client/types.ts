@@ -45,4 +45,5 @@ export interface ViewerMode {
     textbookId?: string;
     chapterId?: string;
     exerciseId?: string;
+    homeworkId?: string;
 }

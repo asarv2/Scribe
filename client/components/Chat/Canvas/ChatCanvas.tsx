@@ -3,10 +3,10 @@
  * This component is for chatting with the AI.
  */
 
-import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme } from "@mantine/core";
+import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconRefresh, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMediaQuery } from "@mantine/hooks";
@@ -50,7 +50,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
-    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures', 'textbooks', 'homeworks', 'chapters', 'subchapters', 'exercises', 'problems', 'homeworks']));
+    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures']));
 
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
@@ -275,6 +275,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     activeChat.title,
                     profileId,
                     activeChat.chatType,
+                    activeChat.teacher
                 );
                 newChatId = chat.id;
                 router.replace(`/classes/c/${classId}/chat/${chat.id}`);
@@ -422,6 +423,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         allDocuments: Document[],
         setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
     ) => {
+        console.log("Handling context click:", contextType, contextId);
         // For lectures
         if (contextType === 'lectures') {
             const doc = allDocuments.find(d => d.lecture === contextId);
@@ -433,15 +435,40 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 });
             }
         }
-        // For textbooks, chapters, subchapters
-        else if (['textbooks', 'chapters', 'subchapters'].includes(contextType)) {
-            const doc = allDocuments.find(d => d.textbook === contextId);
+        // For chapters
+        else if (contextType === 'chapters') {
+            const doc = allDocuments.find(d => d.chapter === contextId);
             if (doc) {
                 setViewerMode({
                     active: true,
                     documentId: doc.id,
-                    textbookId: contextId,
+                    textbookId: doc.textbook ?? undefined,
                     chapterId: contextId,
+                });
+            }
+        }
+        // For exercises
+        else if (contextType === 'exercises') {
+            const doc = allDocuments.find(d => d.exercise === contextId);
+            if (doc) {
+                setViewerMode({
+                    active: true,
+                    documentId: doc.id,
+                    textbookId: doc.textbook ?? undefined,
+                    chapterId: doc.chapter ?? undefined,
+                    exerciseId: contextId,
+                });
+            }
+        }
+        // For homeworks
+        else if (contextType === 'homeworks') {
+            const doc = allDocuments.find(d => d.homework === contextId);
+            if (doc) {
+                setViewerMode({
+                    active: true,
+                    documentId: doc.id,
+                    homeworkId: contextId,
+                    exerciseId: doc.exercise ?? undefined,
                 });
             }
         }
@@ -591,6 +618,55 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     height: "80vh"
                                 }}
                             >
+                                {isInitializing ? (
+                                    <Skeleton height={40} mb="md" />
+                                ) : (
+                                    chatId === "new" && (
+                                        <Group justify="space-between" mb="md">
+                                            <Group gap="xs">
+                                                <IconSchool 
+                                                    size={18} 
+                                                    color={!activeChat.teacher ? 'currentColor' : 'gray'} 
+                                                />
+                                                <Text 
+                                                    size="sm" 
+                                                    c={!activeChat.teacher ? undefined : 'dimmed'}
+                                                    fw={600}
+                                                >
+                                                    Student Mode
+                                                </Text>
+                                            </Group>
+
+                                            <ActionIcon
+                                                variant="transparent"
+                                                onClick={() => setActiveChat({ 
+                                                    ...activeChat, 
+                                                    teacher: !activeChat.teacher,
+                                                    chatType: !activeChat.teacher ? 'general-teacher' : 'general-student'
+                                                })}
+                                                title={`Switch to ${activeChat.teacher ? 'student' : 'teacher'} mode`}
+                                            >
+                                                <IconCaretLeftRight size={24} />
+                                            </ActionIcon>
+
+                                            <Group gap="xs">
+                                                <Text 
+                                                    size="sm" 
+                                                    c={activeChat.teacher ? undefined : 'dimmed'}
+                                                    fw={600}
+                                                >
+                                                    Teacher Mode
+                                                    
+                                                </Text>
+                                                <IconChalkboard 
+                                                    size={18} 
+                                                    color={activeChat.teacher ? 'currentColor' : 'gray'} 
+                                                />
+                                            </Group>
+                                        </Group>
+                                    )
+                                )}
+
                                 <MessageList
                                     chatId={chatId}
                                     classId={classId}
@@ -614,6 +690,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     onScrollToSection={handleScrollToSection}
                                     handleContextClick={handleContextClick}
                                     setViewerMode={setViewerMode}
+                                    expandedSections={expandedSections}
+                                    toggleSection={toggleSection}
                                 />
                             </Card>
                         </Grid.Col>
@@ -638,7 +716,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     expandedNodes={expandedNodes}
                                     toggleNode={toggleNode}
                                     activeChat={activeChat}
-                                    setActiveChat={setActiveChat}
                                     scrollToSection={scrollToSection}
                                 />
                             )}

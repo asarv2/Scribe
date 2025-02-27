@@ -6,7 +6,7 @@
  * 02.05.2025
  */
 
-import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text } from "@mantine/core";
+import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton } from "@mantine/core";
 import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight } from "@tabler/icons-react";
 import { useState, useEffect } from "react";
 import { ContentList } from "./ContentList";
@@ -22,6 +22,7 @@ import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
+import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
 
 interface ContextPanelProps {
     classId: string;
@@ -34,9 +35,16 @@ interface ContextPanelProps {
     expandedNodes: Set<string>;
     toggleNode: (nodeId: string) => void;
     activeChat: ChatMessage;
-    setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>;
     scrollToSection: (sectionId: string) => void;
 }
+
+// Define consistent colors for different content types
+const CONTENT_COLORS = {
+    lectures: 'blue',    // matches badge color
+    chapters: 'green',   // matches badge color
+    exercises: 'cyan',   // matches badge color
+    homeworks: 'orange', // matches badge color
+} as const;
 
 export function ContextPanel({
     classId,
@@ -49,15 +57,13 @@ export function ContextPanel({
     expandedNodes,
     toggleNode,
     activeChat,
-    setActiveChat,
     scrollToSection,
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
     const { colorScheme } = useMantineColorScheme();
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
 
-
-    const { data: lectures } = useQuery({
+    const { data: lectures, isLoading: loadingLectures } = useQuery({
         queryKey: ["lectures", classId],
         queryFn: () => getLectures(supabase, classId)
     });
@@ -78,8 +84,9 @@ export function ContextPanel({
         queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
         enabled: !!textbooks
     });
+    
 
-    const { data: chapters } = useQuery({
+    const { data: chapters, isLoading: loadingChapters } = useQuery({
         queryKey: ["chapters", classId],
         queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
         enabled: !!textbooks
@@ -95,8 +102,6 @@ export function ContextPanel({
         queryFn: () => getExercises(supabase, chapters!.map(c => c.id), homeworks!.map(h => h.id)),
     });
 
-    console.log("Exercises", exercises);
-
     useEffect(() => {
         setLocalSearchQuery(searchQuery);
     }, [searchQuery]);
@@ -109,8 +114,6 @@ export function ContextPanel({
         return () => clearTimeout(timeoutId);
     }, [localSearchQuery, setSearchQuery]);
 
-
-
     const getLectureImageUrl = (item: Lecture, documentId: string) => {
         if (documentId.length > 0) {
             return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${item.id}/${documentId}.png`;
@@ -118,60 +121,89 @@ export function ContextPanel({
         return "/placeholder_image.svg";
     }
 
-    const getTextbookImageUrl = (item: Textbook, documentId: string) => {
-        // if (documentId.length > 0) {
-        //     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.id}/${documentId}.png`;
-        // }
-        return "/placeholder_image.svg";
+    const getChapterImage = (chapterId: string) => {
+        const chapter = chapters?.find(chapter => chapter.id === chapterId);
+        if (!chapter) return '/placeholder_image.svg';
+        const filteredDocuments = textbookDocuments?.filter(document => document.page >= chapter.start_page && document.page <= chapter.end_page);
+        if (!filteredDocuments) return '/placeholder_image.svg';
+        const document = filteredDocuments[0];
+        if (!document) return '/placeholder_image.svg';
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${document.id}.png`
     }
 
-    const getChapterImageUrl = (item: Chapter, documentId: string) => {
-        // if (documentId.length > 0) {
-        //     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${item.textbook}/${documentId}.png`;
-        // }
-        return "/placeholder_image.svg";
+    const getExerciseImageUrl = (chapterId: string | null) => {
+        if (!chapterId) return '/placeholder_image.svg';
+        // find the first exercise in the homework
+        const exercise = exercises?.find(e => e.chapter === chapterId);
+        if (!exercise) return '/placeholder_image.svg';
+
+        // find the textbook document that has the same page number, but null for the chapter, homework and exercise
+        const textbookDocumentExercise = textbookDocuments?.find(d => d.page === exercise.start_page && d.chapter === null && d.homework === null && d.exercise === null);
+        if (textbookDocumentExercise) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentExercise.textbook}/${textbookDocumentExercise.id}.png`;
+
+        return '/placeholder_image.svg';
     }
 
-    // const getChapterImageUrl = (item: Chapter, documentId: string) => {
-    //     const chapter = chapters?.find(chapter => chapter.id === item.id);
-    //     if (!chapter) return '/placeholder_image.svg';
-    //     const filteredDocuments = textbookDocuments?.filter(document => document.page >= chapter.start_page && document.page <= chapter.end_page);
-    //     if (!filteredDocuments) return '/placeholder_image.svg';
-    //     const document = filteredDocuments.find(d => d.id === documentId);
-    //     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${document.id}.png`
-    // }
+    const getHomeworkImageUrl = (homeworkId: string) => {
+        if (!homeworkId) return '/placeholder_image.svg';
+        // find the first exercise in the homework
+        const exercise = exercises?.find(e => e.homework === homeworkId);
+        if (!exercise) return '/placeholder_image.svg';
 
-    // const getSubchapterImageUrl = (item: Subchapter, documentId: string) => {
-    //     const document = textbookDocuments?.find(d => d.id === documentId);
-    //     if (document) {
-    //         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
-    //     }
-    //     return "/placeholder_image.svg";
-    // }
+        // find the textbook document that has the same page number, but null for the chapter, homework and exercise
+        const textbookDocumentExercise = textbookDocuments?.find(d => d.page === exercise.start_page && d.chapter === null && d.homework === null && d.exercise === null);
+        if (textbookDocumentExercise) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentExercise.textbook}/${textbookDocumentExercise.id}.png`;
 
-    const getExerciseImageUrl = (item: Exercise, documentId: string) => {
-        const document = textbookDocuments?.find(d => d.id === documentId);
-        if (document) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
-        }
-        return "/placeholder_image.svg";
+        return '/placeholder_image.svg';
     }
 
-    const getHomeworkImageUrl = (item: Homework, documentId: string) => {
-        const document = textbookDocuments?.find(d => d.id === documentId);
-        if (document) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
-        }
-        return "/placeholder_image.svg";
-    }
+    // Section loading skeleton
+    const SectionSkeleton = () => (
+        <Card
+            p="md"
+            style={{
+                backgroundColor: colorScheme === "dark" ? "#2C2E33" : "#f8f9fa",
+                border: `1px solid ${colorScheme === "dark" ? "#373A40" : "#e9ecef"}`
+            }}
+        >
+            <Group justify="space-between" mb="md">
+                <Skeleton height={20} width={120} />
+                <Skeleton height={16} width={16} circle />
+            </Group>
+            <Stack>
+                {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} height={60} radius="md" />
+                ))}
+            </Stack>
+        </Card>
+    );
 
-    // const getProblemImageUrl = (item: Problem, documentId: string) => {
-    //     const document = textbookDocuments?.find(d => d.id === documentId);
-    //     if (document) {
-    //         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
-    //     }
-    //     return "/placeholder_image.svg";
-    // }
+    // Add search filtering function
+    const filterBySearch = (items: any[], documents: any[]) => {
+        if (!localSearchQuery) return items;
+        const query = localSearchQuery.toLowerCase();
+        
+        return items.filter(item => {
+            // Check item name/title
+            if (item.name?.toLowerCase().includes(query) || 
+                item.title?.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Check associated documents
+            const itemDocs = documents?.filter(doc => 
+                doc.lecture === item.id || 
+                doc.chapter === item.id ||
+                doc.homework === item.id ||
+                doc.exercise === item.id
+            );
+            
+            return itemDocs?.some(doc => 
+                doc.text?.toLowerCase().includes(query) ||
+                doc.description?.toLowerCase().includes(query)
+            );
+        });
+    };
 
     return (
         <Card
@@ -185,31 +217,6 @@ export function ContextPanel({
             }}
         >
             <Stack>
-                <Text size="lg" fw={700}>
-                    Content
-                </Text>
-
-                {/* Add user mode toggle */}
-                <Group justify="space-between">
-                    <Group gap="xs">
-                        <IconSchool size={18} color={!activeChat.teacher ? 'currentColor' : 'gray'} />
-                        <Text size="sm" c={!activeChat.teacher ? undefined : 'dimmed'}>Student</Text>
-                    </Group>
-
-                    <ActionIcon
-                        variant="transparent"
-                        onClick={() => setActiveChat({ ...activeChat, teacher: !activeChat.teacher })}
-                        title={`Switch to ${activeChat.teacher ? 'student' : 'teacher'} mode`}
-                    >
-                        <IconCaretLeftRight size={24} />
-                    </ActionIcon>
-
-                    <Group gap="xs">
-                        <Text size="sm" c={activeChat.teacher ? undefined : 'dimmed'}>Teacher</Text>
-                        <IconChalkboard size={18} color={activeChat.teacher ? 'currentColor' : 'gray'} />
-                    </Group>
-                </Group>
-
                 <TextInput
                     placeholder="Search context..."
                     value={localSearchQuery}
@@ -222,75 +229,60 @@ export function ContextPanel({
                         }
                     })}
                 />
-                {/* <Group>
-                    <Tooltip label="Jump to Lectures">
-                        <ActionIcon
-                            variant="subtle"
-                            onClick={() => scrollToSection('lectures-section')}
-                            aria-label="Jump to lectures"
-                        >
-                            <IconPresentation size={20} />
-                        </ActionIcon>
-                    </Tooltip>
-                    <Tooltip label="Jump to Textbooks">
-                        <ActionIcon
-                            variant="subtle"
-                            onClick={() => scrollToSection('textbooks-section')}
-                            aria-label="Jump to textbooks"
-                        >
-                            <IconBook size={20} />
-                        </ActionIcon>
-                    </Tooltip>
-                    <Tooltip label="Jump to Homework">
-                        <ActionIcon
-                            variant="subtle"
-                            onClick={() => scrollToSection('homework-section')}
-                            aria-label="Jump to homework"
-                        >
-                            <IconFile size={20} />
-                        </ActionIcon>
-                    </Tooltip>
-                </Group> */}
 
                 <ScrollArea.Autosize>
                     <Stack gap="xs">
                         <div id="lectures-section">
-                            <ContentList
-                                title="Lectures"
-                                sectionKey="lectures"
-                                icon={IconPresentation}
-                                items={lectures?.map(l => ({
-                                    ...l,
-                                    newName: l.name ?? "",
-                                    imageUrl: getLectureImageUrl(l, lectureDocuments?.find(d => d.lecture === l.id)?.id ?? "")
-                                })) || []}
-                                isSearching={false}
-                                searchActive={!!searchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                contextType="lectures"
-                                activeContextIds={activeChat.context.lectures}
-                            />
+                            {loadingLectures ? (
+                                <SectionSkeleton />
+                            ) : (
+                                <ContentList
+                                    title="Lectures"
+                                    sectionKey="lectures"
+                                    icon={IconPresentation}
+                                    items={filterBySearch(lectures || [], lectureDocuments || []).map(l => ({
+                                        ...l,
+                                        newName: l.name ?? "",
+                                        imageUrl: getLectureImageUrl(l, lectureDocuments?.find(d => d.lecture === l.id)?.id ?? "")
+                                    })) || []}
+                                    isSearching={!!localSearchQuery}
+                                    searchActive={!!searchQuery}
+                                    expandedSections={expandedSections}
+                                    toggleSection={toggleSection}
+                                    addContextToChat={addContextToChat}
+                                    contextType="lectures"
+                                    activeContextIds={activeChat.context.lectures}
+                                    color={CONTENT_COLORS.lectures}
+                                    documents={lectureDocuments || []}
+                                    searchQuery={localSearchQuery}
+                                />
+                            )}
                         </div>
                         <div id="chapters-section">
-                            <ContentList
-                                title="Chapters"
-                                sectionKey="chapters"
-                                icon={IconBook}
-                                items={chapters?.map(c => ({
-                                    ...c,
-                                    newName: c.title,
-                                    imageUrl: getChapterImageUrl(c, textbookDocuments?.find(d => d.textbook === c.textbook && d.page >= c.start_page && d.page <= c.end_page)?.id ?? "")
-                                })) || []}
-                                isSearching={false}
-                                searchActive={!!searchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                contextType="chapters"
-                                activeContextIds={activeChat.context.chapters}
-                            />
+                            {loadingChapters ? (
+                                <SectionSkeleton />
+                            ) : (
+                                <ContentList
+                                    title="Chapters"
+                                    sectionKey="chapters"
+                                    icon={IconBook}
+                                    items={filterBySearch(chapters || [], textbookDocuments || []).map(c => ({
+                                        ...c,
+                                        newName: `Chapter ${c.chapter_number}: ${c.title}`,
+                                        imageUrl: getChapterImage(c.id)
+                                    })) || []}
+                                    isSearching={!!localSearchQuery}
+                                    searchActive={!!searchQuery}
+                                    expandedSections={expandedSections}
+                                    toggleSection={toggleSection}
+                                    addContextToChat={addContextToChat}
+                                    contextType="chapters"
+                                    activeContextIds={activeChat.context.chapters}
+                                    color={CONTENT_COLORS.chapters}
+                                    documents={textbookDocuments || []}
+                                    searchQuery={localSearchQuery}
+                                />
+                            )}
                         </div>
 
                         <div id="homeworks-section">
@@ -298,13 +290,10 @@ export function ContextPanel({
                                 title="Homeworks"
                                 sectionKey="homeworks"
                                 icon={IconNotebook}
-                                items={homeworks?.map(h => ({
+                                items={filterBySearch(homeworks || [], textbookDocuments || []).map(h => ({
                                     ...h,
                                     newName: h.title,
-                                    imageUrl: getHomeworkImageUrl(h, textbookDocuments?.find(t => {
-                                        const exercise = exercises?.find(e => e.homework === h.id);
-                                        return exercise !== undefined && t.page >= exercise.start_page && t.page <= exercise.end_page;
-                                    })?.id ?? "")
+                                    imageUrl: getHomeworkImageUrl(h.id)
                                 })) || []}
                                 isSearching={false}
                                 searchActive={!!searchQuery}
@@ -313,6 +302,9 @@ export function ContextPanel({
                                 addContextToChat={addContextToChat}
                                 contextType="homeworks"
                                 activeContextIds={activeChat.context.homeworks}
+                                color={CONTENT_COLORS.homeworks}
+                                documents={textbookDocuments || []}
+                                searchQuery={localSearchQuery}
                             />
                         </div>
 
@@ -321,12 +313,10 @@ export function ContextPanel({
                                 title="Exercises"
                                 sectionKey="exercises"
                                 icon={IconPencil}
-                                items={exercises?.map(e => ({
+                                items={filterBySearch(exercises || [], textbookDocuments || []).map(e => ({
                                     ...e,
                                     newName: e.title,
-                                    imageUrl: getExerciseImageUrl(e, textbookDocuments?.find(t => {
-                                        return t.page >= e.start_page && t.page <= e.end_page;
-                                    })?.id ?? "")
+                                    imageUrl: getExerciseImageUrl(e.chapter)
                                 })) || []}
                                 isSearching={false}
                                 searchActive={!!searchQuery}
@@ -335,57 +325,11 @@ export function ContextPanel({
                                 addContextToChat={addContextToChat}
                                 contextType="exercises"
                                 activeContextIds={activeChat.context.exercises}
+                                color={CONTENT_COLORS.exercises}
+                                documents={textbookDocuments || []}
+                                searchQuery={localSearchQuery}
                             />
                         </div>
-
-                        {/* <div id="problems-section">
-                            <ContentList
-                                title="Problems"
-                                sectionKey="problems"
-                                items={problems?.map(p => ({
-                                    ...p,
-                                    newName: p.homework + " - " + p.problem_number,
-                                    imageUrl: getProblemImageUrl(p, textbookDocuments?.find(t => {
-                                        const problem = problems?.find(p => p.id === p.id);
-                                        const exercise = exercises?.find(e => e.id === problem?.exercise);
-                                        return exercise !== undefined && t.page >= exercise.start_page && t.page <= exercise.end_page;
-                                    })?.id ?? "")
-                                })) || []}
-                                isSearching={false}
-                                searchActive={!!searchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                contextType="problems"
-                                activeContextIds={activeChat.context.problems}
-                            />
-                        </div> */}
-
-                        {/* <div id="textbooks-section">
-                            <TextbookTree
-                                classId={classId}
-                                searchQuery={searchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                expandedNodes={expandedNodes}
-                                toggleNode={toggleNode}
-                                activeChat={activeChat}
-                            />
-                        </div>
-
-                        <div id="homework-section">
-                            <HomeworkTree
-                                classId={classId}
-                                searchQuery={searchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                expandedNodes={expandedNodes}
-                                toggleNode={toggleNode}
-                                activeChat={activeChat}
-                            />
-                        </div> */}
                     </Stack>
                 </ScrollArea.Autosize>
             </Stack>

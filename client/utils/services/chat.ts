@@ -13,9 +13,10 @@ export const createChat = async (
     chatTitle: string, 
     userId: string | null = null, 
     chatType: ChatType,
+    teacher: boolean = false,
 ) => {
     const supabase = useSupabaseServer(cookies());
-    console.log("Creating chat", classId, chatTitle, "with type:", chatType);
+    console.log("Creating chat", classId, chatTitle, "with type:", chatType, "and teacher:", teacher);
     
     // Store teacher mode info in the name instead of metadata
     let name = chatTitle;
@@ -23,6 +24,7 @@ export const createChat = async (
         class: classId,
         name: name,
         type: chatType,
+        teacher: teacher,
     } as any;
     
     if (userId) {

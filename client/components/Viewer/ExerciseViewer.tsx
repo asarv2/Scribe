@@ -168,22 +168,110 @@ export default function ExerciseViewer({
         const sortedExercises = exercises ? [...exercises].sort((a, b) => a.exercise_number - b.exercise_number) : [];
         const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
 
+        if (embedded) {
+            return (
+                <Box style={{ 
+                    position: 'relative', 
+                    width: '100%',
+                    aspectRatio: '1',
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                    borderRadius: "10px",
+                    flexShrink: 0
+                }}
+                onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
+                onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
+                >
+                    <Image
+                        src={getActiveImage(activeExerciseId)}
+                        alt={`Exercise ${currentExercise?.exercise_number}`}
+                        width={500}
+                        height={500}
+                        style={{ 
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: "contain"
+                        }}
+                        sizes="100vw"
+                        priority
+                    />
+                    <ActionIcon
+                        size={embedded ? "lg" : "xl"}
+                        variant="filled"
+                        color={colorScheme === "dark" ? "gray" : "dark"}
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: embedded ? 5 : 10,
+                            transform: 'translateY(-50%)',
+                            zIndex: 100,
+                        }}
+                        onClick={() => {
+                            if (!sortedExercises.length) return;
+                            if (currentIndex > 0) {
+                                handleExerciseClick(sortedExercises[currentIndex - 1].id);
+                            }
+                        }}
+                        disabled={!sortedExercises.length || currentIndex === 0}
+                        aria-label="Previous Exercise"
+                    >
+                        <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
+                    </ActionIcon>
+                    <ActionIcon
+                        size={embedded ? "lg" : "xl"}
+                        variant="filled"
+                        color="gray"
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            right: embedded ? 5 : 10,
+                            transform: 'translateY(-50%)',
+                            zIndex: 100,
+                        }}
+                        onClick={() => {
+                            if (!sortedExercises.length) return;
+                            if (currentIndex < sortedExercises.length - 1) {
+                                handleExerciseClick(sortedExercises[currentIndex + 1].id);
+                            }
+                        }}
+                        disabled={!sortedExercises.length || currentIndex === sortedExercises.length - 1}
+                        aria-label="Next Exercise"
+                    >
+                        <IconArrowRight size={embedded ? 24 : 32} />
+                    </ActionIcon>
+                    <Box
+                        pos="absolute"
+                        bottom={embedded ? 5 : 10}
+                        right={embedded ? 5 : 10}
+                        p={embedded ? 4 : 8}
+                        style={{
+                            zIndex: 100,
+                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                            borderRadius: "4px",
+                        }}
+                    >
+                        <Text
+                            size={embedded ? "xs" : "sm"}
+                            fw={500}
+                            style={{
+                                color: colorScheme === "dark" ? "white" : "black",
+                                textShadow: colorScheme === "dark" ?
+                                    "0px 0px 4px rgba(0,0,0,0.5)" :
+                                    "0px 0px 4px rgba(255,255,255,0.5)"
+                            }}
+                        >
+                            Exercise {currentExercise?.title}
+                        </Text>
+                    </Box>
+                </Box>
+            );
+        }
+
         return (
-            <Box style={{ 
-                position: 'relative', 
-                width: '100%',
-                aspectRatio: '1',
-                overflow: "hidden",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
-                borderRadius: "10px",
-                flexShrink: 0
-            }}
-            onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
-            onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
-            >
+            <Card padding="md" pos="relative" withBorder>
                 {isImageLoading && (
                     <Skeleton 
                         height="100%" 
@@ -280,7 +368,7 @@ export default function ExerciseViewer({
                         Exercise {currentExercise?.title}
                     </Text>
                 </Box>
-            </Box>
+            </Card>
         );
     };
 
@@ -516,6 +604,67 @@ export default function ExerciseViewer({
             }
         }
     }, [activeExerciseId]);
+
+    if (embedded) {
+        return (
+            <Stack gap="xs" style={{ height: '100%' }}>
+                <MainViewer />
+                
+                {/* Tighter preview strip */}
+                <Flex
+                    ref={previewScrollRef}
+                    gap={4}
+                    style={{
+                        overflowX: 'auto',
+                        padding: '2px',
+                        flexShrink: 0
+                    }}
+                >
+                    {exercises && sortExercises(exercises).map((exercise) => (
+                        <Box
+                            key={exercise.id}
+                            data-exercise={exercise.id}
+                            style={{
+                                cursor: 'pointer',
+                                width: 40,
+                                height: 40,
+                                position: 'relative',
+                                flexShrink: 0,
+                                borderRadius: '4px',
+                                overflow: 'hidden',
+                            }}
+                            onClick={() => handleExerciseClick(exercise.id)}
+                        >
+                            <Image
+                                src={getActiveImage(exercise.id)}
+                                alt={`Exercise ${exercise.exercise_number}`}
+                                width={40}
+                                height={40}
+                                style={{ 
+                                    objectFit: 'cover',
+                                    outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
+                                    outlineOffset: '-2px',
+                                }}
+                                sizes="100vw"
+                            />
+                        </Box>
+                    ))}
+                </Flex>
+
+                {/* Description with minimal padding */}
+                <Box style={{ overflow: 'auto', paddingInline: '2px' }}>
+                    <Text fw={500} size="sm">
+                        <Latex>{exercises?.find(ex => ex.id === activeExerciseId)?.info ?? ""}</Latex>
+                    </Text>
+                </Box>
+                <Box style={{ overflow: 'auto', paddingInline: '2px' }}>
+                    <Text fw={500} size="sm">
+                        <Latex>{exercises?.find(ex => ex.id === activeExerciseId)?.given ?? ""}</Latex>
+                    </Text>
+                </Box>
+            </Stack>
+        );
+    }
 
     return (
         <ClassLayout classId={classId}>

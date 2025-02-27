@@ -19,6 +19,8 @@ interface ChatInputProps {
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
   ) => void;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
+  expandedSections: Set<string>;
+  toggleSection: (section: string) => void;
 }
 
 export const ChatInput = memo(({ 
@@ -30,7 +32,9 @@ export const ChatInput = memo(({
   onRemoveContext,
   onScrollToSection,
   handleContextClick,
-  setViewerMode
+  setViewerMode,
+  expandedSections,
+  toggleSection
 }: ChatInputProps) => {
   return (
     <Stack>
@@ -40,6 +44,8 @@ export const ChatInput = memo(({
         onRemoveContext={onRemoveContext}
         onScrollToSection={onScrollToSection}
         setViewerMode={setViewerMode}
+        expandedSections={expandedSections}
+        toggleSection={toggleSection}
       />
       
       <Group align="flex-end" style={{ width: '100%' }}>

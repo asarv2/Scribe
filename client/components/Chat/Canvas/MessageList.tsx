@@ -151,30 +151,6 @@ export const MessageList = memo(({
 
   const allDocuments = [...(lectureDocuments ?? []), ...(textbookDocuments ?? [])];
 
-  const handleTeacherOption = (option: string) => {
-    // Map teacher UI options to existing database chat types
-    let chatType: ChatType;
-    
-    switch(option) {
-      case 'approach':
-        chatType = 'conceptual';
-        break;
-      case 'faq':
-        chatType = 'summary';
-        break;
-      case 'misconceptions':
-        chatType = 'review';
-        break;
-      default:
-        chatType = option as ChatType;
-    }
-    
-    console.log(`Teacher selected option: ${option}, mapped to chat type: ${chatType}, setting teacherOption=${option}`);
-    
-    // We need to store what teacher option was selected
-    onOptionClick(chatType, true, option);
-  };
-
   const renderWelcomeMessages = () => {
     if (!showWelcome && !welcomeFollowUp) return null;
 
@@ -299,31 +275,31 @@ export const MessageList = memo(({
                 }}
               >
                 <Text>
-                  {!activeChat.teacher ? (
+                  {!(existingChat?.teacher || activeChat.teacher) ? (
                     <>
                       Sounds good! I can definitely help you with{' '}
-                      {(existingChat ? existingChat.type : activeChat.chatType) === 'homework' ? (
+                      {(existingChat?.type || activeChat.chatType) === 'homework' ? (
                         <Text span fw={600} c="blue">your homework</Text>
-                      ) : (existingChat ? existingChat.type : activeChat.chatType) === 'conceptual' ? (
+                      ) : (existingChat?.type || activeChat.chatType) === 'conceptual' ? (
                         <Text span fw={600} c="cyan">understanding concepts</Text>
-                      ) : (existingChat ? existingChat.type : activeChat.chatType) === 'review' ? (
+                      ) : (existingChat?.type || activeChat.chatType) === 'review' ? (
                         <Text span fw={600} c="teal">reviewing the content</Text>
                       ) : (
                         <Text span fw={600} c="violet">creating a summary</Text>
                       )}. What specific {
-                        (existingChat ? existingChat.type : activeChat.chatType) === 'homework' ? 'problem' :
-                          (existingChat ? existingChat.type : activeChat.chatType) === 'conceptual' ? 'topic' :
+                        (existingChat?.type || activeChat.chatType) === 'homework' ? 'problem' :
+                          (existingChat?.type || activeChat.chatType) === 'conceptual' ? 'topic' :
                             'material'
                       } would you like to go over?
                     </>
                   ) : (
                     <>
                       {/* Teacher follow-up text */}
-                      {activeChat.chatType === 'approach' ? (
+                      {(existingChat?.type || activeChat.chatType) === 'approach' ? (
                         <>What specific <Text span fw={600} c="green">teaching approaches</Text> would you like me to take when helping out the students?</>
-                      ) : activeChat.chatType === 'faq' ? (
+                      ) : (existingChat?.type || activeChat.chatType) === 'faq' ? (
                         <>What are some <Text span fw={600} c="indigo">FAQ's and responses</Text> students tend to have that I can address if they ask me?</>
-                      ) : activeChat.chatType === 'misconception' ? (
+                      ) : (existingChat?.type || activeChat.chatType) === 'misconception' ? (
                         <>What are some <Text span fw={600} c="orange">common misconceptions</Text> students usually have that cause them to make mistakes?</>
                       ) : (
                         <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
@@ -533,11 +509,17 @@ export const MessageList = memo(({
                             )}
                             {group.documents.length > 0 && (
                               <Group gap="xs" pt={group.text ? "xs" : 0}>
-                                {group.documents.map((doc, docIndex) => (
+                                {Array.from(new Set(group.documents)).slice(0, 3).map((doc, docIndex) => (
                                   <Badge
                                     key={docIndex}
                                     style={{ cursor: 'pointer' }}
-                                    onClick={() => handleDocumentClick(doc, chapters ?? [], setViewerMode)}
+                                    onClick={() => {
+                                      if (doc.lecture) {
+                                        handleDocumentClick(doc, chapters ?? [], 'lecture', setViewerMode)
+                                      } else if (doc.textbook) {
+                                        handleDocumentClick(doc, chapters ?? [], 'chapter', setViewerMode)
+                                      }
+                                    }}
                                   >
                                     {getDocumentLabel(doc, lectures ?? [], textbooks ?? [])}
                                   </Badge>

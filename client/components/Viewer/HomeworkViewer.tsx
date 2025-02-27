@@ -192,6 +192,108 @@ export default function HomeworkViewer({
         const sortedExercises = exercises ? sortExercises(exercises) : [];
         const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
 
+        if (embedded) {
+            return (
+                <Box style={{ 
+                    position: 'relative', 
+                    width: '100%',
+                    aspectRatio: '1',
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                    borderRadius: "10px",
+                    flexShrink: 0
+                }}
+                onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
+                onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
+                >
+                    <Image
+                        src={getActiveImage(activeExerciseId)}
+                        alt={`Exercise ${currentExercise?.title}`}
+                        width={500}
+                        height={500}
+                        style={{ 
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: "contain"
+                        }}
+                        sizes="100vw"
+                        priority
+                    />
+                    <ActionIcon
+                        size="lg"
+                        variant="filled"
+                        color={colorScheme === "dark" ? "gray" : "dark"}
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: 5,
+                            transform: 'translateY(-50%)',
+                            zIndex: 100,
+                        }}
+                        onClick={() => {
+                            if (!sortedExercises.length) return;
+                            if (currentIndex > 0) {
+                                handleExerciseClick(sortedExercises[currentIndex - 1].id);
+                            }
+                        }}
+                        disabled={!sortedExercises.length || currentIndex === 0}
+                        aria-label="Previous Exercise"
+                    >
+                        <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                    </ActionIcon>
+                    <ActionIcon
+                        size="lg"
+                        variant="filled"
+                        color="gray"
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            right: 5,
+                            transform: 'translateY(-50%)',
+                            zIndex: 100,
+                        }}
+                        onClick={() => {
+                            if (!sortedExercises.length) return;
+                            if (currentIndex < sortedExercises.length - 1) {
+                                handleExerciseClick(sortedExercises[currentIndex + 1].id);
+                            }
+                        }}
+                        disabled={!sortedExercises.length || currentIndex === sortedExercises.length - 1}
+                        aria-label="Next Exercise"
+                    >
+                        <IconArrowRight size={24} />
+                    </ActionIcon>
+                    <Box
+                        pos="absolute"
+                        bottom={5}
+                        right={5}
+                        p={4}
+                        style={{
+                            zIndex: 100,
+                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                            borderRadius: "4px",
+                        }}
+                    >
+                        <Text
+                            size="xs"
+                            fw={500}
+                            style={{
+                                color: colorScheme === "dark" ? "white" : "black",
+                                textShadow: colorScheme === "dark" ?
+                                    "0px 0px 4px rgba(0,0,0,0.5)" :
+                                    "0px 0px 4px rgba(255,255,255,0.5)"
+                            }}
+                        >
+                            {currentExercise?.title}
+                        </Text>
+                    </Box>
+                </Box>
+            );
+        }
+
         return (
             <Card padding="md" pos="relative" withBorder>
                 <Stack>
@@ -490,6 +592,62 @@ export default function HomeworkViewer({
 
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.textbook}/${exerciseId}/${document.id}.png`;
     };
+
+    if (embedded) {
+        return (
+            <Stack gap="xs" style={{ height: '100%' }}>
+                <MainViewer />
+                
+                {/* Tighter preview strip */}
+                <Flex
+                    ref={previewScrollRef}
+                    gap={4}
+                    style={{
+                        overflowX: 'auto',
+                        padding: '2px',
+                        flexShrink: 0
+                    }}
+                >
+                    {exercises && sortExercises(exercises).map((exercise) => (
+                        <Box
+                            key={exercise.id}
+                            data-exercise={exercise.id}
+                            style={{
+                                cursor: 'pointer',
+                                width: 40,
+                                height: 40,
+                                position: 'relative',
+                                flexShrink: 0,
+                                borderRadius: '4px',
+                                overflow: 'hidden',
+                            }}
+                            onClick={() => handleExerciseClick(exercise.id)}
+                        >
+                            <Image
+                                src={getActiveImage(exercise.id)}
+                                alt={`Exercise ${exercise.problem_number}`}
+                                width={40}
+                                height={40}
+                                style={{ 
+                                    objectFit: 'cover',
+                                    outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
+                                    outlineOffset: '-2px',
+                                }}
+                                sizes="100vw"
+                            />
+                        </Box>
+                    ))}
+                </Flex>
+
+                {/* Description with minimal padding */}
+                <Box style={{ overflow: 'auto', paddingInline: '2px' }}>
+                    <Text fw={500} size="sm">
+                        <Latex>{exercises?.find(ex => ex.id === activeExerciseId)?.info ?? ""}</Latex>
+                    </Text>
+                </Box>
+            </Stack>
+        );
+    }
 
     return (
         <ClassLayout classId={classId}>

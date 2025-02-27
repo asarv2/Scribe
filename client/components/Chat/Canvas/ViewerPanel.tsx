@@ -14,6 +14,10 @@ import { getTextbooks } from "@/utils/queries/get-textbooks";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import ChapterViewer from "../../Viewer/ChapterViewer";
 import ExerciseViewer from "@/components/Viewer/ExerciseViewer";
+import HomeworkViewer from "@/components/Viewer/HomeworkViewer";
+import { getHomeworks } from "@/utils/queries/get-homeworks";
+import { getChapters } from "@/utils/queries/get-chapters";
+
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
@@ -33,14 +37,32 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
         queryFn: () => getTextbooks(supabase, classId),
     });
 
+    const { data: chapters } = useQuery({
+        queryKey: ["chapters", classId],
+        queryFn: () => getChapters(supabase, textbooks?.map(t => t.id) ?? [])
+    });
+
+    const { data: homeworks } = useQuery({
+        queryKey: ["homeworks", classId],
+        queryFn: () => getHomeworks(supabase, classId)
+    });
+
     // Helper function to get viewer title
     const getViewerTitle = () => {
         if (viewerMode.lectureId) {
             const lecture = lectures?.find(l => l.id === viewerMode.lectureId);
             return lecture ? `${lecture.name}` : "Lecture Viewer";
-        } else if (viewerMode.textbookId) {
+        } else if (viewerMode.textbookId && viewerMode.exerciseId) {
             const textbook = textbooks?.find(t => t.id === viewerMode.textbookId);
-            return textbook ? `${textbook.title}` : "Textbook Viewer";
+            const chapter = chapters?.find(c => c.id === viewerMode.chapterId);
+            return textbook ? `${textbook.title} - ${chapter?.title} - Exercises` : "Exercise Viewer";
+        } else if (viewerMode.textbookId && viewerMode.chapterId) {
+            const textbook = textbooks?.find(t => t.id === viewerMode.textbookId);
+            const chapter = chapters?.find(c => c.id === viewerMode.chapterId);
+            return textbook ? `${textbook.title} - ${chapter?.title}` : "Textbook Viewer";
+        } else if (viewerMode.homeworkId) {
+            const homework = homeworks?.find(h => h.id === viewerMode.homeworkId);
+            return homework ? `${homework.title}` : "Homework Viewer";
         }
         return "Document Viewer";
     };
@@ -81,20 +103,30 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
                             embedded={true}
                         />
                     ) : viewerMode.textbookId && viewerMode.chapterId ? (
-                        <ChapterViewer
-                            key={`${viewerMode.textbookId}-${viewerMode.documentId}`}
+                        viewerMode.exerciseId ? (
+                            <ExerciseViewer
+                                key={`${viewerMode.textbookId}-${viewerMode.chapterId}-${viewerMode.exerciseId}`}
+                                classId={classId}
+                                textbookId={viewerMode.textbookId}
+                                chapterId={viewerMode.chapterId}
+                                initialExerciseId={viewerMode.exerciseId}
+                                embedded={true}
+                            />
+                        ) : (
+                            <ChapterViewer
+                                key={`${viewerMode.textbookId}-${viewerMode.chapterId}`}
+                                classId={classId}
+                                textbookId={viewerMode.textbookId}
+                                chapterId={viewerMode.chapterId}
+                                initialDocumentId={viewerMode.documentId}
+                                embedded={true}
+                            />
+                        )
+                    ) : viewerMode.homeworkId ? (
+                        <HomeworkViewer
+                            key={`${viewerMode.homeworkId}-${viewerMode.exerciseId}`}
                             classId={classId}
-                            textbookId={Object.values(viewerMode.textbookId)[0]}
-                            chapterId={viewerMode.chapterId}
-                            initialDocumentId={viewerMode.documentId}
-                            embedded={true}
-                        />
-                    ) : viewerMode.textbookId && viewerMode.chapterId && viewerMode.exerciseId ? (
-                        <ExerciseViewer
-                            key={`${viewerMode.textbookId}-${viewerMode.chapterId}-${viewerMode.exerciseId}`}
-                            classId={classId}
-                            textbookId={Object.values(viewerMode.textbookId)[0]}
-                            chapterId={viewerMode.chapterId}
+                            homeworkId={viewerMode.homeworkId}
                             initialExerciseId={viewerMode.exerciseId}
                             embedded={true}
                         />

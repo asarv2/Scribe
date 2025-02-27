@@ -18,22 +18,23 @@ import { Homework } from "@/types";
 import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
 import Image from "next/image";
 import Link from "next/link";
-
+import { getExerciseDocuments } from "@/utils/queries/get-exercise-docs";
+import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
+import { getTextbooks } from "@/utils/queries/get-textbooks";
 export default function HomeworkPage({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const classId = params.classId;
     const [processingHomeworks, setProcessingHomeworks] = useState<Set<string>>(new Set());
 
+    const {data: textbooks, isLoading: loadingTextbooks} = useQuery({
+        queryKey: ["textbooks", classId],
+        queryFn: () => getTextbooks(supabase, classId)
+    });
+
     const { data: homeworks, isLoading: loadingHomeworks } = useQuery({
         queryKey: ["homeworks", classId],
         queryFn: () => getHomeworks(supabase, classId)
-    });
-
-    const {data: homeworkDocuments, isLoading: loadingHomeworkDocuments} = useQuery({
-        queryKey: ["homeworkDocuments", classId],
-        queryFn: () => getHomeworkDocuments(supabase, homeworks?.map(h => h.id) ?? []),
-        enabled: !!homeworks
     });
 
     const {data: exercises, isLoading: loadingExercises} = useQuery({
@@ -42,30 +43,18 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
         enabled: !!homeworks
     });
 
-    console.log(exercises);
+    const {data: homeworkDocuments, isLoading: loadingHomeworkDocuments} = useQuery({
+        queryKey: ["homeworkDocuments", classId],
+        queryFn: () => getHomeworkDocuments(supabase, homeworks?.map(h => h.id) ?? []),
+        enabled: !!homeworks
+    });
 
-    const handleProblemAnswerEnabledChange = async (exerciseId: string, enabled: boolean) => {
-        try {
-            const {success, error} = await updateExerciseAnswerEnabled(enabled, exerciseId);
-            if (!success) {
-                throw new Error(error);
-            }
-            // notifications.show({
-            //     title: "Success",
-            //     message: "Problem answer enabled status updated",
-            //     color: "green"
-            // });
-        } catch (error) {
-            console.error("Error updating problem answer enabled status:", error);
-            notifications.show({
-                title: "Error",
-                message: "Error updating problem answer enabled status",
-                color: "red"
-            });
-        } finally {
-            queryClient.invalidateQueries({ queryKey: ["problems", classId] });
-        }
-    };
+    const {data: textbookDocuments, isLoading: loadingTextbookDocuments} = useQuery({
+        queryKey: ["textbookDocuments", classId],
+        queryFn: () => getTextbookDocuments(supabase, textbooks?.map(t => t.id) ?? []),
+        enabled: !!textbooks
+    });
+    
 
     const handleRetry = async (classId: string, homework: Homework) => {
         try {
@@ -192,13 +181,14 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
 
     const getDocumentImage = (homeworkId: string) => {
         if (!homeworkId) return '/placeholder_image.svg';
-        const document = homeworkDocuments?.find(document => document.homework === homeworkId);
-        if (!document) return '/placeholder_image.svg';
-        if (document.textbook) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`
-        } else if (document.exercise) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.exercise}/${document.id}.png`
-        }
+        // find the first exercise in the homework
+        const exercise = exercises?.find(e => e.homework === homeworkId);
+        if (!exercise) return '/placeholder_image.svg';
+
+        // find the textbook document that has the same page number, but null for the chapter, homework and exercise
+        const textbookDocumentExercise = textbookDocuments?.find(d => d.page === exercise.start_page && d.chapter === null && d.homework === null && d.exercise === null);
+        if (textbookDocumentExercise) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentExercise.textbook}/${textbookDocumentExercise.id}.png`;
+
         return '/placeholder_image.svg';
     }
 

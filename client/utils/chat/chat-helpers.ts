@@ -34,56 +34,39 @@ export const filterCodeBlocks = (text: string): string => {
     return result;
 };
 
-// Split text by document references
+// Split text by document references and preserve formatting
 export const splitTextByDocuments = (text: string): { text: string; documentId: string | null }[] => {
     if (!text) return [];
 
-    const result: { text: string; documentId: string | null }[] = [];
-    let currentIndex = 0;
+    const documentTags: string[] = [];
+    let cleanedText = text;
 
-    while (true) {
-        // Find the next document tag
-        const startIndex = text.indexOf('<DOCUMENT>', currentIndex);
-        if (startIndex === -1) {
-            // No more document tags, add the remaining text if any
-            if (currentIndex < text.length) {
-                result.push({
-                    text: text.slice(currentIndex),
-                    documentId: null
-                });
-            }
-            break;
-        }
-
-        // Add the text before the document tag
-        if (startIndex > currentIndex) {
-            result.push({
-                text: text.slice(currentIndex, startIndex),
-                documentId: null
-            });
-        }
-
-        // Find the closing tag
-        const endIndex = text.indexOf('</DOCUMENT>', startIndex);
-        if (endIndex === -1) {
-            // No closing tag found, add remaining text and stop
-            result.push({
-                text: text.slice(currentIndex),
-                documentId: null
-            });
-            break;
-        }
-
-        // Extract the document ID
-        const documentId = text.slice(startIndex + 10, endIndex);
-        result.push({
-            text: '',  // No text content for document references
-            documentId
-        });
-
-        // Move the current index past the document tag
-        currentIndex = endIndex + 11; // 11 is length of '</DOCUMENT>'
+    // First extract all document tags and store them
+    const documentRegex = /<DOCUMENT>([^<]+)<\/DOCUMENT>/g;
+    let match;
+    while ((match = documentRegex.exec(text)) !== null) {
+        documentTags.push(match[1]);
+        // Replace the document tag with a placeholder to preserve formatting
+        cleanedText = cleanedText.replace(match[0], '');
     }
+
+    const result: { text: string; documentId: string | null }[] = [];
+    
+    // Add the main text if it exists (with preserved formatting)
+    if (cleanedText.trim()) {
+        result.push({
+            text: cleanedText.trim(),
+            documentId: null
+        });
+    }
+
+    // Add all document references at the end
+    documentTags.forEach(docId => {
+        result.push({
+            text: '',
+            documentId: docId
+        });
+    });
 
     return result;
 };
@@ -142,44 +125,34 @@ export const splitTextByFigures = (text: string): { text: string; figureId: stri
     return result;
 };
 
-// Group consecutive document references
+// Group consecutive document references at the end
 export const groupConsecutiveDocuments = (
     segments: { text: string; documentId: string | null }[], 
     allDocuments: Document[]
 ): { text: string; documents: Document[] }[] => {
     const result: { text: string; documents: Document[] }[] = [];
-    let currentGroup: Document[] = [];
-    let currentText = '';
+    const documents: Document[] = [];
 
-    segments.forEach((segment) => {
-        if (segment.documentId) {
+    // First add all text segments
+    segments.forEach(segment => {
+        if (!segment.documentId && segment.text) {
+            result.push({
+                text: segment.text,
+                documents: []
+            });
+        } else if (segment.documentId) {
             const doc = allDocuments.find(d => d.id === segment.documentId);
             if (doc) {
-                currentGroup.push(doc);
-            }
-        } else {
-            if (currentGroup.length > 0) {
-                result.push({
-                    text: currentText,
-                    documents: [...currentGroup]
-                });
-                currentGroup = [];
-                currentText = '';
-            }
-            if (segment.text) {
-                result.push({
-                    text: segment.text,
-                    documents: []
-                });
+                documents.push(doc);
             }
         }
     });
 
-    // Handle any remaining documents
-    if (currentGroup.length > 0) {
+    // Then add all documents as a single group at the end if there are any
+    if (documents.length > 0) {
         result.push({
-            text: currentText,
-            documents: [...currentGroup]
+            text: '',
+            documents: documents
         });
     }
 
@@ -206,15 +179,16 @@ export const getDocumentLabel = (
 export const handleDocumentClick = (
     doc: Document, 
     chapters: Chapter[], 
+    type: 'lecture' | 'chapter' | 'exercise' | 'homework',
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
 ) => {
-    if (doc.lecture) {
+    if (type === 'lecture' && doc.lecture) {
         setViewerMode({
             active: true,
             documentId: doc.id,
             lectureId: doc.lecture,
         });
-    } else if (doc.textbook) {
+    } else if (type === 'chapter' && doc.textbook) {
         const chapter = chapters?.find(c =>
             doc.page >= c.start_page &&
             doc.page <= c.end_page &&
@@ -228,5 +202,25 @@ export const handleDocumentClick = (
                 chapterId: chapter.id,
             });
         }
+    } else if (type === 'exercise' && doc.exercise) {
+        const chapter = chapters?.find(c => doc.chapter === c.id);
+        if (chapter) {
+            setViewerMode({
+                active: true,
+                documentId: doc.id,
+                textbookId: doc.textbook ?? undefined,
+                chapterId: chapter.id,
+                exerciseId: doc.exercise,
+            });
+        }
+    } else if (type === 'homework' && doc.homework) {
+        setViewerMode({
+            active: true,
+            documentId: doc.id,
+            homeworkId: doc.homework,
+            exerciseId: doc.exercise ?? undefined,
+        });
+    } else {
+        throw new Error('Invalid document type');
     }
 };

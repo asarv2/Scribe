@@ -26,6 +26,8 @@ interface ContextBadgesProps {
     onRemoveContext?: (contextType: keyof ChatMessage['context'], contextId: string) => void;
     onScrollToSection?: (sectionId: string) => void;
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
+    expandedSections: Set<string>;
+    toggleSection: (section: string) => void;
 }
 
 export const ContextBadges = memo(({
@@ -33,7 +35,9 @@ export const ContextBadges = memo(({
     classId,
     onRemoveContext,
     onScrollToSection,
-    setViewerMode
+    setViewerMode,
+    expandedSections,
+    toggleSection
 }: ContextBadgesProps) => {
     const supabase = useSupabaseBrowser();
 
@@ -113,7 +117,7 @@ export const ContextBadges = memo(({
                             if (setViewerMode) {
                                 const document = lectureDocuments?.find(d => d.lecture === lectureId)
                                 if (document) {
-                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                    handleDocumentClick(document, chapters ?? [], 'lecture', setViewerMode);
                                 }
                             }
                         }}
@@ -142,9 +146,9 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.textbook === chapter.textbook)
+                                const document = textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page)
                                 if (document) {
-                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                    handleDocumentClick(document, chapters ?? [], 'chapter', setViewerMode);
                                 }
                             }
                         }}
@@ -174,9 +178,9 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.textbook === chapter?.textbook)
+                                const document = textbookDocuments?.find(d => d.page >= exercise.start_page && d.page <= exercise.end_page)
                                 if (document) {
-                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                    handleDocumentClick(document, chapters ?? [], 'exercise', setViewerMode);
                                 }
                             }
                         }}
@@ -207,9 +211,9 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => homeworkExercises?.some(e => e?.start_page && e?.end_page && e.start_page <= d.page && e.end_page >= d.page))
+                                const document = textbookDocuments?.find(d => d.homework === homeworkId)
                                 if (document) {
-                                    handleDocumentClick(document, chapters ?? [], setViewerMode);
+                                    handleDocumentClick(document, chapters ?? [], 'homework', setViewerMode);
                                 }
                             }
                         }}
@@ -229,11 +233,19 @@ export const ContextBadges = memo(({
                     color="gray"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
-                        onScrollToSection?.("lectures-section")
                         if (setViewerMode) {
                             setViewerMode({
                                 active: false,
                             });
+                        }
+                        if (!expandedSections.has("lectures")) {
+                            toggleSection("lectures");
+                            // delay for 100ms to ensure the section is expanded
+                            setTimeout(() => {
+                                onScrollToSection?.("lectures-section")
+                            }, 100);
+                        } else {
+                            onScrollToSection?.("lectures-section")
                         }
                     }}
                     style={{ cursor: "pointer" }}
@@ -247,11 +259,19 @@ export const ContextBadges = memo(({
                     color="gray"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
-                        onScrollToSection?.("homeworks-section")
                         if (setViewerMode) {
                             setViewerMode({
                                 active: false,
                             });
+                        }
+                        if (!expandedSections.has("homeworks")) {
+                            toggleSection("homeworks");
+                            // delay for 100ms to ensure the section is expanded
+                            setTimeout(() => {
+                                onScrollToSection?.("homeworks-section")
+                            }, 100);
+                        } else {
+                            onScrollToSection?.("homeworks-section")
                         }
                     }}
                     style={{ cursor: "pointer" }}
@@ -264,11 +284,19 @@ export const ContextBadges = memo(({
                     color="gray"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
-                        onScrollToSection?.("chapters-section")
                         if (setViewerMode) {
                             setViewerMode({
                                 active: false,
                             });
+                        }
+                        if (!expandedSections.has("chapters")) {
+                            toggleSection("chapters");
+                            // delay for 100ms to ensure the section is expanded
+                            setTimeout(() => {
+                                onScrollToSection?.("chapters-section")
+                            }, 100);
+                        } else {
+                            onScrollToSection?.("chapters-section")
                         }
                     }}
                     style={{ cursor: "pointer" }}
@@ -281,11 +309,19 @@ export const ContextBadges = memo(({
                     color="gray"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
-                        onScrollToSection?.("exercises-section")
                         if (setViewerMode) {
                             setViewerMode({
                                 active: false,
                             });
+                        }
+                        if (!expandedSections.has("exercises")) {
+                            toggleSection("exercises");
+                            // delay for 100ms to ensure the section is expanded
+                            setTimeout(() => {
+                                onScrollToSection?.("exercises-section")
+                            }, 100);
+                        } else {
+                            onScrollToSection?.("exercises-section")
                         }
                     }}
                     style={{ cursor: "pointer" }}
