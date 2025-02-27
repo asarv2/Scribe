@@ -41,6 +41,8 @@ export interface ViewerMode {
     active: boolean;
     documentId?: string;
     lectureId?: string;
-    textbookId?: string;
-    chapterId?: string;
+    textbookId?: {
+        chapterId?: string;
+        exerciseId?: string;
+    }
 }

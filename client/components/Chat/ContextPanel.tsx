@@ -15,7 +15,6 @@ import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
-import { getChapterExercises } from "@/utils/queries/get-chapter-exercises";
 import { getProblems } from "@/utils/queries/get-problems";
 import { getChapters } from "@/utils/queries/get-chapters";
 import { getSubchapters } from "@/utils/queries/get-subchapters";

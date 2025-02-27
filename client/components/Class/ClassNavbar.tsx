@@ -19,6 +19,7 @@ import {
     IconPresentation,
     IconChevronDown,
     IconBooks,
+    IconUsers,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -36,7 +37,7 @@ import { NAVBAR_CONSTANTS } from './ClassHeader';
 import { getClasses } from '@/utils/queries/get-classes';
 
 interface ClassNavbarProps {
-    classId: string | null;
+    classId: string;
     basePath: string;
     isExpanded: boolean;
     onExpandedChange: (expanded: boolean) => void;
@@ -67,61 +68,50 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
     };
 
-    const showHome = profile?.professor || profile?.admin;
-
     const { openSections, toggleSection } = useClassMenu();
 
     // console.log(openSections);
 
     const generateNavData = () => {
-        return Object.entries(menuConfig).map(([key, item]) => {
-            const baseItem = {
-                label: item.label,
-                icon: item.icon,
-            };
-
-            // Handle single link (Home) vs multiple links
-            if ('link' in item) {
-                return {
-                    ...baseItem,
-                    link: `${basePath}${item.link}`,
-                    isLink: true,
-                };
-            }
-
-            return {
-                ...baseItem,
-                links: item.links.map(link => ({
-                    ...link,
-                    link: `${basePath}${link.link}`
-                }))
-            };
-        })
+        return Object.entries(menuConfig).map(([key, item]) => ({
+            ...item,
+            icon: item.icon as React.FC<any>,  // Cast icon to correct type
+            link: item.link ? `${basePath}${item.link}` : undefined,
+            isLink: !!item.link,
+            links: item.links?.map(link => ({
+                ...link,
+                link: `${basePath}${link.link}`
+            }))
+        }));
     };
 
-    const generateClassData = (currentClassId: string | null) => {
-        const currentClass = getFilteredClasses().find(classItem => classItem.id === currentClassId);
-        return [{
-            label: currentClass?.class_code ?? 'Classes',
-            icon: IconBooks,
-            links: getFilteredClasses().map(classItem => ({
-                label: classItem.class_code ?? 'Select Class',
-                link: `/classes/c/${classItem.id}`,
-                isLink: true,
-            })).filter(link => link.label !== currentClass?.class_code),
-            opened: openSections['Classes'],
-            onToggle: () => toggleSection('Classes'),
-        }];
-    };
+    // const generateClassData = (currentClassId: string | null) => {
+    //     const currentClass = getFilteredClasses().find(classItem => classItem.id === currentClassId);
+    //     return [{
+    //         label: currentClass?.class_code ?? 'Classes',
+    //         icon: IconBooks,
+    //         links: getFilteredClasses().map(classItem => ({
+    //             label: classItem.class_code ?? 'Select Class',
+    //             link: `/classes/c/${classItem.id}`,
+    //             isLink: true,
+    //         })).filter(link => link.label !== currentClass?.class_code),
+    //         opened: openSections['Classes'],
+    //         onToggle: () => toggleSection('Classes'),
+    //     }];
+    // };
 
 
-    const links = classId ? [...generateClassData(classId).map((item) => (
+    // const links = classId ? [...generateClassData(classId).map((item) => (
+    //     <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
+    // )), <Divider m="sm" />, ...generateNavData().map((item) => (
+    //     <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
+    // ))] : generateClassData(classId).map((item) => (
+    //     <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
+    // ));
+
+    const links = generateNavData().map((item) => (
         <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
-    )), <Divider m="sm" />, ...generateNavData().map((item) => (
-        <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
-    ))] : generateClassData(classId).map((item) => (
-        <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
-    ));
+    ))
 
     // Updated Skeleton loading state (closed by default)
     function NavGroupSkeleton() {
@@ -171,14 +161,14 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
                         <IconLayoutDashboard className={classes.linkIcon} stroke={1.5} />
                         <span>Dashboard</span>
                     </Link> */}
-                <ClassNavbarLinksGroup
+                {/* <ClassNavbarLinksGroup
                     icon={IconLayoutDashboard}
                     label="Dashboard"
                     isExpanded={isExpanded}
                     link={`/classes`}
-                />
+                /> */}
                 <ClassNavbarLinksGroup
-                    icon={IconMessage}
+                    icon={IconUsers}
                     label="Feedback"
                     isExpanded={isExpanded}
                     link={`/feedback`}

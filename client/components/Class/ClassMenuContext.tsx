@@ -46,13 +46,13 @@ export const ClassMenuProvider: React.FC<{ classId: string | null; children: Rea
     const sectionLinks = Object.fromEntries(
       Object.entries(menuConfig).map(([section, config]) => [
         section,
-        'links' in config ? config.links.map(l => l.link) : [config.link]
+        'links' in config && config.links ? config.links.map(l => l.link) : [config.link]
       ])
     );
 
     // Only open a section if its path is exactly matched
     for (const [section, paths] of Object.entries(sectionLinks)) {
-      const shouldOpen = paths.some(path => pathname.endsWith(path));
+      const shouldOpen = paths.some(path => pathname?.endsWith(path ?? ''));
       setOpenSection(section as MenuSection, shouldOpen);
     }
   }, [pathname]);

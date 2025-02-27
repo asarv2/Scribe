@@ -22,8 +22,10 @@ import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
 import { logout } from '@/utils/services/auth';
 import { AccountMenu } from '../AccountMenu';
+import { Profile } from '@/types';
+import { Class } from '@/types';
 interface ClassHeaderProps {
-    classId: string | null
+    classId: string
 }
 
 export function ClassHeader({ classId }: ClassHeaderProps) {
@@ -50,14 +52,10 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
         queryFn: () => getClasses(supabase),
     })
 
-    const getFilteredClasses = () => {
+    const getFilteredClasses = (profile: Profile | undefined, classData: Class[] | undefined) => {
         if (!profile || !classData) return [];
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
     };
-
-    // Get current class from URL
-    const currentClass = getFilteredClasses()?.find(c => c.id === classId);
-    const displayText = currentClass ? currentClass.class_code : 'Select Class';
 
     return (
         <Group h="100%" px="md" w="100%" justify="space-between">
@@ -90,6 +88,23 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
                         ))}
                     </Menu.Dropdown>
                 </Menu> */}
+            </Group>
+            <Group gap="md">
+                {getFilteredClasses(profile, classData).map((classItem) => (
+                    <Link key={classItem.id} href={`/classes/c/${classItem.id}`}>
+                        <Button 
+                            variant="subtle"
+                            styles={(theme) => ({
+                                root: {
+                                    textDecoration: classItem.id === classId ? 'underline' : 'none',
+                                    textUnderlineOffset: '4px',
+                                }
+                            })}
+                        >
+                            {classItem.class_code}
+                        </Button>
+                    </Link>
+                ))}
             </Group>
             <Group>
                 <AccountMenu profile={profile} />

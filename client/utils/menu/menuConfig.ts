@@ -5,33 +5,48 @@
  * 02/20/2025
  */
 
-import { IconHome, IconBook, IconFileDescription, IconSettings, IconMessage, IconHistory } from '@tabler/icons-react';
+import { IconHome, IconBook, IconFileDescription, IconSettings, IconMessage, IconHistory, IconPresentation } from '@tabler/icons-react';
 
 export const menuConfig = {
   home: {
     label: 'Home',
     icon: IconHome,
-    link: '',
+    link: '/',
   },
-  content: {
-    label: 'Content',
+  // content: {
+  //   label: 'Content',
+  //   icon: IconBook,
+  //   links: [
+  //     { link: '/lecture', label: 'Lectures' },
+  //     { link: '/textbook', label: 'Textbooks' },
+  //     { link: '/homework', label: 'Homework' },
+  //   ]
+  // },
+  lecture: {
+    label: 'Lectures',
+    icon: IconPresentation,
+    link: '/lecture',
+  },
+  textbook: {
+    label: 'Textbooks',
     icon: IconBook,
-    links: [
-      { link: '/lecture', label: 'Lectures' },
-      { link: '/textbook', label: 'Textbooks' },
-      { link: '/homework', label: 'Homework' },
-    ]
+    link: '/textbook',
+  },
+  homework: {
+    label: 'Homework',
+    icon: IconFileDescription,
+    link: '/homework',
   },
   chat: {
     label: 'Chat',
     icon: IconMessage,
     link: '/chat/new',
   },
-  // history: {
-  //   label: 'History',
-  //   icon: IconHistory,
-  //   link: '/chat',
-  // },
+  history: {
+    label: 'History',
+    icon: IconHistory,
+    link: '/chat',
+  },
 //   settings: {
 //     label: 'Settings',
 //     icon: IconSettings,
@@ -40,6 +55,22 @@ export const menuConfig = {
 //       { link: '/prompt', label: 'Prompts' },
 //     ]
 //   }
-} as const;
+} as MenuConfig;
+
+export interface MenuLink {
+  link: string;
+  label: string;
+}
+
+export interface MenuItem {
+  label: string;
+  icon: React.ComponentType;
+  link?: string;
+  links?: MenuLink[];
+}
+
+export interface MenuConfig {
+  [key: string]: MenuItem;
+}
 
 export type MenuSection = keyof typeof menuConfig;

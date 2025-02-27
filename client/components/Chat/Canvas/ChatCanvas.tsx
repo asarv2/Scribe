@@ -416,15 +416,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         contextType: string,
         contextId: string,
         allDocuments: Document[],
-        chapters: Chapter[],
-        subchapters: Subchapter[],
-        setViewerMode: React.Dispatch<React.SetStateAction<{
-            active: boolean;
-            documentId?: string;
-            lectureId?: string;
-            textbookId?: string;
-            chapterId?: string;
-        }>>
+        setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
     ) => {
         // For lectures
         if (contextType === 'lectures') {
@@ -444,8 +436,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 setViewerMode({
                     active: true,
                     documentId: doc.id,
-                    textbookId: doc.textbook ?? undefined,
-                    chapterId: contextId,
+                    textbookId: {
+                        chapterId: contextId,
+                    },
                 });
             }
         }

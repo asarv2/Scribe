@@ -6,13 +6,14 @@
 import { Card, Stack, Group, Text, ActionIcon, Box } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import LectureViewer from "../../Viewer/LectureViewer";
-import TextbookViewer from "../../Viewer/TextbookViewer";
 import { memo } from "react";
 import { Lecture, Textbook, ViewerMode } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
+import ChapterViewer from "../../Viewer/ChapterViewer";
+import ExerciseViewer from "@/components/Viewer/ExerciseViewer";
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
@@ -79,13 +80,22 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
                             initialDocumentId={viewerMode.documentId}
                             embedded={true}
                         />
-                    ) : viewerMode.textbookId && viewerMode.chapterId ? (
-                        <TextbookViewer
+                    ) : viewerMode.textbookId && viewerMode.textbookId.chapterId ? (
+                        <ChapterViewer
                             key={`${viewerMode.textbookId}-${viewerMode.documentId}`}
                             classId={classId}
-                            textbookId={viewerMode.textbookId}
-                            chapterId={viewerMode.chapterId}
+                            textbookId={Object.values(viewerMode.textbookId)[0]}
+                            chapterId={viewerMode.textbookId.chapterId}
                             initialDocumentId={viewerMode.documentId}
+                            embedded={true}
+                        />
+                    ) : viewerMode.textbookId && viewerMode.textbookId.chapterId && viewerMode.textbookId.exerciseId ? (
+                        <ExerciseViewer
+                            key={`${viewerMode.textbookId}-${viewerMode.textbookId.chapterId}-${viewerMode.textbookId.exerciseId}`}
+                            classId={classId}
+                            textbookId={Object.values(viewerMode.textbookId)[0]}
+                            chapterId={viewerMode.textbookId.chapterId}
+                            initialExerciseId={viewerMode.textbookId.exerciseId}
                             embedded={true}
                         />
                     ) : null}

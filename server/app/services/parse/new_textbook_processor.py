@@ -18,7 +18,7 @@ from supabase import create_client, ClientOptions, Client
 
 # Configure logging
 logging.basicConfig(
-    level=logging.DEBUG,  # Set to DEBUG to see all messages
+    level=logging.INFO,  # Set to DEBUG to see all messages
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),  # Output to console
@@ -260,6 +260,16 @@ class NewTextbookProcessor:
             supabase: Initialized Supabase client
         """
         try:
+            # get all of the chapters data
+            chapters_data = supabase.table('chapters').select('*').eq('textbook', textbook_id).execute()
+            chapters_data = chapters_data.data
+
+            # create a mapping of page number to chapter id
+            page_to_chapter_mapping = {}
+            for chapter in chapters_data:
+                for page_num in range(chapter['start_page'], chapter['end_page'] + 1):
+                    page_to_chapter_mapping[page_num] = chapter['id']
+            
             # Create documents entries for all pages
             documents_to_insert = []
             for page_num in range(self.pdf_document.page_count):
@@ -306,7 +316,7 @@ class NewTextbookProcessor:
             logger.error(f"Error creating documents and uploading images: {str(e)}")
             raise
 
-    def upload_exercise_images(self, class_id: str, chapters_id: List[str], exercises_id: List[List[str]], supabase: Client) -> None:
+    def upload_exercise_images(self, class_id: str, textbook_id: str, chapters_id: List[str], exercises_id: List[List[str]], supabase: Client) -> None:
         """Uploads exercise images to Supabase storage using combined data
         
         Args:
@@ -332,6 +342,7 @@ class NewTextbookProcessor:
                     documents_to_insert.append({
                         'page': exercise['start_page'],
                         'text': exercise['text_content'],
+                        'textbook': textbook_id,
                         'chapter': chapter_id,
                         'exercise': exercise_id,
                         'description': '',
@@ -361,7 +372,7 @@ class NewTextbookProcessor:
                     img_data = f.read()
                 
                 # Upload to Supabase storage using the original image path structure
-                file_path = f"{class_id}/{exercise_id}/{document['id']}.png"
+                file_path = f"{class_id}/{textbook_id}/{exercise_id}/{document['id']}.png"
                 supabase.storage.from_('exercises').upload(
                     file_path,
                     img_data,
@@ -375,7 +386,7 @@ class NewTextbookProcessor:
             raise
 
 if __name__ == "__main__": 
-    textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/Chvatal.pdf"
+    textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/Vanderbei.pdf"
     api_key = os.getenv('GOOGLE_API_KEY')
     class_id = "c770c9bb-4de1-44be-aacb-b4bea3efbacf"  # Replace with actual class ID
 
@@ -387,15 +398,16 @@ if __name__ == "__main__":
 
 
     # custom page labels for chvatal textbook. nothing for the first 16 entries. Then 1 to the end for the rest. But keep everything as a string.
-    c_page_labels = [str(i) for i in range(1, 484)]
-    c_page_labels = ['0' for _ in range(16)] + c_page_labels
+    # c_page_labels = [str(i) for i in range(1, 484)]
+    # c_page_labels = ['0' for _ in range(16)] + c_page_labels
 
-    processor = NewTextbookProcessor(textbook_path, api_key, custom_page_labels=c_page_labels, extra_top_padding=10)
+    # processor = NewTextbookProcessor(textbook_path, api_key, custom_page_labels=c_page_labels, extra_top_padding=10)
+    processor = NewTextbookProcessor(textbook_path, api_key)
     # Process textbook and get ID
-    exercises = processor.extract_exercises(3)
+    exercises = processor.extract_exercises()
     combined_data = processor.create_combined_textbook_json()
-    # textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
+    textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
     
-    # # Upload images
-    # processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
-    # processor.upload_exercise_images(class_id, chapters_id, exercises_id, supabase)
+    # Upload images
+    processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
+    processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase)

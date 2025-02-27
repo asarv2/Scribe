@@ -21,22 +21,23 @@ import { ClassLayout } from "../Class/ClassLayout";
 import DeleteHomeworkModal from "../Delete/DeleteHomeworkModal";
 import { getHomework } from "@/utils/queries/get-homework";
 import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
+import { getExercises } from "@/utils/queries/get-exercises";
 
-type HomeworkViewerProps = {    
+type HomeworkViewerProps = {
     classId: string;
     homeworkId: string;
-    initialDocumentId?: string;
+    initialExerciseId?: string;
     embedded?: boolean;
 }
 
-export default function HomeworkViewer({ 
-    classId, 
-    homeworkId, 
-    initialDocumentId,
-    embedded = false 
+export default function HomeworkViewer({
+    classId,
+    homeworkId,
+    initialExerciseId,
+    embedded = false
 }: HomeworkViewerProps) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
-    const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
+    const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
     const previewScrollRef = useRef<HTMLDivElement>(null);
 
     const { colorScheme } = useMantineColorScheme();
@@ -56,6 +57,11 @@ export default function HomeworkViewer({
         queryFn: () => getHomework(supabase, homeworkId)
     });
 
+    const { data: exercises, isLoading: loadingExercises } = useQuery({
+        queryKey: ["homeworkExercises", homeworkId],
+        queryFn: () => getExercises(supabase, [], [homeworkId])
+    });
+
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
@@ -67,52 +73,57 @@ export default function HomeworkViewer({
         enabled: !!user
     });
 
-    const handlePageClick = (newDocumentId: string) => {
-        setActiveDocumentId(newDocumentId);
+    const handleExerciseClick = (exerciseId: string) => {
+        setActiveExerciseId(exerciseId);
+    };
+
+    const sortExercises = (exercises: any[]) => {
+        return [...exercises].sort((a, b) => {
+            if (a.problem_number !== b.problem_number) {
+                return a.problem_number - b.problem_number;
+            }
+            const partA = a.problem_part_number || 0;
+            const partB = b.problem_part_number || 0;
+            return partA - partB;
+        });
     };
 
     const handleSwipe = (touchEndX: number) => {
-        if (touchStartX !== null && documents) {
+        if (touchStartX !== null && exercises) {
             const deltaX = touchStartX - touchEndX;
             const minSwipeDistance = 50;
 
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
-            if (deltaX > minSwipeDistance && currentIndex < documents.length - 1) {
-                handlePageClick(documents[currentIndex + 1].id);
+            const sortedExercises = sortExercises(exercises);
+            const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
+            if (deltaX > minSwipeDistance && currentIndex < sortedExercises.length - 1) {
+                handleExerciseClick(sortedExercises[currentIndex + 1].id);
             } else if (deltaX < -minSwipeDistance && currentIndex > 0) {
-                handlePageClick(documents[currentIndex - 1].id);
+                handleExerciseClick(sortedExercises[currentIndex - 1].id);
             }
         }
         setTouchStartX(null);
     };
 
     useEffect(() => {
-        if (documents && documents.length > 0 && !activeDocumentId) {
-            if (initialDocumentId) {
-                setActiveDocumentId(initialDocumentId);
-            } else if (page) {
-                const pageNum = parseInt(page.replace(/[^0-9]/g, ''));
-                const matchingDoc = documents.find(doc => doc.page === pageNum);
-                if (matchingDoc) {
-                    setActiveDocumentId(matchingDoc.id);
-                } else {
-                    setActiveDocumentId(documents[0].id);
-                }
+        if (exercises && exercises.length > 0 && !activeExerciseId) {
+            if (initialExerciseId) {
+                setActiveExerciseId(initialExerciseId);
             } else {
-                setActiveDocumentId(documents[0].id);
+                setActiveExerciseId(exercises[0].id);
             }
         }
-    }, [documents, activeDocumentId, page, initialDocumentId]);
+    }, [exercises, activeExerciseId, initialExerciseId]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (!documents) return;
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
+            if (!exercises) return;
+            const sortedExercises = sortExercises(exercises);
+            const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
 
             if (event.key === 'ArrowLeft' && currentIndex > 0) {
-                handlePageClick(documents[currentIndex - 1].id);
-            } else if (event.key === 'ArrowRight' && currentIndex < documents.length - 1) {
-                handlePageClick(documents[currentIndex + 1].id);
+                handleExerciseClick(sortedExercises[currentIndex - 1].id);
+            } else if (event.key === 'ArrowRight' && currentIndex < sortedExercises.length - 1) {
+                handleExerciseClick(sortedExercises[currentIndex + 1].id);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -120,11 +131,11 @@ export default function HomeworkViewer({
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [activeDocumentId, documents]);
+    }, [activeExerciseId, exercises]);
 
     useEffect(() => {
         if (previewScrollRef.current) {
-            const activeThumb = previewScrollRef.current.querySelector(`[data-document="${activeDocumentId}"]`);
+            const activeThumb = previewScrollRef.current.querySelector(`[data-exercise="${activeExerciseId}"]`);
             if (activeThumb) {
                 activeThumb.scrollIntoView({
                     behavior: 'smooth',
@@ -133,15 +144,15 @@ export default function HomeworkViewer({
                 });
             }
         }
-    }, [activeDocumentId]);
+    }, [activeExerciseId]);
 
     // Skeleton components
     function MainViewerSkeleton() {
         return (
             <Card padding="md" pos="relative" withBorder>
-                <Box style={{ 
-                    position: 'relative', 
-                    width: '100%', 
+                <Box style={{
+                    position: 'relative',
+                    width: '100%',
                     height: 500,
                     overflow: "hidden",
                     display: "flex",
@@ -175,106 +186,138 @@ export default function HomeworkViewer({
     }
 
     // Main components
-    const MainViewer = ({ height = 500 }: { height?: number }) => (
-        <Card padding="md" pos="relative" withBorder>
-            <Box style={{ 
-                position: 'relative', 
-                width: '100%', 
-                height,
-                overflow: "hidden",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-            }}
-            onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
-            onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
-            >
-                <Image
-                    src={getActiveImage(activeDocumentId)}
-                    alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
-                    width={500}
-                    height={500}
-                    style={{ 
-                        maxWidth: '100%',
-                        maxHeight: '100%',
-                        borderRadius: "10px",
-                        objectFit: "contain"
+    const MainViewer = ({ height = 500 }: { height?: number }) => {
+        const [isImageLoading, setIsImageLoading] = useState(false);
+        const currentExercise = exercises?.find(ex => ex.id === activeExerciseId);
+        const sortedExercises = exercises ? sortExercises(exercises) : [];
+        const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
+
+        return (
+            <Card padding="md" pos="relative" withBorder>
+                <Stack>
+                    <Group justify="space-between">
+                        <Group>
+                            <Text fw={700} size="lg">Exercise {currentExercise?.title}</Text>
+                            <Text c="dimmed">
+                                (p. {currentExercise?.start_page})
+                            </Text>
+                        </Group>
+                    </Group>
+                    <Box style={{
+                        position: 'relative',
+                        width: '100%',
+                        height,
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
                     }}
-                    sizes="100vw"
-                    placeholder="blur"
-                    blurDataURL={"/placeholder_image.svg"}
-                />
-                <ActionIcon
-                    size={embedded ? "lg" : "xl"}
-                    variant="filled"
-                    color={colorScheme === "dark" ? "gray" : "dark"}
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: embedded ? 5 : 10,
-                        transform: 'translateY(-50%)',
-                        zIndex: 100,
-                    }}
-                    onClick={() => {
-                        const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                        if (currentIndex > 0 && documents) {
-                            handlePageClick(documents[currentIndex - 1].id);
-                        }
-                    }}
-                    disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === 0}
-                    aria-label="Previous Page"
-                >
-                    <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
-                </ActionIcon>
-                <ActionIcon
-                    size={embedded ? "lg" : "xl"}
-                    variant="filled"
-                    color="gray"
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        right: embedded ? 5 : 10,
-                        transform: 'translateY(-50%)',
-                        zIndex: 100,
-                    }}
-                    onClick={() => {
-                        const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                        if (documents && currentIndex < documents.length - 1) {
-                            handlePageClick(documents[currentIndex + 1].id);
-                        }
-                    }}
-                    disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === documents.length - 1}
-                    aria-label="Next Page"
-                >
-                    <IconArrowRight size={embedded ? 24 : 32} />
-                </ActionIcon>
-                <Box
-                    pos="absolute"
-                    bottom={embedded ? 5 : 10}
-                    right={embedded ? 5 : 10}
-                    p={embedded ? 4 : 8}
-                    style={{
-                        zIndex: 100,
-                        backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                        borderRadius: "4px",
-                    }}
-                >
-                    <Text 
-                        size={embedded ? "xs" : "sm"}
-                        fw={500}
-                        style={{ 
-                            color: colorScheme === "dark" ? "white" : "black",
-                            textShadow: colorScheme === "dark" ? 
-                                "0px 0px 4px rgba(0,0,0,0.5)" : 
-                                "0px 0px 4px rgba(255,255,255,0.5)"
-                        }}
+                        onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
+                        onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
                     >
-                        Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
-                    </Text>
-                </Box>
-            </Box>
-        </Card>
-    );
+                        {isImageLoading && (
+                            <Skeleton 
+                                height="100%" 
+                                width="100%" 
+                                radius="md"
+                                style={{
+                                    position: 'absolute',
+                                    zIndex: 1
+                                }}
+                            />
+                        )}
+                        <Image
+                            src={getActiveImage(activeExerciseId)}
+                            alt={`Exercise ${currentExercise?.title}`}
+                            width={500}
+                            height={500}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                borderRadius: "10px",
+                                objectFit: "contain",
+                                padding: "10px",
+                                opacity: isImageLoading ? 0 : 1,
+                                transition: 'opacity 0.2s ease-in-out'
+                            }}
+                            sizes="100vw"
+                            onLoadingComplete={() => setIsImageLoading(false)}
+                            onLoadStart={() => setIsImageLoading(true)}
+                            priority
+                        />
+                        <ActionIcon
+                            size={embedded ? "lg" : "xl"}
+                            variant="filled"
+                            color={colorScheme === "dark" ? "gray" : "dark"}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: embedded ? 5 : 10,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                if (!sortedExercises.length) return;
+                                if (currentIndex > 0) {
+                                    handleExerciseClick(sortedExercises[currentIndex - 1].id);
+                                }
+                            }}
+                            disabled={!sortedExercises.length || currentIndex === 0}
+                            aria-label="Previous Exercise"
+                        >
+                            <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
+                        </ActionIcon>
+                        <ActionIcon
+                            size={embedded ? "lg" : "xl"}
+                            variant="filled"
+                            color="gray"
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                right: embedded ? 5 : 10,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                if (!sortedExercises.length) return;
+                                if (currentIndex < sortedExercises.length - 1) {
+                                    handleExerciseClick(sortedExercises[currentIndex + 1].id);
+                                }
+                            }}
+                            disabled={!sortedExercises.length || currentIndex === sortedExercises.length - 1}
+                            aria-label="Next Exercise"
+                        >
+                            <IconArrowRight size={embedded ? 24 : 32} />
+                        </ActionIcon>
+                        <Box
+                            pos="absolute"
+                            bottom={embedded ? 5 : 10}
+                            right={embedded ? 5 : 10}
+                            p={embedded ? 4 : 8}
+                            style={{
+                                zIndex: 100,
+                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                borderRadius: "4px",
+                            }}
+                        >
+                            <Text
+                                size={embedded ? "xs" : "sm"}
+                                fw={500}
+                                style={{
+                                    color: colorScheme === "dark" ? "white" : "black",
+                                    textShadow: colorScheme === "dark" ?
+                                        "0px 0px 4px rgba(0,0,0,0.5)" :
+                                        "0px 0px 4px rgba(255,255,255,0.5)"
+                                }}
+                            >
+                                {currentExercise?.title}
+                            </Text>
+                        </Box>
+                    </Box>
+                </Stack>
+            </Card>
+        );
+    };
 
     const PreviewStrip = () => (
         <Flex
@@ -285,10 +328,10 @@ export default function HomeworkViewer({
                 padding: '0.5rem',
             }}
         >
-            {documents?.map((doc) => (
+            {exercises && sortExercises(exercises).map((exercise) => (
                 <Box
-                    key={doc.id}
-                    data-document={doc.id}
+                    key={exercise.id}
+                    data-exercise={exercise.id}
                     style={{
                         cursor: 'pointer',
                         width: 50,
@@ -298,16 +341,16 @@ export default function HomeworkViewer({
                         borderRadius: '4px',
                         overflow: 'hidden',
                     }}
-                    onClick={() => handlePageClick(doc.id)}
+                    onClick={() => handleExerciseClick(exercise.id)}
                 >
                     <Image
-                        src={getActiveImage(doc.id)}
-                        alt={`Page ${doc.page}`}
+                        src={getActiveImage(exercise.id)}
+                        alt={`Exercise ${exercise.problem_number}`}
                         width={50}
                         height={50}
-                        style={{ 
+                        style={{
                             objectFit: 'cover',
-                            outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                            outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
                             outlineOffset: '-2px',
                         }}
                         sizes="100vw"
@@ -317,23 +360,135 @@ export default function HomeworkViewer({
         </Flex>
     );
 
-    const Description = () => (
-        <Box p="md" style={{ overflow: 'auto' }}>
-            <Text fw={500} size="lg">
-                <Latex>{documents?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
-            </Text>
-        </Box>
-    );
+    const Description = () => {
+        const currentExercise = exercises?.find(ex => ex.id === activeExerciseId);
+        const currentDocument = documents?.find(doc => doc.exercise === activeExerciseId);
+        const relatedDocuments = documents?.filter(doc => 
+            // Document must be for the same exercise
+            doc.exercise === activeExerciseId && 
+            // Document must be from the same homework
+            doc.homework === homeworkId &&
+            // Document must have a page number
+            doc.page &&
+            currentExercise?.start_page &&
+            currentExercise?.end_page &&
+            // Document's page must be OUTSIDE the range of current exercise
+            (doc.page < currentExercise.start_page || doc.page > currentExercise.end_page)
+        )?.reduce((unique: any[], doc) => {
+            const exists = unique.find(item => item.page === doc.page);
+            if (!exists) {
+                unique.push(doc);
+            }
+            return unique;
+        }, [])?.sort((a, b) => (a.page || 0) - (b.page || 0));
 
-    const getActiveImage = (documentId: string | null) => {
-        const document = documents?.find(doc => doc.id === documentId);
+        if (!currentExercise) return null;
+
+        const getDocumentImage = (document: any) => {
+            if (!document) return "/placeholder_image.svg";
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`;
+        };
+
+        return (
+            <Stack>
+                <Text fw={500}>Problem {currentExercise.problem_number}{currentExercise.problem_part_number !== 1 ? 
+                    `${String.fromCharCode(96 + currentExercise.problem_part_number)})` : 
+                    ""}</Text>
+
+                {currentExercise.info ? (
+                    <Box>
+                        <Text fw={600} mb={4}>Information:</Text>
+                        <Text><Latex>{currentExercise.info}</Latex></Text>
+                    </Box>
+                ) : (
+                    <Text fw={600} mb={4}>No information provided.</Text>
+                )}
+
+                {currentExercise.given && (
+                    <Box>
+                        <Text fw={600} mb={4}>Given:</Text>
+                        <Text><Latex>{currentExercise.given}</Latex></Text>
+                    </Box>
+                )}
+
+                {currentDocument?.description && (
+                    <Box>
+                        <Text><Latex>{currentDocument.description}</Latex></Text>
+                    </Box>
+                )}
+
+                {relatedDocuments && relatedDocuments.length > 0 && (
+                    <Box>
+                        <Text fw={600} mb={4}>Additional Context:</Text>
+                        <Box
+                            style={{
+                                overflowX: 'auto',
+                                overflowY: 'hidden',
+                                whiteSpace: 'nowrap',
+                                padding: '4px'
+                            }}
+                        >
+                            <Flex gap="md" wrap="nowrap">
+                                {relatedDocuments.map((doc) => (
+                                    <Box 
+                                        key={doc.id}
+                                        style={{
+                                            display: 'inline-block',
+                                            verticalAlign: 'top',
+                                            width: '200px',
+                                            flexShrink: 0
+                                        }}
+                                    >
+                                        <Text size="sm" c="dimmed" mb={4}>
+                                            Page {doc.page || 'Unknown'}
+                                        </Text>
+                                        <Card p="xs" withBorder>
+                                            <Image
+                                                src={getDocumentImage(doc)}
+                                                alt={`Page ${doc.page}`}
+                                                width={180}
+                                                height={240}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '240px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: '4px'
+                                                }}
+                                            />
+                                            {doc.description && (
+                                                <Text 
+                                                    mt={4} 
+                                                    size="sm"
+                                                    style={{
+                                                        whiteSpace: 'normal',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                        display: '-webkit-box',
+                                                        WebkitLineClamp: 3,
+                                                        WebkitBoxOrient: 'vertical',
+                                                        lineHeight: '1.4'
+                                                    }}
+                                                >
+                                                    <Latex>{doc.description}</Latex>
+                                                </Text>
+                                            )}
+                                        </Card>
+                                    </Box>
+                                ))}
+                            </Flex>
+                        </Box>
+                    </Box>
+                )}
+            </Stack>
+        );
+    };
+
+    const getActiveImage = (exerciseId: string | null) => {
+        if (!exerciseId) return "/placeholder_image.svg";
+        const document = documents?.find(doc => doc.exercise === exerciseId);
         if (!document) return "/placeholder_image.svg";
-        if (document.textbook) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${documentId}.png`;
-        } else if (document.exercise) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.exercise}/${documentId}.png`;
-        }
-        return "/placeholder_image.svg";
+
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.textbook}/${exerciseId}/${document.id}.png`;
     };
 
     return (
@@ -342,17 +497,17 @@ export default function HomeworkViewer({
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Skeleton visible={loadingHomework} height={32} width={500}>
+                            <Skeleton visible={loadingExercises} height={32} width={500}>
                                 <Text size="xl" fw={700} mb={6}>{homework?.title}</Text>
                             </Skeleton>
                         </Group>
                         <Group>
                             {profile?.professor && (
                                 <DeleteHomeworkModal
-                                    homeworkId={homeworkId} 
-                                    homeworkTitle={homework?.title ?? ""} 
-                                    profile={profile} 
-                                    classId={homework?.class ?? ""} 
+                                    homeworkId={homeworkId}
+                                    homeworkTitle={homework?.title ?? ""}
+                                    profile={profile}
+                                    classId={homework?.class ?? ""}
                                 />
                             )}
                         </Group>

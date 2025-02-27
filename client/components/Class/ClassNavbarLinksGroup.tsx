@@ -4,12 +4,12 @@ import { Box, Collapse, Flex, Group, ThemeIcon, UnstyledButton } from '@mantine/
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import classes from './ClassNavbarLinksGroup.module.css';
-
+import { MenuLink } from '@/utils/menu/menuConfig';
 interface ClassLinksGroupProps {
   icon: React.FC<any>;
   label: string;
   link?: string;
-  links?: { label: string; link: string }[];
+  links?: MenuLink[];
   isExpanded: boolean;
 }
 

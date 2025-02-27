@@ -14,6 +14,7 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getUser } from "@/utils/queries/get-user";
 import { AccountMenu } from "../AccountMenu";
 import { getProfile } from "@/utils/queries/get-profile";
+import { getClasses } from "@/utils/queries/get-classes";
 
 export function HomeHeader() {
     const { colorScheme } = useMantineColorScheme();
@@ -29,6 +30,18 @@ export function HomeHeader() {
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user
     });
+
+    const { data: classData } = useQuery({
+        queryKey: ["classes"],
+        queryFn: () => getClasses(supabase),
+    })
+
+    const getFilteredClasses = () => {
+        if (!profile || !classData) return [];
+        return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
+    };
+
+    const firstClass = getFilteredClasses()?.[0];
 
     return (
         <Group h="100%" px="md" justify="space-between" w="100%">
@@ -48,9 +61,9 @@ export function HomeHeader() {
             <Group>
                 {user ? (
                     // <AccountMenu profile={profile} />
-                    <Link href="/classes">
+                    <Link href={`/classes/c/${firstClass?.id}`}>
                         <Button size="sm">
-                            Dashboard
+                            Home
                         </Button>
                     </Link>
                 ) : (

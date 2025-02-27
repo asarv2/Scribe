@@ -1,7 +1,7 @@
 /**
- * TextbookViewer.tsx
+ * ChapterViewer.tsx
  * 
- * This component is used to display the textbook viewer for the textbook page.
+ * This component is used to display the chapter viewer for the chapter page.
  * @AshokSaravanan222
  * 02.05.2025
  */
@@ -30,7 +30,7 @@ import { getTextbook } from "@/utils/queries/get-textbook";
 import { getChapter } from "@/utils/queries/get-chapter";
 import { getProfile } from "@/utils/queries/get-profile";
 import { ClassLayout } from "../Class/ClassLayout";
-type TextbookViewerProps = {
+type ChapterViewerProps = {
     classId: string;
     textbookId: string;
     chapterId: string;
@@ -76,13 +76,13 @@ function DescriptionSkeleton() {
     );
 }
 
-export default function TextbookViewer({ 
+export default function ChapterViewer({ 
     classId, 
     textbookId, 
     chapterId,
     initialDocumentId,
     embedded = false 
-}: TextbookViewerProps) {
+}: ChapterViewerProps) {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [hoveredFigure, setHoveredFigure] = useState<string | null>(null);
@@ -387,11 +387,11 @@ export default function TextbookViewer({
                                 <Text size="xl" fw={700} mb={6}>{textbook?.title + " - " + chapter?.title}</Text>
                             </Skeleton>
                         </Group>
-                        <Group>
+                        {/* <Group>
                             {showDelete && (
                                 <DeleteTextbookModal textbookId={textbookId} textbookTitle={textbook?.title ?? ""} profile={profile ?? undefined} classId={textbook?.class ?? ""} />
                             )}
-                        </Group>
+                        </Group> */}
                     </Flex>
                     <Grid>
                         <Grid.Col span={isMobile ? 12 : 6}>

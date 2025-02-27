@@ -5,7 +5,7 @@
  * 02.04.2025
  */
 "use client"
-import TextbookViewer from "@/components/Viewer/TextbookViewer";
+import ChapterViewer from "@/components/Viewer/ChapterViewer";
 
 type ChapterProps = {
     params: {
@@ -15,5 +15,5 @@ type ChapterProps = {
     }
 }
 export default function Chapter({ params }: ChapterProps) {
-    return <TextbookViewer classId={params.classId} textbookId={params.textbookId} chapterId={params.chapterId} />
+    return <ChapterViewer classId={params.classId} textbookId={params.textbookId} chapterId={params.chapterId} />
 }

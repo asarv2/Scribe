@@ -16,8 +16,6 @@ interface ChatInputProps {
     contextType: keyof ChatMessage['context'],
     contextId: string,
     documents: Document[],
-    chapters: Chapter[],
-    subchapters: Subchapter[],
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
   ) => void;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>

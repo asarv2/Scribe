@@ -42,6 +42,8 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
         enabled: !!homeworks
     });
 
+    console.log(exercises);
+
     const handleProblemAnswerEnabledChange = async (exerciseId: string, enabled: boolean) => {
         try {
             const {success, error} = await updateExerciseAnswerEnabled(enabled, exerciseId);

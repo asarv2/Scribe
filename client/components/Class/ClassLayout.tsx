@@ -10,14 +10,41 @@ import { ClassNavbar } from "./ClassNavbar";
 import { ClassHeader } from "./ClassHeader";
 import { ClassMenuProvider } from "./ClassMenuContext";
 import { NAVBAR_CONSTANTS } from './ClassHeader';
-
+import { getClasses } from "@/utils/queries/get-classes";
+import { useQuery } from "@tanstack/react-query";
+import { getProfile } from "@/utils/queries/get-profile";
+import { getUser } from "@/utils/queries/get-user";
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
+import { Profile, Class } from "@/types";
 interface ClassLayoutProps {
     children: ReactNode;
-    classId: string | null
+    classId: string | null;
 }
 
 export function ClassLayout({ children, classId }: ClassLayoutProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const supabase = useSupabaseBrowser();
+
+    const { data: user } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    });
+
+    const { data: profile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    });
+
+    const { data: classData } = useQuery({
+        queryKey: ["classes"],
+        queryFn: () => getClasses(supabase),
+    })
+
+    const getFilteredClasses = (profile: Profile | undefined, classData: Class[] | undefined) => {
+        if (!profile || !classData) return [];
+        return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
+    };
 
     return (
         <ClassMenuProvider classId={classId}>
@@ -38,13 +65,13 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
                 })}
             >
                 <AppShell.Header>
-                    <ClassHeader classId={classId} />
+                    <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} />
                 </AppShell.Header>
 
                 <AppShell.Navbar>
                     <ClassNavbar
-                        classId={classId}
-                        basePath={`/classes/c/${classId}`}
+                        classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id}
+                        basePath={`/classes/c/${classId ?? getFilteredClasses(profile, classData)?.[0]?.id}`}
                         isExpanded={isExpanded}
                         onExpandedChange={setIsExpanded}
                     />
