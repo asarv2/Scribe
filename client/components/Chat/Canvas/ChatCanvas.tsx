@@ -21,7 +21,7 @@ import { getAvatarUrl } from "@/utils/services/images";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
 
-import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode, UserMode } from "@/types";
+import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode } from "@/types";
 import { getUser } from "@/utils/queries/get-user";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { ContextPanel } from "../ContextPanel";
@@ -45,21 +45,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
         active: false
     });
-
-    const [activeChat, setActiveChat] = useState<ChatMessage>({
-        id: 1,
-        title: "Chat",
-        prompt: "",
-        context: {
-            lectures: [],
-            chapters: [],
-            exercises: [],
-            homeworks: [],
-        },
-        chatType: 'general'
-    });
     const [loading, setLoading] = useState(false);
-    const [isTeacherChat, setIsTeacherChat] = useState(false);
 
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
@@ -69,8 +55,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
     const { colorScheme } = useMantineColorScheme();
-    const [userMode, setUserMode] = useState<UserMode>('student');
-
     // Fetch necessary data
     const { data: existingChat } = useQuery({
         queryKey: ["chat", chatId],
@@ -150,6 +134,20 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         queryKey: ["exercises", classId],
         queryFn: () => getExercises(supabase, chapters?.map(c => c.id) ?? [], homeworkData?.map(h => h.id) ?? []),
         enabled: !!chapters && !!homeworkData
+    });
+
+    const [activeChat, setActiveChat] = useState<ChatMessage>({
+        id: 1,
+        title: "Chat",
+        prompt: "",
+        context: {
+            lectures: [],
+            chapters: [],
+            exercises: [],
+            homeworks: [],
+        },
+        chatType: profile?.admin || profile?.professor ? 'general-teacher' : 'general-student',
+        teacher: (profile?.admin || profile?.professor) ?? false
     });
 
     // Combine all loading states
@@ -277,10 +275,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     activeChat.title,
                     profileId,
                     activeChat.chatType,
-                    { 
-                        isTeacherChat, 
-                        teacherOption: activeChat.metadata?.teacherOption || '' 
-                    }
                 );
                 newChatId = chat.id;
                 router.replace(`/classes/c/${classId}/chat/${chat.id}`);
@@ -418,12 +412,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         setActiveChat(prev => ({ 
             ...prev, 
             chatType: type,
-            metadata: {
-                ...(prev.metadata || {}),
-                teacherOption: teacherOption
-            }
         }));
-        setIsTeacherChat(isTeacher);
         setWelcomeMessages({ followUp: true });
     }, []);
 
@@ -451,9 +440,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 setViewerMode({
                     active: true,
                     documentId: doc.id,
-                    textbookId: {
-                        chapterId: contextId,
-                    },
+                    textbookId: contextId,
+                    chapterId: contextId,
                 });
             }
         }
@@ -564,27 +552,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         };
     }, [chatId, queryClient, supabase]);
 
-    // Determine if this is a teacher chat based on chat name
-    useEffect(() => {
-        if (existingChat) {
-            const isTeacher = existingChat.name && existingChat.name.includes('[T:');
-            setIsTeacherChat(isTeacher);
-            
-            if (isTeacher) {
-                const match = existingChat.name.match(/\[T:([a-z]+)\]/);
-                if (match && match[1]) {
-                    setActiveChat(prev => ({
-                        ...prev,
-                        metadata: {
-                            ...prev.metadata,
-                            teacherOption: match[1]
-                        }
-                    }));
-                }
-            }
-        }
-    }, [existingChat]);
-
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -594,15 +561,15 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                             <Text size="xl" fw={700} mb={6}>
                                 {existingChat ? existingChat.name : activeChat.title}
                             </Text>
-                            {existingChat?.type && existingChat.type !== 'general' && (
+                            {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
                                 <Badge color={
                                     existingChat.type === 'homework' ? 'blue' :
                                         existingChat.type === 'conceptual' ? 'cyan' :
                                             existingChat.type === 'review' ? 'teal' :
                                                 existingChat.type === 'summary' ? 'violet' :
-                                                    existingChat.type === 'teacher-approach' ? 'green' :
-                                                        existingChat.type === 'teacher-faq' ? 'indigo' :
-                                                            existingChat.type === 'teacher-misconceptions' ? 'orange' :
+                                                    existingChat.type === 'approach' ? 'green' :
+                                                        existingChat.type === 'faq' ? 'indigo' :
+                                                            existingChat.type === 'misconception' ? 'orange' :
                                                                 'gray'
                                 }>
                                     {existingChat.type.startsWith('teacher-') 
@@ -628,14 +595,13 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     chatId={chatId}
                                     classId={classId}
                                     colorScheme={colorScheme}
-                                    showWelcome={existingChat && existingChat.type === 'general' ? false : true}
-                                    welcomeFollowUp={existingChat && existingChat.type === 'general' ? false : welcomeMessages.followUp}
+                                    showWelcome={existingChat && (existingChat.type === 'general-student' || existingChat.type === 'general-teacher') ? false : true}
+                                    welcomeFollowUp={existingChat && (existingChat.type === 'general-student' || existingChat.type === 'general-teacher') ? false : welcomeMessages.followUp}
                                     existingChat={existingChat ?? null}
                                     activeChat={activeChat}
                                     onOptionClick={handleOptionClick}
                                     setViewerMode={setViewerMode}
                                     isInitializing={isInitializing}
-                                    userMode={userMode}
                                 />
 
                                 <ChatInput
@@ -672,9 +638,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     expandedNodes={expandedNodes}
                                     toggleNode={toggleNode}
                                     activeChat={activeChat}
+                                    setActiveChat={setActiveChat}
                                     scrollToSection={scrollToSection}
-                                    userMode={userMode}
-                                    setUserMode={setUserMode}
                                 />
                             )}
                         </Grid.Col>

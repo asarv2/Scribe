@@ -26,7 +26,6 @@ class ChatProcessor(BaseProcessor):
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
         answerable_problems_string: str | None,
-        chat_id: str = None,  # Add chat_id parameter
     ):
         super().__init__()
         self.prompt_type = prompt_type
@@ -35,7 +34,6 @@ class ChatProcessor(BaseProcessor):
         self.current_question = question
         self.chat_history = []
         self.answerable_problems_string = answerable_problems_string
-        self.chat_id = chat_id  # Store the chat_id
         # Format past messages into chat history
         for _, q, r in past_messages:
             if q and r:  # Only add complete message pairs
@@ -73,51 +71,30 @@ class ChatProcessor(BaseProcessor):
         """Process a single message with streaming"""
         try:
             conversation_context = self.format_conversation()
-
-            # Check if a chat_id was provided
-            is_teacher_chat = False
-            teacher_option = None
-            
-            if self.chat_id:
-                # Check if this is a teacher chat by examining name
-                chat_response = supabase.table("chats").select("name").eq("id", self.chat_id).single().execute()
-                chat_name = chat_response.data.get('name', '')
-                
-                if chat_name and '[T:' in chat_name:
-                    match = re.search(r'\[T:([a-z]+)\]', chat_name)
-                    if match:
-                        is_teacher_chat = True
-                        teacher_option = match.group(1)
             
             system_prompt = ""
-            # Get appropriate prompt based on type and whether it's teacher mode
-            if is_teacher_chat:
-                # Teacher modes
-                match self.prompt_type:
-                    case "conceptual":
-                        system_prompt = get_specific_approach_prompt()
-                    case "summary":
-                        system_prompt = get_faq_prompt()
-                    case "review":
-                        system_prompt = get_misconceptions_prompt()
-                    case _:
-                        system_prompt = get_general_prompt()
-            else:
-                # Student modes
-                match self.prompt_type:
-                    case "homework":
-                        if self.answerable_problems_string is None:
-                            system_prompt = get_homework_prompt(solution=False)
-                        else:
-                            system_prompt = get_homework_prompt(solution=True) + self.answerable_problems_string
-                    case "summary":
-                        system_prompt = get_summary_prompt()
-                    case "conceptual":
-                        system_prompt = get_conceptual_prompt()
-                    case "general":
-                        system_prompt = get_general_prompt()
-                    case "review":
-                        system_prompt = get_review_prompt()
+            match self.prompt_type:
+                case "homework":
+                    if self.answerable_problems_string is None:
+                        system_prompt = get_homework_prompt(solution=False)
+                    else:
+                        system_prompt = get_homework_prompt(solution=True) + self.answerable_problems_string
+                case "summary":
+                    system_prompt = get_summary_prompt()
+                case "conceptual":
+                    system_prompt = get_conceptual_prompt()
+                case "general-student":
+                    system_prompt = get_general_prompt()
+                case "review":
+                    system_prompt = get_review_prompt()
+                case "approach":
+                    system_prompt = get_specific_approach_prompt()
+                case "faq":
+                    system_prompt = get_faq_prompt()
+                case "misconception":
+                    system_prompt = get_misconceptions_prompt()
+                case 'general-teacher':
+                    system_prompt = get_general_prompt()
 
             prompt = (
                 "### **Now, continue the conversation using this style.**\n\n"

@@ -55,6 +55,7 @@ export type Database = {
           id: string
           name: string
           profile: string | null
+          teacher: boolean
           type: Database["prod"]["Enums"]["chat_type"]
         }
         Insert: {
@@ -64,6 +65,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          teacher?: boolean
           type?: Database["prod"]["Enums"]["chat_type"]
         }
         Update: {
@@ -73,6 +75,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          teacher?: boolean
           type?: Database["prod"]["Enums"]["chat_type"]
         }
         Relationships: [
@@ -871,7 +874,16 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      chat_type: "homework" | "summary" | "conceptual" | "review" | "general"
+      chat_type:
+        | "homework"
+        | "summary"
+        | "conceptual"
+        | "review"
+        | "general-student"
+        | "general-teacher"
+        | "approach"
+        | "faq"
+        | "misconception"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
       parse_status: "parsing" | "batching" | "complete" | "idle" | "error"

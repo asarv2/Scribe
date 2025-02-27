@@ -21,7 +21,7 @@ import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
-import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage, UserMode } from "@/types";
+import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
 
 interface ContextPanelProps {
     classId: string;
@@ -34,9 +34,8 @@ interface ContextPanelProps {
     expandedNodes: Set<string>;
     toggleNode: (nodeId: string) => void;
     activeChat: ChatMessage;
+    setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>;
     scrollToSection: (sectionId: string) => void;
-    userMode?: UserMode;
-    setUserMode?: (mode: UserMode) => void;
 }
 
 export function ContextPanel({
@@ -50,9 +49,8 @@ export function ContextPanel({
     expandedNodes,
     toggleNode,
     activeChat,
+    setActiveChat,
     scrollToSection,
-    userMode = 'student',
-    setUserMode
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
     const { colorScheme } = useMantineColorScheme();
@@ -175,8 +173,6 @@ export function ContextPanel({
     //     return "/placeholder_image.svg";
     // }
 
-
-
     return (
         <Card
             shadow="sm"
@@ -192,29 +188,27 @@ export function ContextPanel({
                 <Text size="lg" fw={700}>
                     Content
                 </Text>
-                
+
                 {/* Add user mode toggle */}
-                {setUserMode && (
-                    <Group position="apart">
-                        <Group spacing="xs">
-                            <IconSchool size={18} color={userMode === 'student' ? 'currentColor' : 'gray'} />
-                            <Text size="sm" color={userMode === 'student' ? undefined : 'dimmed'}>Student</Text>
-                        </Group>
-                        
-                        <ActionIcon 
-                            variant="transparent"
-                            onClick={() => setUserMode(userMode === 'student' ? 'teacher' : 'student')}
-                            title={`Switch to ${userMode === 'student' ? 'teacher' : 'student'} mode`}
-                        >
-                            <IconCaretLeftRight size={24} />
-                        </ActionIcon>
-                        
-                        <Group spacing="xs">
-                            <Text size="sm" color={userMode === 'teacher' ? undefined : 'dimmed'}>Teacher</Text>
-                            <IconChalkboard size={18} color={userMode === 'teacher' ? 'currentColor' : 'gray'} />
-                        </Group>
+                <Group justify="space-between">
+                    <Group gap="xs">
+                        <IconSchool size={18} color={!activeChat.teacher ? 'currentColor' : 'gray'} />
+                        <Text size="sm" c={!activeChat.teacher ? undefined : 'dimmed'}>Student</Text>
                     </Group>
-                )}
+
+                    <ActionIcon
+                        variant="transparent"
+                        onClick={() => setActiveChat({ ...activeChat, teacher: !activeChat.teacher })}
+                        title={`Switch to ${activeChat.teacher ? 'student' : 'teacher'} mode`}
+                    >
+                        <IconCaretLeftRight size={24} />
+                    </ActionIcon>
+
+                    <Group gap="xs">
+                        <Text size="sm" c={activeChat.teacher ? undefined : 'dimmed'}>Teacher</Text>
+                        <IconChalkboard size={18} color={activeChat.teacher ? 'currentColor' : 'gray'} />
+                    </Group>
+                </Group>
 
                 <TextInput
                     placeholder="Search context..."
@@ -298,7 +292,7 @@ export function ContextPanel({
                                 activeContextIds={activeChat.context.chapters}
                             />
                         </div>
-                        
+
                         <div id="homeworks-section">
                             <ContentList
                                 title="Homeworks"

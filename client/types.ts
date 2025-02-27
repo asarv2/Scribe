@@ -35,14 +35,14 @@ export interface ChatMessage {
         homeworks: string[];   // homework IDs
     };
     chatType: ChatType;
+    teacher: boolean; // whether the chat is a teacher chat
 }
 
 export interface ViewerMode {
     active: boolean;
     documentId?: string;
     lectureId?: string;
-    textbookId?: {
-        chapterId?: string;
-        exerciseId?: string;
-    }
+    textbookId?: string;
+    chapterId?: string;
+    exerciseId?: string;
 }

@@ -34,15 +34,6 @@ async def handle_message(request: ChatRequest):
         chat_response = supabase.table("chats").select("*").eq("id", chat_id).single().execute()
         chat = chat_response.data
         class_id = chat.get('class')
-        
-        # Check if this is a teacher chat by examining the name
-        is_teacher_chat = False
-        teacher_option = None
-        if chat.get('name') and '[T:' in chat.get('name'):
-            match = re.search(r'\[T:([a-z]+)\]', chat.get('name'))
-            if match:
-                is_teacher_chat = True
-                teacher_option = match.group(1)
 
         # Get class info
         class_response = supabase.table("classes").select(
@@ -261,7 +252,6 @@ async def handle_message(request: ChatRequest):
                 all_subchapters,
                 all_homeworks
             ),
-            chat_id=chat_id  # Pass chat_id to the processor
         )
 
         total_response = ""

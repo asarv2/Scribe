@@ -80,22 +80,22 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
                             initialDocumentId={viewerMode.documentId}
                             embedded={true}
                         />
-                    ) : viewerMode.textbookId && viewerMode.textbookId.chapterId ? (
+                    ) : viewerMode.textbookId && viewerMode.chapterId ? (
                         <ChapterViewer
                             key={`${viewerMode.textbookId}-${viewerMode.documentId}`}
                             classId={classId}
                             textbookId={Object.values(viewerMode.textbookId)[0]}
-                            chapterId={viewerMode.textbookId.chapterId}
+                            chapterId={viewerMode.chapterId}
                             initialDocumentId={viewerMode.documentId}
                             embedded={true}
                         />
-                    ) : viewerMode.textbookId && viewerMode.textbookId.chapterId && viewerMode.textbookId.exerciseId ? (
+                    ) : viewerMode.textbookId && viewerMode.chapterId && viewerMode.exerciseId ? (
                         <ExerciseViewer
-                            key={`${viewerMode.textbookId}-${viewerMode.textbookId.chapterId}-${viewerMode.textbookId.exerciseId}`}
+                            key={`${viewerMode.textbookId}-${viewerMode.chapterId}-${viewerMode.exerciseId}`}
                             classId={classId}
                             textbookId={Object.values(viewerMode.textbookId)[0]}
-                            chapterId={viewerMode.textbookId.chapterId}
-                            initialExerciseId={viewerMode.textbookId.exerciseId}
+                            chapterId={viewerMode.chapterId}
+                            initialExerciseId={viewerMode.exerciseId}
                             embedded={true}
                         />
                     ) : null}
