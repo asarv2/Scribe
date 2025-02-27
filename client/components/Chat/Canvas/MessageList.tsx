@@ -6,7 +6,7 @@
 import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader } from "@mantine/core";
 import { IconArrowDown } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
-import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode } from "@/types";
+import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode, UserMode } from "@/types";
 import Latex from "../../Latex";
 import Image from "next/image";
 import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
@@ -39,9 +39,10 @@ interface MessageListProps {
   welcomeFollowUp: boolean;
   existingChat: Chat | null;
   activeChat: ChatMessage;
-  onOptionClick: (type: ChatType) => void;
+  onOptionClick: (type: ChatType, isTeacherMode?: boolean, teacherOption?: string) => void;
   setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
   isInitializing?: boolean;
+  userMode: UserMode;
 }
 
 export const MessageList = memo(({
@@ -54,9 +55,9 @@ export const MessageList = memo(({
   onOptionClick,
   setViewerMode,
   existingChat,
-  isInitializing = false
+  isInitializing = false,
+  userMode
 }: MessageListProps) => {
-
   const supabase = useSupabaseBrowser();
 
   const { data: messages, isLoading: isLoadingMessages } = useQuery({
@@ -152,8 +153,45 @@ export const MessageList = memo(({
 
   const allDocuments = [...(lectureDocuments ?? []), ...(textbookDocuments ?? [])];
 
+  const handleTeacherOption = (option: string) => {
+    // Map teacher UI options to existing database chat types
+    let chatType: ChatType;
+    
+    switch(option) {
+      case 'approach':
+        chatType = 'conceptual';
+        break;
+      case 'faq':
+        chatType = 'summary';
+        break;
+      case 'misconceptions':
+        chatType = 'review';
+        break;
+      default:
+        chatType = option as ChatType;
+    }
+    
+    console.log(`Teacher selected option: ${option}, mapped to chat type: ${chatType}, setting teacherOption=${option}`);
+    
+    // We need to store what teacher option was selected
+    onOptionClick(chatType, true, option);
+  };
+
   const renderWelcomeMessages = () => {
     if (!showWelcome && !welcomeFollowUp) return null;
+    
+    // Parse teacher option from chat name instead of metadata
+    let teacherOption = '';
+    if (existingChat?.name) {
+      const match = existingChat.name.match(/\[T:([a-z]+)\]/);
+      if (match && match[1]) {
+        teacherOption = match[1];
+      }
+    } else if (activeChat.metadata?.teacherOption) {
+      teacherOption = activeChat.metadata.teacherOption;
+    }
+    
+    console.log("Teacher option from chat name:", teacherOption);
 
     return (
       <Stack>
@@ -187,34 +225,62 @@ export const MessageList = memo(({
                     Hi {profile?.first_name || 'there'}, how can I assist you today?
                   </Text>
                   <Group gap="xs">
-                    <Button
-                      variant="light"
-                      color="blue"
-                      onClick={() => onOptionClick('homework')}
-                    >
-                      Homework Help
-                    </Button>
-                    <Button
-                      variant="light"
-                      color="cyan"
-                      onClick={() => onOptionClick('conceptual')}
-                    >
-                      Conceptual Understanding
-                    </Button>
-                    <Button
-                      variant="light"
-                      color="teal"
-                      onClick={() => onOptionClick('review')}
-                    >
-                      Content Review
-                    </Button>
-                    <Button
-                      variant="light"
-                      color="violet"
-                      onClick={() => onOptionClick('summary')}
-                    >
-                      Summary
-                    </Button>
+                    {userMode === 'student' ? (
+                      <>
+                        <Button
+                          variant="light"
+                          color="blue"
+                          onClick={() => onOptionClick('homework')}
+                        >
+                          Homework Help
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="cyan"
+                          onClick={() => onOptionClick('conceptual')}
+                        >
+                          Conceptual Understanding
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="teal"
+                          onClick={() => onOptionClick('review')}
+                        >
+                          Content Review
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="violet"
+                          onClick={() => onOptionClick('summary')}
+                        >
+                          Summary
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="light"
+                          color="green"
+                          onClick={() => handleTeacherOption('approach')}
+                        >
+                          Specific Approach
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="indigo"
+                          onClick={() => handleTeacherOption('faq')}
+                        >
+                          FAQs and Responses
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="orange"
+                          onClick={() => handleTeacherOption('misconceptions')}
+                        >
+                          Common Misconceptions
+                        </Button>
+                      </>
+                    )}
                   </Group>
                 </Stack>
               </Card>
@@ -248,20 +314,35 @@ export const MessageList = memo(({
                 }}
               >
                 <Text>
-                  Sounds good! I can definitely help you with{' '}
-                  {(existingChat ? existingChat.type : activeChat.chatType) === 'homework' ? (
-                    <Text span fw={600} c="blue">your homework</Text>
-                  ) : (existingChat ? existingChat.type : activeChat.chatType) === 'conceptual' ? (
-                    <Text span fw={600} c="cyan">understanding concepts</Text>
-                  ) : (existingChat ? existingChat.type : activeChat.chatType) === 'review' ? (
-                    <Text span fw={600} c="teal">reviewing the content</Text>
+                  {userMode === 'student' ? (
+                    <>
+                      Sounds good! I can definitely help you with{' '}
+                      {(existingChat ? existingChat.type : activeChat.chatType) === 'homework' ? (
+                        <Text span fw={600} c="blue">your homework</Text>
+                      ) : (existingChat ? existingChat.type : activeChat.chatType) === 'conceptual' ? (
+                        <Text span fw={600} c="cyan">understanding concepts</Text>
+                      ) : (existingChat ? existingChat.type : activeChat.chatType) === 'review' ? (
+                        <Text span fw={600} c="teal">reviewing the content</Text>
+                      ) : (
+                        <Text span fw={600} c="violet">creating a summary</Text>
+                      )}. What specific {
+                        (existingChat ? existingChat.type : activeChat.chatType) === 'homework' ? 'problem' :
+                          (existingChat ? existingChat.type : activeChat.chatType) === 'conceptual' ? 'topic' :
+                            'material'
+                      } would you like to go over?
+                    </>
                   ) : (
-                    <Text span fw={600} c="violet">creating a summary</Text>
-                  )}. What specific {
-                    (existingChat ? existingChat.type : activeChat.chatType) === 'homework' ? 'problem' :
-                      (existingChat ? existingChat.type : activeChat.chatType) === 'conceptual' ? 'topic' :
-                        'material'
-                  } would you like to go over?
+                    <>
+                      {/* Teacher follow-up text */}
+                      {teacherOption === 'approach' ? (
+                        <>What specific <Text span fw={600} c="green">teaching approaches</Text> would you like me to take when helping out the students?</>
+                      ) : teacherOption === 'faq' ? (
+                        <>What are some <Text span fw={600} c="indigo">FAQ's and responses</Text> students tend to have that I can address if they ask me?</>
+                      ) : (
+                        <>What are some <Text span fw={600} c="orange">common misconceptions</Text> students usually have that cause them to make mistakes?</>
+                      )}
+                    </>
+                  )}
                 </Text>
               </Card>
             </Stack>

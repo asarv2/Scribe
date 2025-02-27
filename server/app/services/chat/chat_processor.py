@@ -5,7 +5,9 @@ from datetime import datetime
 import os
 from app.extensions import MESSAGES_DIR, UPLOAD_FOLDER
 from app.extensions import supabase
-from app.services.chat.prompts import get_homework_prompt, get_summary_prompt, get_conceptual_prompt, get_general_prompt, get_review_prompt
+from app.services.chat.prompts import get_homework_prompt, get_summary_prompt, get_conceptual_prompt, get_general_prompt, get_review_prompt, get_specific_approach_prompt, get_faq_prompt, get_misconceptions_prompt
+
+
 class ChatMessage(TypedDict):
     id: str
     question: str
@@ -13,6 +15,7 @@ class ChatMessage(TypedDict):
     references: List[str]
     title: Optional[str]
     figures: List[str]
+
 
 class ChatProcessor(BaseProcessor):
     def __init__(
@@ -23,6 +26,7 @@ class ChatProcessor(BaseProcessor):
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
         answerable_problems_string: str | None,
+        chat_id: str = None,  # Add chat_id parameter
     ):
         super().__init__()
         self.prompt_type = prompt_type
@@ -31,6 +35,7 @@ class ChatProcessor(BaseProcessor):
         self.current_question = question
         self.chat_history = []
         self.answerable_problems_string = answerable_problems_string
+        self.chat_id = chat_id  # Store the chat_id
         # Format past messages into chat history
         for _, q, r in past_messages:
             if q and r:  # Only add complete message pairs
@@ -69,21 +74,50 @@ class ChatProcessor(BaseProcessor):
         try:
             conversation_context = self.format_conversation()
 
+            # Check if a chat_id was provided
+            is_teacher_chat = False
+            teacher_option = None
+            
+            if self.chat_id:
+                # Check if this is a teacher chat by examining name
+                chat_response = supabase.table("chats").select("name").eq("id", self.chat_id).single().execute()
+                chat_name = chat_response.data.get('name', '')
+                
+                if chat_name and '[T:' in chat_name:
+                    match = re.search(r'\[T:([a-z]+)\]', chat_name)
+                    if match:
+                        is_teacher_chat = True
+                        teacher_option = match.group(1)
+            
             system_prompt = ""
-            match self.prompt_type:
-                case "homework":
-                    if self.answerable_problems_string is None:
-                        system_prompt = get_homework_prompt(solution=False)
-                    else:
-                        system_prompt = get_homework_prompt(solution=True) + self.answerable_problems_string
-                case "summary":
-                    system_prompt = get_summary_prompt()
-                case "conceptual":
-                    system_prompt = get_conceptual_prompt()
-                case "general":
-                    system_prompt = get_general_prompt()
-                case "review":
-                    system_prompt = get_review_prompt()
+            # Get appropriate prompt based on type and whether it's teacher mode
+            if is_teacher_chat:
+                # Teacher modes
+                match self.prompt_type:
+                    case "conceptual":
+                        system_prompt = get_specific_approach_prompt()
+                    case "summary":
+                        system_prompt = get_faq_prompt()
+                    case "review":
+                        system_prompt = get_misconceptions_prompt()
+                    case _:
+                        system_prompt = get_general_prompt()
+            else:
+                # Student modes
+                match self.prompt_type:
+                    case "homework":
+                        if self.answerable_problems_string is None:
+                            system_prompt = get_homework_prompt(solution=False)
+                        else:
+                            system_prompt = get_homework_prompt(solution=True) + self.answerable_problems_string
+                    case "summary":
+                        system_prompt = get_summary_prompt()
+                    case "conceptual":
+                        system_prompt = get_conceptual_prompt()
+                    case "general":
+                        system_prompt = get_general_prompt()
+                    case "review":
+                        system_prompt = get_review_prompt()
 
             prompt = (
                 "### **Now, continue the conversation using this style.**\n\n"
@@ -98,7 +132,6 @@ class ChatProcessor(BaseProcessor):
                 f"**Student:** {self.current_question}\n"
                 "**You (AI):** "
             )
-
 
             # save input prompt to .txt file in uploads folder
             with open(os.path.join(MESSAGES_DIR, f"{self.message_id}.txt"), "w") as f:
