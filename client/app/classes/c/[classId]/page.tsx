@@ -20,9 +20,14 @@ import { ClassLayout } from "@/components/Class/ClassLayout";
 import { LineChart } from '@mantine/charts';
 import { getChats } from "@/utils/queries/get-chats";
 import { getProfile } from "@/utils/queries/get-profile";
-import { getMessages } from "@/utils/queries/get-messages";
+import { getMessages, getMessagesById } from "@/utils/queries/get-messages";
 import { AreaChart } from '@mantine/charts';
 import { BarChart } from '@mantine/charts';
+import { getFaqs } from "@/utils/queries/get-faqs";
+import { getDocuments } from "@/utils/queries/get-documents";
+import { getLectures, getLecturesById } from "@/utils/queries/get-lectures";
+import { getChaptersById } from "@/utils/queries/get-chapters";
+import { getHomeworksById } from "@/utils/queries/get-homeworks";
 
 export default function Class({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient()
@@ -62,6 +67,42 @@ export default function Class({ params }: { params: { classId: string } }) {
         queryKey: ["messages", classId, chats],
         queryFn: () => getMessages(supabase, chats ? chats.map(chat => chat.id) : []),
         enabled: !!chats
+    })
+
+    const { data: faqs, isLoading: loadingFaqs } = useQuery({
+        queryKey: ["faqs", classId],
+        queryFn: () => getFaqs(supabase, classId),
+        enabled: !!classData
+    })
+
+    const {data: faqMessages, isLoading: loadingFaqMessages} = useQuery({
+        queryKey: ["faqMessages", classId],
+        queryFn: () => getMessagesById(supabase, Array.from(new Set(faqs?.flatMap(faq => faq.messages)))),
+        enabled: !!faqs
+    })
+
+    const {data: faqDocuments, isLoading: loadingFaqDocuments} = useQuery({
+        queryKey: ["faqDocuments", classId],
+        queryFn: () => getDocuments(supabase, Array.from(new Set(faqMessages?.flatMap(message => message.documents)))),
+        enabled: !!faqMessages
+    })
+
+    const {data: faqLectures, isLoading: loadingFaqLectures} = useQuery({
+        queryKey: ["faqLectures", classId],
+        queryFn: () => getLecturesById(supabase, Array.from(new Set(faqDocuments?.flatMap(document => document.lecture).filter(lecture => lecture !== null)))),
+        enabled: !!faqDocuments
+    })
+
+    const {data: faqChapters, isLoading: loadingFaqChapters} = useQuery({
+        queryKey: ["faqChapters", classId],
+        queryFn: () => getChaptersById(supabase, Array.from(new Set(faqDocuments?.flatMap(document => document.chapter).filter(chapter => chapter !== null)))),
+        enabled: !!faqDocuments
+    })
+
+    const {data: faqHomeworks, isLoading: loadingFaqHomeworks} = useQuery({
+        queryKey: ["faqHomeworks", classId],
+        queryFn: () => getHomeworksById(supabase, Array.from(new Set(faqDocuments?.flatMap(document => document.homework).filter(homework => homework !== null)))),
+        enabled: !!faqDocuments
     })
 
     // Process chat data for visualization
@@ -154,6 +195,92 @@ export default function Class({ params }: { params: { classId: string } }) {
     const studentMessagesData = processStudentMessages();
     const timeOfDayMessagesData = processTimeOfDayMessages();
 
+    // Add this new processing function with the other data processing functions
+    const processFaqTopics = () => {
+        if (!faqs) return [];
+        
+        const topicCounts = faqs.reduce((acc: { [key: string]: number }, faq) => {
+            acc[faq.topic] = (acc[faq.topic] || 0) + faq.count;
+            return acc;
+        }, {});
+
+        return Object.entries(topicCounts)
+            .map(([topic, count]) => ({
+                topic,
+                count
+            }))
+            .sort((a, b) => b.count - a.count); // Sort by count descending
+    };
+
+    // Add this const declaration with the other data declarations
+    const faqTopicsData = processFaqTopics();
+
+    // Add these new processing functions after the other processing functions
+    const processFaqLecturesData = () => {
+        if (!faqDocuments || !faqLectures) return [];
+        
+        const lectureCounts = faqDocuments.reduce((acc: { [key: string]: number }, doc) => {
+            if (doc.lecture) {
+                const lecture = faqLectures.find(l => l.id === doc.lecture);
+                const lectureName = lecture ? `${lecture.name}` : 'Unknown Lecture';
+                acc[lectureName] = (acc[lectureName] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        return Object.entries(lectureCounts)
+            .map(([lecture, count]) => ({
+                name: lecture,
+                count
+            }))
+            .sort((a, b) => b.count - a.count);
+    };
+
+    const processFaqChaptersData = () => {
+        if (!faqDocuments || !faqChapters) return [];
+        
+        const chapterCounts = faqDocuments.reduce((acc: { [key: string]: number }, doc) => {
+            if (doc.chapter) {
+                const chapter = faqChapters.find(c => c.id === doc.chapter);
+                const chapterName = chapter ? `${chapter.title}` : 'Unknown Chapter';
+                acc[chapterName] = (acc[chapterName] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        return Object.entries(chapterCounts)
+            .map(([chapter, count]) => ({
+                name: chapter,
+                count
+            }))
+            .sort((a, b) => b.count - a.count);
+    };
+
+    const processFaqHomeworksData = () => {
+        if (!faqDocuments || !faqHomeworks) return [];
+        
+        const homeworkCounts = faqDocuments.reduce((acc: { [key: string]: number }, doc) => {
+            if (doc.homework) {
+                const homework = faqHomeworks.find(h => h.id === doc.homework);
+                const homeworkName = homework ? `${homework.title}` : 'Unknown Homework';
+                acc[homeworkName] = (acc[homeworkName] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        return Object.entries(homeworkCounts)
+            .map(([homework, count]) => ({
+                name: homework,
+                count
+            }))
+            .sort((a, b) => b.count - a.count);
+    };
+
+    // Add these const declarations with the other data declarations
+    const faqLecturesData = processFaqLecturesData();
+    const faqChaptersData = processFaqChaptersData();
+    const faqHomeworksData = processFaqHomeworksData();
+
     return (
         <ClassLayout classId={classId}>
             <Container size="lg" py="xl">
@@ -239,6 +366,61 @@ export default function Class({ params }: { params: { classId: string } }) {
                                 series={[{ name: 'messages', color: 'orange.6' }]}
                                 tickLine="y"
                                 withLegend
+                                withTooltip
+                            />
+                        </Card>
+                    </SimpleGrid>
+
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Text size="lg" fw={500} mb="md">FAQ Topics Distribution</Text>
+                        <BarChart
+                            h={Math.max(400, faqTopicsData.length * 40)} // Dynamically adjust height based on number of topics
+                            data={faqTopicsData}
+                            dataKey="topic"
+                            series={[{ name: 'count', color: 'cyan.6' }]}
+                            tickLine="x"
+                            orientation="horizontal"
+                            withLegend
+                            withTooltip
+                        />
+                    </Card>
+
+                    <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Text size="lg" fw={500} mb="md">Lecture Questions Distribution</Text>
+                            <BarChart
+                                h={Math.max(300, faqLecturesData.length * 40)}
+                                data={faqLecturesData}
+                                dataKey="name"
+                                series={[{ name: 'count', color: 'blue.6' }]}
+                                tickLine="x"
+                                orientation="horizontal"
+                                withTooltip
+                            />
+                        </Card>
+
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Text size="lg" fw={500} mb="md">Chapter Questions Distribution</Text>
+                            <BarChart
+                                h={Math.max(300, faqChaptersData.length * 40)}
+                                data={faqChaptersData}
+                                dataKey="name"
+                                series={[{ name: 'count', color: 'green.6' }]}
+                                tickLine="x"
+                                orientation="horizontal"
+                                withTooltip
+                            />
+                        </Card>
+
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Text size="lg" fw={500} mb="md">Homework Questions Distribution</Text>
+                            <BarChart
+                                h={Math.max(300, faqHomeworksData.length * 40)}
+                                data={faqHomeworksData}
+                                dataKey="name"
+                                series={[{ name: 'count', color: 'red.6' }]}
+                                tickLine="x"
+                                orientation="horizontal"
                                 withTooltip
                             />
                         </Card>

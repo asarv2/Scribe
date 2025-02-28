@@ -478,7 +478,7 @@ export const MessageList = memo(({
                                             width={800}
                                             height={600}
                                             style={{
-                                              maxWidth: '100%',
+                                              maxWidth: '60%',
                                               height: 'auto',
                                               borderRadius: '24px',
                                               objectFit: 'contain',

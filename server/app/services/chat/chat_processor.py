@@ -231,6 +231,8 @@ class ChatProcessor(BaseProcessor):
         import io
         import os
         import matplotlib.pyplot as plt
+        import scipy
+        import networkx as nx
         import numpy as np
         
         try:
@@ -241,6 +243,8 @@ class ChatProcessor(BaseProcessor):
             namespace = {
                 'plt': plt,
                 'np': np,
+                'scipy': scipy,
+                'nx': nx,  # Add networkx to the namespace
                 'figure': plt.figure(),  # Create a new figure explicitly
             }
             

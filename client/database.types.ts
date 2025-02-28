@@ -458,6 +458,41 @@ export type Database = {
           },
         ]
       }
+      faq: {
+        Row: {
+          class: string
+          count: number
+          created_at: string
+          id: string
+          messages: string[]
+          topic: string
+        }
+        Insert: {
+          class: string
+          count?: number
+          created_at?: string
+          id?: string
+          messages?: string[]
+          topic?: string
+        }
+        Update: {
+          class?: string
+          count?: number
+          created_at?: string
+          id?: string
+          messages?: string[]
+          topic?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faq_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedback: {
         Row: {
           created_at: string

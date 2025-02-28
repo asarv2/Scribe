@@ -159,6 +159,7 @@ class BaseProcessor:
 
     async def robust_generate(
         self,
+        system_instruction: str,
         message: Message,
         model: LiteralModel = "gemini-2.0-flash",
         retries: int = 3,
@@ -169,7 +170,7 @@ class BaseProcessor:
             await rate_limiter.acquire(model)
             
             try:
-                model_instance = await self.get_model_instance(model)
+                model_instance = await self.get_model_instance(model, system_instruction)
                 
                 # Extract content parts from the message
                 content_parts = []
