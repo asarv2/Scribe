@@ -55,6 +55,7 @@ export type Database = {
           id: string
           name: string
           profile: string | null
+          response_url: string
           teacher: boolean
           type: Database["prod"]["Enums"]["chat_type"]
         }
@@ -65,6 +66,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          response_url?: string
           teacher?: boolean
           type?: Database["prod"]["Enums"]["chat_type"]
         }
@@ -75,6 +77,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          response_url?: string
           teacher?: boolean
           type?: Database["prod"]["Enums"]["chat_type"]
         }

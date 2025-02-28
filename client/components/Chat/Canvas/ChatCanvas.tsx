@@ -20,6 +20,7 @@ import { createChat } from "@/utils/services/chat";
 import { getAvatarUrl } from "@/utils/services/images";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
+import { TypeAnimation } from 'react-type-animation';
 
 import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode } from "@/types";
 import { getUser } from "@/utils/queries/get-user";
@@ -268,6 +269,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             let profileId = profile?.id;
             let newChatId = chatId;
 
+            const responseUrl =  `${process.env.NEXT_PUBLIC_API_URL}`
+
             if (chatId === "new") {
                 // Create new generation with type and metadata including teacherOption
                 const chat = await createChat(
@@ -275,7 +278,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     activeChat.title,
                     profileId,
                     activeChat.chatType,
-                    activeChat.teacher
+                    activeChat.teacher,
+                    responseUrl
                 );
                 newChatId = chat.id;
                 router.replace(`/classes/c/${classId}/chat/${chat.id}`);
@@ -289,7 +293,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 profile: profileId,
                 bare_question: activeChat.prompt + additionalContextForBareQuestion,
                 question: activeChat.prompt,
-                response_url: `${process.env.NEXT_PUBLIC_API_URL}`,
+                response_url: responseUrl,
                 documents: getDocuments().map(doc => doc.id),
                 exercises: activeChat.context.exercises, // these can stay as they are
             };
@@ -586,7 +590,29 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Text size="xl" fw={700} mb={6}>
-                                {existingChat ? existingChat.name : activeChat.title}
+                                {existingChat ? (
+                                    <TypeAnimation
+                                        key={existingChat.name}
+                                        sequence={[
+                                            '',
+                                            100,
+                                            existingChat.name || '',
+                                        ]}
+                                        wrapper="span"
+                                        cursor={false}
+                                        repeat={0}
+                                        speed={50}
+                                        style={{
+                                            fontSize: '1.25rem',
+                                            fontWeight: 700,
+                                            display: 'inline-block',
+                                        }}
+                                    />
+                                ) : (
+                                    <Text size="xl" fw={700}>
+                                        {activeChat.title}
+                                    </Text>
+                                )}
                             </Text>
                             {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
                                 <Badge color={

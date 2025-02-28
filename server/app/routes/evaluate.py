@@ -5,9 +5,11 @@ import traceback
 from app.extensions import supabase
 from datetime import datetime
 from app.services.chat.topic_processor import TopicProcessor
+from app.services.chat.title_processor import TitleProcessor
 
 # Define request models
 class EvaluationRequest(BaseModel):
+    chat_id: str | None = None
     lecture_id: str | None = None
     textbook_id: str | None = None
     generation_id: str | None = None
@@ -107,6 +109,55 @@ async def evaluate_homework(request: EvaluationRequest):
         raise HTTPException(status_code=500, detail=f'Error uploading evaluation: {type(e).__name__} - {str(e)}')
     
     return {'message': 'Evaluation uploaded'}
+
+
+@router.post('/chat')
+async def evaluate_chat(request: EvaluationRequest):
+    """Evaluate a chat and return the documents. Only is called once when the chat is created."""
+    try:
+        # get chat
+        chat = supabase.table("chats").select("*").eq("id", request.chat_id).execute()
+
+        # get all messages, using the chat id of the initial message
+        messages_response = supabase.table("messages").select("*").order("created_at", desc=False).eq("chat", chat.data[0]['id']).execute()
+        messages = messages_response.data
+
+        # get the first message
+        first_message = messages[0]
+
+        if not first_message:
+            raise HTTPException(status_code=404, detail="First message not found")
+
+        # ask an LLM to generate a title for the chat
+        title_processor = TitleProcessor(
+            chat.data[0]['id'],
+            first_message['bare_question'],
+            first_message['bare_response']
+        )
+        raw_title = await title_processor.process_message()
+
+        # clean the title
+        title = title_processor.clean_result(raw_title)
+
+        print(f"Title: {title}")
+
+        # update the chat with the title
+        supabase.table("chats").update({
+            "name": title
+        }).eq("id", chat.data[0]['id']).execute()
+
+        print(f"Chat updated with title: {title}")
+
+    except Exception as e:
+        print(f"Error evaluating chat:")
+        print(f"Chat ID: {request.chat_id}")
+        print(f"Error details: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Traceback: ", traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f'Error evaluating chat: {type(e).__name__} - {str(e)}')
+        
+    
+    
 
 @router.post('/message')
 async def evaluate_message(request: EvaluationRequest):

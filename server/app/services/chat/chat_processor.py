@@ -13,7 +13,6 @@ class ChatMessage(TypedDict):
     question: str
     response: str
     references: List[str]
-    title: Optional[str]
     figures: List[str]
 
 
@@ -143,13 +142,6 @@ class ChatProcessor(BaseProcessor):
         """Clean chat results and extract document references and code blocks from tags."""
         document_ids = []
         figure_ids = []
-        
-        # Extract title if present
-        title = None
-        title_match = re.search(r'<TITLE>([^<]+)</TITLE>', result)
-        if title_match:
-            title = title_match.group(1).strip()
-            result = re.sub(r'<TITLE>[^<]+</TITLE>', '', result)
 
         # Convert markdown-style code blocks (both with and without python tag) to CODE tags
         result = re.sub(
@@ -222,7 +214,6 @@ class ChatProcessor(BaseProcessor):
             question=self.current_question,
             response=cleaned_result.strip(),
             references=list(set(document_ids)),
-            title=title,
             figures=figure_ids
         )
 

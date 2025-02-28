@@ -155,7 +155,38 @@ Deno.serve(async (req) => {
     });
 
     data = await response.json();
-  } else  {
+  } else if (type === "chat") {
+    const { data: chat, error } = await supabase.from("chats").select(
+      "response_url",
+    ).eq("id", evaluation_id).single();
+
+    if (error) {
+      console.error("Error fetching chat:", error);
+      return new Response(JSON.stringify({ error: "Failed to fetch chat" }), {
+        status: 500,
+      });
+    }
+
+    if (!chat) {
+      console.error("Chat not found");
+      return new Response(JSON.stringify({ error: "Chat not found" }), {
+        status: 404,
+      });
+    }
+
+    const server_url = chat.response_url;
+
+    // call the server to evaluate the chat
+    const response = await fetch(`${server_url}/evaluate/chat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ chat_id: evaluation_id }),
+    });
+
+    data = await response.json();
+  } else {
     console.error("Invalid type:", type);
     return new Response(JSON.stringify({ error: "Invalid type" }), {
       status: 400,

@@ -4,14 +4,14 @@ import { Chat, TypedSupabaseClient } from "../../types";
 export async function getChats(
     client: TypedSupabaseClient,
     classId: string,
-    userId: string,
+    userIds: string[],
 ) {
     const { data, error } = await client
         .from("chats")
         .select("*")
         .eq("class", classId)
         .eq("deleted", false)
-        .eq("profile", userId)
+        .in("profile", userIds)
         .order("created_at", { ascending: false });
 
     if (error) {

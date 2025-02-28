@@ -269,11 +269,9 @@ async def handle_message(request: ChatRequest):
                 if last_open_tag > last_complete_tag:
                     text = text[:last_open_tag]
 
-            # Remove the entire title section (tags and content)
-            text = re.sub(r'<TITLE>[^<]+</TITLE>', '', text)
             
             # Remove any malformed closing tags without matching opening tags
-            text = re.sub(r'</(?:SLIDE|LECTURE|TEXTBOOK|PAGE|TITLE)>', '', text)
+            text = re.sub(r'</(?:SLIDE|LECTURE|TEXTBOOK|PAGE)>', '', text)
 
             
             # Remove any malformed opening tags without matching closing tags
@@ -326,12 +324,6 @@ async def handle_message(request: ChatRequest):
                 all_textbooks,
                 current_documents
             )
-
-            if cleaned_result.get('title') is not None:
-                supabase.table("chats").update({
-                    "name": cleaned_result['title']
-                }).eq("id", chat_id).execute()
-
             # Final update to the message in Supabase
             supabase.table("messages").update({
                 "bare_response": total_response,

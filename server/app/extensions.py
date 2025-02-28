@@ -35,3 +35,7 @@ os.makedirs(MESSAGES_DIR, exist_ok=True)
 EVALUATIONS_DIR = os.path.join(UPLOAD_FOLDER, 'evaluations')
 os.makedirs(EVALUATIONS_DIR, exist_ok=True)
 
+# make chats directory if it doesn't exist, under the uploads directory
+CHATS_DIR = os.path.join(UPLOAD_FOLDER, 'chats')
+os.makedirs(CHATS_DIR, exist_ok=True)
+
