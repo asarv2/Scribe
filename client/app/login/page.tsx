@@ -15,15 +15,25 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HomeLayout } from "@/components/Home/HomeLayout";
+import { getClasses } from "@/utils/queries/get-classes";
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
+import { Class } from "@/types";
+import { getProfile } from "@/utils/queries/get-profile";
+import { getUser } from "@/utils/queries/get-user";
 
 export default function Login() {
-
+    const supabase = useSupabaseBrowser()
     const queryClient = useQueryClient()
     const router = useRouter()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const { data: classes, isLoading: classesLoading } = useQuery({
+        queryKey: ["classes"],
+        queryFn: () => getClasses(supabase)
+    })
 
 
     const handleLogin = async () => {
@@ -38,14 +48,26 @@ export default function Login() {
                 throw new Error("Please enter a valid Purdue email")
             }
 
-            const { success, error } = await login(email, password)
-            if (!success) {
+            const { success, error, user } = await login(email, password)
+            if (!success || !user) {
                 throw new Error(error)
             } else {
                 queryClient.invalidateQueries({
                     queryKey: ["user"]
                 })
-                router.push("/classes")
+                const profile = await getProfile(supabase, user.id)
+                if (!profile) {
+                    throw new Error("Profile not found")
+                }
+                const filteredClasses = classes?.filter((c: Class) => (profile.professor && profile.classes.includes(c.id)) || profile.admin)
+                if (filteredClasses?.length === 0) {
+                    throw new Error("No classes found")
+                }
+                const firstClass = filteredClasses?.[0]
+                if (!firstClass) {
+                    throw new Error("No classes found")
+                }
+                router.push(`/classes/c/${firstClass.id}`)
             }
 
             notifications.show({

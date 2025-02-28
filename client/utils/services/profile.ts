@@ -18,3 +18,23 @@ export const updateAvatar = async (formData: FormData, userId: string) => {
     }
     return {success: true, error: ""};
 }
+
+export const checkEmail = async (email: string) => {
+    const supabase = useSupabaseServer(cookies());
+    const { data, error } = await supabase.from("profiles").select("*").eq("email", email).eq("admin", false);
+    if (error) {
+        return {success: false, error: error.message, profile: null};
+    } else {
+        return {success: true, error: "", profile: data[0]};
+    }
+}
+
+export const updateClasses = async (userId: string, classes: string[]) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase.from("profiles").update({ classes: classes }).eq("id", userId);
+    if (error) {
+        return {success: false, error: error.message};
+    } else {
+        return {success: true, error: ""};
+    }
+}

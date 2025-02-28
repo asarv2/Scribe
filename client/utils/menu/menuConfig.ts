@@ -22,21 +22,21 @@ export const menuConfig = {
   //     { link: '/homework', label: 'Homework' },
   //   ]
   // },
-  lecture: {
-    label: 'Lectures',
-    icon: IconPresentation,
-    link: '/lecture',
-  },
-  textbook: {
-    label: 'Textbooks',
-    icon: IconBook,
-    link: '/textbook',
-  },
-  homework: {
-    label: 'Homework',
-    icon: IconFileDescription,
-    link: '/homework',
-  },
+  // lecture: {
+  //   label: 'Lectures',
+  //   icon: IconPresentation,
+  //   link: '/lecture',
+  // },
+  // textbook: {
+  //   label: 'Textbooks',
+  //   icon: IconBook,
+  //   link: '/textbook',
+  // },
+  // homework: {
+  //   label: 'Homework',
+  //   icon: IconFileDescription,
+  //   link: '/homework',
+  // },
   chat: {
     label: 'Chat',
     icon: IconMessage,

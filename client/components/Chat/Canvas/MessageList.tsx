@@ -188,33 +188,33 @@ export const MessageList = memo(({
                   <Group gap="xs">
                     {!activeChat.teacher ? (
                       <>
-                        <Button
+                        {/* <Button
                           variant="light"
                           color="blue"
                           onClick={() => onOptionClick('homework')}
                         >
                           Homework Help
-                        </Button>
+                        </Button> */}
                         <Button
                           variant="light"
                           color="cyan"
                           onClick={() => onOptionClick('conceptual')}
                         >
-                          Conceptual Understanding
+                          Understand
                         </Button>
                         <Button
                           variant="light"
                           color="teal"
                           onClick={() => onOptionClick('review')}
                         >
-                          Content Review
+                          Visualize
                         </Button>
                         <Button
                           variant="light"
                           color="violet"
                           onClick={() => onOptionClick('summary')}
                         >
-                          Summary
+                          Review
                         </Button>
                       </>
                     ) : (
@@ -281,11 +281,11 @@ export const MessageList = memo(({
                       {(existingChat?.type || activeChat.chatType) === 'homework' ? (
                         <Text span fw={600} c="blue">your homework</Text>
                       ) : (existingChat?.type || activeChat.chatType) === 'conceptual' ? (
-                        <Text span fw={600} c="cyan">understanding concepts</Text>
+                        <Text span fw={600} c="cyan">understanding the material</Text>
                       ) : (existingChat?.type || activeChat.chatType) === 'review' ? (
-                        <Text span fw={600} c="teal">reviewing the content</Text>
+                        <Text span fw={600} c="teal">visualizing key concepts</Text>
                       ) : (
-                        <Text span fw={600} c="violet">creating a summary</Text>
+                        <Text span fw={600} c="violet">creating review documents</Text>
                       )}. What specific {
                         (existingChat?.type || activeChat.chatType) === 'homework' ? 'problem' :
                           (existingChat?.type || activeChat.chatType) === 'conceptual' ? 'topic' :

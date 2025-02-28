@@ -263,7 +263,7 @@ export function ContextPanel({
                                 <SectionSkeleton />
                             ) : (
                                 <ContentList
-                                    title="Chapters"
+                                    title="Readings"
                                     sectionKey="chapters"
                                     icon={IconBook}
                                     items={filterBySearch(chapters || [], textbookDocuments || []).map(c => ({
@@ -308,7 +308,7 @@ export function ContextPanel({
                             />
                         </div>
 
-                        <div id="exercises-section">
+                        {/* <div id="exercises-section">
                             <ContentList
                                 title="Exercises"
                                 sectionKey="exercises"
@@ -329,7 +329,7 @@ export function ContextPanel({
                                 documents={textbookDocuments || []}
                                 searchQuery={localSearchQuery}
                             />
-                        </div>
+                        </div> */}
                     </Stack>
                 </ScrollArea.Autosize>
             </Stack>

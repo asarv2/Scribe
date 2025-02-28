@@ -254,6 +254,31 @@ export const ContextBadges = memo(({
                 </Badge>
             )}
 
+            {activeChat.context.chapters.length === 0 && chapters && chapters.length !== 0 && (
+                <Badge
+                    color="gray"
+                    leftSection={<IconPlus size={12} />}
+                    onClick={() => {
+                        if (setViewerMode) {
+                            setViewerMode({
+                                active: false,
+                            });
+                        }
+                        if (!expandedSections.has("chapters")) {
+                            toggleSection("chapters");
+                            // delay for 100ms to ensure the section is expanded
+                            setTimeout(() => {
+                                onScrollToSection?.("chapters-section")
+                            }, 100);
+                        } else {
+                            onScrollToSection?.("chapters-section")
+                        }
+                    }}
+                    style={{ cursor: "pointer" }}
+                >
+                    Add Readings
+                </Badge>
+            )}
             {activeChat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
                 <Badge
                     color="gray"
@@ -279,32 +304,7 @@ export const ContextBadges = memo(({
                     Add Homeworks
                 </Badge>
             )}
-            {activeChat.context.chapters.length === 0 && chapters && chapters.length !== 0 && (
-                <Badge
-                    color="gray"
-                    leftSection={<IconPlus size={12} />}
-                    onClick={() => {
-                        if (setViewerMode) {
-                            setViewerMode({
-                                active: false,
-                            });
-                        }
-                        if (!expandedSections.has("chapters")) {
-                            toggleSection("chapters");
-                            // delay for 100ms to ensure the section is expanded
-                            setTimeout(() => {
-                                onScrollToSection?.("chapters-section")
-                            }, 100);
-                        } else {
-                            onScrollToSection?.("chapters-section")
-                        }
-                    }}
-                    style={{ cursor: "pointer" }}
-                >
-                    Add Chapters
-                </Badge>
-            )}
-            {activeChat.context.exercises.length === 0 && exercises && exercises.length !== 0 && (
+            {/* {activeChat.context.exercises.length === 0 && exercises && exercises.length !== 0 && (
                 <Badge
                     color="gray"
                     leftSection={<IconPlus size={12} />}
@@ -328,7 +328,7 @@ export const ContextBadges = memo(({
                 >
                     Add Exercises
                 </Badge>
-            )}
+            )} */}
         </>
     );
 

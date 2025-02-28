@@ -145,18 +145,21 @@ export type Database = {
           classes: string[]
           code: string
           created_at: string
+          deleted: boolean
           id: string
         }
         Insert: {
           classes?: string[]
           code: string
           created_at?: string
+          deleted?: boolean
           id?: string
         }
         Update: {
           classes?: string[]
           code?: string
           created_at?: string
+          deleted?: boolean
           id?: string
         }
         Relationships: []
@@ -738,6 +741,7 @@ export type Database = {
           admin: boolean
           classes: string[]
           created_at: string
+          email: string
           first_name: string
           id: string
           last_name: string
@@ -747,6 +751,7 @@ export type Database = {
           admin?: boolean
           classes?: string[]
           created_at?: string
+          email?: string
           first_name?: string
           id?: string
           last_name?: string
@@ -756,6 +761,7 @@ export type Database = {
           admin?: boolean
           classes?: string[]
           created_at?: string
+          email?: string
           first_name?: string
           id?: string
           last_name?: string
