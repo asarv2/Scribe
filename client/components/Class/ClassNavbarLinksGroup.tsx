@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { IconCalendarStats, IconChevronRight } from '@tabler/icons-react';
-import { Box, Collapse, Flex, Group, ThemeIcon, UnstyledButton } from '@mantine/core';
+import { Box, Collapse, Flex, Group, ThemeIcon, UnstyledButton, Skeleton } from '@mantine/core';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import classes from './ClassNavbarLinksGroup.module.css';
@@ -11,6 +11,7 @@ interface ClassLinksGroupProps {
   link?: string;
   links?: MenuLink[];
   isExpanded: boolean;
+  isLoading?: boolean;
 }
 
 export function ClassNavbarLinksGroup({
@@ -18,19 +19,28 @@ export function ClassNavbarLinksGroup({
   label,
   links,
   link,
-  isExpanded
+  isExpanded,
+  isLoading
 }: ClassLinksGroupProps) {
   const hasLinks = Array.isArray(links);
   const pathname = usePathname();
   const [opened, setOpened] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // More exact path matching
-  const isActiveGroup = hasLinks 
-    ? links.some(item => pathname === item.link)
-    : pathname === link;
+  // Normalize paths by removing trailing slashes
+  const normalizedPathname = pathname?.replace(/\/$/, '');
+  const normalizedLink = link?.replace(/\/$/, '');
 
-  const isActiveLink = !hasLinks && pathname === link;
+  // More exact path matching with normalized paths
+  const isActiveGroup = hasLinks 
+    ? links.some(item => normalizedPathname === item.link?.replace(/\/$/, ''))
+    : normalizedPathname === normalizedLink;
+
+  // For home/index routes, also check if we're at the root of the class
+  const isActiveLink = !hasLinks && (
+    normalizedPathname === normalizedLink || 
+    (label === 'Home' && normalizedPathname === normalizedLink?.replace(/\/+$/, ''))
+  );
 
   const handleMouseEnter = () => {
     // Clear any existing timeout
@@ -83,6 +93,31 @@ export function ClassNavbarLinksGroup({
       {link.label}
     </Link>
   ));
+
+  if (isLoading) {
+    return (
+      <div className={classes.control}>
+        <Flex justify="space-between" gap={0} style={{ width: '100%' }}>
+          <Box style={{ display: 'flex', alignItems: 'center' }}>
+            <Skeleton height={36} width={36} radius="md" />
+            {isExpanded && (
+              <Skeleton height={20} width={100} radius="sm" ml="md" />
+            )}
+          </Box>
+          {isExpanded && hasLinks && (
+            <Skeleton height={16} width={16} radius="sm" />
+          )}
+        </Flex>
+        {isExpanded && hasLinks && opened && (
+          <Box ml={50} mt="xs">
+            {Array(3).fill(0).map((_, i) => (
+              <Skeleton key={i} height={24} width="80%" radius="sm" mb="xs" />
+            ))}
+          </Box>
+        )}
+      </div>
+    );
+  }
 
   if (!hasLinks && link) {
     return (

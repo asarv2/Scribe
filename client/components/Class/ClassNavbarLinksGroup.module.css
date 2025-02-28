@@ -32,3 +32,14 @@
   .chevron {
     transition: transform 200ms ease;
   }
+
+.control[data-active="true"] {
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
+}
+
+.link[data-active="true"] {
+  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
+}
+

@@ -1,6 +1,6 @@
 .navbar {
     width: var(--collapsed-width);
-    transition: all var(--transition-duration) ease;
+    transition: width var(--transition-duration) ease;
     position: relative;
     z-index: var(--z-index);
     border-right: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
@@ -9,6 +9,7 @@
 
 .navbar:hover {
     width: var(--expanded-width);
+    border-right: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 /* Add overlay with transition */
@@ -20,14 +21,13 @@
     width: 0;
     height: 100vh;
     background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
-    box-shadow: var(--mantine-shadow-md);
     z-index: -1;
     opacity: 0;
     transition: all var(--transition-duration) ease;
 }
 
 .navbar:hover::after {
-    width: calc(var(--expanded-width) - var(--collapsed-width));
+    width: calc(var(--expanded-width) - var(--collapsed-width) - 1px); /* Subtract 1px to not cover the border */
     opacity: 1;
 }
 

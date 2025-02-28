@@ -110,25 +110,13 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
     // ));
 
     const links = generateNavData().map((item) => (
-        <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
+        <ClassNavbarLinksGroup 
+            {...item} 
+            key={item.label} 
+            isExpanded={isExpanded} 
+            isLoading={loadingUser || loadingProfile}
+        />
     ))
-
-    // Updated Skeleton loading state (closed by default)
-    function NavGroupSkeleton() {
-        return (
-            <div className={classes.section}>
-                <div className={classes.control}>
-                    <Flex justify="space-between" gap={0} style={{ width: '100%' }}>
-                        <Box style={{ display: 'flex', alignItems: 'center' }}>
-                            <Skeleton height={30} width={30} radius="sm" />
-                            <Skeleton height={20} width={100} radius="sm" ml="md" />
-                        </Box>
-                        <Skeleton height={16} width={16} radius="sm" />
-                    </Flex>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <nav
@@ -144,15 +132,7 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
         >
             <ScrollArea className={classes.links}>
                 <div className={classes.linksInner}>
-                    {(loadingUser || loadingProfile) ? (
-                        <>
-                            <NavGroupSkeleton />
-                            <NavGroupSkeleton />
-                            <NavGroupSkeleton />
-                        </>
-                    ) : (
-                        links
-                    )}
+                    {links}
                 </div>
             </ScrollArea>
 
@@ -172,6 +152,7 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
                     label="Feedback"
                     isExpanded={isExpanded}
                     link={`/feedback`}
+                    isLoading={loadingUser || loadingProfile}
                 />
             </div>
         </nav>
