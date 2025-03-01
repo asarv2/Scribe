@@ -6,9 +6,9 @@
  * 02.05.2025
  */
 
-import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton } from "@mantine/core";
-import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight } from "@tabler/icons-react";
-import { useState, useEffect } from "react";
+import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image } from "@mantine/core";
+import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight } from "@tabler/icons-react";
+import { useState, useEffect, useRef } from "react";
 import { ContentList } from "./ContentList";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +22,7 @@ import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface ContextPanelProps {
     classId: string;
@@ -45,6 +46,126 @@ const CONTENT_COLORS = {
     homeworks: 'orange', // matches badge color
 } as const;
 
+// Define a reusable ItemCard component directly in ContextPanel
+const ItemCard = ({
+    item,
+    color,
+    contextType,
+    addContextToChat,
+    isVisible
+}: {
+    item: any,
+    color: string,
+    contextType: keyof ChatMessage['context'],
+    addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void,
+    isVisible: boolean
+}) => {
+    const { colorScheme } = useMantineColorScheme();
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    return (
+        <Card
+            shadow="xs"
+            p="xs"
+            radius="md"
+            withBorder
+            style={{
+                marginBottom: '8px',
+                backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                borderLeft: `3px solid var(--mantine-color-${color}-filled)`,
+            }}
+            onClick={(e) => {
+                e.stopPropagation();
+                addContextToChat(contextType, item.id);
+            }}
+        >
+            <Group>
+                {isVisible ? (
+                    <Image
+                        src={item.imageUrl}
+                        alt={item.newName}
+                        width={40}
+                        height={40}
+                        style={{
+                            objectFit: 'cover',
+                            borderRadius: '4px',
+                        }}
+                        loading="lazy"
+                        onLoad={() => setImageLoaded(true)}
+                    />
+                ) : (
+                    <Skeleton width={40} height={40} radius={4} />
+                )}
+                <Stack style={{ flex: 1 }}>
+                    <Group justify="space-between">
+                        <Text size="sm">
+                            {item.newName}
+                        </Text>
+                    </Group>
+                </Stack>
+            </Group>
+        </Card>
+    );
+};
+
+// Section header component
+const SectionHeader = ({
+    title,
+    icon: IconComponent,
+    isExpanded,
+    toggleSection,
+    sectionKey,
+    count
+}: {
+    title: string,
+    icon: any,
+    isExpanded: boolean,
+    toggleSection: (section: string) => void,
+    sectionKey: string,
+    count?: number
+}) => (
+    <Group
+        mb="xs"
+        justify="space-between"
+        style={{
+            cursor: 'pointer',
+            userSelect: 'none',
+        }}
+        onClick={() => toggleSection(sectionKey)}
+    >
+        <Group gap="xs">
+            {IconComponent && <IconComponent size={16} />}
+            <Text fw={700}>
+                {title} {count !== undefined && `(${count})`}
+            </Text>
+        </Group>
+        {isExpanded ? (
+            <IconChevronDown size={16} />
+        ) : (
+            <IconChevronRight size={16} />
+        )}
+    </Group>
+);
+
+// Section loading skeleton
+const SectionSkeleton = () => (
+    <Stack mt="md">
+        {[1, 2, 3].map((i) => (
+            <Card key={i} shadow="xs" p="xs" radius="md" withBorder>
+                <Group>
+                    <Skeleton width={40} height={40} radius="md" />
+                    <Stack style={{ flex: 1 }}>
+                        <Skeleton height={12} width="60%" />
+                        <Skeleton height={8} width="40%" />
+                    </Stack>
+                </Group>
+            </Card>
+        ))}
+    </Stack>
+);
+
 export function ContextPanel({
     classId,
     isMobile,
@@ -61,6 +182,8 @@ export function ContextPanel({
     const supabase = useSupabaseBrowser();
     const { colorScheme } = useMantineColorScheme();
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
+    const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const { data: lectures, isLoading: loadingLectures } = useQuery({
         queryKey: ["lectures", classId],
@@ -83,7 +206,6 @@ export function ContextPanel({
         queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
         enabled: !!textbooks
     });
-    
 
     const { data: chapters, isLoading: loadingChapters } = useQuery({
         queryKey: ["chapters", classId],
@@ -112,6 +234,42 @@ export function ContextPanel({
 
         return () => clearTimeout(timeoutId);
     }, [localSearchQuery, setSearchQuery]);
+
+
+    // Track which items are currently visible in the viewport
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('data-id');
+                    if (id) {
+                        setVisibleItems(prev => {
+                            const newSet = new Set(prev);
+                            if (entry.isIntersecting) {
+                                newSet.add(id);
+                            } else {
+                                // Optional: remove items that are no longer visible
+                                // Keeping them in the set will act as a cache
+                                // newSet.delete(id);
+                            }
+                            return newSet;
+                        });
+                    }
+                });
+            },
+            {
+                root: containerRef.current,
+                threshold: 0.1,
+                rootMargin: '100px' // Load images slightly before they come into view
+            }
+        );
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
 
     const getLectureImageUrl = (item: Lecture, documentId: string) => {
         if (documentId.length > 0) {
@@ -156,53 +314,176 @@ export function ContextPanel({
         return '/placeholder_image.svg';
     }
 
-    // Section loading skeleton
-    const SectionSkeleton = () => (
-        <Card
-            p="md"
-            style={{
-                backgroundColor: colorScheme === "dark" ? "#2C2E33" : "#f8f9fa",
-                border: `1px solid ${colorScheme === "dark" ? "#373A40" : "#e9ecef"}`
-            }}
-        >
-            <Group justify="space-between" mb="md">
-                <Skeleton height={20} width={120} />
-                <Skeleton height={16} width={16} circle />
-            </Group>
-            <Stack>
-                {[1, 2, 3].map((i) => (
-                    <Skeleton key={i} height={60} radius="md" />
-                ))}
-            </Stack>
-        </Card>
-    );
-
     // Add search filtering function
     const filterBySearch = (items: any[], documents: any[]) => {
         if (!localSearchQuery) return items;
         const query = localSearchQuery.toLowerCase();
-        
+
         return items.filter(item => {
             // Check item name/title
-            if (item.name?.toLowerCase().includes(query) || 
+            if (item.name?.toLowerCase().includes(query) ||
                 item.title?.toLowerCase().includes(query)) {
                 return true;
             }
-            
+
             // Check associated documents
-            const itemDocs = documents?.filter(doc => 
-                doc.lecture === item.id || 
+            const itemDocs = documents?.filter(doc =>
+                doc.lecture === item.id ||
                 doc.chapter === item.id ||
                 doc.homework === item.id ||
                 doc.exercise === item.id
             );
-            
-            return itemDocs?.some(doc => 
+
+            return itemDocs?.some(doc =>
                 doc.text?.toLowerCase().includes(query) ||
                 doc.description?.toLowerCase().includes(query)
             );
         });
     };
+
+    // Get all content items combined
+    const getAllContentItems = () => {
+        const allItems = [];
+
+        // Add lectures
+        if (lectures) {
+            const filteredLectures = filterBySearch(lectures, lectureDocuments || [])
+                .filter(l => !activeChat.context.lectures.includes(l.id))
+                .map(l => ({
+                    ...l,
+                    newName: l.name ?? "",
+                    imageUrl: getLectureImageUrl(l, lectureDocuments?.find(d => d.lecture === l.id)?.id ?? ""),
+                    type: 'lectures' as keyof ChatMessage['context'],
+                    color: CONTENT_COLORS.lectures
+                }));
+            allItems.push(...filteredLectures);
+        }
+
+        // Add chapters
+        if (chapters) {
+            const filteredChapters = filterBySearch(chapters, textbookDocuments || [])
+                .filter(c => !activeChat.context.chapters.includes(c.id))
+                .map(c => ({
+                    ...c,
+                    newName: `Chapter ${c.chapter_number}: ${c.title}`,
+                    imageUrl: getChapterImage(c.id),
+                    type: 'chapters' as keyof ChatMessage['context'],
+                    color: CONTENT_COLORS.chapters
+                }));
+            allItems.push(...filteredChapters);
+        }
+
+        // Add homeworks
+        if (homeworks) {
+            const filteredHomeworks = filterBySearch(homeworks, textbookDocuments || [])
+                .filter(h => !activeChat.context.homeworks.includes(h.id))
+                .map(h => ({
+                    ...h,
+                    newName: h.title,
+                    imageUrl: getHomeworkImageUrl(h.id),
+                    type: 'homeworks' as keyof ChatMessage['context'],
+                    color: CONTENT_COLORS.homeworks
+                }));
+            allItems.push(...filteredHomeworks);
+        }
+
+        // Sort by type and then by name
+        return allItems.sort((a, b) => {
+            // If searching, sort by relevance
+            if (localSearchQuery) {
+                const scoreA = calculateRelevance(a, [...(lectureDocuments || []), ...(textbookDocuments || [])], localSearchQuery.toLowerCase());
+                const scoreB = calculateRelevance(b, [...(lectureDocuments || []), ...(textbookDocuments || [])], localSearchQuery.toLowerCase());
+                return scoreB - scoreA;
+            }
+
+            // Otherwise sort by type first, then by name
+            if (a.type !== b.type) {
+                const typeOrder = { lectures: 1, chapters: 2, homeworks: 3 };
+                return typeOrder[a.type as keyof typeof typeOrder] - typeOrder[b.type as keyof typeof typeOrder];
+            }
+
+            return a.newName.localeCompare(b.newName);
+        });
+    };
+
+    // Calculate relevance score for search results
+    const calculateRelevance = (item: any, documents: any[], query: string): number => {
+        if (!query) return 0;
+
+        let score = 0;
+
+        // Title match has highest weight
+        if (item.newName.toLowerCase().includes(query)) {
+            score += 10;
+        }
+
+        // Check documents content
+        const itemDocs = documents?.filter(doc =>
+            doc.lecture === item.id ||
+            doc.chapter === item.id ||
+            doc.homework === item.id ||
+            doc.exercise === item.id
+        );
+
+        itemDocs?.forEach(doc => {
+            // Text content matches
+            if (doc.text?.toLowerCase().includes(query)) {
+                score += 5;
+            }
+            // Description matches
+            if (doc.description?.toLowerCase().includes(query)) {
+                score += 3;
+            }
+        });
+
+        return score;
+    };
+
+    const allContentItems = getAllContentItems();
+    const isLoading = loadingLectures || loadingChapters;
+
+    // Virtualized list setup
+    const rowVirtualizer = useVirtualizer({
+        count: allContentItems.length,
+        getScrollElement: () => containerRef.current,
+        estimateSize: () => 70, // Approximate height of each item
+        overscan: 5, // Number of items to render outside of the visible area
+    });
+
+    // Connect observer to virtualized items
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('data-id');
+                    if (id) {
+                        setVisibleItems(prev => {
+                            const newSet = new Set(prev);
+                            if (entry.isIntersecting) {
+                                newSet.add(id);
+                            }
+                            return newSet;
+                        });
+                    }
+                });
+            },
+            {
+                root: containerRef.current,
+                threshold: 0.1,
+                rootMargin: '100px'
+            }
+        );
+
+        // Observe all virtual items
+        const elements = containerRef.current.querySelectorAll('[data-id]');
+        elements.forEach(el => observer.observe(el));
+
+        return () => {
+            elements.forEach(el => observer.unobserve(el));
+        };
+    }, [rowVirtualizer.getVirtualItems()]);
 
     return (
         <Card
@@ -229,108 +510,61 @@ export function ContextPanel({
                     })}
                 />
 
-                <ScrollArea.Autosize>
-                    <Stack gap="xs">
-                        <div id="lectures-section">
-                            {loadingLectures ? (
-                                <SectionSkeleton />
-                            ) : (
-                                <ContentList
-                                    title="Lectures"
-                                    sectionKey="lectures"
-                                    icon={IconPresentation}
-                                    items={filterBySearch(lectures || [], lectureDocuments || []).map(l => ({
-                                        ...l,
-                                        newName: l.name ?? "",
-                                        imageUrl: getLectureImageUrl(l, lectureDocuments?.find(d => d.lecture === l.id)?.id ?? "")
-                                    })) || []}
-                                    isSearching={!!localSearchQuery}
-                                    searchActive={!!searchQuery}
-                                    expandedSections={expandedSections}
-                                    toggleSection={toggleSection}
-                                    addContextToChat={addContextToChat}
-                                    contextType="lectures"
-                                    activeContextIds={activeChat.context.lectures}
-                                    color={CONTENT_COLORS.lectures}
-                                    documents={lectureDocuments || []}
-                                    searchQuery={localSearchQuery}
-                                />
-                            )}
-                        </div>
-                        <div id="chapters-section">
-                            {loadingChapters ? (
-                                <SectionSkeleton />
-                            ) : (
-                                <ContentList
-                                    title="Readings"
-                                    sectionKey="chapters"
-                                    icon={IconBook}
-                                    items={filterBySearch(chapters || [], textbookDocuments || []).map(c => ({
-                                        ...c,
-                                        newName: `Chapter ${c.chapter_number}: ${c.title}`,
-                                        imageUrl: getChapterImage(c.id)
-                                    })) || []}
-                                    isSearching={!!localSearchQuery}
-                                    searchActive={!!searchQuery}
-                                    expandedSections={expandedSections}
-                                    toggleSection={toggleSection}
-                                    addContextToChat={addContextToChat}
-                                    contextType="chapters"
-                                    activeContextIds={activeChat.context.chapters}
-                                    color={CONTENT_COLORS.chapters}
-                                    documents={textbookDocuments || []}
-                                    searchQuery={localSearchQuery}
-                                />
-                            )}
-                        </div>
+                {isLoading ? (
+                    <SectionSkeleton />
+                ) : (
+                    <div
+                        ref={containerRef}
+                        style={{
+                            height: 'calc(80vh - 100px)',
+                            overflow: 'auto',
+                            position: 'relative'
+                        }}
+                    >
+                        {allContentItems.length > 0 ? (
+                            <div
+                                style={{
+                                    height: `${rowVirtualizer.getTotalSize()}px`,
+                                    width: '100%',
+                                    position: 'relative'
+                                }}
+                            >
+                                {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                                    const item = allContentItems[virtualRow.index];
+                                    const itemId = `${item.type}-${item.id}`;
+                                    const isItemVisible = visibleItems.has(itemId);
 
-                        <div id="homeworks-section">
-                            <ContentList
-                                title="Homeworks"
-                                sectionKey="homeworks"
-                                icon={IconNotebook}
-                                items={filterBySearch(homeworks || [], textbookDocuments || []).map(h => ({
-                                    ...h,
-                                    newName: h.title,
-                                    imageUrl: getHomeworkImageUrl(h.id)
-                                })) || []}
-                                isSearching={false}
-                                searchActive={!!searchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                contextType="homeworks"
-                                activeContextIds={activeChat.context.homeworks}
-                                color={CONTENT_COLORS.homeworks}
-                                documents={textbookDocuments || []}
-                                searchQuery={localSearchQuery}
-                            />
-                        </div>
-
-                        {/* <div id="exercises-section">
-                            <ContentList
-                                title="Exercises"
-                                sectionKey="exercises"
-                                icon={IconPencil}
-                                items={filterBySearch(exercises || [], textbookDocuments || []).map(e => ({
-                                    ...e,
-                                    newName: e.title,
-                                    imageUrl: getExerciseImageUrl(e.chapter)
-                                })) || []}
-                                isSearching={false}
-                                searchActive={!!searchQuery}
-                                expandedSections={expandedSections}
-                                toggleSection={toggleSection}
-                                addContextToChat={addContextToChat}
-                                contextType="exercises"
-                                activeContextIds={activeChat.context.exercises}
-                                color={CONTENT_COLORS.exercises}
-                                documents={textbookDocuments || []}
-                                searchQuery={localSearchQuery}
-                            />
-                        </div> */}
-                    </Stack>
-                </ScrollArea.Autosize>
+                                    return (
+                                        <div
+                                            key={itemId}
+                                            data-id={itemId}
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: `${virtualRow.size}px`,
+                                                transform: `translateY(${virtualRow.start}px)`,
+                                            }}
+                                        >
+                                            <ItemCard
+                                                item={item}
+                                                color={item.color}
+                                                contextType={item.type}
+                                                addContextToChat={addContextToChat}
+                                                isVisible={isItemVisible || localSearchQuery.length > 0}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <Text c="dimmed" ta="center" py="md">
+                                {localSearchQuery ? "No results found" : "No content available"}
+                            </Text>
+                        )}
+                    </div>
+                )}
             </Stack>
         </Card>
     );

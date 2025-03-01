@@ -4,7 +4,7 @@
  */
 
 import { Badge, Group } from "@mantine/core";
-import { IconPlus, IconX } from "@tabler/icons-react";
+import { IconPlus, IconWand, IconX } from "@tabler/icons-react";
 import { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -230,7 +230,8 @@ export const ContextBadges = memo(({
         <>
             {activeChat.context.lectures.length === 0 && lectures && lectures.length !== 0 && (
                 <Badge
-                    color="gray"
+                    color="blue"
+                    variant="light"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
                         if (setViewerMode) {
@@ -256,7 +257,8 @@ export const ContextBadges = memo(({
 
             {activeChat.context.chapters.length === 0 && chapters && chapters.length !== 0 && (
                 <Badge
-                    color="gray"
+                    color="green"
+                    variant="light"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
                         if (setViewerMode) {
@@ -281,7 +283,8 @@ export const ContextBadges = memo(({
             )}
             {activeChat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
                 <Badge
-                    color="gray"
+                    color="orange"
+                    variant="light"
                     leftSection={<IconPlus size={12} />}
                     onClick={() => {
                         if (setViewerMode) {
@@ -336,6 +339,9 @@ export const ContextBadges = memo(({
         <Group>
             {renderActiveBadges()}
             {renderAddBadges()}
+            {/* <Badge color="purple" leftSection={<IconWand size={12} />} style={{ cursor: "pointer" }}>
+                Find Context
+            </Badge> */}
         </Group>
     );
 });

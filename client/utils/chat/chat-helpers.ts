@@ -1,13 +1,14 @@
 import { Chapter, Document, ViewerMode } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 
-// Filter out code blocks from text
+// Filter out code blocks from text but preserve text content
 export const filterCodeBlocks = (text: string): string => {
     if (!text) return '';
 
     let result = '';
     let currentIndex = 0;
 
+    // Handle <CODE> tags
     while (true) {
         // Find the next code block start
         const startIndex = text.indexOf('<CODE>', currentIndex);
@@ -23,15 +24,42 @@ export const filterCodeBlocks = (text: string): string => {
         // Find the closing tag
         const endIndex = text.indexOf('</CODE>', startIndex);
         if (endIndex === -1) {
-            // No closing tag found, stop here
+            // No closing tag found, add placeholder and stop
+            result += '<FIGURE>code-placeholder</FIGURE>';
             break;
         }
+
+        // Add placeholder for the code block
+        result += '<FIGURE>code-placeholder</FIGURE>';
 
         // Move the current index past the code block
         currentIndex = endIndex + 7; // 7 is length of '</CODE>'
     }
 
-    return result;
+    // Also filter out triple backtick code blocks
+    return filterTripleBacktickCodeBlocks(result);
+};
+
+// Filter out triple backtick code blocks
+export const filterTripleBacktickCodeBlocks = (text: string): string => {
+    if (!text) return '';
+    
+    // Regular expression to match complete triple backtick code blocks
+    const completeCodeBlockRegex = /```[\s\S]*?```/g;
+    
+    // Replace complete code blocks with a figure placeholder
+    let processedText = text.replace(completeCodeBlockRegex, '<FIGURE>code-placeholder</FIGURE>');
+    
+    // Check for incomplete code blocks (opening ``` without closing ```)
+    const incompleteCodeBlockIndex = processedText.lastIndexOf('```');
+    if (incompleteCodeBlockIndex !== -1 && 
+        processedText.indexOf('```', incompleteCodeBlockIndex + 3) === -1) {
+        // There's an opening ``` without a closing one
+        processedText = processedText.substring(0, incompleteCodeBlockIndex) + 
+                        '<FIGURE>code-placeholder</FIGURE>';
+    }
+    
+    return processedText;
 };
 
 // Split text by document references and preserve formatting
