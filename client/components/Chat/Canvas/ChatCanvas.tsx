@@ -626,17 +626,24 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                             </Text>
                             {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
                                 <Badge color={
-                                    existingChat.type === 'homework' ? 'blue' :
-                                        existingChat.type === 'conceptual' ? 'cyan' :
-                                            existingChat.type === 'review' ? 'teal' :
-                                                existingChat.type === 'summary' ? 'violet' :
-                                                    existingChat.type === 'approach' ? 'green' :
-                                                        existingChat.type === 'faq' ? 'indigo' :
-                                                            existingChat.type === 'misconception' ? 'orange' :
-                                                                'gray'
+                                    existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'blue' :
+                                    existingChat.type === 'concept' ? 'cyan' :
+                                    existingChat.type === 'review' ? 'teal' :
+                                    existingChat.type === 'method' ? 'green' :
+                                    existingChat.type === 'generate' ? 'indigo' :
+                                    existingChat.type === 'other' ? 'orange' :
+                                    'gray'
                                 }>
-                                    {existingChat.type.startsWith('teacher-') 
-                                        ? existingChat.type.replace('teacher-', '').charAt(0).toUpperCase() + existingChat.type.replace('teacher-', '').slice(1)
+                                    {existingChat.type.startsWith('homework-') 
+                                        ? 'Homework'
+                                        : existingChat.type === 'concept'
+                                        ? 'Conceptual'
+                                        : existingChat.type === 'method'
+                                        ? 'Approach'
+                                        : existingChat.type === 'generate'
+                                        ? 'Generated'
+                                        : existingChat.type === 'other'
+                                        ? 'Other'
                                         : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
                                 </Badge>
                             )}
