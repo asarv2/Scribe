@@ -412,11 +412,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     }, []);
 
-    const handleOptionClick = useCallback((type: ChatType, isTeacher: boolean = false, teacherOption: string = '') => {
-        console.log(`Setting chat type to: ${type} (teacher mode: ${isTeacher}, teacherOption: ${teacherOption})`);
+    const handleOptionClick = useCallback((type: ChatType, isTeacherMode: boolean = false, teacherOption: string = '') => {
         setActiveChat(prev => ({ 
             ...prev, 
             chatType: type,
+            teacher: isTeacherMode || prev.teacher
         }));
         setWelcomeMessages({ followUp: true });
     }, []);

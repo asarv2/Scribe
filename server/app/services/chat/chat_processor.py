@@ -24,7 +24,6 @@ class ChatProcessor(BaseProcessor):
         message_id: str,
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
-        answerable_problems_string: str | None,
     ):
         super().__init__()
         self.prompt_type = prompt_type
@@ -32,7 +31,6 @@ class ChatProcessor(BaseProcessor):
         self.message_id = message_id
         self.current_question = question
         self.chat_history = []
-        self.answerable_problems_string = answerable_problems_string
         # Format past messages into chat history
         for _, q, r in past_messages:
             if q and r:  # Only add complete message pairs
@@ -65,6 +63,7 @@ class ChatProcessor(BaseProcessor):
         all_lectures: List[Dict[str, Any]],
         all_textbooks: List[Dict[str, Any]],
         all_documents: List[Dict[str, Any]],
+        output_rules: str,
         stream_callback: Optional[Callable[[str], Awaitable[None]]] = None
     ) -> AsyncGenerator[str, None]:
         """Process a single message with streaming"""
@@ -74,10 +73,7 @@ class ChatProcessor(BaseProcessor):
             system_prompt = ""
             match self.prompt_type:
                 case "homework":
-                    if self.answerable_problems_string is None:
-                        system_prompt = get_homework_prompt(solution=False)
-                    else:
-                        system_prompt = get_homework_prompt(solution=True) + self.answerable_problems_string
+                    system_prompt = get_homework_prompt(solution=False)
                 case "summary":
                     system_prompt = get_summary_prompt()
                 case "conceptual":
@@ -101,6 +97,7 @@ class ChatProcessor(BaseProcessor):
                 "Here is the current conversation context:\n"
                 f"{complete_context}\n\n"
                 "CRITICAL INSTRUCTIONS:\n\n"
+                f"{output_rules}\n\n"
                 "Only if you find it useful, or the student asks use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
                 "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. "
                 "Moreover, if you use the textbook, use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags, where x is the textbook number and a, b, c are the page numbers. "
@@ -206,8 +203,8 @@ class ChatProcessor(BaseProcessor):
             result = result.replace(textbook_match.group(0), document_tags)
         
         # Remove any remaining lecture/textbook related tags
-        cleaned_result = re.sub(r'<(LECTURE|TEXTBOOK|SLIDE|PAGE|TITLE)[^>]*>', '', result)
-        cleaned_result = re.sub(r'</(LECTURE|TEXTBOOK|TITLE)>', '', cleaned_result)
+        cleaned_result = re.sub(r'<(LECTURE|TEXTBOOK|SLIDE|PAGE)[^>]*>', '', result)
+        cleaned_result = re.sub(r'</(LECTURE|TEXTBOOK)>', '', cleaned_result)
         
         return ChatMessage(
             id=self.message_id,

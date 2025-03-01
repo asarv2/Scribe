@@ -11,6 +11,8 @@ from supabase import create_client, ClientOptions, Client
 from dotenv import load_dotenv
 from tqdm import tqdm
 
+from table_of_contents_extractor import TableOfContentsExtractor
+
 load_dotenv()
 
 logger = logging.getLogger(__name__)
@@ -219,10 +221,9 @@ class NewHomeworkProcessor:
             logger.error(f"Error processing homework file {file_path}: {str(e)}")
             raise
 
-    def upload_to_supabase(self, class_id: str, supabase: Client) -> List[str]:
+    def upload_to_supabase(self, class_id: str, supabase: Client, page_labels: List[str]) -> List[str]:
         """Upload all processed homework to Supabase"""
         try:
-
             # find all textbooks
             textbook_response = supabase.table('textbooks').select('*').eq('class', class_id).execute()
             textbooks = textbook_response.data
@@ -260,7 +261,6 @@ class NewHomeworkProcessor:
                                     textbook_number = int(part['textbook'].get('number'))
                                     textbook_id = next((t['id'] for t in textbooks if t['textbook_number'] == textbook_number), None)
 
-
                                     if part['textbook'].get('exercise'):
                                         exercise_name = part['textbook'].get('exercise')
 
@@ -280,21 +280,57 @@ class NewHomeworkProcessor:
                                                 'problem_part_number': j + 1,
                                             }).eq('id', exercise_id).execute()
 
-                                            # update the document to be processed
-                                            supabase.table('documents').update({
-                                                'homework': homework_id,
-                                                'processed': True
-                                            }).eq('exercise', exercise_id).execute()
+                                            # Find documents that contain this exercise in their exercises array
+                                            # Note: This requires a contains operator which might not be directly available
+                                            # We'll fetch documents and filter them in Python
+                                            all_docs = supabase.table('documents').select('*').execute().data
+                                            matching_docs = []
+                                            
+                                            for doc in all_docs:
+                                                exercises = doc.get('exercises', [])
+                                                if exercise_id in exercises:
+                                                    matching_docs.append(doc)
+                                            
+                                            # Update each document to add this homework to its homeworks array
+                                            for doc in matching_docs:
+                                                # Get current homeworks array or initialize empty array
+                                                current_homeworks = doc.get('homeworks', [])
+                                                
+                                                # Add new homework ID if not already present
+                                                if homework_id not in current_homeworks:
+                                                    current_homeworks.append(homework_id)
+                                                    
+                                                    # Update document with new homeworks array
+                                                    supabase.table('documents').update({
+                                                        'homeworks': current_homeworks,
+                                                        'processed': True
+                                                    }).eq('id', doc['id']).execute()
                                         else:
                                             print(f"Could not find exercise: {exercise_name}")
 
                                     if part['textbook'].get('page'):
                                         page = part['textbook'].get('page')
-                                        # update the document's homework section. The exercise should already be set in the previous step.
-                                        supabase.table('documents').update({
-                                            'homework': homework_id,
-                                            'processed': True
-                                        }).eq('textbook', textbook_id).eq('page', page).execute()
+                                        for i, label in enumerate(page_labels):
+                                            if label == str(page):
+                                                actual_page = i + 1
+                                                break
+                                        # Get documents for this textbook and page
+                                        docs = supabase.table('documents').select('*').eq('textbook', textbook_id).eq('page', actual_page).execute()
+                                        
+                                        # Update each document to add this homework to its homeworks array
+                                        for doc in docs.data:
+                                            # Get current homeworks array or initialize empty array
+                                            current_homeworks = doc.get('homeworks', [])
+                                            
+                                            # Add new homework ID if not already present
+                                            if homework_id not in current_homeworks:
+                                                current_homeworks.append(homework_id)
+                                                
+                                                # Update document with new homeworks array
+                                                supabase.table('documents').update({
+                                                    'homeworks': current_homeworks,
+                                                    'processed': True
+                                                }).eq('id', doc['id']).execute()
 
                                 else:
                                     # Exercise doesn't exist, create it
@@ -307,17 +343,16 @@ class NewHomeworkProcessor:
                                         'title': exercise_name
                                     }).execute()
                                     exercise_id = exercise_response.data[0]['id']
-                                    # Create document for exercise. Later this will become an image. We can have a description of it, as well as the text content.
+                                    
+                                    # Create document for exercise with homeworks array
                                     supabase.table('documents').insert({
                                         'page': 1, # leave for now.
                                         'text': '', # leave for now.
                                         'description': '', # leave for now.
-                                        'exercise': exercise_id,
-                                        'textbook': textbook_id,
-                                        'homework': homework_id,
+                                        'exercises': [exercise_id],  # Initialize as array with current exercise
+                                        'homeworks': [homework_id],  # Initialize as array with current homework
                                         'processed': True, # set this to be true for now.
                                     }).execute()
-
                             
                             problem_pbar.update(1)
                     
@@ -367,7 +402,13 @@ if __name__ == "__main__":
     # # Process all homework files
     # homework_data = processor.process_all_homework(class_id, supabase, max_homeworks=1)
     # print(f"Processed {len(homework_data)} homework assignments")
+
+    # get the page labels
+    # get the pdf path
+    pdf_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/Vanderbei.pdf"
+    toc_extractor = TableOfContentsExtractor(api_key, pdf_path)
+    page_labels = toc_extractor.get_page_labels()
     
     # # Upload to Supabase
-    homework_ids = processor.upload_to_supabase(class_id, supabase)
+    homework_ids = processor.upload_to_supabase(class_id, supabase, page_labels)
     print(f"Uploaded homework with IDs: {homework_ids}")

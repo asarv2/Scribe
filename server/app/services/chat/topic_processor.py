@@ -6,6 +6,7 @@ from app.services.base_processor import BaseProcessor, Message
 class TopicProcessor(BaseProcessor):
     def __init__(
         self,
+        class_title: str,
         topics: List[str],
         message: str,
         message_id: str,
@@ -13,6 +14,7 @@ class TopicProcessor(BaseProcessor):
     ):
         super().__init__()
         self.topics = topics
+        self.class_title = class_title
         self.current_message = message
         self.message_id = message_id
         self.chat_history = []
@@ -42,7 +44,7 @@ class TopicProcessor(BaseProcessor):
         Prompt the model to group the message into topics of questions being asked, depending on the topics provided.
         """
         system_prompt = (
-            "You are an expert at identifying the topics of questions being asked in a chat. "
+            f"You are an expert at identifying the topics of questions being asked in the class {self.class_title}. "
             "Given a series of messages in a conversation and a list of topics, "
             "you will identify the topic of the most recent question/message. "
             "Each of the topics can be an individual term itself, or a type of question being asked.\n"

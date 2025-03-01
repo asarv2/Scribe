@@ -25,17 +25,45 @@ import { ClassLayout } from "@/components/Class/ClassLayout";
 import { getStudents } from "@/utils/queries/get-students";
 import { IconUser, IconUsers } from '@tabler/icons-react';
 
-// Add the skeleton component
+// Function to get badge color based on chat type
+const getBadgeColor = (type: string) => {
+    switch(type) {
+        case 'homework': return 'blue';
+        case 'conceptual': return 'cyan';
+        case 'review': return 'teal';
+        case 'summary': return 'violet';
+        case 'approach': return 'green';
+        case 'faq': return 'indigo';
+        case 'misconception': return 'orange';
+        case 'general-student': 
+        case 'general-teacher': 
+        default: return 'gray';
+    }
+};
+
+// Function to format chat type for display
+const formatChatType = (type: string) => {
+    if (type.startsWith('general-')) {
+        return 'General';
+    }
+    if (type === 'misconception') {
+        return 'Mix-Up';
+    }
+    return type.charAt(0).toUpperCase() + type.slice(1);
+};
+
+// Update the skeleton component
 function ChatSkeleton() {
     return (
         <Card withBorder>
-            <Group align="flex-start">
-                <Skeleton height={150} width={150} radius="md" />
-                <Stack gap="xs">
-                    <Skeleton height={24} width={200} />
+            <Stack>
+                <Skeleton height={200} radius="md" />
+                <Skeleton height={48} width="100%" /> {/* Height for 2 lines of text */}
+                <Group justify="space-between" align="center">
                     <Skeleton height={16} width={150} />
-                </Stack>
-            </Group>
+                    <Skeleton height={20} width={80} radius="xl" />
+                </Group>
+            </Stack>
         </Card>
     );
 }
@@ -218,11 +246,33 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         { value: 'misconception', label: 'Misconception' }
     ];
 
+    // Create student options for Select, including the teacher/admin themselves
+    const studentOptions = useMemo(() => {
+        if (!students || !profile) return [];
+        return [
+            { value: 'all', label: 'All Students' },
+            { 
+                value: profile.id, 
+                label: `${profile.first_name} ${profile.last_name} (Me)` 
+            },
+            ...students.map(student => ({
+                value: student.id,
+                label: `${student.first_name} ${student.last_name}` || student.email || 'Unknown Student'
+            }))
+        ];
+    }, [students, profile]);
+
     // Filter chats based on selected student and type
     const filteredStudentChats = useMemo(() => {
-        if (!studentChats) return [];
+        if (!studentChats && !userChats) return [];
         
-        let filtered = [...studentChats];
+        // Combine student chats and user chats
+        let allChats = [...(studentChats ?? [])];
+        if (userChats) {
+            allChats = [...allChats, ...userChats];
+        }
+        
+        let filtered = [...allChats];
         
         if (selectedStudent && selectedStudent !== 'all') {
             filtered = filtered.filter(chat => chat.profile === selectedStudent);
@@ -233,19 +283,17 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         }
         
         return filtered;
-    }, [studentChats, selectedStudent, selectedType]);
+    }, [studentChats, userChats, selectedStudent, selectedType]);
 
-    // Create student options for Select
-    const studentOptions = useMemo(() => {
-        if (!students) return [];
-        return [
-            { value: 'all', label: 'All Students' },
-            ...students.map(student => ({
-                value: student.id,
-                label: student.first_name + " " + student.last_name || student.email || 'Unknown Student'
-            }))
-        ];
-    }, [students]);
+    // Filter teacher chats - only show chats where the user is a teacher/admin
+    const filteredTeacherChats = useMemo(() => {
+        if (!userChats || !profile) return [];
+        
+        return userChats.filter(chat => 
+            // Only include chats where the user is a teacher or admin
+            chat.teacher === true && chat.profile === profile.id
+        );
+    }, [userChats, profile]);
 
     const renderChatList = (chatList: Chat[] | undefined, title: string) => {
         if (!chatList || chatList.length === 0) return null;
@@ -254,7 +302,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
             <Stack>
                 {title && <Text size="lg" fw={600}>{title}</Text>}
                 <SimpleGrid
-                    cols={{ base: 1, sm: 2, lg: 3 }}
+                    cols={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
                     spacing="xl"
                     verticalSpacing="xl"
                     p="md"
@@ -273,35 +321,43 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                 >
                                     <Card withBorder h="100%" padding="lg">
                                         <Stack>
-                                            <Image
-                                                src={getActiveImage(context)}
-                                                alt={`Chat context`}
-                                                width={0}
-                                                height={0}
-                                                sizes="100vw"
+                                            <Box pos="relative">
+                                                <Image
+                                                    src={getActiveImage(context)}
+                                                    alt={`Chat context`}
+                                                    width={0}
+                                                    height={0}
+                                                    sizes="100vw"
+                                                    style={{ 
+                                                        width: '100%', 
+                                                        height: '200px',
+                                                        objectFit: "contain", 
+                                                        borderRadius: "10px" 
+                                                    }}
+                                                />
+                                            </Box>
+                                            <Text 
+                                                size="lg" 
+                                                fw={500} 
+                                                lineClamp={2}
                                                 style={{ 
-                                                    width: '100%', 
-                                                    height: '200px',
-                                                    objectFit: "contain", 
-                                                    borderRadius: "10px" 
+                                                    height: '3em',  // Force exactly 2 lines height
+                                                    overflow: 'hidden',
+                                                    display: '-webkit-box',
+                                                    WebkitLineClamp: 2,
+                                                    WebkitBoxOrient: 'vertical'
                                                 }}
-                                            />
-                                            <Stack gap="md">
-                                                <Group justify="space-between" align="flex-start">
-                                                    <Text size="lg" fw={500} lineClamp={1}>{chat.name}</Text>
-                                                    <Group gap="xs">
-                                                        <Badge color={chat.teacher ? 'blue' : 'green'}>
-                                                            {chat.teacher ? 'Teacher' : 'Student'}
-                                                        </Badge>
-                                                        <Badge color="grape">
-                                                            {chat.type}
-                                                        </Badge>
-                                                    </Group>
-                                                </Group>
+                                            >
+                                                {chat.name}
+                                            </Text>
+                                            <Group justify="space-between" align="center">
                                                 <Text size="sm" c="dimmed">
-                                                    Created {new Date(chat.created_at ?? "").toLocaleDateString()}
+                                                    {new Date(chat.created_at ?? "").toLocaleDateString()}
                                                 </Text>
-                                            </Stack>
+                                                <Badge color={getBadgeColor(chat.type)}>
+                                                    {formatChatType(chat.type)}
+                                                </Badge>
+                                            </Group>
                                         </Stack>
                                     </Card>
                                 </Link>
@@ -311,6 +367,23 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
             </Stack>
         );
     };
+
+    // Update the loading skeleton display
+    const renderSkeletons = () => (
+        <SimpleGrid
+            cols={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
+            spacing="xl"
+            verticalSpacing="xl"
+            p="md"
+        >
+            <ChatSkeleton />
+            <ChatSkeleton />
+            <ChatSkeleton />
+            <ChatSkeleton />
+            <ChatSkeleton />
+            <ChatSkeleton />
+        </SimpleGrid>
+    );
 
     return (
         <ClassLayout classId={classId}>
@@ -323,11 +396,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                     </Flex>
 
                     {loadingChats || loadingMessages || loadingMessagesReferences ? (
-                        <Stack gap="xl">
-                            <ChatSkeleton />
-                            <ChatSkeleton />
-                            <ChatSkeleton />
-                        </Stack>
+                        renderSkeletons()
                     ) : (chats && classData) && chats.length > 0 ? (
                         profile?.admin || profile?.professor ? (
                             <Tabs defaultValue="student">
@@ -367,7 +436,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                 </Tabs.Panel>
 
                                 <Tabs.Panel value="teacher" pt="xl">
-                                    {renderChatList(userChats, "")}
+                                    {renderChatList(filteredTeacherChats, "")}
                                 </Tabs.Panel>
                             </Tabs>
                         ) : (

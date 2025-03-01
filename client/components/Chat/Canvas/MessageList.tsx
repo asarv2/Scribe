@@ -4,7 +4,7 @@
  */
 
 import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader } from "@mantine/core";
-import { IconArrowDown } from "@tabler/icons-react";
+import { IconArrowDown, IconFileText } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
 import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode } from "@/types";
 import Latex from "../../Latex";
@@ -42,6 +42,7 @@ interface MessageListProps {
   onOptionClick: (type: ChatType, isTeacherMode?: boolean, teacherOption?: string) => void;
   setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
   isInitializing?: boolean;
+  profile?: Profile;
 }
 
 export const MessageList = memo(({
@@ -154,6 +155,9 @@ export const MessageList = memo(({
   const renderWelcomeMessages = () => {
     if (!showWelcome && !welcomeFollowUp) return null;
 
+    // Determine if we're in teacher mode - check both the existing chat and active chat
+    const isTeacherMode = existingChat?.teacher || activeChat.teacher;
+
     return (
       <Stack>
         {!existingChat && showWelcome && (
@@ -186,15 +190,9 @@ export const MessageList = memo(({
                     Hi {profile?.first_name || 'there'}, how can I assist you today?
                   </Text>
                   <Group gap="xs">
-                    {!activeChat.teacher ? (
+                    {!isTeacherMode ? (
                       <>
-                        {/* <Button
-                          variant="light"
-                          color="blue"
-                          onClick={() => onOptionClick('homework')}
-                        >
-                          Homework Help
-                        </Button> */}
+                        {/* Student options */}
                         <Button
                           variant="light"
                           color="cyan"
@@ -219,6 +217,7 @@ export const MessageList = memo(({
                       </>
                     ) : (
                       <>
+                        {/* Teacher options */}
                         <Button
                           variant="light"
                           color="green"
@@ -275,7 +274,7 @@ export const MessageList = memo(({
                 }}
               >
                 <Text>
-                  {!(existingChat?.teacher || activeChat.teacher) ? (
+                  {!isTeacherMode ? (
                     <>
                       Sounds good! I can definitely help you with{' '}
                       {(existingChat?.type || activeChat.chatType) === 'homework' ? (
@@ -412,6 +411,21 @@ export const MessageList = memo(({
                     <Text size="sm" c="dimmed">
                       {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
                     </Text>
+                    
+                    {/* Admin-only file link icon. Temporary disabled. */}
+                    {!profile?.admin && (
+                      <ActionIcon
+                        component="a"
+                        href={`${process.env.NEXT_PUBLIC_API_URL}/files/messages/${message.id}.txt`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="View message file"
+                        variant="subtle"
+                        size="sm"
+                      >
+                        <IconFileText size={16} />
+                      </ActionIcon>
+                    )}
                   </Group>
 
                   {/* Message container */}

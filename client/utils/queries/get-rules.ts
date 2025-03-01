@@ -1,8 +1,8 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getFaqs(client: TypedSupabaseClient, classId: string) {
+export async function getRules(client: TypedSupabaseClient, classId: string) {
     const {data, error} = await client
-        .from("faqs")
+        .from("rules")
         .select("*")
         .eq("class", classId)
         .order("count", {ascending: false})

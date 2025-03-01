@@ -461,28 +461,37 @@ export type Database = {
           },
         ]
       }
-      faq: {
+      faqs: {
         Row: {
+          chapters: string[]
           class: string
           count: number
           created_at: string
+          homeworks: string[]
           id: string
+          lectures: string[]
           messages: string[]
           topic: string
         }
         Insert: {
+          chapters?: string[]
           class: string
           count?: number
           created_at?: string
+          homeworks?: string[]
           id?: string
+          lectures?: string[]
           messages?: string[]
           topic?: string
         }
         Update: {
+          chapters?: string[]
           class?: string
           count?: number
           created_at?: string
+          homeworks?: string[]
           id?: string
+          lectures?: string[]
           messages?: string[]
           topic?: string
         }
@@ -806,6 +815,50 @@ export type Database = {
           professor?: boolean
         }
         Relationships: []
+      }
+      rules: {
+        Row: {
+          chapters: string[]
+          class: string
+          count: number
+          created_at: string
+          homeworks: string[]
+          id: string
+          lectures: string[]
+          messages: string[]
+          rule: string
+        }
+        Insert: {
+          chapters?: string[]
+          class: string
+          count?: number
+          created_at?: string
+          homeworks?: string[]
+          id?: string
+          lectures?: string[]
+          messages?: string[]
+          rule?: string
+        }
+        Update: {
+          chapters?: string[]
+          class?: string
+          count?: number
+          created_at?: string
+          homeworks?: string[]
+          id?: string
+          lectures?: string[]
+          messages?: string[]
+          rule?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rules_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subchapters: {
         Row: {

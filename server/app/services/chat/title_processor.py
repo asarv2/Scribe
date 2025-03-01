@@ -32,6 +32,7 @@ class TitleProcessor(BaseProcessor):
             "you will identify the title of the chat. "
             "The title should be a single sentence that captures the essence of the chat. "
             "You should output a single <TITLE>x</TITLE> tag, where x is the title of the chat. "
+            "CRITICAL: Make sure to keep the title short and concise, it should be under 10 words. It should be Title Case, and not be too specific for the one question, since the chat may continue."
             "Here is an example to show how you should output your answer:\n"
             "CONVERSATION:\n"
             "Student: Can you explain the simplex method?\n"

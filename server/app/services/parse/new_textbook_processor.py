@@ -188,63 +188,94 @@ class NewTextbookProcessor:
             logger.error(f"Error creating combined textbook JSON: {str(e)}", exc_info=True)
             raise
 
-    def upload_to_supabase(self, class_id: str, supabase: Client) -> Tuple[str, str, str]:
-        """Uploads the processed textbook data to Supabase
+    def upload_to_supabase(self, class_id: str, supabase: Client, old_textbook_id: str = None) -> Tuple[str, List[str], List[List[str]]]:
+        """Uploads the processed textbook data to Supabase or fetches from existing textbook
         
         Args:
             class_id: The ID of the class to upload the textbook to
             supabase: Initialized Supabase client
+            old_textbook_id: Optional ID of existing textbook to copy data from
             
         Returns:
-            str: The created textbook ID
+            Tuple[str, List[str], List[List[str]]]: The textbook ID, chapter IDs, and exercise IDs
         """
         try:
-            # Get the combined data
-            combined_data = self.create_combined_textbook_json()
-            
-            # Create textbook entry
-            textbook_response = supabase.table('textbooks').insert({
-                'class': class_id,
-                'title': combined_data['textbook_name'],
-                'pages': self.pdf_document.page_count,
-            }).execute()
-            
-            textbook_id = textbook_response.data[0]['id']
-            logger.info(f"Created textbook with ID: {textbook_id}")
-            
-            # Upload chapters and exercises
-            chapters_id = []
-            exercises_id = []
-            for i, chapter in tqdm(enumerate(combined_data['chapters']), desc="Uploading chapters"):
-                # Create chapter
-                chapter_response = supabase.table('chapters').insert({
-                    'title': chapter['title'],
-                    'start_page': chapter['start_page'],
-                    'end_page': chapter['end_page'],
-                    'textbook': textbook_id,
-                    'chapter_number': i + 1
+            if old_textbook_id:
+                logger.info(f"Using existing textbook data from ID: {old_textbook_id}")
+                
+                textbook_id = old_textbook_id
+                
+                # Fetch existing chapters
+                old_chapters = supabase.table('chapters').select('*').eq('textbook', old_textbook_id).order('chapter_number').execute()
+                
+                # Map to store old chapter ID to new chapter ID
+                chapter_id_mapping = {}
+                chapters_id = []
+                exercises_id = []
+                
+                # Create new chapters based on old ones
+                for old_chapter in tqdm(old_chapters.data, desc="Copying chapters"):
+                    chapter_id_mapping[old_chapter['id']] = old_chapter['id']
+                    
+                    # Fetch exercises for this old chapter
+                    old_exercises = supabase.table('exercises').select('*').eq('chapter', old_chapter['id']).order('exercise_number').execute()
+                    
+                    # Create new exercises based on old ones
+                    chapter_exercise_ids = []
+                    for old_exercise in old_exercises.data:
+                        chapter_exercise_ids.append(old_exercise['id'])
+                    
+                    exercises_id.append(chapter_exercise_ids)
+                    chapters_id.append(old_chapter['id'])
+                
+                logger.info(f"Successfully copied textbook data from {old_textbook_id} to {textbook_id}")
+                
+            else:
+                # Original implementation for creating new textbook data
+                combined_data = self.create_combined_textbook_json()
+                
+                textbook_response = supabase.table('textbooks').insert({
+                    'class': class_id,
+                    'title': combined_data['textbook_name'],
+                    'pages': self.pdf_document.page_count,
                 }).execute()
                 
-                chapter_id = chapter_response.data[0]['id']
-                chapters_id.append(chapter_id)
+                textbook_id = textbook_response.data[0]['id']
+                logger.info(f"Created textbook with ID: {textbook_id}")
                 
-
-                # Upload exercises for this chapter
-                exercise_ids = []
-                for j, exercise in enumerate(chapter.get('exercises', [])):
-                    exercise_response = supabase.table('exercises').insert({
-                        'title': exercise['title'],
-                        'start_page': exercise['start_page'],
-                        'end_page': exercise['end_page'],
-                        'chapter': chapter_id,
-                        'exercise_number': j + 1
+                # Upload chapters and exercises
+                chapters_id = []
+                exercises_id = []
+                for i, chapter in tqdm(enumerate(combined_data['chapters']), desc="Uploading chapters"):
+                    # Create chapter
+                    chapter_response = supabase.table('chapters').insert({
+                        'title': chapter['title'],
+                        'start_page': chapter['start_page'],
+                        'end_page': chapter['end_page'],
+                        'textbook': textbook_id,
+                        'chapter_number': i + 1
                     }).execute()
+                    
+                    chapter_id = chapter_response.data[0]['id']
+                    chapters_id.append(chapter_id)
+                    
+                    # Upload exercises for this chapter
+                    exercise_ids = []
+                    for j, exercise in enumerate(chapter.get('exercises', [])):
+                        exercise_response = supabase.table('exercises').insert({
+                            'title': exercise['title'],
+                            'start_page': exercise['start_page'],
+                            'end_page': exercise['end_page'],
+                            'chapter': chapter_id,
+                            'exercise_number': j + 1
+                        }).execute()
 
-                    exercise_id = exercise_response.data[0]['id']
-                    exercise_ids.append(exercise_id)
-                
-                exercises_id.append(exercise_ids)
-            logger.info(f"Successfully uploaded textbook data to Supabase")
+                        exercise_id = exercise_response.data[0]['id']
+                        exercise_ids.append(exercise_id)
+                    
+                    exercises_id.append(exercise_ids)
+                logger.info(f"Successfully uploaded textbook data to Supabase")
+            
             return textbook_id, chapters_id, exercises_id
             
         except Exception as e:
@@ -316,70 +347,143 @@ class NewTextbookProcessor:
             logger.error(f"Error creating documents and uploading images: {str(e)}")
             raise
 
-    def upload_exercise_images(self, class_id: str, textbook_id: str, chapters_id: List[str], exercises_id: List[List[str]], supabase: Client) -> None:
-        """Uploads exercise images to Supabase storage using combined data
+    def upload_exercise_images(self, class_id: str, textbook_id: str, chapters_id: List[str], exercises_id: List[List[str]], supabase: Client, upload_images: bool = True) -> None:
+        """Updates existing documents with exercise IDs and uploads exercise images to Supabase storage
         
         Args:
             class_id: The class ID
+            textbook_id: The textbook ID
             chapters_id: The chapters ID (list)
             exercises_id: The exercises ID (2D list, matching chapters)
             supabase: Initialized Supabase client
+            upload_images: Whether to upload exercise images
         """
         try:
             # Get the combined data that contains exercise information
             combined_data = self.create_combined_textbook_json()
             
-            # Prepare documents for bulk insertion
-            documents_to_insert = []
+            # First, get all existing documents for this textbook
+            existing_docs = supabase.table('documents').select('*').eq('textbook', textbook_id).execute()
+            existing_docs_map = {doc['page']: doc for doc in existing_docs.data}
             
-            # Create mapping of exercise data for later use
-            exercise_mapping = {}  # Will store exercise_id -> {image_path, chapter_id} mapping
+            # Create mapping to collect exercises by page
+            page_exercises_map = {}  # Will store page_num -> {exercises: [], chapter: str}
+            exercise_image_map = {}  # Will store exercise_id -> {image_path, doc_id}
             
-            # Iterate through chapters and their exercises to prepare documents
+            # First, assign chapters to all pages
+            page_to_chapter_map = {}  # Maps page number to chapter ID
+            
+            # Create a mapping of page ranges to chapter IDs
+            for chapter_data, chapter_id in zip(combined_data['chapters'], chapters_id):
+                start_page = chapter_data['start_page']
+                end_page = chapter_data.get('end_page')
+                
+                # If end_page is None, use the next chapter's start_page - 1 or the last page
+                if end_page is None:
+                    chapter_idx = combined_data['chapters'].index(chapter_data)
+                    if chapter_idx < len(combined_data['chapters']) - 1:
+                        end_page = combined_data['chapters'][chapter_idx + 1]['start_page'] - 1
+                    else:
+                        end_page = self.pdf_document.page_count
+                
+                # Assign this chapter to all pages in its range
+                for page_num in range(start_page, end_page + 1):
+                    page_to_chapter_map[page_num] = chapter_id
+            
+            # Now process exercises and add them to the appropriate pages
             for chapter_data, chapter_id, chapter_exercises_ids in zip(combined_data['chapters'], chapters_id, exercises_id):
                 for exercise, exercise_id in zip(chapter_data.get('exercises', []), chapter_exercises_ids):
-                    # Create document entry
-                    documents_to_insert.append({
-                        'page': exercise['start_page'],
-                        'text': exercise['text_content'],
-                        'textbook': textbook_id,
-                        'chapter': chapter_id,
-                        'exercise': exercise_id,
-                        'description': '',
-                        'processed': True # can change later if we want LLM to describe the page.
-                    })
+                    page_num = exercise['start_page']
                     
-                    # Store mapping for later use
-                    exercise_mapping[exercise_id] = {
-                        'image_path': exercise['image_path'],
-                        'chapter_id': chapter_id
-                    }
+                    # Initialize page entry if not exists
+                    if page_num not in page_exercises_map:
+                        page_exercises_map[page_num] = {
+                            'exercises': [],
+                            'chapter': chapter_id,
+                            'text': ''  # Will concatenate text from all exercises
+                        }
+                    
+                    # Add exercise to the page
+                    page_exercises_map[page_num]['exercises'].append(exercise_id)
+                    
+                    # Concatenate text content
+                    if page_exercises_map[page_num]['text']:
+                        page_exercises_map[page_num]['text'] += "\n\n" + exercise['text_content']
+                    else:
+                        page_exercises_map[page_num]['text'] = exercise['text_content']
+                    
+                    # Store image mapping for later use
+                    if page_num in existing_docs_map:
+                        doc_id = existing_docs_map[page_num]['id']
+                        exercise_image_map[exercise_id] = {
+                            'image_path': exercise['image_path'],
+                            'doc_id': doc_id
+                        }
             
-            # Bulk insert documents
-            documents_response = supabase.table('documents').insert(documents_to_insert).execute()
-            logger.info(f"Created {len(documents_response.data)} exercise documents")
+            # Prepare documents to upsert - first for pages with exercises
+            documents_to_upsert = []
+            for page_num, page_data in page_exercises_map.items():
+                if page_num in existing_docs_map:
+                    doc = existing_docs_map[page_num]
+                    documents_to_upsert.append({
+                        'id': doc['id'],
+                        'page': page_num,
+                        'textbook': textbook_id,
+                        'exercises': page_data['exercises'],  # Array of exercise IDs
+                        'chapter': page_data['chapter'],
+                        'text': page_data['text']
+                    })
             
-            # Upload images using the created documents
-            for document in tqdm(documents_response.data, desc="Uploading exercise images"):
-                exercise_id = document['exercise']
-                exercise_data = exercise_mapping[exercise_id]
+            # Then for all other pages that need chapter assignments
+            for page_num, doc in existing_docs_map.items():
+                # Skip pages we've already processed (those with exercises)
+                if page_num in page_exercises_map:
+                    continue
                 
-                # Get image from original path
-                original_path = exercise_data['image_path']
-                image_full_path = os.path.join(os.path.dirname(self.pdf_path), f'exercises_{self.pdf_filename.split(".")[0]}', original_path)
-                
-                with open(image_full_path, 'rb') as f:
-                    img_data = f.read()
-                
-                # Upload to Supabase storage using the original image path structure
-                file_path = f"{class_id}/{textbook_id}/{exercise_id}/{document['id']}.png"
-                supabase.storage.from_('exercises').upload(
-                    file_path,
-                    img_data,
-                    file_options={"content-type": "image/png"}
-                )
+                # If this page has a chapter assignment, update it
+                if page_num in page_to_chapter_map:
+                    documents_to_upsert.append({
+                        'id': doc['id'],
+                        'page': page_num,
+                        'textbook': textbook_id,
+                        'chapter': page_to_chapter_map[page_num],
+                        # Keep existing text and exercises (if any)
+                        'text': doc.get('text', ''),
+                        'exercises': doc.get('exercises', [])
+                    })
             
-            logger.info("Successfully uploaded all exercise images")
+            # Bulk upsert documents
+            if documents_to_upsert:
+                # Process in smaller batches to avoid conflicts
+                batch_size = 50
+                for i in range(0, len(documents_to_upsert), batch_size):
+                    batch = documents_to_upsert[i:i+batch_size]
+                    updated_docs = supabase.table('documents').upsert(batch).execute()
+                    logger.info(f"Updated batch of {len(batch)} documents with chapter/exercise IDs")
+                
+                if upload_images:
+                    # Upload images using the updated documents
+                    for exercise_id, exercise_data in tqdm(exercise_image_map.items(), desc="Uploading exercise images"):
+                        # Get image from original path
+                        original_path = exercise_data['image_path']
+                        image_full_path = os.path.join(os.path.dirname(self.pdf_path), 
+                                                    f'exercises_{self.pdf_filename.split(".")[0]}', 
+                                                    original_path)
+                        
+                        with open(image_full_path, 'rb') as f:
+                            img_data = f.read()
+                        
+                        # Upload to Supabase storage
+                        file_path = f"{class_id}/{textbook_id}/{exercise_id}/{exercise_data['doc_id']}.png"
+                        supabase.storage.from_('exercises').upload(
+                            file_path,
+                            img_data,
+                            file_options={"content-type": "image/png"}
+                        )
+                    
+                    logger.info("Successfully uploaded all exercise images")
+            else:
+                logger.info("No documents to update")
             
         except Exception as e:
             logger.error(f"Error uploading exercise images: {str(e)}")
@@ -406,8 +510,9 @@ if __name__ == "__main__":
     # Process textbook and get ID
     exercises = processor.extract_exercises()
     combined_data = processor.create_combined_textbook_json()
-    textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
+    textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase, old_textbook_id="abd70059-0f1d-4c17-82a5-9e034356f21c")
+    # print(textbook_id, chapters_id, exercises_id)
     
     # Upload images
-    processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
-    processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase)
+    # processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
+    processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase, upload_images=False)
