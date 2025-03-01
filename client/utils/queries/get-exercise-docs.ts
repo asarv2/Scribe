@@ -4,7 +4,7 @@ export async function getExerciseDocuments(client: TypedSupabaseClient, exercise
     const {data, error} = await client
         .from("documents")
         .select("*")
-        .in("exercise", exerciseIds)
+        .contains("exercises", exerciseIds)
         .order("page", {ascending: true})
     
     if (error) {

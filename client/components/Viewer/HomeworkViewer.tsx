@@ -22,6 +22,7 @@ import DeleteHomeworkModal from "../Delete/DeleteHomeworkModal";
 import { getHomework } from "@/utils/queries/get-homework";
 import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
 import { getExercises } from "@/utils/queries/get-exercises";
+import { getExerciseDocuments } from "@/utils/queries/get-exercise-docs";
 
 type HomeworkViewerProps = {
     classId: string;
@@ -464,12 +465,12 @@ export default function HomeworkViewer({
 
     const Description = () => {
         const currentExercise = exercises?.find(ex => ex.id === activeExerciseId);
-        const currentDocument = documents?.find(doc => doc.exercise === activeExerciseId);
+        const currentDocument = documents?.find(doc => doc.exercises.includes(activeExerciseId ?? ""));
         const relatedDocuments = documents?.filter(doc => 
             // Document must be for the same exercise
-            doc.exercise === activeExerciseId && 
+            doc.exercises.includes(activeExerciseId ?? "") && 
             // Document must be from the same homework
-            doc.homework === homeworkId &&
+            doc.homeworks.includes(homeworkId) &&
             // Document must have a page number
             doc.page &&
             currentExercise?.start_page &&
@@ -587,10 +588,10 @@ export default function HomeworkViewer({
 
     const getActiveImage = (exerciseId: string | null) => {
         if (!exerciseId) return "/placeholder_image.svg";
-        const document = documents?.find(doc => doc.exercise === exerciseId);
+        const document = documents?.find(doc => doc.exercises.includes(exerciseId));
         if (!document) return "/placeholder_image.svg";
 
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.textbook}/${exerciseId}/${document.id}.png`;
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.textbook}/${exerciseId}.png`;
     };
 
     if (embedded) {

@@ -197,7 +197,9 @@ export type Database = {
           created_at: string
           description: string
           exercise: string | null
+          exercises: string[]
           homework: string | null
+          homeworks: string[]
           id: string
           lecture: string | null
           page: number
@@ -211,7 +213,9 @@ export type Database = {
           created_at?: string
           description?: string
           exercise?: string | null
+          exercises?: string[]
           homework?: string | null
+          homeworks?: string[]
           id?: string
           lecture?: string | null
           page: number
@@ -225,7 +229,9 @@ export type Database = {
           created_at?: string
           description?: string
           exercise?: string | null
+          exercises?: string[]
           homework?: string | null
+          homeworks?: string[]
           id?: string
           lecture?: string | null
           page?: number
@@ -822,6 +828,7 @@ export type Database = {
           class: string
           count: number
           created_at: string
+          enabled: boolean
           homeworks: string[]
           id: string
           lectures: string[]
@@ -833,6 +840,7 @@ export type Database = {
           class: string
           count?: number
           created_at?: string
+          enabled?: boolean
           homeworks?: string[]
           id?: string
           lectures?: string[]
@@ -844,6 +852,7 @@ export type Database = {
           class?: string
           count?: number
           created_at?: string
+          enabled?: boolean
           homeworks?: string[]
           id?: string
           lectures?: string[]

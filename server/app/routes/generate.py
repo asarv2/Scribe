@@ -32,7 +32,23 @@ async def fetch_document_resources(supabase, current_message):
     lecture_ids = list(set([doc.get('lecture') for doc in current_documents if doc.get('lecture') is not None])) or []
     chapter_ids = list(set([doc.get('chapter') for doc in current_documents if doc.get('chapter') is not None])) or []
     textbook_ids = list(set([doc.get('textbook') for doc in current_documents if doc.get('textbook') is not None])) or []
-    homework_ids = list(set([doc.get('homework') for doc in current_documents if doc.get('homework') is not None])) or []
+    
+    # Extract homework and exercise IDs from the new fields
+    homework_ids = []
+    exercise_ids = []
+    
+    for doc in current_documents:
+        # Get homeworks from the homeworks array field
+        if doc.get('homeworks') and isinstance(doc.get('homeworks'), list):
+            homework_ids.extend([hw_id for hw_id in doc.get('homeworks') if hw_id is not None])
+        
+        # Get exercises from the exercises array field
+        if doc.get('exercises') and isinstance(doc.get('exercises'), list):
+            exercise_ids.extend([ex_id for ex_id in doc.get('exercises') if ex_id is not None])
+    
+    # Remove duplicates
+    homework_ids = list(set(homework_ids)) or []
+    exercise_ids = list(set(exercise_ids)) or []
     
     # Fetch all related resources
     all_lectures = []
@@ -55,35 +71,20 @@ async def fetch_document_resources(supabase, current_message):
         homeworks_response = supabase.table("homeworks").select("*").in_("id", homework_ids).order("homework_number", desc=False).execute()
         all_homeworks = homeworks_response.data or []
     
-    # For exercises, we need to get them based on chapters and homeworks
-    # Use a set to track exercise IDs we've already added to avoid duplicates
-    seen_exercise_ids = set()
     all_exercises = []
-    
-    # Get exercises related to chapters
-    if chapter_ids:
-        exercises_response = supabase.table("exercises").select("*").in_("chapter", chapter_ids).execute()
-        chapter_exercises = exercises_response.data or []
-        for exercise in chapter_exercises:
-            if exercise.get('id') not in seen_exercise_ids:
-                seen_exercise_ids.add(exercise.get('id'))
-                all_exercises.append(exercise)
-    
-    # Get exercises directly linked to documents
-    exercise_ids = list(set([doc.get('exercise') for doc in current_documents if doc.get('exercise') is not None])) or []
     if exercise_ids:
-        direct_exercises_response = supabase.table("exercises").select("*").in_("id", exercise_ids).execute()
-        direct_exercises = direct_exercises_response.data or []
-        for exercise in direct_exercises:
-            if exercise.get('id') not in seen_exercise_ids:
-                seen_exercise_ids.add(exercise.get('id'))
-                all_exercises.append(exercise)
+        exercises_response = supabase.table("exercises").select("*").in_("id", exercise_ids).execute()
+        all_exercises = exercises_response.data or []
     
-    # Get exercises related to homeworks
-    if homework_ids:
-        homework_exercises_response = supabase.table("exercises").select("*").in_("homework", homework_ids).execute()
-        homework_exercises = homework_exercises_response.data or []
-        for exercise in homework_exercises:
+    # Also get exercises related to chapters for completeness
+    if chapter_ids:
+        chapter_exercises_response = supabase.table("exercises").select("*").in_("chapter", chapter_ids).execute()
+        chapter_exercises = chapter_exercises_response.data or []
+        
+        # Use a set to track exercise IDs we've already added to avoid duplicates
+        seen_exercise_ids = set(ex.get('id') for ex in all_exercises)
+        
+        for exercise in chapter_exercises:
             if exercise.get('id') not in seen_exercise_ids:
                 seen_exercise_ids.add(exercise.get('id'))
                 all_exercises.append(exercise)
@@ -162,53 +163,60 @@ async def handle_message(request: ChatRequest):
             if doc.get('lecture') is not None:
                 lecture_number = next((l.get('note_number') for l in all_lectures if l.get('id') == doc.get('lecture')), None)
                 content = f"\nLECTURE NUMBER: {lecture_number} SLIDE: {doc.get('page')}\n"
-            if doc.get('textbook') is not None:
+            elif doc.get('textbook') is not None:
                 textbook_number = next((t.get('textbook_number') for t in all_textbooks if t.get('id') == doc.get('textbook')), None)
                 content = f"\nTEXTBOOK NUMBER: {textbook_number} PAGE: {doc.get('page')}\n"
+                
+                # Add chapter info if available
+                if (doc.get('chapter') is not None):
+                    chapter_name = next((str(c.get('chapter_number')) + ": " + c.get('title') for c in all_chapters if c.get('id') == doc.get('chapter')), None)
+                    content += f"CHAPTER {chapter_name}\n"
             
-            # Add chapter, subchapter, and homework info if available
-            if (doc.get('chapter') is not None):
-                chapter_name = next((str(c.get('chapter_number')) + ": " + c.get('title') for c in all_chapters if c.get('id') == doc.get('chapter')), None)
-                content += f"CHAPTER {chapter_name}\n"
-            if (doc.get('homework') is not None):
-                # First get the basic homework info
-                homework = next((h for h in all_homeworks if h.get('id') == doc.get('homework')), None)
-                if homework:
-                    # Sanitize additional info to be on one line
-                    additional_info = homework.get('additional_info', '').replace('\n', ' ').strip()
-                    content += f"HOMEWORK {homework.get('homework_number')}: {homework.get('title')}, WITH INFO: {additional_info}\n"
-            
-            # Add main content and description last
+            # Add main content and description for the document
             if doc.get('text') is not None and doc.get('text') != "":
                 content += f"\nContent: {doc.get('text')}\n"
             if doc.get('description') is not None and doc.get('description') != "":
                 content += f"\nDescription: {doc.get('description')}\n"
             
-            message_context.append(content)
-
-        # Add exercise information to the message context
-        for doc in current_documents:
-            if doc.get('exercise') is not None:
-                exercise = next((e for e in all_exercises if e.get('id') == doc.get('exercise')), None)
-                if exercise:
-                    exercise_chapter = next((c for c in all_chapters if c.get('id') == exercise.get('chapter')), None)
-                    if exercise_chapter:
-                        exercise_textbook_id = exercise_chapter.get('textbook')
-                        exercise_textbook_number = next((t.get('textbook_number') for t in all_textbooks if t.get('id') == exercise_textbook_id), None)
-                        exercise_info = f"EXERCISE: {exercise.get('title')} ON TEXTBOOK {exercise_textbook_number} START PAGE: {doc.get('start_page', 'N/A')} END PAGE: {doc.get('end_page', 'N/A')}\n"
-                        message_context.append(exercise_info)
-        
-        # Add homework exercises to the message context
-        for homework_id in list(set([doc.get('homework') for doc in current_documents if doc.get('homework') is not None])):
-            homework_exercises = [e for e in all_exercises if e.get('homework') == homework_id]
-            homework = next((h for h in all_homeworks if h.get('id') == homework_id), None)
+            # Add homework info separately
+            if doc.get('homeworks') and isinstance(doc.get('homeworks'), list):
+                for hw_id in doc.get('homeworks'):
+                    homework = next((h for h in all_homeworks if h.get('id') == hw_id), None)
+                    if homework:
+                        hw_content = f"\n{homework.get('title')}"
+                        # Only add additional info if it exists and isn't empty
+                        additional_info = homework.get('additional_info', '').replace('\n', ' ').strip()
+                        if additional_info:
+                            hw_content += f", WITH INFO: {additional_info}"
+                        hw_content += "\n"
+                        message_context.append(hw_content)
             
-            if homework and homework_exercises:
-                for exercise in homework_exercises:
-                    exercise_info = f"PROBLEM: {exercise.get('title')} ON HOMEWORK {homework.get('homework_number')}: {homework.get('title')}\n"
-                    if exercise.get('description'):
-                        exercise_info += f"Description: {exercise.get('description')}\n"
-                    message_context.append(exercise_info)
+            # Add exercise info separately
+            if doc.get('exercises') and isinstance(doc.get('exercises'), list):
+                for ex_id in doc.get('exercises'):
+                    exercise = next((e for e in all_exercises if e.get('id') == ex_id), None)
+                    if exercise:
+                        ex_content = f"\nEXERCISE: {exercise.get('title')}"
+                        
+                        # Add textbook reference if available
+                        exercise_chapter = next((c for c in all_chapters if c.get('id') == exercise.get('chapter')), None)
+                        if exercise_chapter:
+                            exercise_textbook_id = exercise_chapter.get('textbook')
+                            exercise_textbook_number = next((t.get('textbook_number') for t in all_textbooks if t.get('id') == exercise_textbook_id), None)
+                            if exercise_textbook_number:
+                                ex_content += f" (FROM TEXTBOOK {exercise_textbook_number})"
+                        
+                        ex_content += "\n"
+                        
+                        # Add description if available
+                        if exercise.get('description'):
+                            ex_content += f"Description: {exercise.get('description')}\n"
+                        
+                        message_context.append(ex_content)
+            
+            # Add the main document content to the context
+            if content.strip():
+                message_context.append(content)
 
         processor = ChatProcessor(
             prompt_type=chat['type'],

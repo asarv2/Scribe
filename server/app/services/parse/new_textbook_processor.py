@@ -474,7 +474,7 @@ class NewTextbookProcessor:
                             img_data = f.read()
                         
                         # Upload to Supabase storage
-                        file_path = f"{class_id}/{textbook_id}/{exercise_id}/{exercise_data['doc_id']}.png"
+                        file_path = f"{class_id}/{textbook_id}/{exercise_id}.png"
                         supabase.storage.from_('exercises').upload(
                             file_path,
                             img_data,
@@ -515,4 +515,4 @@ if __name__ == "__main__":
     
     # Upload images
     # processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
-    processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase, upload_images=False)
+    processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase)

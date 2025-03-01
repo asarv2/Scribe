@@ -24,7 +24,7 @@ export type Chat = Database[SchemaName]["Tables"]["chats"]["Row"]
 export type ChatType = Database[SchemaName]["Enums"]["chat_type"]
 export type Code = Database[SchemaName]["Tables"]["codes"]["Row"]
 
-export type Faq = Database[SchemaName]["Tables"]["faq"]["Row"]
+export type Faqs = Database[SchemaName]["Tables"]["faqs"]["Row"]
 
 export interface ChatMessage {
     id: number;

@@ -42,7 +42,7 @@ interface MessageListProps {
   onOptionClick: (type: ChatType, isTeacherMode?: boolean, teacherOption?: string) => void;
   setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
   isInitializing?: boolean;
-  profile?: Profile;
+  loading?: boolean;
 }
 
 export const MessageList = memo(({
@@ -56,6 +56,7 @@ export const MessageList = memo(({
   setViewerMode,
   existingChat,
   isInitializing = false,
+  loading,
 }: MessageListProps) => {
   const supabase = useSupabaseBrowser();
 
@@ -153,7 +154,7 @@ export const MessageList = memo(({
   const allDocuments = [...(lectureDocuments ?? []), ...(textbookDocuments ?? [])];
 
   const renderWelcomeMessages = () => {
-    if (!showWelcome && !welcomeFollowUp) return null;
+    if ((!showWelcome && !welcomeFollowUp)) return null;
 
     // Determine if we're in teacher mode - check both the existing chat and active chat
     const isTeacherMode = existingChat?.teacher || activeChat.teacher;
@@ -345,7 +346,7 @@ export const MessageList = memo(({
   );
 
   // Combine loading states
-  const isLoading = isInitializing || isLoadingMessages;
+  const isLoading = isInitializing || isLoadingMessages || loading
 
   return (
     <Stack
@@ -360,7 +361,7 @@ export const MessageList = memo(({
         transition: "opacity 0.2s ease-in-out"
       }}
     >
-      {isLoading ? renderLoadingState() : (
+      {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
         <>
           {renderWelcomeMessages()}
           {messages?.map((message, index) => (

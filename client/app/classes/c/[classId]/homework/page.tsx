@@ -15,7 +15,6 @@ import { notifications } from "@mantine/notifications";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { Skeleton } from "@mantine/core";
 import { Homework } from "@/types";
-import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
 import Image from "next/image";
 import Link from "next/link";
 import { getExerciseDocuments } from "@/utils/queries/get-exercise-docs";
@@ -40,12 +39,6 @@ export default function HomeworkPage({ params }: { params: { classId: string } }
     const {data: exercises, isLoading: loadingExercises} = useQuery({
         queryKey: ["exercises", classId],
         queryFn: () => getExercises(supabase, [], homeworks?.map(h => h.id) ?? []),
-        enabled: !!homeworks
-    });
-
-    const {data: homeworkDocuments, isLoading: loadingHomeworkDocuments} = useQuery({
-        queryKey: ["homeworkDocuments", classId],
-        queryFn: () => getHomeworkDocuments(supabase, homeworks?.map(h => h.id) ?? []),
         enabled: !!homeworks
     });
 

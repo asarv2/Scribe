@@ -154,6 +154,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     // Combine all loading states
     const isInitializing = !user || !profile || !professor || !lectures || !textbooks;
 
+    // Add this state to track when we receive a realtime update
+    const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);
+
+    // Add this state to track message submission
+
     const getDocuments = () => {
         // Previous document references from context
         const lectureDocs = lectureDocuments?.filter(document =>
@@ -171,20 +176,20 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 document.page <= chapter.end_page
             );
         }) ?? [];
-        const exerciseDocs = textbookDocuments?.filter(document => {
-            const activeExercises = exercises?.filter(e =>
-                activeChat.context.exercises.includes(e.id)
-            );
-            // Check if document's page falls within any active exercise's range
-            return activeExercises?.some(exercise => {
-                const parentChapter = chapters?.find(c => c.id === exercise.chapter);
-                return parentChapter?.textbook === document.textbook &&
-                    document.page >= exercise.start_page &&
-                    document.page <= exercise.end_page;
-            });
-        }) ?? [];
+        // const exerciseDocs = textbookDocuments?.filter(document => {
+        //     const activeExercises = exercises?.filter(e =>
+        //         activeChat.context.exercises.includes(e.id)
+        //     );
+        //     // Check if document's page falls within any active exercise's range
+        //     return activeExercises?.some(exercise => {
+        //         const parentChapter = chapters?.find(c => c.id === exercise.chapter);
+        //         return parentChapter?.textbook === document.textbook &&
+        //             document.page >= exercise.start_page &&
+        //             document.page <= exercise.end_page;
+        //     });
+        // }) ?? [];
         const homeworkDocs = textbookDocuments?.filter(document => {
-            const homework = homeworkData?.find(h => h.id === document.homework);
+            const homework = homeworkData?.find(h => document.homeworks.includes(h.id));
             return homework && activeChat.context.homeworks.includes(homework.id);
         }) ?? [];
 
@@ -203,7 +208,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         return Array.from(new Set([
             ...lectureDocs,
             ...chapterDocs,
-            ...exerciseDocs,
+            // ...exerciseDocs,
             ...homeworkDocs,
             ...messageDocuments
         ]));
@@ -229,16 +234,16 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         });
 
         // Add exercise context
-        activeChat.context.exercises.forEach(exerciseId => {
-            const exercise = exercises?.find(e => e.id === exerciseId);
-            const chapter = exercise ? chapters?.find(c => c.id === exercise.chapter) : null;
-            if (exercise && chapter) {
-                const exerciseTitle = exercise.title !== ""
-                    ? exercise.title
-                    : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`;
-                contextParts.push(`Exercise: ${exerciseTitle}`);
-            }
-        });
+        // activeChat.context.exercises.forEach(exerciseId => {
+        //     const exercise = exercises?.find(e => e.id === exerciseId);
+        //     const chapter = exercise ? chapters?.find(c => c.id === exercise.chapter) : null;
+        //     if (exercise && chapter) {
+        //         const exerciseTitle = exercise.title !== ""
+        //             ? exercise.title
+        //             : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`;
+        //         contextParts.push(`Exercise: ${exerciseTitle}`);
+        //     }
+        // });
 
         // Add homework context
         activeChat.context.homeworks.forEach(homeworkId => {
@@ -550,6 +555,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 async (payload) => {
                     console.log("Received chat update:", payload);
 
+                    // Set flag to indicate we received a realtime update
+                    if (payload.eventType === 'UPDATE' && payload.new.name !== payload.old.name) {
+                        setReceivedRealtimeUpdate(true);
+                    }
+
                     // Immediately update the cache with the new data
                     queryClient.setQueryData(
                         ["chat", chatId],
@@ -583,6 +593,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         };
     }, [chatId, queryClient, supabase]);
 
+
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -592,16 +603,15 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                             <Text size="xl" fw={700} mb={6}>
                                 {existingChat ? (
                                     <TypeAnimation
-                                        key={existingChat.name}
+                                        key={`${existingChat.id}-${receivedRealtimeUpdate}`}
                                         sequence={[
-                                            '',
-                                            100,
                                             existingChat.name || '',
                                         ]}
                                         wrapper="span"
                                         cursor={false}
                                         repeat={0}
                                         speed={50}
+                                        preRenderFirstString={!receivedRealtimeUpdate} // Only animate if we received a realtime update
                                         style={{
                                             fontSize: '1.25rem',
                                             fontWeight: 700,
@@ -704,6 +714,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     onOptionClick={handleOptionClick}
                                     setViewerMode={setViewerMode}
                                     isInitializing={isInitializing}
+                                    loading={loading}
                                 />
 
                                 <ChatInput

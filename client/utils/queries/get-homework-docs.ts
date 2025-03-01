@@ -4,7 +4,7 @@ export async function getHomeworkDocuments(client: TypedSupabaseClient, homework
     const {data, error} = await client
         .from("documents")
         .select("*")
-        .in("homework", homeworkIds)
+        .contains("homeworks", homeworkIds)
         .order("page", {ascending: true})
     
     if (error) {

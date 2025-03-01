@@ -202,6 +202,13 @@ export const handleDocumentClick = (
                 chapterId: chapter.id,
             });
         }
+    } else if (type === 'homework' && doc.homeworks) {
+        setViewerMode({
+            active: true,
+            documentId: doc.id,
+            homeworkId: doc.homeworks[0],
+            exerciseId: doc.exercises[0] ?? undefined,
+        });
     } else if (type === 'exercise' && doc.exercise) {
         const chapter = chapters?.find(c => doc.chapter === c.id);
         if (chapter) {
@@ -213,13 +220,6 @@ export const handleDocumentClick = (
                 exerciseId: doc.exercise,
             });
         }
-    } else if (type === 'homework' && doc.homework) {
-        setViewerMode({
-            active: true,
-            documentId: doc.id,
-            homeworkId: doc.homework,
-            exerciseId: doc.exercise ?? undefined,
-        });
     } else {
         throw new Error('Invalid document type');
     }

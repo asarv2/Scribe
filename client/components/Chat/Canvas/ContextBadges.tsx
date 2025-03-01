@@ -211,7 +211,7 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.homework === homeworkId)
+                                const document = textbookDocuments?.find(d => d.homeworks.includes(homeworkId))
                                 if (document) {
                                     handleDocumentClick(document, chapters ?? [], 'homework', setViewerMode);
                                 }

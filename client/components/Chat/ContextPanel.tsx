@@ -22,7 +22,6 @@ import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
-import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
 
 interface ContextPanelProps {
     classId: string;
@@ -151,8 +150,8 @@ export function ContextPanel({
         if (!exercise) return '/placeholder_image.svg';
 
         // find the textbook document that has the same page number, but null for the chapter, homework and exercise
-        const textbookDocumentExercise = textbookDocuments?.find(d => d.page === exercise.start_page && d.chapter === null && d.homework === null && d.exercise === null);
-        if (textbookDocumentExercise) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentExercise.textbook}/${textbookDocumentExercise.id}.png`;
+        const textbookDocumentHomework = textbookDocuments?.find(d => d.homeworks.includes(homeworkId));
+        if (textbookDocumentHomework) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentHomework.textbook}/${textbookDocumentHomework.id}.png`;
 
         return '/placeholder_image.svg';
     }
