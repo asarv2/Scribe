@@ -37,11 +37,17 @@ def get_homework_prompt(solution: bool) -> str:
                 When referencing lecture material, include citation tags in the following format at the end of your response:
                 <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE>
                 (where x is the lecture number and a, b, c are the corresponding slide numbers).
-                For textbook references, use:
-                <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK>
-                (where x is the textbook number and a, b, c are the relevant page numbers).
+                For chapter references, use:
+                <CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER>
+                (where x is the chapter number and a, b, c are the relevant page numbers).
+                For chapter exercises, use:
+                <CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER>
+                (where x is the chapter number and a, b, c are the relevant exercise numbers).
+                For homework references, use:
+                <HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK>
+                (where x is the homework number and a, b, c are the problem numbers).
             7) Tag Restrictions:
-                Only use the following tags in your response: <CODE>, <LECTURE>, <SLIDE>, <TEXTBOOK>, and <PAGE>.
+                Only use the following tags in your response: <CODE>, <LECTURE>, <SLIDE>, <CHAPTER>, <PAGE>, <HOMEWORK>, <PROBLEM>, and <EXERCISE>.
                 Refrain from using any additional tags.
             8) Overall Tone and Clarity:
                 Maintain a supportive and clear tone throughout your explanation.
@@ -83,11 +89,17 @@ def get_homework_prompt(solution: bool) -> str:
                 When referencing lecture material, include citation tags in the following format at the end of your response:
                 <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE>
                 (where x is the lecture number and a, b, c are the corresponding slide numbers).
-                For textbook references, use:
-                <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK>
-                (where x is the textbook number and a, b, c are the relevant page numbers).
+                For chapter references, use:
+                <CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER>
+                (where x is the chapter number and a, b, c are the relevant page numbers).
+                For chapter exercises, use:
+                <CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER>
+                (where x is the chapter number and a, b, c are the relevant exercise numbers).
+                For homework references, use:
+                <HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK>
+                (where x is the homework number and a, b, c are the problem numbers).
             7) Tag Restrictions:
-                Only use the following tags in your response: <CODE>, <LECTURE>, <SLIDE>, <TEXTBOOK>, and <PAGE>.
+                Only use the following tags in your response: <CODE>, <LECTURE>, <SLIDE>, <CHAPTER>, <PAGE>, <HOMEWORK>, <PROBLEM>, and <EXERCISE>.
                 Refrain from using any additional tags.
             8) Overall Tone and Clarity:
                 Maintain a supportive and clear tone throughout your explanation.
@@ -99,7 +111,7 @@ def get_homework_prompt(solution: bool) -> str:
     additional_system_prompt = (
         """
             Here is a really good example of an a teacher assistant helping the student understand a concept. You can use this as a reference to help guide the student to the correct answer.
-            Student: Hi, I'm struggling with this discrete math problem. Let me read it again to make sure I understand. We have n people on the left and n on the right. Each person on the left shakes hands with exactly 10 on the right, and vice versa. We need to prove there’s no subset S of the left where the size of T (the set of right-side people who shook hands with S) is smaller than S. The hint says to use contradiction and the pigeonhole principle. I'm not sure where to start.
+            Student: Hi, I'm struggling with this discrete math problem. Let me read it again to make sure I understand. We have n people on the left and n on the right. Each person on the left shakes hands with exactly 10 on the right, and vice versa. We need to prove there's no subset S of the left where the size of T (the set of right-side people who shook hands with S) is smaller than S. The hint says to use contradiction and the pigeonhole principle. I'm not sure where to start.
 
             TA: Let's break it down. First, what does the problem assume for contradiction?  
             Student: That such a set S exists where |T| < |S|. But I don't see how that leads to a contradiction.
@@ -161,12 +173,18 @@ def get_conceptual_prompt() -> str:
         - When referencing specific lectures, include the citation tags in the following format at the end of your response:  
             `<LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE>`  
             (where *x* is the lecture number and *a*, *b*, *c* are the relevant slide numbers).  
-        - For textbook references, use:  
-            `<TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK>`  
-            (where *x* is the textbook number and *a*, *b*, *c* are the corresponding page numbers).
+        - For chapter references, use:  
+            `<CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER>`  
+            (where *x* is the chapter number and *a*, *b*, *c* are the corresponding page numbers).
+        - For chapter exercises, use:
+            `<CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER>`
+            (where *x* is the chapter number and *a*, *b*, *c* are the relevant exercise numbers).
+        - For homework references, use:  
+            `<HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK>`  
+            (where *x* is the homework number and *a*, *b*, *c* are the problem numbers).
 
         6. **Tag Usage & Formatting Rules:**  
-        - Only use the following tags in your response: `<CODE>`, `<LECTURE>`, `<SLIDE>`, `<TEXTBOOK>`, and `<PAGE>`. Do not introduce any additional tags.
+        - Only use the following tags in your response: `<CODE>`, `<LECTURE>`, `<SLIDE>`, `<CHAPTER>`, `<PAGE>`, `<HOMEWORK>`, `<PROBLEM>`, and `<EXERCISE>`. Do not introduce any additional tags.
 
         7. **Overall Tone and Clarity:**  
         - Maintain a supportive, encouraging tone that fosters independent learning.  
@@ -221,12 +239,18 @@ def get_review_prompt() -> str:
         - When referencing lecture content, include citation tags in the format:  
             `<LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE>`  
             (where *x* is the lecture number and *a*, *b*, *c* are the slide numbers).  
-        - For textbook or lab materials, use:  
-            `<TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK>`  
-            (with *x* representing the textbook number and *a*, *b*, *c* the corresponding page numbers).
+        - For chapter references, use:  
+            `<CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER>`  
+            (with *x* representing the chapter number and *a*, *b*, *c* the corresponding page numbers).
+        - For chapter exercises, use:
+            `<CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER>`
+            (where *x* is the chapter number and *a*, *b*, *c* are the relevant exercise numbers).
+        - For homework references, use:  
+            `<HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK>`  
+            (where *x* is the homework number and *a*, *b*, *c* are the problem numbers).
 
         6. **Tag Usage & Formatting Rules:**  
-        - Only use the following tags in your response: `<CODE>`, `<LECTURE>`, `<SLIDE>`, `<TEXTBOOK>`, and `<PAGE>`. Refrain from using any additional tags.
+        - Only use the following tags in your response: `<CODE>`, `<LECTURE>`, `<SLIDE>`, `<CHAPTER>`, `<PAGE>`, `<HOMEWORK>`, `<PROBLEM>`, and `<EXERCISE>`. Refrain from using any additional tags.
 
         7. **Overall Tone and Clarity:**  
         - Maintain a friendly and encouraging tone that reinforces the student's understanding of the material.  
@@ -256,7 +280,7 @@ def get_review_prompt() -> str:
             "Thanks! What happens if the spindle fibers don't attach correctly to the chromosomes during metaphase?"
 
             Professor's Response:
-            "Great question! If spindle fibers fail to attach properly, chromosomes might not segregate evenly. This leads to aneuploidy—daughter cells with missing or extra chromosomes. Severe cases can trigger cell death (apoptosis) or diseases like cancer. Cells have checkpoints (like the metaphase checkpoint) to catch errors, but they’re not foolproof. That's why mutations in checkpoint proteins are linked to many cancers."
+            "Great question! If spindle fibers fail to attach properly, chromosomes might not segregate evenly. This leads to aneuploidy—daughter cells with missing or extra chromosomes. Severe cases can trigger cell death (apoptosis) or diseases like cancer. Cells have checkpoints (like the metaphase checkpoint) to catch errors, but they're not foolproof. That's why mutations in checkpoint proteins are linked to many cancers."
 
             Let me know if you want to dive deeper—happy to share notes or diagrams!"
         """
@@ -288,12 +312,18 @@ def get_summary_prompt() -> str:
         - When referencing specific lecture content, append citation tags in the following format:  
             `<LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE>`  
             (where *x* is the lecture number and *a*, *b*, *c* are the slide numbers).  
-        - For textbook or lab references, use:  
-            `<TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK>`  
-            (with *x* representing the textbook number and *a*, *b*, *c* the corresponding page numbers).
+        - For chapter references, use:  
+            `<CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER>`  
+            (with *x* representing the chapter number and *a*, *b*, *c* the corresponding page numbers).
+        - For chapter exercises, use:
+            `<CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER>`
+            (where *x* is the chapter number and *a*, *b*, *c* are the relevant exercise numbers).
+        - For homework references, use:  
+            `<HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK>`  
+            (where *x* is the homework number and *a*, *b*, *c* are the problem numbers).
 
         5. **Tag Usage & Formatting Rules:**  
-        - Only use the following tags: `<CODE>`, `<LECTURE>`, `<SLIDE>`, `<TEXTBOOK>`, and `<PAGE>`. No additional tags should be used.
+        - Only use the following tags: `<CODE>`, `<LECTURE>`, `<SLIDE>`, `<CHAPTER>`, `<PAGE>`, `<HOMEWORK>`, `<PROBLEM>`, and `<EXERCISE>`. No additional tags should be used.
 
         6. **Tone:**  
         - Keep the response straightforward and objective, focusing solely on summarizing the content without engaging in a conversational manner.

@@ -27,7 +27,6 @@ import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
 
 type ExerciseViewerProps = {
     classId: string;
-    textbookId: string;
     chapterId: string;
     initialExerciseId?: string;
     embedded?: boolean;
@@ -101,7 +100,6 @@ function DescriptionSkeleton() {
 export default function ExerciseViewer({ 
     classId, 
     chapterId,
-    textbookId,
     initialExerciseId,
     embedded = false 
 }: ExerciseViewerProps) {
@@ -151,10 +149,10 @@ export default function ExerciseViewer({
 
     const getActiveImage = (exerciseId: string | null) => {
         if (!exerciseId) return "/placeholder_image.svg";
-        const document = documents?.find(doc => doc.exercise === exerciseId);
+        const document = documents?.find(doc => doc.exercises.includes(exerciseId));
         if (!document) return "/placeholder_image.svg";
 
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.textbook}/${exerciseId}/${document.id}.png`;
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.textbook}/${exerciseId}.png`;
     };
 
     const sortExercises = (exercises: Exercise[]) => {
@@ -422,7 +420,6 @@ export default function ExerciseViewer({
             // Document must be for the same exercise
             doc.exercise === activeExerciseId && 
             // Document must be from the same textbook
-            doc.textbook === textbookId &&
             // Document must have a page number
             doc.page &&
             currentExercise?.start_page &&
@@ -558,20 +555,25 @@ export default function ExerciseViewer({
 
     // Add these useEffect hooks:
     useEffect(() => {
-        // Set initial active exercise based on URL exercise parameter
+        // Set initial active exercise based on initialExerciseId prop or URL exercise parameter
         if (exercises && exercises.length > 0 && !activeExerciseId) {
-            if (exerciseNumber) {
+            if (initialExerciseId) {
+                // First try to find the exact exercise by ID
+                setActiveExerciseId(initialExerciseId);
+            } else if (exerciseNumber) {
+                // If no initialExerciseId but URL has exercise number
                 const matchingEx = exercises.find(ex => ex.exercise_number === parseInt(exerciseNumber));
                 if (matchingEx) {
                     setActiveExerciseId(matchingEx.id);
                 } else {
-                    setActiveExerciseId(exercises[0].id);
+                    setActiveExerciseId(sortExercises(exercises)[0].id);
                 }
             } else {
-                setActiveExerciseId(exercises[0].id);
+                // Default to first exercise
+                setActiveExerciseId(sortExercises(exercises)[0].id);
             }
         }
-    }, [exercises, activeExerciseId, exerciseNumber]);
+    }, [exercises, activeExerciseId, exerciseNumber, initialExerciseId]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {

@@ -1,4 +1,4 @@
-import { Chapter, Document, ViewerMode } from "@/types";
+import { Chapter, Document, Exercise, Homework, Lecture, Textbook, ViewerMode } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 
 // Filter out code blocks from text but preserve text content
@@ -63,36 +63,71 @@ export const filterTripleBacktickCodeBlocks = (text: string): string => {
 };
 
 // Split text by document references and preserve formatting
-export const splitTextByDocuments = (text: string): { text: string; documentId: string | null }[] => {
+export const splitTextByDocuments = (text: string): { text: string; documentId: string | null; exerciseId: string | null; documentType: 'lecture' | 'chapter' | 'chapter_exercise' | 'homework_problem' | null }[] => {
     if (!text) return [];
 
-    const documentTags: string[] = [];
+    const documentTags: Array<{id: string, type: 'lecture' | 'chapter'}> = [];
+    const exerciseTags: Array<{id: string, type: 'chapter_exercise' | 'homework_problem'}> = [];
     let cleanedText = text;
 
-    // First extract all document tags and store them
-    const documentRegex = /<DOCUMENT>([^<]+)<\/DOCUMENT>/g;
-    let match;
-    while ((match = documentRegex.exec(text)) !== null) {
-        documentTags.push(match[1]);
-        // Replace the document tag with a placeholder to preserve formatting
-        cleanedText = cleanedText.replace(match[0], '');
-    }
+    // Extract all document tags and store them with their types
+    const documentPatterns = [
+        { regex: /<DOCUMENT_LECTURE>([^<]+)<\/DOCUMENT_LECTURE>/g, type: 'lecture' },
+        { regex: /<DOCUMENT_CHAPTER>([^<]+)<\/DOCUMENT_CHAPTER>/g, type: 'chapter' },
+    ];
 
-    const result: { text: string; documentId: string | null }[] = [];
+    const exercisePatterns = [
+        { regex: /<EXERCISE_CHAPTER>([^<]+)<\/EXERCISE_CHAPTER>/g, type: 'chapter_exercise' },
+        { regex: /<PROBLEM_HOMEWORK>([^<]+)<\/PROBLEM_HOMEWORK>/g, type: 'homework_problem' }
+    ];
+
+    documentPatterns.forEach(pattern => {
+        let match;
+        while ((match = pattern.regex.exec(text)) !== null) {
+            documentTags.push({ id: match[1], type: pattern.type as 'lecture' | 'chapter' });
+            // Replace the document tag with empty string to preserve formatting
+            cleanedText = cleanedText.replace(match[0], '');
+        }
+    });
+
+    exercisePatterns.forEach(pattern => {
+        let match;
+        while ((match = pattern.regex.exec(text)) !== null) {
+            exerciseTags.push({ id: match[1], type: pattern.type as 'chapter_exercise' | 'homework_problem' });
+            // Replace the exercise tag with empty string to preserve formatting
+            cleanedText = cleanedText.replace(match[0], '');
+        }
+    });
+
+    const result: { text: string; documentId: string | null; exerciseId: string | null; documentType: 'lecture' | 'chapter' | 'chapter_exercise' | 'homework_problem' | null }[] = [];
     
     // Add the main text if it exists (with preserved formatting)
     if (cleanedText.trim()) {
         result.push({
             text: cleanedText.trim(),
-            documentId: null
+            documentId: null,
+            exerciseId: null,
+            documentType: null
         });
     }
 
     // Add all document references at the end
-    documentTags.forEach(docId => {
+    documentTags.forEach(doc => {
         result.push({
             text: '',
-            documentId: docId
+            documentId: doc.id,
+            exerciseId: null,
+            documentType: doc.type
+        });
+    });
+
+    // Add all exercise references at the end
+    exerciseTags.forEach(exercise => {
+        result.push({
+            text: '',
+            documentId: null,
+            exerciseId: exercise.id,
+            documentType: exercise.type
         });
     });
 
@@ -153,102 +188,116 @@ export const splitTextByFigures = (text: string): { text: string; figureId: stri
     return result;
 };
 
-// Group consecutive document references at the end
+// Group consecutive document references together
 export const groupConsecutiveDocuments = (
-    segments: { text: string; documentId: string | null }[], 
-    allDocuments: Document[]
-): { text: string; documents: Document[] }[] => {
-    const result: { text: string; documents: Document[] }[] = [];
-    const documents: Document[] = [];
+    segments: { text: string; documentId: string | null; exerciseId: string | null; documentType: string | null }[],
+    lectureDocuments: Document[],
+    chapterDocuments: Document[],
+    chapterExercises: Exercise[],
+    homeworkExercises: Exercise[]
+): { text: string; documents: Document[], exercises: Exercise[] }[] => {
+    const result: { text: string; documents: Document[], exercises: Exercise[] }[] = [];
+    let currentGroup: { text: string; documents: Document[], exercises: Exercise[] } | null = null;
 
-    // First add all text segments
     segments.forEach(segment => {
-        if (!segment.documentId && segment.text) {
-            result.push({
-                text: segment.text,
-                documents: []
-            });
-        } else if (segment.documentId) {
-            const doc = allDocuments.find(d => d.id === segment.documentId);
-            if (doc) {
-                documents.push(doc);
+        if (segment.documentId && segment.documentType === 'lecture') {
+            // This is a document reference
+            const document = lectureDocuments.find(doc => doc.id === segment.documentId);
+            
+            if (!currentGroup || currentGroup.text) {
+                // Start a new group if we don't have one or if the current group has text
+                currentGroup = { text: '', documents: [], exercises: [] };
+                result.push(currentGroup);
             }
+            
+            if (document) {
+                currentGroup.documents.push(document);
+            }
+        } else if (segment.documentId && segment.documentType === 'chapter') {
+            // This is a chapter reference
+            const document = chapterDocuments.find(doc => doc.id === segment.documentId);
+            
+            if (!currentGroup || currentGroup.text) {
+                // Start a new group if we don't have one or if the current group has text
+                currentGroup = { text: '', documents: [], exercises: [] };
+                result.push(currentGroup);
+            }
+            
+            if (document) {
+                currentGroup.documents.push(document);
+            }
+        } else if (segment.exerciseId && segment.documentType === 'chapter_exercise') {
+            // This is a chapter exercise reference
+            const exercise = chapterExercises.find(ex => ex.id === segment.exerciseId);
+            
+            if (!currentGroup || currentGroup.text) {
+                // Start a new group if we don't have one or if the current group has text
+                currentGroup = { text: '', documents: [], exercises: [] };
+                result.push(currentGroup);
+            }
+            
+            if (exercise) {
+                currentGroup.exercises.push(exercise);
+            }
+        } else if (segment.exerciseId && segment.documentType === 'homework_problem') {
+            // This is a homework problem reference
+            const exercise = homeworkExercises.find(ex => ex.id === segment.exerciseId);
+            
+            if (!currentGroup || currentGroup.text) {
+                // Start a new group if we don't have one or if the current group has text
+                currentGroup = { text: '', documents: [], exercises: [] };
+                result.push(currentGroup);
+            }
+            
+            if (exercise) {
+                currentGroup.exercises.push(exercise);
+            }
+        } else if (segment.text) {
+            // This is text content
+            currentGroup = { text: segment.text, documents: [], exercises: [] };
+            result.push(currentGroup);
         }
     });
-
-    // Then add all documents as a single group at the end if there are any
-    if (documents.length > 0) {
-        result.push({
-            text: '',
-            documents: documents
-        });
-    }
 
     return result;
 };
 
-// Get document label for display
-export const getDocumentLabel = (
-    doc: Document, 
-    lectures: any[], 
-    textbooks: any[]
-): string => {
-    if (doc.lecture) {
-        const lecture = lectures?.find(l => l.id === doc.lecture);
-        return `${lecture?.name ?? 'Lecture'} p.${doc.page}`;
-    } else if (doc.textbook) {
-        const textbook = textbooks?.find(t => t.id === doc.textbook);
-        return `${textbook?.title ?? 'Textbook'} p.${doc.page}`;
-    }
-    return 'Document Reference';
-};
-
-// Handle document click
+// Handle document click with support for different document types
 export const handleDocumentClick = (
-    doc: Document, 
-    chapters: Chapter[], 
-    type: 'lecture' | 'chapter' | 'exercise' | 'homework',
-    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
+    contextType: 'lectures' | 'chapters' | 'homeworks',
+    contextId: string,
+    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>,
+    documentId?: string,
+    textbookId?: string,
+    exerciseId?: string,
 ) => {
-    if (type === 'lecture' && doc.lecture) {
+    // For lectures
+    if (contextType === 'lectures' && documentId) {
         setViewerMode({
             active: true,
-            documentId: doc.id,
-            lectureId: doc.lecture,
+            documentId: documentId,
+            lectureId: contextId,
         });
-    } else if (type === 'chapter' && doc.textbook) {
-        const chapter = chapters?.find(c =>
-            doc.page >= c.start_page &&
-            doc.page <= c.end_page &&
-            c.textbook === doc.textbook
-        );
-        if (chapter) {
-            setViewerMode({
-                active: true,
-                documentId: doc.id,
-                textbookId: doc.textbook,
-                chapterId: chapter.id,
-            });
-        }
-    } else if (type === 'homework' && doc.homeworks) {
+    }
+    // For chapters
+    else if (contextType === 'chapters' && documentId && textbookId) {
         setViewerMode({
             active: true,
-            documentId: doc.id,
-            homeworkId: doc.homeworks[0],
-            exerciseId: doc.exercises[0] ?? undefined,
+            documentId: documentId,
+            textbookId: textbookId,
+            chapterId: contextId,
         });
-    } else if (type === 'exercise' && doc.exercise) {
-        const chapter = chapters?.find(c => doc.chapter === c.id);
-        if (chapter) {
-            setViewerMode({
-                active: true,
-                documentId: doc.id,
-                textbookId: doc.textbook ?? undefined,
-                chapterId: chapter.id,
-                exerciseId: doc.exercise,
-            });
-        }
-    } else {
-        throw new Error('Invalid document type');
+    } else if (contextType === 'chapters' && exerciseId) {
+        setViewerMode({
+            active: true,
+            chapterId: contextId,
+            exerciseId: exerciseId,
+        });
+    } else if (contextType === 'homeworks' && exerciseId) {
+        setViewerMode({
+            active: true,
+            homeworkId: contextId,
+            exerciseId: exerciseId,
+        });
     }
 };

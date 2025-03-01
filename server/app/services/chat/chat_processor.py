@@ -12,7 +12,10 @@ class ChatMessage(TypedDict):
     id: str
     question: str
     response: str
-    references: List[str]
+    lecture_references: List[str]
+    chapter_references: List[str]
+    chapter_exercise_references: List[str]
+    homework_exercise_references: List[str]
     figures: List[str]
 
 
@@ -60,9 +63,6 @@ class ChatProcessor(BaseProcessor):
     async def process_message(
         self,
         complete_context: str,
-        all_lectures: List[Dict[str, Any]],
-        all_textbooks: List[Dict[str, Any]],
-        all_documents: List[Dict[str, Any]],
         output_rules: str,
         stream_callback: Optional[Callable[[str], Awaitable[None]]] = None
     ) -> AsyncGenerator[str, None]:
@@ -98,10 +98,11 @@ class ChatProcessor(BaseProcessor):
                 f"{output_rules}\n\n"
                 "Only if you find it useful, or the student asks use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
                 "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. "
-                "Moreover, if you use the textbook, use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags, where x is the textbook number and a, b, c are the page numbers. "
+                "Moreover, if you use the content from the chapter, use <CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER> tags, where x is the chapter number and a, b, c are the page numbers. If you cite any exercises from the chapter, use <CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER> tags, where x is the chapter number and a, b, c are the exercise numbers."
+                "Lastly, if you use the homework, use <HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK> tags, where x is the homework number and a, b, c are the problem numbers. "
                 "Put this at the end of your response. Do not include periods after your citations, add it before the tags.\n\n"
-                f"**Student:** {self.current_question}\n"
-                "**You (AI):** "
+                f"Student: {self.current_question}\n"
+                "You (AI): "
             )
 
             # save input prompt to .txt file in uploads folder
@@ -131,12 +132,22 @@ class ChatProcessor(BaseProcessor):
         self,
         result: str,
         all_lectures: List[Dict[str, Any]],
-        all_textbooks: List[Dict[str, Any]],
-        all_documents: List[Dict[str, Any]],
+        all_chapters: List[Dict[str, Any]],
+        all_homeworks: List[Dict[str, Any]],
+        all_lecture_documents: List[Dict[str, Any]],
+        all_chapter_documents: List[Dict[str, Any]],
+        all_chapter_exercises: List[Dict[str, Any]],
+        all_homework_exercises: List[Dict[str, Any]],
     ) -> ChatMessage:
         """Clean chat results and extract document references and code blocks from tags."""
-        document_ids = []
+        lecture_document_ids = []
+        chapter_document_ids = []
+        chapter_exercise_ids = []
+        homework_exercise_ids = []
         figure_ids = []
+        lecture_ids = []
+        chapter_ids = []
+        homework_ids = []
 
         # Convert markdown-style code blocks (both with and without python tag) to CODE tags
         result = re.sub(
@@ -163,52 +174,102 @@ class ChatProcessor(BaseProcessor):
                 result = result.replace(code_match.group(0), '')
 
         # Process lectures and insert document tags
-        lecture_matches = re.finditer(r'<LECTURE ([^>]+)>((?:<SLIDE \d+>)+)</LECTURE>', result)
-        for lecture_match in lecture_matches:
+        lecture_matches = list(re.finditer(r'<LECTURE ([^>]+)>((?:<SLIDE \d+>)+)</LECTURE>', result))
+        for lecture_match in reversed(lecture_matches):
             lecture_number = lecture_match.group(1)
             slide_nums = [int(num) for num in re.findall(r'<SLIDE (\d+)>', lecture_match.group(2))]
             lecture_id = next((lecture['id'] for lecture in all_lectures if lecture['note_number'] == int(lecture_number)), None)
             
-            # Find matching documents
-            matching_docs = [
-                doc['id'] for doc in all_documents
-                if doc.get('page') in slide_nums 
-                and doc.get('lecture') == lecture_id
-            ]
-            document_ids.extend(matching_docs)
-            
-            # Replace the lecture tag with document tags
-            document_tags = ''.join([f'<DOCUMENT>{doc_id}</DOCUMENT>' for doc_id in matching_docs])
-            result = result.replace(lecture_match.group(0), document_tags)
+            if lecture_id:
+                lecture_ids.append(lecture_id)
+                
+                # Find matching documents
+                matching_docs = [
+                    doc['id'] for doc in all_lecture_documents
+                    if doc.get('page') in slide_nums 
+                    and doc.get('lecture') == lecture_id
+                ]
+                lecture_document_ids.extend(matching_docs)
+                
+                # Replace the lecture tag with document tags
+                document_tags = ''.join([f'<DOCUMENT_LECTURE>{doc_id}</DOCUMENT_LECTURE>' for doc_id in matching_docs])
+                
+                # Replace only this specific match using string slicing
+                start, end = lecture_match.span()
+                result = result[:start] + document_tags + result[end:]
 
-        # Process textbooks and insert document tags
-        textbook_matches = re.finditer(r'<TEXTBOOK ([^>]+)>((?:<PAGE \d+>)+)</TEXTBOOK>', result)
-        for textbook_match in textbook_matches:
-            textbook_number = textbook_match.group(1)
-            page_nums = [int(num) for num in re.findall(r'<PAGE (\d+)>', textbook_match.group(2))]
-            textbook_id = next((textbook['id'] for textbook in all_textbooks if textbook['textbook_number'] == int(textbook_number)), None)
+        # Process chapters and insert document tags
+        chapter_matches = list(re.finditer(r'<CHAPTER ([^>]+)>((?:<PAGE \d+>|<EXERCISE \d+>)+)</CHAPTER>', result))
+        for chapter_match in reversed(chapter_matches):
+            chapter_number = chapter_match.group(1)
+            page_nums = [int(num) for num in re.findall(r'<PAGE (\d+)>', chapter_match.group(2))]
+            exercise_nums = [int(num) for num in re.findall(r'<EXERCISE (\d+)>', chapter_match.group(2))]
+            chapter_id = next((chapter['id'] for chapter in all_chapters if chapter['chapter_number'] == int(chapter_number)), None)
             
-            # Find matching documents
-            matching_docs = [
-                doc['id'] for doc in all_documents
-                if doc.get('page') in page_nums 
-                and doc.get('textbook') == textbook_id
-            ]
-            document_ids.extend(matching_docs)
-            
-            # Replace the textbook tag with document tags
-            document_tags = ''.join([f'<DOCUMENT>{doc_id}</DOCUMENT>' for doc_id in matching_docs])
-            result = result.replace(textbook_match.group(0), document_tags)
+            if chapter_id:
+                chapter_ids.append(chapter_id)
+                
+                # Find matching documents for pages
+                matching_docs = [
+                    doc['id'] for doc in all_chapter_documents
+                    if doc.get('page') in page_nums 
+                    and doc.get('chapter') == chapter_id
+                ]
+                chapter_document_ids.extend(matching_docs)
+                
+                # Find matching exercises
+                matching_exercises = [
+                    exercise['id'] for exercise in all_chapter_exercises
+                    if exercise.get('exercise_number') in exercise_nums
+                    and exercise.get('chapter') == chapter_id
+                ]
+                chapter_exercise_ids.extend(matching_exercises)
+                
+                # Replace the chapter tag with document and exercise tags
+                document_tags = ''.join([f'<DOCUMENT_CHAPTER>{doc_id}</DOCUMENT_CHAPTER>' for doc_id in matching_docs])
+                exercise_tags = ''.join([f'<EXERCISE_CHAPTER>{exercise_id}</EXERCISE_CHAPTER>' for exercise_id in matching_exercises])
+                
+                # Replace only this specific match using string slicing
+                start, end = chapter_match.span()
+                result = result[:start] + document_tags + exercise_tags + result[end:]
         
-        # Remove any remaining lecture/textbook related tags
-        cleaned_result = re.sub(r'<(LECTURE|TEXTBOOK|SLIDE|PAGE)[^>]*>', '', result)
-        cleaned_result = re.sub(r'</(LECTURE|TEXTBOOK)>', '', cleaned_result)
+        # Process homework and insert document tags
+        homework_matches = list(re.finditer(r'<HOMEWORK ([^>]+)>((?:<PROBLEM \d+>)+)</HOMEWORK>', result))
+        for i, homework_match in enumerate(reversed(homework_matches)):
+            homework_number = homework_match.group(1)
+            problem_nums = [int(num) for num in re.findall(r'<PROBLEM (\d+)>', homework_match.group(2))]
+            homework_id = next((homework['id'] for homework in all_homeworks if homework['homework_number'] == int(homework_number)), None)
+            
+            if homework_id:
+                homework_ids.append(homework_id)
+                
+                # Find matching documents
+                matching_exercises = [
+                    doc['id'] for doc in all_homework_exercises
+                    if doc.get('problem_number') in problem_nums 
+                    and doc.get('homework') == homework_id
+                ]
+                homework_exercise_ids.extend(matching_exercises)
+                
+                # Replace the specific homework tag with exercise tags
+                exercise_tags = ''.join([f'<PROBLEM_HOMEWORK>{exercise_id}</PROBLEM_HOMEWORK>' for exercise_id in matching_exercises])
+                
+                # Replace only this specific match using string slicing
+                start, end = homework_match.span()
+                result = result[:start] + exercise_tags + result[end:]
+        
+        # Remove any remaining tags
+        cleaned_result = re.sub(r'<(LECTURE|CHAPTER|HOMEWORK|SLIDE|PAGE|PROBLEM)(\s[^>]*)?>', '', result)
+        cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK)>', '', cleaned_result)
         
         return ChatMessage(
             id=self.message_id,
             question=self.current_question,
             response=cleaned_result.strip(),
-            references=list(set(document_ids)),
+            lecture_references=list(set(lecture_ids)),
+            chapter_references=list(set(chapter_ids)),
+            chapter_exercise_references=list(set(chapter_exercise_ids)),
+            homework_exercise_references=list(set(homework_exercise_ids)),
             figures=figure_ids
         )
 

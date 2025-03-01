@@ -7,6 +7,7 @@ from typing import Dict, List, Any, Union, Optional, Callable, Awaitable, AsyncG
 from pydantic import BaseModel
 from app.extensions import supabase
 from app.services.chat.chat_processor import ChatProcessor, ChatMessage
+from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content
 import json
 import re
 
@@ -15,88 +16,6 @@ router = APIRouter()
 class ChatRequest(BaseModel):
     chat_id: str
     message_id: str
-
-async def fetch_document_resources(supabase, current_message):
-    """
-    Fetch all resources (lectures, chapters, textbooks, homeworks, exercises) 
-    related to the current message's documents.
-    
-    Returns a dictionary containing all the fetched resources.
-    """
-    # Get documents for the current message
-    document_ids = current_message.get('documents', [])
-    current_documents_response = supabase.table("documents").select("*").in_("id", document_ids).order("page", desc=False).execute()
-    current_documents = current_documents_response.data or []
-    
-    # Extract IDs for related resources
-    lecture_ids = list(set([doc.get('lecture') for doc in current_documents if doc.get('lecture') is not None])) or []
-    chapter_ids = list(set([doc.get('chapter') for doc in current_documents if doc.get('chapter') is not None])) or []
-    textbook_ids = list(set([doc.get('textbook') for doc in current_documents if doc.get('textbook') is not None])) or []
-    
-    # Extract homework and exercise IDs from the new fields
-    homework_ids = []
-    exercise_ids = []
-    
-    for doc in current_documents:
-        # Get homeworks from the homeworks array field
-        if doc.get('homeworks') and isinstance(doc.get('homeworks'), list):
-            homework_ids.extend([hw_id for hw_id in doc.get('homeworks') if hw_id is not None])
-        
-        # Get exercises from the exercises array field
-        if doc.get('exercises') and isinstance(doc.get('exercises'), list):
-            exercise_ids.extend([ex_id for ex_id in doc.get('exercises') if ex_id is not None])
-    
-    # Remove duplicates
-    homework_ids = list(set(homework_ids)) or []
-    exercise_ids = list(set(exercise_ids)) or []
-    
-    # Fetch all related resources
-    all_lectures = []
-    if lecture_ids:
-        lectures_response = supabase.table("lectures").select("*").in_("id", lecture_ids).order("note_number", desc=False).execute()
-        all_lectures = lectures_response.data or []
-    
-    all_chapters = []
-    if chapter_ids:
-        chapters_response = supabase.table("chapters").select("*").in_("id", chapter_ids).order("chapter_number", desc=False).execute()
-        all_chapters = chapters_response.data or []
-    
-    all_textbooks = []
-    if textbook_ids:
-        textbooks_response = supabase.table("textbooks").select("*").in_("id", textbook_ids).order("textbook_number", desc=False).execute()
-        all_textbooks = textbooks_response.data or []
-    
-    all_homeworks = []
-    if homework_ids:
-        homeworks_response = supabase.table("homeworks").select("*").in_("id", homework_ids).order("homework_number", desc=False).execute()
-        all_homeworks = homeworks_response.data or []
-    
-    all_exercises = []
-    if exercise_ids:
-        exercises_response = supabase.table("exercises").select("*").in_("id", exercise_ids).execute()
-        all_exercises = exercises_response.data or []
-    
-    # Also get exercises related to chapters for completeness
-    if chapter_ids:
-        chapter_exercises_response = supabase.table("exercises").select("*").in_("chapter", chapter_ids).execute()
-        chapter_exercises = chapter_exercises_response.data or []
-        
-        # Use a set to track exercise IDs we've already added to avoid duplicates
-        seen_exercise_ids = set(ex.get('id') for ex in all_exercises)
-        
-        for exercise in chapter_exercises:
-            if exercise.get('id') not in seen_exercise_ids:
-                seen_exercise_ids.add(exercise.get('id'))
-                all_exercises.append(exercise)
-    
-    return {
-        "documents": current_documents,
-        "lectures": all_lectures,
-        "chapters": all_chapters,
-        "textbooks": all_textbooks,
-        "homeworks": all_homeworks,
-        "exercises": all_exercises
-    }
 
 @router.post('/chat')
 async def handle_message(request: ChatRequest):
@@ -113,11 +32,11 @@ async def handle_message(request: ChatRequest):
             "last_generation_attempt": datetime.now().isoformat()
         }).eq("id", message_id).execute()
 
+        # Get chat and class info
         chat_response = supabase.table("chats").select("*").eq("id", chat_id).single().execute()
         chat = chat_response.data
         class_id = chat.get('class')
 
-        # Get class info
         class_response = supabase.table("classes").select(
             "title, course_description"
         ).eq("id", class_id).single().execute()
@@ -130,94 +49,46 @@ async def handle_message(request: ChatRequest):
         messages_response = supabase.table("messages").select("*").order("created_at", desc=False).eq("chat", chat_id).execute()
         messages = messages_response.data
 
-        # Get the first message (the one we need to process)
+        # Get the current message and format past messages for context
         current_message = next((msg for msg in messages if msg['id'] == message_id), None)
-        
-        # Format past messages for context
         past_messages = [(msg['id'], msg['bare_question'], msg.get('bare_response', '')) for msg in messages if msg['id'] != message_id]
 
-        # Fetch all resources related to the current message
-        resources = await fetch_document_resources(supabase, current_message)
+        # Get resource IDs from the message
+        lecture_ids = current_message.get('lectures', []) or []
+        chapter_ids = current_message.get('chapters', []) or []
+        homework_ids = current_message.get('homeworks', []) or []
+
+        # Fetch resources and their documents
+        lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
+        chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
+        homework_resources = await fetch_homework_resources(supabase, homework_ids)
         
-        current_documents = resources["documents"]
-        all_lectures = resources["lectures"]
-        all_chapters = resources["chapters"]
-        all_textbooks = resources["textbooks"]
-        all_homeworks = resources["homeworks"]
-        all_exercises = resources["exercises"]
+        # Extract the individual components
+        all_lectures = lecture_resources.get('lectures', [])
+        all_chapters = chapter_resources.get('chapters', [])
+        all_homeworks = homework_resources.get('homeworks', [])
+        
+        # Get documents for each resource type
+        all_lecture_documents = lecture_resources.get('documents', [])
+        all_chapter_documents = chapter_resources.get('documents', [])
+        all_chapter_exercises = chapter_resources.get('exercises', [])
+        all_homework_exercises = homework_resources.get('exercises', [])
 
-        # Sort documents by lecture number and page number
-        current_documents = sorted(current_documents, 
-            key=lambda doc: (
-                next((l.get('note_number') for l in all_lectures if l.get('id') == doc.get('lecture')), float('inf')),
-                doc.get('page', float('inf'))
-            ) if doc.get('lecture') is not None else (float('inf'), float('inf'))
-        )
-
-        # Format the context for the current message
+        # Generate textual content for context
+        lecture_content = await fetch_lecture_content(supabase, lecture_ids)
+        chapter_content = await fetch_chapter_content(supabase, chapter_ids)
+        homework_content = await fetch_homework_content(supabase, homework_ids)
+        
+        # Combine all content for context
         message_context = []
-        for doc in current_documents:
-            content = ""
-            
-            # Start with document type and number
-            if doc.get('lecture') is not None:
-                lecture_number = next((l.get('note_number') for l in all_lectures if l.get('id') == doc.get('lecture')), None)
-                content = f"\nLECTURE NUMBER: {lecture_number} SLIDE: {doc.get('page')}\n"
-            elif doc.get('textbook') is not None:
-                textbook_number = next((t.get('textbook_number') for t in all_textbooks if t.get('id') == doc.get('textbook')), None)
-                content = f"\nTEXTBOOK NUMBER: {textbook_number} PAGE: {doc.get('page')}\n"
-                
-                # Add chapter info if available
-                if (doc.get('chapter') is not None):
-                    chapter_name = next((str(c.get('chapter_number')) + ": " + c.get('title') for c in all_chapters if c.get('id') == doc.get('chapter')), None)
-                    content += f"CHAPTER {chapter_name}\n"
-            
-            # Add main content and description for the document
-            if doc.get('text') is not None and doc.get('text') != "":
-                content += f"\nContent: {doc.get('text')}\n"
-            if doc.get('description') is not None and doc.get('description') != "":
-                content += f"\nDescription: {doc.get('description')}\n"
-            
-            # Add homework info separately
-            if doc.get('homeworks') and isinstance(doc.get('homeworks'), list):
-                for hw_id in doc.get('homeworks'):
-                    homework = next((h for h in all_homeworks if h.get('id') == hw_id), None)
-                    if homework:
-                        hw_content = f"\n{homework.get('title')}"
-                        # Only add additional info if it exists and isn't empty
-                        additional_info = homework.get('additional_info', '').replace('\n', ' ').strip()
-                        if additional_info:
-                            hw_content += f", WITH INFO: {additional_info}"
-                        hw_content += "\n"
-                        message_context.append(hw_content)
-            
-            # Add exercise info separately
-            if doc.get('exercises') and isinstance(doc.get('exercises'), list):
-                for ex_id in doc.get('exercises'):
-                    exercise = next((e for e in all_exercises if e.get('id') == ex_id), None)
-                    if exercise:
-                        ex_content = f"\nEXERCISE: {exercise.get('title')}"
-                        
-                        # Add textbook reference if available
-                        exercise_chapter = next((c for c in all_chapters if c.get('id') == exercise.get('chapter')), None)
-                        if exercise_chapter:
-                            exercise_textbook_id = exercise_chapter.get('textbook')
-                            exercise_textbook_number = next((t.get('textbook_number') for t in all_textbooks if t.get('id') == exercise_textbook_id), None)
-                            if exercise_textbook_number:
-                                ex_content += f" (FROM TEXTBOOK {exercise_textbook_number})"
-                        
-                        ex_content += "\n"
-                        
-                        # Add description if available
-                        if exercise.get('description'):
-                            ex_content += f"Description: {exercise.get('description')}\n"
-                        
-                        message_context.append(ex_content)
-            
-            # Add the main document content to the context
-            if content.strip():
-                message_context.append(content)
+        if lecture_content:
+            message_context.append(lecture_content)
+        if chapter_content:
+            message_context.append(chapter_content)
+        if homework_content:
+            message_context.append(homework_content)
 
+        # Initialize processor and response
         processor = ChatProcessor(
             prompt_type=chat['type'],
             course_title=class_title,
@@ -240,26 +111,29 @@ async def handle_message(request: ChatRequest):
                 last_open_tag = text.rfind('<')
                 if last_open_tag > last_complete_tag:
                     text = text[:last_open_tag]
-
             
             # Remove any malformed closing tags without matching opening tags
-            text = re.sub(r'</(?:SLIDE|LECTURE|TEXTBOOK|PAGE)>', '', text)
-
+            text = re.sub(r'</(?:SLIDE|LECTURE|CHAPTER|PAGE|PROBLEM|HOMEWORK|EXERCISE)>', '', text)
             
             # Remove any malformed opening tags without matching closing tags
             tag_patterns = {
                 'LECTURE': r'<LECTURE ([^>]+)>(?!(?:.*?</LECTURE>))',
-                'TEXTBOOK': r'<TEXTBOOK ([^>]+)>(?!(?:.*?</TEXTBOOK>))',
+                'CHAPTER': r'<CHAPTER ([^>]+)>(?!(?:.*?</CHAPTER>))',
+                'HOMEWORK': r'<HOMEWORK ([^>]+)>(?!(?:.*?</HOMEWORK>))',
                 'SLIDE': r'<SLIDE ([^>]+)>(?!(?:.*?</SLIDE>))',
                 'PAGE': r'<PAGE ([^>]+)>(?!(?:.*?</PAGE>))',
+                'PROBLEM': r'<PROBLEM ([^>]+)>(?!(?:.*?</PROBLEM>))',
+                'EXERCISE': r'<EXERCISE ([^>]+)>(?!(?:.*?</EXERCISE>))',
             }
             
             for pattern in tag_patterns.values():
                 text = re.sub(pattern, '', text)
             
             # Remove any remaining valid tags
-            cleaned_result = re.sub(r'<(LECTURE|TEXTBOOK|SLIDE|PAGE)[^>]*>', '', text)
-            cleaned_result = re.sub(r'</(LECTURE|TEXTBOOK|SLIDE|PAGE)>', '', cleaned_result)
+            cleaned_result = re.sub(r'<(LECTURE|CHAPTER|HOMEWORK|SLIDE|PAGE|PROBLEM|EXERCISE)[^>]*>', '', text)
+            cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK)>', '', cleaned_result)
+            cleaned_result = re.sub(r'<(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK)>[^<]+</(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK)>', '', cleaned_result)
+            cleaned_result = re.sub(r'<PROBLEM_HOMEWORK>[^<]+</PROBLEM_HOMEWORK>', '', cleaned_result)
 
             return cleaned_result.strip()
 
@@ -282,9 +156,6 @@ async def handle_message(request: ChatRequest):
         try:
             async for _ in processor.process_message(
                 complete_context="\n".join(message_context),
-                all_lectures=all_lectures,
-                all_textbooks=all_textbooks,
-                all_documents=current_documents,
                 output_rules=output_rules,
                 stream_callback=update_callback
             ):
@@ -293,15 +164,23 @@ async def handle_message(request: ChatRequest):
             # Clean the response and extract document references
             cleaned_result = processor.clean_result(
                 total_response,
-                all_lectures,
-                all_textbooks,
-                current_documents
+                all_lectures=all_lectures,
+                all_chapters=all_chapters,
+                all_homeworks=all_homeworks,
+                all_lecture_documents=all_lecture_documents,
+                all_chapter_documents=all_chapter_documents,
+                all_chapter_exercises=all_chapter_exercises,
+                all_homework_exercises=all_homework_exercises,
             )
+            
             # Final update to the message in Supabase
             supabase.table("messages").update({
                 "bare_response": total_response,
-                "response": cleaned_result['response'],
-                "references": cleaned_result['references'],
+                "response": cleaned_result["response"],
+                "lecture_references": cleaned_result["lecture_references"],
+                "chapter_references": cleaned_result["chapter_references"],
+                "chapter_exercise_references": cleaned_result["chapter_exercise_references"],
+                "homework_exercise_references": cleaned_result["homework_exercise_references"],
                 "generation_status": "complete",
                 "generation_error": ""
             }).eq("id", message_id).execute()
@@ -370,9 +249,3 @@ async def fetch_output_rules(supabase, class_id):
         print(f"Error fetching output rules: {str(e)}")
         # Return basic formatting instructions if there's an error
         return "Format your response clearly with appropriate citations to course materials."
-
-
-
-
-
-

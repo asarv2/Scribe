@@ -30,6 +30,7 @@ import { getTextbook } from "@/utils/queries/get-textbook";
 import { getChapter } from "@/utils/queries/get-chapter";
 import { getProfile } from "@/utils/queries/get-profile";
 import { ClassLayout } from "../Class/ClassLayout";
+import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
 type ChapterViewerProps = {
     classId: string;
     textbookId: string;
@@ -110,8 +111,8 @@ export default function ChapterViewer({
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
-        queryKey: ["chapterTextbookDocuments", textbookId, chapterId],
-        queryFn: () => getTextbookDocuments(supabase, [textbookId], chapter?.start_page, chapter?.end_page),
+        queryKey: ["chapterDocuments", textbookId, chapterId],
+        queryFn: () => getChapterDocuments(supabase, [chapterId]),
         enabled: !!chapter
     })
 
@@ -133,7 +134,7 @@ export default function ChapterViewer({
 
     const showDelete = profile?.professor || profile?.admin;
 
-
+    const filteredDocuments = documents?.sort((a, b) => a.page - b.page);
 
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !textbook || !documentId) return "/placeholder_image.svg";
@@ -141,51 +142,54 @@ export default function ChapterViewer({
     }
 
     const handleSwipe = (touchEndX: number) => {
-        if (touchStartX !== null && documents) {
+        if (touchStartX !== null && filteredDocuments) {
             const deltaX = touchStartX - touchEndX;
             const minSwipeDistance = 50;
 
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
-            if (deltaX > minSwipeDistance && currentIndex < documents.length - 1) {
+            const currentIndex = filteredDocuments.findIndex(doc => doc.id === activeDocumentId);
+            if (deltaX > minSwipeDistance && currentIndex < filteredDocuments.length - 1) {
                 // Swipe left (next page)
-                handlePageClick(documents[currentIndex + 1].id);
+                handlePageClick(filteredDocuments[currentIndex + 1].id);
             } else if (deltaX < -minSwipeDistance && currentIndex > 0) {
                 // Swipe right (previous page)
-                handlePageClick(documents[currentIndex - 1].id);
+                handlePageClick(filteredDocuments[currentIndex - 1].id);
             }
         }
         setTouchStartX(null);
     };
 
     useEffect(() => {
-        // Set initial active document based on URL page parameter
-        if (documents && documents.length > 0 && !activeDocumentId) {
-            if (page) {
+        // Set initial active document based on URL page parameter or initialDocumentId
+        if (filteredDocuments && filteredDocuments.length > 0 && !activeDocumentId) {
+            if (initialDocumentId) {
+                // Always prioritize initialDocumentId when it's provided
+                setActiveDocumentId(initialDocumentId);
+            } else if (page) {
                 // Handle both single page numbers and page ranges (e.g., "p.5" or "pp.5-7")
                 const pageNum = parseInt(page.replace(/[^0-9]/g, ''));
-                const matchingDoc = documents.find(doc => doc.page === pageNum);
+                const matchingDoc = filteredDocuments.find(doc => doc.page === pageNum);
                 if (matchingDoc) {
                     setActiveDocumentId(matchingDoc.id);
                 } else {
                     // Default to first page if specified page not found
-                    setActiveDocumentId(documents[0].id);
+                    setActiveDocumentId(filteredDocuments[0].id);
                 }
             } else {
                 // No page specified, default to first page
-                setActiveDocumentId(documents[0].id);
+                setActiveDocumentId(filteredDocuments[0].id);
             }
         }
-    }, [documents, activeDocumentId, page]);
+    }, [filteredDocuments, activeDocumentId, page, initialDocumentId]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (!documents) return;
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
+            if (!filteredDocuments) return;
+            const currentIndex = filteredDocuments.findIndex(doc => doc.id === activeDocumentId);
 
             if (event.key === 'ArrowLeft' && currentIndex > 0) {
-                handlePageClick(documents[currentIndex - 1].id);
-            } else if (event.key === 'ArrowRight' && currentIndex < documents.length - 1) {
-                handlePageClick(documents[currentIndex + 1].id);
+                handlePageClick(filteredDocuments[currentIndex - 1].id);
+            } else if (event.key === 'ArrowRight' && currentIndex < filteredDocuments.length - 1) {
+                handlePageClick(filteredDocuments[currentIndex + 1].id);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -193,7 +197,7 @@ export default function ChapterViewer({
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [activeDocumentId, documents]);
+    }, [activeDocumentId, filteredDocuments]);
 
     useEffect(() => {
         if (previewScrollRef.current) {
@@ -207,6 +211,13 @@ export default function ChapterViewer({
             }
         }
     }, [activeDocumentId]);
+
+    // Add this effect to handle changes to initialDocumentId
+    useEffect(() => {
+        if (initialDocumentId && filteredDocuments) {
+            setActiveDocumentId(initialDocumentId);
+        }
+    }, [initialDocumentId, filteredDocuments]);
 
     // Shared viewer component
     const MainViewer = () => (
@@ -243,6 +254,8 @@ export default function ChapterViewer({
                 sizes="100vw"
                 placeholder="blur"
                 blurDataURL="/placeholder_image.svg"
+                priority={true}
+                unoptimized={true}
             />
             <ActionIcon
                 size={embedded ? "lg" : "xl"}
@@ -256,12 +269,12 @@ export default function ChapterViewer({
                     zIndex: 100,
                 }}
                 onClick={() => {
-                    const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                    if (currentIndex > 0 && documents) {
-                        handlePageClick(documents[currentIndex - 1].id);
+                    const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                    if (currentIndex > 0 && filteredDocuments) {
+                        handlePageClick(filteredDocuments[currentIndex - 1].id);
                     }
                 }}
-                disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === 0}
+                disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
                 aria-label="Previous Page"
             >
                 <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
@@ -269,7 +282,7 @@ export default function ChapterViewer({
             <ActionIcon
                 size={embedded ? "lg" : "xl"}
                 variant="filled"
-                color="gray"
+                color={colorScheme === "dark" ? "gray" : "dark"}
                 style={{
                     position: 'absolute',
                     top: '50%',
@@ -278,15 +291,15 @@ export default function ChapterViewer({
                     zIndex: 100,
                 }}
                 onClick={() => {
-                    const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                    if (documents && currentIndex < documents.length - 1) {
-                        handlePageClick(documents[currentIndex + 1].id);
+                    const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                    if (filteredDocuments && currentIndex < filteredDocuments.length - 1) {
+                        handlePageClick(filteredDocuments[currentIndex + 1].id);
                     }
                 }}
-                disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === documents.length - 1}
+                disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
                 aria-label="Next Page"
             >
-                <IconArrowRight size={embedded ? 24 : 32} />
+                <IconArrowRight size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
             </ActionIcon>
             <Box
                 pos="absolute"

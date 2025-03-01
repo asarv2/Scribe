@@ -3,10 +3,10 @@
  * Used to show all the messages in the chat.
  */
 
-import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader } from "@mantine/core";
-import { IconArrowDown, IconFileText } from "@tabler/icons-react";
+import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch } from "@mantine/core";
+import { IconArrowDown, IconFileText, IconRefresh, IconX } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
-import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode } from "@/types";
+import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode, Exercise } from "@/types";
 import Latex from "../../Latex";
 import Image from "next/image";
 import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
@@ -15,7 +15,6 @@ import {
   splitTextByDocuments,
   splitTextByFigures,
   groupConsecutiveDocuments,
-  getDocumentLabel,
   handleDocumentClick
 } from "@/utils/chat/chat-helpers";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -30,15 +29,16 @@ import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { getChapters } from "@/utils/queries/get-chapters";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getMessages } from "@/utils/queries/get-messages";
-
+import { getExercises } from "@/utils/queries/get-exercises";
+import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
+import { Checkbox } from "@mantine/core";
 interface MessageListProps {
   chatId: string;
   classId: string;
   colorScheme: string;
-  showWelcome: boolean;
-  welcomeFollowUp: boolean;
   existingChat: Chat | null;
   activeChat: ChatMessage;
+  setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>;
   onOptionClick: (type: ChatType, isTeacherMode?: boolean, teacherOption?: string) => void;
   setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
   isInitializing?: boolean;
@@ -49,10 +49,8 @@ export const MessageList = memo(({
   chatId,
   classId,
   colorScheme,
-  showWelcome,
-  welcomeFollowUp,
   activeChat,
-  onOptionClick,
+  setActiveChat,
   setViewerMode,
   existingChat,
   isInitializing = false,
@@ -99,16 +97,33 @@ export const MessageList = memo(({
     queryFn: () => getTextbooks(supabase, classId),
   });
 
-  const { data: textbookDocuments } = useQuery({
-    queryKey: ["textbookDocuments", classId],
-    queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
-    enabled: !!textbooks
-  });
-
   const { data: chapters } = useQuery({
     queryKey: ["chapters", classId],
     queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
     enabled: !!textbooks
+  });
+
+  const { data: chapterDocuments } = useQuery({
+    queryKey: ["chapterDocuments", classId],
+    queryFn: () => getChapterDocuments(supabase, chapters!.map(c => c.id)),
+    enabled: !!chapters
+  });
+
+  const { data: homeworks } = useQuery({
+    queryKey: ["homeworks", classId],
+    queryFn: () => getHomeworks(supabase, classId),
+  });
+
+  const { data: chapterExercises } = useQuery({
+    queryKey: ["chapterExercises", classId],
+    queryFn: () => getExercises(supabase, chapters!.map(c => c.id), []),
+    enabled: !!chapters
+  });
+
+  const { data: homeworkExercises } = useQuery({
+    queryKey: ["homeworkExercises", classId],
+    queryFn: () => getExercises(supabase, [], homeworks!.map(h => h.id)),
+    enabled: !!homeworks
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -149,21 +164,15 @@ export const MessageList = memo(({
     if (isNearBottom) {
       scrollToBottom();
     }
-  }, [messages, showWelcome, welcomeFollowUp]);
-
-  const allDocuments = [...(lectureDocuments ?? []), ...(textbookDocuments ?? [])];
+  }, [messages]);
 
   const renderWelcomeMessages = () => {
-    if ((!showWelcome && !welcomeFollowUp)) return null;
-
-    // Determine if we're in teacher mode - check both the existing chat and active chat
-    const isTeacherMode = existingChat?.teacher || activeChat.teacher;
 
     return (
       <Stack>
-        {!existingChat && showWelcome && (
+        {(!existingChat && (chatId === 'new')) && (
           <Flex gap="md" align="flex-start">
-            <Stack gap="xs" align="flex-start">
+            <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
               <Group gap="xs" align="center">
                 <Avatar
                   src={professor ? getAvatarUrl(professor.id) : undefined}
@@ -182,138 +191,222 @@ export const MessageList = memo(({
                 style={{
                   backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
                   minWidth: "200px",
+                  width: "100%",
                   maxWidth: "100%",
-                  border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                  border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
+                  position: "relative"
                 }}
               >
-                <Stack gap="xs">
-                  <Text>
-                    Hi {profile?.first_name || 'there'}, how can I assist you today?
-                  </Text>
-                  <Group gap="xs">
-                    {!isTeacherMode ? (
-                      <>
-                        {/* Student options */}
-                        <Button
-                          variant="light"
-                          color="cyan"
-                          onClick={() => onOptionClick('concept')}
-                        >
-                          Conceptual
-                        </Button>
-                        <Button
-                          variant="light"
-                          color="teal"
-                          onClick={() => onOptionClick('homework-student')}
-                        >
-                          Homework
-                        </Button>
-                        <Button
-                          variant="light"
-                          color="violet"
-                          onClick={() => onOptionClick('review')}
-                        >
-                          Review
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        {/* Teacher options */}
-                        <Button
-                          variant="light"
-                          color="green"
-                          onClick={() => onOptionClick('method')}
-                        >
-                          Methodology
-                        </Button>
-                        <Button
-                          variant="light"
-                          color="indigo"
-                          onClick={() => onOptionClick('homework-professor')}
-                        >
-                          Homework
-                        </Button>
-                        <Button
-                          variant="light"
-                          color="orange"
-                          onClick={() => onOptionClick('generate')}
-                        >
-                          Generate
-                        </Button>
-                      </>
+                <Stack gap="sm">
+                  <Flex justify="space-between" align="center">
+                    <Text>
+                      Hi {profile?.first_name || 'there'}, how can I assist you today?
+                    </Text>
+                    {(profile?.admin || profile?.professor) && (
+                      <Group justify="flex-end">
+                        <Group gap="xs" align="center">
+                          <Badge size="xs" variant="light" color="blue">Teacher</Badge>
+                          <Checkbox
+                            size="xs"
+                            checked={activeChat.teacher}
+                            onChange={() => setActiveChat((prev) => ({
+                              ...prev,
+                              teacher: !prev.teacher,
+                              chatType: prev.teacher ? 'general-student' : 'general-teacher'
+                            }))}
+                          />
+                        </Group>
+                      </Group>
                     )}
-                  </Group>
+                  </Flex>
+                  <Flex justify="space-between" align="center">
+                    <Group gap="xs">
+                      {!activeChat.teacher ? (
+                        <>
+                          {/* Student options */}
+                          <Button
+                            variant="light"
+                            color="cyan"
+                            onClick={() => setActiveChat({
+                              ...activeChat,
+                              chatType: 'concept'
+                            })}
+                          >
+                            Conceptual
+                          </Button>
+                          <Button
+                            variant="light"
+                            color="teal"
+                            onClick={() => setActiveChat({
+                              ...activeChat,
+                              chatType: 'homework-student'
+                            })}
+                          >
+                            Homework
+                          </Button>
+                          <Button
+                            variant="light"
+                            color="violet"
+                            onClick={() => setActiveChat({
+                              ...activeChat,
+                              chatType: 'review'
+                            })}
+                          >
+                            Review
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          {/* Teacher options */}
+                          <Button
+                            variant="light"
+                            color="green"
+                            onClick={() => setActiveChat({
+                              ...activeChat,
+                              chatType: 'method'
+                            })}
+                          >
+                            Methodology
+                          </Button>
+                          <Button
+                            variant="light"
+                            color="indigo"
+                            onClick={() => setActiveChat({
+                              ...activeChat,
+                              chatType: 'homework-professor'
+                            })}
+                          >
+                            Homework
+                          </Button>
+                          <Button
+                            variant="light"
+                            color="orange"
+                            onClick={() => setActiveChat({
+                              ...activeChat,
+                              chatType: 'generate'
+                            })}
+                          >
+                            Generate
+                          </Button>
+                        </>
+                      )}
+                    </Group>
+                    {/* Clear button in bottom right */}
+                    {activeChat.chatType &&
+                      !activeChat.chatType.startsWith('general') && (
+                        <Group justify="flex-end" mt="xs">
+                          <ActionIcon
+                            variant="subtle"
+                            color="red"
+                            size="sm"
+                            onClick={() => setActiveChat((prev) => ({
+                              ...prev,
+                              chatType: prev.teacher ? 'general-student' : 'general-teacher'
+                            }))}
+                        title="Clear Selection"
+                      >
+                        <IconRefresh size={16} />
+                        </ActionIcon>
+                      </Group>
+                    )}
+                  </Flex>
                 </Stack>
               </Card>
             </Stack>
           </Flex>
         )}
 
-        {welcomeFollowUp && (
-          <Flex gap="md" align="flex-start">
-            <Stack gap="xs" align="flex-start">
-              <Group gap="xs" align="center">
-                <Avatar
-                  src={professor ? getAvatarUrl(professor.id) : undefined}
-                  size="sm"
-                  radius="xl"
-                  alt="AI Assistant"
-                />
-                <Text size="sm" c="dimmed">
-                  {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                </Text>
-              </Group>
+        {(existingChat ||
+          (activeChat.chatType &&
+            !activeChat.chatType.startsWith('general'))) && (
+            <Flex gap="md" align="flex-start">
+              <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
+                <Group gap="xs" align="center">
+                  <Avatar
+                    src={professor ? getAvatarUrl(professor.id) : undefined}
+                    size="sm"
+                    radius="xl"
+                    alt="AI Assistant"
+                  />
+                  <Text size="sm" c="dimmed">
+                    {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                  </Text>
+                </Group>
 
-              <Card
-                padding="sm"
-                radius="md"
-                style={{
-                  backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                  minWidth: "200px",
-                  maxWidth: "100%",
-                  border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
-                }}
-              >
-                <Text>
-                  {!isTeacherMode ? (
-                    <>
-                      Sounds good! I can definitely help you with{' '}
-                      {(existingChat?.type || activeChat.chatType) === 'homework-student' ? (
-                        <Text span fw={600} c="blue">your homework</Text>
-                      ) : (existingChat?.type || activeChat.chatType) === 'concept' ? (
-                        <Text span fw={600} c="cyan">understanding the material</Text>
-                      ) : (existingChat?.type || activeChat.chatType) === 'review' ? (
-                        <Text span fw={600} c="teal">visualizing key concepts</Text>
-                      ) : (
-                        <Text span fw={600} c="violet">general questions</Text>
-                      )}. What specific {
-                        (existingChat?.type || activeChat.chatType) === 'homework-student' ? 'problem' :
-                          (existingChat?.type || activeChat.chatType) === 'homework-professor' ? 'problem' :
-                            (existingChat?.type || activeChat.chatType) === 'concept' ? 'topic' :
-                              'material'
-                      } would you like to go over?
-                    </>
-                  ) : (
-                    <>
-                      {/* Teacher follow-up text */}
-                      {(existingChat?.type || activeChat.chatType) === 'method' ? (
-                        <>What specific <Text span fw={600} c="green">teaching approaches</Text> would you like me to take when helping out the students?</>
-                      ) : (existingChat?.type || activeChat.chatType) === 'homework-professor' ? (
-                        <>What are some <Text span fw={600} c="indigo">FAQ's and responses</Text> students tend to have that I can address if they ask me?</>
-                      ) : (existingChat?.type || activeChat.chatType) === 'generate' ? (
-                        <>What are some <Text span fw={600} c="orange">common misconceptions</Text> students usually have that cause them to make mistakes?</>
-                      ) : (
-                        <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                      )}
-                    </>
-                  )}
-                </Text>
-              </Card>
-            </Stack>
-          </Flex>
-        )}
+                <Card
+                  padding="sm"
+                  radius="md"
+                  style={{
+                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                    minWidth: "200px",
+                    width: "100%",
+                    maxWidth: "100%",
+                    border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
+                    position: "relative"
+                  }}
+                >
+                  <Text>
+                    {!activeChat.teacher ? (
+                      <>
+                        Sounds good! I can definitely help you with{' '}
+                        {(existingChat?.type || activeChat.chatType) === 'homework-student' ? (
+                          <Text span fw={600} c="blue">your homework</Text>
+                        ) : (existingChat?.type || activeChat.chatType) === 'concept' ? (
+                          <Text span fw={600} c="cyan">understanding the material</Text>
+                        ) : (existingChat?.type || activeChat.chatType) === 'review' ? (
+                          <Text span fw={600} c="teal">visualizing key concepts</Text>
+                        ) : (
+                          <Text span fw={600} c="violet">general questions</Text>
+                        )}. What specific {
+                          (existingChat?.type || activeChat.chatType) === 'homework-student' ? 'problem' :
+                            (existingChat?.type || activeChat.chatType) === 'homework-professor' ? 'problem' :
+                              (existingChat?.type || activeChat.chatType) === 'concept' ? 'topic' :
+                                'material'
+                        } would you like to go over?
+                      </>
+                    ) : (
+                      <>
+                        {/* Teacher follow-up text */}
+                        {(existingChat?.type || activeChat.chatType) === 'method' ? (
+                          <>What specific <Text span fw={600} c="green">teaching approaches</Text> would you like me to take when helping out the students?</>
+                        ) : (existingChat?.type || activeChat.chatType) === 'homework-professor' ? (
+                          <>What are some <Text span fw={600} c="indigo">FAQ's and responses</Text> students tend to have that I can address if they ask me?</>
+                        ) : (existingChat?.type || activeChat.chatType) === 'generate' ? (
+                          <>What are some <Text span fw={600} c="orange">common misconceptions</Text> students usually have that cause them to make mistakes?</>
+                        ) : (
+                          <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
+                        )}
+                      </>
+                    )}
+                  </Text>
+                </Card>
+              </Stack>
+            </Flex>
+          )}
       </Stack>
     );
+  };
+
+  // Get document label for display
+  const getDocumentLabel = (
+    type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise',
+    doc?: Document,
+    exercise?: Exercise,
+  ): string => {
+    if (type === 'lecture' && doc) {
+      const lecture = lectures?.find(l => l.id === doc.lecture);
+      return `${lecture?.name ?? 'Lecture'} p.${doc.page}`;
+    } else if (type === 'chapter' && doc) {
+      const textbook = textbooks?.find(t => t.id === doc.textbook);
+      return `${textbook?.title ?? 'Textbook'} p.${doc.page}`;
+    } else if (type === 'chapter-exercise' && exercise) {
+      const chapter = chapters?.find(c => c.id === exercise.chapter);
+      return `Ch.${chapter?.chapter_number ?? '?'} Ex.${exercise.exercise_number}`;
+    } else if (type === 'homework-problem' && exercise) {
+      const homework = homeworks?.find(h => h.id === exercise.homework);
+      return `HW ${homework?.homework_number ?? '?'} Problem ${exercise.problem_number}`;
+    }
+    return 'Document Reference';
   };
 
   const renderLoadingState = () => (
@@ -413,7 +506,7 @@ export const MessageList = memo(({
                     <Text size="sm" c="dimmed">
                       {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
                     </Text>
-                    
+
                     {/* Admin-only file link icon. Temporary disabled. */}
                     {profile?.admin && (
                       <ActionIcon
@@ -455,7 +548,10 @@ export const MessageList = memo(({
                                 : segment.text)
                               .join('')
                           ),
-                          allDocuments
+                          lectureDocuments ?? [],
+                          chapterDocuments ?? [],
+                          chapterExercises ?? [],
+                          homeworkExercises ?? []
                         ).map((group, index) => (
                           <Box key={index}>
                             {group.text && (
@@ -543,27 +639,111 @@ export const MessageList = memo(({
                                 ))}
                               </Stack>
                             )}
-                            {group.documents.length > 0 && (
-                              <Group gap="xs" pt={group.text ? "xs" : 0}>
-                                {Array.from(new Set(group.documents)).slice(0, 3).map((doc, docIndex) => (
-                                  <Badge
-                                    key={docIndex}
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={() => {
-                                      if (doc.lecture) {
-                                        handleDocumentClick(doc, chapters ?? [], 'lecture', setViewerMode)
-                                      } else if (doc.textbook) {
-                                        handleDocumentClick(doc, chapters ?? [], 'chapter', setViewerMode)
-                                      }
-                                    }}
-                                  >
-                                    {getDocumentLabel(doc, lectures ?? [], textbooks ?? [])}
-                                  </Badge>
-                                ))}
-                              </Group>
-                            )}
+                            <Group gap="xs" pt={group.text ? "xs" : 0}>
+                              {group.documents.length > 0 && (
+                                <>
+                                  {Array.from(new Set(group.documents)).slice(0, 3).map((doc, docIndex) => {
+                                    const lectureDocument: boolean = doc.lecture !== null;
+                                    const chapterDocument: boolean = doc.textbook !== null && doc.chapter !== null;
+
+                                    if (lectureDocument) {
+                                      return (
+                                        <Badge
+                                          key={docIndex}
+                                          color="blue"
+                                          style={{ cursor: 'pointer' }}
+                                          onClick={() => {
+                                            if (doc.lecture) {
+                                              handleDocumentClick('lectures', doc.lecture, setViewerMode, doc.id);
+                                            }
+                                          }}
+                                        >
+                                          {getDocumentLabel(
+                                            'lecture',
+                                            doc,
+                                            undefined
+                                          )}
+                                        </Badge>
+                                      );
+                                    } else if (chapterDocument) {
+                                      return (
+                                        <Badge
+                                          key={docIndex}
+                                          color="green"
+                                          style={{ cursor: 'pointer' }}
+                                          onClick={() => {
+                                            if (doc.textbook && doc.chapter) {
+                                              handleDocumentClick('chapters', doc.chapter, setViewerMode, doc.id, doc.textbook);
+                                            }
+                                          }}
+                                        >
+                                          {getDocumentLabel(
+                                            'chapter',
+                                            doc,
+                                            undefined
+                                          )}
+                                        </Badge>
+                                      );
+                                    } else {
+                                      return null;
+                                    }
+                                  })}
+                                </>
+                              )}
+                              {group.exercises.length > 0 && (
+                                <>
+                                  {Array.from(new Set(group.exercises)).slice(0, 3).map((exercise, exerciseIndex) => {
+                                    const chapterExercise: boolean = exercise.chapter !== null;
+                                    const homeworkExercise: boolean = exercise.homework !== null;
+
+                                    if (homeworkExercise) {
+                                      return (
+                                        <Badge
+                                          key={exerciseIndex}
+                                          color="orange"
+                                          style={{ cursor: 'pointer' }}
+                                          onClick={() => {
+                                            if (exercise.homework) {
+                                              handleDocumentClick('homeworks', exercise.homework, setViewerMode, undefined, undefined, exercise.id);
+                                            }
+                                          }}
+                                        >
+                                          {getDocumentLabel(
+                                            'homework-problem',
+                                            undefined,
+                                            exercise
+                                          )}
+                                        </Badge>
+                                      );
+                                    } if (chapterExercise) {
+                                      return (
+                                        <Badge
+                                          key={exerciseIndex}
+                                          color="teal"
+                                          style={{ cursor: 'pointer' }}
+                                          onClick={() => {
+                                            if (exercise.chapter) {
+                                              handleDocumentClick('chapters', exercise.chapter, setViewerMode, undefined, undefined, exercise.id);
+                                            }
+                                          }}
+                                        >
+                                          {getDocumentLabel(
+                                            'chapter-exercise',
+                                            undefined,
+                                            exercise
+                                          )}
+                                        </Badge>
+                                      );
+                                    } else {
+                                      return null;
+                                    }
+                                  })}
+                                </>
+                              )}
+                            </Group>
                           </Box>
                         ))}
+
                       </Stack>
                     )}
                   </Card>

@@ -12,12 +12,6 @@ interface ChatInputProps {
   onSend: () => void;
   onRemoveContext: (contextType: keyof ChatMessage['context'], contextId: string) => void;
   onScrollToSection: (sectionId: string) => void;
-  handleContextClick?: (
-    contextType: keyof ChatMessage['context'],
-    contextId: string,
-    documents: Document[],
-    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
-  ) => void;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
   expandedSections: Set<string>;
   toggleSection: (section: string) => void;
@@ -31,7 +25,6 @@ export const ChatInput = memo(({
   onSend,
   onRemoveContext,
   onScrollToSection,
-  handleContextClick,
   setViewerMode,
   expandedSections,
   toggleSection
@@ -57,6 +50,11 @@ export const ChatInput = memo(({
           maxRows={5}
           autosize
           style={{ flex: 1 }}
+          styles={{
+            input: {
+              fontSize: '16px',
+            }
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();

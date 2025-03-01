@@ -33,7 +33,6 @@ export interface ChatMessage {
     context: {
         lectures: string[];     // lecture IDs
         chapters: string[];    // chapter IDs
-        exercises: string[];   // exercise IDs
         homeworks: string[];   // homework IDs
     };
     chatType: ChatType;
@@ -42,10 +41,10 @@ export interface ChatMessage {
 
 export interface ViewerMode {
     active: boolean;
-    documentId?: string;
-    lectureId?: string;
-    textbookId?: string;
-    chapterId?: string;
-    exerciseId?: string;
-    homeworkId?: string;
+    documentId?: string; // this goes with either lecture or chapter
+    lectureId?: string; // source of truth for lecture
+    textbookId?: string; // used soley for chapter convienence
+    chapterId?: string; // source of truth for chapter
+    exerciseId?: string; // this goes with either chapter or homework
+    homeworkId?: string; // source of truth for homework
 }

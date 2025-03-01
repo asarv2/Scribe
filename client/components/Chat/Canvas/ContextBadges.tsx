@@ -115,9 +115,9 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = lectureDocuments?.find(d => d.lecture === lectureId)
+                                const document = lectureDocuments?.find(d => d.lecture === lectureId) // first page of the lecture
                                 if (document) {
-                                    handleDocumentClick(document, chapters ?? [], 'lecture', setViewerMode);
+                                    handleDocumentClick('lectures', lectureId, setViewerMode, document.id);
                                 }
                             }
                         }}
@@ -146,9 +146,12 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page)
-                                if (document) {
-                                    handleDocumentClick(document, chapters ?? [], 'chapter', setViewerMode);
+                                const textbook = textbooks?.find(t => t.id === chapter.textbook)
+                                if (textbook) {
+                                    const document = textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === textbook.id) // first page of the chapter
+                                    if (document) {
+                                        handleDocumentClick('chapters', chapterId, setViewerMode, document.id, textbook.id);
+                                    }
                                 }
                             }
                         }}
@@ -158,42 +161,8 @@ export const ContextBadges = memo(({
                 );
             })}
 
-            {activeChat.context.exercises.map(exerciseId => {
-                const exercise = exercises?.find(e => e.id === exerciseId);
-                const chapter = exercise ? chapters?.find(c => c.id === exercise.chapter) : null;
-                return exercise && chapter && (
-                    <Badge
-                        key={exerciseId}
-                        color="cyan"
-                        style={{ cursor: 'pointer' }}
-                        rightSection={onRemoveContext && (
-                            <IconX
-                                size={14}
-                                style={{ cursor: 'pointer' }}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRemoveContext('exercises', exerciseId);
-                                }}
-                            />
-                        )}
-                        onClick={(e) => {
-                            if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.page >= exercise.start_page && d.page <= exercise.end_page)
-                                if (document) {
-                                    handleDocumentClick(document, chapters ?? [], 'exercise', setViewerMode);
-                                }
-                            }
-                        }}
-                    >
-                        {exercise.title !== "" ? exercise.title : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`}
-                    </Badge>
-                );
-            })}
-
             {activeChat.context.homeworks.map(homeworkId => {
                 const homework = homeworkData?.find(h => h.id === homeworkId);
-                const homeworkProblems = problems?.filter(p => p.homework === homeworkId);
-                const homeworkExercises = homeworkProblems?.map(p => exercises?.find(e => e.id === p.exercise));
                 return homework && (
                     <Badge
                         key={homeworkId}
@@ -211,9 +180,9 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = textbookDocuments?.find(d => d.homeworks.includes(homeworkId))
-                                if (document) {
-                                    handleDocumentClick(document, chapters ?? [], 'homework', setViewerMode);
+                                const exercise = exercises?.find(e => e.homework === homeworkId) // find first exercise of the homework
+                                if (exercise) {
+                                    handleDocumentClick('homeworks', homeworkId, setViewerMode, undefined, undefined, exercise.id);
                                 }
                             }
                         }}

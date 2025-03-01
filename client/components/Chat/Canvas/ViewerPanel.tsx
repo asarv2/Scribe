@@ -17,6 +17,7 @@ import ExerciseViewer from "@/components/Viewer/ExerciseViewer";
 import HomeworkViewer from "@/components/Viewer/HomeworkViewer";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getChapters } from "@/utils/queries/get-chapters";
+import { getExercises } from "@/utils/queries/get-exercises";
 
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
@@ -52,10 +53,6 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
         if (viewerMode.lectureId) {
             const lecture = lectures?.find(l => l.id === viewerMode.lectureId);
             return lecture ? `${lecture.name}` : "Lecture Viewer";
-        } else if (viewerMode.textbookId && viewerMode.exerciseId) {
-            const textbook = textbooks?.find(t => t.id === viewerMode.textbookId);
-            const chapter = chapters?.find(c => c.id === viewerMode.chapterId);
-            return textbook ? `${textbook.title} - ${chapter?.title} - Exercises` : "Exercise Viewer";
         } else if (viewerMode.textbookId && viewerMode.chapterId) {
             const textbook = textbooks?.find(t => t.id === viewerMode.textbookId);
             const chapter = chapters?.find(c => c.id === viewerMode.chapterId);
@@ -63,6 +60,9 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
         } else if (viewerMode.homeworkId) {
             const homework = homeworks?.find(h => h.id === viewerMode.homeworkId);
             return homework ? `${homework.title}` : "Homework Viewer";
+        } else if (viewerMode.exerciseId && viewerMode.chapterId) {
+            const chapter = chapters?.find(c => c.id === viewerMode.chapterId);
+            return chapter ? `Chapter ${chapter.chapter_number} Exercises` : "Exercise Viewer";
         }
         return "Document Viewer";
     };
@@ -102,17 +102,8 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
                             initialDocumentId={viewerMode.documentId}
                             embedded={true}
                         />
-                    ) : viewerMode.textbookId && viewerMode.chapterId ? (
-                        viewerMode.exerciseId ? (
-                            <ExerciseViewer
-                                key={`${viewerMode.textbookId}-${viewerMode.chapterId}-${viewerMode.exerciseId}`}
-                                classId={classId}
-                                textbookId={viewerMode.textbookId}
-                                chapterId={viewerMode.chapterId}
-                                initialExerciseId={viewerMode.exerciseId}
-                                embedded={true}
-                            />
-                        ) : (
+                    ) : viewerMode.chapterId ? (
+                        viewerMode.textbookId ? (
                             <ChapterViewer
                                 key={`${viewerMode.textbookId}-${viewerMode.chapterId}`}
                                 classId={classId}
@@ -121,7 +112,16 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
                                 initialDocumentId={viewerMode.documentId}
                                 embedded={true}
                             />
-                        )
+                            
+                        ) : viewerMode.exerciseId ? (
+                            <ExerciseViewer
+                                key={`${viewerMode.chapterId}-${viewerMode.exerciseId}`}
+                                classId={classId}
+                                chapterId={viewerMode.chapterId}
+                                initialExerciseId={viewerMode.exerciseId}
+                                embedded={true}
+                            />
+                        ) : null
                     ) : viewerMode.homeworkId ? (
                         <HomeworkViewer
                             key={`${viewerMode.homeworkId}-${viewerMode.exerciseId}`}

@@ -686,15 +686,16 @@ export type Database = {
         Row: {
           bare_question: string
           bare_response: string
+          chapters: string[]
           chat: string | null
           created_at: string
           documents: string[]
-          exercises: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
+          homeworks: string[]
           id: string
           last_generation_attempt: string | null
-          problems: string[]
+          lectures: string[]
           profile: string | null
           question: string
           references: string[]
@@ -704,15 +705,16 @@ export type Database = {
         Insert: {
           bare_question?: string
           bare_response?: string
+          chapters?: string[]
           chat?: string | null
           created_at?: string
           documents?: string[]
-          exercises?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homeworks?: string[]
           id?: string
           last_generation_attempt?: string | null
-          problems?: string[]
+          lectures?: string[]
           profile?: string | null
           question?: string
           references?: string[]
@@ -722,15 +724,16 @@ export type Database = {
         Update: {
           bare_question?: string
           bare_response?: string
+          chapters?: string[]
           chat?: string | null
           created_at?: string
           documents?: string[]
-          exercises?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homeworks?: string[]
           id?: string
           last_generation_attempt?: string | null
-          problems?: string[]
+          lectures?: string[]
           profile?: string | null
           question?: string
           references?: string[]
