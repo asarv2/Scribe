@@ -197,21 +197,21 @@ export const MessageList = memo(({
                         <Button
                           variant="light"
                           color="cyan"
-                          onClick={() => onOptionClick('conceptual')}
+                          onClick={() => onOptionClick('concept')}
                         >
-                          Understand
+                          Conceptual
                         </Button>
                         <Button
                           variant="light"
                           color="teal"
-                          onClick={() => onOptionClick('review')}
+                          onClick={() => onOptionClick('homework-student')}
                         >
-                          Visualize
+                          Homework
                         </Button>
                         <Button
                           variant="light"
                           color="violet"
-                          onClick={() => onOptionClick('summary')}
+                          onClick={() => onOptionClick('review')}
                         >
                           Review
                         </Button>
@@ -222,23 +222,23 @@ export const MessageList = memo(({
                         <Button
                           variant="light"
                           color="green"
-                          onClick={() => onOptionClick('approach')}
+                          onClick={() => onOptionClick('method')}
                         >
-                          Specific Approach
+                          Methodology
                         </Button>
                         <Button
                           variant="light"
                           color="indigo"
-                          onClick={() => onOptionClick('faq')}
+                          onClick={() => onOptionClick('homework-professor')}
                         >
-                          FAQs and Responses
+                          Homework
                         </Button>
                         <Button
                           variant="light"
                           color="orange"
-                          onClick={() => onOptionClick('misconception')}
+                          onClick={() => onOptionClick('generate')}
                         >
-                          Common Misconceptions
+                          Generate
                         </Button>
                       </>
                     )}
@@ -278,28 +278,29 @@ export const MessageList = memo(({
                   {!isTeacherMode ? (
                     <>
                       Sounds good! I can definitely help you with{' '}
-                      {(existingChat?.type || activeChat.chatType) === 'homework' ? (
+                      {(existingChat?.type || activeChat.chatType) === 'homework-student' ? (
                         <Text span fw={600} c="blue">your homework</Text>
-                      ) : (existingChat?.type || activeChat.chatType) === 'conceptual' ? (
+                      ) : (existingChat?.type || activeChat.chatType) === 'concept' ? (
                         <Text span fw={600} c="cyan">understanding the material</Text>
                       ) : (existingChat?.type || activeChat.chatType) === 'review' ? (
                         <Text span fw={600} c="teal">visualizing key concepts</Text>
                       ) : (
-                        <Text span fw={600} c="violet">creating review documents</Text>
+                        <Text span fw={600} c="violet">general questions</Text>
                       )}. What specific {
-                        (existingChat?.type || activeChat.chatType) === 'homework' ? 'problem' :
-                          (existingChat?.type || activeChat.chatType) === 'conceptual' ? 'topic' :
-                            'material'
+                        (existingChat?.type || activeChat.chatType) === 'homework-student' ? 'problem' :
+                          (existingChat?.type || activeChat.chatType) === 'homework-professor' ? 'problem' :
+                            (existingChat?.type || activeChat.chatType) === 'concept' ? 'topic' :
+                              'material'
                       } would you like to go over?
                     </>
                   ) : (
                     <>
                       {/* Teacher follow-up text */}
-                      {(existingChat?.type || activeChat.chatType) === 'approach' ? (
+                      {(existingChat?.type || activeChat.chatType) === 'method' ? (
                         <>What specific <Text span fw={600} c="green">teaching approaches</Text> would you like me to take when helping out the students?</>
-                      ) : (existingChat?.type || activeChat.chatType) === 'faq' ? (
+                      ) : (existingChat?.type || activeChat.chatType) === 'homework-professor' ? (
                         <>What are some <Text span fw={600} c="indigo">FAQ's and responses</Text> students tend to have that I can address if they ask me?</>
-                      ) : (existingChat?.type || activeChat.chatType) === 'misconception' ? (
+                      ) : (existingChat?.type || activeChat.chatType) === 'generate' ? (
                         <>What are some <Text span fw={600} c="orange">common misconceptions</Text> students usually have that cause them to make mistakes?</>
                       ) : (
                         <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>

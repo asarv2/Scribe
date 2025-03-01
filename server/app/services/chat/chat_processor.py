@@ -72,21 +72,19 @@ class ChatProcessor(BaseProcessor):
             
             system_prompt = ""
             match self.prompt_type:
-                case "homework":
-                    system_prompt = get_homework_prompt(solution=False)
-                case "summary":
-                    system_prompt = get_summary_prompt()
-                case "conceptual":
+                case "concept":
                     system_prompt = get_conceptual_prompt()
+                case "homework-student":
+                    system_prompt = get_homework_prompt(solution=False)
+                case "review":
+                    system_prompt = get_summary_prompt()
                 case "general-student":
                     system_prompt = get_general_prompt()
-                case "review":
-                    system_prompt = get_review_prompt()
-                case "approach":
+                case "homework-professor":
+                    system_prompt = get_homework_prompt(solution=True)
+                case "method":
                     system_prompt = get_specific_approach_prompt()
-                case "faq":
-                    system_prompt = get_faq_prompt()
-                case "misconception":
+                case "generate":
                     system_prompt = get_misconceptions_prompt()
                 case 'general-teacher':
                     system_prompt = get_general_prompt()

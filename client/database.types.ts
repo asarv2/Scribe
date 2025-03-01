@@ -415,6 +415,7 @@ export type Database = {
           problem_number: number
           problem_part_number: number
           start_page: number
+          text: string
           title: string
           type: string
         }
@@ -431,6 +432,7 @@ export type Database = {
           problem_number?: number
           problem_part_number?: number
           start_page?: number
+          text?: string
           title?: string
           type?: string
         }
@@ -447,6 +449,7 @@ export type Database = {
           problem_number?: number
           problem_part_number?: number
           start_page?: number
+          text?: string
           title?: string
           type?: string
         }
@@ -981,15 +984,15 @@ export type Database = {
     }
     Enums: {
       chat_type:
-        | "homework"
-        | "summary"
-        | "conceptual"
-        | "review"
+        | "homework-student"
+        | "homework-professor"
+        | "method"
+        | "generate"
         | "general-student"
         | "general-teacher"
-        | "approach"
-        | "faq"
-        | "misconception"
+        | "concept"
+        | "review"
+        | "other"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
       parse_status: "parsing" | "batching" | "complete" | "idle" | "error"
