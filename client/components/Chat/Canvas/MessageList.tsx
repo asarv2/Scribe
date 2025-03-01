@@ -414,7 +414,7 @@ export const MessageList = memo(({
                     </Text>
                     
                     {/* Admin-only file link icon. Temporary disabled. */}
-                    {!profile?.admin && (
+                    {profile?.admin && (
                       <ActionIcon
                         component="a"
                         href={`${process.env.NEXT_PUBLIC_API_URL}/files/messages/${message.id}.txt`}

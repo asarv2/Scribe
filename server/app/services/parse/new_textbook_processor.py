@@ -238,6 +238,7 @@ class NewTextbookProcessor:
                     'class': class_id,
                     'title': combined_data['textbook_name'],
                     'pages': self.pdf_document.page_count,
+                    'parse_status': 'complete'
                 }).execute()
                 
                 textbook_id = textbook_response.data[0]['id']
@@ -267,7 +268,8 @@ class NewTextbookProcessor:
                             'start_page': exercise['start_page'],
                             'end_page': exercise['end_page'],
                             'chapter': chapter_id,
-                            'exercise_number': j + 1
+                            'exercise_number': j + 1,
+                            'text': exercise['text_content']
                         }).execute()
 
                         exercise_id = exercise_response.data[0]['id']
@@ -510,9 +512,10 @@ if __name__ == "__main__":
     # Process textbook and get ID
     exercises = processor.extract_exercises()
     combined_data = processor.create_combined_textbook_json()
-    textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase, old_textbook_id="abd70059-0f1d-4c17-82a5-9e034356f21c")
+    # old_textbook_id="abd70059-0f1d-4c17-82a5-9e034356f21c"
+    textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
     # print(textbook_id, chapters_id, exercises_id)
     
     # Upload images
-    # processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
+    processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
     processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase)
