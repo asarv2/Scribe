@@ -167,7 +167,6 @@ export const MessageList = memo(({
   }, [messages]);
 
   const renderWelcomeMessages = () => {
-
     return (
       <Stack>
         {(!existingChat && (chatId === 'new')) && (
@@ -316,9 +315,11 @@ export const MessageList = memo(({
           </Flex>
         )}
 
-        {(existingChat ||
-          (activeChat.chatType &&
-            !activeChat.chatType.startsWith('general'))) && (
+        {/* Only show follow-up message if:
+            1. It's a new chat with a non-general chat type, OR
+            2. It's an existing chat with a non-general chat type */}
+        {((existingChat && !existingChat.type.startsWith('general')) ||
+          (!existingChat && activeChat.chatType && !activeChat.chatType.startsWith('general'))) && (
             <Flex gap="md" align="flex-start">
               <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
                 <Group gap="xs" align="center">
@@ -346,7 +347,7 @@ export const MessageList = memo(({
                   }}
                 >
                   <Text>
-                    {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
+                    {!(existingChat ? existingChat.teacher : activeChat.teacher)  ? (
                       <>
                         {/* Student follow-up text */}
                         {existingChat ? (
@@ -665,7 +666,7 @@ export const MessageList = memo(({
                             <Group gap="xs" pt={group.text ? "xs" : 0}>
                               {group.documents.length > 0 && (
                                 <>
-                                  {Array.from(new Set(group.documents)).slice(0, 3).map((doc, docIndex) => {
+                                  {Array.from(new Map(group.documents.map(doc => [doc.id, doc])).values()).slice(0, 3).map((doc, docIndex) => {
                                     const lectureDocument: boolean = doc.lecture !== null;
                                     const chapterDocument: boolean = doc.textbook !== null && doc.chapter !== null;
 
@@ -715,7 +716,7 @@ export const MessageList = memo(({
                               )}
                               {group.exercises.length > 0 && (
                                 <>
-                                  {Array.from(new Set(group.exercises)).slice(0, 3).map((exercise, exerciseIndex) => {
+                                  {Array.from(new Map(group.exercises.map(exercise => [exercise.id, exercise])).values()).slice(0, 3).map((exercise, exerciseIndex) => {
                                     const chapterExercise: boolean = exercise.chapter !== null;
                                     const homeworkExercise: boolean = exercise.homework !== null;
 

@@ -113,21 +113,13 @@ class NewHomeworkProcessor:
             # Get textbook info from database
             raw_textbook_info = supabase.table("textbooks").select("*").eq("class", class_id).execute().data
             textbook_info = "\n".join(f"{t['textbook_number']}. {t['title']}" for t in raw_textbook_info)
-
-            # Create folder for homework images if PDF
-            if pdf_document:
-                homework_name = os.path.splitext(os.path.basename(file_path))[0]
-                images_folder = os.path.join(os.path.dirname(file_path), f'images_{homework_name}')
-                os.makedirs(images_folder, exist_ok=True)
-
+            
             # Combine homework info
             homework_info = []
-            page_texts = {}  # Store page texts for later matching
             
             if pdf_document:
-                for page_num, page in enumerate(pdf_document):
+                for page in pdf_document:
                     text = page.get_text()
-                    page_texts[page_num] = text
                     homework_info.append(f"PDF Content: {text}")
             
             if text_content:
@@ -137,83 +129,16 @@ class NewHomeworkProcessor:
 
             # Extract problems
             homework_data = problems_extractor.extract_exercises_from_text(combined_info)
+
+            # Extract images
+            result_data = problems_extractor.extract_problem_images(
+                homework_data, 
+                pdf_document, 
+                file_path
+            )
             
-            # If PDF document, process 'given' sections to extract images
-            if pdf_document:
-                for problem_idx, problem in enumerate(homework_data.get('problems', [])):
-                    # Use 1-based problem numbering
-                    problem_number = str(problem_idx + 1)
-                    
-                    for page_num, page_text in page_texts.items():
-                        page = pdf_document[page_num]
-                        
-                        # First find all problem number markers on the page
-                        problem_markers = []
-                        number_pattern = r'\b\d+\.'  # Pattern to match numbers followed by period
-                        
-                        # Get text blocks with their formatting
-                        blocks = page.get_text("dict").get("blocks", [])
-                        for block in blocks:
-                            for line in block.get("lines", []):
-                                for span in line.get("spans", []):
-                                    text = span.get("text", "").strip()
-                                    if re.search(number_pattern, text):
-                                        logger.debug(f"Found problem marker: {text} at y={span['bbox'][1]}")
-                                        problem_markers.append({
-                                            'number': text.strip(),
-                                            'y': span["bbox"][1]  # y-coordinate of the start
-                                        })
-                        
-                        # Sort markers by y-coordinate
-                        problem_markers.sort(key=lambda x: x['y'])
-                        logger.debug(f"Problem markers on page {page_num}: {problem_markers}")
-                        
-                        # Process each part in the problem
-                        for part_idx, part in enumerate(problem.get('parts', [])):
-                            if 'given' in part:
-                                given_text = part['given']
-                                # Clean up the given text for better matching
-                                clean_given = re.sub(r'\s+', ' ', given_text).strip()
-                                
-                                # Try to find the text in the page
-                                text_instances = page.search_for(clean_given[:50])  # Search first 50 chars to handle long text
-                                if text_instances:
-                                    # Get the first instance
-                                    rect = text_instances[0]
-                                    y1 = rect.y0
-                                    
-                                    logger.debug(f"Found given text for problem {problem_number}, part {part_idx} at y={y1}")
-                                    
-                                    # Find which problem section this belongs to
-                                    section_start = 0
-                                    section_end = page.rect.height
-                                    
-                                    # Find the problem section boundaries
-                                    for i, marker in enumerate(problem_markers):
-                                        if marker['y'] <= y1:
-                                            section_start = marker['y']
-                                            if i + 1 < len(problem_markers):
-                                                section_end = problem_markers[i + 1]['y']
-                                            logger.debug(f"Text belongs to section starting at y={section_start}, ending at y={section_end}")
-                                    
-                                    # Add padding
-                                    padding = 10
-                                    clip_rect = fitz.Rect(
-                                        0,  # Start from left edge
-                                        max(0, section_start - padding),
-                                        page.rect.width,  # Extend to right edge
-                                        min(page.rect.height, section_end + padding)
-                                    )
-                                    
-                                    # Render the region as an image
-                                    pix = page.get_pixmap(matrix=fitz.Matrix(2, 2), clip=clip_rect)
-                                    image_filename = f'problem_{problem_number}_part_{part_idx + 1}_given.png'
-                                    image_path = os.path.join(images_folder, image_filename)
-                                    pix.save(image_path)
-                                    
-                                    # Add image path to the part data
-                                    part['given_image'] = os.path.relpath(image_path, os.path.dirname(file_path))
-                                    logger.debug(f"Saved image for problem {problem_number}, part {part_idx + 1}: {image_path}")
+            # Add document structure to homework data
+            homework_data['document_structure'] = result_data.get('document_structure', {})
             
             return homework_data
             
@@ -230,7 +155,7 @@ class NewHomeworkProcessor:
             # Get all processed homework
             homework_list = self._load_existing_homework()
             # sort homework_list by due_date
-            homework_list = sorted(homework_list, key=lambda x: x['due_date'])
+            homework_list = sorted(homework_list, key=lambda x: x.get('due_date', ''))  # Use get with default
             homework_ids = []
             
             # Upload each homework with progress bar
@@ -252,14 +177,14 @@ class NewHomeworkProcessor:
                     problems = homework_data.get('problems', [])
 
                     with tqdm(total=len(problems), desc=f"Uploading problems for {homework_data.get('title')}") as problem_pbar:
-                        for i, problem in enumerate(problems):
+                        for j, problem in enumerate(problems):
                             # Upload parts
-                            for j, part in enumerate(problem.get('parts', [])):
+                            for k, part in enumerate(problem.get('parts', [])):
                                 # Check if this is a textbook reference or a given problem
                                 if 'textbook' in part:
                                     # This is a textbook reference - search for existing exercise
-                                    textbook_number = int(part['textbook'].get('number'))
-                                    textbook_id = next((t['id'] for t in textbooks if t['textbook_number'] == textbook_number), None)
+                                    textbook_number = int(part['textbook'].get('number', 0))
+                                    textbook_id = next((t['id'] for t in textbooks if t.get('textbook_number') == textbook_number), None)
 
                                     if part['textbook'].get('exercise'):
                                         exercise_name = part['textbook'].get('exercise')
@@ -275,9 +200,9 @@ class NewHomeworkProcessor:
                                             exercise_id = existing_exercise.data[0]['id']
                                             supabase.table('exercises').update({
                                                 'homework': homework_id,
-                                                'problem_number': i + 1,
+                                                'problem_number': j + 1,
                                                 'info': problem.get('info') if problem.get('info') else '',
-                                                'problem_part_number': j + 1,
+                                                'problem_part_number': k + 1,
                                             }).eq('id', exercise_id).execute()
 
                                             # Find documents that contain this exercise in their exercises array
@@ -310,49 +235,130 @@ class NewHomeworkProcessor:
 
                                     if part['textbook'].get('page'):
                                         page = part['textbook'].get('page')
+                                        actual_page = None
+                                        # Safely convert page labels to strings for comparison
                                         for i, label in enumerate(page_labels):
-                                            if label == str(page):
+                                            if str(label) == str(page):
                                                 actual_page = i + 1
                                                 break
-                                        # Get documents for this textbook and page
-                                        docs = supabase.table('documents').select('*').eq('textbook', textbook_id).eq('page', actual_page).execute()
                                         
-                                        # Update each document to add this homework to its homeworks array
-                                        for doc in docs.data:
-                                            # Get current homeworks array or initialize empty array
-                                            current_homeworks = doc.get('homeworks', [])
+                                        # Only proceed if we found a valid page
+                                        if actual_page is not None and textbook_id is not None:
+                                            # Get documents for this textbook and page
+                                            docs = supabase.table('documents').select('*').eq('textbook', textbook_id).eq('page', actual_page).execute()
                                             
-                                            # Add new homework ID if not already present
-                                            if homework_id not in current_homeworks:
-                                                current_homeworks.append(homework_id)
+                                            # Update each document to add this homework to its homeworks array
+                                            for doc in docs.data:
+                                                # Get current homeworks array or initialize empty array
+                                                current_homeworks = doc.get('homeworks', [])
                                                 
-                                                # Update document with new homeworks array
-                                                supabase.table('documents').update({
-                                                    'homeworks': current_homeworks,
-                                                    'processed': True
-                                                }).eq('id', doc['id']).execute()
+                                                # Add new homework ID if not already present
+                                                if homework_id not in current_homeworks:
+                                                    current_homeworks.append(homework_id)
+                                                    
+                                                    # Update document with new homeworks array
+                                                    supabase.table('documents').update({
+                                                        'homeworks': current_homeworks,
+                                                        'processed': True
+                                                    }).eq('id', doc['id']).execute()
 
                                 else:
                                     # Exercise doesn't exist, create it
-                                    exercise_response = supabase.table('exercises').insert({
-                                        'homework': homework_id,
-                                        'problem_number': i + 1,
-                                        'info': problem.get('info') if problem.get('info') else '',
-                                        'problem_part_number': j + 1,
-                                        'given': part.get('given') if part.get('given') else '',
-                                        'title': exercise_name
-                                    }).execute()
-                                    exercise_id = exercise_response.data[0]['id']
+                                    # Define exercise_name with a default value
+                                    exercise_name = f"Problem {j+1}.{k+1}"
                                     
-                                    # Create document for exercise with homeworks array
-                                    supabase.table('documents').insert({
-                                        'page': 1, # leave for now.
-                                        'text': '', # leave for now.
-                                        'description': '', # leave for now.
-                                        'exercises': [exercise_id],  # Initialize as array with current exercise
-                                        'homeworks': [homework_id],  # Initialize as array with current homework
-                                        'processed': True, # set this to be true for now.
-                                    }).execute()
+                                    # Prepare exercise data
+                                    exercise_data = {
+                                        'homework': homework_id,
+                                        'problem_number': j + 1,
+                                        'info': problem.get('info') if problem.get('info') else '',
+                                        'problem_part_number': k + 1,
+                                        'given': part.get('given') if part.get('given') else '',
+                                        'title': exercise_name,
+                                        'text': part.get('text_content') if part.get('text_content') else ''
+                                    }
+                                    
+                                    # Add image URL if available
+                                    if 'image_path' in part and part['image_path']:
+                                        try:
+                                            image_path = part['image_path']
+                                            
+                                            # Check if file exists
+                                            full_image_path = os.path.join(self.class_folder, "homeworks", image_path)
+                                            if os.path.exists(full_image_path):
+                                                # Create the exercise first to get the exercise_id
+                                                exercise_response = supabase.table('exercises').insert(exercise_data).execute()
+                                                exercise_id = exercise_response.data[0]['id']
+                                                
+                                                # Upload image to Supabase storage
+                                                with open(full_image_path, 'rb') as f:
+                                                    image_data = f.read()
+                                                
+                                                # Create a unique path for the image in storage using class_id/exercise_id.png
+                                                storage_path = f"{class_id}/{exercise_id}.png"
+                                                
+                                                # Upload to storage
+                                                supabase.storage.from_("exercises").upload(
+                                                    path=storage_path,
+                                                    file=image_data,
+                                                    file_options={"content-type": "image/png"}
+                                                )
+                                                
+                                                
+                                                # Create document for exercise with homeworks array
+                                                supabase.table('documents').insert({
+                                                    'page': 1, # leave for now.
+                                                    'text': '', # leave for now.
+                                                    'description': '', # leave for now.
+                                                    'exercises': [exercise_id],  # Initialize as array with current exercise
+                                                    'homeworks': [homework_id],  # Initialize as array with current homework
+                                                    'processed': True, # set this to be true for now.
+                                                }).execute()
+                                            else:
+                                                logger.warning(f"Image file not found: {full_image_path}")
+                                                # If no image, just create the exercise normally
+                                                exercise_response = supabase.table('exercises').insert(exercise_data).execute()
+                                                exercise_id = exercise_response.data[0]['id']
+                                                
+                                                # Create document for exercise with homeworks array
+                                                supabase.table('documents').insert({
+                                                    'page': 1, # leave for now.
+                                                    'text': '', # leave for now.
+                                                    'description': '', # leave for now.
+                                                    'exercises': [exercise_id],  # Initialize as array with current exercise
+                                                    'homeworks': [homework_id],  # Initialize as array with current homework
+                                                    'processed': True, # set this to be true for now.
+                                                }).execute()
+                                        except Exception as e:
+                                            logger.error(f"Error uploading image for exercise {exercise_name}: {str(e)}")
+                                            print(f"Error uploading image for exercise {exercise_name}: {str(e)}")
+                                            # If there was an error with the image, still create the exercise without the image
+                                            exercise_response = supabase.table('exercises').insert(exercise_data).execute()
+                                            exercise_id = exercise_response.data[0]['id']
+                                            
+                                            # Create document for exercise with homeworks array
+                                            supabase.table('documents').insert({
+                                                'page': 1, # leave for now.
+                                                'text': '', # leave for now.
+                                                'description': '', # leave for now.
+                                                'exercises': [exercise_id],  # Initialize as array with current exercise
+                                                'homeworks': [homework_id],  # Initialize as array with current homework
+                                                'processed': True, # set this to be true for now.
+                                            }).execute()
+                                    else:
+                                        # No image, just create the exercise
+                                        exercise_response = supabase.table('exercises').insert(exercise_data).execute()
+                                        exercise_id = exercise_response.data[0]['id']
+                                        
+                                        # Create document for exercise with homeworks array
+                                        supabase.table('documents').insert({
+                                            'page': 1, # leave for now.
+                                            'text': '', # leave for now.
+                                            'description': '', # leave for now.
+                                            'exercises': [exercise_id],  # Initialize as array with current exercise
+                                            'homeworks': [homework_id],  # Initialize as array with current homework
+                                            'processed': True, # set this to be true for now.
+                                        }).execute()
                             
                             problem_pbar.update(1)
                     
@@ -386,9 +392,9 @@ class NewHomeworkProcessor:
 
 if __name__ == "__main__":
     # Example usage
-    homework_folder = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/ma421/homework"
+    homework_folder = "/Users/ashoksaravanan/Coding/ScribeLec/server/classes/cs182/homeworks"
     api_key = os.getenv('GOOGLE_API_KEY')
-    class_id = "c770c9bb-4de1-44be-aacb-b4bea3efbacf" 
+    class_id = "45d629b6-9138-45f9-ab79-2a089f665890" 
 
     # Initialize Supabase client
     supabase_url = os.getenv("SUPABASE_URL")
@@ -400,12 +406,12 @@ if __name__ == "__main__":
     processor = NewHomeworkProcessor(homework_folder, api_key)
     
     # # Process all homework files
-    # homework_data = processor.process_all_homework(class_id, supabase, max_homeworks=1)
-    # print(f"Processed {len(homework_data)} homework assignments")
+    homework_data = processor.process_all_homework(class_id, supabase)
+    print(f"Processed {len(homework_data)} homework assignments")
 
     # get the page labels
     # get the pdf path
-    pdf_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/Vanderbei.pdf"
+    pdf_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/classes/cs182/textbooks/Discrete.pdf"
     toc_extractor = TableOfContentsExtractor(api_key, pdf_path)
     page_labels = toc_extractor.get_page_labels()
     

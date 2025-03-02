@@ -61,7 +61,7 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
                 styles={(theme) => ({
                     navbar: {
                         border: 'none'
-                    }
+                    },
                 })}
             >
                 <AppShell.Header>

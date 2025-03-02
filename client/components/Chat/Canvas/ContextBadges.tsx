@@ -197,6 +197,34 @@ export const ContextBadges = memo(({
     // Render "Add X" badges
     const renderAddBadges = () => (
         <>
+            {activeChat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
+                <Badge
+                    color="orange"
+                    variant="light"
+                    leftSection={<IconPlus size={12} />}
+                    onClick={() => {
+                        if (setViewerMode) {
+                            setViewerMode({
+                                active: false,
+                            });
+                        }
+                        // First ensure the section is expanded
+                        if (!expandedSections.has("homeworks")) {
+                            toggleSection("homeworks");
+                        }
+                        // Use onScrollToSection which is passed as a prop
+                        if (onScrollToSection) {
+                            // Small delay to ensure UI updates first
+                            setTimeout(() => {
+                                onScrollToSection("homeworks-section-first-item");
+                            }, 50);
+                        }
+                    }}
+                    style={{ cursor: "pointer" }}
+                >
+                    Add Homeworks
+                </Badge>
+            )}
             {activeChat.context.lectures.length === 0 && lectures && lectures.length !== 0 && (
                 <Badge
                     color="blue"
@@ -208,14 +236,16 @@ export const ContextBadges = memo(({
                                 active: false,
                             });
                         }
+                        // First ensure the section is expanded
                         if (!expandedSections.has("lectures")) {
                             toggleSection("lectures");
-                            // delay for 100ms to ensure the section is expanded
+                        }
+                        // Use onScrollToSection which is passed as a prop
+                        if (onScrollToSection) {
+                            // Small delay to ensure UI updates first
                             setTimeout(() => {
-                                window.scrollToFirstItem?.("lectures");
-                            }, 100);
-                        } else {
-                            window.scrollToFirstItem?.("lectures");
+                                onScrollToSection("lectures-section-first-item");
+                            }, 50);
                         }
                     }}
                     style={{ cursor: "pointer" }}
@@ -235,14 +265,16 @@ export const ContextBadges = memo(({
                                 active: false,
                             });
                         }
+                        // First ensure the section is expanded
                         if (!expandedSections.has("chapters")) {
                             toggleSection("chapters");
-                            // delay for 100ms to ensure the section is expanded
+                        }
+                        // Use onScrollToSection which is passed as a prop
+                        if (onScrollToSection) {
+                            // Small delay to ensure UI updates first
                             setTimeout(() => {
-                                onScrollToSection?.("chapters-section")
-                            }, 100);
-                        } else {
-                            onScrollToSection?.("chapters-section")
+                                onScrollToSection("chapters-section-first-item");
+                            }, 50);
                         }
                     }}
                     style={{ cursor: "pointer" }}
@@ -250,32 +282,7 @@ export const ContextBadges = memo(({
                     Add Readings
                 </Badge>
             )}
-            {activeChat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
-                <Badge
-                    color="orange"
-                    variant="light"
-                    leftSection={<IconPlus size={12} />}
-                    onClick={() => {
-                        if (setViewerMode) {
-                            setViewerMode({
-                                active: false,
-                            });
-                        }
-                        if (!expandedSections.has("homeworks")) {
-                            toggleSection("homeworks");
-                            // delay for 100ms to ensure the section is expanded
-                            setTimeout(() => {
-                                onScrollToSection?.("homeworks-section")
-                            }, 100);
-                        } else {
-                            onScrollToSection?.("homeworks-section")
-                        }
-                    }}
-                    style={{ cursor: "pointer" }}
-                >
-                    Add Homeworks
-                </Badge>
-            )}
+
         </>
     );
 

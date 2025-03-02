@@ -152,7 +152,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     });
 
     // Combine all loading states
-    const isInitializing = !user || !profile || !professor || !lectures || !textbooks;
+    const isInitializing = !user || !profile || !lectures || !textbooks;
 
     // Add this state to track when we receive a realtime update
     const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);

@@ -24,6 +24,8 @@ import { getDocument } from "pdfjs-dist";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { getStudents } from "@/utils/queries/get-students";
 import { IconUser, IconUsers } from '@tabler/icons-react';
+import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
+import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
 
 // Function to get badge color based on chat type
 const getBadgeColor = (type: string) => {
@@ -127,10 +129,22 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         enabled: !!chats
     })
 
+    const { data: lectureMessagesReferences, isLoading: loadingLectureMessagesReferences } = useQuery({
+        queryKey: ["lectureMessagesReferences", classId, messages],
+        queryFn: () => getLectureDocuments(supabase, messages!.map(message => message.lecture_references).flat()),
+        enabled: !!messages
+    })
+
+    const { data: chapterMessagesReferences, isLoading: loadingChapterMessagesReferences } = useQuery({
+        queryKey: ["chapterMessagesReferences", classId, messages],
+        queryFn: () => getChapterDocuments(supabase, messages!.map(message => message.chapter_references).flat()),
+        enabled: !!messages
+    })
+
     const { data: messagesReferences, isLoading: loadingMessagesReferences } = useQuery({
         queryKey: ["messagesReferences", classId, messages],
-        queryFn: () => getDocuments(supabase, messages!.map(message => message.references).flat()),
-        enabled: !!messages
+        queryFn: () => [...(lectureMessagesReferences ?? []), ...(chapterMessagesReferences ?? [])],
+        enabled: !!lectureMessagesReferences || !!chapterMessagesReferences
     })
 
     // Realtime subscription for generations
@@ -385,6 +399,11 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         </SimpleGrid>
     );
 
+    // Add this function to check if the user is a student
+    const isStudent = () => {
+        return profile && !profile.admin && !profile.professor;
+    }
+
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -395,10 +414,14 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                         </Group>
                     </Flex>
 
-                    {loadingChats || loadingMessages || loadingMessagesReferences ? (
+                    {loadingChats || loadingMessages || loadingLectureMessagesReferences || loadingChapterMessagesReferences || loadingMessagesReferences ? (
                         renderSkeletons()
                     ) : (chats && classData) && chats.length > 0 ? (
-                        profile?.admin || profile?.professor ? (
+                        isStudent() ? (
+                            // Student view - only show their chats
+                            renderChatList(userChats, "My Chats")
+                        ) : (
+                            // Admin/Professor view - show tabbed interface
                             <Tabs defaultValue="student">
                                 <Tabs.List>
                                     <Tabs.Tab value="student" leftSection={<IconUsers size={16} />}>
@@ -439,8 +462,6 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                     {renderChatList(filteredTeacherChats, "")}
                                 </Tabs.Panel>
                             </Tabs>
-                        ) : (
-                            renderChatList(userChats, "My Chats")
                         )
                     ) : (
                         <Text c="dimmed" ta="center">No chats found</Text>

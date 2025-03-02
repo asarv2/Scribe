@@ -25,10 +25,10 @@ import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, Ch
 import { useVirtualizer } from "@tanstack/react-virtual";
 declare global {
     interface Window {
-      scrollToFirstItem?: (type: string) => void;
+        scrollToFirstItem?: (type: string) => void;
     }
-  }
-  
+}
+
 interface ContextPanelProps {
     classId: string;
     isMobile: boolean;
@@ -88,18 +88,28 @@ const ItemCard = ({
         >
             <Group>
                 {isVisible ? (
-                    <Image
-                        src={item.imageUrl}
-                        alt={item.newName}
-                        width={40}
-                        height={40}
-                        style={{
-                            objectFit: 'cover',
-                            borderRadius: '4px',
-                        }}
-                        loading="lazy"
-                        onLoad={() => setImageLoaded(true)}
-                    />
+                    <div style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#f0f0f0'
+                    }}>
+                        <Image
+                            src={item.imageUrl}
+                            alt={item.newName}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                            }}
+                            loading="lazy"
+                            onLoad={() => setImageLoaded(true)}
+                        />
+                    </div>
                 ) : (
                     <Skeleton width={40} height={40} radius={4} />
                 )}
@@ -114,45 +124,6 @@ const ItemCard = ({
         </Card>
     );
 };
-
-// Section header component
-const SectionHeader = ({
-    title,
-    icon: IconComponent,
-    isExpanded,
-    toggleSection,
-    sectionKey,
-    count
-}: {
-    title: string,
-    icon: any,
-    isExpanded: boolean,
-    toggleSection: (section: string) => void,
-    sectionKey: string,
-    count?: number
-}) => (
-    <Group
-        mb="xs"
-        justify="space-between"
-        style={{
-            cursor: 'pointer',
-            userSelect: 'none',
-        }}
-        onClick={() => toggleSection(sectionKey)}
-    >
-        <Group gap="xs">
-            {IconComponent && <IconComponent size={16} />}
-            <Text fw={700}>
-                {title} {count !== undefined && `(${count})`}
-            </Text>
-        </Group>
-        {isExpanded ? (
-            <IconChevronDown size={16} />
-        ) : (
-            <IconChevronRight size={16} />
-        )}
-    </Group>
-);
 
 // Section loading skeleton
 const SectionSkeleton = () => (
@@ -189,7 +160,7 @@ export function ContextPanel({
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
     const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
     const containerRef = useRef<HTMLDivElement>(null);
-    
+
     // Add refs for the first items of each type
     const firstLectureRef = useRef<string | null>(null);
     const firstChapterRef = useRef<string | null>(null);
@@ -321,7 +292,8 @@ export function ContextPanel({
         const textbookDocumentHomework = textbookDocuments?.find(d => d.homeworks.includes(homeworkId));
         if (textbookDocumentHomework) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentHomework.textbook}/${textbookDocumentHomework.id}.png`;
 
-        return '/placeholder_image.svg';
+        // return the /classid/exerciseid.png
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`;
     }
 
     // Add search filtering function
@@ -333,6 +305,20 @@ export function ContextPanel({
             // Check item name/title
             if (item.name?.toLowerCase().includes(query) ||
                 item.title?.toLowerCase().includes(query)) {
+                return true;
+            }
+            
+            // Check item numbers (note_number, homework_number, chapter_number)
+            if ((item.note_number !== undefined && item.note_number.toString().includes(query)) ||
+                (item.homework_number !== undefined && item.homework_number.toString().includes(query)) ||
+                (item.chapter_number !== undefined && item.chapter_number.toString().includes(query))) {
+                return true;
+            }
+            
+            // Check for type keywords (lecture, chapter, homework)
+            if ((query.includes('lecture') && item.hasOwnProperty('note_number')) ||
+                (query.includes('chapter') && item.hasOwnProperty('chapter_number')) ||
+                (query.includes('homework') && item.hasOwnProperty('homework_number'))) {
                 return true;
             }
 
@@ -355,49 +341,9 @@ export function ContextPanel({
     const getAllContentItems = () => {
         const allItems = [];
 
-        // Add lectures
-        if (lectures) {
-            const filteredLectures = filterBySearch(lectures, lectureDocuments || [])
-                .filter(l => !activeChat.context.lectures.includes(l.id))
-                .map(l => ({
-                    ...l,
-                    newName: l.name ?? "",
-                    imageUrl: getLectureImageUrl(l, lectureDocuments?.find(d => d.lecture === l.id)?.id ?? ""),
-                    type: 'lectures' as keyof ChatMessage['context'],
-                    color: CONTENT_COLORS.lectures
-                }));
-            
-            // Store the first lecture ID if available
-            if (filteredLectures.length > 0 && firstLectureRef.current === null) {
-                firstLectureRef.current = filteredLectures[0].id;
-            }
-            
-            allItems.push(...filteredLectures);
-        }
-
-        // Add chapters
-        if (chapters) {
-            const filteredChapters = filterBySearch(chapters, textbookDocuments || [])
-                .filter(c => !activeChat.context.chapters.includes(c.id))
-                .map(c => ({
-                    ...c,
-                    newName: `Chapter ${c.chapter_number}: ${c.title}`,
-                    imageUrl: getChapterImage(c.id),
-                    type: 'chapters' as keyof ChatMessage['context'],
-                    color: CONTENT_COLORS.chapters
-                }));
-            
-            // Store the first chapter ID if available
-            if (filteredChapters.length > 0 && firstChapterRef.current === null) {
-                firstChapterRef.current = filteredChapters[0].id;
-            }
-            
-            allItems.push(...filteredChapters);
-        }
-
         // Add homeworks
         if (homeworks) {
-            const filteredHomeworks = filterBySearch(homeworks, textbookDocuments || [])
+            const filteredHomeworks = filterBySearch(homeworks.sort((a, b) => b.homework_number - a.homework_number), textbookDocuments || [])
                 .filter(h => !activeChat.context.homeworks.includes(h.id))
                 .map(h => ({
                     ...h,
@@ -406,13 +352,53 @@ export function ContextPanel({
                     type: 'homeworks' as keyof ChatMessage['context'],
                     color: CONTENT_COLORS.homeworks
                 }));
-            
+
             // Store the first homework ID if available
             if (filteredHomeworks.length > 0 && firstHomeworkRef.current === null) {
                 firstHomeworkRef.current = filteredHomeworks[0].id;
             }
-            
+
             allItems.push(...filteredHomeworks);
+        }
+
+        // Add lectures
+        if (lectures) {
+            const filteredLectures = filterBySearch(lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)), lectureDocuments || [])
+                .filter(l => !activeChat.context.lectures.includes(l.id))
+                .map(l => ({
+                    ...l,
+                    newName: l.name ?? "",
+                    imageUrl: getLectureImageUrl(l, lectureDocuments?.find(d => d.lecture === l.id)?.id ?? ""),
+                    type: 'lectures' as keyof ChatMessage['context'],
+                    color: CONTENT_COLORS.lectures
+                }));
+
+            // Store the first lecture ID if available
+            if (filteredLectures.length > 0 && firstLectureRef.current === null) {
+                firstLectureRef.current = filteredLectures[0].id;
+            }
+
+            allItems.push(...filteredLectures);
+        }
+
+        // Add chapters
+        if (chapters) {
+            const filteredChapters = filterBySearch(chapters.sort((a, b) => (a.chapter_number ?? 0) - (b.chapter_number ?? 0)), textbookDocuments || [])
+                .filter(c => !activeChat.context.chapters.includes(c.id))
+                .map(c => ({
+                    ...c,
+                    newName: `Chapter ${c.chapter_number}: ${c.title}`,
+                    imageUrl: getChapterImage(c.id),
+                    type: 'chapters' as keyof ChatMessage['context'],
+                    color: CONTENT_COLORS.chapters
+                }));
+
+            // Store the first chapter ID if available
+            if (filteredChapters.length > 0 && firstChapterRef.current === null) {
+                firstChapterRef.current = filteredChapters[0].id;
+            }
+
+            allItems.push(...filteredChapters);
         }
 
         // Sort by type and then by name
@@ -426,11 +412,11 @@ export function ContextPanel({
 
             // Otherwise sort by type first, then by name
             if (a.type !== b.type) {
-                const typeOrder = { lectures: 1, chapters: 2, homeworks: 3 };
+                const typeOrder = { homeworks: 1, lectures: 2, chapters: 3 };
                 return typeOrder[a.type as keyof typeof typeOrder] - typeOrder[b.type as keyof typeof typeOrder];
             }
 
-            return a.newName.localeCompare(b.newName);
+            return 0; // No additional sorting needed as we've already sorted within each type
         });
     };
 
@@ -469,6 +455,11 @@ export function ContextPanel({
 
     const allContentItems = getAllContentItems();
     const isLoading = loadingLectures || loadingChapters;
+
+    // Find first items of each type for scrolling
+    const firstLectureItem = allContentItems.find(item => item.type === 'lectures');
+    const firstChapterItem = allContentItems.find(item => item.type === 'chapters');
+    const firstHomeworkItem = allContentItems.find(item => item.type === 'homeworks');
 
     // Virtualized list setup
     const rowVirtualizer = useVirtualizer({
@@ -516,7 +507,7 @@ export function ContextPanel({
     // Add a method to scroll to the first item of a specific type
     const scrollToFirstItem = (type: 'lectures' | 'chapters' | 'homeworks') => {
         let itemId = null;
-        
+
         switch (type) {
             case 'lectures':
                 itemId = firstLectureRef.current;
@@ -528,11 +519,11 @@ export function ContextPanel({
                 itemId = firstHomeworkRef.current;
                 break;
         }
-        
+
         if (itemId) {
             const virtualItemId = `${type}-${itemId}`;
             const element = containerRef.current?.querySelector(`[data-id="${virtualItemId}"]`);
-            
+
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
@@ -546,7 +537,7 @@ export function ContextPanel({
         if (scrollToSection && typeof scrollToSection === 'function') {
             // Update the parent's scrollToSection to include our new functionality
             const originalScrollToSection = scrollToSection;
-            
+
             // Override the scrollToSection to handle our special section IDs
             (window as any).scrollToFirstItem = (type: string) => {
                 if (['lectures', 'chapters', 'homeworks'].includes(type)) {
@@ -595,6 +586,11 @@ export function ContextPanel({
                             position: 'relative'
                         }}
                     >
+                        {/* Add section marker divs for scrolling */}
+                        <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="chapters-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        
                         {allContentItems.length > 0 ? (
                             <div
                                 style={{
@@ -607,11 +603,18 @@ export function ContextPanel({
                                     const item = allContentItems[virtualRow.index];
                                     const itemId = `${item.type}-${item.id}`;
                                     const isItemVisible = visibleItems.has(itemId);
+                                    
+                                    // Add section-specific IDs to the first item of each type
+                                    const isFirstOfType = 
+                                        (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
+                                        (item.type === 'chapters' && item.id === firstChapterItem?.id) ||
+                                        (item.type === 'homeworks' && item.id === firstHomeworkItem?.id);
 
                                     return (
                                         <div
                                             key={itemId}
                                             data-id={itemId}
+                                            id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
                                             style={{
                                                 position: 'absolute',
                                                 top: 0,
