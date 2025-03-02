@@ -23,7 +23,12 @@ import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
-
+declare global {
+    interface Window {
+      scrollToFirstItem?: (type: string) => void;
+    }
+  }
+  
 interface ContextPanelProps {
     classId: string;
     isMobile: boolean;
@@ -184,6 +189,11 @@ export function ContextPanel({
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
     const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
     const containerRef = useRef<HTMLDivElement>(null);
+    
+    // Add refs for the first items of each type
+    const firstLectureRef = useRef<string | null>(null);
+    const firstChapterRef = useRef<string | null>(null);
+    const firstHomeworkRef = useRef<string | null>(null);
 
     const { data: lectures, isLoading: loadingLectures } = useQuery({
         queryKey: ["lectures", classId],
@@ -356,6 +366,12 @@ export function ContextPanel({
                     type: 'lectures' as keyof ChatMessage['context'],
                     color: CONTENT_COLORS.lectures
                 }));
+            
+            // Store the first lecture ID if available
+            if (filteredLectures.length > 0 && firstLectureRef.current === null) {
+                firstLectureRef.current = filteredLectures[0].id;
+            }
+            
             allItems.push(...filteredLectures);
         }
 
@@ -370,6 +386,12 @@ export function ContextPanel({
                     type: 'chapters' as keyof ChatMessage['context'],
                     color: CONTENT_COLORS.chapters
                 }));
+            
+            // Store the first chapter ID if available
+            if (filteredChapters.length > 0 && firstChapterRef.current === null) {
+                firstChapterRef.current = filteredChapters[0].id;
+            }
+            
             allItems.push(...filteredChapters);
         }
 
@@ -384,6 +406,12 @@ export function ContextPanel({
                     type: 'homeworks' as keyof ChatMessage['context'],
                     color: CONTENT_COLORS.homeworks
                 }));
+            
+            // Store the first homework ID if available
+            if (filteredHomeworks.length > 0 && firstHomeworkRef.current === null) {
+                firstHomeworkRef.current = filteredHomeworks[0].id;
+            }
+            
             allItems.push(...filteredHomeworks);
         }
 
@@ -484,6 +512,52 @@ export function ContextPanel({
             elements.forEach(el => observer.unobserve(el));
         };
     }, [rowVirtualizer.getVirtualItems()]);
+
+    // Add a method to scroll to the first item of a specific type
+    const scrollToFirstItem = (type: 'lectures' | 'chapters' | 'homeworks') => {
+        let itemId = null;
+        
+        switch (type) {
+            case 'lectures':
+                itemId = firstLectureRef.current;
+                break;
+            case 'chapters':
+                itemId = firstChapterRef.current;
+                break;
+            case 'homeworks':
+                itemId = firstHomeworkRef.current;
+                break;
+        }
+        
+        if (itemId) {
+            const virtualItemId = `${type}-${itemId}`;
+            const element = containerRef.current?.querySelector(`[data-id="${virtualItemId}"]`);
+            
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    };
+
+    // Expose the scroll method through a ref or effect
+    useEffect(() => {
+        // This makes the scrollToFirstItem method available to the parent component
+        // through the scrollToSection prop
+        if (scrollToSection && typeof scrollToSection === 'function') {
+            // Update the parent's scrollToSection to include our new functionality
+            const originalScrollToSection = scrollToSection;
+            
+            // Override the scrollToSection to handle our special section IDs
+            (window as any).scrollToFirstItem = (type: string) => {
+                if (['lectures', 'chapters', 'homeworks'].includes(type)) {
+                    scrollToFirstItem(type as 'lectures' | 'chapters' | 'homeworks');
+                } else {
+                    // Call the original function for other section IDs
+                    originalScrollToSection(type);
+                }
+            };
+        }
+    }, [scrollToSection, firstLectureRef.current, firstChapterRef.current, firstHomeworkRef.current]);
 
     return (
         <Card

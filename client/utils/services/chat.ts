@@ -58,3 +58,15 @@ export const deleteChat = async (chatId: string) => {
     return { success: true, error: "" };
 
 }
+
+export const updateChatRating = async (chatId: string, rating: number) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("chats")
+        .update({ rating })
+        .eq("id", chatId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}

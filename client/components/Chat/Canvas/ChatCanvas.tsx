@@ -3,10 +3,10 @@
  * This component is for chatting with the AI.
  */
 
-import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton } from "@mantine/core";
+import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard } from "@tabler/icons-react";
+import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMediaQuery } from "@mantine/hooks";
@@ -16,7 +16,7 @@ import { getChat } from "@/utils/queries/get-chat";
 import { getMessages } from "@/utils/queries/get-messages";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getProfessor } from "@/utils/queries/get-professor";
-import { createChat } from "@/utils/services/chat";
+import { createChat, updateChatRating } from "@/utils/services/chat";
 import { getAvatarUrl } from "@/utils/services/images";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
@@ -148,6 +148,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         },
         chatType: 'general-student',
         teacher: false,
+        rating: null
     });
 
     // Combine all loading states
@@ -157,6 +158,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);
 
     // Add this state to track message submission
+
+    // Add state for the thank you message
+    const [showThankYou, setShowThankYou] = useState(false);
 
     const getLectureContext = () => {
         const previousMessagesLectures = messages?.flatMap(message =>
@@ -195,7 +199,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         activeChat.context.lectures.forEach(lectureId => {
             const lecture = lectures?.find(l => l.id === lectureId);
             if (lecture) {
-                contextParts.push(`Lecture: ${lecture.name}`);
+                contextParts.push(`Lecture ${lecture.note_number}: ${lecture.name}`);
             }
         });
 
@@ -207,23 +211,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             }
         });
 
-        // Add exercise context
-        // activeChat.context.exercises.forEach(exerciseId => {
-        //     const exercise = exercises?.find(e => e.id === exerciseId);
-        //     const chapter = exercise ? chapters?.find(c => c.id === exercise.chapter) : null;
-        //     if (exercise && chapter) {
-        //         const exerciseTitle = exercise.title !== ""
-        //             ? exercise.title
-        //             : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`;
-        //         contextParts.push(`Exercise: ${exerciseTitle}`);
-        //     }
-        // });
-
         // Add homework context
         activeChat.context.homeworks.forEach(homeworkId => {
             const homework = homeworkData?.find(h => h.id === homeworkId);
             if (homework) {
-                contextParts.push(`Homework: ${homework.title}`);
+                contextParts.push(`Homework ${homework.homework_number}: ${homework.title}`);
             }
         });
 
@@ -561,6 +553,42 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     }, [profile]);
 
+    // Handle rating change
+    const handleRatingChange = async (value: number) => {
+        // Set the rating and show thank you message immediately
+        setShowThankYou(true);
+
+        // If we have an existing chat, update the rating in the database
+        if (existingChat && chatId !== "new") {
+            try {
+                const { success, error } = await updateChatRating(chatId, value);
+                if (!success) {
+                    throw new Error(error);
+                }
+
+                // Invalidate the query to refresh the chat data
+                await queryClient.invalidateQueries({
+                    queryKey: ["chat", chatId],
+                    exact: true
+                });
+            } catch (error) {
+                console.error("Error updating rating:", error);
+                notifications.show({
+                    title: "Error",
+                    message: "Failed to save your rating. Please try again.",
+                    color: "red"
+                });
+                // Reset thank you message on error
+                setShowThankYou(false);
+                return;
+            }
+        }
+
+        // Hide the thank you message after 3 seconds
+        setTimeout(() => {
+            setShowThankYou(false);
+        }, 3000);
+    };
 
     return (
         <ClassLayout classId={classId}>
@@ -612,6 +640,33 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                                         ? 'Other'
                                                         : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
                                 </Badge>
+                            )}
+                        </Group>
+
+                        {/* Rating component with thank you message */}
+                        <Group>
+                            {showThankYou ? (
+                                <Group gap="xs" style={{
+                                    opacity: showThankYou ? 1 : 0,
+                                    transition: 'opacity 0.8s ease-in-out'
+                                }}>
+                                    <IconCheck size={18} color="green" />
+                                    <Text size="sm" c="green">Thanks for your feedback!</Text>
+                                </Group>
+                            ) : (
+                                <>
+                                    {existingChat?.rating === null && (
+                                        <Text size="sm" c="dimmed">Rate this chat:</Text>
+                                    )}
+                                    {existingChat && (
+                                        <Rating
+                                            value={existingChat?.rating || 0}
+                                            onChange={handleRatingChange}
+                                            readOnly={existingChat?.rating !== null}
+                                            size="md"
+                                        />
+                                    )}
+                                </>
                             )}
                         </Group>
                     </Flex>

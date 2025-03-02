@@ -55,6 +55,7 @@ export type Database = {
           id: string
           name: string
           profile: string | null
+          rating: number | null
           response_url: string
           teacher: boolean
           type: Database["prod"]["Enums"]["chat_type"]
@@ -66,6 +67,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          rating?: number | null
           response_url?: string
           teacher?: boolean
           type?: Database["prod"]["Enums"]["chat_type"]
@@ -77,6 +79,7 @@ export type Database = {
           id?: string
           name?: string
           profile?: string | null
+          rating?: number | null
           response_url?: string
           teacher?: boolean
           type?: Database["prod"]["Enums"]["chat_type"]
@@ -686,15 +689,19 @@ export type Database = {
         Row: {
           bare_question: string
           bare_response: string
+          chapter_exercise_references: string[]
+          chapter_references: string[]
           chapters: string[]
           chat: string | null
           created_at: string
           documents: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references: string[]
           homeworks: string[]
           id: string
           last_generation_attempt: string | null
+          lecture_references: string[]
           lectures: string[]
           profile: string | null
           question: string
@@ -705,15 +712,19 @@ export type Database = {
         Insert: {
           bare_question?: string
           bare_response?: string
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           chapters?: string[]
           chat?: string | null
           created_at?: string
           documents?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           homeworks?: string[]
           id?: string
           last_generation_attempt?: string | null
+          lecture_references?: string[]
           lectures?: string[]
           profile?: string | null
           question?: string
@@ -724,15 +735,19 @@ export type Database = {
         Update: {
           bare_question?: string
           bare_response?: string
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           chapters?: string[]
           chat?: string | null
           created_at?: string
           documents?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           homeworks?: string[]
           id?: string
           last_generation_attempt?: string | null
+          lecture_references?: string[]
           lectures?: string[]
           profile?: string | null
           question?: string

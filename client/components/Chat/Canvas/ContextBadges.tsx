@@ -212,10 +212,10 @@ export const ContextBadges = memo(({
                             toggleSection("lectures");
                             // delay for 100ms to ensure the section is expanded
                             setTimeout(() => {
-                                onScrollToSection?.("lectures-section")
+                                window.scrollToFirstItem?.("lectures");
                             }, 100);
                         } else {
-                            onScrollToSection?.("lectures-section")
+                            window.scrollToFirstItem?.("lectures");
                         }
                     }}
                     style={{ cursor: "pointer" }}
@@ -276,31 +276,6 @@ export const ContextBadges = memo(({
                     Add Homeworks
                 </Badge>
             )}
-            {/* {activeChat.context.exercises.length === 0 && exercises && exercises.length !== 0 && (
-                <Badge
-                    color="gray"
-                    leftSection={<IconPlus size={12} />}
-                    onClick={() => {
-                        if (setViewerMode) {
-                            setViewerMode({
-                                active: false,
-                            });
-                        }
-                        if (!expandedSections.has("exercises")) {
-                            toggleSection("exercises");
-                            // delay for 100ms to ensure the section is expanded
-                            setTimeout(() => {
-                                onScrollToSection?.("exercises-section")
-                            }, 100);
-                        } else {
-                            onScrollToSection?.("exercises-section")
-                        }
-                    }}
-                    style={{ cursor: "pointer" }}
-                >
-                    Add Exercises
-                </Badge>
-            )} */}
         </>
     );
 

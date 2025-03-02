@@ -226,69 +226,69 @@ export const MessageList = memo(({
                           {/* Student options */}
                           <Button
                             variant="light"
-                            color="cyan"
-                            onClick={() => setActiveChat({
-                              ...activeChat,
+                            color="green"
+                            onClick={() => setActiveChat((prev) => ({
+                              ...prev,
                               chatType: 'concept'
-                            })}
+                            }))}
                           >
                             Conceptual
                           </Button>
-                          <Button
-                            variant="light"
-                            color="teal"
-                            onClick={() => setActiveChat({
-                              ...activeChat,
-                              chatType: 'homework-student'
-                            })}
-                          >
-                            Homework
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="violet"
-                            onClick={() => setActiveChat({
-                              ...activeChat,
-                              chatType: 'review'
-                            })}
-                          >
-                            Review
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          {/* Teacher options */}
-                          <Button
-                            variant="light"
-                            color="green"
-                            onClick={() => setActiveChat({
-                              ...activeChat,
-                              chatType: 'method'
-                            })}
-                          >
-                            Methodology
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="indigo"
-                            onClick={() => setActiveChat({
-                              ...activeChat,
-                              chatType: 'homework-professor'
-                            })}
-                          >
-                            Homework
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="orange"
-                            onClick={() => setActiveChat({
-                              ...activeChat,
-                              chatType: 'generate'
-                            })}
-                          >
-                            Generate
-                          </Button>
-                        </>
+                        <Button
+                          variant="light"
+                          color="indigo"
+                          onClick={() => setActiveChat((prev) => ({
+                            ...prev,
+                            chatType: 'homework-student'
+                          }))}
+                        >
+                          Homework
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="cyan"
+                          onClick={() => setActiveChat((prev) => ({
+                            ...prev,
+                            chatType: 'review'
+                          }))}
+                        >
+                          Review
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        {/* Teacher options */}
+                        <Button
+                          variant="light"
+                          color="green"
+                          onClick={() => setActiveChat((prev) => ({
+                            ...prev,
+                            chatType: 'method'
+                          }))}
+                        >
+                          Methodology
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="indigo"
+                          onClick={() => setActiveChat((prev) => ({
+                            ...prev,
+                            chatType: 'homework-professor'
+                          }))}
+                        >
+                          Homework
+                        </Button>
+                        <Button
+                          variant="light"
+                          color="cyan"
+                          onClick={() => setActiveChat((prev) => ({
+                            ...prev,
+                            chatType: 'generate'
+                          }))}
+                        >
+                          Generate
+                        </Button>
+                      </>
                       )}
                     </Group>
                     {/* Clear button in bottom right */}
@@ -303,12 +303,12 @@ export const MessageList = memo(({
                               ...prev,
                               chatType: prev.teacher ? 'general-student' : 'general-teacher'
                             }))}
-                        title="Clear Selection"
-                      >
-                        <IconRefresh size={16} />
-                        </ActionIcon>
-                      </Group>
-                    )}
+                            title="Clear Selection"
+                          >
+                            <IconRefresh size={16} />
+                          </ActionIcon>
+                        </Group>
+                      )}
                   </Flex>
                 </Stack>
               </Card>
@@ -346,35 +346,58 @@ export const MessageList = memo(({
                   }}
                 >
                   <Text>
-                    {!activeChat.teacher ? (
+                    {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
                       <>
-                        Sounds good! I can definitely help you with{' '}
-                        {(existingChat?.type || activeChat.chatType) === 'homework-student' ? (
-                          <Text span fw={600} c="blue">your homework</Text>
-                        ) : (existingChat?.type || activeChat.chatType) === 'concept' ? (
-                          <Text span fw={600} c="cyan">understanding the material</Text>
-                        ) : (existingChat?.type || activeChat.chatType) === 'review' ? (
-                          <Text span fw={600} c="teal">visualizing key concepts</Text>
+                        {/* Student follow-up text */}
+                        {existingChat ? (
+                          // Use existingChat data when available
+                          existingChat.type === 'concept' ? (
+                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
+                          ) : existingChat.type === 'homework-student' ? (
+                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
+                          ) : existingChat.type === 'review' ? (
+                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
+                          ) : (
+                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
+                          )
                         ) : (
-                          <Text span fw={600} c="violet">general questions</Text>
-                        )}. What specific {
-                          (existingChat?.type || activeChat.chatType) === 'homework-student' ? 'problem' :
-                            (existingChat?.type || activeChat.chatType) === 'homework-professor' ? 'problem' :
-                              (existingChat?.type || activeChat.chatType) === 'concept' ? 'topic' :
-                                'material'
-                        } would you like to go over?
+                          // Fall back to activeChat data for new chats
+                          activeChat.chatType === 'concept' ? (
+                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
+                          ) : activeChat.chatType === 'homework-student' ? (
+                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
+                          ) : activeChat.chatType === 'review' ? (
+                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
+                          ) : (
+                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
+                          )
+                        )}
                       </>
                     ) : (
                       <>
                         {/* Teacher follow-up text */}
-                        {(existingChat?.type || activeChat.chatType) === 'method' ? (
-                          <>What specific <Text span fw={600} c="green">teaching approaches</Text> would you like me to take when helping out the students?</>
-                        ) : (existingChat?.type || activeChat.chatType) === 'homework-professor' ? (
-                          <>What are some <Text span fw={600} c="indigo">FAQ's and responses</Text> students tend to have that I can address if they ask me?</>
-                        ) : (existingChat?.type || activeChat.chatType) === 'generate' ? (
-                          <>What are some <Text span fw={600} c="orange">common misconceptions</Text> students usually have that cause them to make mistakes?</>
+                        {existingChat ? (
+                          // Use existingChat data when available
+                          existingChat.type === 'method' ? (
+                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
+                          ) : existingChat.type === 'homework-professor' ? (
+                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
+                          ) : existingChat.type === 'generate' ? (
+                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                          ) : (
+                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
+                          )
                         ) : (
-                          <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
+                          // Fall back to activeChat data for new chats
+                          activeChat.chatType === 'method' ? (
+                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
+                          ) : activeChat.chatType === 'homework-professor' ? (
+                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
+                          ) : activeChat.chatType === 'generate' ? (
+                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                          ) : (
+                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
+                          )
                         )}
                       </>
                     )}

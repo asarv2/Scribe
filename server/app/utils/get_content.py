@@ -15,7 +15,7 @@ async def fetch_lecture_content(supabase, lecture_ids):
         lecture_content = f"LECTURE {lecture.get('note_number')}: {lecture.get('name')}\n"
         
         for doc in sorted(lecture_docs, key=lambda d: d.get("page", 0)):
-            lecture_content += f"SLIDE {doc.get('page')}: {doc.get('text', '')}\n\n"
+            lecture_content += f"\nSLIDE {doc.get('page')}\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
         
         content.append(lecture_content)
     

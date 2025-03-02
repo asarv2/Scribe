@@ -37,6 +37,7 @@ export interface ChatMessage {
     };
     chatType: ChatType;
     teacher: boolean; // whether the chat is a teacher chat
+    rating: number | null;
 }
 
 export interface ViewerMode {

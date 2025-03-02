@@ -112,6 +112,17 @@ async def handle_message(request: ChatRequest):
                 if last_open_tag > last_complete_tag:
                     text = text[:last_open_tag]
             
+            # Normalize incorrect closing tags like </CHAPTER 2> to </CHAPTER>
+            text = re.sub(r'</((LECTURE|CHAPTER|HOMEWORK))\s+\d+>', r'</\1>', text)
+            
+            # Handle standalone tags without proper closing
+            standalone_tags = re.finditer(r'<(CHAPTER|LECTURE|HOMEWORK)\s+(\d+)>(?!\s*<(?:SLIDE|PAGE|EXERCISE|PROBLEM))', text)
+            for tag in reversed(list(standalone_tags)):
+                tag_type, number = tag.groups()
+                # Replace with proper opening and closing tags
+                start, end = tag.span()
+                text = text[:start] + f'<{tag_type} {number}></{tag_type}>' + text[end:]
+            
             # Remove any malformed closing tags without matching opening tags
             text = re.sub(r'</(?:SLIDE|LECTURE|CHAPTER|PAGE|PROBLEM|HOMEWORK|EXERCISE)>', '', text)
             
@@ -131,7 +142,7 @@ async def handle_message(request: ChatRequest):
             
             # Remove any remaining valid tags
             cleaned_result = re.sub(r'<(LECTURE|CHAPTER|HOMEWORK|SLIDE|PAGE|PROBLEM|EXERCISE)[^>]*>', '', text)
-            cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK)>', '', cleaned_result)
+            cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK)(\s[^>]*)?>', '', cleaned_result)  # Updated to handle any content in closing tags
             cleaned_result = re.sub(r'<(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK)>[^<]+</(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK)>', '', cleaned_result)
             cleaned_result = re.sub(r'<PROBLEM_HOMEWORK>[^<]+</PROBLEM_HOMEWORK>', '', cleaned_result)
 
