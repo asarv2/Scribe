@@ -1,4 +1,5 @@
 .env
 app/env
 uploads
+classes
 **/__pycache__/

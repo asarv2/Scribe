@@ -492,9 +492,9 @@ class NewTextbookProcessor:
             raise
 
 if __name__ == "__main__": 
-    textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/uploads/Vanderbei.pdf"
+    textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/classes/cs182/textbooks/Discrete.pdf"
     api_key = os.getenv('GOOGLE_API_KEY')
-    class_id = "c770c9bb-4de1-44be-aacb-b4bea3efbacf"  # Replace with actual class ID
+    class_id = "45d629b6-9138-45f9-ab79-2a089f665890"  # Replace with actual class ID
 
     # Initialize Supabase client
     supabase_url = os.getenv("SUPABASE_URL")
@@ -514,7 +514,7 @@ if __name__ == "__main__":
     combined_data = processor.create_combined_textbook_json()
     # old_textbook_id="abd70059-0f1d-4c17-82a5-9e034356f21c"
     textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
-    # print(textbook_id, chapters_id, exercises_id)
+    print(textbook_id, chapters_id, exercises_id)
     
     # Upload images
     processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)

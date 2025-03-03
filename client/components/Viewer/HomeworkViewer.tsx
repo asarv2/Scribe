@@ -591,7 +591,10 @@ export default function HomeworkViewer({
         const document = documents?.find(doc => doc.exercises.includes(exerciseId));
         if (!document) return "/placeholder_image.svg";
 
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${document.textbook}/${exerciseId}.png`;
+        if (document.textbook) {
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`;
+        }
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exerciseId}.png`;
     };
 
     if (embedded) {

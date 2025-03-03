@@ -159,7 +159,7 @@ class BaseProcessor:
 
     async def robust_generate(
         self,
-        system_instruction: str,
+        system_instruction: str | None,
         message: Message,
         model: LiteralModel = "gemini-2.0-flash",
         retries: int = 3,

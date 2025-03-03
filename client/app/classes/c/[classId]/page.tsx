@@ -275,6 +275,11 @@ export default function Class({ params }: { params: { classId: string } }) {
     const faqChaptersData = processFaqChaptersData();
     const faqHomeworksData = processFaqHomeworksData();
 
+    // Add this function to check if the user is a student
+    const isStudent = () => {
+        return profile && !profile.admin && !profile.professor;
+    }
+
     return (
         <ClassLayout classId={classId}>
             <Container size="lg" py="xl">
@@ -283,142 +288,164 @@ export default function Class({ params }: { params: { classId: string } }) {
                         {classData?.title}
                     </Text>
 
-                    <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
-                        <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">
-                                Chat Usage
-                            </Text>
-                            <LineChart
-                                h={400}
-                                data={chartData}
-                                dataKey="date"
-                                series={[
-                                    { name: 'chats', color: 'blue.6' }
-                                ]}
-                                curveType="linear"
-                                tickLine="y"
-                                gridAxis="xy"
-                                withLegend
-                                withTooltip
-                            />
-                        </Card>
+                    {isStudent() ? (
+                        // Student view - only show individual usage
+                        <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+                            <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                <Text size="lg" fw={500} mb="md">
+                                    Your Chat Usage
+                                </Text>
+                                <LineChart
+                                    h={400}
+                                    data={chartData}
+                                    dataKey="date"
+                                    series={[
+                                        { name: 'chats', color: 'blue.6' }
+                                    ]}
+                                    curveType="linear"
+                                    tickLine="y"
+                                    gridAxis="xy"
+                                    withLegend
+                                    withTooltip
+                                />
+                            </Card>
 
-                        {/* <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">
-                                Messages Over Time
-                            </Text>
-                            <LineChart
-                                h={400}
-                                data={messageChartData}
-                                dataKey="date"
-                                series={[
-                                    { name: 'messages', color: 'teal.6' }
-                                ]}
-                                curveType="linear"
-                                tickLine="y"
-                                gridAxis="xy"
-                                withLegend
-                                withTooltip
-                            />
-                        </Card> */}
+                            <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                <Text size="lg" fw={500} mb="md">Your Message Usage</Text>
+                                <AreaChart
+                                    h={400}
+                                    data={messagesPerDayData}
+                                    dataKey="date"
+                                    series={[{ name: 'messages', color: 'violet.6' }]}
+                                    curveType="linear"
+                                    tickLine="y"
+                                    gridAxis="xy"
+                                    withLegend
+                                    withTooltip
+                                />
+                            </Card>
 
-                        <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">Message Usage</Text>
-                            <AreaChart
-                                h={400}
-                                data={messagesPerDayData}
-                                dataKey="date"
-                                series={[{ name: 'messages', color: 'violet.6' }]}
-                                curveType="linear"
-                                tickLine="y"
-                                gridAxis="xy"
-                                withLegend
-                                withTooltip
-                            />
-                        </Card>
+                            <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                <Text size="lg" fw={500} mb="md">Your Message Frequency</Text>
+                                <BarChart
+                                    h={400}
+                                    data={timeOfDayMessagesData}
+                                    dataKey="hour"
+                                    series={[{ name: 'messages', color: 'orange.6' }]}
+                                    tickLine="y"
+                                    withLegend
+                                    withTooltip
+                                />
+                            </Card>
+                        </SimpleGrid>
+                    ) : (
+                        // Admin/Professor view - show all analytics
+                        <>
+                            <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+                                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                    <Text size="lg" fw={500} mb="md">
+                                        Chat Usage
+                                    </Text>
+                                    <LineChart
+                                        h={400}
+                                        data={chartData}
+                                        dataKey="date"
+                                        series={[
+                                            { name: 'chats', color: 'blue.6' }
+                                        ]}
+                                        curveType="linear"
+                                        tickLine="y"
+                                        gridAxis="xy"
+                                        withLegend
+                                        withTooltip
+                                    />
+                                </Card>
 
-                        {/* <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">Questions by Student</Text>
-                            <BarChart
-                                h={400}
-                                data={studentQuestionsData}
-                                dataKey="student"
-                                series={[{ name: 'questions', color: 'indigo.6' }]}
-                                tickLine="y"
-                                orientation="vertical"
-                                withLegend
-                                withTooltip
-                            />
-                        </Card> */}
+                                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                    <Text size="lg" fw={500} mb="md">Message Usage</Text>
+                                    <AreaChart
+                                        h={400}
+                                        data={messagesPerDayData}
+                                        dataKey="date"
+                                        series={[{ name: 'messages', color: 'violet.6' }]}
+                                        curveType="linear"
+                                        tickLine="y"
+                                        gridAxis="xy"
+                                        withLegend
+                                        withTooltip
+                                    />
+                                </Card>
 
-                        <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">Message Frequency</Text>
-                            <BarChart
-                                h={400}
-                                data={timeOfDayMessagesData}
-                                dataKey="hour"
-                                series={[{ name: 'messages', color: 'orange.6' }]}
-                                tickLine="y"
-                                withLegend
-                                withTooltip
-                            />
-                        </Card>
-                    </SimpleGrid>
+                                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                    <Text size="lg" fw={500} mb="md">Message Frequency</Text>
+                                    <BarChart
+                                        h={400}
+                                        data={timeOfDayMessagesData}
+                                        dataKey="hour"
+                                        series={[{ name: 'messages', color: 'orange.6' }]}
+                                        tickLine="y"
+                                        withLegend
+                                        withTooltip
+                                    />
+                                </Card>
+                            </SimpleGrid>
 
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
-                        <Text size="lg" fw={500} mb="md">FAQ Topics Distribution</Text>
-                        <BarChart
-                            h={Math.max(400, faqTopicsData.length * 40)} // Dynamically adjust height based on number of topics
-                            data={faqTopicsData}
-                            dataKey="topic"
-                            series={[{ name: 'count', color: 'cyan.6' }]}
-                            tickLine="x"
-                            orientation="horizontal"
-                            withLegend
-                            withTooltip
-                        />
-                    </Card>
+                            <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                <Text size="lg" fw={500} mb="md">FAQ Topics Distribution</Text>
+                                <BarChart
+                                    h={Math.max(400, faqTopicsData.length * 40)}
+                                    data={faqTopicsData}
+                                    dataKey="topic"
+                                    series={[{ name: 'count', color: 'cyan.6' }]}
+                                    tickLine="x"
+                                    orientation="horizontal"
+                                    withLegend
+                                    withTooltip
+                                />
+                            </Card>
 
-                    <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
-                        <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">Lecture Questions Distribution</Text>
-                            <BarChart
-                                h={Math.max(300, faqLecturesData.length * 40)}
-                                data={faqLecturesData}
-                                dataKey="name"
-                                series={[{ name: 'count', color: 'blue.6' }]}
-                                tickLine="x"
-                                orientation="horizontal"
-                                withTooltip
-                            />
-                        </Card>
+                            <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+                                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                    <Text size="lg" fw={500} mb="md">Lecture Questions Distribution</Text>
+                                    <BarChart
+                                        h={Math.max(300, faqLecturesData.length * 40)}
+                                        data={faqLecturesData}
+                                        dataKey="name"
+                                        series={[{ name: 'count', color: 'blue.6' }]}
+                                        tickLine="x"
+                                        orientation="horizontal"
+                                        withTooltip
+                                    />
+                                </Card>
 
-                        <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">Chapter Questions Distribution</Text>
-                            <BarChart
-                                h={Math.max(300, faqChaptersData.length * 40)}
-                                data={faqChaptersData}
-                                dataKey="name"
-                                series={[{ name: 'count', color: 'green.6' }]}
-                                tickLine="x"
-                                orientation="horizontal"
-                                withTooltip
-                            />
-                        </Card>
+                                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                    <Text size="lg" fw={500} mb="md">Chapter Questions Distribution</Text>
+                                    <BarChart
+                                        h={Math.max(300, faqChaptersData.length * 40)}
+                                        data={faqChaptersData}
+                                        dataKey="name"
+                                        series={[{ name: 'count', color: 'green.6' }]}
+                                        tickLine="x"
+                                        orientation="horizontal"
+                                        withTooltip
+                                    />
+                                </Card>
 
-                        <Card shadow="sm" padding="lg" radius="md" withBorder>
-                            <Text size="lg" fw={500} mb="md">Homework Questions Distribution</Text>
-                            <BarChart
-                                h={Math.max(300, faqHomeworksData.length * 40)}
-                                data={faqHomeworksData}
-                                dataKey="name"
-                                series={[{ name: 'count', color: 'red.6' }]}
-                                tickLine="x"
-                                orientation="horizontal"
-                                withTooltip
-                            />
-                        </Card>
-                    </SimpleGrid>
+                                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                    <Text size="lg" fw={500} mb="md">Homework Questions Distribution</Text>
+                                    <BarChart
+                                        h={Math.max(300, faqHomeworksData.length * 40)}
+                                        data={faqHomeworksData}
+                                        dataKey="name"
+                                        series={[{ name: 'count', color: 'red.6' }]}
+                                        tickLine="x"
+                                        orientation="horizontal"
+                                        withTooltip
+                                    />
+                                </Card>
+                            </SimpleGrid>
+                        </>
+                    )}
                 </Stack>
             </Container>
         </ClassLayout>

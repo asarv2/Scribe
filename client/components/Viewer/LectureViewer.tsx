@@ -364,7 +364,7 @@ export default function LectureViewer({
                 <Box style={{ 
                     position: 'relative', 
                     width: '100%',
-                    aspectRatio: '1',
+                    aspectRatio: '16/9',
                     overflow: "hidden",
                     display: "flex",
                     alignItems: "center",
@@ -465,49 +465,63 @@ export default function LectureViewer({
                     </Box>
                 </Box>
                 
-                {/* Tighter preview strip */}
-                <Flex
-                    ref={previewScrollRef}
-                    gap={4}
+                {/* Preview strip with fixed height and better visibility */}
+                <Box 
                     style={{
-                        overflowX: 'auto',
-                        padding: '2px',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        height: '40px', // Fixed height
+                        marginBottom: '4px' // Add some space between preview and description
                     }}
                 >
-                    {filteredDocuments?.map((doc) => (
-                        <Box
-                            key={doc.id}
-                            data-document={doc.id}
-                            style={{
-                                cursor: 'pointer',
-                                width: 40,
-                                height: 40,
-                                position: 'relative',
-                                flexShrink: 0,
-                                borderRadius: '4px',
-                                overflow: 'hidden',
-                            }}
-                            onClick={() => handlePageClick(doc.id)}
-                        >
-                            <Image
-                                src={getActiveImage(doc.id)}
-                                alt={`Page ${doc.page}`}
-                                width={40}
-                                height={40}
-                                style={{ 
-                                    objectFit: 'cover',
-                                    outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
-                                    outlineOffset: '-2px',
+                    <Flex
+                        ref={previewScrollRef}
+                        gap={4}
+                        style={{
+                            overflowX: 'auto',
+                            padding: '2px',
+                            height: '100%',
+                            width: '100%'
+                        }}
+                    >
+                        {filteredDocuments?.map((doc) => (
+                            <Box
+                                key={doc.id}
+                                data-document={doc.id}
+                                style={{
+                                    cursor: 'pointer',
+                                    width: 35, // Slightly smaller
+                                    height: 35, // Slightly smaller
+                                    position: 'relative',
+                                    flexShrink: 0,
+                                    borderRadius: '4px',
+                                    overflow: 'hidden',
                                 }}
-                                sizes="100vw"
-                            />
-                        </Box>
-                    ))}
-                </Flex>
+                                onClick={() => handlePageClick(doc.id)}
+                            >
+                                <Image
+                                    src={getActiveImage(doc.id)}
+                                    alt={`Page ${doc.page}`}
+                                    width={35}
+                                    height={35}
+                                    style={{ 
+                                        objectFit: 'cover',
+                                        outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                                        outlineOffset: '-2px',
+                                    }}
+                                    sizes="100vw"
+                                />
+                            </Box>
+                        ))}
+                    </Flex>
+                </Box>
 
-                {/* Description with minimal padding */}
-                <Box style={{ overflow: 'auto', paddingInline: '2px' }}>
+                {/* Description with flex-grow to take remaining space */}
+                <Box style={{ 
+                    overflow: 'auto', 
+                    paddingInline: '2px',
+                    flexGrow: 1,
+                    minHeight: '80px' // Ensure description always has some minimum height
+                }}>
                     <Text fw={500} size="sm">
                         <Latex>{filteredDocuments?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
                     </Text>

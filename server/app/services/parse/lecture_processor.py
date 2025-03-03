@@ -73,6 +73,7 @@ class LectureProcessor(BaseProcessor):
 
             # Generate response using AI with increased retries and wait time
             response = await self.robust_generate(
+                None,
                 message,
                 model="gemini-2.0-flash-lite"
             )

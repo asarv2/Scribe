@@ -1,0 +1,13 @@
+{
+  "name": "scryb-brightspace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.307",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "tsc && cp src/popup.html dist/ && cp manifest.json dist/ && cp -r images dist/"
+  }
+}
