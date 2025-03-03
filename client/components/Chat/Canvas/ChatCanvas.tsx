@@ -3,7 +3,7 @@
  * This component is for chatting with the AI.
  */
 
-import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Center } from "@mantine/core";
+import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
 import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck } from "@tabler/icons-react";
@@ -16,13 +16,13 @@ import { getChat } from "@/utils/queries/get-chat";
 import { getMessages } from "@/utils/queries/get-messages";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getProfessor } from "@/utils/queries/get-professor";
-import { createChat } from "@/utils/services/chat";
+import { createChat, updateChatRating } from "@/utils/services/chat";
 import { getAvatarUrl } from "@/utils/services/images";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
 import { TypeAnimation } from 'react-type-animation';
 
-import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode } from "@/types";
+import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode, Exercise } from "@/types";
 import { getUser } from "@/utils/queries/get-user";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { ContextPanel } from "../ContextPanel";
@@ -144,11 +144,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         context: {
             lectures: [],
             chapters: [],
-            exercises: [],
             homeworks: [],
         },
-        chatType: profile?.admin || profile?.professor ? 'general-teacher' : 'general-student',
-        teacher: (profile?.admin || profile?.professor) ?? false
+        chatType: 'general-student',
+        teacher: false,
+        rating: null
     });
 
     // Combine all loading states
@@ -159,59 +159,37 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     // Add this state to track message submission
 
-    const getDocuments = () => {
-        // Previous document references from context
-        const lectureDocs = lectureDocuments?.filter(document =>
-            activeChat.context.lectures.includes(document.lecture ?? "")
-        ) ?? [];
-        const chapterDocs = textbookDocuments?.filter(document => {
-            // Find the chapters that are in our context
-            const activeChapters = chapters?.filter(c =>
-                activeChat.context.chapters.includes(c.id)
-            );
-            // Check if the document's page falls within any active chapter's page range
-            return activeChapters?.some(chapter =>
-                document.textbook === chapter.textbook &&
-                document.page >= chapter.start_page &&
-                document.page <= chapter.end_page
-            );
-        }) ?? [];
-        // const exerciseDocs = textbookDocuments?.filter(document => {
-        //     const activeExercises = exercises?.filter(e =>
-        //         activeChat.context.exercises.includes(e.id)
-        //     );
-        //     // Check if document's page falls within any active exercise's range
-        //     return activeExercises?.some(exercise => {
-        //         const parentChapter = chapters?.find(c => c.id === exercise.chapter);
-        //         return parentChapter?.textbook === document.textbook &&
-        //             document.page >= exercise.start_page &&
-        //             document.page <= exercise.end_page;
-        //     });
-        // }) ?? [];
-        const homeworkDocs = textbookDocuments?.filter(document => {
-            const homework = homeworkData?.find(h => document.homeworks.includes(h.id));
-            return homework && activeChat.context.homeworks.includes(homework.id);
-        }) ?? [];
+    // Add state for the thank you message
+    const [showThankYou, setShowThankYou] = useState(false);
 
-        // Previous message references
-        const previousMessagesDocs = messages?.flatMap(message =>
+    const getLectureContext = () => {
+        const previousMessagesLectures = messages?.flatMap(message =>
             // Check if references exists and is an array before accessing
-            Array.isArray(message.documents) ? message.documents : []
+            Array.isArray(message.lectures) ? message.lectures : []
         ) ?? [];
 
-        // Get the actual documents from the references
-        const messageDocuments = ([...textbookDocuments ?? [], ...lectureDocuments ?? []]).filter(document =>
-            previousMessagesDocs.includes(document.id)
+        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? []), ...previousMessagesLectures]));
+        return allLectures;
+    }
+
+    const getChapterContext = () => {
+        const previousMessagesChapters = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.chapters) ? message.chapters : []
         ) ?? [];
 
-        // Combine all references, removing duplicates
-        return Array.from(new Set([
-            ...lectureDocs,
-            ...chapterDocs,
-            // ...exerciseDocs,
-            ...homeworkDocs,
-            ...messageDocuments
-        ]));
+        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...previousMessagesChapters]));
+        return allChapters;
+    }
+
+    const getHomeworkContext = () => {
+        const previousMessagesHomeworks = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.homeworks) ? message.homeworks : []
+        ) ?? [];
+
+        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? []), ...previousMessagesHomeworks]));
+        return allHomeworks;
     }
 
     const getAdditionalContextForBareQuestion = () => {
@@ -221,7 +199,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         activeChat.context.lectures.forEach(lectureId => {
             const lecture = lectures?.find(l => l.id === lectureId);
             if (lecture) {
-                contextParts.push(`Lecture: ${lecture.name}`);
+                contextParts.push(`Lecture ${lecture.note_number}: ${lecture.name}`);
             }
         });
 
@@ -233,29 +211,17 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             }
         });
 
-        // Add exercise context
-        // activeChat.context.exercises.forEach(exerciseId => {
-        //     const exercise = exercises?.find(e => e.id === exerciseId);
-        //     const chapter = exercise ? chapters?.find(c => c.id === exercise.chapter) : null;
-        //     if (exercise && chapter) {
-        //         const exerciseTitle = exercise.title !== ""
-        //             ? exercise.title
-        //             : `Exercise ${chapter.chapter_number}.${exercise.exercise_number}`;
-        //         contextParts.push(`Exercise: ${exerciseTitle}`);
-        //     }
-        // });
-
         // Add homework context
         activeChat.context.homeworks.forEach(homeworkId => {
             const homework = homeworkData?.find(h => h.id === homeworkId);
             if (homework) {
-                contextParts.push(`Homework: ${homework.title}`);
+                contextParts.push(`Homework ${homework.homework_number}: ${homework.title}`);
             }
         });
 
         // If there's any context, add a prefix
         if (contextParts.length > 0) {
-            return `\n\nContext:\n${contextParts.join('\n')}`;
+            return `\n\nContext:\n\n${contextParts.join('\n')}\n`;
         }
 
         return '';
@@ -274,7 +240,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             let profileId = profile?.id;
             let newChatId = chatId;
 
-            const responseUrl =  `${process.env.NEXT_PUBLIC_API_URL}`
+            const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
 
             if (chatId === "new") {
                 // Create new generation with type and metadata including teacherOption
@@ -299,8 +265,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 bare_question: activeChat.prompt + additionalContextForBareQuestion,
                 question: activeChat.prompt,
                 response_url: responseUrl,
-                documents: getDocuments().map(doc => doc.id),
-                exercises: activeChat.context.exercises, // these can stay as they are
+                // documents: getDocuments().map(doc => doc.id), // will need to remove this later
+                lectures: getLectureContext(),
+                chapters: getChapterContext(),
+                homeworks: getHomeworkContext(),
+                // exercises: activeChat.context.exercises, // these can stay as they are
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -330,7 +299,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 context: {
                     lectures: [],
                     chapters: [],
-                    exercises: [],
                     homeworks: [],
                 }
             });
@@ -418,8 +386,8 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     }, []);
 
     const handleOptionClick = useCallback((type: ChatType, isTeacherMode: boolean = false, teacherOption: string = '') => {
-        setActiveChat(prev => ({ 
-            ...prev, 
+        setActiveChat(prev => ({
+            ...prev,
             chatType: type,
             teacher: isTeacherMode || prev.teacher
         }));
@@ -427,59 +395,41 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     }, []);
 
     const handleContextClick = useCallback((
-        contextType: string,
+        contextType: 'lectures' | 'chapters' | 'homeworks',
         contextId: string,
-        allDocuments: Document[],
-        setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
+        setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>,
+        documentId?: string,
+        textbookId?: string,
+        exerciseId?: string,
     ) => {
-        console.log("Handling context click:", contextType, contextId);
         // For lectures
-        if (contextType === 'lectures') {
-            const doc = allDocuments.find(d => d.lecture === contextId);
-            if (doc) {
-                setViewerMode({
-                    active: true,
-                    documentId: doc.id,
-                    lectureId: doc.lecture ?? undefined,
-                });
-            }
+        if (contextType === 'lectures' && documentId) {
+            setViewerMode({
+                active: true,
+                documentId: documentId,
+                lectureId: contextId,
+            });
         }
         // For chapters
-        else if (contextType === 'chapters') {
-            const doc = allDocuments.find(d => d.chapter === contextId);
-            if (doc) {
-                setViewerMode({
-                    active: true,
-                    documentId: doc.id,
-                    textbookId: doc.textbook ?? undefined,
-                    chapterId: contextId,
-                });
-            }
-        }
-        // For exercises
-        else if (contextType === 'exercises') {
-            const doc = allDocuments.find(d => d.exercise === contextId);
-            if (doc) {
-                setViewerMode({
-                    active: true,
-                    documentId: doc.id,
-                    textbookId: doc.textbook ?? undefined,
-                    chapterId: doc.chapter ?? undefined,
-                    exerciseId: contextId,
-                });
-            }
-        }
-        // For homeworks
-        else if (contextType === 'homeworks') {
-            const doc = allDocuments.find(d => d.homework === contextId);
-            if (doc) {
-                setViewerMode({
-                    active: true,
-                    documentId: doc.id,
-                    homeworkId: contextId,
-                    exerciseId: doc.exercise ?? undefined,
-                });
-            }
+        else if (contextType === 'chapters' && documentId && textbookId) {
+            setViewerMode({
+                active: true,
+                documentId: documentId,
+                textbookId: textbookId,
+                chapterId: contextId,
+            });
+        } else if (contextType === 'chapters' && exerciseId) {
+            setViewerMode({
+                active: true,
+                chapterId: contextId,
+                exerciseId: exerciseId,
+            });
+        } else if (contextType === 'homeworks' && exerciseId) {
+            setViewerMode({
+                active: true,
+                homeworkId: contextId,
+                exerciseId: exerciseId,
+            });
         }
     }, []);
 
@@ -593,11 +543,51 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         };
     }, [chatId, queryClient, supabase]);
 
+    useEffect(() => {
+        if (profile) {
+            setActiveChat(prev => ({
+                ...prev,
+                chatType: profile.admin || profile.professor ? 'general-teacher' : 'general-student',
+                teacher: profile.admin || profile.professor
+            }));
+        }
+    }, [profile]);
 
-    // Simplify the rating change handler - no need to show/hide thank you message
+    // Handle rating change
     const handleRatingChange = async (value: number) => {
-        // Just save the rating to your database
-        // For example: await updateChatRating(chatId, value);
+        // Set the rating and show thank you message immediately
+        setShowThankYou(true);
+
+        // If we have an existing chat, update the rating in the database
+        if (existingChat && chatId !== "new") {
+            try {
+                const { success, error } = await updateChatRating(chatId, value);
+                if (!success) {
+                    throw new Error(error);
+                }
+
+                // Invalidate the query to refresh the chat data
+                await queryClient.invalidateQueries({
+                    queryKey: ["chat", chatId],
+                    exact: true
+                });
+            } catch (error) {
+                console.error("Error updating rating:", error);
+                notifications.show({
+                    title: "Error",
+                    message: "Failed to save your rating. Please try again.",
+                    color: "red"
+                });
+                // Reset thank you message on error
+                setShowThankYou(false);
+                return;
+            }
+        }
+
+        // Hide the thank you message after 3 seconds
+        setTimeout(() => {
+            setShowThankYou(false);
+        }, 3000);
     };
 
     return (
@@ -625,25 +615,58 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                         }}
                                     />
                                 ) : (
-                                    <Text size="xl" fw={700}>
-                                        {activeChat.title}
-                                    </Text>
+                                    activeChat.title
                                 )}
                             </Text>
                             {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
                                 <Badge color={
-                                    existingChat.type.includes('homework') ? 'blue' :
+                                    existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'blue' :
                                         existingChat.type === 'concept' ? 'cyan' :
                                             existingChat.type === 'review' ? 'teal' :
-                                                existingChat.type === 'generate' ? 'violet' :
-                                                    existingChat.type === 'method' ? 'green' :
-                                                        existingChat.type === 'other' ? 'indigo' :
+                                                existingChat.type === 'method' ? 'green' :
+                                                    existingChat.type === 'generate' ? 'indigo' :
+                                                        existingChat.type === 'other' ? 'orange' :
                                                             'gray'
                                 }>
-                                    {existingChat.type.startsWith('teacher-') 
-                                        ? existingChat.type.replace('teacher-', '').charAt(0).toUpperCase() + existingChat.type.replace('teacher-', '').slice(1)
-                                        : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
+                                    {existingChat.type.startsWith('homework-')
+                                        ? 'Homework'
+                                        : existingChat.type === 'concept'
+                                            ? 'Conceptual'
+                                            : existingChat.type === 'method'
+                                                ? 'Approach'
+                                                : existingChat.type === 'generate'
+                                                    ? 'Generated'
+                                                    : existingChat.type === 'other'
+                                                        ? 'Other'
+                                                        : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
                                 </Badge>
+                            )}
+                        </Group>
+
+                        {/* Rating component with thank you message */}
+                        <Group>
+                            {showThankYou ? (
+                                <Group gap="xs" style={{
+                                    opacity: showThankYou ? 1 : 0,
+                                    transition: 'opacity 0.8s ease-in-out'
+                                }}>
+                                    <IconCheck size={18} color="green" />
+                                    <Text size="sm" c="green">Thanks for your feedback!</Text>
+                                </Group>
+                            ) : (
+                                <>
+                                    {existingChat?.rating === null && (
+                                        <Text size="sm" c="dimmed">Rate this chat:</Text>
+                                    )}
+                                    {existingChat && (
+                                        <Rating
+                                            value={existingChat?.rating || 0}
+                                            onChange={handleRatingChange}
+                                            readOnly={existingChat?.rating !== null}
+                                            size="md"
+                                        />
+                                    )}
+                                </>
                             )}
                         </Group>
                     </Flex>
@@ -659,83 +682,13 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     height: "80vh"
                                 }}
                             >
-                                {existingChat && (
-                                    <Flex 
-                                        justify="flex-end" 
-                                        style={{ 
-                                            marginTop: '-13px', 
-                                            marginRight: '-5px',
-                                            paddingBottom: '7px',
-                                        }}
-                                    >
-                                        <Group gap="xs">
-                                            <Text size="sm" c="white">Rate this chat:</Text>
-                                            <Rating
-                                                value={existingChat.rating || 0}
-                                                onChange={handleRatingChange}
-                                                size="md"
-                                            />
-                                        </Group>
-                                    </Flex>
-                                )}
-
-                                {isInitializing ? (
-                                    <Skeleton height={40} mb="md" />
-                                ) : (
-                                    chatId === "new" && (
-                                        <Group justify="space-between" mb="md">
-                                            <Group gap="xs">
-                                                <IconSchool 
-                                                    size={18} 
-                                                    color={!activeChat.teacher ? 'currentColor' : 'gray'} 
-                                                />
-                                                <Text 
-                                                    size="sm" 
-                                                    c={!activeChat.teacher ? undefined : 'dimmed'}
-                                                    fw={600}
-                                                >
-                                                    Student Mode
-                                                </Text>
-                                            </Group>
-
-                                            <ActionIcon
-                                                variant="transparent"
-                                                onClick={() => setActiveChat({ 
-                                                    ...activeChat, 
-                                                    teacher: !activeChat.teacher,
-                                                    chatType: !activeChat.teacher ? 'general-teacher' : 'general-student'
-                                                })}
-                                                title={`Switch to ${activeChat.teacher ? 'student' : 'teacher'} mode`}
-                                            >
-                                                <IconCaretLeftRight size={24} />
-                                            </ActionIcon>
-
-                                            <Group gap="xs">
-                                                <Text 
-                                                    size="sm" 
-                                                    c={activeChat.teacher ? undefined : 'dimmed'}
-                                                    fw={600}
-                                                >
-                                                    Teacher Mode
-                                                    
-                                                </Text>
-                                                <IconChalkboard 
-                                                    size={18} 
-                                                    color={activeChat.teacher ? 'currentColor' : 'gray'} 
-                                                />
-                                            </Group>
-                                        </Group>
-                                    )
-                                )}
-
                                 <MessageList
                                     chatId={chatId}
                                     classId={classId}
                                     colorScheme={colorScheme}
-                                    showWelcome={existingChat && (existingChat.type === 'general-student' || existingChat.type === 'general-teacher') ? false : true}
-                                    welcomeFollowUp={existingChat && (existingChat.type === 'general-student' || existingChat.type === 'general-teacher') ? false : welcomeMessages.followUp}
                                     existingChat={existingChat ?? null}
                                     activeChat={activeChat}
+                                    setActiveChat={setActiveChat}
                                     onOptionClick={handleOptionClick}
                                     setViewerMode={setViewerMode}
                                     isInitializing={isInitializing}
@@ -750,7 +703,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     onSend={handleChat}
                                     onRemoveContext={handleRemoveContext}
                                     onScrollToSection={handleScrollToSection}
-                                    handleContextClick={handleContextClick}
                                     setViewerMode={setViewerMode}
                                     expandedSections={expandedSections}
                                     toggleSection={toggleSection}
