@@ -41,13 +41,11 @@
       "downloads",
       "scripting",
       "cookies",
-      "storage"
+      "storage",
+      "webRequest"
     ],
     "host_permissions": [
       "https://purdue.brightspace.com/*"
-    ],
-    "background": {
-      "persistent": false
-    }
+    ]
   }
 }

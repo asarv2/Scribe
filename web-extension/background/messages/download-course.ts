@@ -19,12 +19,111 @@ interface DownloadCourseResponse {
 const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCourseResponse> = async (req, res) => {
   const { courseId } = req.body;
   let tab: chrome.tabs.Tab | undefined;
+  let downloadListener: any;
   
   const storage = new Storage();
   
   try {
+    // Add network request listener for the initial download request
+    downloadListener = (details: chrome.webRequest.WebRequestHeadersDetails) => {
+      console.log("[Background] WebRequest intercepted:", {
+        url: details.url,
+        type: details.type,
+        method: details.method,
+        requestId: details.requestId
+      });
+
+      // Listen for both the initiation request and the final download
+      if (details.url.includes('/InitiateCourseDownload') || 
+          details.url.includes('/downloads/Course/')) {
+        console.log("[Background] Matched download pattern:", details.url);
+      }
+    };
+
+    // Add the listener without blocking
+    console.log("[Background] Adding webRequest listener...");
+    chrome.webRequest.onBeforeRequest.addListener(
+      downloadListener,
+      { 
+        urls: [
+          "*://*.brightspace.com/d2l/le/content/*/startdownload/InitiateCourseDownload*",
+          "*://*.brightspace.com/d2l/le/content/*/downloads/Course/*"
+        ]
+      }
+    );
+
+    // Add a downloads listener instead
+    chrome.downloads.onCreated.addListener(async (downloadItem) => {
+      if (downloadItem.url.includes('/downloads/Course/')) {
+        console.log("[Background] Download created:", downloadItem);
+        
+        try {
+          // Get the cookies for authentication
+          const cookies = await chrome.cookies.getAll({ url: downloadItem.url });
+          const cookieHeader = cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; ');
+          
+          // Fetch the file
+          const response = await fetch(downloadItem.url, {
+            headers: {
+              'Cookie': cookieHeader
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          // Get the file data
+          const blob = await response.blob();
+          
+          // Ensure we have a valid filename
+          const filename = downloadItem.filename || 'course_content.zip';
+          
+          // Create FormData to send the file
+          const formData = new FormData();
+          formData.append('file', new File([blob], filename, { type: 'application/zip' }));
+          formData.append('course_id', courseId);
+          formData.append('filename', filename);
+          
+          console.log("[Background] Uploading file to server:", {
+            filename: filename,
+            courseId: courseId,
+            size: blob.size,
+            formData: Object.fromEntries(formData.entries()) // Debug formData contents
+          });
+          
+          // Upload to server
+          const uploadResponse = await fetch(`${process.env.PLASMO_PUBLIC_API_URL}/upload/zip`, {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            console.error('[Background] Upload response:', {
+              status: uploadResponse.status,
+              statusText: uploadResponse.statusText,
+              body: errorText
+            });
+            throw new Error(`Upload failed: ${errorText}`);
+          }
+          
+          const result = await uploadResponse.json();
+          console.log('[Background] Upload successful:', result);
+          
+          // Cancel the original download
+          chrome.downloads.cancel(downloadItem.id);
+          
+        } catch (error) {
+          console.error('[Background] Error processing download:', error);
+          storage.set('downloadStatus', `Error: ${error.message}`);
+        }
+      }
+    });
+
     // Update status
     await storage.set('downloadStatus', 'Creating tab...');
+    console.log("[Background] Creating new tab...");
     
     const contentPageUrl = `https://purdue.brightspace.com/d2l/le/content/${courseId}/Home`;
     tab = await chrome.tabs.create({ url: contentPageUrl, active: false });
@@ -32,6 +131,8 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     if (!tab || !tab.id) {
       throw new Error("Failed to create tab");
     }
+
+    console.log("[Background] Tab created:", tab.id);
 
     // Update status
     await storage.set('downloadStatus', 'Waiting for page load...');
@@ -41,6 +142,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
       const timeout = setTimeout(() => reject(new Error("Page load timeout")), 30000);
       const listener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
         if (tabId === tab.id && changeInfo.status === 'complete') {
+          console.log("[Background] Tab loaded:", tabId);
           chrome.tabs.onUpdated.removeListener(listener);
           clearTimeout(timeout);
           setTimeout(resolve, 2000);
@@ -52,80 +154,38 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     // Update status
     await storage.set('downloadStatus', 'Looking for download button...');
 
-    // Execute content script
+    // Execute content script to monitor the download variable
+    console.log("[Background] Executing content script...");
     const [results] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
         return new Promise((resolve) => {
-          console.log("Starting download detection...");
+          console.log("[Content] Starting download monitoring...");
           
-          // Save initial HTML state
-          const initialHTML = document.documentElement.outerHTML;
-          console.log("Initial page HTML:", initialHTML);
-
-          // Track HTML changes
-          let lastHTML = initialHTML;
-          const debugObserver = new MutationObserver(() => {
-            const currentHTML = document.documentElement.outerHTML;
-            if (currentHTML !== lastHTML) {
-              console.log("Page HTML changed:", currentHTML);
-              lastHTML = currentHTML;
-            }
-          });
-
-          debugObserver.observe(document.documentElement, {
-            childList: true,
-            subtree: true,
-            attributes: true
-          });
-
-          // Listen for network requests
+          // Monitor network requests
           const originalXHR = window.XMLHttpRequest.prototype.open;
           window.XMLHttpRequest.prototype.open = function(...args) {
-            console.log("XHR Request:", args);
+            console.log("[Content] XHR Request:", args);
+            if (args[1]?.includes('InitiateCourseDownload')) {
+              console.log("[Content] Download initiation detected");
+            }
             return originalXHR.apply(this, args);
           };
 
-          // Listen for fetch requests
-          const originalFetch = window.fetch;
-          window.fetch = function(...args) {
-            console.log("Fetch Request:", args);
-            return originalFetch.apply(this, args);
-          };
-
-          // Create a MutationObserver to watch for the download link
-          const observer = new MutationObserver((mutations) => {
-            console.log("Mutation observed:", mutations);
-            
-            // Look for any anchors that might be download related
-            const allAnchors = document.querySelectorAll('a');
-            console.log("All anchors on page:", Array.from(allAnchors).map(a => ({
-              href: a.href,
-              download: a.download,
-              text: a.textContent,
-              attributes: Array.from(a.attributes).map(attr => `${attr.name}="${attr.value}"`)
-            })));
-
-            for (const mutation of mutations) {
-              const downloadLink = document.querySelector('a[download][href*="/d2l/le/content/"]');
-              if (downloadLink) {
-                console.log("Found download link:", downloadLink);
-                observer.disconnect();
-                debugObserver.disconnect();
-                const url = (downloadLink as HTMLAnchorElement).href;
-                const filename = (downloadLink as HTMLAnchorElement).download;
-                resolve({ url, filename });
-                return;
-              }
+          // Monitor for the download variable
+          let downloadJobId = null;
+          Object.defineProperty(window, 'DownloadProgressDialogResultJSVariable', {
+            set: function(value) {
+              console.log("[Content] Download job ID set:", value);
+              downloadJobId = value;
+              // You can now construct the final URL
+              const orgUnitId = window.location.pathname.split('/')[5]; // Extract from URL
+              const finalUrl = `/d2l/le/content/${orgUnitId}/downloads/Course/${value}/Download`;
+              console.log("[Content] Final download URL:", finalUrl);
+            },
+            get: function() {
+              return downloadJobId;
             }
-          });
-
-          // Start observing with broader scope
-          observer.observe(document, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            characterData: true
           });
 
           // Find and click download button
@@ -134,7 +194,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
               const hasDownloadText = btn.textContent?.trim() === 'Download';
               const hasDownloadIcon = btn.querySelector('.d2l-icon-custom');
               const hasLeftFloat = (btn as HTMLElement).style.cssText.includes('float:left');
-              console.log("Checking button:", {
+              console.log("[Content] Checking button:", {
                 text: btn?.textContent?.trim(),
                 hasIcon: !!btn?.querySelector('.d2l-icon-custom'),
                 style: btn?.getAttribute('style'),
@@ -147,7 +207,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             document.querySelector('button.d2l-button[id^="d2l_"][id*="_"][id*="_"]')
           ];
 
-          console.log("Found possible buttons:", possibleButtons.map(btn => ({
+          console.log("[Content] Found possible buttons:", possibleButtons.map(btn => ({
             id: btn?.id,
             text: btn?.textContent?.trim(),
             class: btn?.className,
@@ -158,42 +218,17 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           const downloadButton = possibleButtons.find(btn => btn) as HTMLButtonElement;
           
           if (downloadButton) {
-            console.log("Found and clicking button:", {
-              id: downloadButton.id,
-              text: downloadButton.textContent?.trim(),
-              class: downloadButton.className,
-              style: downloadButton.getAttribute('style'),
-              html: downloadButton.outerHTML
-            });
-            
-            // Try both click methods
+            console.log("[Content] Found download button, clicking...");
             downloadButton.click();
-            downloadButton.dispatchEvent(new MouseEvent('click', {
-              bubbles: true,
-              cancelable: true,
-              view: window
-            }));
-            
-            console.log("Button clicked");
           } else {
-            console.log("No download button found");
-            // Save HTML for debugging
-            console.log("Full page HTML at failure:", document.documentElement.outerHTML);
+            console.log("[Content] Download button not found");
             resolve(null);
           }
-
-          // Set timeout
-          setTimeout(() => {
-            console.log("Timeout reached. Final page HTML:", document.documentElement.outerHTML);
-            observer.disconnect();
-            debugObserver.disconnect();
-            resolve(null);
-          }, 10000);
         });
       }
     });
 
-    console.log("Script execution complete. Results:", results);
+    console.log("[Background] Script execution complete. Results:", results);
 
     // Update status
     await storage.set('downloadStatus', 'Processing download...');
@@ -202,58 +237,37 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
       throw new Error("No download link found");
     }
 
-    // Close the tab. Not doing temporarily to debug
-    // if (tab.id) {
-    //   await chrome.tabs.remove(tab.id);
-    // }
-
-    // Update status
-    await storage.set('downloadStatus', 'Starting download...');
-
-    // Process download
-    const downloadId = await chrome.downloads.download({
-      url: (results.result as DownloadItem).url,
-      filename: `D2L Downloads/${courseId}/${(results.result as DownloadItem).filename}`,
-      saveAs: false
-    });
-
-    // Wait for download to complete
-    await new Promise((resolve, reject) => {
-      chrome.downloads.onChanged.addListener(function listener(delta) {
-        if (delta.id === downloadId) {
-          if (delta.state?.current === 'complete') {
-            chrome.downloads.onChanged.removeListener(listener);
-            resolve(undefined);
-          } else if (delta.error) {
-            chrome.downloads.onChanged.removeListener(listener);
-            reject(new Error(`Download failed: ${delta.error.current}`));
-          }
-        }
-      });
-    });
+    // Wait for a reasonable time for the download to complete
+    await new Promise((resolve) => setTimeout(resolve, 30000));
 
     // Update status
     await storage.set('downloadStatus', 'Download complete!');
 
     res.send({
-      success: true,
-      downloads: [results.result as DownloadItem]
+      success: true
     });
 
   } catch (error) {
-    console.error("Error downloading course content:", error);
+    console.error("[Background] Error:", error);
     await storage.set('downloadStatus', `Error: ${error.message}`);
-    // if (tab?.id) {
-    //   try {
-    //     await chrome.tabs.remove(tab.id);
-    //   } catch (e) {
-    //     console.error("Error closing tab:", e);
-    //   }
-    // }
+    if (downloadListener) {
+      chrome.webRequest.onBeforeRequest.removeListener(downloadListener);
+    }
+    if (tab?.id) {
+      try {
+        await chrome.tabs.remove(tab.id);
+      } catch (e) {
+        console.error("Error closing tab:", e);
+      }
+    }
     res.send({
       success: false,
       error: error.message
     });
+  } finally {
+    if (downloadListener) {
+      chrome.webRequest.onBeforeRequest.removeListener(downloadListener);
+    }
   }
 }
 
