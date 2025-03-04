@@ -14,8 +14,14 @@ import { joinWaitlist } from "../utils/services/waitlist";
 import Image from "next/image";
 import classes from "../components/Landing.module.css";
 import { HomeLayout } from "@/components/Home/HomeLayout";
+import { getUser } from "@/utils/queries/get-user";
+import { useQuery } from "@tanstack/react-query";
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
+import { getProfile } from "@/utils/queries/get-profile";
+import { getClasses } from "@/utils/queries/get-classes";
 
 export default function Landing() {
+  const supabase = useSupabaseBrowser()
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,6 +58,28 @@ export default function Landing() {
     }
   }
 
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUser(supabase),
+  })
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: () => getProfile(supabase, user!.id),
+  })
+
+  const { data: classData } = useQuery({
+    queryKey: ["classes"],
+    queryFn: () => getClasses(supabase),
+  })
+
+  const getFilteredClasses = () => {
+    if (!profile || !classData) return [];
+    return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
+  };
+
+  const firstClass = getFilteredClasses()?.[0];
+
   return (
     <HomeLayout>
       <Container size="lg">
@@ -87,7 +115,42 @@ export default function Landing() {
                 <b>Private and Secure</b> - Students must have a code provided by professors to use the service.
               </List.Item>
             </List>
-
+            {!user && !profile ? (
+              <Group mt={30}>
+                <Link href="/login">
+                  <Button>
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button>
+                    Sign Up
+                  </Button>
+                </Link>
+              </Group>
+            ) : (
+              <>
+                {(profile?.professor || profile?.admin) ? (
+                  <Group mt={30}>
+                    <Button component={Link} href={`/classes/c/${firstClass?.id}`}>
+                      Home
+                    </Button>
+                  </Group>
+                ) : (
+                  <Group mt={30}>
+                    {getFilteredClasses().map((classItem) => (
+                      <Button key={classItem.id} component={Link} href={`/classes/c/${classItem.id}/chat/new`}>
+                        {classItem.class_code} Chat
+                      </Button>
+                    ))}
+                  </Group>
+                )}
+              </>
+            )}
+            {/* <Button component={Link} href="/signup">
+              Sign Up
+            </Button>
+{/* 
             <Group mt={30}>
               <Input
                 placeholder="Your Purdue email"
@@ -99,7 +162,7 @@ export default function Landing() {
               <Button onClick={handleClick} loading={isLoading}>
                 Join Waitlist
               </Button>
-            </Group>
+            </Group> */}
           </div>
 
           <Image

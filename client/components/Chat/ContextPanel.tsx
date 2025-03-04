@@ -269,19 +269,6 @@ export function ContextPanel({
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${document.id}.png`
     }
 
-    const getExerciseImageUrl = (chapterId: string | null) => {
-        if (!chapterId) return '/placeholder_image.svg';
-        // find the first exercise in the homework
-        const exercise = exercises?.find(e => e.chapter === chapterId);
-        if (!exercise) return '/placeholder_image.svg';
-
-        // find the textbook document that has the same page number, but null for the chapter, homework and exercise
-        const textbookDocumentExercise = textbookDocuments?.find(d => d.page === exercise.start_page && d.chapter === null && d.homework === null && d.exercise === null);
-        if (textbookDocumentExercise) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentExercise.textbook}/${textbookDocumentExercise.id}.png`;
-
-        return '/placeholder_image.svg';
-    }
-
     const getHomeworkImageUrl = (homeworkId: string) => {
         if (!homeworkId) return '/placeholder_image.svg';
         // find the first exercise in the homework

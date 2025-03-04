@@ -3,10 +3,10 @@
  * This component is for chatting with the AI.
  */
 
-import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating } from "@mantine/core";
+import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck } from "@tabler/icons-react";
+import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMediaQuery } from "@mantine/hooks";
@@ -38,6 +38,7 @@ import { getProblems } from "@/utils/queries/get-problems";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
+import ChatHistoryDropdown from "./ChatHistoryDropdown";
 
 export default function ChatCanvas({ classId, chatId }: { classId: string, chatId: string }) {
     const queryClient = useQueryClient();
@@ -590,6 +591,13 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }, 3000);
     };
 
+    // Add this function to handle chat selection
+    const handleChatSelect = (selectedChatId: string) => {
+        if (selectedChatId !== chatId) {
+            router.push(`/classes/c/${classId}/chat/${selectedChatId}`);
+        }
+    };
+
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -607,7 +615,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                         cursor={false}
                                         repeat={0}
                                         speed={50}
-                                        preRenderFirstString={!receivedRealtimeUpdate} // Only animate if we received a realtime update
+                                        preRenderFirstString={!receivedRealtimeUpdate}
                                         style={{
                                             fontSize: '1.25rem',
                                             fontWeight: 700,
@@ -618,6 +626,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     activeChat.title
                                 )}
                             </Text>
+
                             {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
                                 <Badge color={
                                     existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'blue' :
@@ -643,32 +652,16 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                             )}
                         </Group>
 
-                        {/* Rating component with thank you message */}
-                        <Group>
-                            {showThankYou ? (
-                                <Group gap="xs" style={{
-                                    opacity: showThankYou ? 1 : 0,
-                                    transition: 'opacity 0.8s ease-in-out'
-                                }}>
-                                    <IconCheck size={18} color="green" />
-                                    <Text size="sm" c="green">Thanks for your feedback!</Text>
-                                </Group>
-                            ) : (
-                                <>
-                                    {existingChat?.rating === null && (
-                                        <Text size="sm" c="dimmed">Rate this chat:</Text>
-                                    )}
-                                    {existingChat && (
-                                        <Rating
-                                            value={existingChat?.rating || 0}
-                                            onChange={handleRatingChange}
-                                            readOnly={existingChat?.rating !== null}
-                                            size="md"
-                                        />
-                                    )}
-                                </>
-                            )}
-                        </Group>
+                        {/* Show rating in top right corner only if it has been rated */}
+                        {existingChat && existingChat.rating !== null && (
+                            <Group>
+                                <Rating
+                                    value={existingChat.rating}
+                                    readOnly
+                                    size="md"
+                                />
+                            </Group>
+                        )}
                     </Flex>
 
                     <Grid>
@@ -682,6 +675,54 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     height: "80vh"
                                 }}
                             >
+                                {/* Add chat controls at the top right of the message list */}
+                                <Flex justify="space-between" align="center" mb={10}>
+                                    {/* Rating component - only show if not yet rated */}
+                                    {existingChat && existingChat.rating === null && (
+                                        <Group>
+                                            {showThankYou ? (
+                                                <Group gap="xs" style={{
+                                                    opacity: showThankYou ? 1 : 0,
+                                                    transition: 'opacity 0.8s ease-in-out'
+                                                }}>
+                                                    <IconCheck size={18} color="green" />
+                                                    <Text size="sm" c="green">Thanks for your feedback!</Text>
+                                                </Group>
+                                            ) : (
+                                                <>
+                                                    <Text size="sm" c="dimmed">Rate this chat:</Text>
+                                                    <Rating
+                                                        value={0}
+                                                        onChange={handleRatingChange}
+                                                        size="md"
+                                                    />
+                                                </>
+                                            )}
+                                        </Group>
+                                    )}
+                                    
+                                    {/* Chat history and new chat buttons */}
+                                    <Group gap="xs" ml="auto">
+                                        <ChatHistoryDropdown 
+                                            currentChatId={chatId} 
+                                            onChatSelect={handleChatSelect} 
+                                            classId={classId}
+                                        />
+                                        
+                                        <Tooltip label="Start a new chat">
+                                            <ActionIcon 
+                                                variant="subtle" 
+                                                size="md" 
+                                                aria-label="Start a new chat"
+                                                onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                                disabled={chatId === "new"}
+                                            >
+                                                <IconPlus size={18} />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    </Group>
+                                </Flex>
+
                                 <MessageList
                                     chatId={chatId}
                                     classId={classId}

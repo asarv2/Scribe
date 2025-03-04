@@ -7,10 +7,10 @@
 
 "use client"
 
-import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput } from "@mantine/core"
+import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
-import { login } from "@/utils/services/auth";
+import { login, createAnonymousUser } from "@/utils/services/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,14 +20,17 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Class } from "@/types";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
+import { checkEmail } from "@/utils/services/profile";
 
 export default function Login() {
     const supabase = useSupabaseBrowser()
     const queryClient = useQueryClient()
     const router = useRouter()
+    const [isProfessor, setIsProfessor] = useState(false)
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [lastName, setLastName] = useState("") // used for student login
+    const [email, setEmail] = useState("") // used for both student and professor login
+    const [password, setPassword] = useState("") // used for professor login
     const [loading, setLoading] = useState(false)
 
     const { data: classes, isLoading: classesLoading } = useQuery({
@@ -35,39 +38,83 @@ export default function Login() {
         queryFn: () => getClasses(supabase)
     })
 
-
     const handleLogin = async () => {
         setLoading(true)
         try {
-            // Login logic here
-            if (!email || !password) {
-                throw new Error("Please enter email and password")
-            }
+            if (isProfessor) {
+                // Professor login logic
+                if (!email || !password) {
+                    throw new Error("Please enter email and password")
+                }
 
-            if (!email.endsWith("@purdue.edu")) {
-                throw new Error("Please enter a valid Purdue email")
-            }
+                if (!email.endsWith("@purdue.edu")) {
+                    throw new Error("Please enter a valid Purdue email")
+                }
 
-            const { success, error, user } = await login(email, password)
-            if (!success || !user) {
-                throw new Error(error)
+                const { success, error, user } = await login(email, password)
+                if (!success || !user) {
+                    throw new Error(error)
+                } else {
+                    queryClient.invalidateQueries({
+                        queryKey: ["user"]
+                    })
+                    const profile = await getProfile(supabase, user.id)
+                    if (!profile) {
+                        throw new Error("Profile not found")
+                    }
+                    const filteredClasses = classes?.filter((c: Class) => (profile.professor && profile.classes.includes(c.id)) || profile.admin)
+                    if (filteredClasses?.length === 0) {
+                        throw new Error("No classes found")
+                    }
+                    const firstClass = filteredClasses?.[0]
+                    if (!firstClass) {
+                        throw new Error("No classes found")
+                    }
+                    router.push(`/classes/c/${firstClass.id}`)
+                }
             } else {
-                queryClient.invalidateQueries({
-                    queryKey: ["user"]
-                })
-                const profile = await getProfile(supabase, user.id)
-                if (!profile) {
+                // Student login logic
+                if (!lastName || !email) {
+                    throw new Error("Please enter last name and email")
+                }
+
+                if (!email.endsWith("@purdue.edu")) {
+                    throw new Error("Please enter a valid Purdue email")
+                }
+
+                // Check email
+                const { success: emailSuccess, error: emailError, profile: emailProfile } = await checkEmail(email)
+                if (!emailSuccess) {
+                    throw new Error(emailError)
+                }
+
+                if (!emailProfile) {
                     throw new Error("Profile not found")
                 }
-                const filteredClasses = classes?.filter((c: Class) => (profile.professor && profile.classes.includes(c.id)) || profile.admin)
-                if (filteredClasses?.length === 0) {
-                    throw new Error("No classes found")
+
+                if (lastName.toLowerCase() !== emailProfile.last_name.toLowerCase()) {
+                    throw new Error("Last name could not be verified")
                 }
-                const firstClass = filteredClasses?.[0]
-                if (!firstClass) {
-                    throw new Error("No classes found")
+
+                const { success, error, user } = await createAnonymousUser(emailProfile.first_name, emailProfile.last_name, email, emailProfile?.classes ?? [], emailProfile.id)
+                if (!success || !user) {
+                    throw new Error(error)
+                } else {
+                    queryClient.invalidateQueries({
+                        queryKey: ["user"]
+                    })
+                    const filteredClasses = classes?.filter((c: Class) => emailProfile.classes.includes(c.id))
+                    if (filteredClasses?.length === 0) {
+                        throw new Error("No classes found")
+                    }
+
+                    const firstClass = filteredClasses?.[0]
+                    if (!firstClass) {
+                        throw new Error("No classes found")
+                    }
+
+                    router.push(`/classes/c/${firstClass.id}/chat/new`)
                 }
-                router.push(`/classes/c/${firstClass.id}`)
             }
 
             notifications.show({
@@ -88,19 +135,65 @@ export default function Login() {
         }
     }
 
-
     return (
         <HomeLayout>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Center>
                     <Stack>
-                        <Text size="xl">Professor Login</Text>
-                        <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                        <PasswordInput placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        <Button color="teal" onClick={handleLogin} loading={loading}>Login</Button>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                            <Text size="xl">{isProfessor ? "Professor Login" : "Student Login"}</Text>
+                            <Switch
+                                checked={isProfessor}
+                                onChange={(e) => setIsProfessor(e.target.checked)}
+                                size="sm"
+                                mt={"4"}
+                            />
+                        </div>
+
+                        {isProfessor ? (
+                            // Professor login form
+                            <>
+                                <Input
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <PasswordInput
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </>
+                        ) : (
+                            // Student login form
+                            <>
+                                <Input
+                                    placeholder="Last name"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                />
+                                <Input
+                                    placeholder="Purdue Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </>
+                        )}
+
+                        <Button
+                            color="teal"
+                            onClick={handleLogin}
+                            loading={loading}
+                        >
+                            Login
+                        </Button>
+
                         <Divider />
-                        <Link href="/login/student" style={{ width: "100%" }}>
-                            <Button color="blue" style={{ width: "100%" }}>I'm a Student</Button>
+
+                        <Link href="/signup" style={{ width: "100%" }}>
+                            <Button color="blue" style={{ width: "100%" }}>
+                                I don't have an account
+                            </Button>
                         </Link>
                     </Stack>
                 </Center>

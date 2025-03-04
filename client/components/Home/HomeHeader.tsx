@@ -59,18 +59,29 @@ export function HomeHeader() {
             </Group>
 
             <Group>
-                {user ? (
+                {user && profile ? (
                     // <AccountMenu profile={profile} />
-                    <Link href={`/classes/c/${firstClass?.id}`}>
-                        <Button size="sm">
-                            Home
-                        </Button>
-                    </Link>
+                    <>
+                        {profile?.professor || profile?.admin ? (
+                            <Link href={`/classes/c/${firstClass?.id}`}>
+                                <Button size="sm">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
+                                <Button size="sm">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        )}
+                    </>
+
                 ) : (
                     <>
-                        <Link href="/login">
+                        <Link href="/signup">
                             <Button size="sm">
-                                Login
+                                Get Started
                             </Button>
                         </Link>
                         {/* <Link href="/signup" className={classes.link}>

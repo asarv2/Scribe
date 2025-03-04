@@ -91,8 +91,8 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
             </Group>
             <Group gap="md">
                 {getFilteredClasses(profile, classData).map((classItem) => (
-                    <Link key={classItem.id} href={`/classes/c/${classItem.id}`}>
-                        <Button 
+                    <Link key={classItem.id} href={profile?.professor || profile?.admin ? `/classes/c/${classItem.id}` : `/classes/c/${classItem.id}/chat/new`}>
+                        <Button
                             variant="subtle"
                             styles={(theme) => ({
                                 root: {

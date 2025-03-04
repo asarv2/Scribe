@@ -51,10 +51,10 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
             <AppShell
                 header={{ height: 60 }}
                 navbar={{
-                    width: {
+                    width: profile && (profile.professor || profile.admin) ? {
                         base: NAVBAR_CONSTANTS.COLLAPSED_WIDTH,
                         expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
-                    },
+                    } : 0,
                     breakpoint: 'sm',
                 }}
                 padding="md"
@@ -68,14 +68,16 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
                     <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} />
                 </AppShell.Header>
 
-                <AppShell.Navbar>
-                    <ClassNavbar
-                        classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id}
-                        basePath={`/classes/c/${classId ?? getFilteredClasses(profile, classData)?.[0]?.id}`}
-                        isExpanded={isExpanded}
-                        onExpandedChange={setIsExpanded}
-                    />
-                </AppShell.Navbar>
+                {profile && (profile.professor || profile.admin) && (
+                    <AppShell.Navbar>
+                        <ClassNavbar
+                            classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id}
+                            basePath={`/classes/c/${classId ?? getFilteredClasses(profile, classData)?.[0]?.id}`}
+                            isExpanded={isExpanded}
+                            onExpandedChange={setIsExpanded}
+                        />
+                    </AppShell.Navbar>
+                )}
 
                 <AppShell.Main>
                     {children}
