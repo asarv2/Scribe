@@ -10,9 +10,7 @@ import type { Class } from "~types"
 import { useEffect, useState } from "react"
 import type { Course } from "~contents/dashboardDetector"
 import type { CourseHomepage } from "~contents/homepageDetector"
-import type { PdfLink } from "~contents/linkExtractor"
 import { Storage } from "@plasmohq/storage"
-import { uploadMultiplePdfs } from "~contents/fileUploader"
 
 // Define page types
 enum PageType {
@@ -43,17 +41,11 @@ const Icons = {
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
-    ),
-    IconX: () => (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M18 6L6 18" />
-            <path d="M6 6l12 12" />
-        </svg>
     )
 }
 
 // Simplified DownloadStatus component
-function DownloadStatus({ onClose }: { onClose: () => void }) {
+function DownloadStatus() {
     const [status, setStatus] = useState<string>("");
     const storage = new Storage();
 
@@ -87,9 +79,9 @@ function DownloadStatus({ onClose }: { onClose: () => void }) {
             icon={icon}
             mt="md"
             withCloseButton
-            onClose={() => {
-                storage.set('downloadStatus', '');
-                onClose();
+            onClose={async () => {
+                await storage.set('downloadStatus', '');
+                setStatus('');
             }}
         >
             {status}
@@ -97,25 +89,15 @@ function DownloadStatus({ onClose }: { onClose: () => void }) {
     );
 }
 
-// Update the CourseCard component
+// Simplified CourseCard component
 function CourseCard({
     course,
-    onScan,
-    onUpload,
     onDownload,
-    isLoading,
-    isUploading,
-    isDownloading,
-    pdfLinksCount = 0
+    isDownloading
 }: {
     course: Course | CourseHomepage,
-    onScan: () => void,
-    onUpload: () => void,
     onDownload: () => void,
-    isLoading?: boolean,
-    isUploading?: boolean,
-    isDownloading?: boolean,
-    pdfLinksCount?: number
+    isDownloading?: boolean
 }) {
     return (
         <Card shadow="sm" p="md" withBorder>
@@ -125,23 +107,6 @@ function CourseCard({
                 <Text size="sm">Course Descriptor: {course.courseDescriptor}</Text>
             )}
             <Group mt="md">
-                <Button
-                    size="xs"
-                    onClick={onScan}
-                    loading={isLoading}
-                >
-                    Scan Content
-                </Button>
-                {pdfLinksCount > 0 && (
-                    <Button
-                        size="xs"
-                        onClick={onUpload}
-                        loading={isUploading}
-                        color="green"
-                    >
-                        Upload Content
-                    </Button>
-                )}
                 <Button
                     size="xs"
                     onClick={onDownload}
@@ -155,22 +120,6 @@ function CourseCard({
     )
 }
 
-// Add this component for the clear button
-function ClearButton({ onClick }: { onClick: () => void }) {
-    return (
-        <Button
-            variant="subtle"
-            color="gray"
-            size="xs"
-            onClick={onClick}
-            leftSection={<Icons.IconX />}
-            style={{ position: 'absolute', right: 8, top: 8 }}
-        >
-            Clear Results
-        </Button>
-    );
-}
-
 function IndexPopupContent() {
     // State for page type and URL
     const [pageType, setPageType] = useState<PageType>(PageType.UNKNOWN)
@@ -180,7 +129,6 @@ function IndexPopupContent() {
     // State for different detectors
     const [detectedCourses, setDetectedCourses] = useState<Course[]>([])
     const [homepageInfo, setHomepageInfo] = useState<CourseHomepage | null>(null)
-    const [detectedPdfLinks, setDetectedPdfLinks] = useState<PdfLink[]>([])
 
     // Loading and error states
     const [isLoading, setIsLoading] = useState(true)
@@ -199,52 +147,9 @@ function IndexPopupContent() {
         }
     })
 
-    // State for scan progress
-    const [scanProgress, setScanProgress] = useState<{
-        isScanning: boolean;
-        currentFile?: string;
-        pdfLinks: PdfLink[];
-    }>({
-        isScanning: false,
-        pdfLinks: []
-    });
-
-    // Add new state for tracking multiple scans
-    const [scanningSessions, setScanningSessions] = useState<Record<string, boolean>>({});
-
-    // Add new state for tracking uploads
-    const [uploadingSessions, setUploadingSessions] = useState<Record<string, boolean>>({});
-
-    // Add state for upload progress
-    const [uploadProgress, setUploadProgress] = useState<{
-        current: number;
-        total: number;
-        results: { title: string; success: boolean }[];
-    }>({ current: 0, total: 0, results: [] });
-
-    // Add new state for tracking downloads
+    // Add state for tracking downloads
     const [downloadingSessions, setDownloadingSessions] = useState<Record<string, boolean>>({});
-
-    // Add this state
-    const [downloadStatus, setDownloadStatus] = useState<string>("");
-
-    // Add global download status
-    const [globalDownloadStatus, setGlobalDownloadStatus] = useState<string>("");
     const storage = new Storage();
-
-    useEffect(() => {
-        // Set up global status listener
-        const checkStatus = async () => {
-            const currentStatus = await storage.get('downloadStatus');
-            if (currentStatus) setGlobalDownloadStatus(currentStatus);
-        };
-
-        // Poll for status updates every second
-        const intervalId = setInterval(checkStatus, 1000);
-
-        // Cleanup
-        return () => clearInterval(intervalId);
-    }, []);
 
     // Function to get the active tab
     const getActiveTab = async () => {
@@ -352,128 +257,18 @@ function IndexPopupContent() {
         }
     }
 
-    // Modify the scan function to handle individual course scans
-    const scanCourse = async (courseId: string, courseDescriptor: string) => {
+    // Update the download function
+    const downloadCourseContent = async (courseId: string, courseDescriptor: string) => {
         try {
-            setScanningSessions(prev => ({ ...prev, [courseId]: true }));
+            setDownloadingSessions(prev => ({ ...prev, [courseId]: true }));
+            await storage.set('downloadStatus', "Initiating download...");
 
             const response = await sendToBackground<
                 { courseId: string; courseDescriptor: string },
-                { success: boolean; pdfLinks?: PdfLink[]; error?: string }
-            >({
-                name: "scan-content",
-                body: { courseId, courseDescriptor }
-            });
-
-            if (!response.success) {
-                throw new Error(response.error || "Failed to scan content page");
-            }
-
-            setScanProgress(prev => ({
-                isScanning: false,
-                pdfLinks: [...prev.pdfLinks, ...(response.pdfLinks || [])]
-            }));
-
-        } catch (err) {
-            console.error("Error scanning content page:", err);
-            setError(err.message || "Error scanning content page");
-        } finally {
-            setScanningSessions(prev => ({ ...prev, [courseId]: false }));
-        }
-    };
-
-    // Add function to scan all courses
-    const scanAllCourses = async () => {
-        setError(null);
-        setScanProgress(prev => ({ ...prev, isScanning: true, pdfLinks: [] }));
-
-        try {
-            const coursesToScan = pageType === PageType.DASHBOARD
-                ? detectedCourses
-                : (homepageInfo ? [homepageInfo] : []);
-
-            for (const course of coursesToScan) {
-                if (course.courseId && course.courseDescriptor) {
-                    await scanCourse(course.courseId, course.courseDescriptor);
-                }
-            }
-        } catch (err) {
-            console.error("Error scanning all courses:", err);
-            setError("Error scanning all courses");
-        } finally {
-            setScanProgress(prev => ({ ...prev, isScanning: false }));
-        }
-    };
-
-    // Listen for scan updates
-    useEffect(() => {
-        const updateScanProgress = async () => {
-            const results = await storage.get('currentScanResults') || [];
-            setScanProgress(prev => ({
-                ...prev,
-                pdfLinks: results as PdfLink[]
-            }));
-        };
-
-        const interval = setInterval(updateScanProgress, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-    // Update the upload function
-    const uploadCourseContent = async (courseId: string) => {
-        try {
-            setUploadingSessions(prev => ({ ...prev, [courseId]: true }));
-            setUploadProgress({ current: 0, total: scanProgress.pdfLinks.length, results: [] });
-
-            const result = await uploadMultiplePdfs(
-                scanProgress.pdfLinks,
-                courseId,
-                (current, total, title, status) => {
-                    setUploadProgress(prev => ({
-                        current,
-                        total,
-                        results: [...prev.results, { title, success: status === 'success' }]
-                    }));
-                }
-            );
-
-            if (!result.success) {
-                throw new Error("Failed to upload PDFs");
-            }
-
-        } catch (err) {
-            console.error("Error uploading content:", err);
-            setError(err.message || "Error uploading content");
-        } finally {
-            setUploadingSessions(prev => ({ ...prev, [courseId]: false }));
-        }
-    };
-
-    // Add this effect to listen for status updates
-    useEffect(() => {
-        const checkDownloadStatus = async () => {
-            const status = await storage.get('downloadStatus');
-            if (status) {
-                setDownloadStatus(status as string);
-            }
-        };
-
-        const interval = setInterval(checkDownloadStatus, 500);
-        return () => clearInterval(interval);
-    }, []);
-
-    // Update the download function
-    const downloadCourseContent = async (courseId: string) => {
-        try {
-            setDownloadingSessions(prev => ({ ...prev, [courseId]: true }));
-            setDownloadStatus("Initiating download...");
-
-            const response = await sendToBackground<
-                { courseId: string },
                 { success: boolean; downloads?: any[]; error?: string }
             >({
                 name: "download-course",
-                body: { courseId }
+                body: { courseId, courseDescriptor }
             });
 
             console.log("Download response:", response);
@@ -485,6 +280,7 @@ function IndexPopupContent() {
         } catch (err) {
             console.error("Error downloading content:", err);
             setError(err.message || "Error downloading content");
+            await storage.set('downloadStatus', `Error: ${err.message || "Download failed"}`);
         } finally {
             setDownloadingSessions(prev => ({ ...prev, [courseId]: false }));
         }
@@ -547,19 +343,6 @@ function IndexPopupContent() {
         initializePopup()
     }, [])
 
-    // Listen for scan progress updates
-    useEffect(() => {
-        const handleMessage = (message) => {
-            if (message.type === "SCAN_PROGRESS_UPDATE") {
-                // Update your state with the new links
-                setDetectedPdfLinks(message.payload.links);
-            }
-        };
-
-        chrome.runtime.onMessage.addListener(handleMessage);
-        return () => chrome.runtime.onMessage.removeListener(handleMessage);
-    }, []);
-
     // Render page type icon
     const renderPageTypeIcon = () => {
         switch (pageType) {
@@ -590,60 +373,25 @@ function IndexPopupContent() {
                                 {error}
                             </Alert>
                         ) : detectedCourses.length > 0 ? (
-                            <>
-                                <Button
-                                    size="sm"
-                                    onClick={scanAllCourses}
-                                    loading={scanProgress.isScanning}
-                                >
-                                    Scan All Courses
-                                </Button>
-                                <Stack gap="md">
-                                    {detectedCourses.map((course) => (
-                                        <CourseCard
-                                            key={course.courseId}
-                                            course={course}
-                                            onScan={() => scanCourse(course.courseId, course.courseDescriptor)}
-                                            onUpload={() => uploadCourseContent(course.courseId)}
-                                            onDownload={() => downloadCourseContent(course.courseId)}
-                                            isLoading={scanningSessions[course.courseId]}
-                                            isUploading={uploadingSessions[course.courseId]}
-                                            isDownloading={downloadingSessions[course.courseId]}
-                                            pdfLinksCount={scanProgress.pdfLinks.length}
-                                        />
-                                    ))}
-                                </Stack>
-                            </>
+                            <Stack gap="md">
+                                {detectedCourses.map((course) => (
+                                    <CourseCard
+                                        key={course.courseId}
+                                        course={course}
+                                        onDownload={() => downloadCourseContent(course.courseId, course.courseDescriptor)}
+                                        isDownloading={downloadingSessions[course.courseId]}
+                                    />
+                                ))}
+                            </Stack>
                         ) : (
                             <Text size="sm" c="dimmed">No courses detected on this dashboard</Text>
-                        )}
-
-                        {/* Show scan results if any */}
-                        {scanProgress.pdfLinks.length > 0 && (
-                            <Card shadow="sm" p="md" withBorder style={{ position: 'relative' }}>
-                                <ClearButton
-                                    onClick={() => {
-                                        setScanProgress(prev => ({ ...prev, pdfLinks: [] }));
-                                        storage.set('currentScanResults', []); // Clear storage as well
-                                    }}
-                                />
-                                <Text fw={600} mb="sm">Found PDFs ({scanProgress.pdfLinks.length})</Text>
-                                <Stack gap="xs" style={{ maxHeight: "200px", overflow: "auto" }}>
-                                    {scanProgress.pdfLinks.map((link, index) => (
-                                        <Group key={index} justify="space-between" p="xs">
-                                            <Text size="sm" style={{ flex: 1 }}>{link.title}</Text>
-                                            <Badge size="sm">{link.fileName}</Badge>
-                                        </Group>
-                                    ))}
-                                </Stack>
-                            </Card>
                         )}
 
                         <Button size="sm" onClick={refreshData} loading={isLoading}>
                             Refresh Courses
                         </Button>
 
-                        <DownloadStatus onClose={() => setGlobalDownloadStatus("")} />
+                        <DownloadStatus />
                     </Stack>
                 )
 
@@ -664,43 +412,18 @@ function IndexPopupContent() {
                         ) : homepageInfo ? (
                             <CourseCard
                                 course={homepageInfo}
-                                onScan={() => scanCourse(homepageInfo.courseId, homepageInfo.courseDescriptor)}
-                                onUpload={() => uploadCourseContent(homepageInfo.courseId)}
-                                onDownload={() => downloadCourseContent(homepageInfo.courseId)}
-                                isLoading={scanningSessions[homepageInfo.courseId]}
-                                isUploading={uploadingSessions[homepageInfo.courseId]}
+                                onDownload={() => downloadCourseContent(homepageInfo.courseId, homepageInfo.courseDescriptor)}
                                 isDownloading={downloadingSessions[homepageInfo.courseId]}
-                                pdfLinksCount={scanProgress.pdfLinks.length}
                             />
                         ) : (
                             <Text size="sm" c="dimmed">No course homepage information detected</Text>
-                        )}
-
-                        {scanProgress.pdfLinks.length > 0 && (
-                            <Card shadow="sm" p="md" withBorder style={{ position: 'relative' }}>
-                                <ClearButton
-                                    onClick={() => {
-                                        setScanProgress(prev => ({ ...prev, pdfLinks: [] }));
-                                        storage.set('currentScanResults', []); // Clear storage as well
-                                    }}
-                                />
-                                <Text fw={600} mb="sm">Found PDFs ({scanProgress.pdfLinks.length})</Text>
-                                <Stack gap="xs" style={{ maxHeight: "200px", overflow: "auto" }}>
-                                    {scanProgress.pdfLinks.map((link, index) => (
-                                        <Group key={index} justify="space-between" p="xs">
-                                            <Text size="sm" style={{ flex: 1 }}>{link.title}</Text>
-                                            <Badge size="sm">{link.fileName}</Badge>
-                                        </Group>
-                                    ))}
-                                </Stack>
-                            </Card>
                         )}
 
                         <Button size="sm" onClick={refreshData} loading={isLoading}>
                             Refresh Homepage Info
                         </Button>
 
-                        <DownloadStatus onClose={() => setGlobalDownloadStatus("")} />
+                        <DownloadStatus />
                     </Stack>
                 )
 
@@ -718,27 +441,6 @@ function IndexPopupContent() {
         }
     }
 
-    // Add this component to show upload progress
-    const UploadProgress = () => {
-        if (uploadProgress.current === 0) return null;
-
-        return (
-            <Card shadow="sm" p="md" withBorder>
-                <Text fw={600} mb="sm">Upload Progress ({uploadProgress.current}/{uploadProgress.total})</Text>
-                <Stack gap="xs" style={{ maxHeight: "200px", overflow: "auto" }}>
-                    {uploadProgress.results.map((result, index) => (
-                        <Group key={index} justify="space-between" p="xs">
-                            <Text size="sm" style={{ flex: 1 }}>{result.title}</Text>
-                            <Badge color={result.success ? "green" : "red"}>
-                                {result.success ? "Success" : "Failed"}
-                            </Badge>
-                        </Group>
-                    ))}
-                </Stack>
-            </Card>
-        );
-    };
-
     return (
         <Container p="md" style={{ width: "350px", minHeight: "400px" }}>
             <Stack>
@@ -755,20 +457,7 @@ function IndexPopupContent() {
 
                 <Divider />
 
-                {/* Show global download status */}
-                {globalDownloadStatus && (
-                    <Alert 
-                        color={globalDownloadStatus.includes("Error") ? "red" : 
-                              globalDownloadStatus.includes("complete") ? "green" : "blue"}
-                        variant="light"
-                        withCloseButton
-                        onClose={() => storage.set('downloadStatus', '')}
-                    >
-                        {globalDownloadStatus}
-                    </Alert>
-                )}
-
-                {/* Remove Tabs and directly show current page content */}
+                {/* Show page content */}
                 {renderPageContent()}
 
                 {/* URL display at bottom */}
@@ -778,8 +467,6 @@ function IndexPopupContent() {
                         {currentUrl}
                     </Text>
                 </Box>
-
-                <UploadProgress />
             </Stack>
         </Container>
     );

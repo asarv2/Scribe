@@ -2,8 +2,10 @@ from fastapi import APIRouter, File, UploadFile, Form, Request
 from fastapi.responses import JSONResponse
 import os
 import uuid
+import zipfile
+import shutil
 from datetime import datetime
-from app.extensions import COURSES_DIR
+from app.extensions import COURSES_DIR, supabase
 
 router = APIRouter()
 
@@ -12,10 +14,11 @@ router = APIRouter()
 async def upload_zip(
     file: UploadFile = File(...), 
     course_id: str = Form(...),
+    course_descriptor: str = Form(...),
     filename: str = Form(...)
 ):
     """
-    Receive a zip file from D2L and save it to the courses directory.
+    Receive a zip file from D2L, extract it, and save contents to the courses directory.
     
     Parameters:
     - file: The uploaded ZIP file from D2L
@@ -30,13 +33,6 @@ async def upload_zip(
     print(f"- File: {file.filename}")
     print(f"- Course ID: {course_id}")
     print(f"- Filename: {filename}")
-    
-    # Validate inputs
-    if not file:
-        return JSONResponse(
-            status_code=400,
-            content={"error": "No file provided"}
-        )
     
     if not course_id:
         return JSONResponse(
@@ -57,91 +53,90 @@ async def upload_zip(
             content={"error": "File must be a ZIP archive"}
         )
     
-    # Create a unique filename while preserving the original name
-    base_name = os.path.splitext(filename)[0]
-    unique_filename = f"{base_name}_{uuid.uuid4()}.zip"
+    # check the classes supabase table to check if the course_id exists
+    class_response = supabase.table("classes").select("*").eq("brightspace_course_id", course_id).execute()
+    if not class_response.data:
+        # we should create a new class in the classes table
+        class_response = supabase.table("classes").insert({
+            "title": filename,
+            "brightspace_course_id": course_id,
+            "brightspace_course_descriptor": course_descriptor,
+            "created_at": datetime.now().isoformat()
+        }).execute()
+        class_id = class_response.data[0]["id"]
+    else:
+        # update the class with the updated_at timestamp
+        class_response = supabase.table("classes").update({
+            "updated_at": datetime.now().isoformat()
+        }).eq("brightspace_course_id", course_id).execute()
+        class_id = class_response.data[0]["id"]
     
-    # Create a folder structure: courses/[course_id]/downloads/[date]
-    today = datetime.now().strftime("%Y-%m-%d")
-    folder_path = os.path.join(COURSES_DIR, course_id, "downloads", today)
-    os.makedirs(folder_path, exist_ok=True)
+    # Create the target extraction directory using class_id
+    extract_folder = os.path.join(COURSES_DIR, class_id, "base")
+    
+    # Create zip storage directory with timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    zip_storage_folder = os.path.join(COURSES_DIR, class_id, "zip")
+    
+    # Ensure all directories exist
+    os.makedirs(COURSES_DIR, exist_ok=True)  # Make sure base courses directory exists
+    os.makedirs(os.path.join(COURSES_DIR, class_id), exist_ok=True)  # Make sure class directory exists
+    os.makedirs(zip_storage_folder, exist_ok=True)  # Make sure zip directory exists
+    
+    # Remove existing directory contents but keep the directory
+    if os.path.exists(extract_folder):
+        shutil.rmtree(extract_folder)  # Remove the entire base folder
+    
+    # Create fresh base directory
+    os.makedirs(extract_folder, exist_ok=True)
     
     try:
-        # Save the file
-        file_path = os.path.join(folder_path, unique_filename)
-        with open(file_path, "wb") as f:
+        # Save the zip file with timestamp
+        zip_filename = f"{timestamp}_{filename}"
+        zip_path = os.path.join(zip_storage_folder, zip_filename)
+        
+        # Ensure the file content is at the beginning
+        await file.seek(0)
+        
+        # Save the zip file
+        with open(zip_path, "wb") as f:
             f.write(await file.read())
+        
+        # Verify the zip file exists before extracting
+        if not os.path.exists(zip_path):
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "status": "error",
+                    "message": f"Failed to save zip file to {zip_path}"
+                }
+            )
+        
+        # Extract the zip file to the base directory
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_folder)
         
         # Return success response with file information
         return {
             "status": "success",
             "original_filename": filename,
-            "stored_filename": unique_filename,
             "course_id": course_id,
+            "class_id": class_id,
             "upload_time": datetime.now().isoformat(),
-            "file_path": f"/files/courses/{course_id}/downloads/{today}/{unique_filename}"
+            "extracted_to": f"/files/courses/{class_id}/base",
+            "zip_stored_at": f"/files/courses/{class_id}/zip/{zip_filename}"
         }
         
     except Exception as e:
+        # Log the full error for debugging
+        import traceback
+        print(f"Error processing zip file: {str(e)}")
+        print(traceback.format_exc())
+        
         return JSONResponse(
             status_code=500,
             content={
                 "status": "error",
-                "message": f"Failed to save file: {str(e)}"
+                "message": f"Failed to process zip file: {str(e)}"
             }
         )
-
-@router.post("/course")
-async def upload_course(file: UploadFile = File(...), course_id: str = Form(None)):
-    """
-    Receive course files uploaded from the Chrome extension.
-    
-    Parameters:
-    - file: The uploaded file (syllabus or other course document)
-    - course_id: Optional course ID from Brightspace
-    
-    Returns:
-    - JSON with file information and storage path
-    """
-    # Create a unique filename to prevent collisions
-    file_extension = os.path.splitext(file.filename)[1]
-    unique_filename = f"{uuid.uuid4()}{file_extension}"
-    
-    # Create a folder structure based on course id and date
-    today = datetime.now().strftime("%Y-%m-%d")
-    folder_path = os.path.join(COURSES_DIR, course_id, today)
-    os.makedirs(folder_path, exist_ok=True)
-    
-    # Save the file
-    file_path = os.path.join(folder_path, unique_filename)
-    with open(file_path, "wb") as f:
-        f.write(await file.read())
-    
-    # Return file information
-    return {
-        "filename": file.filename,
-        "stored_filename": unique_filename,
-        "course_id": course_id,
-        "upload_time": datetime.now().isoformat(),
-        "file_path": f"/files/courses/{course_id}/{today}/{unique_filename}"
-    }
-
-@router.post("/brightspace-data")
-async def receive_brightspace_data(request: Request):
-    """
-    Receive data from the Brightspace extension without a file.
-    This endpoint can be used for logging or tracking extension activity.
-    """
-    data = await request.json()
-
-    print("Received data from Brightspace extension")
-    print("Data: ", data)
-    
-    # Log or process the data as needed
-    # For example, you might store this in a database
-    
-    return {
-        "status": "success",
-        "message": "Data received",
-        "timestamp": datetime.now().isoformat()
-    }

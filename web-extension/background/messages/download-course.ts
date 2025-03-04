@@ -3,6 +3,7 @@ import { Storage } from "@plasmohq/storage"
 
 interface DownloadCourseRequest {
   courseId: string
+  courseDescriptor: string
 }
 
 interface DownloadItem {
@@ -18,16 +19,18 @@ interface DownloadCourseResponse {
 }
 
 const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCourseResponse> = async (req, res) => {
-  const { courseId } = req.body;
+  const { courseId, courseDescriptor } = req.body;
   let tab: chrome.tabs.Tab | undefined;
-  let downloadListener: any;
+  let isProcessing = false; // Add flag to prevent duplicate processing
+  let downloadListener: ((downloadItem: chrome.downloads.DownloadItem) => void) | undefined;
   
   const storage = new Storage();
   
   try {
-    // Add downloads listener before creating tab
-    chrome.downloads.onCreated.addListener(async (downloadItem) => {
-      if (downloadItem.url.includes('/downloads/Course/')) {
+    // Define the listener
+    downloadListener = async (downloadItem: chrome.downloads.DownloadItem) => {
+      if (downloadItem.url.includes('/downloads/Course/') && !isProcessing) {
+        isProcessing = true; // Set flag to prevent duplicate processing
         console.log("[Background] Download created:", downloadItem);
         
         try {
@@ -65,11 +68,13 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           const formData = new FormData();
           formData.append('file', new File([blob], filename, { type: 'application/zip' }));
           formData.append('course_id', courseId);
+          formData.append('course_descriptor', courseDescriptor);
           formData.append('filename', filename);
           
           console.log("[Background] Uploading file to server:", {
             filename: filename,
             courseId: courseId,
+            courseDescriptor: courseDescriptor,
             size: blob.size,
             formData: Object.fromEntries(formData.entries())
           });
@@ -105,6 +110,9 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             });
           }
           
+          // Remove the listener after successful processing
+          chrome.downloads.onCreated.removeListener(downloadListener);
+          
           // Send success response
           res.send({
             success: true,
@@ -114,6 +122,9 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
         } catch (error) {
           console.error('[Background] Error processing download:', error);
           await storage.set('downloadStatus', `Error uploading file: ${error.message}`);
+          
+          // Remove the listener on error
+          chrome.downloads.onCreated.removeListener(downloadListener);
           
           // Send error response
           res.send({
@@ -129,7 +140,10 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           }
         }
       }
-    });
+    };
+
+    // Add the listener
+    chrome.downloads.onCreated.addListener(downloadListener);
 
     // Update initial status
     await storage.set('downloadStatus', 'Creating tab...');
@@ -215,9 +229,9 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     console.error("[Background] Error:", error);
     await storage.set('downloadStatus', `Error: ${error.message}`);
     
-    // Clean up silently
+    // Now downloadListener will be in scope
     if (downloadListener) {
-      chrome.webRequest.onBeforeRequest.removeListener(downloadListener);
+      chrome.downloads.onCreated.removeListener(downloadListener);
     }
     if (tab?.id) {
       chrome.tabs.remove(tab.id).catch(() => {

@@ -11,39 +11,11 @@ export interface DownloadItem {
   filename: string
 }
 
-// Function to trigger the download button click and wait for download
-function clickDownloadButton(): Promise<DownloadItem | null> {
+// Function to trigger the download button click
+function clickDownloadButton(): Promise<boolean> {
   return new Promise((resolve) => {
     console.log("Attempting to find download button...");
     
-    // Create a listener for the download request
-    const downloadListener = (event: Event) => {
-      const anchor = event.target as HTMLAnchorElement;
-      if (anchor.href && anchor.href.includes('/d2l/le/content/')) {
-        event.preventDefault(); // Prevent the default download
-        console.log("Intercepted download URL:", anchor.href);
-        
-        // Get the filename from the Content-Disposition header or fallback to a default
-        const filename = anchor.download || 'course_content.zip';
-        
-        resolve({
-          url: anchor.href,
-          filename: filename
-        });
-        
-        document.removeEventListener('click', downloadListener, true);
-      }
-    };
-    
-    // Add capture phase listener to intercept download clicks
-    document.addEventListener('click', downloadListener, true);
-    
-    // Set a timeout to clean up if no download is detected
-    setTimeout(() => {
-      document.removeEventListener('click', downloadListener, true);
-      resolve(null);
-    }, 10000); // 10 second timeout
-
     // Try multiple methods to find the button
     const possibleButtons = [
       // Try by class and text content combination
@@ -60,48 +32,23 @@ function clickDownloadButton(): Promise<DownloadItem | null> {
       document.querySelector('button.d2l-button[id^="d2l_"][id*="_"][id*="_"]')
     ];
 
-    console.log("Found possible buttons:", possibleButtons.map(btn => ({
-      id: btn?.id,
-      text: btn?.textContent?.trim(),
-      class: btn?.className,
-      style: btn?.getAttribute('style'),
-      hasIcon: btn?.querySelector('.d2l-icon-custom') !== null,
-      exists: !!btn
-    })));
-
     // Get the first valid button
     const downloadButton = possibleButtons.find(btn => btn) as HTMLButtonElement;
 
     if (downloadButton) {
-      console.log("Found and clicking button:", {
-        id: downloadButton.id,
-        text: downloadButton.textContent?.trim(),
-        class: downloadButton.className,
-        style: downloadButton.getAttribute('style'),
-        hasIcon: downloadButton.querySelector('.d2l-icon-custom') !== null
-      });
-      
+      console.log("Found and clicking button");
       downloadButton.click();
-      console.log("Download button clicked successfully");
+      resolve(true);
     } else {
       console.log("No download button found");
-      document.removeEventListener('click', downloadListener, true);
-      resolve(null);
+      resolve(false);
     }
   });
 }
 
 // Function to find all downloadable content
-async function findDownloadableContent(courseId: string): Promise<DownloadItem[]> {
-  const downloads: DownloadItem[] = [];
-  
-  // Try to click download button and wait for download
-  const downloadItem = await clickDownloadButton();
-  if (downloadItem) {
-    downloads.push(downloadItem);
-  }
-
-  return downloads;
+async function findDownloadableContent(courseId: string): Promise<boolean> {
+  return await clickDownloadButton();
 }
 
 // Listen for messages from popup
@@ -114,8 +61,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
           findDownloadableContent(message.courseId)
-            .then(downloads => {
-              sendResponse({ success: true, downloads });
+            .then(success => {
+              sendResponse({ success: success });
             })
             .catch(error => {
               sendResponse({ success: false, error: error.message });
@@ -123,8 +70,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         });
       } else {
         findDownloadableContent(message.courseId)
-          .then(downloads => {
-            sendResponse({ success: true, downloads });
+          .then(success => {
+            sendResponse({ success: success });
           })
           .catch(error => {
             sendResponse({ success: false, error: error.message });

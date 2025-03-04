@@ -27,8 +27,8 @@ function isValidCoursePage(): boolean {
   }
   
   // Check if the course ID is valid (4-6 digits)
-  const courseId = homeMatch?.[1];
-  if (courseId && (courseId.length < 4 || courseId.length > 6)) {
+  const courseId = homeMatch[1];
+  if (courseId.length < 4 || courseId.length > 6) {
     console.log("Invalid course ID length:", courseId);
     return false;
   }
