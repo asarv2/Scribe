@@ -12,6 +12,7 @@ interface DownloadItem {
 
 interface DownloadCourseResponse {
   success: boolean
+  message?: string
   downloads?: DownloadItem[]
   error?: string
 }
@@ -24,43 +25,24 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
   const storage = new Storage();
   
   try {
-    // Add network request listener for the initial download request
-    downloadListener = (details: chrome.webRequest.WebRequestHeadersDetails) => {
-      console.log("[Background] WebRequest intercepted:", {
-        url: details.url,
-        type: details.type,
-        method: details.method,
-        requestId: details.requestId
-      });
-
-      // Listen for both the initiation request and the final download
-      if (details.url.includes('/InitiateCourseDownload') || 
-          details.url.includes('/downloads/Course/')) {
-        console.log("[Background] Matched download pattern:", details.url);
-      }
-    };
-
-    // Add the listener without blocking
-    console.log("[Background] Adding webRequest listener...");
-    chrome.webRequest.onBeforeRequest.addListener(
-      downloadListener,
-      { 
-        urls: [
-          "*://*.brightspace.com/d2l/le/content/*/startdownload/InitiateCourseDownload*",
-          "*://*.brightspace.com/d2l/le/content/*/downloads/Course/*"
-        ]
-      }
-    );
-
-    // Add a downloads listener instead
+    // Add downloads listener before creating tab
     chrome.downloads.onCreated.addListener(async (downloadItem) => {
       if (downloadItem.url.includes('/downloads/Course/')) {
         console.log("[Background] Download created:", downloadItem);
         
         try {
+          // Update status
+          await storage.set('downloadStatus', 'Processing download...');
+          
           // Get the cookies for authentication
           const cookies = await chrome.cookies.getAll({ url: downloadItem.url });
           const cookieHeader = cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; ');
+          
+          // Immediately cancel the download to prevent saving to user's device
+          await chrome.downloads.cancel(downloadItem.id);
+          
+          // Update status
+          await storage.set('downloadStatus', 'Uploading to server...');
           
           // Fetch the file
           const response = await fetch(downloadItem.url, {
@@ -89,7 +71,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             filename: filename,
             courseId: courseId,
             size: blob.size,
-            formData: Object.fromEntries(formData.entries()) // Debug formData contents
+            formData: Object.fromEntries(formData.entries())
           });
           
           // Upload to server
@@ -108,20 +90,48 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             throw new Error(`Upload failed: ${errorText}`);
           }
           
+          // Upload successful
           const result = await uploadResponse.json();
           console.log('[Background] Upload successful:', result);
           
-          // Cancel the original download
-          chrome.downloads.cancel(downloadItem.id);
+          // Update status before closing tab
+          await storage.set('downloadStatus', 'Upload complete! ✅');
+          
+          // Close the tab silently (ignore errors)
+          if (tab?.id) {
+            chrome.tabs.remove(tab.id).catch(() => {
+              // Ignore tab closing errors
+              console.log("[Background] Tab already closed or not found");
+            });
+          }
+          
+          // Send success response
+          res.send({
+            success: true,
+            message: "File uploaded successfully"
+          });
           
         } catch (error) {
           console.error('[Background] Error processing download:', error);
-          storage.set('downloadStatus', `Error: ${error.message}`);
+          await storage.set('downloadStatus', `Error uploading file: ${error.message}`);
+          
+          // Send error response
+          res.send({
+            success: false,
+            error: error.message
+          });
+          
+          // Clean up silently
+          if (tab?.id) {
+            chrome.tabs.remove(tab.id).catch(() => {
+              // Ignore tab closing errors
+            });
+          }
         }
       }
     });
 
-    // Update status
+    // Update initial status
     await storage.set('downloadStatus', 'Creating tab...');
     console.log("[Background] Creating new tab...");
     
@@ -145,7 +155,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           console.log("[Background] Tab loaded:", tabId);
           chrome.tabs.onUpdated.removeListener(listener);
           clearTimeout(timeout);
-          setTimeout(resolve, 2000);
+          setTimeout(resolve, 2000); // Add a small delay after page load
         }
       };
       chrome.tabs.onUpdated.addListener(listener);
@@ -159,7 +169,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     const [results] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
           console.log("[Content] Starting download monitoring...");
           
           // Monitor network requests
@@ -172,34 +182,12 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             return originalXHR.apply(this, args);
           };
 
-          // Monitor for the download variable
-          let downloadJobId = null;
-          Object.defineProperty(window, 'DownloadProgressDialogResultJSVariable', {
-            set: function(value) {
-              console.log("[Content] Download job ID set:", value);
-              downloadJobId = value;
-              // You can now construct the final URL
-              const orgUnitId = window.location.pathname.split('/')[5]; // Extract from URL
-              const finalUrl = `/d2l/le/content/${orgUnitId}/downloads/Course/${value}/Download`;
-              console.log("[Content] Final download URL:", finalUrl);
-            },
-            get: function() {
-              return downloadJobId;
-            }
-          });
-
           // Find and click download button
           const possibleButtons = [
             Array.from(document.querySelectorAll('button.d2l-button')).find(btn => {
               const hasDownloadText = btn.textContent?.trim() === 'Download';
               const hasDownloadIcon = btn.querySelector('.d2l-icon-custom');
               const hasLeftFloat = (btn as HTMLElement).style.cssText.includes('float:left');
-              console.log("[Content] Checking button:", {
-                text: btn?.textContent?.trim(),
-                hasIcon: !!btn?.querySelector('.d2l-icon-custom'),
-                style: btn?.getAttribute('style'),
-                matches: hasDownloadText && hasDownloadIcon && hasLeftFloat
-              });
               return hasDownloadText && hasDownloadIcon && hasLeftFloat;
             }),
             Array.from(document.querySelectorAll('button.d2l-button')).find(btn => 
@@ -207,22 +195,15 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             document.querySelector('button.d2l-button[id^="d2l_"][id*="_"][id*="_"]')
           ];
 
-          console.log("[Content] Found possible buttons:", possibleButtons.map(btn => ({
-            id: btn?.id,
-            text: btn?.textContent?.trim(),
-            class: btn?.className,
-            style: btn?.getAttribute('style'),
-            html: btn?.outerHTML
-          })));
-
           const downloadButton = possibleButtons.find(btn => btn) as HTMLButtonElement;
           
           if (downloadButton) {
             console.log("[Content] Found download button, clicking...");
             downloadButton.click();
+            resolve(true);
           } else {
             console.log("[Content] Download button not found");
-            resolve(null);
+            resolve(false);
           }
         });
       }
@@ -230,45 +211,25 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
 
     console.log("[Background] Script execution complete. Results:", results);
 
-    // Update status
-    await storage.set('downloadStatus', 'Processing download...');
-
-    if (!results.result) {
-      throw new Error("No download link found");
-    }
-
-    // Wait for a reasonable time for the download to complete
-    await new Promise((resolve) => setTimeout(resolve, 30000));
-
-    // Update status
-    await storage.set('downloadStatus', 'Download complete!');
-
-    res.send({
-      success: true
-    });
-
   } catch (error) {
     console.error("[Background] Error:", error);
     await storage.set('downloadStatus', `Error: ${error.message}`);
+    
+    // Clean up silently
     if (downloadListener) {
       chrome.webRequest.onBeforeRequest.removeListener(downloadListener);
     }
     if (tab?.id) {
-      try {
-        await chrome.tabs.remove(tab.id);
-      } catch (e) {
-        console.error("Error closing tab:", e);
-      }
+      chrome.tabs.remove(tab.id).catch(() => {
+        // Ignore tab closing errors
+      });
     }
+    
     res.send({
       success: false,
       error: error.message
     });
-  } finally {
-    if (downloadListener) {
-      chrome.webRequest.onBeforeRequest.removeListener(downloadListener);
-    }
   }
-}
+};
 
 export default handler 

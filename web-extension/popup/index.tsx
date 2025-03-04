@@ -52,24 +52,69 @@ const Icons = {
     )
 }
 
-// Add this new component near the top of the file
+// Simplified DownloadStatus component
+function DownloadStatus({ onClose }: { onClose: () => void }) {
+    const [status, setStatus] = useState<string>("");
+    const storage = new Storage();
+
+    useEffect(() => {
+        const checkStatus = async () => {
+            const currentStatus = await storage.get('downloadStatus');
+            if (currentStatus) setStatus(currentStatus);
+        };
+
+        const intervalId = setInterval(checkStatus, 1000);
+        return () => clearInterval(intervalId);
+    }, []);
+
+    if (!status) return null;
+
+    let color = "blue";
+    let icon = null;
+
+    if (status.includes("complete") || status.includes("✅")) {
+        color = "green";
+        icon = "✅";
+    } else if (status.includes("Error")) {
+        color = "red";
+        icon = "❌";
+    }
+
+    return (
+        <Alert 
+            color={color} 
+            variant="light"
+            icon={icon}
+            mt="md"
+            withCloseButton
+            onClose={() => {
+                storage.set('downloadStatus', '');
+                onClose();
+            }}
+        >
+            {status}
+        </Alert>
+    );
+}
+
+// Update the CourseCard component
 function CourseCard({
     course,
     onScan,
     onUpload,
-    onDownload,  // Add this prop
+    onDownload,
     isLoading,
     isUploading,
-    isDownloading,  // Add this prop
+    isDownloading,
     pdfLinksCount = 0
 }: {
     course: Course | CourseHomepage,
     onScan: () => void,
     onUpload: () => void,
-    onDownload: () => void,  // Add this type
+    onDownload: () => void,
     isLoading?: boolean,
     isUploading?: boolean,
-    isDownloading?: boolean,  // Add this type
+    isDownloading?: boolean,
     pdfLinksCount?: number
 }) {
     return (
@@ -96,7 +141,6 @@ function CourseCard({
                     >
                         Upload Content
                     </Button>
-
                 )}
                 <Button
                     size="xs"
@@ -184,8 +228,23 @@ function IndexPopupContent() {
     // Add this state
     const [downloadStatus, setDownloadStatus] = useState<string>("");
 
-    // Initialize storage
+    // Add global download status
+    const [globalDownloadStatus, setGlobalDownloadStatus] = useState<string>("");
     const storage = new Storage();
+
+    useEffect(() => {
+        // Set up global status listener
+        const checkStatus = async () => {
+            const currentStatus = await storage.get('downloadStatus');
+            if (currentStatus) setGlobalDownloadStatus(currentStatus);
+        };
+
+        // Poll for status updates every second
+        const intervalId = setInterval(checkStatus, 1000);
+
+        // Cleanup
+        return () => clearInterval(intervalId);
+    }, []);
 
     // Function to get the active tab
     const getActiveTab = async () => {
@@ -583,6 +642,8 @@ function IndexPopupContent() {
                         <Button size="sm" onClick={refreshData} loading={isLoading}>
                             Refresh Courses
                         </Button>
+
+                        <DownloadStatus onClose={() => setGlobalDownloadStatus("")} />
                     </Stack>
                 )
 
@@ -638,6 +699,8 @@ function IndexPopupContent() {
                         <Button size="sm" onClick={refreshData} loading={isLoading}>
                             Refresh Homepage Info
                         </Button>
+
+                        <DownloadStatus onClose={() => setGlobalDownloadStatus("")} />
                     </Stack>
                 )
 
@@ -691,6 +754,19 @@ function IndexPopupContent() {
                 </Group>
 
                 <Divider />
+
+                {/* Show global download status */}
+                {globalDownloadStatus && (
+                    <Alert 
+                        color={globalDownloadStatus.includes("Error") ? "red" : 
+                              globalDownloadStatus.includes("complete") ? "green" : "blue"}
+                        variant="light"
+                        withCloseButton
+                        onClose={() => storage.set('downloadStatus', '')}
+                    >
+                        {globalDownloadStatus}
+                    </Alert>
+                )}
 
                 {/* Remove Tabs and directly show current page content */}
                 {renderPageContent()}
