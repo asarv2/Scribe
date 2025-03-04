@@ -1,22 +1,22 @@
 /// <reference types="chrome"/>
 
-// Add this near the top of your file
-const DEBUG = true;
+import { debugLog, updateDebugOverlay } from './debug';
 
-function debugLog(...args: any[]) {
-  if (DEBUG) {
-    console.log("[Brightspace Extension]", ...args);
-  }
+// Define the PdfLink interface
+export interface PdfLink {
+  title: string;
+  url: string;
+  fileName: string;
 }
 
 // Check if we're on a valid Brightspace course homepage
-function isValidCoursePage(): boolean {
+export function isValidCoursePage(): boolean {
   const url = window.location.href;
   return /https:\/\/purdue\.brightspace\.com\/d2l\/home\/\d+/.test(url);
 }
 
 // Extract course ID from URL
-function getCourseId(): string | null {
+export function getCourseId(): string | null {
   const url = window.location.href;
   
   // Try to match the course page pattern
@@ -31,7 +31,7 @@ function getCourseId(): string | null {
 }
 
 // Extract course description from page HTML
-function getCourseDescription(): string | null {
+export function getCourseDescription(): string | null {
   // First check if we have a stored description for this course
   const courseId = getCourseId();
   if (courseId) {
@@ -81,17 +81,50 @@ function getCourseDescription(): string | null {
   return null;
 }
 
-// Navigate to the content page
-function navigateToContentPage(courseId: string) {
-  window.location.href = `https://purdue.brightspace.com/d2l/le/content/${courseId}/Home`;
+// Find all PDF links on the assignments page
+export function findAssignmentPdfLinks(): PdfLink[] {
+  debugLog("Looking for PDF links in assignments...");
+  updateDebugOverlay("Looking for PDF links in assignments...");
+  
+  const pdfLinks: PdfLink[] = [];
+  const courseId = getCourseId();
+  const courseDescription = getCourseDescription();
+  
+  if (!courseId || !courseDescription) {
+    debugLog("Missing course ID or description, cannot process assignment links");
+    updateDebugOverlay("Missing course ID or description, cannot process assignment links");
+    return pdfLinks;
+  }
+  
+  // Select all <a> elements whose href attribute contains ".pdf"
+  const links = document.querySelectorAll<HTMLAnchorElement>('a[href*=".pdf"]');
+  
+  links.forEach(link => {
+    const href = link.href;
+    const title = link.textContent?.trim() || "Untitled Assignment PDF";
+    
+    // Extract filename from href
+    const urlParts = href.split('/');
+    const fileName = urlParts[urlParts.length - 1].split('?')[0]; // Remove query parameters
+    
+    if (href) {
+      // For assignment PDFs, we can use the direct href as it's usually already a direct link
+      pdfLinks.push({ title, url: href, fileName });
+    }
+  });
+  
+  debugLog(`Found ${pdfLinks.length} PDF links in assignments`);
+  updateDebugOverlay(`Found ${pdfLinks.length} PDF links in assignments`);
+  
+  return pdfLinks;
 }
 
 // Find all PDF links on the page
-function findPdfLinks(): Array<{title: string, url: string, fileName: string}> {
+export function findPdfLinks(): PdfLink[] {
   debugLog("Looking for PDF links...");
   updateDebugOverlay("Looking for PDF links...");
   
-  const pdfLinks: Array<{title: string, url: string, fileName: string}> = [];
+  const pdfLinks: PdfLink[] = [];
   const courseId = getCourseId();
   const courseDescription = getCourseDescription();
   
@@ -162,7 +195,7 @@ function findPdfLinks(): Array<{title: string, url: string, fileName: string}> {
 }
 
 // Construct a PDF viewer URL in the specified format
-function constructPdfViewerUrl(courseId: string, courseDescription: string, fileName: string): string {
+export function constructPdfViewerUrl(courseId: string, courseDescription: string, fileName: string): string {
   // URL encode the file name - this will convert spaces to %20 automatically
   const encodedFileName = encodeURIComponent(fileName);
   
@@ -171,7 +204,7 @@ function constructPdfViewerUrl(courseId: string, courseDescription: string, file
 }
 
 // Extract the file parameter from a PDF viewer URL
-function extractFileParam(url: string): string | null {
+export function extractFileParam(url: string): string | null {
   // For viewer URLs
   const viewerMatch = url.match(/file=%2Fcontent%2Fenforced%2F[^%]+%2F([^%&]+)/);
   if (viewerMatch) {
@@ -187,41 +220,8 @@ function extractFileParam(url: string): string | null {
   return null;
 }
 
-// Send results to your server
-function sendResultToServer(data: any) {
-  const serverUrl = "https://633e-128-210-107-85.ngrok-free.app/upload/brightspace-data";
-  const courseId = getCourseId();
-  
-  debugLog(`Sending data to server with courseId: ${courseId}`);
-  updateDebugOverlay(`Sending data to server with courseId: ${courseId}`);
-  
-  const payload = {
-    ...data,
-    timestamp: new Date().toISOString(),
-    url: window.location.href,
-    courseId: courseId
-  };
-  
-  fetch(serverUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  })
-  .then(response => response.json())
-  .then(data => {
-    debugLog('Success:', data);
-    updateDebugOverlay('Server response: ' + JSON.stringify(data));
-  })
-  .catch(error => {
-    debugLog('Error:', error);
-    updateDebugOverlay('Error sending to server: ' + error.message);
-  });
-}
-
-// Process the current page
-function processCurrentPage(): { status: string, message: string, data?: any } {
+// Process the current page - updated to handle assignments page
+export function processCurrentPage(): { status: string, message: string, data?: any } {
   const url = window.location.href;
   const courseId = getCourseId();
   
@@ -275,9 +275,38 @@ function processCurrentPage(): { status: string, message: string, data?: any } {
         data: { pdfLinks }
       };
     } else {
+      // If no content links found, still navigate to assignments page
       return { 
-        status: "error", 
-        message: "No PDF links found on this page" 
+        status: "navigating_to_assignments", 
+        message: "No PDF links found on content page. Navigating to assignments page..." 
+      };
+    }
+  }
+  // Check if we're on the assignments page
+  else if (url.includes('/d2l/lms/dropbox/user/folders_list.d2l') && courseId) {
+    debugLog("On assignments page, looking for PDF links");
+    updateDebugOverlay("On assignments page, looking for PDF links");
+    
+    // Find PDF links in assignments
+    const assignmentPdfLinks = findAssignmentPdfLinks();
+    
+    if (assignmentPdfLinks.length > 0) {
+      // Send the links to the background script for processing
+      chrome.runtime.sendMessage({ 
+        action: "processAssignmentPdfLinks", 
+        links: assignmentPdfLinks,
+        courseId: courseId
+      });
+      
+      return { 
+        status: "processing_assignments", 
+        message: `Found ${assignmentPdfLinks.length} PDF links in assignments. Processing...`,
+        data: { assignmentPdfLinks }
+      };
+    } else {
+      return { 
+        status: "complete", 
+        message: "No PDF links found in assignments" 
       };
     }
   } else {
@@ -286,103 +315,4 @@ function processCurrentPage(): { status: string, message: string, data?: any } {
       message: "Not on a valid Brightspace page or could not extract course ID" 
     };
   }
-}
-
-// Listen for messages from popup or background
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  debugLog("Content script received message:", message);
-  updateDebugOverlay("Received message: " + JSON.stringify(message));
-  
-  if (message.action === "startProcess") {
-    debugLog("Starting process from popup request");
-    updateDebugOverlay("Starting process from popup request");
-    
-    const result = processCurrentPage();
-    
-    if (result.status === "navigate") {
-      const courseId = getCourseId();
-      const courseDescription = getCourseDescription();
-      
-      if (courseId) {
-        // Send both course ID and description to background script
-        chrome.runtime.sendMessage({ 
-          action: "navigateToContent", 
-          courseId: courseId,
-          courseDescription: courseDescription
-        });
-      }
-    }
-    
-    sendResponse(result);
-  } else if (message.action === "checkPage") {
-    // Just check the current page without taking action
-    const result = {
-      url: window.location.href,
-      courseId: getCourseId(),
-      isContentPage: window.location.href.includes('/d2l/le/content/')
-    };
-    sendResponse(result);
-  } else if (message.action === "findPdfLinks") {
-    // Find PDF links on the current page
-    const pdfLinks = findPdfLinks();
-    sendResponse({ links: pdfLinks });
-    return true;
-  }
-  
-  // Return true for async responses
-  return true;
-});
-
-function addDebugOverlay(): HTMLElement | null {
-  if (!DEBUG) return null;
-  
-  const overlay = document.createElement('div');
-  overlay.style.position = 'fixed';
-  overlay.style.bottom = '10px';
-  overlay.style.right = '10px';
-  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-  overlay.style.color = 'white';
-  overlay.style.padding = '10px';
-  overlay.style.borderRadius = '5px';
-  overlay.style.zIndex = '9999';
-  overlay.style.maxHeight = '200px';
-  overlay.style.overflowY = 'auto';
-  overlay.style.maxWidth = '400px';
-  overlay.id = 'brightspace-extension-debug';
-  
-  document.body.appendChild(overlay);
-  
-  return overlay;
-}
-
-function updateDebugOverlay(message: string) {
-  if (!DEBUG) return;
-  
-  let overlay = document.getElementById('brightspace-extension-debug');
-  if (!overlay) {
-    overlay = addDebugOverlay();
-  }
-  
-  if (!overlay) return;
-  
-  const entry = document.createElement('div');
-  entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-  overlay.appendChild(entry);
-  
-  // Keep only the last 10 messages
-  while (overlay.childNodes.length > 10) {
-    const firstChild = overlay.firstChild;
-    if (firstChild) {
-      overlay.removeChild(firstChild);
-    }
-  }
-}
-
-// Initialize debug overlay
-if (DEBUG) {
-  window.addEventListener('load', () => {
-    updateDebugOverlay("Content script loaded on: " + window.location.href);
-    updateDebugOverlay("Course ID: " + getCourseId());
-    updateDebugOverlay("Course Description: " + getCourseDescription());
-  });
 }

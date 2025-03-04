@@ -1,0 +1,53 @@
+{
+  "name": "scryb",
+  "displayName": "Scryb",
+  "version": "0.0.1",
+  "description": "Used to parse brightspace content and upload to scryb website.",
+  "author": "Ashok Saravanan",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@mantine/core": "^7.17.1",
+    "@mantine/hooks": "^7.17.1",
+    "@plasmohq/messaging": "^0.7.1",
+    "@plasmohq/storage": "^1.15.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "@tanstack/react-query": "^5.67.1",
+    "add": "^2.0.6",
+    "plasmo": "0.90.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.258",
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "postcss": "^8.5.3",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
+    "prettier": "3.2.4",
+    "typescript": "5.3.3"
+  },
+  "manifest": {
+    "permissions": [
+      "activeTab",
+      "tabs",
+      "downloads",
+      "scripting",
+      "cookies",
+      "storage"
+    ],
+    "host_permissions": [
+      "https://purdue.brightspace.com/*"
+    ],
+    "background": {
+      "persistent": false
+    }
+  }
+}
