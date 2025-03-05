@@ -119,14 +119,14 @@ export default function Landing() {
               </List.Item>
             </List>
             {!user && !profile ? (
-              <Group mt={30} gap="md">
+              <Group mt={30}>
                 <Link href="/login">
-                  <Button size="md">
+                  <Button>
                     Login
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button size="md">
+                  <Button>
                     Sign Up
                   </Button>
                 </Link>
@@ -135,14 +135,14 @@ export default function Landing() {
               <>
                 {(profile?.professor || profile?.admin) ? (
                   <Group mt={30}>
-                    <Button component={Link} href={`/classes/c/${firstClass?.id}`} size="md">
+                    <Button component={Link} href={`/classes/c/${firstClass?.id}`}>
                       Home
                     </Button>
                   </Group>
                 ) : (
                   <Group mt={30} gap="md" wrap="wrap">
                     {getFilteredClasses().map((classItem) => (
-                      <Button key={classItem.id} component={Link} href={`/classes/c/${classItem.id}/chat/new`} size="md">
+                      <Button key={classItem.id} component={Link} href={`/classes/c/${classItem.id}/chat/new`}>
                         {classItem.class_code} Chat
                       </Button>
                     ))}
