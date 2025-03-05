@@ -231,7 +231,7 @@ export const MessageList = memo(({
                               chatType: 'concept'
                             }))}
                           >
-                            Conceptual
+                            Learn
                           </Button>
                         <Button
                           variant="light"
@@ -251,7 +251,7 @@ export const MessageList = memo(({
                             chatType: 'review'
                           }))}
                         >
-                          Review
+                          Test-Prep
                         </Button>
                       </>
                     ) : (
