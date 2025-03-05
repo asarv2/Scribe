@@ -9,7 +9,6 @@
 import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image } from "@mantine/core";
 import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
-import { ContentList } from "./ContentList";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -127,7 +126,7 @@ const ItemCard = ({
 
 // Section loading skeleton
 const SectionSkeleton = () => (
-    <Stack mt="md">
+    <Stack>
         {[1, 2, 3].map((i) => (
             <Card key={i} shadow="xs" p="xs" radius="md" withBorder>
                 <Group>
@@ -563,7 +562,12 @@ export function ContextPanel({
                 />
 
                 {isLoading ? (
-                    <SectionSkeleton />
+                    <>
+                        <SectionSkeleton />
+                        <SectionSkeleton />
+                        <SectionSkeleton />
+                    </>
+
                 ) : (
                     <div
                         ref={containerRef}
