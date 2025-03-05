@@ -2,7 +2,7 @@ import { sendToBackground } from "@plasmohq/messaging"
 import {
     Stack, Card, Text, Container, Loader, Center, Button, Group, Badge,
     Tabs, Divider, Alert, Box, Title,
-    useMantineColorScheme
+    useMantineColorScheme, Progress
 } from '@mantine/core'
 import { useQuery } from "@tanstack/react-query"
 import { Providers } from "~providers"
@@ -47,15 +47,19 @@ const Icons = {
 // Simplified DownloadStatus component
 function DownloadStatus() {
     const [status, setStatus] = useState<string>("");
+    const [progress, setProgress] = useState<number | null>(null);
     const storage = new Storage();
 
     useEffect(() => {
         const checkStatus = async () => {
             const currentStatus = await storage.get('downloadStatus');
+            const currentProgress = await storage.get('uploadProgress');
+            
             if (currentStatus) setStatus(currentStatus);
+            if (currentProgress !== undefined) setProgress(Number(currentProgress));
         };
 
-        const intervalId = setInterval(checkStatus, 1000);
+        const intervalId = setInterval(checkStatus, 500);
         return () => clearInterval(intervalId);
     }, []);
 
@@ -72,6 +76,8 @@ function DownloadStatus() {
         icon = "❌";
     }
 
+    const isUploading = status.includes("Uploading to server");
+
     return (
         <Alert 
             color={color} 
@@ -81,10 +87,23 @@ function DownloadStatus() {
             withCloseButton
             onClose={async () => {
                 await storage.set('downloadStatus', '');
+                await storage.set('uploadProgress', null);
                 setStatus('');
+                setProgress(null);
             }}
         >
-            {status}
+            <Text>{status}</Text>
+            
+            {isUploading && progress !== null && (
+                <Progress 
+                    value={progress} 
+                    mt="xs" 
+                    size="sm" 
+                    color={color}
+                    striped
+                    animated
+                />
+            )}
         </Alert>
     );
 }
