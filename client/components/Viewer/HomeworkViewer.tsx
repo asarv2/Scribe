@@ -12,7 +12,7 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton, Modal } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { Grid, Flex, Container } from "@mantine/core";
 import Latex from "@/components/Latex";
@@ -40,6 +40,7 @@ export default function HomeworkViewer({
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
     const previewScrollRef = useRef<HTMLDivElement>(null);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
     const { colorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
@@ -186,6 +187,11 @@ export default function HomeworkViewer({
         );
     }
 
+    // Function to open the full-size image modal
+    const openImageModal = () => {
+        setIsImageModalOpen(true);
+    };
+
     // Main components
     const MainViewer = ({ height = 500 }: { height?: number }) => {
         const [isImageLoading, setIsImageLoading] = useState(false);
@@ -198,7 +204,7 @@ export default function HomeworkViewer({
                 <Box style={{ 
                     position: 'relative', 
                     width: '100%',
-                    aspectRatio: '1',
+                    aspectRatio: '16/9',
                     overflow: "hidden",
                     display: "flex",
                     alignItems: "center",
@@ -207,21 +213,29 @@ export default function HomeworkViewer({
                     borderRadius: "10px",
                     flexShrink: 0
                 }}
-                onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
-                onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
+                onTouchStart={(e) => {
+                    setTouchStartX(e.changedTouches[0].clientX);
+                }}
+                onTouchEnd={(e) => {
+                    const touchEndX = e.changedTouches[0].clientX;
+                    handleSwipe(touchEndX);
+                }}
                 >
                     <Image
                         src={getActiveImage(activeExerciseId)}
-                        alt={`Exercise ${currentExercise?.title}`}
+                        alt={`Exercise ${currentExercise?.problem_number}`}
                         width={500}
                         height={500}
                         style={{ 
                             maxWidth: '100%',
                             maxHeight: '100%',
-                            objectFit: "contain"
+                            objectFit: "contain",
+                            cursor: "zoom-in" // Add cursor to indicate clickable
                         }}
                         sizes="100vw"
-                        priority
+                        placeholder="blur"
+                        blurDataURL={"/placeholder_image.svg"}
+                        onClick={openImageModal} // Add click handler to open modal
                     />
                     <ActionIcon
                         size="lg"
@@ -235,12 +249,13 @@ export default function HomeworkViewer({
                             zIndex: 100,
                         }}
                         onClick={() => {
-                            if (!sortedExercises.length) return;
+                            const sortedExercises = exercises ? sortExercises(exercises) : [];
+                            const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
                             if (currentIndex > 0) {
                                 handleExerciseClick(sortedExercises[currentIndex - 1].id);
                             }
                         }}
-                        disabled={!sortedExercises.length || currentIndex === 0}
+                        disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === 0}
                         aria-label="Previous Exercise"
                     >
                         <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
@@ -257,12 +272,13 @@ export default function HomeworkViewer({
                             zIndex: 100,
                         }}
                         onClick={() => {
-                            if (!sortedExercises.length) return;
+                            const sortedExercises = exercises ? sortExercises(exercises) : [];
+                            const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
                             if (currentIndex < sortedExercises.length - 1) {
                                 handleExerciseClick(sortedExercises[currentIndex + 1].id);
                             }
                         }}
-                        disabled={!sortedExercises.length || currentIndex === sortedExercises.length - 1}
+                        disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === sortExercises(exercises).length - 1}
                         aria-label="Next Exercise"
                     >
                         <IconArrowRight size={24} />
@@ -278,17 +294,17 @@ export default function HomeworkViewer({
                             borderRadius: "4px",
                         }}
                     >
-                        <Text
+                        <Text 
                             size="xs"
                             fw={500}
-                            style={{
+                            style={{ 
                                 color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ?
-                                    "0px 0px 4px rgba(0,0,0,0.5)" :
+                                textShadow: colorScheme === "dark" ? 
+                                    "0px 0px 4px rgba(0,0,0,0.5)" : 
                                     "0px 0px 4px rgba(255,255,255,0.5)"
                             }}
                         >
-                            {currentExercise?.title}
+                            Problem {currentExercise?.problem_number}
                         </Text>
                     </Box>
                 </Box>
@@ -341,12 +357,14 @@ export default function HomeworkViewer({
                                 objectFit: "contain",
                                 padding: "10px",
                                 opacity: isImageLoading ? 0 : 1,
-                                transition: 'opacity 0.2s ease-in-out'
+                                transition: 'opacity 0.2s ease-in-out',
+                                cursor: "zoom-in" // Add cursor to indicate clickable
                             }}
                             sizes="100vw"
                             onLoadingComplete={() => setIsImageLoading(false)}
                             onLoadStart={() => setIsImageLoading(true)}
                             priority
+                            onClick={openImageModal} // Add click handler to open modal
                         />
                         <ActionIcon
                             size={embedded ? "lg" : "xl"}
@@ -360,12 +378,13 @@ export default function HomeworkViewer({
                                 zIndex: 100,
                             }}
                             onClick={() => {
-                                if (!sortedExercises.length) return;
+                                const sortedExercises = exercises ? sortExercises(exercises) : [];
+                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
                                 if (currentIndex > 0) {
                                     handleExerciseClick(sortedExercises[currentIndex - 1].id);
                                 }
                             }}
-                            disabled={!sortedExercises.length || currentIndex === 0}
+                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === 0}
                             aria-label="Previous Exercise"
                         >
                             <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
@@ -382,12 +401,13 @@ export default function HomeworkViewer({
                                 zIndex: 100,
                             }}
                             onClick={() => {
-                                if (!sortedExercises.length) return;
+                                const sortedExercises = exercises ? sortExercises(exercises) : [];
+                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
                                 if (currentIndex < sortedExercises.length - 1) {
                                     handleExerciseClick(sortedExercises[currentIndex + 1].id);
                                 }
                             }}
-                            disabled={!sortedExercises.length || currentIndex === sortedExercises.length - 1}
+                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === sortExercises(exercises).length - 1}
                             aria-label="Next Exercise"
                         >
                             <IconArrowRight size={embedded ? 24 : 32} />
@@ -600,55 +620,237 @@ export default function HomeworkViewer({
     if (embedded) {
         return (
             <Stack gap="xs" style={{ height: '100%' }}>
-                <MainViewer />
-                
-                {/* Tighter preview strip */}
-                <Flex
-                    ref={previewScrollRef}
-                    gap={4}
-                    style={{
-                        overflowX: 'auto',
-                        padding: '2px',
+                {loadingDocuments || loadingExercises ? (
+                    // Skeleton for embedded viewer
+                    <Box style={{ 
+                        position: 'relative', 
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                        borderRadius: "10px",
+                        flexShrink: 0
+                    }}>
+                        <Skeleton height="100%" width="100%" radius="md" />
+                    </Box>
+                ) : (
+                    <Box style={{ 
+                        position: 'relative', 
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                        borderRadius: "10px",
                         flexShrink: 0
                     }}
-                >
-                    {exercises && sortExercises(exercises).map((exercise) => (
-                        <Box
-                            key={exercise.id}
-                            data-exercise={exercise.id}
-                            style={{
-                                cursor: 'pointer',
-                                width: 40,
-                                height: 40,
-                                position: 'relative',
-                                flexShrink: 0,
-                                borderRadius: '4px',
-                                overflow: 'hidden',
+                    onTouchStart={(e) => {
+                        setTouchStartX(e.changedTouches[0].clientX);
+                    }}
+                    onTouchEnd={(e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        handleSwipe(touchEndX);
+                    }}
+                    >
+                        <Image
+                            src={getActiveImage(activeExerciseId)}
+                            alt={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}`}
+                            width={500}
+                            height={500}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain",
+                                cursor: "zoom-in" // Add cursor to indicate clickable
                             }}
-                            onClick={() => handleExerciseClick(exercise.id)}
+                            sizes="100vw"
+                            placeholder="blur"
+                            blurDataURL={"/placeholder_image.svg"}
+                            onClick={openImageModal} // Add click handler to open modal
+                        />
+                        <ActionIcon
+                            size="lg"
+                            variant="filled"
+                            color={colorScheme === "dark" ? "gray" : "dark"}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: 5,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                const sortedExercises = exercises ? sortExercises(exercises) : [];
+                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
+                                if (currentIndex > 0) {
+                                    handleExerciseClick(sortedExercises[currentIndex - 1].id);
+                                }
+                            }}
+                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === 0}
+                            aria-label="Previous Exercise"
                         >
-                            <Image
-                                src={getActiveImage(exercise.id)}
-                                alt={`Exercise ${exercise.problem_number}`}
-                                width={40}
-                                height={40}
+                            <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                        </ActionIcon>
+                        <ActionIcon
+                            size="lg"
+                            variant="filled"
+                            color="gray"
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                right: 5,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                const sortedExercises = exercises ? sortExercises(exercises) : [];
+                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
+                                if (currentIndex < sortedExercises.length - 1) {
+                                    handleExerciseClick(sortedExercises[currentIndex + 1].id);
+                                }
+                            }}
+                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === sortExercises(exercises).length - 1}
+                            aria-label="Next Exercise"
+                        >
+                            <IconArrowRight size={24} />
+                        </ActionIcon>
+                        <Box
+                            pos="absolute"
+                            bottom={5}
+                            right={5}
+                            p={4}
+                            style={{
+                                zIndex: 100,
+                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                borderRadius: "4px",
+                            }}
+                        >
+                            <Text 
+                                size="xs"
+                                fw={500}
                                 style={{ 
-                                    objectFit: 'cover',
-                                    outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
-                                    outlineOffset: '-2px',
+                                    color: colorScheme === "dark" ? "white" : "black",
+                                    textShadow: colorScheme === "dark" ? 
+                                        "0px 0px 4px rgba(0,0,0,0.5)" : 
+                                        "0px 0px 4px rgba(255,255,255,0.5)"
                                 }}
-                                sizes="100vw"
-                            />
+                            >
+                                Problem {exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}
+                            </Text>
                         </Box>
-                    ))}
-                </Flex>
-
-                {/* Description with minimal padding */}
-                <Box style={{ overflow: 'auto', paddingInline: '2px' }}>
-                    <Text fw={500} size="sm">
-                        <Latex>{exercises?.find(ex => ex.id === activeExerciseId)?.info ?? ""}</Latex>
-                    </Text>
+                    </Box>
+                )}
+                
+                {/* Preview strip with fixed height and better visibility */}
+                <Box 
+                    style={{
+                        flexShrink: 0,
+                        height: '40px', // Fixed height
+                        marginBottom: '4px' // Add some space between preview and description
+                    }}
+                >
+                    {loadingDocuments || loadingExercises ? (
+                        <Flex gap={4} style={{ padding: '2px', height: '100%' }}>
+                            {[...Array(6)].map((_, index) => (
+                                <Skeleton key={index} height={35} width={35} radius="sm" />
+                            ))}
+                        </Flex>
+                    ) : (
+                        <Flex
+                            ref={previewScrollRef}
+                            gap={4}
+                            style={{
+                                overflowX: 'auto',
+                                padding: '2px',
+                                height: '100%',
+                                width: '100%'
+                            }}
+                        >
+                            {exercises && sortExercises(exercises).map((exercise) => (
+                                <Box
+                                    key={exercise.id}
+                                    data-exercise={exercise.id}
+                                    style={{
+                                        cursor: 'pointer',
+                                        width: 35, // Slightly smaller
+                                        height: 35, // Slightly smaller
+                                        position: 'relative',
+                                        flexShrink: 0,
+                                        borderRadius: '4px',
+                                        overflow: 'hidden',
+                                    }}
+                                    onClick={() => handleExerciseClick(exercise.id)}
+                                >
+                                    <Image
+                                        src={getActiveImage(exercise.id)}
+                                        alt={`Exercise ${exercise.problem_number}`}
+                                        width={35}
+                                        height={35}
+                                        style={{ 
+                                            objectFit: 'cover',
+                                            outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
+                                            outlineOffset: '-2px',
+                                        }}
+                                        sizes="100vw"
+                                    />
+                                </Box>
+                            ))}
+                        </Flex>
+                    )}
                 </Box>
+
+                {/* Description with flex-grow to take remaining space */}
+                <Box style={{ 
+                    overflow: 'auto', 
+                    paddingInline: '2px',
+                    flexGrow: 1,
+                    minHeight: '80px' // Ensure description always has some minimum height
+                }}>
+                    {loadingDocuments || loadingExercises ? (
+                        <Stack>
+                            <Skeleton height={16} width="90%" />
+                            <Skeleton height={16} width="85%" />
+                            <Skeleton height={16} width="70%" />
+                        </Stack>
+                    ) : (
+                        <Text fw={500} size="sm">
+                            <Latex>{exercises?.find(ex => ex.id === activeExerciseId)?.info ?? ""}</Latex>
+                        </Text>
+                    )}
+                </Box>
+                
+                {/* Add the full-size image modal */}
+                <Modal 
+                    opened={isImageModalOpen} 
+                    onClose={() => setIsImageModalOpen(false)}
+                    size="xl"
+                    padding="md"
+                    centered
+                    title={`Problem ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}`}
+                >
+                    <Box 
+                        style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            height: '80vh'
+                        }}
+                    >
+                        <Image
+                            src={getActiveImage(activeExerciseId)}
+                            alt={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}`}
+                            width={1200}
+                            height={1200}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain"
+                            }}
+                            sizes="100vw"
+                        />
+                    </Box>
+                </Modal>
             </Stack>
         );
     }
@@ -677,7 +879,7 @@ export default function HomeworkViewer({
                     <Grid>
                         <Grid.Col span={isMobile ? 12 : 6}>
                             <Stack>
-                                {loadingDocuments ? (
+                                {loadingDocuments || loadingExercises ? (
                                     <>
                                         <MainViewerSkeleton />
                                         <PreviewStripSkeleton />
@@ -691,7 +893,7 @@ export default function HomeworkViewer({
                             </Stack>
                         </Grid.Col>
                         <Grid.Col span={isMobile ? 12 : 6}>
-                            {loadingDocuments ? (
+                            {loadingDocuments || loadingExercises ? (
                                 <DescriptionSkeleton />
                             ) : (
                                 <Description />
@@ -699,6 +901,38 @@ export default function HomeworkViewer({
                         </Grid.Col>
                     </Grid>
                 </Stack>
+                
+                {/* Add the full-size image modal */}
+                <Modal 
+                    opened={isImageModalOpen} 
+                    onClose={() => setIsImageModalOpen(false)}
+                    size="xl"
+                    padding="md"
+                    centered
+                    title={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.title}`}
+                >
+                    <Box 
+                        style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            height: '80vh'
+                        }}
+                    >
+                        <Image
+                            src={getActiveImage(activeExerciseId)}
+                            alt={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.title}`}
+                            width={1200}
+                            height={1200}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain"
+                            }}
+                            sizes="100vw"
+                        />
+                    </Box>
+                </Modal>
             </Container>
         </ClassLayout>
     );

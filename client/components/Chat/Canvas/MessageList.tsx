@@ -4,7 +4,7 @@
  */
 
 import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch } from "@mantine/core";
-import { IconArrowDown, IconFileText, IconRefresh, IconX } from "@tabler/icons-react";
+import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
 import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode, Exercise } from "@/types";
 import Latex from "../../Latex";
@@ -681,6 +681,16 @@ export const MessageList = memo(({
                                               handleDocumentClick('lectures', doc.lecture, setViewerMode, doc.id);
                                             }
                                           }}
+                                          leftSection={
+                                            <Avatar 
+                                              src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${doc.lecture}/${doc.id}.png`}
+                                              size="xs"
+                                              radius="sm"
+                                            />
+                                          }
+                                          rightSection={
+                                            <IconChevronRight size={16} />
+                                          }
                                         >
                                           {getDocumentLabel(
                                             'lecture',
@@ -700,6 +710,16 @@ export const MessageList = memo(({
                                               handleDocumentClick('chapters', doc.chapter, setViewerMode, doc.id, doc.textbook);
                                             }
                                           }}
+                                          leftSection={
+                                            <Avatar 
+                                              src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${doc.textbook}/${doc.id}.png`}
+                                              size="xs"
+                                              radius="sm"
+                                            />
+                                          }
+                                          rightSection={
+                                            <IconChevronRight size={16} />
+                                          }
                                         >
                                           {getDocumentLabel(
                                             'chapter',
@@ -731,6 +751,16 @@ export const MessageList = memo(({
                                               handleDocumentClick('homeworks', exercise.homework, setViewerMode, undefined, undefined, exercise.id);
                                             }
                                           }}
+                                          leftSection={
+                                            <Avatar 
+                                              src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`}
+                                              size="xs"
+                                              radius="sm"
+                                            />
+                                          }
+                                          rightSection={
+                                            <IconChevronRight size={16} />
+                                          }
                                         >
                                           {getDocumentLabel(
                                             'homework-problem',
@@ -740,6 +770,8 @@ export const MessageList = memo(({
                                         </Badge>
                                       );
                                     } if (chapterExercise) {
+                                      // Find the textbook for this chapter exercise
+                                      const chapter = chapters?.find(c => c.id === exercise.chapter);
                                       return (
                                         <Badge
                                           key={exerciseIndex}
@@ -750,6 +782,18 @@ export const MessageList = memo(({
                                               handleDocumentClick('chapters', exercise.chapter, setViewerMode, undefined, undefined, exercise.id);
                                             }
                                           }}
+                                          leftSection={
+                                            <Avatar 
+                                              src={chapter?.textbook ? 
+                                                `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${chapter.textbook}/${exercise.id}.png` : 
+                                                '/placeholder_image.svg'}
+                                              size="xs"
+                                              radius="sm"
+                                            />
+                                          }
+                                          rightSection={
+                                            <IconChevronRight size={16} />
+                                          }
                                         >
                                           {getDocumentLabel(
                                             'chapter-exercise',

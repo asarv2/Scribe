@@ -14,7 +14,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton, Modal } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -43,6 +43,7 @@ export default function LectureViewer({
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [hoveredFigure, setHoveredFigure] = useState<string | null>(null);
     const previewScrollRef = useRef<HTMLDivElement>(null);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
     const { colorScheme } = useMantineColorScheme();
 
@@ -200,6 +201,11 @@ export default function LectureViewer({
         );
     }
 
+    // Add function to open the full-size image modal
+    const openImageModal = () => {
+        setIsImageModalOpen(true);
+    };
+
     // Shared viewer component
     const MainViewer = ({ height = 500 }: { height?: number }) => (
         <Card padding="md" pos="relative" withBorder>
@@ -229,11 +235,13 @@ export default function LectureViewer({
                         maxWidth: '100%',
                         maxHeight: '100%',
                         borderRadius: "10px",
-                        objectFit: "contain"
+                        objectFit: "contain",
+                        cursor: "zoom-in" // Add cursor to indicate clickable
                     }}
                     sizes="100vw"
                     placeholder="blur"
                     blurDataURL={"/placeholder_image.svg"}
+                    onClick={openImageModal} // Add click handler to open modal
                 />
                 <ActionIcon
                     size={embedded ? "lg" : "xl"}
@@ -361,109 +369,125 @@ export default function LectureViewer({
     if (embedded) {
         return (
             <Stack gap="xs" style={{ height: '100%' }}>
-                <Box style={{ 
-                    position: 'relative', 
-                    width: '100%',
-                    aspectRatio: '16/9',
-                    overflow: "hidden",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
-                    borderRadius: "10px",
-                    flexShrink: 0
-                }}
-                onTouchStart={(e) => {
-                    setTouchStartX(e.changedTouches[0].clientX);
-                }}
-                onTouchEnd={(e) => {
-                    const touchEndX = e.changedTouches[0].clientX;
-                    handleSwipe(touchEndX);
-                }}
-                >
-                    <Image
-                        src={getActiveImage(activeDocumentId)}
-                        alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
-                        width={500}
-                        height={500}
-                        style={{ 
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            objectFit: "contain"
-                        }}
-                        sizes="100vw"
-                        placeholder="blur"
-                        blurDataURL={"/placeholder_image.svg"}
-                    />
-                    <ActionIcon
-                        size={embedded ? "lg" : "xl"}
-                        variant="filled"
-                        color={colorScheme === "dark" ? "gray" : "dark"}
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: embedded ? 5 : 10,
-                            transform: 'translateY(-50%)',
-                            zIndex: 100,
-                        }}
-                        onClick={() => {
-                            const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                            if (currentIndex > 0 && filteredDocuments) {
-                                handlePageClick(filteredDocuments[currentIndex - 1].id);
-                            }
-                        }}
-                        disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
-                        aria-label="Previous Slide"
+                {loadingDocuments ? (
+                    // Skeleton for embedded viewer
+                    <Box style={{ 
+                        position: 'relative', 
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                        borderRadius: "10px",
+                        flexShrink: 0
+                    }}>
+                        <Skeleton height="100%" width="100%" radius="md" />
+                    </Box>
+                ) : (
+                    <Box style={{ 
+                        position: 'relative', 
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                        borderRadius: "10px",
+                        flexShrink: 0
+                    }}
+                    onTouchStart={(e) => {
+                        setTouchStartX(e.changedTouches[0].clientX);
+                    }}
+                    onTouchEnd={(e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        handleSwipe(touchEndX);
+                    }}
                     >
-                        <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
-                    </ActionIcon>
-                    <ActionIcon
-                        size={embedded ? "lg" : "xl"}
-                        variant="filled"
-                        color="gray"
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            right: embedded ? 5 : 10,
-                            transform: 'translateY(-50%)',
-                            zIndex: 100,
-                        }}
-                        onClick={() => {
-                            const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                            if (filteredDocuments && currentIndex < filteredDocuments.length - 1) {
-                                handlePageClick(filteredDocuments[currentIndex + 1].id);
-                            }
-                        }}
-                        disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
-                        aria-label="Next Slide"
-                    >
-                        <IconArrowRight size={embedded ? 24 : 32} />
-                    </ActionIcon>
-                    <Box
-                        pos="absolute"
-                        bottom={embedded ? 5 : 10}
-                        right={embedded ? 5 : 10}
-                        p={embedded ? 4 : 8}
-                        style={{
-                            zIndex: 100,
-                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                            borderRadius: "4px",
-                        }}
-                    >
-                        <Text 
-                            size={embedded ? "xs" : "sm"}
-                            fw={500}
+                        <Image
+                            src={getActiveImage(activeDocumentId)}
+                            alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
+                            width={500}
+                            height={500}
                             style={{ 
-                                color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ? 
-                                    "0px 0px 4px rgba(0,0,0,0.5)" : 
-                                    "0px 0px 4px rgba(255,255,255,0.5)"
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain",
+                                cursor: "zoom-in" // Add cursor to indicate clickable
+                            }}
+                            sizes="100vw"
+                            placeholder="blur"
+                            blurDataURL={"/placeholder_image.svg"}
+                            onClick={openImageModal} // Add click handler to open modal
+                        />
+                        <ActionIcon
+                            size={embedded ? "lg" : "xl"}
+                            variant="filled"
+                            color={colorScheme === "dark" ? "gray" : "dark"}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: embedded ? 5 : 10,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                if (currentIndex > 0 && filteredDocuments) {
+                                    handlePageClick(filteredDocuments[currentIndex - 1].id);
+                                }
+                            }}
+                            disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
+                            aria-label="Previous Slide"
+                        >
+                            <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
+                        </ActionIcon>
+                        <ActionIcon
+                            size={embedded ? "lg" : "xl"}
+                            variant="filled"
+                            color="gray"
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                right: embedded ? 5 : 10,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                if (filteredDocuments && currentIndex < filteredDocuments.length - 1) {
+                                    handlePageClick(filteredDocuments[currentIndex + 1].id);
+                                }
+                            }}
+                            disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
+                            aria-label="Next Slide"
+                        >
+                            <IconArrowRight size={embedded ? 24 : 32} />
+                        </ActionIcon>
+                        <Box
+                            pos="absolute"
+                            bottom={embedded ? 5 : 10}
+                            right={embedded ? 5 : 10}
+                            p={embedded ? 4 : 8}
+                            style={{
+                                zIndex: 100,
+                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                borderRadius: "4px",
                             }}
                         >
-                            Page {filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}
-                        </Text>
+                            <Text 
+                                size={embedded ? "xs" : "sm"}
+                                fw={500}
+                                style={{ 
+                                    color: colorScheme === "dark" ? "white" : "black",
+                                    textShadow: colorScheme === "dark" ? 
+                                        "0px 0px 4px rgba(0,0,0,0.5)" : 
+                                        "0px 0px 4px rgba(255,255,255,0.5)"
+                                }}
+                            >
+                                Page {filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}
+                            </Text>
+                        </Box>
                     </Box>
-                </Box>
+                )}
                 
                 {/* Preview strip with fixed height and better visibility */}
                 <Box 
@@ -473,46 +497,54 @@ export default function LectureViewer({
                         marginBottom: '4px' // Add some space between preview and description
                     }}
                 >
-                    <Flex
-                        ref={previewScrollRef}
-                        gap={4}
-                        style={{
-                            overflowX: 'auto',
-                            padding: '2px',
-                            height: '100%',
-                            width: '100%'
-                        }}
-                    >
-                        {filteredDocuments?.map((doc) => (
-                            <Box
-                                key={doc.id}
-                                data-document={doc.id}
-                                style={{
-                                    cursor: 'pointer',
-                                    width: 35, // Slightly smaller
-                                    height: 35, // Slightly smaller
-                                    position: 'relative',
-                                    flexShrink: 0,
-                                    borderRadius: '4px',
-                                    overflow: 'hidden',
-                                }}
-                                onClick={() => handlePageClick(doc.id)}
-                            >
-                                <Image
-                                    src={getActiveImage(doc.id)}
-                                    alt={`Page ${doc.page}`}
-                                    width={35}
-                                    height={35}
-                                    style={{ 
-                                        objectFit: 'cover',
-                                        outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
-                                        outlineOffset: '-2px',
+                    {loadingDocuments ? (
+                        <Flex gap={4} style={{ padding: '2px', height: '100%' }}>
+                            {[...Array(6)].map((_, index) => (
+                                <Skeleton key={index} height={35} width={35} radius="sm" />
+                            ))}
+                        </Flex>
+                    ) : (
+                        <Flex
+                            ref={previewScrollRef}
+                            gap={4}
+                            style={{
+                                overflowX: 'auto',
+                                padding: '2px',
+                                height: '100%',
+                                width: '100%'
+                            }}
+                        >
+                            {filteredDocuments?.map((doc) => (
+                                <Box
+                                    key={doc.id}
+                                    data-document={doc.id}
+                                    style={{
+                                        cursor: 'pointer',
+                                        width: 35, // Slightly smaller
+                                        height: 35, // Slightly smaller
+                                        position: 'relative',
+                                        flexShrink: 0,
+                                        borderRadius: '4px',
+                                        overflow: 'hidden',
                                     }}
-                                    sizes="100vw"
-                                />
-                            </Box>
-                        ))}
-                    </Flex>
+                                    onClick={() => handlePageClick(doc.id)}
+                                >
+                                    <Image
+                                        src={getActiveImage(doc.id)}
+                                        alt={`Page ${doc.page}`}
+                                        width={35}
+                                        height={35}
+                                        style={{ 
+                                            objectFit: 'cover',
+                                            outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                                            outlineOffset: '-2px',
+                                        }}
+                                        sizes="100vw"
+                                    />
+                                </Box>
+                            ))}
+                        </Flex>
+                    )}
                 </Box>
 
                 {/* Description with flex-grow to take remaining space */}
@@ -522,10 +554,50 @@ export default function LectureViewer({
                     flexGrow: 1,
                     minHeight: '80px' // Ensure description always has some minimum height
                 }}>
-                    <Text fw={500} size="sm">
-                        <Latex>{filteredDocuments?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
-                    </Text>
+                    {loadingDocuments ? (
+                        <Stack>
+                            <Skeleton height={16} width="90%" />
+                            <Skeleton height={16} width="85%" />
+                            <Skeleton height={16} width="70%" />
+                        </Stack>
+                    ) : (
+                        <Text fw={500} size="sm">
+                            <Latex>{filteredDocuments?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
+                        </Text>
+                    )}
                 </Box>
+                
+                {/* Add the full-size image modal */}
+                <Modal 
+                    opened={isImageModalOpen} 
+                    onClose={() => setIsImageModalOpen(false)}
+                    size="xl"
+                    padding="md"
+                    centered
+                    title={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
+                >
+                    <Box 
+                        style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            height: '80vh'
+                        }}
+                    >
+                        <Image
+                            src={getActiveImage(activeDocumentId)}
+                            alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
+                            width={1200}
+                            height={1200}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain"
+                            }}
+                            sizes="100vw"
+                        />
+                    </Box>
+                </Modal>
             </Stack>
         );
     }
@@ -571,6 +643,38 @@ export default function LectureViewer({
                         </Grid.Col>
                     </Grid>
                 </Stack>
+                
+                {/* Add the full-size image modal */}
+                <Modal 
+                    opened={isImageModalOpen} 
+                    onClose={() => setIsImageModalOpen(false)}
+                    size="xl"
+                    padding="md"
+                    centered
+                    title={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
+                >
+                    <Box 
+                        style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            height: '80vh'
+                        }}
+                    >
+                        <Image
+                            src={getActiveImage(activeDocumentId)}
+                            alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
+                            width={1200}
+                            height={1200}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain"
+                            }}
+                            sizes="100vw"
+                        />
+                    </Box>
+                </Modal>
             </Container>
         </ClassLayout>
     );

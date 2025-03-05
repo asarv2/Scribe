@@ -3,7 +3,7 @@
  * Used to show the context badges in the chat.
  */
 
-import { Badge, Group } from "@mantine/core";
+import { Badge, Group, Avatar } from "@mantine/core";
 import { IconPlus, IconWand, IconX } from "@tabler/icons-react";
 import { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -103,6 +103,15 @@ export const ContextBadges = memo(({
                         key={lectureId}
                         color="blue"
                         style={{ cursor: 'pointer' }}
+                        leftSection={
+                            <Avatar 
+                                src={lectureDocuments?.find(d => d.lecture === lectureId) ? 
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${lectureDocuments.find(d => d.lecture === lectureId)?.id}.png` : 
+                                    '/placeholder_image.svg'}
+                                size="xs"
+                                radius="sm"
+                            />
+                        }
                         rightSection={onRemoveContext && (
                             <IconX
                                 size={14}
@@ -134,6 +143,15 @@ export const ContextBadges = memo(({
                         key={chapterId}
                         color="green"
                         style={{ cursor: 'pointer' }}
+                        leftSection={
+                            <Avatar 
+                                src={textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook) ? 
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${textbookDocuments.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook)?.id}.png` : 
+                                    '/placeholder_image.svg'}
+                                size="xs"
+                                radius="sm"
+                            />
+                        }
                         rightSection={onRemoveContext && (
                             <IconX
                                 size={14}
@@ -168,6 +186,15 @@ export const ContextBadges = memo(({
                         key={homeworkId}
                         color="orange"
                         style={{ cursor: 'pointer' }}
+                        leftSection={
+                            <Avatar 
+                                src={exercises?.find(e => e.homework === homeworkId) ? 
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercises.find(e => e.homework === homeworkId)?.id}.png` : 
+                                    '/placeholder_image.svg'}
+                                size="xs"
+                                radius="sm"
+                            />
+                        }
                         rightSection={onRemoveContext && (
                             <IconX
                                 size={14}

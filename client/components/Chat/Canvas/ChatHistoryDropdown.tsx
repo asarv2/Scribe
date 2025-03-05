@@ -2,7 +2,7 @@ import { getChats } from "@/utils/queries/get-chats";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { Menu, ActionIcon, ScrollArea, Group, Text, Avatar, Stack } from "@mantine/core";
+import { Menu, ActionIcon, ScrollArea, Group, Text, Avatar, Stack, Tooltip } from "@mantine/core";
 import { IconHistory } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -182,9 +182,11 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
     return (
         <Menu position="bottom-start" shadow="md">
             <Menu.Target>
-                <ActionIcon variant="subtle" size="md" aria-label="View chat history">
-                    <IconHistory size={18} />
-                </ActionIcon>
+                <Tooltip label="History">
+                    <ActionIcon variant="subtle" size="md" aria-label="View chat history">
+                        <IconHistory size={18} />
+                    </ActionIcon>
+                </Tooltip>
             </Menu.Target>
             
             <Menu.Dropdown>
@@ -201,8 +203,8 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
                                     size="sm" 
                                     radius="sm"
                                 />
-                                <Stack gap={0}>
-                                    <Text size="sm">
+                                <Stack gap={0} w={250}>
+                                    <Text size="sm" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                                         {chat.name || `Chat ${chat.id.substring(0, 6)}`}
                                     </Text>
                                     <Text size="xs" c="dimmed">

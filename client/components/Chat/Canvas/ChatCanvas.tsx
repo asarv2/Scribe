@@ -500,14 +500,14 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 {
                     event: '*',
                     schema: 'prod',
-                    table: 'chats',
+                    table: 'chats', 
                     filter: `id=eq.${chatId}`
                 },
                 async (payload) => {
                     console.log("Received chat update:", payload);
 
                     // Set flag to indicate we received a realtime update
-                    if (payload.eventType === 'UPDATE' && payload.new.name !== payload.old.name) {
+                    if (payload.eventType === 'UPDATE' && payload.new.name !== existingChat?.name) {
                         setReceivedRealtimeUpdate(true);
                     }
 
@@ -690,7 +690,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                                 </Group>
                                             ) : (
                                                 <>
-                                                    <Text size="sm" c="dimmed">Rate this chat:</Text>
+                                                    <Text size="sm">Rate this chat:</Text>
                                                     <Rating
                                                         value={0}
                                                         onChange={handleRatingChange}

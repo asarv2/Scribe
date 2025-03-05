@@ -15,7 +15,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { usePathname, useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton, Modal } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
@@ -88,6 +88,7 @@ export default function ChapterViewer({
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [hoveredFigure, setHoveredFigure] = useState<string | null>(null);
     const previewScrollRef = useRef<HTMLDivElement>(null);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
     const { colorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
@@ -219,12 +220,17 @@ export default function ChapterViewer({
         }
     }, [initialDocumentId, filteredDocuments]);
 
+    // Function to open the full-size image modal
+    const openImageModal = () => {
+        setIsImageModalOpen(true);
+    };
+
     // Shared viewer component
     const MainViewer = () => (
         <Box style={{ 
             position: 'relative', 
             width: '100%',
-            aspectRatio: '1',
+            aspectRatio: '16/9',
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
@@ -249,22 +255,24 @@ export default function ChapterViewer({
                 style={{ 
                     maxWidth: '100%',
                     maxHeight: '100%',
-                    objectFit: "contain"
+                    objectFit: "contain",
+                    cursor: "zoom-in" // Add cursor to indicate clickable
                 }}
                 sizes="100vw"
                 placeholder="blur"
                 blurDataURL="/placeholder_image.svg"
                 priority={true}
                 unoptimized={true}
+                onClick={openImageModal} // Add click handler to open modal
             />
             <ActionIcon
-                size={embedded ? "lg" : "xl"}
+                size="lg"
                 variant="filled"
                 color={colorScheme === "dark" ? "gray" : "dark"}
                 style={{
                     position: 'absolute',
                     top: '50%',
-                    left: embedded ? 5 : 10,
+                    left: 5,
                     transform: 'translateY(-50%)',
                     zIndex: 100,
                 }}
@@ -277,16 +285,16 @@ export default function ChapterViewer({
                 disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
                 aria-label="Previous Page"
             >
-                <IconArrowLeft size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
+                <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
             </ActionIcon>
             <ActionIcon
-                size={embedded ? "lg" : "xl"}
+                size="lg"
                 variant="filled"
-                color={colorScheme === "dark" ? "gray" : "dark"}
+                color="gray"
                 style={{
                     position: 'absolute',
                     top: '50%',
-                    right: embedded ? 5 : 10,
+                    right: 5,
                     transform: 'translateY(-50%)',
                     zIndex: 100,
                 }}
@@ -299,13 +307,13 @@ export default function ChapterViewer({
                 disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
                 aria-label="Next Page"
             >
-                <IconArrowRight size={embedded ? 24 : 32} color={colorScheme === "dark" ? "white" : "black"} />
+                <IconArrowRight size={24} />
             </ActionIcon>
             <Box
                 pos="absolute"
-                bottom={embedded ? 5 : 10}
-                right={embedded ? 5 : 10}
-                p={embedded ? 4 : 8}
+                bottom={5}
+                right={5}
+                p={4}
                 style={{
                     zIndex: 100,
                     backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
@@ -313,7 +321,7 @@ export default function ChapterViewer({
                 }}
             >
                 <Text 
-                    size={embedded ? "xs" : "sm"}
+                    size="xs"
                     fw={500}
                     style={{ 
                         color: colorScheme === "dark" ? "white" : "black",
@@ -336,17 +344,18 @@ export default function ChapterViewer({
             style={{
                 overflowX: 'auto',
                 padding: '2px',
-                flexShrink: 0
+                height: '100%',
+                width: '100%'
             }}
         >
-            {documents?.map((doc) => (
+            {filteredDocuments?.map((doc) => (
                 <Box
                     key={doc.id}
                     data-document={doc.id}
                     style={{
                         cursor: 'pointer',
-                        width: embedded ? 40 : 50,
-                        height: embedded ? 40 : 50,
+                        width: 35, // Slightly smaller
+                        height: 35, // Slightly smaller
                         position: 'relative',
                         flexShrink: 0,
                         borderRadius: '4px',
@@ -357,14 +366,15 @@ export default function ChapterViewer({
                     <Image
                         src={getActiveImage(doc.id)}
                         alt={`Page ${doc.page}`}
-                        width={embedded ? 40 : 50}
-                        height={embedded ? 40 : 50}
+                        width={35}
+                        height={35}
                         style={{ 
                             objectFit: 'cover',
                             outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
                             outlineOffset: '-2px',
                         }}
                         sizes="100vw"
+                        unoptimized={true}
                     />
                 </Box>
             ))}
@@ -373,8 +383,8 @@ export default function ChapterViewer({
 
     // Description component
     const Description = () => (
-        <Box style={{ overflow: 'auto', paddingInline: embedded ? '2px' : 'md' }}>
-            <Text fw={500} size={embedded ? "sm" : "lg"}>
+        <Box style={{ overflow: 'auto', paddingInline: '2px' }}>
+            <Text fw={500} size="sm">
                 <Latex>{documents?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
             </Text>
         </Box>
@@ -383,9 +393,196 @@ export default function ChapterViewer({
     if (embedded) {
         return (
             <Stack gap="xs" style={{ height: '100%' }}>
-                <MainViewer />
-                <PreviewStrip />
-                <Description />
+                {loadingDocuments ? (
+                    // Skeleton for embedded viewer
+                    <Box style={{ 
+                        position: 'relative', 
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                        borderRadius: "10px",
+                        flexShrink: 0
+                    }}>
+                        <Skeleton height="100%" width="100%" radius="md" />
+                    </Box>
+                ) : (
+                    <Box style={{ 
+                        position: 'relative', 
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                        borderRadius: "10px",
+                        flexShrink: 0
+                    }}
+                    onTouchStart={(e) => {
+                        setTouchStartX(e.changedTouches[0].clientX);
+                    }}
+                    onTouchEnd={(e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        handleSwipe(touchEndX);
+                    }}
+                    >
+                        <Image
+                            src={getActiveImage(activeDocumentId)}
+                            alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                            width={500}
+                            height={500}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain",
+                                cursor: "zoom-in" // Add cursor to indicate clickable
+                            }}
+                            sizes="100vw"
+                            placeholder="blur"
+                            blurDataURL="/placeholder_image.svg"
+                            onClick={openImageModal} // Add click handler to open modal
+                            unoptimized={true}
+                        />
+                        <ActionIcon
+                            size="lg"
+                            variant="filled"
+                            color={colorScheme === "dark" ? "gray" : "dark"}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: 5,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                if (currentIndex > 0 && filteredDocuments) {
+                                    handlePageClick(filteredDocuments[currentIndex - 1].id);
+                                }
+                            }}
+                            disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
+                            aria-label="Previous Page"
+                        >
+                            <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                        </ActionIcon>
+                        <ActionIcon
+                            size="lg"
+                            variant="filled"
+                            color="gray"
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                right: 5,
+                                transform: 'translateY(-50%)',
+                                zIndex: 100,
+                            }}
+                            onClick={() => {
+                                const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                if (filteredDocuments && currentIndex < filteredDocuments.length - 1) {
+                                    handlePageClick(filteredDocuments[currentIndex + 1].id);
+                                }
+                            }}
+                            disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
+                            aria-label="Next Page"
+                        >
+                            <IconArrowRight size={24} />
+                        </ActionIcon>
+                        <Box
+                            pos="absolute"
+                            bottom={5}
+                            right={5}
+                            p={4}
+                            style={{
+                                zIndex: 100,
+                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                borderRadius: "4px",
+                            }}
+                        >
+                            <Text 
+                                size="xs"
+                                fw={500}
+                                style={{ 
+                                    color: colorScheme === "dark" ? "white" : "black",
+                                    textShadow: colorScheme === "dark" ? 
+                                        "0px 0px 4px rgba(0,0,0,0.5)" : 
+                                        "0px 0px 4px rgba(255,255,255,0.5)"
+                                }}
+                            >
+                                Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
+                            </Text>
+                        </Box>
+                    </Box>
+                )}
+                
+                {/* Preview strip with fixed height and better visibility */}
+                <Box 
+                    style={{
+                        flexShrink: 0,
+                        height: '40px', // Fixed height
+                        marginBottom: '4px' // Add some space between preview and description
+                    }}
+                >
+                    {loadingDocuments ? (
+                        <Flex gap={4} style={{ padding: '2px', height: '100%' }}>
+                            {[...Array(6)].map((_, index) => (
+                                <Skeleton key={index} height={35} width={35} radius="sm" />
+                            ))}
+                        </Flex>
+                    ) : (
+                        <PreviewStrip />
+                    )}
+                </Box>
+                
+                {/* Description with flex-grow to take remaining space */}
+                <Box style={{ 
+                    overflow: 'auto', 
+                    paddingInline: '2px',
+                    flexGrow: 1,
+                    minHeight: '80px' // Ensure description always has some minimum height
+                }}>
+                    {loadingDocuments ? (
+                        <Stack>
+                            <Skeleton height={16} width="90%" />
+                            <Skeleton height={16} width="85%" />
+                            <Skeleton height={16} width="70%" />
+                        </Stack>
+                    ) : (
+                        <Description />
+                    )}
+                </Box>
+                
+                {/* Add the full-size image modal */}
+                <Modal 
+                    opened={isImageModalOpen} 
+                    onClose={() => setIsImageModalOpen(false)}
+                    size="xl"
+                    padding="md"
+                    centered
+                    title={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                >
+                    <Box 
+                        style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            height: '80vh'
+                        }}
+                    >
+                        <Image
+                            src={getActiveImage(activeDocumentId)}
+                            alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                            width={1200}
+                            height={1200}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain"
+                            }}
+                            sizes="100vw"
+                            unoptimized={true}
+                        />
+                    </Box>
+                </Modal>
             </Stack>
         );
     }
@@ -431,6 +628,39 @@ export default function ChapterViewer({
                         </Grid.Col>
                     </Grid>
                 </Stack>
+                
+                {/* Add the full-size image modal */}
+                <Modal 
+                    opened={isImageModalOpen} 
+                    onClose={() => setIsImageModalOpen(false)}
+                    size="xl"
+                    padding="md"
+                    centered
+                    title={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                >
+                    <Box 
+                        style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            height: '80vh'
+                        }}
+                    >
+                        <Image
+                            src={getActiveImage(activeDocumentId)}
+                            alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                            width={1200}
+                            height={1200}
+                            style={{ 
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain"
+                            }}
+                            sizes="100vw"
+                            unoptimized={true}
+                        />
+                    </Box>
+                </Modal>
             </Container>
         </ClassLayout>
     );

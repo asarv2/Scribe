@@ -19,11 +19,14 @@ import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getClasses } from "@/utils/queries/get-classes";
+import { useMediaQuery } from "@mantine/hooks";
 
 export default function Landing() {
   const supabase = useSupabaseBrowser()
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleClick = async () => {
     setIsLoading(true);
@@ -85,23 +88,23 @@ export default function Landing() {
       <Container size="lg">
         <div className={classes.inner}>
           <div className={classes.content}>
-            <Title className={classes.title}>
+            <Title className={classes.title} size="h1">
               Welcome to{' '}
               <span className={classes.highlight}>
                 <span className={classes.x}>Scribe</span>
               </span>
             </Title>
-            <Text c="dimmed" mt="md">
+            <Text c="dimmed" mt="md" size="lg">
               Join the future of learning. An AI-powered chatbot that takes burden off professors and students.
             </Text>
 
             <List
               mt={30}
               spacing="sm"
-              size="sm"
+              size="md"
               icon={
-                <ThemeIcon size={20} radius="xl">
-                  <IconCheck size={12} stroke={1.5} />
+                <ThemeIcon size={24} radius="xl">
+                  <IconCheck size={16} stroke={1.5} />
                 </ThemeIcon>
               }
             >
@@ -116,14 +119,14 @@ export default function Landing() {
               </List.Item>
             </List>
             {!user && !profile ? (
-              <Group mt={30}>
+              <Group mt={30} gap="md">
                 <Link href="/login">
-                  <Button>
+                  <Button size="md">
                     Login
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button>
+                  <Button size="md">
                     Sign Up
                   </Button>
                 </Link>
@@ -132,14 +135,14 @@ export default function Landing() {
               <>
                 {(profile?.professor || profile?.admin) ? (
                   <Group mt={30}>
-                    <Button component={Link} href={`/classes/c/${firstClass?.id}`}>
+                    <Button component={Link} href={`/classes/c/${firstClass?.id}`} size="md">
                       Home
                     </Button>
                   </Group>
                 ) : (
-                  <Group mt={30}>
+                  <Group mt={30} gap="md" wrap="wrap">
                     {getFilteredClasses().map((classItem) => (
-                      <Button key={classItem.id} component={Link} href={`/classes/c/${classItem.id}/chat/new`}>
+                      <Button key={classItem.id} component={Link} href={`/classes/c/${classItem.id}/chat/new`} size="md">
                         {classItem.class_code} Chat
                       </Button>
                     ))}
@@ -173,6 +176,8 @@ export default function Landing() {
             className={classes.heroImage}
             style={{
               borderRadius: "10px",
+              maxWidth: "100%",
+              height: "auto"
             }}
           />
         </div>
