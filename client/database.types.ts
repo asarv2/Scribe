@@ -112,9 +112,8 @@ export type Database = {
           created_at: string | null
           deleted: boolean
           id: string
-          map: string | null
-          menu: string[]
           title: string | null
+          updated_at: string
         }
         Insert: {
           active?: boolean
@@ -126,9 +125,8 @@ export type Database = {
           created_at?: string | null
           deleted?: boolean
           id?: string
-          map?: string | null
-          menu?: string[]
           title?: string | null
+          updated_at?: string
         }
         Update: {
           active?: boolean
@@ -140,9 +138,8 @@ export type Database = {
           created_at?: string | null
           deleted?: boolean
           id?: string
-          map?: string | null
-          menu?: string[]
           title?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -409,6 +406,7 @@ export type Database = {
           answer_enabled: boolean
           chapter: string | null
           created_at: string
+          description: string
           end_page: number
           exercise_number: number
           given: string
@@ -426,6 +424,7 @@ export type Database = {
           answer_enabled?: boolean
           chapter?: string | null
           created_at?: string
+          description?: string
           end_page?: number
           exercise_number?: number
           given?: string
@@ -443,6 +442,7 @@ export type Database = {
           answer_enabled?: boolean
           chapter?: string | null
           created_at?: string
+          description?: string
           end_page?: number
           exercise_number?: number
           given?: string
@@ -928,6 +928,32 @@ export type Database = {
           },
         ]
       }
+      syllabi: {
+        Row: {
+          class: string | null
+          created_at: string
+          id: string
+        }
+        Insert: {
+          class?: string | null
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          class?: string | null
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "syllabi_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       textbooks: {
         Row: {
           class: string
@@ -1013,7 +1039,13 @@ export type Database = {
         | "other"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
-      parse_status: "parsing" | "batching" | "complete" | "idle" | "error"
+      parse_status:
+        | "extracting"
+        | "uploading"
+        | "parsing"
+        | "complete"
+        | "idle"
+        | "error"
       topic_type: "group" | "term" | "problem" | "algorithm"
     }
     CompositeTypes: {

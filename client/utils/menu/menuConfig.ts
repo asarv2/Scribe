@@ -37,6 +37,11 @@ export const menuConfig = {
   //   icon: IconFileDescription,
   //   link: '/homework',
   // },
+  content: {
+    label: 'Content',
+    icon: IconBook,
+    link: '/content',
+  },
   chat: {
     label: 'Chat',
     icon: IconMessage,

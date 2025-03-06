@@ -9,11 +9,11 @@ import json
 import re
 from PIL import Image
 import io
-from table_of_contents_extractor import TableOfContentsExtractor
+from app.services.upload.table_of_contents_extractor import TableOfContentsExtractor
 import xml.etree.ElementTree as ET
 from tqdm import tqdm
 import logging
-from exercise_extractor import ExerciseExtractor
+from app.services.upload.exercise_extractor import ExerciseExtractor
 from supabase import create_client, ClientOptions, Client
 
 # Configure logging
@@ -29,7 +29,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class NewTextbookProcessor:
+class TextbookExtractor:
     def __init__(self, pdf_path: str, api_key: str, custom_page_labels: List[str] = None, extra_top_padding: int = 0):
         self.pdf_path = pdf_path
         self.pdf_document = fitz.open(pdf_path)
@@ -172,6 +172,7 @@ class NewTextbookProcessor:
             # Create final structure
             combined_data = {
                 "textbook_name": base_filename,
+                "pages": self.pdf_document.page_count,
                 "chapters": chapters
             }
             
@@ -188,97 +189,55 @@ class NewTextbookProcessor:
             logger.error(f"Error creating combined textbook JSON: {str(e)}", exc_info=True)
             raise
 
-    def upload_to_supabase(self, class_id: str, supabase: Client, old_textbook_id: str = None) -> Tuple[str, List[str], List[List[str]]]:
+    def upload_to_supabase(self, textbook_id: str, supabase: Client) -> Tuple[int, List[str], List[List[str]]]:
         """Uploads the processed textbook data to Supabase or fetches from existing textbook
         
         Args:
-            class_id: The ID of the class to upload the textbook to
+            textbook_id: The ID of the textbook to upload the data to
             supabase: Initialized Supabase client
-            old_textbook_id: Optional ID of existing textbook to copy data from
             
         Returns:
-            Tuple[str, List[str], List[List[str]]]: The textbook ID, chapter IDs, and exercise IDs
+            Tuple[int, List[str], List[List[str]]]: The number of pages, chapter IDs, and exercise IDs
         """
         try:
-            if old_textbook_id:
-                logger.info(f"Using existing textbook data from ID: {old_textbook_id}")
-                
-                textbook_id = old_textbook_id
-                
-                # Fetch existing chapters
-                old_chapters = supabase.table('chapters').select('*').eq('textbook', old_textbook_id).order('chapter_number').execute()
-                
-                # Map to store old chapter ID to new chapter ID
-                chapter_id_mapping = {}
-                chapters_id = []
-                exercises_id = []
-                
-                # Create new chapters based on old ones
-                for old_chapter in tqdm(old_chapters.data, desc="Copying chapters"):
-                    chapter_id_mapping[old_chapter['id']] = old_chapter['id']
-                    
-                    # Fetch exercises for this old chapter
-                    old_exercises = supabase.table('exercises').select('*').eq('chapter', old_chapter['id']).order('exercise_number').execute()
-                    
-                    # Create new exercises based on old ones
-                    chapter_exercise_ids = []
-                    for old_exercise in old_exercises.data:
-                        chapter_exercise_ids.append(old_exercise['id'])
-                    
-                    exercises_id.append(chapter_exercise_ids)
-                    chapters_id.append(old_chapter['id'])
-                
-                logger.info(f"Successfully copied textbook data from {old_textbook_id} to {textbook_id}")
-                
-            else:
-                # Original implementation for creating new textbook data
-                combined_data = self.create_combined_textbook_json()
-                
-                textbook_response = supabase.table('textbooks').insert({
-                    'class': class_id,
-                    'title': combined_data['textbook_name'],
-                    'pages': self.pdf_document.page_count,
-                    'parse_status': 'complete'
+            # Original implementation for creating new textbook data
+            combined_data = self.create_combined_textbook_json()
+            
+            # Upload chapters and exercises
+            chapters_id = []
+            exercises_id = []
+            for i, chapter in tqdm(enumerate(combined_data['chapters']), desc="Uploading chapters"):
+                # Create chapter
+                chapter_response = supabase.table('chapters').insert({
+                    'title': chapter['title'],
+                    'start_page': chapter['start_page'],
+                    'end_page': chapter['end_page'],
+                    'textbook': textbook_id,
+                    'chapter_number': i + 1
                 }).execute()
                 
-                textbook_id = textbook_response.data[0]['id']
-                logger.info(f"Created textbook with ID: {textbook_id}")
+                chapter_id = chapter_response.data[0]['id']
+                chapters_id.append(chapter_id)
                 
-                # Upload chapters and exercises
-                chapters_id = []
-                exercises_id = []
-                for i, chapter in tqdm(enumerate(combined_data['chapters']), desc="Uploading chapters"):
-                    # Create chapter
-                    chapter_response = supabase.table('chapters').insert({
-                        'title': chapter['title'],
-                        'start_page': chapter['start_page'],
-                        'end_page': chapter['end_page'],
-                        'textbook': textbook_id,
-                        'chapter_number': i + 1
+                # Upload exercises for this chapter
+                exercise_ids = []
+                for j, exercise in enumerate(chapter.get('exercises', [])):
+                    exercise_response = supabase.table('exercises').insert({
+                        'title': exercise['title'],
+                        'start_page': exercise['start_page'],
+                        'end_page': exercise['end_page'],
+                        'chapter': chapter_id,
+                        'exercise_number': j + 1,
+                        'text': exercise['text_content']
                     }).execute()
-                    
-                    chapter_id = chapter_response.data[0]['id']
-                    chapters_id.append(chapter_id)
-                    
-                    # Upload exercises for this chapter
-                    exercise_ids = []
-                    for j, exercise in enumerate(chapter.get('exercises', [])):
-                        exercise_response = supabase.table('exercises').insert({
-                            'title': exercise['title'],
-                            'start_page': exercise['start_page'],
-                            'end_page': exercise['end_page'],
-                            'chapter': chapter_id,
-                            'exercise_number': j + 1,
-                            'text': exercise['text_content']
-                        }).execute()
 
-                        exercise_id = exercise_response.data[0]['id']
-                        exercise_ids.append(exercise_id)
-                    
-                    exercises_id.append(exercise_ids)
-                logger.info(f"Successfully uploaded textbook data to Supabase")
-            
-            return textbook_id, chapters_id, exercises_id
+                    exercise_id = exercise_response.data[0]['id']
+                    exercise_ids.append(exercise_id)
+                
+                exercises_id.append(exercise_ids)
+            logger.info(f"Successfully uploaded textbook data to Supabase")
+
+            return combined_data['pages'], chapters_id, exercises_id
             
         except Exception as e:
             logger.error(f"Error uploading to Supabase: {str(e)}")
@@ -319,7 +278,7 @@ class NewTextbookProcessor:
                     'page': page_num + 1,  # 1-based page numbering
                     'text': text,
                     'description': '',
-                    'processed': True # can change later if we want LLM to describe the page.
+                    'processed': False # can change later if we want LLM to describe the page.
                 })
             
             # Bulk insert documents
@@ -491,31 +450,31 @@ class NewTextbookProcessor:
             logger.error(f"Error uploading exercise images: {str(e)}")
             raise
 
-if __name__ == "__main__": 
-    textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/classes/cs182/textbooks/Discrete.pdf"
-    api_key = os.getenv('GOOGLE_API_KEY')
-    class_id = "45d629b6-9138-45f9-ab79-2a089f665890"  # Replace with actual class ID
+# if __name__ == "__main__": 
+#     textbook_path = "/Users/ashoksaravanan/Coding/ScribeLec/server/classes/cs182/textbooks/Discrete.pdf"
+#     api_key = os.getenv('GOOGLE_API_KEY')
+#     class_id = "45d629b6-9138-45f9-ab79-2a089f665890"  # Replace with actual class ID
 
-    # Initialize Supabase client
-    supabase_url = os.getenv("SUPABASE_URL")
-    supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
-    opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
-    supabase = create_client(supabase_url, supabase_private_key, options=opts)
+#     # Initialize Supabase client
+#     supabase_url = os.getenv("SUPABASE_URL")
+#     supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
+#     opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
+#     supabase = create_client(supabase_url, supabase_private_key, options=opts)
 
 
-    # custom page labels for chvatal textbook. nothing for the first 16 entries. Then 1 to the end for the rest. But keep everything as a string.
-    # c_page_labels = [str(i) for i in range(1, 484)]
-    # c_page_labels = ['0' for _ in range(16)] + c_page_labels
+#     # custom page labels for chvatal textbook. nothing for the first 16 entries. Then 1 to the end for the rest. But keep everything as a string.
+#     # c_page_labels = [str(i) for i in range(1, 484)]
+#     # c_page_labels = ['0' for _ in range(16)] + c_page_labels
 
-    # processor = NewTextbookProcessor(textbook_path, api_key, custom_page_labels=c_page_labels, extra_top_padding=10)
-    processor = NewTextbookProcessor(textbook_path, api_key)
-    # Process textbook and get ID
-    exercises = processor.extract_exercises()
-    combined_data = processor.create_combined_textbook_json()
-    # old_textbook_id="abd70059-0f1d-4c17-82a5-9e034356f21c"
-    textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
-    print(textbook_id, chapters_id, exercises_id)
+#     # processor = NewTextbookProcessor(textbook_path, api_key, custom_page_labels=c_page_labels, extra_top_padding=10)
+#     processor = TextbookExtractor(textbook_path, api_key)
+#     # Process textbook and get ID
+#     exercises = processor.extract_exercises()
+#     combined_data = processor.create_combined_textbook_json()
+#     # old_textbook_id="abd70059-0f1d-4c17-82a5-9e034356f21c"
+#     textbook_id, chapters_id, exercises_id = processor.upload_to_supabase(class_id, supabase)
+#     print(textbook_id, chapters_id, exercises_id)
     
-    # Upload images
-    processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
-    processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase)
+#     # Upload images
+#     processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
+#     processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase)

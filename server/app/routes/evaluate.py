@@ -13,6 +13,7 @@ class EvaluationRequest(BaseModel):
     chat_id: str | None = None
     lecture_id: str | None = None
     textbook_id: str | None = None
+    homework_id: str | None = None
     generation_id: str | None = None
     message_id: str | None = None
 

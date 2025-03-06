@@ -4,13 +4,13 @@ import type { Course } from "./dashboardDetector";
 export interface CourseHomepage {
   name: string;
   courseId: string;
-  courseDescriptor: string | null;
+  courseDescriptor: string;
   isHomepage: boolean;
 }
 
 // Configure the content script to run on D2L pages
 export const config: PlasmoCSConfig = {
-  matches: ["<all_urls>"],
+  matches: ["https://purdue.brightspace.com/d2l/home/*"],
   all_frames: true
 }
 
@@ -32,12 +32,15 @@ function getCourseId(): string | null {
 
 // Extract course description from page HTML
 function getCourseDescription(): string | null {
-  // Look for the "wl." pattern in the page HTML
+  // Look for the "wl." pattern in the page HTML using a more flexible pattern
   const pageHtml = document.documentElement.innerHTML;
-  const match = pageHtml.match(/wl\.([\d]+\.[\w]+\.[\d]+\.[\d]+)/);
+  const wlMatch = pageHtml.match(/wl\.([^,\s"<>]+)/i);
   
-  if (match && match[1]) {
-    const description = match[1];
+  if (wlMatch && wlMatch[1]) {
+    // Clean up the description by removing any trailing artifacts like ';
+    let description = wlMatch[1].trim();
+    description = description.replace(/['";]+$/, ''); // Remove trailing quotes or semicolons
+    
     debugLog("Found course description:", description);
     return description;
   }
@@ -98,7 +101,7 @@ function getCourseHomepageInfo(existingCourses: Course[] = []): CourseHomepage |
     return {
       courseId: existingCourse.courseId,
       name: existingCourse.name,
-      courseDescriptor: existingCourse.courseDescriptor || null,
+      courseDescriptor: existingCourse.courseDescriptor,
       isHomepage: true
     };
   }
@@ -107,6 +110,12 @@ function getCourseHomepageInfo(existingCourses: Course[] = []): CourseHomepage |
   debugLog("Course not found in existing courses, scraping page");
   const name = getCourseName() || `Course ${courseId}`;
   const courseDescriptor = getCourseDescription();
+  
+  // Return null if we couldn't find a course descriptor
+  if (!courseDescriptor) {
+    debugLog("Could not find course descriptor, cannot detect homepage");
+    return null;
+  }
   
   debugLog("Course homepage info:", {
     courseId,

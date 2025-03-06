@@ -2,15 +2,21 @@ import { sendToBackground } from "@plasmohq/messaging"
 import {
     Stack, Card, Text, Container, Loader, Center, Button, Group, Badge,
     Tabs, Divider, Alert, Box, Title,
-    useMantineColorScheme, Progress
+    useMantineColorScheme, Progress, Tooltip
 } from '@mantine/core'
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Providers } from "~providers"
-import type { Class } from "~types"
+import type { Class, Homework, Lecture, Profile, Textbook } from "~types"
 import { useEffect, useState } from "react"
 import type { Course } from "~contents/dashboardDetector"
 import type { CourseHomepage } from "~contents/homepageDetector"
 import { Storage } from "@plasmohq/storage"
+import type { User } from "~node_modules/@supabase/supabase-js/dist/module"
+import Login from "~components/Login"
+import Logout from "~components/Logout"
+import { Icons } from "~components/Icons"
+import CourseCard from "~components/CourseCard"
+import { getSupabaseClient } from "~utils/supabase/supabase-client"
 
 // Define page types
 enum PageType {
@@ -19,125 +25,6 @@ enum PageType {
     HOMEPAGE = "HOMEPAGE"
 }
 
-// Add these SVG icons at the top of the file
-const Icons = {
-    Dashboard: () => (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="4" y="4" width="6" height="6" rx="1" />
-            <rect x="14" y="4" width="6" height="6" rx="1" />
-            <rect x="4" y="14" width="6" height="6" rx="1" />
-            <rect x="14" y="14" width="6" height="6" rx="1" />
-        </svg>
-    ),
-    Home: () => (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 12H3l9-9 9 9h-2" />
-            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" />
-        </svg>
-    ),
-    AlertCircle: () => (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
-    )
-}
-
-// Simplified DownloadStatus component
-function DownloadStatus() {
-    const [status, setStatus] = useState<string>("");
-    const [progress, setProgress] = useState<number | null>(null);
-    const storage = new Storage();
-
-    useEffect(() => {
-        const checkStatus = async () => {
-            const currentStatus = await storage.get('downloadStatus');
-            const currentProgress = await storage.get('uploadProgress');
-            
-            if (currentStatus) setStatus(currentStatus);
-            if (currentProgress !== undefined) setProgress(Number(currentProgress));
-        };
-
-        const intervalId = setInterval(checkStatus, 500);
-        return () => clearInterval(intervalId);
-    }, []);
-
-    if (!status) return null;
-
-    let color = "blue";
-    let icon = null;
-
-    if (status.includes("complete") || status.includes("✅")) {
-        color = "green";
-        icon = "✅";
-    } else if (status.includes("Error")) {
-        color = "red";
-        icon = "❌";
-    }
-
-    const isUploading = status.includes("Uploading to server");
-
-    return (
-        <Alert 
-            color={color} 
-            variant="light"
-            icon={icon}
-            mt="md"
-            withCloseButton
-            onClose={async () => {
-                await storage.set('downloadStatus', '');
-                await storage.set('uploadProgress', null);
-                setStatus('');
-                setProgress(null);
-            }}
-        >
-            <Text>{status}</Text>
-            
-            {isUploading && progress !== null && (
-                <Progress 
-                    value={progress} 
-                    mt="xs" 
-                    size="sm" 
-                    color={color}
-                    striped
-                    animated
-                />
-            )}
-        </Alert>
-    );
-}
-
-// Simplified CourseCard component
-function CourseCard({
-    course,
-    onDownload,
-    isDownloading
-}: {
-    course: Course | CourseHomepage,
-    onDownload: () => void,
-    isDownloading?: boolean
-}) {
-    return (
-        <Card shadow="sm" p="md" withBorder>
-            <Text fw={600} size="lg">{course.name}</Text>
-            <Text size="sm">Course ID: {course.courseId}</Text>
-            {course.courseDescriptor && (
-                <Text size="sm">Course Descriptor: {course.courseDescriptor}</Text>
-            )}
-            <Group mt="md">
-                <Button
-                    size="xs"
-                    onClick={onDownload}
-                    loading={isDownloading}
-                    color="blue"
-                >
-                    Download Course
-                </Button>
-            </Group>
-        </Card>
-    )
-}
 
 function IndexPopupContent() {
     // State for page type and URL
@@ -155,20 +42,86 @@ function IndexPopupContent() {
 
     const colorScheme = useMantineColorScheme()
 
+    const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
+        queryKey: ["user"],
+        queryFn: async () => {
+            const response = await sendToBackground<{}, { user: User }>({
+                name: "get-user"
+            })
+            return response.user
+        }
+    })
+
+    const { data: profile, isLoading: isLoadingProfile, error: profileError } = useQuery({
+        queryKey: ["profile"],
+        queryFn: async () => {
+            const response = await sendToBackground<{ userId: string }, { profile: Profile }>({
+                name: "get-profile",
+                body: { userId: user?.id }
+            })
+            return response.profile
+        },
+        enabled: !!user
+    })
+
     // Query to get saved classes from database
-    const { data: savedClasses, isLoading: isLoadingSaved, error: savedError } = useQuery({
+    const { data: classes, isLoading: isLoadingSaved, error: savedError } = useQuery({
         queryKey: ["classes"],
         queryFn: async () => {
             const response = await sendToBackground<{}, { classes: Class[] }>({
                 name: "get-classes"
             })
             return response.classes
-        }
+        },
     })
+
+    const { data: lectures, isLoading: isLoadingLectures, error: lecturesError } = useQuery({
+        queryKey: ["lectures", courseId],
+        queryFn: async () => {
+            const response = await sendToBackground<{ classIds: string[] }, { lectures: Lecture[] }>({
+                name: "get-lectures",
+                body: { classIds: classes?.map((course) => course.id) || [] }
+            })
+            return response.lectures
+        },
+        enabled: !!classes
+    })
+
+    const { data: textbooks, isLoading: isLoadingTextbooks, error: textbooksError } = useQuery({
+        queryKey: ["textbooks", courseId],
+        queryFn: async () => {
+            const response = await sendToBackground<{ classIds: string[] }, { textbooks: Textbook[] }>({
+                name: "get-textbooks",
+                body: { classIds: classes?.map((course) => course.id) || [] }
+            })
+            return response.textbooks
+        },
+        enabled: !!classes
+    })
+
+    const { data: homeworks, isLoading: isLoadingHomeworks, error: homeworksError } = useQuery({
+        queryKey: ["homeworks", courseId],
+        queryFn: async () => {
+            const response = await sendToBackground<{ classIds: string[] }, { homeworks: Homework[] }>({
+                name: "get-homeworks",
+                body: { classIds: classes?.map((course) => course.id) || [] }
+            })
+            return response.homeworks
+        },
+        enabled: !!classes
+    })
+
+    const getFilteredClasses = (classes: Class[] | null, profile: Profile | null) => {
+        if (!classes || !profile) return [];
+        return classes.filter((course) => (profile.admin || (profile.professor && profile.classes.includes(course.id))))
+    }
+
 
     // Add state for tracking downloads
     const [downloadingSessions, setDownloadingSessions] = useState<Record<string, boolean>>({});
     const storage = new Storage();
+
+    const queryClient = useQueryClient();
 
     // Function to get the active tab
     const getActiveTab = async () => {
@@ -255,7 +208,7 @@ function IndexPopupContent() {
                 tab.id,
                 {
                     action: "getCourseHomepage",
-                    courses: savedClasses || []
+                    courses: classes || []
                 },
                 (response) => {
                     if (chrome.runtime.lastError) {
@@ -280,14 +233,18 @@ function IndexPopupContent() {
     const downloadCourseContent = async (courseId: string, courseDescriptor: string) => {
         try {
             setDownloadingSessions(prev => ({ ...prev, [courseId]: true }));
-            await storage.set('downloadStatus', "Initiating download...");
+            await storage.set(`downloadStatus_${courseId}`, "Initiating download...");
+
+            if (!profile) {
+                throw new Error("Profile not found");
+            }
 
             const response = await sendToBackground<
-                { courseId: string; courseDescriptor: string },
+                { courseId: string; courseDescriptor: string, profileId: string },
                 { success: boolean; downloads?: any[]; error?: string }
             >({
                 name: "download-course",
-                body: { courseId, courseDescriptor }
+                body: { courseId, courseDescriptor, profileId: profile.id }
             });
 
             console.log("Download response:", response);
@@ -299,14 +256,14 @@ function IndexPopupContent() {
         } catch (err) {
             console.error("Error downloading content:", err);
             setError(err.message || "Error downloading content");
-            await storage.set('downloadStatus', `Error: ${err.message || "Download failed"}`);
+            await storage.set(`downloadStatus_${courseId}`, `Error: ${err.message || "Download failed"}`);
         } finally {
             setDownloadingSessions(prev => ({ ...prev, [courseId]: false }));
         }
     };
 
     // Function to refresh data based on current page type
-    const refreshData = () => {
+    const refreshData = async () => {
         switch (pageType) {
             case PageType.DASHBOARD:
                 detectCoursesOnDashboard()
@@ -318,6 +275,8 @@ function IndexPopupContent() {
                 // Nothing to refresh for unknown pages
                 break
         }
+        // clear the download status
+        await storage.clear()
     }
 
     // Initialize on popup open
@@ -362,6 +321,129 @@ function IndexPopupContent() {
         initializePopup()
     }, [])
 
+    // Add realtime subscriptions for profiles
+    useEffect(() => {
+        if (!user) return;
+
+        const supabase = getSupabaseClient();
+
+        const channel = supabase
+            .channel('realtime-profiles')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'profiles'
+                },
+                () => {
+                    // Invalidate profile query to fetch fresh data
+                    queryClient.invalidateQueries({
+                        queryKey: ["profile"]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [user, queryClient]);
+
+    // Add realtime subscriptions for classes
+    useEffect(() => {
+        if (!user) return;
+
+        const supabase = getSupabaseClient();
+
+        const channel = supabase
+            .channel('realtime-classes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'classes'
+                },
+                () => {
+                    // Invalidate classes query to fetch fresh data
+                    queryClient.invalidateQueries({
+                        queryKey: ["classes"]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [user, queryClient]);
+
+    // Add realtime subscriptions for course-specific data when viewing a course
+    useEffect(() => {
+        if (!user || !classes) return;
+
+        const supabase = getSupabaseClient();
+
+        // Create channels for lectures, textbooks, and homeworks
+        const lecturesChannel = supabase
+            .channel('realtime-lectures')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'lectures'
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["lectures", courseId]
+                    });
+                }
+            )
+            .subscribe();
+
+        const textbooksChannel = supabase
+            .channel('realtime-textbooks')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'textbooks'
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["textbooks", courseId]
+                    });
+                }
+            )
+            .subscribe();
+
+        const homeworksChannel = supabase
+            .channel('realtime-homeworks')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'homeworks'
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["homeworks", courseId]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(lecturesChannel);
+            supabase.removeChannel(textbooksChannel);
+            supabase.removeChannel(homeworksChannel);
+        };
+    }, [user, queryClient, classes]);
+
     // Render page type icon
     const renderPageTypeIcon = () => {
         switch (pageType) {
@@ -380,69 +462,263 @@ function IndexPopupContent() {
             case PageType.DASHBOARD:
                 return (
                     <Stack>
-                        <Group>
-                            <Icons.Dashboard />
-                            <Text fw={600}>Dashboard</Text>
-                        </Group>
-
-                        {isLoading ? (
+                        {isLoading || isLoadingSaved ? (
                             <Center py="md"><Loader size="sm" /></Center>
                         ) : error ? (
                             <Alert color="red" title="Error" icon={<Icons.AlertCircle />}>
                                 {error}
                             </Alert>
-                        ) : detectedCourses.length > 0 ? (
-                            <Stack gap="md">
-                                {detectedCourses.map((course) => (
-                                    <CourseCard
-                                        key={course.courseId}
-                                        course={course}
-                                        onDownload={() => downloadCourseContent(course.courseId, course.courseDescriptor)}
-                                        isDownloading={downloadingSessions[course.courseId]}
-                                    />
-                                ))}
-                            </Stack>
                         ) : (
-                            <Text size="sm" c="dimmed">No courses detected on this dashboard</Text>
+                            <Stack>
+                                {/* Detected Courses Section */}
+                                {detectedCourses && detectedCourses.length > 0 && (
+                                    <>
+                                        <Group justify="space-between" align="center">
+                                            <Text fw={600}>Detected Courses</Text>
+                                            <Tooltip label="Refresh Detection">
+                                                <Button
+                                                    variant="subtle"
+                                                    size="xs"
+                                                    onClick={refreshData}
+                                                    loading={isLoading}
+                                                    p={4}
+                                                >
+                                                    <Icons.Refresh />
+                                                </Button>
+                                            </Tooltip>
+                                        </Group>
+
+                                        <Stack gap="md">
+                                            {detectedCourses.map((course) => {
+                                                if (!course || !course.courseId) return null;
+
+                                                // Parse course ID as number for comparison
+                                                const courseIdNum = Number(course.courseId);
+
+                                                // Check if this course is already downloaded
+                                                const isDownloaded = getFilteredClasses(classes, profile)?.some(savedCourse => {
+                                                    if (!savedCourse || !savedCourse.brightspace_course_id) return false;
+                                                    const savedCourseId = Number(savedCourse.brightspace_course_id);
+                                                    return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
+                                                });
+
+                                                const action = {
+                                                    type: isDownloaded ? 'refresh' as const : 'download' as const,
+                                                    handler: () => downloadCourseContent(course.courseId, course.courseDescriptor)
+                                                };
+
+                                                return (
+                                                    <CourseCard
+                                                        key={course.courseId}
+                                                        course={course}
+                                                        action={action}
+                                                        isLoading={downloadingSessions[course.courseId]}
+                                                        courseId={course.courseId}
+                                                        isDetected={true}
+                                                        lectures={lectures?.filter(lecture => {
+                                                            if (!lecture || !lecture.class) return false;
+                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === lecture.class);
+                                                            return Number(classData?.brightspace_course_id) === Number(course.courseId);
+                                                        }) || []}
+                                                        textbooks={textbooks?.filter(textbook => {
+                                                            if (!textbook || !textbook.class) return false;
+                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === textbook.class);
+                                                            return Number(classData?.brightspace_course_id) === Number(course.courseId);
+                                                        }) || []}
+                                                        homeworks={homeworks?.filter(homework => {
+                                                            if (!homework || !homework.class) return false;
+                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
+                                                            return Number(classData?.brightspace_course_id) === Number(course.courseId);
+                                                        }) || []}
+                                                    />
+                                                );
+                                            })}
+                                        </Stack>
+                                    </>
+                                )}
+
+                                {/* Divider between sections if both have content */}
+                                {detectedCourses && detectedCourses.length > 0 && getFilteredClasses(classes, profile) && getFilteredClasses(classes, profile).length > 0 && (
+                                    <Divider my="md" />
+                                )}
+
+                                {/* My Courses Section */}
+                                {getFilteredClasses(classes, profile) && getFilteredClasses(classes, profile).length > 0 && (
+                                    <>
+                                        <Text fw={600}>My Courses</Text>
+                                        <Stack gap="md">
+                                            {getFilteredClasses(classes, profile).filter(savedCourse => {
+                                                if (!savedCourse || !savedCourse.brightspace_course_id) return true;
+                                                const savedCourseId = Number(savedCourse.brightspace_course_id);
+
+                                                // Skip courses that are already shown in the detected section
+                                                return !detectedCourses.some(course => {
+                                                    if (!course || !course.courseId) return false;
+                                                    const courseIdNum = Number(course.courseId);
+                                                    return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
+                                                });
+                                            }).map((savedCourse) => (
+                                                <CourseCard
+                                                    key={savedCourse.id}
+                                                    course={savedCourse}
+                                                    courseId={String(savedCourse.brightspace_course_id)}
+                                                    lectures={lectures?.filter(lecture => {
+                                                        if (!lecture || !lecture.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === lecture.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                    textbooks={textbooks?.filter(textbook => {
+                                                        if (!textbook || !textbook.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === textbook.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                    homeworks={homeworks?.filter(homework => {
+                                                        if (!homework || !homework.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                />
+                                            ))}
+                                        </Stack>
+                                    </>
+                                )}
+
+                                {/* Show message if no courses */}
+                                {(!detectedCourses || detectedCourses.length === 0) && (!getFilteredClasses(classes, profile) || getFilteredClasses(classes, profile).length === 0) && (
+                                    <Text size="sm" c="dimmed">No courses detected or saved</Text>
+                                )}
+                            </Stack>
                         )}
-
-                        <Button size="sm" onClick={refreshData} loading={isLoading}>
-                            Refresh Courses
-                        </Button>
-
-                        <DownloadStatus />
                     </Stack>
                 )
 
             case PageType.HOMEPAGE:
                 return (
                     <Stack>
-                        <Group>
-                            <Icons.Home />
-                            <Text fw={600}>Course Homepage</Text>
-                        </Group>
-
-                        {isLoading ? (
+                        {isLoading || isLoadingSaved ? (
                             <Center py="md"><Loader size="sm" /></Center>
                         ) : error ? (
                             <Alert color="red" title="Error" icon={<Icons.AlertCircle />}>
                                 {error}
                             </Alert>
-                        ) : homepageInfo ? (
-                            <CourseCard
-                                course={homepageInfo}
-                                onDownload={() => downloadCourseContent(homepageInfo.courseId, homepageInfo.courseDescriptor)}
-                                isDownloading={downloadingSessions[homepageInfo.courseId]}
-                            />
                         ) : (
-                            <Text size="sm" c="dimmed">No course homepage information detected</Text>
+                            <Stack>
+                                {/* Detected Course Section */}
+                                {homepageInfo && (
+                                    <>
+                                        <Group justify="space-between" align="center">
+                                            <Text fw={600}>Detected Course</Text>
+                                            <Tooltip label="Refresh Detection">
+                                                <Button
+                                                    variant="subtle"
+                                                    size="xs"
+                                                    onClick={refreshData}
+                                                    loading={isLoading}
+                                                    p={4}
+                                                >
+                                                    <Icons.Refresh />
+                                                </Button>
+                                            </Tooltip>
+                                        </Group>
+
+                                        <Stack gap="md">
+                                            {(() => {
+                                                if (!homepageInfo || !homepageInfo.courseId) return null;
+
+                                                // Parse course ID as number for comparison
+                                                const courseIdNum = Number(homepageInfo.courseId);
+
+                                                // Check if this course is already downloaded
+                                                const isDownloaded = classes?.some(savedCourse => {
+                                                    if (!savedCourse || !savedCourse.brightspace_course_id) return false;
+                                                    const savedCourseId = Number(savedCourse.brightspace_course_id);
+                                                    return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
+                                                });
+
+                                                const action = {
+                                                    type: isDownloaded ? 'refresh' as const : 'download' as const,
+                                                    handler: () => downloadCourseContent(homepageInfo.courseId, homepageInfo.courseDescriptor)
+                                                };
+
+                                                return (
+                                                    <CourseCard
+                                                        course={homepageInfo}
+                                                        action={action}
+                                                        isLoading={downloadingSessions[homepageInfo.courseId]}
+                                                        courseId={homepageInfo.courseId}
+                                                        isDetected={true}
+                                                        lectures={lectures?.filter(lecture => {
+                                                            if (!lecture || !lecture.class) return false;
+                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === lecture.class);
+                                                            return Number(classData?.brightspace_course_id) === Number(homepageInfo.courseId);
+                                                        }) || []}
+                                                        textbooks={textbooks?.filter(textbook => {
+                                                            if (!textbook || !textbook.class) return false;
+                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === textbook.class);
+                                                            return Number(classData?.brightspace_course_id) === Number(homepageInfo.courseId);
+                                                        }) || []}
+                                                        homeworks={homeworks?.filter(homework => {
+                                                            if (!homework || !homework.class) return false;
+                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
+                                                            return Number(classData?.brightspace_course_id) === Number(homepageInfo.courseId);
+                                                        }) || []}
+                                                    />
+                                                );
+                                            })()}
+                                        </Stack>
+                                    </>
+                                )}
+
+                                {/* Divider between sections if both have content */}
+                                {homepageInfo && getFilteredClasses(classes, profile) && getFilteredClasses(classes, profile).length > 0 && (
+                                    <Divider my="md" />
+                                )}
+
+                                {/* My Courses Section */}
+                                {getFilteredClasses(classes, profile) && getFilteredClasses(classes, profile).length > 0 && (
+                                    <>
+                                        <Text fw={600}>My Courses</Text>
+                                        <Stack gap="md">
+                                            {getFilteredClasses(classes, profile).filter(savedCourse => {
+                                                if (!savedCourse || !savedCourse.brightspace_course_id || !homepageInfo || !homepageInfo.courseId) return true;
+
+                                                const savedCourseId = Number(savedCourse.brightspace_course_id);
+                                                const homepageIdNum = Number(homepageInfo.courseId);
+
+                                                // Skip the course that is already shown in the detected section
+                                                return isNaN(savedCourseId) || isNaN(homepageIdNum) || savedCourseId !== homepageIdNum;
+                                            }).map((savedCourse) => (
+                                                <CourseCard
+                                                    key={savedCourse.id}
+                                                    course={savedCourse}
+                                                    courseId={String(savedCourse.brightspace_course_id)}
+                                                    lectures={lectures?.filter(lecture => {
+                                                        if (!lecture || !lecture.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === lecture.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                    textbooks={textbooks?.filter(textbook => {
+                                                        if (!textbook || !textbook.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === textbook.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                    homeworks={homeworks?.filter(homework => {
+                                                        if (!homework || !homework.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                />
+                                            ))}
+                                        </Stack>
+                                    </>
+                                )}
+
+                                {/* Show message if no courses */}
+                                {!homepageInfo && (!getFilteredClasses(classes, profile) || getFilteredClasses(classes, profile).length === 0) && (
+                                    <Text size="sm" c="dimmed">No course homepage information detected</Text>
+                                )}
+                            </Stack>
                         )}
-
-                        <Button size="sm" onClick={refreshData} loading={isLoading}>
-                            Refresh Homepage Info
-                        </Button>
-
-                        <DownloadStatus />
                     </Stack>
                 )
 
@@ -452,27 +728,73 @@ function IndexPopupContent() {
                         <Alert color="yellow" title="Unknown Page" icon={<Icons.AlertCircle />}>
                             This doesn't appear to be a supported Brightspace page.
                         </Alert>
-                        <Text size="sm">
-                            Navigate to a Purdue Brightspace dashboard or course homepage to use this extension.
+
+                        <Text size="sm" mt="md">
+                            Navigate to a Purdue Brightspace dashboard or course homepage to download courses.
                         </Text>
+
+                        {/* Show saved courses even on unknown pages */}
+                        {!isLoadingSaved && getFilteredClasses(classes, profile) && getFilteredClasses(classes, profile).length > 0 && (
+                            <>
+                                <Text fw={600} mt="md">My Courses</Text>
+                                <Stack gap="md">
+                                    {getFilteredClasses(classes, profile).map((savedCourse) => (
+                                        <CourseCard
+                                            key={savedCourse.id || `saved-${Math.random()}`}
+                                            course={savedCourse}
+                                            courseId={String(savedCourse.brightspace_course_id)}
+                                            lectures={lectures?.filter(lecture => {
+                                                if (!lecture || !lecture.class) return false;
+                                                const classData = getFilteredClasses(classes, profile)?.find(c => c.id === lecture.class);
+                                                return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                            }) || []}
+                                            textbooks={textbooks?.filter(textbook => {
+                                                if (!textbook || !textbook.class) return false;
+                                                const classData = getFilteredClasses(classes, profile)?.find(c => c.id === textbook.class);
+                                                return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                            }) || []}
+                                            homeworks={homeworks?.filter(homework => {
+                                                if (!homework || !homework.class) return false;
+                                                const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
+                                                return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                            }) || []}
+                                        />
+                                    ))}
+                                </Stack>
+                            </>
+                        )}
                     </Stack>
                 )
         }
     }
 
-    return (
-        <Container p="md" style={{ width: "350px", minHeight: "400px" }}>
+    // Add this function to render login or content
+    const renderContent = () => {
+        // If user is loading, show a loader
+        if (isLoadingUser) {
+            return (
+                <Center style={{ height: "300px" }}>
+                    <Loader />
+                </Center>
+            );
+        }
+
+        // If no user is logged in, show login screen
+        if (!user) {
+            return <Login />;
+        }
+
+        // Otherwise show the main content
+        return (
             <Stack>
-                {/* Header with page type indicator */}
-                <Group justify="space-between" mb="xs">
-                    <Title order={4}>D2L Companion</Title>
-                    <Badge
-                        leftSection={renderPageTypeIcon()}
-                        color={pageType === PageType.UNKNOWN ? "gray" : "blue"}
-                    >
-                        {pageType}
-                    </Badge>
-                </Group>
+                {/* User logout component */}
+                {profile && (
+                    <Logout
+                        name={profile.first_name + " " + profile.last_name}
+                        userId={user.id}
+                        logoutIcon={<Icons.Logout />}
+                    />
+                )}
 
                 <Divider />
 
@@ -487,6 +809,12 @@ function IndexPopupContent() {
                     </Text>
                 </Box>
             </Stack>
+        );
+    };
+
+    return (
+        <Container p="md" style={{ width: "350px", minHeight: "400px" }}>
+            {renderContent()}
         </Container>
     );
 }

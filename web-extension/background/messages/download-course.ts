@@ -4,6 +4,7 @@ import { Storage } from "@plasmohq/storage"
 interface DownloadCourseRequest {
   courseId: string
   courseDescriptor: string
+  profileId: string
 }
 
 interface DownloadItem {
@@ -19,7 +20,7 @@ interface DownloadCourseResponse {
 }
 
 const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCourseResponse> = async (req, res) => {
-  const { courseId, courseDescriptor } = req.body;
+  const { courseId, courseDescriptor, profileId } = req.body;
   let tab: chrome.tabs.Tab | undefined;
   let syllabusTab: chrome.tabs.Tab | undefined;
   let isProcessing = false; // Add flag to prevent duplicate processing
@@ -38,7 +39,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
         
         try {
           // Update status
-          await storage.set('downloadStatus', 'Processing download...');
+          await storage.set(`downloadStatus_${courseId}`, 'Processing download...');
           
           // Get the cookies for authentication
           const cookies = await chrome.cookies.getAll({ url: downloadItem.url });
@@ -48,7 +49,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           await chrome.downloads.cancel(downloadItem.id);
           
           // Update status
-          await storage.set('downloadStatus', 'Uploading to server...');
+          await storage.set(`downloadStatus_${courseId}`, 'Uploading to server...');
           
           // Fetch the file
           const response = await fetch(downloadItem.url, {
@@ -73,6 +74,8 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           formData.append('course_id', courseId);
           formData.append('course_descriptor', courseDescriptor);
           formData.append('filename', filename);
+          formData.append('response_url', process.env.PLASMO_PUBLIC_API_URL || '');
+          formData.append('profile_id', profileId);
           
           // Add syllabus if available
           if (syllabusFileName && syllabusBlob) {
@@ -90,8 +93,8 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           });
           
           // Upload to server with progress tracking
-          await storage.set('downloadStatus', 'Uploading to server...');
-          await storage.set('uploadProgress', 0);
+          await storage.set(`downloadStatus_${courseId}`, 'Uploading to server...');
+          await storage.set(`uploadProgress_${courseId}`, 0);
 
           const totalSize = blob.size + (syllabusBlob?.size || 0);
 
@@ -116,8 +119,8 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             
             // Only update storage at most once per second to avoid quota limits
             if (currentTime - lastStorageUpdateTime >= 1000) {
-              await storage.set('uploadProgress', pendingProgress);
-              await storage.set('downloadStatus', status);
+              await storage.set(`uploadProgress_${courseId}`, pendingProgress);
+              await storage.set(`downloadStatus_${courseId}`, status);
               lastStorageUpdateTime = currentTime;
               pendingProgress = 0;
             }
@@ -164,8 +167,8 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             }
 
             // Update progress to 100% when complete
-            await storage.set('uploadProgress', 100);
-            await storage.set('downloadStatus', 'Upload complete! ✅');
+            await storage.set(`uploadProgress_${courseId}`, 100);
+            await storage.set(`downloadStatus_${courseId}`, 'Upload complete! ✅');
 
             const responseData = await uploadResult.json();
             console.log('[Background] Upload successful:', responseData);
@@ -191,7 +194,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             // Clear the interval if there's an error
             clearInterval(progressInterval);
             console.error('[Background] Error processing download:', error);
-            await storage.set('downloadStatus', `Error uploading files: ${error.message}`);
+            await storage.set(`downloadStatus_${courseId}`, `Error uploading files: ${error.message}`);
             
             // Remove the listener on error
             chrome.downloads.onCreated.removeListener(downloadListener);
@@ -211,7 +214,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
           }
         } catch (error) {
           console.error('[Background] Error processing download:', error);
-          await storage.set('downloadStatus', `Error uploading files: ${error.message}`);
+          await storage.set(`downloadStatus_${courseId}`, `Error uploading files: ${error.message}`);
           
           // Remove the listener on error
           chrome.downloads.onCreated.removeListener(downloadListener);
@@ -236,7 +239,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     chrome.downloads.onCreated.addListener(downloadListener);
 
     // Update initial status
-    await storage.set('downloadStatus', 'Getting syllabus...');
+    await storage.set(`downloadStatus_${courseId}`, 'Getting syllabus...');
     
     // First, try to get the syllabus
     const overviewPageUrl = `https://purdue.brightspace.com/d2l/le/content/${courseId}/Home?itemIdentifier=Overview`;
@@ -291,7 +294,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
             syllabusFileName = syllabusResults.result.title;
             
             // Try to download the syllabus
-            await storage.set('downloadStatus', 'Downloading syllabus...');
+            await storage.set(`downloadStatus_${courseId}`, 'Downloading syllabus...');
             
             // Get cookies for authentication
             const cookies = await chrome.cookies.getAll({ url: `https://purdue.brightspace.com` });
@@ -330,7 +333,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     }
 
     // Update status
-    await storage.set('downloadStatus', 'Creating tab for course content...');
+    await storage.set(`downloadStatus_${courseId}`, 'Creating tab for course content...');
     console.log("[Background] Creating new tab for course content...");
     
     const contentPageUrl = `https://purdue.brightspace.com/d2l/le/content/${courseId}/Home?itemIdentifier=TOC`;
@@ -343,7 +346,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     console.log("[Background] Tab created:", tab.id);
 
     // Update status
-    await storage.set('downloadStatus', 'Waiting for page load...');
+    await storage.set(`downloadStatus_${courseId}`, 'Waiting for page load...');
 
     // Wait for page to load
     await new Promise((resolve, reject) => {
@@ -360,7 +363,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
     });
 
     // Update status
-    await storage.set('downloadStatus', 'Looking for download button...');
+    await storage.set(`downloadStatus_${courseId}`, 'Looking for download button...');
 
     // Execute content script to monitor the download variable
     console.log("[Background] Executing content script...");
@@ -406,13 +409,13 @@ const handler: PlasmoMessaging.MessageHandler<DownloadCourseRequest, DownloadCou
         });
       }
     });
-    await storage.set('downloadStatus', 'Downloading course content...');
+    await storage.set(`downloadStatus_${courseId}`, 'Downloading course content...');
 
     console.log("[Background] Script execution complete. Results:", results);
 
   } catch (error) {
     console.error("[Background] Error:", error);
-    await storage.set('downloadStatus', `Error: ${error.message}`);
+    await storage.set(`downloadStatus_${courseId}`, `Error: ${error.message}`);
     
     // Now downloadListener will be in scope
     if (downloadListener) {

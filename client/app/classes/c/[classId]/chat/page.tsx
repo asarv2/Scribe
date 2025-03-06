@@ -421,47 +421,30 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                             // Student view - only show their chats
                             renderChatList(userChats, "My Chats")
                         ) : (
-                            // Admin/Professor view - show tabbed interface
-                            <Tabs defaultValue="student">
-                                <Tabs.List>
-                                    <Tabs.Tab value="student" leftSection={<IconUsers size={16} />}>
-                                        Student Chats
-                                    </Tabs.Tab>
-                                    <Tabs.Tab value="teacher" leftSection={<IconUser size={16} />}>
-                                        My Chats
-                                    </Tabs.Tab>
-                                </Tabs.List>
-
-                                <Tabs.Panel value="student" pt="xl">
-                                    <Stack gap="md">
-                                        <Group align="flex-start" grow>
-                                            <Select
-                                                label="Filter by Student"
-                                                placeholder="Select a student"
-                                                data={studentOptions}
-                                                value={selectedStudent}
-                                                onChange={setSelectedStudent}
-                                                defaultValue="all"
-                                                clearable
-                                            />
-                                            <Select
-                                                label="Filter by Type"
-                                                placeholder="Select chat type"
-                                                data={chatTypes}
-                                                value={selectedType}
-                                                onChange={setSelectedType}
-                                                defaultValue="all"
-                                                clearable
-                                            />
-                                        </Group>
-                                        {renderChatList(filteredStudentChats, "")}
-                                    </Stack>
-                                </Tabs.Panel>
-
-                                <Tabs.Panel value="teacher" pt="xl">
-                                    {renderChatList(filteredTeacherChats, "")}
-                                </Tabs.Panel>
-                            </Tabs>
+                            // Admin/Professor view - show only student chats without tabs
+                            <Stack gap="md">
+                                <Group align="flex-start" grow>
+                                    <Select
+                                        label="Filter by Student"
+                                        placeholder="Select a student"
+                                        data={studentOptions}
+                                        value={selectedStudent}
+                                        onChange={setSelectedStudent}
+                                        defaultValue="all"
+                                        clearable
+                                    />
+                                    <Select
+                                        label="Filter by Type"
+                                        placeholder="Select chat type"
+                                        data={chatTypes}
+                                        value={selectedType}
+                                        onChange={setSelectedType}
+                                        defaultValue="all"
+                                        clearable
+                                    />
+                                </Group>
+                                {renderChatList(filteredStudentChats, "")}
+                            </Stack>
                         )
                     ) : (
                         <Text c="dimmed" ta="center">No chats found</Text>
