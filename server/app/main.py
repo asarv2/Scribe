@@ -49,8 +49,7 @@ app.add_middleware(
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*", "ngrok-skip-browser-warning"],
-    expose_headers=["*"],
+    allow_headers=["*"],
 )
 
 # Import routers after app creation
