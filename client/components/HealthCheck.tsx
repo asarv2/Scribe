@@ -17,6 +17,7 @@ const checkHealth = async () => {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'
       },
+      redirect: 'follow',
     });
 
     // Log the raw response for debugging
