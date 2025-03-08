@@ -598,6 +598,13 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     };
 
+    // Add this handler for dropped items
+    const handleDrop = (item: { type: keyof ChatMessage['context'], id: string }) => {
+        if (item && item.type && item.id) {
+            addContextToChat(item.type, item.id);
+        }
+    };
+
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -747,6 +754,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     setViewerMode={setViewerMode}
                                     expandedSections={expandedSections}
                                     toggleSection={toggleSection}
+                                    onDrop={handleDrop}
                                 />
                             </Card>
                         </Grid.Col>
@@ -772,6 +780,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     toggleNode={toggleNode}
                                     activeChat={activeChat}
                                     scrollToSection={scrollToSection}
+                                    makeDraggable={true}
                                 />
                             )}
                         </Grid.Col>
