@@ -27,8 +27,7 @@ COPY app/requirements.txt app/
 COPY app/requirements_gpu.txt app/
 
 # Install base dependencies (excluding packages provided by base image)
-RUN pip3 install --no-cache-dir -r app/requirements.txt \
-    --exclude torch
+RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt)
 
 # Install GPU-specific dependencies
 RUN pip3 install --no-cache-dir -r app/requirements_gpu.txt
