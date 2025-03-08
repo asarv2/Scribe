@@ -4,19 +4,18 @@ import torch
 from transformers import AutoModelForCausalLM, AutoProcessor
 from typing import Optional, Tuple
 
-# Set upload folder based on environment
-UPLOAD_FOLDER = "/app/uploads" if os.getenv('DOCKER_ENV') else os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+# Set models folder based on environment
+MODELS_FOLDER = "/app/models" if os.getenv('DOCKER_ENV') else os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
 
 # Define all directory paths
-MODELS_DIR = os.path.join(UPLOAD_FOLDER, 'models')
-os.makedirs(MODELS_DIR, exist_ok=True)
+os.makedirs(MODELS_FOLDER, exist_ok=True)
 
 class ModelManager:
     def __init__(self):
         self.model = None
         self.processor = None
         self.model_name = "microsoft/Phi-4-multimodal-instruct"
-        self.local_model_path = os.path.join(MODELS_DIR, "phi-4-multimodal-instruct")
+        self.local_model_path = os.path.join(MODELS_FOLDER, "phi-4-multimodal-instruct")
 
     def download_model(self) -> None:
         """Download the model from HuggingFace"""
