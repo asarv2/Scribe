@@ -1,5 +1,5 @@
-# Use NVIDIA's PyTorch image with CUDA development tools
-FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-devel
+# Use NVIDIA's PyTorch image
+FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
