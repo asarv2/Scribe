@@ -279,7 +279,7 @@ async def upload_course(
                 
                 full_path = os.path.join(extract_folder, assignment_path)
                 # make sure the file is a pdf, .txt or .docx
-                if not full_path.endswith('.pdf') and not full_path.endswith('.txt') and not full_path.endswith('.docx'):
+                if not full_path.endswith('.pdf') and not full_path.endswith('.txt'):
                     continue
 
                 if os.path.exists(full_path) and full_path in new_files:

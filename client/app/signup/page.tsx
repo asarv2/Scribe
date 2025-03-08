@@ -115,7 +115,7 @@ export default function Login() {
                 throw new Error("No classes found")
             }
             
-            router.push(`/classes/c/${firstClass.id}`)
+            router.push(`/classes/c/${firstClass.id}/chat/new`)
 
         } catch (e: any) {
             console.error(e)
