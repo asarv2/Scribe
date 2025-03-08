@@ -14,10 +14,7 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
-from app.config import ModelManager
-
-# Initialize model manager
-model_manager = ModelManager()
+from app.config import model_manager
 
 # Only attempt to load model on startup if GPU is available
 if os.getenv('DOCKER_ENV'):

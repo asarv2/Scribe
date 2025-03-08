@@ -116,3 +116,6 @@ class ModelManager:
         if self.model is None or self.processor is None:
             return self.load_model()
         return self.model, self.processor
+    
+# Initialize model manager
+model_manager = ModelManager()
