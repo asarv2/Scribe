@@ -1,6 +1,7 @@
 import os
 import sys
 import asyncio
+from contextlib import asynccontextmanager
 
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
@@ -13,13 +14,46 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
+from app.config import model_manager
 
-# Create FastAPI app
-app = FastAPI(title="Scribe API")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan events for startup and shutdown"""
+    await download_model_if_needed()
+    yield
+
+# Create FastAPI app with lifespan
+app = FastAPI(title="Scribe API", lifespan=lifespan)
 
 # Create a simple task queue
 task_queue = asyncio.Queue()
 processing_task = None
+
+async def download_model_if_needed():
+    """Download the model if we're in Docker and the model doesn't exist"""
+    if os.getenv('DOCKER_ENV'):
+        print("Docker environment detected. Checking for model...")
+        if not os.path.exists(model_manager.local_model_path):
+            print(f"Model not found at {model_manager.local_model_path}. Downloading...")
+            try:
+                # Ensure directory exists
+                os.makedirs(model_manager.local_model_path, exist_ok=True)
+                print(f"Download directory created/verified")
+                
+                # Download the model
+                model_manager.download_model()
+                
+                # Verify the download
+                if os.path.exists(model_manager.local_model_path):
+                    print(f"Contents of {model_manager.local_model_path}:")
+                    print(os.listdir(model_manager.local_model_path))
+                
+                print("Model downloaded successfully!")
+            except Exception as e:
+                print(f"Error downloading model: {str(e)}")
+                raise
+        else:
+            print("Model already exists. Skipping download.")
 
 # Task processor
 async def process_task_queue():
