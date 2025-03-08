@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 ENV DOCKER_ENV=true
+ENV SKIP_MODEL_DOWNLOAD=true
 
 # Install Python and required system dependencies
 RUN apt-get update && apt-get install -y \
@@ -41,9 +42,11 @@ COPY app/ app/
 COPY download_model.py .
 COPY gunicorn.conf.py .
 
-# Create startup script
+# Create startup script with conditional model download
 RUN echo '#!/bin/bash\n\
-python3 download_model.py\n\
+if [ "$SKIP_MODEL_DOWNLOAD" != "true" ]; then\n\
+    python3 download_model.py\n\
+fi\n\
 gunicorn --config gunicorn.conf.py app.main:app' > /app/start.sh && \
 chmod +x /app/start.sh
 
