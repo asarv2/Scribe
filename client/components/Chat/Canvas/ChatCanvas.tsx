@@ -754,7 +754,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     setViewerMode={setViewerMode}
                                     expandedSections={expandedSections}
                                     toggleSection={toggleSection}
-                                    onDrop={handleDrop}
+                                    // onDrop={handleDrop}
                                 />
                             </Card>
                         </Grid.Col>

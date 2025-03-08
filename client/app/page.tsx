@@ -84,7 +84,7 @@ export default function Landing() {
             {/* AI Welcome Message */}
             <Flex justify="flex-start" align="flex-start" mb="md">
               <Box style={{ maxWidth: "90%" }}>
-                <Group spacing="xs" position="left" mb={4}>
+                <Group gap="xs" justify="flex-start" mb={4}>
                   <Avatar radius="xl" size="md">
                     <IconSchool size={24} />
                   </Avatar>
@@ -117,7 +117,7 @@ export default function Landing() {
             {showUserQuery && (
               <Flex justify="flex-end" align="flex-start" mb="md">
                 <Box style={{ maxWidth: "90%" }}>
-                  <Group position="right" spacing="xs" mb={4}>
+                  <Group justify="flex-end" gap="xs" mb={4}>
                     <Text size="lg" c="dimmed">Student</Text>
                     <Avatar radius="xl" size="md" color="blue" />
                   </Group>
@@ -150,7 +150,7 @@ export default function Landing() {
             {showAIResponse && (
               <Flex justify="flex-start" align="flex-start" mb="md">
                 <Box style={{ maxWidth: "90%" }}>
-                  <Group spacing="xs" position="left" mb={4}>
+                  <Group gap="xs" justify="flex-start" mb={4}>
                     <Avatar radius="xl" size="md">
                       <IconSchool size={24} />
                     </Avatar>
@@ -165,7 +165,7 @@ export default function Landing() {
                       fontSize: '1.2em'
                     }}
                   >
-                    <Stack spacing="lg">
+                    <Stack gap="lg">
                       {/* Buttons with animation */}
                       <TypeAnimation
                         sequence={[
@@ -179,7 +179,7 @@ export default function Landing() {
                       />
                       
                       {showButtons && (
-                        <Group position="center" spacing="md" style={{ marginBottom: "20px" }}>
+                        <Group justify="center" gap="md" style={{ marginBottom: "20px" }}>
                           <Link href="/login">
                             <Button size="md" variant="filled">Log In</Button>
                           </Link>
@@ -198,9 +198,8 @@ export default function Landing() {
                             wrapper="div"
                             speed={70}
                             cursor={false}
-                          >
-                            {(text) => <Text size="md" fw={400}>{text}</Text>}
-                          </TypeAnimation>
+                          />
+                          <Text size="md" fw={400}>to find out how I can help you using your teacher's content</Text>
                         </Group>
                       )}
                       
@@ -216,15 +215,9 @@ export default function Landing() {
                             wrapper="div"
                             speed={70}
                             cursor={false}
-                            style={{ display: 'inline' }}
-                          >
-                            {(text) => (
-                              <>
-                                <Text component="span" fw={700} size="lg">{text.split(":")[0]}: </Text>
-                                {text.includes(":") && <Text component="span" size="lg">{text.split(":")[1]}</Text>}
-                              </>
-                            )}
-                          </TypeAnimation>
+                          />
+                          <Text component="span" fw={700} size="lg">Learn: </Text>
+                          <Text component="span" size="lg">Conceptual and computational understanding along with visualization</Text>
                         </Box>
                       )}
                       
@@ -235,20 +228,14 @@ export default function Landing() {
                             sequence={[
                               "Homework: Understand what your homework question is asking and how to solve it step by step",
                               1000,
-                              () => setShowTestPrep(true) // Set test prep to true after homework animation
+                              () => setShowTestPrep(true)
                             ]}
                             wrapper="div"
                             speed={70}
                             cursor={false}
-                            style={{ display: 'inline' }}
-                          >
-                            {(text) => (
-                              <>
-                                <Text component="span" fw={700} size="lg">{text.split(":")[0]}: </Text>
-                                {text.includes(":") && <Text component="span" size="lg">{text.split(":")[1]}</Text>}
-                              </>
-                            )}
-                          </TypeAnimation>
+                          />
+                          <Text component="span" fw={700} size="lg">Homework: </Text>
+                          <Text component="span" size="lg">Understand what your homework question is asking and how to solve it step by step</Text>
                         </Box>
                       )}
                       
@@ -262,15 +249,9 @@ export default function Landing() {
                             wrapper="div"
                             speed={70}
                             cursor={false}
-                            style={{ display: 'inline' }}
-                          >
-                            {(text) => (
-                              <>
-                                <Text component="span" fw={700} size="lg">{text.split(":")[0]}: </Text>
-                                {text.includes(":") && <Text component="span" size="lg">{text.split(":")[1]}</Text>}
-                              </>
-                            )}
-                          </TypeAnimation>
+                          />
+                          <Text component="span" fw={700} size="lg">Test-Prep: </Text>
+                          <Text component="span" size="lg">Practice questions and customized review materials to help you ace your exams</Text>
                         </Box>
                       )}
                     </Stack>
@@ -293,7 +274,7 @@ export default function Landing() {
           >
             
             <Card mb="lg" p="md" withBorder shadow="sm">
-              <Group position="left" mb={10}>
+              <Group gap="xs" mb={10}>
                 <IconGraph size={24} color="#228be6" />
                 <Text fw={700}>Graph</Text>
               </Group>
@@ -331,7 +312,7 @@ export default function Landing() {
             </Card>
 
             <Card mb="lg" p="md" withBorder shadow="sm">
-              <Group position="left" mb={10}>
+              <Group gap="xs" mb={10}>
                 <IconFileText size={24} color="#228be6" />
                 <Text fw={700}>Summary</Text>
               </Group>
@@ -356,7 +337,7 @@ export default function Landing() {
             </Card>
 
             <Card p="md" withBorder shadow="sm">
-              <Group position="left" mb={10}>
+              <Group gap="xs" mb={10}>
                 <IconQuestionMark size={24} color="#228be6" />
                 <Text fw={700}>Questions</Text>
               </Group>

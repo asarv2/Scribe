@@ -58,6 +58,11 @@ function DraggableWrapper({
     item,
     type,
     makeDraggable = false
+}: {
+    children: React.ReactNode;
+    item: { id: string };
+    type: keyof ChatMessage['context'];
+    makeDraggable?: boolean;
 }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'CONTEXT_ITEM',
@@ -73,7 +78,7 @@ function DraggableWrapper({
 
     return (
         <div 
-            ref={drag} 
+            ref={(drag as unknown) as React.LegacyRef<HTMLDivElement>}
             style={{
                 opacity: isDragging ? 0.5 : 1,
                 cursor: 'move',
@@ -136,7 +141,11 @@ const ItemCard = ({
                 e.stopPropagation();
                 if (!makeDraggable) {
                     addContextToChat(contextType, item.id);
+                    
+                } else {
+                    addContextToChat(contextType, item.id);
                 }
+                
             }}
         >
             <Group>
