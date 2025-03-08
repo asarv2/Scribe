@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Layout component for the app
  * @AshokSaravanan222
@@ -16,6 +18,9 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Profile, Class } from "@/types";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 interface ClassLayoutProps {
     children: ReactNode;
     classId: string | null;
@@ -48,27 +53,27 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
 
     return (
         <ClassMenuProvider classId={classId}>
-            <AppShell
-                header={{ height: 60 }}
-                navbar={{
-                    width: profile && (profile.professor || profile.admin) ? {
-                        base: NAVBAR_CONSTANTS.COLLAPSED_WIDTH,
-                        expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
-                    } : 0,
-                    breakpoint: 'sm',
-                }}
-                padding="md"
-                styles={(theme) => ({
-                    navbar: {
-                        border: 'none'
-                    },
-                })}
-            >
-                <AppShell.Header>
-                    <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} />
-                </AppShell.Header>
+            <DndProvider backend={HTML5Backend}>
+                <AppShell
+                    header={{ height: 60 }}
+                    navbar={{
+                        width: {
+                            base: NAVBAR_CONSTANTS.COLLAPSED_WIDTH,
+                            expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
+                        },
+                        breakpoint: 'sm',
+                    }}
+                    padding="md"
+                    styles={(theme) => ({
+                        navbar: {
+                            border: 'none'
+                        },
+                    })}
+                >
+                    <AppShell.Header>
+                        <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} />
+                    </AppShell.Header>
 
-                {profile && (profile.professor || profile.admin) && (
                     <AppShell.Navbar>
                         <ClassNavbar
                             classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id}
@@ -77,12 +82,12 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
                             onExpandedChange={setIsExpanded}
                         />
                     </AppShell.Navbar>
-                )}
 
-                <AppShell.Main>
-                    {children}
-                </AppShell.Main>
-            </AppShell>
+                    <AppShell.Main>
+                        {children}
+                    </AppShell.Main>
+                </AppShell>
+            </DndProvider>
         </ClassMenuProvider>
     );
 }

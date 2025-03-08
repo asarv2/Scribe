@@ -22,6 +22,7 @@ import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useDrag } from 'react-dnd';
 declare global {
     interface Window {
         scrollToFirstItem?: (type: string) => void;
@@ -40,6 +41,7 @@ interface ContextPanelProps {
     toggleNode: (nodeId: string) => void;
     activeChat: ChatMessage;
     scrollToSection: (sectionId: string) => void;
+    makeDraggable?: boolean;
 }
 
 // Define consistent colors for different content types
@@ -50,24 +52,74 @@ const CONTENT_COLORS = {
     homeworks: 'orange', // matches badge color
 } as const;
 
+// Define a wrapper component that makes an item draggable
+function DraggableWrapper({
+    children,
+    item,
+    type,
+    makeDraggable = false
+}) {
+    const [{ isDragging }, drag] = useDrag(() => ({
+        type: 'CONTEXT_ITEM',
+        item: { id: item.id, type },
+        collect: (monitor) => ({
+            isDragging: !!monitor.isDragging(),
+        }),
+    }), [item.id, type]);
+
+    if (!makeDraggable) {
+        return <>{children}</>;
+    }
+
+    return (
+        <div 
+            ref={drag} 
+            style={{
+                opacity: isDragging ? 0.5 : 1,
+                cursor: 'move',
+                position: 'relative'
+            }}
+        >
+            {children}
+            {isDragging && (
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    background: 'rgba(0, 120, 255, 0.8)',
+                    color: 'white',
+                    fontSize: '11px',
+                    padding: '2px 5px',
+                    borderRadius: '0 0 0 4px',
+                    zIndex: 10
+                }}>
+                    Dragging
+                </div>
+            )}
+        </div>
+    );
+}
+
 // Define a reusable ItemCard component directly in ContextPanel
 const ItemCard = ({
     item,
     color,
     contextType,
     addContextToChat,
-    isVisible
+    isVisible,
+    makeDraggable = false
 }: {
     item: any,
     color: string,
     contextType: keyof ChatMessage['context'],
     addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void,
-    isVisible: boolean
+    isVisible: boolean,
+    makeDraggable?: boolean
 }) => {
     const { colorScheme } = useMantineColorScheme();
     const [imageLoaded, setImageLoaded] = useState(false);
 
-    return (
+    const originalCard = (
         <Card
             shadow="xs"
             p="xs"
@@ -76,13 +128,15 @@ const ItemCard = ({
             style={{
                 marginBottom: '8px',
                 backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
-                cursor: 'pointer',
+                cursor: makeDraggable ? 'grab' : 'pointer',
                 transition: 'all 0.2s ease',
                 borderLeft: `3px solid var(--mantine-color-${color}-filled)`,
             }}
             onClick={(e) => {
                 e.stopPropagation();
-                addContextToChat(contextType, item.id);
+                if (!makeDraggable) {
+                    addContextToChat(contextType, item.id);
+                }
             }}
         >
             <Group>
@@ -122,6 +176,13 @@ const ItemCard = ({
             </Group>
         </Card>
     );
+
+    // Wrap in draggable component if needed
+    return makeDraggable ? (
+        <DraggableWrapper item={item} type={contextType} makeDraggable={makeDraggable}>
+            {originalCard}
+        </DraggableWrapper>
+    ) : originalCard;
 };
 
 // Section loading skeleton
@@ -153,6 +214,7 @@ export function ContextPanel({
     toggleNode,
     activeChat,
     scrollToSection,
+    makeDraggable = false
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
     const { colorScheme } = useMantineColorScheme();
@@ -621,6 +683,7 @@ export function ContextPanel({
                                                 contextType={item.type}
                                                 addContextToChat={addContextToChat}
                                                 isVisible={isItemVisible || localSearchQuery.length > 0}
+                                                makeDraggable={makeDraggable}
                                             />
                                         </div>
                                     );

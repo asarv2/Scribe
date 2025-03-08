@@ -32,6 +32,7 @@ import { getMessages } from "@/utils/queries/get-messages";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
 import { Checkbox } from "@mantine/core";
+import { useDrop, DropTargetMonitor } from 'react-dnd';
 interface MessageListProps {
   chatId: string;
   classId: string;
@@ -127,7 +128,7 @@ export const MessageList = memo(({
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Check scroll position to show/hide scroll button
@@ -466,9 +467,63 @@ export const MessageList = memo(({
   // Combine loading states
   const isLoading = isInitializing || isLoadingMessages || loading
 
+  // Define document item type
+  interface DocumentItem {
+    id: string;
+    type: string;
+    // Add other properties as needed
+    [key: string]: any;
+  }
+  
+  // Define proper drop handler that matches the context click behavior
+  const handleContextDrop = (item: { id: string, type: string }) => {
+    if (item && item.id && item.type) {
+      // Update the active chat context, similar to addContextToChat in ChatCanvas
+      setActiveChat(prev => ({
+        ...prev,
+        context: {
+          ...prev.context,
+          [item.type]: [...prev.context[item.type as keyof typeof prev.context] || [], item.id]
+        }
+      }));
+      
+      console.log(`Added context: ${item.type} - ${item.id}`);
+      return { dropped: true };
+    }
+    return { dropped: false };
+  };
+  
+  // Set up drop functionality with the correct item type
+  const [{ isOver, canDrop }, drop] = useDrop(() => ({
+    // Accept the CONTEXT_ITEM type - this must match what's used in ContextPanel
+    accept: 'CONTEXT_ITEM',
+    
+    // Handle the drop event
+    drop: handleContextDrop,
+    
+    // Collect properties to determine the current state
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+    }),
+  }), [setActiveChat]); // Add dependency on setActiveChat
+
+  const isActive = isOver && canDrop;
+
   return (
+
+    // Then replace the Stack component
     <Stack
-      ref={containerRef}
+      ref={(el) => {
+        // Use the drop function which returns a ref function
+        drop(el);
+        
+        // Update container ref without directly assigning to .current
+        if (containerRef) {
+          // Store the reference for scrolling functionality
+          containerRef.current = el;
+        }
+      }}
       style={{
         flex: 1,
         overflowY: "auto",
@@ -476,7 +531,10 @@ export const MessageList = memo(({
         maxHeight: "calc(80vh - 150px)",
         position: "relative",
         opacity: isLoading ? 0.7 : 1,
-        transition: "opacity 0.2s ease-in-out"
+        transition: "all 0.2s ease-in-out",
+        border: isOver ? `2px dashed ${canDrop ? '#228be6' : '#fa5252'}` : '2px solid transparent',
+        backgroundColor: isOver && canDrop ? (colorScheme === "dark" ? 'rgba(34, 139, 230, 0.1)' : 'rgba(34, 139, 230, 0.05)') : 'transparent',
+        padding: isOver ? '8px' : '10px'
       }}
     >
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
