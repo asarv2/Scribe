@@ -9,3 +9,6 @@ export type TypedSupabaseClient = ReturnType<typeof import('@supabase/supabase-j
 
 export type Class = Database[SchemaName]["Tables"]["classes"]["Row"]
 export type Profile = Database[SchemaName]["Tables"]["profiles"]["Row"]
+export type Lecture = Database[SchemaName]["Tables"]["lectures"]["Row"]
+export type Textbook = Database[SchemaName]["Tables"]["textbooks"]["Row"]
+export type Homework = Database[SchemaName]["Tables"]["homeworks"]["Row"]

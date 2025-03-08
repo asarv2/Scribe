@@ -1,5 +1,6 @@
 import os
 import sys
+import asyncio
 
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
@@ -8,13 +9,39 @@ if not os.getenv('DOCKER_ENV'):
 else:
     BASE_DIR = '/app'
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
 
 # Create FastAPI app
 app = FastAPI(title="Scribe API")
+
+# Create a simple task queue
+task_queue = asyncio.Queue()
+processing_task = None
+
+# Task processor
+async def process_task_queue():
+    while True:
+        task_func, args, kwargs = await task_queue.get()
+        try:
+            await task_func(*args, **kwargs)
+        except Exception as e:
+            print(f"Error processing task: {str(e)}")
+        finally:
+            task_queue.task_done()
+
+# Add task to queue
+async def add_task(task_func, *args, **kwargs):
+    await task_queue.put((task_func, args, kwargs))
+    
+    global processing_task
+    if processing_task is None or processing_task.done():
+        processing_task = asyncio.create_task(process_task_queue())
+
+# Add to app state
+app.state.add_task = add_task
 
 # Add CORS middleware
 app.add_middleware(

@@ -14,3 +14,5 @@ matplotlib==3.8.3
 scipy==1.12.0
 networkx==3.2.1
 PyMuPDF==1.21.1
+docx2txt==0.8
+aiofiles==23.2.1

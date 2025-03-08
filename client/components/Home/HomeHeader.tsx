@@ -44,51 +44,18 @@ export function HomeHeader() {
     const firstClass = getFilteredClasses()?.[0];
 
     return (
-        <Group h="100%" px="md" justify="space-between" w="100%">
+        <Group h="100%" px="md" justify="center" w="100%" align="center">
             <Group>
                 <Link href="/">
                     <Image
                         src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
                         priority
                         alt="Logo"
-                        width={90}
-                        height={20}
+                        width={120}
+                        height={30}
                         style={{ marginTop: '4px' }}
                     />
                 </Link>
-            </Group>
-
-            <Group>
-                {user && profile ? (
-                    // <AccountMenu profile={profile} />
-                    <>
-                        {profile?.professor || profile?.admin ? (
-                            <Link href={`/classes/c/${firstClass?.id}`}>
-                                <Button size="sm">
-                                    Get Started
-                                </Button>
-                            </Link>
-                        ) : (
-                            <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
-                                <Button size="sm">
-                                    Get Started
-                                </Button>
-                            </Link>
-                        )}
-                    </>
-
-                ) : (
-                    <>
-                        <Link href="/signup">
-                            <Button size="sm">
-                                Get Started
-                            </Button>
-                        </Link>
-                        {/* <Link href="/signup" className={classes.link}>
-                            Sign Up
-                        </Link> */}
-                    </>
-                )}
             </Group>
         </Group>
     );

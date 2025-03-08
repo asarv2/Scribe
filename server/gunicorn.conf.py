@@ -11,7 +11,7 @@ worker_class = 'uvicorn.workers.UvicornWorker'
 threads = 4
 
 # Longer timeout for GPU operations
-timeout = 300
+timeout = 600
 
 # Keep-alive settings
 keepalive = 65

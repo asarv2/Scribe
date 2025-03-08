@@ -12,7 +12,7 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton, Modal } from "@mantine/core";
+import { ActionIcon, Box, Card, em, Group, Stack, Text, useMantineColorScheme, Skeleton, Modal, Divider } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { Grid, Flex, Container } from "@mantine/core";
 import Latex from "@/components/Latex";
@@ -23,6 +23,7 @@ import { getHomework } from "@/utils/queries/get-homework";
 import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getExerciseDocuments } from "@/utils/queries/get-exercise-docs";
+import { Exercise } from "@/types";
 
 type HomeworkViewerProps = {
     classId: string;
@@ -201,8 +202,8 @@ export default function HomeworkViewer({
 
         if (embedded) {
             return (
-                <Box style={{ 
-                    position: 'relative', 
+                <Box style={{
+                    position: 'relative',
                     width: '100%',
                     aspectRatio: '16/9',
                     overflow: "hidden",
@@ -213,20 +214,20 @@ export default function HomeworkViewer({
                     borderRadius: "10px",
                     flexShrink: 0
                 }}
-                onTouchStart={(e) => {
-                    setTouchStartX(e.changedTouches[0].clientX);
-                }}
-                onTouchEnd={(e) => {
-                    const touchEndX = e.changedTouches[0].clientX;
-                    handleSwipe(touchEndX);
-                }}
+                    onTouchStart={(e) => {
+                        setTouchStartX(e.changedTouches[0].clientX);
+                    }}
+                    onTouchEnd={(e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        handleSwipe(touchEndX);
+                    }}
                 >
                     <Image
                         src={getActiveImage(activeExerciseId)}
                         alt={`Exercise ${currentExercise?.problem_number}`}
                         width={500}
                         height={500}
-                        style={{ 
+                        style={{
                             maxWidth: '100%',
                             maxHeight: '100%',
                             objectFit: "contain",
@@ -294,13 +295,13 @@ export default function HomeworkViewer({
                             borderRadius: "4px",
                         }}
                     >
-                        <Text 
+                        <Text
                             size="xs"
                             fw={500}
-                            style={{ 
+                            style={{
                                 color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ? 
-                                    "0px 0px 4px rgba(0,0,0,0.5)" : 
+                                textShadow: colorScheme === "dark" ?
+                                    "0px 0px 4px rgba(0,0,0,0.5)" :
                                     "0px 0px 4px rgba(255,255,255,0.5)"
                             }}
                         >
@@ -316,10 +317,7 @@ export default function HomeworkViewer({
                 <Stack>
                     <Group justify="space-between">
                         <Group>
-                            <Text fw={700} size="lg">Exercise {currentExercise?.title}</Text>
-                            <Text c="dimmed">
-                                (p. {currentExercise?.start_page})
-                            </Text>
+                            <Text fw={700} size="lg">{currentExercise?.title}</Text>
                         </Group>
                     </Group>
                     <Box style={{
@@ -335,9 +333,9 @@ export default function HomeworkViewer({
                         onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
                     >
                         {isImageLoading && (
-                            <Skeleton 
-                                height="100%" 
-                                width="100%" 
+                            <Skeleton
+                                height="100%"
+                                width="100%"
                                 radius="md"
                                 style={{
                                     position: 'absolute',
@@ -486,9 +484,9 @@ export default function HomeworkViewer({
     const Description = () => {
         const currentExercise = exercises?.find(ex => ex.id === activeExerciseId);
         const currentDocument = documents?.find(doc => doc.exercises.includes(activeExerciseId ?? ""));
-        const relatedDocuments = documents?.filter(doc => 
+        const relatedDocuments = documents?.filter(doc =>
             // Document must be for the same exercise
-            doc.exercises.includes(activeExerciseId ?? "") && 
+            doc.exercises.includes(activeExerciseId ?? "") &&
             // Document must be from the same homework
             doc.homeworks.includes(homeworkId) &&
             // Document must have a page number
@@ -514,23 +512,27 @@ export default function HomeworkViewer({
 
         return (
             <Stack>
-                <Text fw={500}>Problem {currentExercise.problem_number}{currentExercise.problem_part_number !== 1 ? 
-                    `${String.fromCharCode(96 + currentExercise.problem_part_number)})` : 
+                <Text fw={500}>Problem {currentExercise.problem_number}{currentExercise.problem_part_number !== 1 ?
+                    `${String.fromCharCode(96 + currentExercise.problem_part_number)})` :
                     ""}</Text>
 
-                {currentExercise.info ? (
+                {currentExercise.info && (
                     <Box>
                         <Text fw={600} mb={4}>Information:</Text>
                         <Text><Latex>{currentExercise.info}</Latex></Text>
                     </Box>
-                ) : (
-                    <Text fw={600} mb={4}>No information provided.</Text>
                 )}
 
                 {currentExercise.given && (
                     <Box>
                         <Text fw={600} mb={4}>Given:</Text>
                         <Text><Latex>{currentExercise.given}</Latex></Text>
+                    </Box>
+                )}
+                {currentExercise.description && (
+                    <Box>
+                        <Text fw={600} mb={4}>Description:</Text>
+                        <Text><Latex>{currentExercise.description}</Latex></Text>
                     </Box>
                 )}
 
@@ -553,7 +555,7 @@ export default function HomeworkViewer({
                         >
                             <Flex gap="md" wrap="nowrap">
                                 {relatedDocuments.map((doc) => (
-                                    <Box 
+                                    <Box
                                         key={doc.id}
                                         style={{
                                             display: 'inline-block',
@@ -579,8 +581,8 @@ export default function HomeworkViewer({
                                                 }}
                                             />
                                             {doc.description && (
-                                                <Text 
-                                                    mt={4} 
+                                                <Text
+                                                    mt={4}
                                                     size="sm"
                                                     style={{
                                                         whiteSpace: 'normal',
@@ -617,13 +619,37 @@ export default function HomeworkViewer({
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exerciseId}.png`;
     };
 
+    const getExerciseInfo = (exercise: Exercise | undefined) => {
+        if (!exercise) return "";
+        return (
+            <Stack>
+                {exercise.info && (
+                    <Box>
+                        <Text fw={600} mb={4}>Information:</Text>
+                        <Text><Latex>{exercise.info}</Latex></Text>
+                    </Box>
+                )}
+                {exercise.info && exercise.description && (
+                    <Divider />
+                )}
+
+                {exercise.description && (
+                    <Box>
+                        {/* <Text fw={600} mb={4}>Description:</Text> */}
+                        <Text><Latex>{exercise.description}</Latex></Text>
+                    </Box>
+                )}
+            </Stack>
+        )
+    }
+
     if (embedded) {
         return (
             <Stack gap="xs" style={{ height: '100%' }}>
                 {loadingDocuments || loadingExercises ? (
                     // Skeleton for embedded viewer
-                    <Box style={{ 
-                        position: 'relative', 
+                    <Box style={{
+                        position: 'relative',
                         width: '100%',
                         aspectRatio: '16/9',
                         backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
@@ -633,8 +659,8 @@ export default function HomeworkViewer({
                         <Skeleton height="100%" width="100%" radius="md" />
                     </Box>
                 ) : (
-                    <Box style={{ 
-                        position: 'relative', 
+                    <Box style={{
+                        position: 'relative',
                         width: '100%',
                         aspectRatio: '16/9',
                         overflow: "hidden",
@@ -645,20 +671,20 @@ export default function HomeworkViewer({
                         borderRadius: "10px",
                         flexShrink: 0
                     }}
-                    onTouchStart={(e) => {
-                        setTouchStartX(e.changedTouches[0].clientX);
-                    }}
-                    onTouchEnd={(e) => {
-                        const touchEndX = e.changedTouches[0].clientX;
-                        handleSwipe(touchEndX);
-                    }}
+                        onTouchStart={(e) => {
+                            setTouchStartX(e.changedTouches[0].clientX);
+                        }}
+                        onTouchEnd={(e) => {
+                            const touchEndX = e.changedTouches[0].clientX;
+                            handleSwipe(touchEndX);
+                        }}
                     >
                         <Image
                             src={getActiveImage(activeExerciseId)}
                             alt={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}`}
                             width={500}
                             height={500}
-                            style={{ 
+                            style={{
                                 maxWidth: '100%',
                                 maxHeight: '100%',
                                 objectFit: "contain",
@@ -726,13 +752,13 @@ export default function HomeworkViewer({
                                 borderRadius: "4px",
                             }}
                         >
-                            <Text 
+                            <Text
                                 size="xs"
                                 fw={500}
-                                style={{ 
+                                style={{
                                     color: colorScheme === "dark" ? "white" : "black",
-                                    textShadow: colorScheme === "dark" ? 
-                                        "0px 0px 4px rgba(0,0,0,0.5)" : 
+                                    textShadow: colorScheme === "dark" ?
+                                        "0px 0px 4px rgba(0,0,0,0.5)" :
                                         "0px 0px 4px rgba(255,255,255,0.5)"
                                 }}
                             >
@@ -741,9 +767,9 @@ export default function HomeworkViewer({
                         </Box>
                     </Box>
                 )}
-                
+
                 {/* Preview strip with fixed height and better visibility */}
-                <Box 
+                <Box
                     style={{
                         flexShrink: 0,
                         height: '40px', // Fixed height
@@ -787,7 +813,7 @@ export default function HomeworkViewer({
                                         alt={`Exercise ${exercise.problem_number}`}
                                         width={35}
                                         height={35}
-                                        style={{ 
+                                        style={{
                                             objectFit: 'cover',
                                             outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
                                             outlineOffset: '-2px',
@@ -801,8 +827,8 @@ export default function HomeworkViewer({
                 </Box>
 
                 {/* Description with flex-grow to take remaining space */}
-                <Box style={{ 
-                    overflow: 'auto', 
+                <Box style={{
+                    overflow: 'auto',
                     paddingInline: '2px',
                     flexGrow: 1,
                     minHeight: '80px' // Ensure description always has some minimum height
@@ -814,25 +840,25 @@ export default function HomeworkViewer({
                             <Skeleton height={16} width="70%" />
                         </Stack>
                     ) : (
-                        <Text fw={500} size="sm">
-                            <Latex>{exercises?.find(ex => ex.id === activeExerciseId)?.info ?? ""}</Latex>
-                        </Text>
+                        <Stack>
+                            {getExerciseInfo(exercises?.find(ex => ex.id === activeExerciseId))}
+                        </Stack>
                     )}
                 </Box>
-                
+
                 {/* Add the full-size image modal */}
-                <Modal 
-                    opened={isImageModalOpen} 
+                <Modal
+                    opened={isImageModalOpen}
                     onClose={() => setIsImageModalOpen(false)}
                     size="xl"
                     padding="md"
                     centered
                     title={`Problem ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}`}
                 >
-                    <Box 
-                        style={{ 
-                            display: 'flex', 
-                            justifyContent: 'center', 
+                    <Box
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
                             alignItems: 'center',
                             height: '80vh'
                         }}
@@ -842,7 +868,7 @@ export default function HomeworkViewer({
                             alt={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}`}
                             width={1200}
                             height={1200}
-                            style={{ 
+                            style={{
                                 maxWidth: '100%',
                                 maxHeight: '100%',
                                 objectFit: "contain"
@@ -901,20 +927,20 @@ export default function HomeworkViewer({
                         </Grid.Col>
                     </Grid>
                 </Stack>
-                
+
                 {/* Add the full-size image modal */}
-                <Modal 
-                    opened={isImageModalOpen} 
+                <Modal
+                    opened={isImageModalOpen}
                     onClose={() => setIsImageModalOpen(false)}
                     size="xl"
                     padding="md"
                     centered
-                    title={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.title}`}
+                    title={`${exercises?.find(ex => ex.id === activeExerciseId)?.title}`}
                 >
-                    <Box 
-                        style={{ 
-                            display: 'flex', 
-                            justifyContent: 'center', 
+                    <Box
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
                             alignItems: 'center',
                             height: '80vh'
                         }}
@@ -924,7 +950,7 @@ export default function HomeworkViewer({
                             alt={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.title}`}
                             width={1200}
                             height={1200}
-                            style={{ 
+                            style={{
                                 maxWidth: '100%',
                                 maxHeight: '100%',
                                 objectFit: "contain"

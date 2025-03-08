@@ -3,12 +3,12 @@ import type { PlasmoCSConfig } from "~node_modules/plasmo/dist/type";
 export interface Course {
     name: string;
     courseId: string;
-    courseDescriptor?: string;
+    courseDescriptor: string;
 }
 
 // Configure the content script to run on D2L pages
 export const config: PlasmoCSConfig = {
-  matches: ["<all_urls>"],
+  matches: ["https://purdue.brightspace.com/d2l/home/*"],
   all_frames: true
 }
 
@@ -111,7 +111,6 @@ function extractCourses(): Course[] {
       
       // Skip if we've already processed this course
       if (processedIds.has(courseId)) return;
-      processedIds.add(courseId);
       
       // Get course name from text attribute or content
       let fullText = card.getAttribute('text') || '';
@@ -134,12 +133,20 @@ function extractCourses(): Course[] {
         }
       }
       
+      // Only add course if we found a descriptor
+      if (!courseDescriptor) {
+        console.log(`Skipping course ${courseId} - no descriptor found`);
+        return;
+      }
+      
       // Add to courses array
       courses.push({
         courseId,
         name: name || `Course ${courseId}`,
-        courseDescriptor: courseDescriptor || undefined
+        courseDescriptor: courseDescriptor
       });
+      
+      processedIds.add(courseId); // Add to processed IDs after successful extraction
       
       console.log(`Found course: ${name} (${courseId}) - Descriptor: ${courseDescriptor}`);
     } catch (e) {

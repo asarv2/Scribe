@@ -19,6 +19,13 @@ class CleanedResponse:
         self.description = description
         self.text = text
 
+class CleanedHomeworkResponse:
+    def __init__(self, exercise_id: str, problem: str, description: str, text: str):
+        self.exercise_id = exercise_id
+        self.problem = problem
+        self.description = description
+        self.text = text
+
 class ContentType(Enum):
     LECTURE = "lecture"
     TOPIC = "topic"
