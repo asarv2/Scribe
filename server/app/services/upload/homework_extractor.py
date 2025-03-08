@@ -11,7 +11,6 @@ from app.services.upload.problems_extractor import ProblemsExtractor
 from supabase import create_client, ClientOptions, Client
 from dotenv import load_dotenv
 from tqdm import tqdm
-import docx2txt
 from app.services.upload.table_of_contents_extractor import TableOfContentsExtractor
 
 load_dotenv()
@@ -56,8 +55,6 @@ class HomeworkExtractor:
             elif file_path.endswith('.txt'):
                 with open(file_path, 'r') as f:
                     text_content = f.read()
-            elif file_path.endswith('.docx'):
-                text_content = docx2txt.process(file_path)
             else:
                 raise ValueError(f"Unsupported file type: {file_path}")
             

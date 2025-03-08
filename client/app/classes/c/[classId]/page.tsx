@@ -28,7 +28,10 @@ import { getDocuments } from "@/utils/queries/get-documents";
 import { getLectures, getLecturesById } from "@/utils/queries/get-lectures";
 import { getChaptersById } from "@/utils/queries/get-chapters";
 import { getHomeworksById } from "@/utils/queries/get-homeworks";
-
+import { getAllChats } from "@/utils/queries/get-all-chats";
+import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
+import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
+import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
 export default function Class({ params }: { params: { classId: string } }) {
     const queryClient = useQueryClient()
     const [opened, { toggle }] = useDisclosure(false)
@@ -51,16 +54,15 @@ export default function Class({ params }: { params: { classId: string } }) {
         queryFn: () => getUser(supabase),
     })
 
+    const { data: chats } = useQuery({
+        queryKey: ["allChats", classId],
+        queryFn: () => getAllChats(supabase, classId),
+    })
+
     const { data: profile } = useQuery({
         queryKey: ["profile", user?.id],
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user
-    })
-
-    const { data: chats } = useQuery({
-        queryKey: ["chats", classId, profile?.id],
-        queryFn: () => getChats(supabase, classId, [profile!.id]),
-        enabled: !!profile
     })
 
     const { data: messages } = useQuery({
@@ -87,16 +89,34 @@ export default function Class({ params }: { params: { classId: string } }) {
         enabled: !!faqs
     })
 
+    const {data: faqLectureDocuments, isLoading: loadingFaqLectureDocuments} = useQuery({
+        queryKey: ["faqLectureDocuments", classId],
+        queryFn: () => getLectureDocuments(supabase, Array.from(new Set(faqLectures?.flatMap(lecture => lecture.id)))),
+        enabled: !!faqLectures
+    })
+
     const {data: faqChapters, isLoading: loadingFaqChapters} = useQuery({
         queryKey: ["faqChapters", classId],
         queryFn: () => getChaptersById(supabase, Array.from(new Set(faqs?.flatMap(faq => faq.chapters)))),
         enabled: !!faqs
     })
 
+    const {data: faqChapterDocuments, isLoading: loadingFaqChapterDocuments} = useQuery({
+        queryKey: ["faqChapterDocuments", classId],
+        queryFn: () => getChapterDocuments(supabase, Array.from(new Set(faqChapters?.flatMap(chapter => chapter.id)))),
+        enabled: !!faqChapters
+    })
+
     const {data: faqHomeworks, isLoading: loadingFaqHomeworks} = useQuery({
         queryKey: ["faqHomeworks", classId],
         queryFn: () => getHomeworksById(supabase, Array.from(new Set(faqs?.flatMap(faq => faq.homeworks)))),
         enabled: !!faqs
+    })
+
+    const {data: faqHomeworkDocuments, isLoading: loadingFaqHomeworkDocuments} = useQuery({
+        queryKey: ["faqHomeworkDocuments", classId],
+        queryFn: () => getHomeworkDocuments(supabase, Array.from(new Set(faqHomeworks?.flatMap(homework => homework.id)))),
+        enabled: !!faqHomeworks
     })
 
     // Process chat data for visualization
@@ -211,7 +231,7 @@ export default function Class({ params }: { params: { classId: string } }) {
 
     // Add these new processing functions after the other processing functions
     const processFaqLecturesData = () => {
-        if (!faqs || !faqLectures) return [];
+        if (!faqs || !faqLectures || !faqLectureDocuments) return [];
         
         const lectureCounts = faqs.reduce((acc: { [key: string]: number }, faq) => {
             if (faq.lectures) {

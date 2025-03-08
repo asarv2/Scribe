@@ -22,29 +22,33 @@ RUN apt-get update && apt-get install -y \
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy single requirements file
+# Copy requirements files
 COPY app/requirements.txt app/
+COPY app/requirements_gpu.txt app/
 
-# Install dependencies (excluding torch since it's in the base image)
-RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt)
+# Install base dependencies
+RUN pip3 install --no-cache-dir -r app/requirements.txt
 
-# Create uploads directory with proper permissions
-RUN mkdir -p /app/uploads && \
-    chmod 777 /app/uploads
-
-
-# Copy application code
-COPY app/ app/
-
-# Copy gunicorn configuration
-COPY gunicorn.conf.py .
+# Install GPU-specific dependencies
+RUN pip3 install --no-cache-dir -r app/requirements_gpu.txt
 
 # Create directory for gunicorn logs
 RUN mkdir -p /var/log/gunicorn && \
     chmod 777 /var/log/gunicorn
 
+# Copy application code
+COPY app/ app/
+COPY download_model.py .
+COPY gunicorn.conf.py .
+
+# Create startup script
+RUN echo '#!/bin/bash\n\
+python3 download_model.py\n\
+gunicorn --config gunicorn.conf.py app.main:app' > /app/start.sh && \
+chmod +x /app/start.sh
+
 # Expose the FastAPI port
 EXPOSE 5000
 
-# Run with uvicorn workers
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "app.main:app"]
+# Run startup script
+CMD ["/app/start.sh"]
