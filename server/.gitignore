@@ -2,5 +2,7 @@
 app/env
 uploads
 classes
-**/__pycache__/
-*.pyc
+**/**/__pycache__/
+
+# ignore all Python bytecode files
+**/*.pyc

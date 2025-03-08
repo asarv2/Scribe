@@ -55,11 +55,11 @@ export default function Landing() {
 
   return (
     <HomeLayout>
-      <Box style={{ 
-        height: 'calc(100vh - 120px)', 
+      <Box style={{
+        height: 'calc(100vh - 120px)',
         width: '100%',
-        display: 'flex', 
-        alignItems: 'center', 
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
       }}>
@@ -177,7 +177,7 @@ export default function Landing() {
                         wrapper="div"
                         cursor={false}
                       />
-                      
+
                       {showButtons && (
                         <Group justify="center" gap="md" style={{ marginBottom: "20px" }}>
                           <Link href="/login">
@@ -199,10 +199,9 @@ export default function Landing() {
                             speed={70}
                             cursor={false}
                           />
-                          <Text size="md" fw={400}>to find out how I can help you using your teacher's content</Text>
                         </Group>
                       )}
-                      
+
                       {/* Then the Learn point */}
                       {showLearn && (
                         <Box>
@@ -216,11 +215,9 @@ export default function Landing() {
                             speed={70}
                             cursor={false}
                           />
-                          <Text component="span" fw={700} size="lg">Learn: </Text>
-                          <Text component="span" size="lg">Conceptual and computational understanding along with visualization</Text>
                         </Box>
                       )}
-                      
+
                       {/* Homework point */}
                       {showHomework && (
                         <Box>
@@ -234,11 +231,9 @@ export default function Landing() {
                             speed={70}
                             cursor={false}
                           />
-                          <Text component="span" fw={700} size="lg">Homework: </Text>
-                          <Text component="span" size="lg">Understand what your homework question is asking and how to solve it step by step</Text>
                         </Box>
                       )}
-                      
+
                       {/* Test-Prep point */}
                       {showTestPrep && (
                         <Box>
@@ -250,8 +245,6 @@ export default function Landing() {
                             speed={70}
                             cursor={false}
                           />
-                          <Text component="span" fw={700} size="lg">Test-Prep: </Text>
-                          <Text component="span" size="lg">Practice questions and customized review materials to help you ace your exams</Text>
                         </Box>
                       )}
                     </Stack>
@@ -272,17 +265,17 @@ export default function Landing() {
               borderRadius: "8px",
             }}
           >
-            
+
             <Card mb="lg" p="md" withBorder shadow="sm">
               <Group gap="xs" mb={10}>
                 <IconGraph size={24} color="#228be6" />
                 <Text fw={700}>Graph</Text>
               </Group>
               <Text size="sm" mb="md">The AI will create visualizations if applicable to help you understand and visualize your course material</Text>
-              <Box 
-                style={{ 
-                  width: "100%", 
-                  height: "120px", 
+              <Box
+                style={{
+                  width: "100%",
+                  height: "120px",
                   backgroundColor: colorScheme === "dark" ? "#25262b" : "#e9ecef",
                   borderRadius: "4px",
                   display: "flex",
@@ -293,7 +286,7 @@ export default function Landing() {
                 }}
               >
                 {/* Simple graph visualization */}
-                <Box 
+                <Box
                   style={{
                     position: "absolute",
                     width: "90%",
@@ -317,9 +310,9 @@ export default function Landing() {
                 <Text fw={700}>Summary</Text>
               </Group>
               <Text size="sm" mb="md">The AI will create a summary of relevant course material to help you study</Text>
-              <Box 
-                style={{ 
-                  width: "100%", 
+              <Box
+                style={{
+                  width: "100%",
                   padding: "10px",
                   backgroundColor: colorScheme === "dark" ? "#25262b" : "#e9ecef",
                   borderRadius: "4px",
@@ -342,9 +335,9 @@ export default function Landing() {
                 <Text fw={700}>Questions</Text>
               </Group>
               <Text size="sm" mb="md">The AI will generate practice questions to help you prepare for exams</Text>
-              <Box 
-                style={{ 
-                  width: "100%", 
+              <Box
+                style={{
+                  width: "100%",
                   padding: "10px",
                   backgroundColor: colorScheme === "dark" ? "#25262b" : "#e9ecef",
                   borderRadius: "4px",

@@ -1,31 +1,26 @@
 import os
 from dotenv import load_dotenv
-from supabase.client import Client, create_client, ClientOptions
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Add error checking for required environment variables
-supabase_url = os.getenv("SUPABASE_URL")
-if not supabase_url:
-    raise ValueError("SUPABASE_URL environment variable is not set")
+# Initialize Supabase client only if credentials are available
+supabase = None
+if os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_PRIVATE_KEY"):
+    from supabase.client import Client, create_client, ClientOptions
+    opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
+    supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_PRIVATE_KEY"), options=opts)
+    print("Supabase client initialized")
+else:
+    print("Warning: Supabase credentials not found, running without database")
 
-supabase_private_key = os.getenv("SUPABASE_PRIVATE_KEY")
-if not supabase_private_key:
-    raise ValueError("SUPABASE_PRIVATE_KEY environment variable is not set")
-
-print("Loaded environment variables")
-
-# Initialize Supabase client
-opts = ClientOptions().replace(schema=os.getenv("SUPABASE_SCHEMA"))
-supabase: Client = create_client(supabase_url, supabase_private_key, options=opts)
-print("Supabase client initialized")
-
-# Set upload folder based on environment
-UPLOAD_FOLDER = "/app/uploads" if os.getenv('DOCKER_ENV') else os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
-
-# Ensure upload directory exists
+# Set paths based on environment
+BASE_FOLDER = "/app" if os.getenv('DOCKER_ENV') else os.path.dirname(os.path.dirname(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_FOLDER, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+MODELS_FOLDER = os.path.join(BASE_FOLDER, "models")
+os.makedirs(MODELS_FOLDER, exist_ok=True)
+
 
 # make messages directory if it doesn't exist, under the uploads directory
 MESSAGES_DIR = os.path.join(UPLOAD_FOLDER, 'messages')

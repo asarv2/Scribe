@@ -2,14 +2,10 @@
 import os
 from typing import Optional, Tuple, TYPE_CHECKING
 
+from app.extensions import MODELS_FOLDER
+
 if TYPE_CHECKING:
     from transformers import AutoModelForCausalLM, AutoProcessor
-
-# Set models folder based on environment
-MODELS_FOLDER = "/app/models" if os.getenv('DOCKER_ENV') else os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
-
-# Define all directory paths
-os.makedirs(MODELS_FOLDER, exist_ok=True)
 
 class ModelManager:
     def __init__(self):
