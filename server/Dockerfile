@@ -25,7 +25,6 @@ WORKDIR /app
 
 # Copy requirements files
 COPY app/requirements.txt app/
-COPY app/requirements_gpu.txt app/
 
 # Install base dependencies (excluding packages provided by base image)
 RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt) \
