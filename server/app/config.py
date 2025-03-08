@@ -55,6 +55,7 @@ class ModelManager:
         try:
             import torch
             from transformers import AutoModelForCausalLM, AutoProcessor, GenerationConfig
+            from transformers import BitsAndBytesConfig
 
             device = "cuda" if torch.cuda.is_available() else "cpu"
             
@@ -75,28 +76,32 @@ class ModelManager:
                 print("Model not found locally. Downloading...")
                 self.download_model()
 
-            print("Loading model...")
+            print(f"Loading model from {self.local_model_path}...")
             
-            # Load processor directly from HuggingFace
+            # Configure 4-bit quantization
+            quantization_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_compute_dtype=torch.float16,
+            )
+
+            # Load processor from local path
             self.processor = AutoProcessor.from_pretrained(
-                self.model_name,
+                self.local_model_path,
                 trust_remote_code=True
             )
 
-            # Load model directly from HuggingFace
+            # Load model with quantization
             self.model = AutoModelForCausalLM.from_pretrained(
-                self.model_name,
-                device_map=device,
-                torch_dtype="auto",
+                self.local_model_path,
+                device_map="auto",
+                torch_dtype=torch.float16,
                 trust_remote_code=True,
-                _attn_implementation=attn_implementation
+                quantization_config=quantization_config,
+                attn_implementation=attn_implementation
             )
 
-            # Load generation config
-            self.generation_config = GenerationConfig.from_pretrained(self.model_name)
-
-            if device == "cuda":
-                self.model.cuda()
+            # Load generation config from local path
+            self.generation_config = GenerationConfig.from_pretrained(self.local_model_path)
                 
             print("Model loaded successfully")
             return self.model, self.processor
