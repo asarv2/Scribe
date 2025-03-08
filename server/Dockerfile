@@ -28,10 +28,9 @@ COPY app/requirements.txt app/
 COPY app/requirements_gpu.txt app/
 
 # Install base dependencies (excluding packages provided by base image)
-RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt)
-
-# Install GPU-specific dependencies
-RUN pip3 install --no-cache-dir -r app/requirements_gpu.txt
+RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt) \
+    --extra-index-url https://download.pytorch.org/whl/cu121 \
+    flash-attn --no-build-isolation
 
 # Create directory for gunicorn logs
 RUN mkdir -p /var/log/gunicorn && \
