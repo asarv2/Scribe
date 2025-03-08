@@ -3,8 +3,8 @@ uvicorn[standard]==0.27.1
 python-multipart==0.0.9
 gunicorn==23.0.0
 openai-whisper==20240930
-torch==2.6.0 # old 2.5.1
-torchvision==0.21.0
+torch==2.5.1
+pillow==11.1.0
 google-generativeai==0.8.4
 python-dotenv==1.0.1
 supabase==2.12.0
@@ -18,7 +18,3 @@ PyMuPDF==1.21.1
 docx2txt==0.8
 aiofiles==23.2.1
 transformers==4.48.2
-pillow==11.1.0
-soundfile==0.13.1
-backoff==2.2.1
-peft==0.13.2

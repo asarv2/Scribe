@@ -49,7 +49,7 @@ class ModelManager:
             if device == "cuda":
                 try:
                     import flash_attn  # type: ignore
-                    import accelerate
+                    import accelerate # type: ignore
                     _ = flash_attn.__version__
                     attn_implementation = "flash_attention_2"
                 except ImportError:

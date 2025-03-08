@@ -1,6 +1,10 @@
 from typing import List, Dict, Any, Optional, Callable
 import base64
 from app.services.base_processor import BaseProcessor, CleanedResponse, Message
+from app.config import model_manager
+import torch
+from PIL import Image
+import io
 
 class LectureProcessor(BaseProcessor):
     def __init__(self, course_title: str):
@@ -40,6 +44,44 @@ class LectureProcessor(BaseProcessor):
 
         return cleaned_response
 
+    async def process_with_phi4(self, image: bytes, prompt: str) -> Optional[str]:
+        """Try to process with Phi-4 model first"""
+        try:
+            model, processor = model_manager.get_model()
+            if not model or not processor:
+                return None
+
+            # Convert bytes to PIL Image
+            pil_image = Image.open(io.BytesIO(image))
+            
+            # Use the prompt parameter in the formatted text
+            formatted_prompt = f"<|user|><|image_1|>{prompt}<|end|><|assistant|>"
+            
+            # Process image and text with Phi-4 format
+            inputs = processor(
+                text=formatted_prompt,
+                images=pil_image,
+                return_tensors="pt"
+            )
+
+            # Move to GPU if available
+            if torch.cuda.is_available():
+                inputs = {k: v.cuda() for k, v in inputs.items()}
+                model.cuda()
+
+            # Generate response
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=512,
+                do_sample=False
+            )
+            
+            response = processor.decode(outputs[0], skip_special_tokens=True)
+            return response
+        except Exception as e:
+            print(f"Phi-4 processing failed: {str(e)}")
+            return None
+
     async def process_page(
         self,
         image: bytes,
@@ -49,13 +91,27 @@ class LectureProcessor(BaseProcessor):
         num_pages: int,
     ) -> CleanedResponse:
         try:
-            # Convert image bytes to base64
-            base64_image = base64.b64encode(image).decode('utf-8')
-            
             # Get prompts
             base_prompt = self._get_base_prompt()
             additional_prompt = self._get_additional_prompt(page_number, num_pages)
+            combined_prompt = base_prompt + "\n\n" + additional_prompt
 
+            # Try Phi-4 first
+            phi4_response = await self.process_with_phi4(image, combined_prompt)
+            
+            if phi4_response:
+                print(f"Successfully processed page {page_number} with Phi-4")
+                return self.clean_response(
+                    phi4_response,
+                    lecture_name,
+                    page_number,
+                    text
+                )
+
+            # Fallback to Gemini
+            print(f"Falling back to Gemini for page {page_number}")
+            base64_image = base64.b64encode(image).decode('utf-8')
+            
             message = Message(content=[
                 {
                     "type": "image_url",
@@ -63,15 +119,13 @@ class LectureProcessor(BaseProcessor):
                 },
                 {
                     "type": "text",
-                    "text": base_prompt + "\n\n" + additional_prompt
+                    "text": combined_prompt
                 },
                 *([] if not text else [{"type": "text", "text": text}])
             ])
 
-            # Add message to conversation history
             self.conversation_history.append(message)
-
-            # Generate response using AI with increased retries and wait time
+            
             response = await self.robust_generate(
                 None,
                 message,
@@ -79,11 +133,10 @@ class LectureProcessor(BaseProcessor):
             )
             
             if not response:
-                raise Exception("Empty response from AI model")
+                raise Exception("Empty response from both models")
             
-            print(f"Successfully processed page {page_number}")
-
-            # Add AI response to conversation history
+            print(f"Successfully processed page {page_number} with Gemini")
+            
             self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
 
             return self.clean_response(
@@ -95,7 +148,6 @@ class LectureProcessor(BaseProcessor):
 
         except Exception as error:
             print(f"Error processing page {page_number}: {str(error)}")
-            # Add more specific error handling if needed
             raise error
 
     async def process_slides(
