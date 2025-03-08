@@ -25,6 +25,9 @@ WORKDIR /app
 # Copy requirements files
 COPY app/requirements.txt app/
 
+# Install bitsandbytes first with CUDA support
+RUN pip3 install --no-cache-dir bitsandbytes>=0.41.1
+
 # Install base dependencies (excluding packages provided by base image)
 RUN pip3 install --no-cache-dir $(grep -v "^torch==" app/requirements.txt) \
     https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.6cxx11abiTRUE-cp311-cp311-linux_x86_64.whl

@@ -116,15 +116,3 @@ class ModelManager:
         if self.model is None or self.processor is None:
             return self.load_model()
         return self.model, self.processor
-
-# Initialize model manager
-model_manager = ModelManager()
-
-# Only attempt to load model on startup if GPU is available
-if os.getenv('DOCKER_ENV'):
-    import torch
-    if torch.cuda.is_available():
-        try:
-            model_manager.load_model()
-        except Exception as e:
-            print(f"Warning: Could not load model on startup: {str(e)}")
