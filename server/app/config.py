@@ -18,10 +18,6 @@ class ModelManager:
         self.user_prompt = '<|user|>'
         self.assistant_prompt = '<|assistant|>'
         self.prompt_suffix = '<|end|>'
-        # Add audio processing parameters
-        self.audio_compression_rate = 16
-        self.audio_downsample_rate = 2
-        self.audio_feat_stride = 2
 
     def download_model(self) -> None:
         """Download the model from HuggingFace"""
@@ -88,28 +84,27 @@ class ModelManager:
                 bnb_4bit_compute_dtype=torch.float16,
             )
 
-            # Load processor from local path with audio parameters
+            # Load processor from local path
             self.processor = AutoProcessor.from_pretrained(
                 self.local_model_path,
-                trust_remote_code=True,
-                audio_compression_rate=self.audio_compression_rate,
-                audio_downsample_rate=self.audio_downsample_rate,
-                audio_feat_stride=self.audio_feat_stride
+                trust_remote_code=True
             )
 
-            # Load model with updated configurations
+            # Load model with quantization
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.local_model_path,
                 device_map="auto",
                 torch_dtype=torch.float16,
                 trust_remote_code=True,
                 quantization_config=quantization_config,
-                attn_implementation=attn_implementation,
-                _attn_implementation=attn_implementation  # Add this line for compatibility
+                _attn_implementation=attn_implementation
             )
 
-            # Load generation config from local path
-            self.generation_config = GenerationConfig.from_pretrained(self.local_model_path)
+            # Load generation config
+            self.generation_config = GenerationConfig.from_pretrained(self.model_name)
+
+            if device == "cuda":
+                self.model.cuda()
                 
             print("Model loaded successfully")
             return self.model, self.processor
