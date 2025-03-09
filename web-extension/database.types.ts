@@ -112,7 +112,9 @@ export type Database = {
           created_at: string | null
           deleted: boolean
           download: boolean
+          download_time: string
           id: string
+          privacy: boolean
           title: string | null
           updated_at: string
         }
@@ -126,7 +128,9 @@ export type Database = {
           created_at?: string | null
           deleted?: boolean
           download?: boolean
+          download_time?: string
           id?: string
+          privacy?: boolean
           title?: string | null
           updated_at?: string
         }
@@ -140,7 +144,9 @@ export type Database = {
           created_at?: string | null
           deleted?: boolean
           download?: boolean
+          download_time?: string
           id?: string
+          privacy?: boolean
           title?: string | null
           updated_at?: string
         }
@@ -292,20 +298,44 @@ export type Database = {
         Row: {
           class: string
           created_at: string
+          download_time: string
+          error_message: string
+          file_list: string[]
           id: string
+          processed_files: number
+          response_url: string
           status: string
+          toc_content: string
+          total_files: number
+          updated_at: string
         }
         Insert: {
           class: string
           created_at?: string
+          download_time?: string
+          error_message?: string
+          file_list?: string[]
           id?: string
+          processed_files?: number
+          response_url?: string
           status?: string
+          toc_content?: string
+          total_files?: number
+          updated_at?: string
         }
         Update: {
           class?: string
           created_at?: string
+          download_time?: string
+          error_message?: string
+          file_list?: string[]
           id?: string
+          processed_files?: number
+          response_url?: string
           status?: string
+          toc_content?: string
+          total_files?: number
+          updated_at?: string
         }
         Relationships: [
           {

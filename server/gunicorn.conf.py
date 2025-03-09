@@ -18,16 +18,24 @@ keepalive = 65
 
 import os
 
+# Track worker IDs
+worker_count = 0
+
 def when_ready(server):
     print(f"Gunicorn server is ready. Running {workers} workers")
 
 def on_starting(server):
-    # Set environment variable to identify the first worker
-    os.environ['GUNICORN_WORKER_ID'] = '0'
+    # Reset worker counter
+    global worker_count
+    worker_count = 0
 
 def post_fork(server, worker):
-    # Assign worker IDs
-    worker_id = server.worker_processes.index(worker.pid)
+    # Use a global counter to assign worker IDs
+    global worker_count
+    worker_id = worker_count
+    worker_count += 1
+    
+    # Set environment variables
     os.environ['GUNICORN_WORKER_ID'] = str(worker_id)
     
     # Only the first worker loads the GPU model

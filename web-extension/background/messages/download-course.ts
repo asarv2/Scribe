@@ -29,6 +29,13 @@ interface DownloadAlarmData {
   scheduledTime: string // Store time as "HH:MM" format
 }
 
+// Add interface for SSO refresh alarm data
+interface SSORefreshAlarmData {
+  classId: string
+  courseId: string
+  lastRefresh: number // timestamp of last refresh
+}
+
 const handler: PlasmoMessaging.MessageHandler<
   { courseId: string; courseDescriptor: string; profileId: string; classId: string; scheduledTime?: string },
   DownloadCourseResponse
@@ -67,6 +74,12 @@ const handler: PlasmoMessaging.MessageHandler<
   
   console.log(`[Background] Created alarm ${alarmName} to download course ${courseId} daily at ${scheduledTime}`);
   
+  // Create a pending download entry for the next scheduled download
+  await createPendingDownload(classId, scheduledDate.toISOString());
+  
+  // Set up SSO refresh alarm to run hourly until the scheduled download
+  setupSSORefreshAlarm(courseId, classId, scheduledDate.getTime());
+  
   // Start the first download immediately
   await performDownload(courseId, courseDescriptor, profileId, classId);
   
@@ -77,7 +90,58 @@ const handler: PlasmoMessaging.MessageHandler<
   });
 };
 
-// Update the alarm handler to check the download flag
+// Function to create a pending download entry
+async function createPendingDownload(classId: string, downloadTime: string) {
+  try {
+    const client = getSupabaseClient();
+    const responseUrl = process.env.PLASMO_PUBLIC_API_URL || '';
+    
+    const { data, error } = await client
+      .from('downloads')
+      .insert({
+        class: classId,
+        status: 'pending',
+        download_time: downloadTime,
+        created_at: new Date().toISOString(),
+        response_url: responseUrl
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('[Background] Error creating pending download record:', error);
+      return null;
+    }
+    
+    console.log(`[Background] Created pending download record with ID: ${data.id} for ${downloadTime}`);
+    return data.id;
+  } catch (error) {
+    console.error('[Background] Error creating pending download:', error);
+    return null;
+  }
+}
+
+// Function to set up SSO refresh alarm
+async function setupSSORefreshAlarm(courseId: string, classId: string, scheduledDownloadTime: number) {
+  const ssoRefreshAlarmName = `sso_refresh_${classId}`;
+  const storage = new Storage();
+  
+  // Store SSO refresh data
+  await storage.set(ssoRefreshAlarmName, {
+    classId,
+    courseId,
+    lastRefresh: Date.now()
+  });
+  
+  // Create alarm to refresh SSO hourly
+  chrome.alarms.create(ssoRefreshAlarmName, {
+    periodInMinutes: 60 // Refresh every hour
+  });
+  
+  console.log(`[Background] Created SSO refresh alarm ${ssoRefreshAlarmName} for course ${courseId}`);
+}
+
+// Update the alarm handler to handle SSO refresh alarms
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name.startsWith('download_course_')) {
     const storage = new Storage();
@@ -106,8 +170,89 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     
     // Perform the download
     await performDownload(alarmData.courseId, alarmData.courseDescriptor, alarmData.profileId, alarmData.classId);
+    
+    // Create a pending download entry for the next scheduled download
+    const nextDownloadDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+    const [hours, minutes] = alarmData.scheduledTime.split(":").map(Number);
+    nextDownloadDate.setHours(hours, minutes, 0, 0);
+    
+    await createPendingDownload(classId, nextDownloadDate.toISOString());
+  }
+  else if (alarm.name.startsWith('sso_refresh_')) {
+    const storage = new Storage();
+    const classId = alarm.name.replace('sso_refresh_', '');
+    const ssoData = await storage.get<SSORefreshAlarmData>(alarm.name);
+    
+    if (!ssoData) {
+      console.log(`[Background] No SSO refresh data found for alarm ${alarm.name}, clearing alarm`);
+      chrome.alarms.clear(alarm.name);
+      return;
+    }
+    
+    // Check if we should continue refreshing SSO for this course
+    const shouldContinue = await checkShouldContinueDownload(classId);
+    
+    if (!shouldContinue) {
+      console.log(`[Background] Download flag is false for class ${classId}, clearing SSO refresh alarm`);
+      chrome.alarms.clear(alarm.name);
+      await storage.remove(alarm.name);
+      return;
+    }
+    
+    console.log(`[Background] SSO refresh alarm triggered for ${alarm.name}, refreshing credentials`);
+    
+    // Perform the SSO refresh
+    await refreshSSO(ssoData.courseId);
+    
+    // Update last refresh timestamp
+    await storage.set(alarm.name, {
+      ...ssoData,
+      lastRefresh: Date.now()
+    });
   }
 });
+
+// Function to refresh SSO credentials
+async function refreshSSO(courseId: string) {
+  try {
+    console.log(`[Background] Refreshing SSO credentials for course ${courseId}`);
+    
+    // Create a hidden tab to refresh SSO
+    const contentPageUrl = `https://purdue.brightspace.com/d2l/le/content/${courseId}/Home`;
+    const tab = await chrome.tabs.create({ url: contentPageUrl, active: false });
+    
+    if (!tab || !tab.id) {
+      throw new Error("Failed to create tab for SSO refresh");
+    }
+    
+    // Wait for page to load
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        chrome.tabs.remove(tab.id).catch(() => {});
+        reject(new Error("SSO refresh page load timeout"));
+      }, 30000);
+      
+      const listener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+        if (tabId === tab.id && changeInfo.status === 'complete') {
+          chrome.tabs.onUpdated.removeListener(listener);
+          clearTimeout(timeout);
+          setTimeout(() => {
+            chrome.tabs.remove(tab.id).catch(() => {});
+            resolve(true);
+          }, 5000); // Keep the page open for 5 seconds to ensure SSO is refreshed
+        }
+      };
+      
+      chrome.tabs.onUpdated.addListener(listener);
+    });
+    
+    console.log(`[Background] Successfully refreshed SSO credentials for course ${courseId}`);
+    return true;
+  } catch (error) {
+    console.error(`[Background] Error refreshing SSO credentials:`, error);
+    return false;
+  }
+}
 
 // Update the check function to use classId instead of courseId
 async function checkShouldContinueDownload(classId: string): Promise<boolean> {
@@ -151,24 +296,59 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
   const client = getSupabaseClient();
   
   try {
-    // Create a new entry in the downloads table
-    const { data: downloadData, error: downloadError } = await client
+    // Check for existing pending download record
+    const { data: pendingDownloads, error: pendingError } = await client
       .from('downloads')
-      .insert({
-        class: classId,
-        status: 'init',
-        created_at: new Date().toISOString()
-      })
-      .select()
-      .single();
+      .select('*')
+      .eq('class', classId)
+      .eq('status', 'pending')
+      .order('download_time', { ascending: true })
+      .limit(1);
     
-    if (downloadError) {
-      console.error('[Background] Error creating download record:', downloadError);
-      throw new Error(`Failed to create download record: ${downloadError.message}`);
+    let downloadId;
+    let responseUrl = process.env.PLASMO_PUBLIC_API_URL || '';
+    
+    if (pendingError) {
+      console.error('[Background] Error checking pending downloads:', pendingError);
     }
     
-    const downloadId = downloadData.id;
-    console.log(`[Background] Created download record with ID: ${downloadId}`);
+    if (pendingDownloads && pendingDownloads.length > 0) {
+      // Use the existing pending download record
+      downloadId = pendingDownloads[0].id;
+      // Use the response_url from the pending download if available
+      responseUrl = pendingDownloads[0].response_url || responseUrl;
+      
+      // Update the status to 'init'
+      await client
+        .from('downloads')
+        .update({
+          status: 'init',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', downloadId);
+        
+      console.log(`[Background] Using pending download record with ID: ${downloadId}`);
+    } else {
+      // Create a new entry in the downloads table
+      const { data: downloadData, error: downloadError } = await client
+        .from('downloads')
+        .insert({
+          class: classId,
+          status: 'init',
+          created_at: new Date().toISOString(),
+          response_url: responseUrl
+        })
+        .select()
+        .single();
+      
+      if (downloadError) {
+        console.error('[Background] Error creating download record:', downloadError);
+        throw new Error(`Failed to create download record: ${downloadError.message}`);
+      }
+      
+      downloadId = downloadData.id;
+      console.log(`[Background] Created download record with ID: ${downloadId}`);
+    }
     
     // Define the listener
     downloadListener = async (downloadItem: chrome.downloads.DownloadItem) => {
@@ -218,7 +398,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
           formData.append('file', new File([blob], filename, { type: 'application/zip' }));
           formData.append('class_id', classId);
           formData.append('filename', filename);
-          formData.append('response_url', process.env.PLASMO_PUBLIC_API_URL || '');
+          formData.append('response_url', responseUrl);
           formData.append('profile_id', profileId);
           formData.append('download_id', downloadId);
           
@@ -227,6 +407,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
             courseId: courseId,
             classId: classId,
             downloadId: downloadId,
+            responseUrl: responseUrl,
             size: blob.size
           });
           
@@ -292,7 +473,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
 
           try {
             // Perform the actual upload
-            const uploadResult = await fetch(`${process.env.PLASMO_PUBLIC_API_URL}/upload/content`, {
+            const uploadResult = await fetch(`${responseUrl}/upload/content`, {
               method: 'POST',
               body: formData
             });
