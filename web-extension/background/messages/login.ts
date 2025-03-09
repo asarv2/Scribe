@@ -1,6 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
-import type { User } from "~node_modules/@supabase/supabase-js/dist/module"
-import { getSupabaseServer } from '~utils/supabase/supabase-server'
+import type { User } from "@supabase/supabase-js"
+import { getSupabaseClient } from '~utils/supabase/supabase-client'
 
 interface LoginResponse {
   success: boolean
@@ -8,33 +8,42 @@ interface LoginResponse {
   user: User | null
 }
 
-const handler: PlasmoMessaging.MessageHandler<{ email: string, password: string }, LoginResponse> = async (req, res) => {
+const handler: PlasmoMessaging.MessageHandler<
+  { email: string; password: string },
+  LoginResponse
+> = async (req, res) => {
   try {
-    // Create the server client in the background script
-    const client = getSupabaseServer()
+    console.log("Login attempt for:", req.body.email);
+    const client = getSupabaseClient();
     
     const { data, error } = await client.auth.signInWithPassword({
-        email: req.body.email,
-        password: req.body.password,
-    })
+      email: req.body.email,
+      password: req.body.password
+    });
+
     if (error) {
-        throw new Error(error.message);
+      console.error("Login error:", error.message);
+      return res.send({
+        success: false,
+        error: error.message,
+        user: null
+      });
     }
 
+    console.log("Login successful for:", req.body.email);
     res.send({
       success: true,
       error: "",
-      user: data.session?.user ?? null
-    })
+      user: data.user
+    });
   } catch (error) {
-    console.error('Error in login handler:', error);
-    // Send an empty array with the error to prevent the extension from breaking
+    console.error("Unexpected error in login handler:", error);
     res.send({
       success: false,
-      error: error.message,
+      error: error.message || "An unexpected error occurred",
       user: null
-    })
+    });
   }
 }
 
-export default handler
+export default handler;

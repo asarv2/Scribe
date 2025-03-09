@@ -7,46 +7,32 @@ type LogoutProps = {
     name: string;
     userId: string;
     logoutIcon: React.ReactNode;
+    onLogout: () => void;
 }
 
-
-export default function Logout({ name, userId, logoutIcon }: LogoutProps) {
+export default function Logout({ name, userId, logoutIcon, onLogout }: LogoutProps) {
     const [loading, setLoading] = useState(false);
     const queryClient = useQueryClient();
 
     const handleLogout = async () => {
         setLoading(true);
+        
         try {
-            const { success, error } = await sendToBackground<{}, { success: boolean; error: string }>({
+            const response = await sendToBackground<{}, { success: boolean; error: string }>({
                 name: "logout"
             });
 
-            if (!success) {
-                throw new Error(error);
-            } else {
-                queryClient.invalidateQueries({
-                    queryKey: ["user"]
-                });
-                queryClient.invalidateQueries({
-                    queryKey: ["profile"]
-                });
-                queryClient.invalidateQueries({
-                    queryKey: ["classes"]
-                });
-                queryClient.invalidateQueries({
-                    queryKey: ["lectures"]
-                });
-                queryClient.invalidateQueries({
-                    queryKey: ["textbooks"]
-                });
-                queryClient.invalidateQueries({
-                    queryKey: ["homeworks"]
-                });
-                
-                
+            if (!response.success) {
+                throw new Error(response.error || "Logout failed");
             }
-        } catch (e) {
-            console.error(e);
+            
+            // Clear React Query cache
+            queryClient.clear();
+            
+            // Call the callback to update parent component state
+            onLogout();
+        } catch (error) {
+            console.error("Logout error:", error);
         } finally {
             setLoading(false);
         }

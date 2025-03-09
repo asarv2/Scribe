@@ -16,12 +16,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
 from app.config import model_manager
 
-# Only attempt to load model on startup if GPU is available
-if os.getenv('DOCKER_ENV'):
+# Only attempt to load model on startup if GPU is available and we're in the main process
+if os.getenv('DOCKER_ENV') and (not 'gunicorn' in os.environ.get('SERVER_SOFTWARE', '') or os.environ.get('GUNICORN_WORKER_ID') == '0'):
     import torch
     if torch.cuda.is_available():
         try:
-            model_manager.load_model()
+            # This will now only be called by one worker due to the singleton pattern
+            model_manager.get_model()
+            print("Model loaded successfully in main process")
         except Exception as e:
             print(f"Warning: Could not load model on startup: {str(e)}")
 

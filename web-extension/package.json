@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@mantine/core": "^7.17.1",
+    "@mantine/dates": "^7.17.1",
     "@mantine/hooks": "^7.17.1",
     "@plasmohq/messaging": "^0.7.1",
     "@plasmohq/storage": "^1.15.0",
@@ -42,7 +43,8 @@
       "scripting",
       "cookies",
       "storage",
-      "webRequest"
+      "webRequest",
+      "alarms"
     ],
     "host_permissions": [
       "https://purdue.brightspace.com/*"

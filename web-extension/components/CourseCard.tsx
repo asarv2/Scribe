@@ -12,8 +12,9 @@
 
 import { sendToBackground } from "@plasmohq/messaging"
 import {
-    Stack, Card, Text, Button, Group, Progress, Tooltip, 
-    RingProgress, Center, SimpleGrid
+    Stack, Card, Text, Button, Group, Progress, Tooltip,
+    RingProgress, Center, SimpleGrid,
+    NavLink
 } from '@mantine/core'
 import type { Class, Profile, Lecture, Textbook, Homework } from "~types"
 import { useEffect, useState } from "react"
@@ -21,25 +22,22 @@ import type { Course } from "~contents/dashboardDetector"
 import type { CourseHomepage } from "~contents/homepageDetector"
 import { Storage } from "@plasmohq/storage"
 import { Icons } from "~components/Icons"
+import { TimeInput } from '@mantine/dates'
+import { useQuery } from "~node_modules/@tanstack/react-query/build/legacy/useQuery"
 
 export default function CourseCard({
     course,
-    action,
+    profile,
     isLoading,
     courseId,
-    isDetected = false,
     lectures = [],
     textbooks = [],
     homeworks = []
 }: {
-    course: Course | CourseHomepage | Class,
-    action?: {
-        type: 'download' | 'refresh',
-        handler: () => void
-    },
+    course: Class,
+    profile: Profile,
     isLoading?: boolean,
     courseId?: string,
-    isDetected?: boolean,
     lectures?: Lecture[],
     textbooks?: Textbook[],
     homeworks?: Homework[]
@@ -47,19 +45,19 @@ export default function CourseCard({
     const [downloadStatus, setDownloadStatus] = useState<string>("");
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
     const storage = new Storage();
+    const [scheduledTime, setScheduledTime] = useState<string>("08:00");
+    const [isScheduling, setIsScheduling] = useState<boolean>(false);
 
-    // Get the title from the appropriate property based on the object type
-    const fullTitle = 'title' in course
-        ? course.title
-        : (course as any).name || (course as any).course_name || 'Unknown Course';
+    // Get the title from the appropriate property
+    const fullTitle = course.title || 'Unknown Course';
 
     // Get class code directly if available
-    const classCode = (course as any).class_code;
+    const classCode = course.class_code;
 
     // Parse class code from title if not directly available
     let displayCode = classCode;
     if (!displayCode) {
-        // Match patterns like "Spring 2025 STAT/MA 41600-003 LEC" or "Spring 2025 CS 25300-LE1 LEC"
+        // Match patterns like "Spring 2025 STAT/MA 41600-003 LEC"
         const codeMatch = fullTitle.match(/(?:Spring|Fall|Summer)\s+\d{4}\s+([A-Z]+(?:\/[A-Z]+)?\s+\d{3,5})/i);
         if (codeMatch) {
             // Format the code (e.g., "STAT/MA 41600" -> "STAT/MA 416")
@@ -71,7 +69,7 @@ export default function CourseCard({
     }
 
     // Get updated_at timestamp if available
-    const updatedAt = (course as any).updated_at;
+    const updatedAt = course.updated_at;
     let formattedDate = '';
 
     if (updatedAt) {
@@ -120,11 +118,11 @@ export default function CourseCard({
     // Calculate parse status percentages
     const calculateParseStatus = (items: any[]) => {
         if (!items || items.length === 0) return { percent: 0, count: 0, total: 0 };
-        
-        const completedCount = items.filter(item => 
+
+        const completedCount = items.filter(item =>
             item.parse_status === 'complete' || item.parse_status === 'completed'
         ).length;
-        
+
         return {
             percent: Math.round((completedCount / items.length) * 100),
             count: completedCount,
@@ -138,6 +136,27 @@ export default function CourseCard({
 
     // Determine if we should show the status indicators
     const hasContentItems = lectures.length > 0 || textbooks.length > 0 || homeworks.length > 0;
+
+    // Function to schedule downloads
+    const handleScheduleDownload = async () => {
+        setIsScheduling(true);
+        try {
+            await sendToBackground({
+                name: "download-course",
+                body: {
+                    courseId: courseId,
+                    courseDescriptor: course.brightspace_course_descriptor,
+                    profileId: profile.id,
+                    classId: course.id,
+                    scheduledTime
+                }
+            });
+        } catch (error) {
+            console.error("Error scheduling download:", error);
+        } finally {
+            setIsScheduling(false);
+        }
+    };
 
     return (
         <Card shadow="sm" p="md" withBorder>
@@ -155,34 +174,22 @@ export default function CourseCard({
                                 </Text>
                             </Group>
                         ) : (
-                            <Text size="xs" c="dimmed">Detected on Brightspace</Text>
+                            <Text size="xs" c="dimmed">Ready to download</Text>
                         )}
                     </div>
-                    {action && (
-                        isLoading ? 
-                            <Button
-                                variant="subtle"
-                                size="xs"
-                                onClick={action.handler}
-                                loading={isLoading}
-                                color={action.type === 'download' ? "blue" : "green"}
-                                p={4}
-                                w={36}
-                                h={36}
-                            />
-                        : <Tooltip label={action.type === 'download' ? "Download Course" : "Update Course"}>
-                            <Button
-                                variant="subtle"
-                                size="xs"
-                                onClick={action.handler}
-                                loading={isLoading}
-                                color={action.type === 'download' ? "blue" : "green"}
-                                p={4}
-                            >
-                                <Icons.Download />
-                            </Button>
-                        </Tooltip>
-                    )}
+                    <Tooltip label="View on Scribe">
+                        <Button
+                            variant="subtle"
+                            size="xs"
+                            color="blue"
+                            p={4}
+                            onClick={() => {
+                                window.open(`https://scribe-lec.vercel.app/classes/c/${course.id}`, '_blank');
+                            }}
+                        >
+                            <Icons.Eye />
+                        </Button>
+                    </Tooltip>
                 </Group>
 
                 {isUploading && uploadProgress !== null && (
@@ -194,7 +201,7 @@ export default function CourseCard({
                         animated
                     />
                 )}
-                
+
                 {hasContentItems && !isUploading && (
                     <SimpleGrid cols={3} spacing="xs" mt="xs">
                         {lectures.length > 0 && (
@@ -217,7 +224,7 @@ export default function CourseCard({
                                 </div>
                             </Tooltip>
                         )}
-                        
+
                         {textbooks.length > 0 && (
                             <Tooltip label={`Textbooks: ${textbookStatus.count}/${textbookStatus.total} parsed`}>
                                 <div>
@@ -238,7 +245,7 @@ export default function CourseCard({
                                 </div>
                             </Tooltip>
                         )}
-                        
+
                         {homeworks.length > 0 && (
                             <Tooltip label={`Homeworks: ${homeworkStatus.count}/${homeworkStatus.total} parsed`}>
                                 <div>
@@ -261,6 +268,37 @@ export default function CourseCard({
                         )}
                     </SimpleGrid>
                 )}
+
+                {/* Time picker and schedule button */}
+                <Group mt="md">
+                    <TimeInput
+                        label="Schedule daily download"
+                        value={scheduledTime}
+                        onChange={(event) => setScheduledTime(event.target.value)}
+                        withSeconds={false}
+                    />
+                    <Button
+                        onClick={handleScheduleDownload}
+                        loading={isScheduling}
+                        variant="light"
+                        leftSection={<Icons.Clock />}
+                    >
+                        Schedule
+                    </Button>
+                </Group>
+
+                {/* Download now button */}
+                <Button
+                    onClick={handleScheduleDownload}
+                    loading={isLoading}
+                    leftSection={<Icons.Download />}
+                    variant="filled"
+                    color="blue"
+                    fullWidth
+                    mt="md"
+                >
+                    Download Now
+                </Button>
             </Stack>
         </Card>
     )
