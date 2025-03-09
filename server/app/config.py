@@ -56,6 +56,11 @@ class ModelManager:
         )
 
         return model, processor
+    
+    def get_model(self) -> Tuple[AutoModelForCausalLM, AutoProcessor]:
+        if self.model is None or self.processor is None:
+            self.model, self.processor = self.load_model()
+        return self.model, self.processor
 
 # Initialize model manager
 model_manager = ModelManager()
