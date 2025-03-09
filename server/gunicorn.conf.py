@@ -18,8 +18,8 @@ keepalive = 65
 
 import os
 
-# Track worker IDs
-worker_count = 0
+# Set a file-based lock to ensure only one worker loads the model
+GPU_LOCK_FILE = "/tmp/gpu_worker.lock"
 
 def when_ready(server):
     print(f"Gunicorn server is ready. Running {workers} workers")
@@ -30,18 +30,21 @@ def on_starting(server):
     worker_count = 0
 
 def post_fork(server, worker):
-    # Use a global counter to assign worker IDs
-    global worker_count
-    worker_id = worker_count
-    worker_count += 1
+    # Simple worker ID assignment based on PID
+    worker_id = worker.pid
     
-    # Set environment variables
-    os.environ['GUNICORN_WORKER_ID'] = str(worker_id)
-    
-    # Only the first worker loads the GPU model
-    if worker_id == 0:
-        os.environ['GPU_WORKER'] = 'true'
+    # Only the first worker to create the lock file gets GPU access
+    if not os.path.exists(GPU_LOCK_FILE):
+        try:
+            with open(GPU_LOCK_FILE, 'w') as f:
+                f.write(str(worker_id))
+            os.environ['GPU_WORKER'] = 'true'
+            is_gpu = True
+        except:
+            os.environ['GPU_WORKER'] = 'false'
+            is_gpu = False
     else:
         os.environ['GPU_WORKER'] = 'false'
+        is_gpu = False
     
-    print(f"Worker {worker_id} started with PID {worker.pid}, GPU enabled: {worker_id == 0}")
+    print(f"Worker started with PID {worker_id}, GPU enabled: {is_gpu}")
