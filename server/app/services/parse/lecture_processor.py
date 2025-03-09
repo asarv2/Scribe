@@ -2,7 +2,6 @@ from typing import List, Dict, Any, Optional, Callable
 import base64
 from app.services.base_processor import BaseProcessor, CleanedResponse, Message
 from app.config import model_manager
-import torch
 from PIL import Image
 import io
 
@@ -58,25 +57,28 @@ class LectureProcessor(BaseProcessor):
             formatted_prompt = f"<|user|><|image_1|>{prompt}<|end|><|assistant|>"
             
             # Process image and text with Phi-4 format
-            inputs = processor(
-                text=formatted_prompt,
-                images=pil_image,
-                return_tensors="pt"
-            )
+            inputs = processor(text=formatted_prompt, images=pil_image, return_tensors='pt')
 
-            # Move to GPU if available
-            if torch.cuda.is_available():
-                inputs = {k: v.cuda() for k, v in inputs.items()}
-                model.cuda()
+            # Move all input tensors to the same device as the model's first layer
+            device = model.device
+            for key in inputs:
+                if inputs[key] is not None:  # Only move tensors that exist
+                    inputs[key] = inputs[key].to(device)
 
             # Generate response
-            outputs = model.generate(
+            generate_ids = model.generate(
                 **inputs,
-                max_new_tokens=512,
-                do_sample=False
+                max_new_tokens=2000,
+                num_beams=1,
+                do_sample=False,
+                pad_token_id=processor.tokenizer.pad_token_id,
+                num_logits_to_keep=1
             )
             
-            response = processor.decode(outputs[0], skip_special_tokens=True)
+            generate_ids = generate_ids[:, inputs['input_ids'].shape[1]:]
+            response = processor.batch_decode(
+                generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
+            )[0]
             return response
         except Exception as e:
             print(f"Phi-4 processing failed: {str(e)}")

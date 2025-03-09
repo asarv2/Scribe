@@ -18,8 +18,6 @@ else:
 BASE_FOLDER = "/app" if os.getenv('DOCKER_ENV') else os.path.dirname(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_FOLDER, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-MODELS_FOLDER = os.path.join(BASE_FOLDER, "models")
-os.makedirs(MODELS_FOLDER, exist_ok=True)
 
 
 # make messages directory if it doesn't exist, under the uploads directory
