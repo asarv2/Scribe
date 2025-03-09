@@ -14,9 +14,10 @@ import { sendToBackground } from "@plasmohq/messaging"
 import {
     Stack, Card, Text, Button, Group, Progress, Tooltip,
     RingProgress, Center, SimpleGrid,
-    NavLink
+    NavLink,
+    Switch, ActionIcon, Badge, Accordion, List
 } from '@mantine/core'
-import type { Class, Profile, Lecture, Textbook, Homework } from "~types"
+import type { Class, Profile, Lecture, Textbook, Homework, Download } from "~types"
 import { useEffect, useState } from "react"
 import type { Course } from "~contents/dashboardDetector"
 import type { CourseHomepage } from "~contents/homepageDetector"
@@ -24,12 +25,14 @@ import { Storage } from "@plasmohq/storage"
 import { Icons } from "~components/Icons"
 import { TimeInput } from '@mantine/dates'
 import { useQuery } from "~node_modules/@tanstack/react-query/build/legacy/useQuery"
+import { getSupabaseClient } from "~utils/supabase/supabase-client"
 
 export default function CourseCard({
     course,
     profile,
     isLoading,
     courseId,
+    downloads = [],
     lectures = [],
     textbooks = [],
     homeworks = []
@@ -40,13 +43,24 @@ export default function CourseCard({
     courseId?: string,
     lectures?: Lecture[],
     textbooks?: Textbook[],
-    homeworks?: Homework[]
+    homeworks?: Homework[],
+    downloads?: Download[]
 }) {
     const [downloadStatus, setDownloadStatus] = useState<string>("");
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
     const storage = new Storage();
     const [scheduledTime, setScheduledTime] = useState<string>("08:00");
+    const [originalTime, setOriginalTime] = useState<string>("08:00");
     const [isScheduling, setIsScheduling] = useState<boolean>(false);
+    const [isScheduled, setIsScheduled] = useState<boolean>(false);
+    const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [timeChanged, setTimeChanged] = useState<boolean>(false);
+    const supabase = getSupabaseClient();
+    
+    // Filter pending downloads for this class
+    const pendingDownloads = downloads.filter(download => 
+        download.class === course.id && download.status === 'pending'
+    ).sort((a, b) => new Date(a.download_time).getTime() - new Date(b.download_time).getTime());
 
     // Get the title from the appropriate property
     const fullTitle = course.title || 'Unknown Course';
@@ -100,6 +114,35 @@ export default function CourseCard({
         return () => clearInterval(intervalId);
     }, [courseId]);
 
+    // Check if course has scheduled downloads enabled and get the time
+    useEffect(() => {
+        const checkScheduleStatus = async () => {
+            if (!course.id) return;
+            
+            // Get download status from database
+            setIsScheduled(course.download === true);
+            
+            // Get scheduled time if available
+            if (course.download_time) {
+                const timeStr = course.download_time;
+                let formattedTime = "08:00";
+                
+                // Convert from database format (could be ISO string or HH:MM) to HH:MM
+                if (timeStr.includes('T')) {
+                    const date = new Date(timeStr);
+                    formattedTime = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                } else if (timeStr.includes(':')) {
+                    formattedTime = timeStr;
+                }
+                
+                setScheduledTime(formattedTime);
+            }
+        };
+        
+        checkScheduleStatus();
+    }, [course]);
+
+
     // Determine status color and icon
     let statusColor = "blue";
     let statusIcon = null;
@@ -137,8 +180,68 @@ export default function CourseCard({
     // Determine if we should show the status indicators
     const hasContentItems = lectures.length > 0 || textbooks.length > 0 || homeworks.length > 0;
 
-    // Function to schedule downloads
-    const handleScheduleDownload = async () => {
+    // Function to toggle scheduled downloads switch (doesn't enable in database yet)
+    const toggleScheduledSwitch = () => {
+        setIsScheduled(!isScheduled);
+        setTimeChanged(true);
+    };
+    
+    // Function to save scheduled time and enable downloads
+    const saveScheduledTime = async () => {
+        if (!course.id) return;
+        
+        setIsSaving(true);
+        try {
+            // First update the download status (this will cancel pending downloads if disabling)
+            await sendToBackground({
+                name: "update-download-status",
+                body: {
+                    classId: course.id,
+                    enabled: isScheduled
+                }
+            });
+            
+            // Update the time in the database
+            const { error } = await supabase
+                .from('classes')
+                .update({ 
+                    download_time: scheduledTime
+                })
+                .eq('id', course.id);
+                
+            if (error) throw error;
+            
+            // If downloads are enabled, update or create the schedule
+            if (isScheduled) {
+                await sendToBackground({
+                    name: "update-download-schedule",
+                    body: {
+                        courseId: courseId,
+                        courseDescriptor: course.brightspace_course_descriptor,
+                        profileId: profile.id,
+                        classId: course.id,
+                        scheduledTime
+                    }
+                });
+            }
+            
+            // Update original time to match current time
+            setOriginalTime(scheduledTime);
+            setTimeChanged(false);
+        } catch (error) {
+            console.error("Error saving scheduled time:", error);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    // Function to handle time change
+    const handleTimeChange = (event) => {
+        setScheduledTime(event.target.value);
+    };
+
+    // Function to download now
+    const handleDownloadNow = async () => {
         setIsScheduling(true);
         try {
             await sendToBackground({
@@ -152,7 +255,7 @@ export default function CourseCard({
                 }
             });
         } catch (error) {
-            console.error("Error scheduling download:", error);
+            console.error("Error downloading course:", error);
         } finally {
             setIsScheduling(false);
         }
@@ -269,27 +372,56 @@ export default function CourseCard({
                     </SimpleGrid>
                 )}
 
-                {/* Time picker and schedule button */}
-                <Group mt="md">
+                {/* Time picker with toggle and save button */}
+                <Group mt="md" align="center">
+                    <Switch
+                        checked={isScheduled}
+                        onChange={toggleScheduledSwitch}
+                        label="Daily download time"
+                    />
                     <TimeInput
-                        label="Schedule daily download"
                         value={scheduledTime}
-                        onChange={(event) => setScheduledTime(event.target.value)}
+                        onChange={handleTimeChange}
                         withSeconds={false}
                     />
-                    <Button
-                        onClick={handleScheduleDownload}
-                        loading={isScheduling}
-                        variant="light"
-                        leftSection={<Icons.Clock />}
-                    >
-                        Schedule
-                    </Button>
+                    {timeChanged && (
+                        <ActionIcon 
+                            color="blue" 
+                            variant="filled" 
+                            onClick={saveScheduledTime}
+                            loading={isSaving}
+                        >
+                            <Icons.Check />
+                        </ActionIcon>
+                    )}
                 </Group>
+
+                {/* Pending downloads section */}
+                {pendingDownloads.length > 0 && (
+                    <Accordion variant="contained" mt="xs">
+                        <Accordion.Item value="pending-downloads">
+                            <Accordion.Control>
+                                <Group>
+                                    <Text size="sm">Pending Downloads</Text>
+                                    <Badge>{pendingDownloads.length}</Badge>
+                                </Group>
+                            </Accordion.Control>
+                            <Accordion.Panel>
+                                <List size="xs" spacing="xs">
+                                    {pendingDownloads.map((download) => (
+                                        <List.Item key={download.id}>
+                                            {new Date(download.download_time).toLocaleString()}
+                                        </List.Item>
+                                    ))}
+                                </List>
+                            </Accordion.Panel>
+                        </Accordion.Item>
+                    </Accordion>
+                )}
 
                 {/* Download now button */}
                 <Button
-                    onClick={handleScheduleDownload}
+                    onClick={handleDownloadNow}
                     loading={isLoading}
                     leftSection={<Icons.Download />}
                     variant="filled"

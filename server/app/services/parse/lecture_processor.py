@@ -46,60 +46,19 @@ class LectureProcessor(BaseProcessor):
         self.notes[lecture_name][page_number] = cleaned_response
 
         return cleaned_response
-
-    async def process_with_phi4(self, image: bytes, prompt: str) -> Optional[str]:
-        """Try to process with Phi-4 model first"""
-        try:
-            model, processor = model_manager.get_model()
-            if not model or not processor:
-                return None
-
-            # Convert bytes to PIL Image
-            pil_image = Image.open(io.BytesIO(image))
-            
-            # Use the prompt parameter in the formatted text
-            formatted_prompt = f"<|user|><|image_1|>{prompt}<|end|><|assistant|>"
-            
-            # Process image and text with Phi-4 format
-            inputs = processor(text=formatted_prompt, images=pil_image, return_tensors='pt')
-
-            # Move all input tensors to the same device as the model's first layer
-            device = model.device
-            for key in inputs:
-                if inputs[key] is not None:  # Only move tensors that exist
-                    inputs[key] = inputs[key].to(device)
-
-            # Generate response with optimized parameters
-            generate_ids = model.generate(
-                **inputs,
-                max_new_tokens=2000,
-                num_beams=1,
-                do_sample=False,
-                pad_token_id=processor.tokenizer.pad_token_id,
-                num_logits_to_keep=1,
-                use_cache=True,  # Enable KV caching
-                temperature=0.0  # Deterministic output, faster
-            )
-            
-            generate_ids = generate_ids[:, inputs['input_ids'].shape[1]:]
-            response = processor.batch_decode(
-                generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
-            )[0]
-            return response
-        except Exception as e:
-            print(f"Phi-4 processing failed: {str(e)}")
-            return None
-
-    async def process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6) -> List[Optional[str]]:
+    
+    async def process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6, 
+                                     batch_callback=None) -> List[Optional[str]]:
         """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
             # Route this GPU-intensive task to the GPU worker
-            return await route_to_gpu_worker(self._process_with_phi4_batch, images, prompts, min_batch_size, max_batch_size)
+            return await route_to_gpu_worker(self._process_with_phi4_batch, images, prompts, min_batch_size, max_batch_size, batch_callback)
         except Exception as e:
             print(f"Phi-4 batch processing failed: {str(e)}")
             return [None] * len(images)
 
-    async def _process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6) -> List[Optional[str]]:
+    async def _process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6,
+                                      batch_callback=None) -> List[Optional[str]]:
         """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
             model, processor = model_manager.get_model()
@@ -191,13 +150,13 @@ class LectureProcessor(BaseProcessor):
                 with torch.no_grad():
                     generate_ids = model.generate(
                         **batch_inputs,
-                        max_new_tokens=2000,
+                        max_new_tokens=1000,  # Reduced from 2000
                         num_beams=1,
                         do_sample=False,
                         pad_token_id=processor.tokenizer.pad_token_id,
                         num_logits_to_keep=1,
-                        use_cache=True,
-                        temperature=0.0
+                        use_cache=True,  # Explicitly enable KV cache
+                        repetition_penalty=1.0  # Disable repetition penalty for speed
                     )
                 generation_time = time.time() - generation_start
                 print(f"Generation completed in {generation_time:.2f} seconds")
@@ -214,6 +173,13 @@ class LectureProcessor(BaseProcessor):
                     print(f'>>> Processed image {image_index+j+1}')
                 
                 all_responses.extend(batch_responses)
+                
+                # Call the batch callback if provided
+                if batch_callback:
+                    # Create a list of indices for this batch
+                    batch_indices = list(range(image_index, image_index + batch_size))
+                    await batch_callback(batch_responses, batch_indices)
+                
                 image_index += batch_size
                 
                 # Clear CUDA cache between batches
@@ -225,74 +191,6 @@ class LectureProcessor(BaseProcessor):
         except Exception as e:
             print(f"Phi-4 batch processing failed: {str(e)}")
             return [None] * len(images)
-
-    async def process_page(
-        self,
-        image: bytes,
-        text: str,
-        page_number: int,
-        lecture_name: str,
-        num_pages: int,
-    ) -> CleanedResponse:
-        try:
-            # Get prompts
-            base_prompt = self._get_base_prompt()
-            additional_prompt = self._get_additional_prompt(page_number, num_pages)
-            combined_prompt = base_prompt + "\n\n" + additional_prompt
-
-            # Try Phi-4 first
-            phi4_response = await self.process_with_phi4(image, combined_prompt)
-            
-            if phi4_response:
-                print(f"Successfully processed page {page_number} with Phi-4")
-                return self.clean_response(
-                    phi4_response,
-                    lecture_name,
-                    page_number,
-                    text
-                )
-
-            # Fallback to Gemini
-            print(f"Falling back to Gemini for page {page_number}")
-            base64_image = base64.b64encode(image).decode('utf-8')
-            
-            message = Message(content=[
-                {
-                    "type": "image_url",
-                    "image_url": f"data:image/png;base64,{base64_image}"
-                },
-                {
-                    "type": "text",
-                    "text": combined_prompt
-                },
-                *([] if not text else [{"type": "text", "text": text}])
-            ])
-
-            self.conversation_history.append(message)
-            
-            response = await self.robust_generate(
-                None,
-                message,
-                model="gemini-2.0-flash-lite"
-            )
-            
-            if not response:
-                raise Exception("Empty response from both models")
-            
-            print(f"Successfully processed page {page_number} with Gemini")
-            
-            self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
-
-            return self.clean_response(
-                response,
-                lecture_name,
-                page_number,
-                text
-            )
-
-        except Exception as error:
-            print(f"Error processing page {page_number}: {str(error)}")
-            raise error
 
     async def process_slides(
         self,
@@ -319,10 +217,25 @@ class LectureProcessor(BaseProcessor):
                 page_numbers.append(document['page'])
                 text_contents.append(document['text'])
             
-            # Process all images in optimized batches
-            responses = await self.process_with_phi4_batch(images, prompts)
+            # Create a callback for batch processing
+            async def batch_callback(batch_responses, batch_indices):
+                for i, response in enumerate(batch_responses):
+                    if response:  # Only process successful responses from Phi-4
+                        idx = batch_indices[i]
+                        print(f"Processing batch result for page {page_numbers[idx]}")
+                        result = self.clean_response(
+                            response,
+                            lecture_name,
+                            page_numbers[idx],
+                            text_contents[idx]
+                        )
+                        # Call after_generate for each processed document in the batch
+                        await after_generate(result)
             
-            # Process results
+            # Process all images in optimized batches with the callback
+            responses = await self.process_with_phi4_batch(images, prompts, batch_callback=batch_callback)
+            
+            # Process results (including any that failed with Phi-4)
             results = []
             for i, response in enumerate(responses):
                 if not response:
@@ -356,18 +269,21 @@ class LectureProcessor(BaseProcessor):
                     print(f"Successfully processed page {page_numbers[i]} with Gemini")
                     
                     self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
+                    
+                    # Process and update the Gemini result
+                    result = self.clean_response(
+                        response,
+                        lecture_name,
+                        page_numbers[i],
+                        text_contents[i]
+                    )
+                    results.append(result)
+                    await after_generate(result)
                 else:
-                    print(f"Successfully processed page {page_numbers[i]} with Phi-4")
-                
-                result = self.clean_response(
-                    response,
-                    lecture_name,
-                    page_numbers[i],
-                    text_contents[i]
-                )
-                results.append(result)
-                await after_generate(result)
-                
+                    # For Phi-4 successful responses, we've already processed them in the batch callback
+                    result = self.notes[lecture_name][page_numbers[i]]
+                    results.append(result)
+            
             return results
         except Exception as error:
             print("Error processing PDF:", error)

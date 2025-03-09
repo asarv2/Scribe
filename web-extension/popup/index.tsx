@@ -6,7 +6,7 @@ import {
 } from '@mantine/core'
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Providers } from "~providers"
-import type { Class, Homework, Lecture, Profile, Textbook } from "~types"
+import type { Class, Download, Homework, Lecture, Profile, Textbook } from "~types"
 import { useEffect, useState } from "react"
 import type { Course } from "~contents/dashboardDetector"
 import type { CourseHomepage } from "~contents/homepageDetector"
@@ -64,6 +64,17 @@ function IndexPopupContent() {
         },
         enabled: !!user
     })
+
+    const { data: downloads, isLoading: isLoadingDownloads, error: downloadsError } = useQuery({
+        queryKey: ["downloads"],
+        queryFn: async () => {
+            const response = await sendToBackground<{}, { downloads: Download[] }>({
+                name: "get-downloads"
+            })
+            return response.downloads
+        }
+    })
+    
 
     // Query to get saved classes from database
     const { data: classes, isLoading: isLoadingSaved, error: savedError } = useQuery({
@@ -354,6 +365,35 @@ function IndexPopupContent() {
         };
     }, [user, queryClient]);
 
+    // Add realtime subscriptions for downloads
+    useEffect(() => {
+        if (!user) return;
+
+        const supabase = getSupabaseClient();
+
+        const channel = supabase
+            .channel('realtime-downloads')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'downloads'
+                },
+                () => {
+                    // Invalidate profile query to fetch fresh data
+                    queryClient.invalidateQueries({
+                        queryKey: ["downloads"]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [user, queryClient]);
+
     // Add realtime subscriptions for classes
     useEffect(() => {
         if (!user) return;
@@ -532,7 +572,11 @@ function IndexPopupContent() {
                                     <>
                                         <Text fw={600}>My Courses</Text>
                                         <Stack gap="md">
-                                            {getFilteredClasses(classes, profile).map((savedCourse) => (
+                                            {getFilteredClasses(classes, profile).sort((a, b) => {
+                                                const aCreated = new Date(a.created_at);
+                                                const bCreated = new Date(b.created_at);
+                                                return bCreated.getTime() - aCreated.getTime();
+                                            }).map((savedCourse) => (
                                                 <CourseCard
                                                     key={savedCourse.id}
                                                     course={savedCourse}
@@ -550,6 +594,11 @@ function IndexPopupContent() {
                                                     homeworks={homeworks?.filter(homework => {
                                                         if (!homework || !homework.class) return false;
                                                         const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                    downloads={downloads?.filter(download => {
+                                                        if (!download || !download.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === download.class);
                                                         return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
                                                     }) || []}
                                                     profile={profile}
@@ -655,6 +704,11 @@ function IndexPopupContent() {
                                                         const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
                                                         return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
                                                     }) || []}
+                                                    downloads={downloads?.filter(download => {
+                                                        if (!download || !download.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === download.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
                                                     profile={profile}
                                                 />
                                             ))}
@@ -705,6 +759,11 @@ function IndexPopupContent() {
                                             homeworks={homeworks?.filter(homework => {
                                                 if (!homework || !homework.class) return false;
                                                 const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
+                                                return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                            }) || []}
+                                            downloads={downloads?.filter(download => {
+                                                if (!download || !download.class) return false;
+                                                const classData = getFilteredClasses(classes, profile)?.find(c => c.id === download.class);
                                                 return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
                                             }) || []}
                                             profile={profile}

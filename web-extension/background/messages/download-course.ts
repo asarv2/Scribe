@@ -487,7 +487,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
 
             // Update progress to 100% when complete
             await storage.set(`uploadProgress_${courseId}`, 100);
-            await storage.set(`downloadStatus_${courseId}`, 'Upload complete! ✅');
+            await storage.set(`downloadStatus_${courseId}`, 'Upload complete!');
 
             const responseData = await uploadResult.json();
             console.log('[Background] Upload successful:', responseData);

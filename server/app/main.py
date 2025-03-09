@@ -16,19 +16,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
 from app.config import model_manager
 
-# Only attempt to load model on startup if GPU is available and we're in the main process
-if os.getenv('DOCKER_ENV') and (not 'gunicorn' in os.environ.get('SERVER_SOFTWARE', '') or os.environ.get('GUNICORN_WORKER_ID') == '0'):
-    import torch
-    if torch.cuda.is_available():
-        try:
-            # This will now only be called by one worker due to the singleton pattern
-            model_manager.get_model()
-            print("Model loaded successfully in main process")
-        except Exception as e:
-            print(f"Warning: Could not load model on startup: {str(e)}")
+# Define lifespan to load model at startup
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load model at startup if this is the GPU worker
+    if os.environ.get('GPU_WORKER') == 'true':
+        import torch
+        if torch.cuda.is_available():
+            try:
+                print("Loading model in GPU worker at startup...")
+                model_manager.get_model()
+                model_manager.warm_up_model()  # Add warm-up step
+                print("Model loaded successfully in GPU worker")
+            except Exception as e:
+                print(f"Warning: Could not load model on startup: {str(e)}")
+    yield
 
 # Create FastAPI app with lifespan
-app = FastAPI(title="Scribe API")
+app = FastAPI(title="Scribe API", lifespan=lifespan)
 
 # Create a simple task queue
 task_queue = asyncio.Queue()
