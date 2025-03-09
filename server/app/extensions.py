@@ -17,8 +17,9 @@ else:
 # Set paths based on environment
 BASE_FOLDER = "/app" if os.getenv('DOCKER_ENV') else os.path.dirname(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_FOLDER, "uploads")
+MODEL_CACHE_DIR = os.path.join(BASE_FOLDER, "model_cache")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
+os.makedirs(MODEL_CACHE_DIR, exist_ok=True)
 
 # make messages directory if it doesn't exist, under the uploads directory
 MESSAGES_DIR = os.path.join(UPLOAD_FOLDER, 'messages')

@@ -4,6 +4,10 @@ from app.services.base_processor import BaseProcessor, CleanedResponse, Message
 from app.config import model_manager
 from PIL import Image
 import io
+import torch
+import asyncio
+import time
+from app.services.task_router import route_to_gpu_worker
 
 class LectureProcessor(BaseProcessor):
     def __init__(self, course_title: str):
@@ -65,14 +69,16 @@ class LectureProcessor(BaseProcessor):
                 if inputs[key] is not None:  # Only move tensors that exist
                     inputs[key] = inputs[key].to(device)
 
-            # Generate response
+            # Generate response with optimized parameters
             generate_ids = model.generate(
                 **inputs,
                 max_new_tokens=2000,
                 num_beams=1,
                 do_sample=False,
                 pad_token_id=processor.tokenizer.pad_token_id,
-                num_logits_to_keep=1
+                num_logits_to_keep=1,
+                use_cache=True,  # Enable KV caching
+                temperature=0.0  # Deterministic output, faster
             )
             
             generate_ids = generate_ids[:, inputs['input_ids'].shape[1]:]
@@ -83,6 +89,142 @@ class LectureProcessor(BaseProcessor):
         except Exception as e:
             print(f"Phi-4 processing failed: {str(e)}")
             return None
+
+    async def process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6) -> List[Optional[str]]:
+        """Process multiple images in parallel with Phi-4 model using optimized batching"""
+        try:
+            # Route this GPU-intensive task to the GPU worker
+            return await route_to_gpu_worker(self._process_with_phi4_batch, images, prompts, min_batch_size, max_batch_size)
+        except Exception as e:
+            print(f"Phi-4 batch processing failed: {str(e)}")
+            return [None] * len(images)
+
+    async def _process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6) -> List[Optional[str]]:
+        """Process multiple images in parallel with Phi-4 model using optimized batching"""
+        try:
+            model, processor = model_manager.get_model()
+            if not model or not processor:
+                return [None] * len(images)
+
+            # Preload and preprocess all images
+            print("Preloading and preprocessing all images...")
+            preprocess_start = time.time()
+            pil_images = []
+            for img_bytes in images:
+                img = Image.open(io.BytesIO(img_bytes))
+                # Convert to RGB if image has alpha channel or is not RGB
+                if img.mode != 'RGB':
+                    img = img.convert('RGB')
+                # Use a smaller target size to reduce memory and processing time
+                img = img.resize((384, 384), Image.LANCZOS)
+                pil_images.append(img)
+            preprocess_time = time.time() - preprocess_start
+            print(f"Preprocessing completed in {preprocess_time:.2f} seconds")
+
+            # Calculate optimal batch distribution
+            total_images = len(images)
+            batches = []
+            
+            # Determine optimal batch distribution to minimize forward passes
+            remaining = total_images
+            while remaining > 0:
+                if remaining <= max_batch_size:
+                    # Last batch with remaining images
+                    batches.append(remaining)
+                    break
+                elif remaining <= max_batch_size * 2:
+                    # Split remaining images into two balanced batches
+                    batch1 = remaining // 2
+                    batch2 = remaining - batch1
+                    if batch1 < min_batch_size:
+                        batch1 = min_batch_size
+                        batch2 = remaining - batch1
+                    batches.extend([batch1, batch2])
+                    break
+                else:
+                    # Add a max-sized batch and continue
+                    batches.append(max_batch_size)
+                    remaining -= max_batch_size
+            
+            print(f"Optimized batch distribution: {batches} (total: {sum(batches)} images)")
+            
+            # Process images according to the calculated batch sizes
+            all_responses = []
+            image_index = 0
+            
+            for batch_num, batch_size in enumerate(batches):
+                batch_images = pil_images[image_index:image_index+batch_size]
+                batch_prompts = [f"<|user|><|image_1|>{prompts[i+image_index]}<|end|><|assistant|>" for i in range(batch_size)]
+                
+                print(f"\n--- PROCESSING BATCH {batch_num + 1}/{len(batches)} ({batch_size} images) ---")
+                
+                # Warm up KV cache for this specific batch
+                if batch_num == 0 or batch_size > 1:
+                    print("Warming up KV cache for this batch...")
+                    with torch.no_grad():
+                        # Use a simple prompt similar to what we'll process
+                        warm_up_text = f"<|user|>Describe a lecture slide.<|end|><|assistant|>"
+                        warm_up_inputs = processor(text=warm_up_text, return_tensors='pt').to(model.device)
+                        _ = model(**warm_up_inputs)
+                
+                print("Processing batch inputs")
+                # Time the input processing
+                input_start = time.time()
+                batch_inputs = processor(
+                    text=batch_prompts, 
+                    images=batch_images, 
+                    return_tensors='pt', 
+                    padding=True
+                )
+                
+                # Move all input tensors to the same device as the model
+                device = model.device
+                for key in batch_inputs:
+                    if batch_inputs[key] is not None:
+                        batch_inputs[key] = batch_inputs[key].to(device)
+                input_time = time.time() - input_start
+                print(f"Input processing completed in {input_time:.2f} seconds")
+                
+                print("Generating responses for batch")
+                # Generate responses with optimized parameters
+                generation_start = time.time()
+                with torch.no_grad():
+                    generate_ids = model.generate(
+                        **batch_inputs,
+                        max_new_tokens=2000,
+                        num_beams=1,
+                        do_sample=False,
+                        pad_token_id=processor.tokenizer.pad_token_id,
+                        num_logits_to_keep=1,
+                        use_cache=True,
+                        temperature=0.0
+                    )
+                generation_time = time.time() - generation_start
+                print(f"Generation completed in {generation_time:.2f} seconds")
+                
+                # Process each response in the batch
+                batch_responses = []
+                for j in range(batch_size):
+                    # Extract the response for this specific image
+                    response_ids = generate_ids[j, batch_inputs['input_ids'].shape[1]:]
+                    response = processor.batch_decode(
+                        [response_ids], skip_special_tokens=True, clean_up_tokenization_spaces=False
+                    )[0]
+                    batch_responses.append(response)
+                    print(f'>>> Processed image {image_index+j+1}')
+                
+                all_responses.extend(batch_responses)
+                image_index += batch_size
+                
+                # Clear CUDA cache between batches
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+            
+            return all_responses
+            
+        except Exception as e:
+            print(f"Phi-4 batch processing failed: {str(e)}")
+            return [None] * len(images)
 
     async def process_page(
         self,
@@ -160,17 +302,72 @@ class LectureProcessor(BaseProcessor):
         after_generate: Callable[[CleanedResponse], None]
     ) -> List[CleanedResponse]:
         try:
-            results = []
+            # Prepare all prompts and images
+            images = []
+            prompts = []
+            page_numbers = []
+            text_contents = []
+            
             for document in documents:
-                result = await self.process_page(
-                    document['image'],
-                    document['text'],
-                    document['page'],
+                # Get prompts
+                base_prompt = self._get_base_prompt()
+                additional_prompt = self._get_additional_prompt(document['page'], num_slides)
+                combined_prompt = base_prompt + "\n\n" + additional_prompt
+                
+                images.append(document['image'])
+                prompts.append(combined_prompt)
+                page_numbers.append(document['page'])
+                text_contents.append(document['text'])
+            
+            # Process all images in optimized batches
+            responses = await self.process_with_phi4_batch(images, prompts)
+            
+            # Process results
+            results = []
+            for i, response in enumerate(responses):
+                if not response:
+                    # Fallback to Gemini for this specific image
+                    print(f"Falling back to Gemini for page {page_numbers[i]}")
+                    base64_image = base64.b64encode(images[i]).decode('utf-8')
+                    
+                    message = Message(content=[
+                        {
+                            "type": "image_url",
+                            "image_url": f"data:image/png;base64,{base64_image}"
+                        },
+                        {
+                            "type": "text",
+                            "text": prompts[i]
+                        },
+                        *([] if not text_contents[i] else [{"type": "text", "text": text_contents[i]}])
+                    ])
+
+                    self.conversation_history.append(message)
+                    
+                    response = await self.robust_generate(
+                        None,
+                        message,
+                        model="gemini-2.0-flash-lite"
+                    )
+                    
+                    if not response:
+                        raise Exception(f"Empty response from both models for page {page_numbers[i]}")
+                    
+                    print(f"Successfully processed page {page_numbers[i]} with Gemini")
+                    
+                    self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
+                else:
+                    print(f"Successfully processed page {page_numbers[i]} with Phi-4")
+                
+                result = self.clean_response(
+                    response,
                     lecture_name,
-                    num_slides,
+                    page_numbers[i],
+                    text_contents[i]
                 )
                 results.append(result)
                 await after_generate(result)
+                
             return results
         except Exception as error:
             print("Error processing PDF:", error)
