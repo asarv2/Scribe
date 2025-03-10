@@ -14,26 +14,17 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
-from app.config import model_manager
+from app.config import model, processor
 
-# Define lifespan to load model at startup
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Load model at startup if this is the GPU worker
-    if os.environ.get('GPU_WORKER') == 'true':
-        import torch
-        if torch.cuda.is_available():
-            try:
-                print("Loading model in GPU worker at startup...")
-                model_manager.get_model()
-                model_manager.warm_up_model()  # Add warm-up step
-                print("Model loaded successfully in GPU worker")
-            except Exception as e:
-                print(f"Warning: Could not load model on startup: {str(e)}")
-    yield
+# Check if model is loaded
+if model is None:
+    print("Model not available - CUDA required")
+else:
+    # Use model and processor
+    print("Model loaded successfully")
 
 # Create FastAPI app with lifespan
-app = FastAPI(title="Scribe API", lifespan=lifespan)
+app = FastAPI(title="Scribe API")
 
 # Create a simple task queue
 task_queue = asyncio.Queue()

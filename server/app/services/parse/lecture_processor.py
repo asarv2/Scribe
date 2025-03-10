@@ -8,6 +8,7 @@ import torch
 import asyncio
 import time
 from app.services.task_router import route_to_gpu_worker
+from app.config import model, processor
 
 class LectureProcessor(BaseProcessor):
     def __init__(self, course_title: str):
@@ -61,8 +62,9 @@ class LectureProcessor(BaseProcessor):
                                       batch_callback=None) -> List[Optional[str]]:
         """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
-            # Get model from global registry - no need to reload
-            model, processor = model_manager.get_model()
+            # Get model from global manager
+            if model is None or processor is None:
+                raise RuntimeError("Model not available")
             
             # Preload and preprocess all images
             print("Preloading and preprocessing all images...")
@@ -115,15 +117,6 @@ class LectureProcessor(BaseProcessor):
                 batch_prompts = [f"<|user|><|image_1|>{prompts[i+image_index]}<|end|><|assistant|>" for i in range(batch_size)]
                 
                 print(f"\n--- PROCESSING BATCH {batch_num + 1}/{len(batches)} ({batch_size} images) ---")
-                
-                # Warm up KV cache for this specific batch
-                if batch_num == 0 or batch_size > 1:
-                    print("Warming up KV cache for this batch...")
-                    with torch.no_grad():
-                        # Use a simple prompt similar to what we'll process
-                        warm_up_text = f"<|user|>Describe a lecture slide.<|end|><|assistant|>"
-                        warm_up_inputs = processor(text=warm_up_text, return_tensors='pt').to(model.device)
-                        _ = model(**warm_up_inputs)
                 
                 print("Processing batch inputs")
                 # Time the input processing

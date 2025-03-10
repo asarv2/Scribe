@@ -29,7 +29,7 @@ class ModelManager:
         self.assistant_prompt = "<|assistant|>\n"
         self.prompt_suffix = "\n"
 
-    def get_gpu_memory(self) -> float:
+    def _get_gpu_memory(self) -> float:
         """Get combined available GPU memory"""
         try:
             if not torch.cuda.is_available():
@@ -45,7 +45,7 @@ class ModelManager:
             print(f"Error getting GPU memory: {e}")
             return 0
     
-    def get_model(self):
+    def _get_model(self):
         """Get model from global registry or load it if not available"""
         global MODEL_REGISTRY
         
@@ -66,7 +66,7 @@ class ModelManager:
             if not (is_gpu_worker and has_gpu):
                 raise RuntimeError("Model loading requires GPU worker with available GPU")
             
-            total_free_gb = self.get_gpu_memory()
+            total_free_gb = self._get_gpu_memory()
             if total_free_gb < 20:
                 raise RuntimeError("Insufficient GPU memory. Need at least 20GB available. Found: " + str
                 (total_free_gb))
@@ -135,7 +135,7 @@ class ModelManager:
             
             return model, processor
     
-    def warm_up_model(self):
+    def _warm_up_model(self):
         """Warm up the model with a simple inference to optimize first real request"""
         if not MODEL_REGISTRY["initialized"]:
             return
@@ -157,3 +157,16 @@ class ModelManager:
 
 # Initialize model manager
 model_manager = ModelManager()
+
+model = None
+processor = None
+if os.environ.get('GPU_WORKER') == 'true':
+    import torch
+    if torch.cuda.is_available():
+        try:
+            print("Loading model in GPU worker at startup...")
+            model, processor = model_manager._get_model()
+            model_manager._warm_up_model()  # Add warm-up step
+            print("Model loaded successfully in GPU worker")
+        except Exception as e:
+            print(f"Warning: Could not load model on startup: {str(e)}")
