@@ -3,7 +3,7 @@
  * Used to show the context badges in the chat.
  */
 
-import { Badge, Group, Avatar } from "@mantine/core";
+import { Badge, Group, Avatar, Text, ActionIcon } from "@mantine/core";
 import { IconPlus, IconWand, IconX } from "@tabler/icons-react";
 import { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -315,11 +315,14 @@ export const ContextBadges = memo(({
 
     return (
         <Group>
+            <Text size="sm" c="dimmed">
+                Add Context:
+            </Text>
             {renderActiveBadges()}
             {renderAddBadges()}
-            {/* <Badge color="purple" leftSection={<IconWand size={12} />} style={{ cursor: "pointer" }}>
-                Find Context
-            </Badge> */}
+            {(!activeChat.context.lectures?.length && 
+                !activeChat.context.chapters?.length && 
+                !activeChat.context.homeworks?.length)}
         </Group>
     );
 });

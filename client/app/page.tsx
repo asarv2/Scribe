@@ -199,7 +199,6 @@ export default function Landing() {
                             speed={70}
                             cursor={false}
                           />
-                          <Text size="md" fw={400}>to find out how I can help you using your teacher's content</Text>
                         </Group>
                       )}
                       
@@ -216,8 +215,6 @@ export default function Landing() {
                             speed={70}
                             cursor={false}
                           />
-                          <Text component="span" fw={700} size="lg">Learn: </Text>
-                          <Text component="span" size="lg">Conceptual and computational understanding along with visualization</Text>
                         </Box>
                       )}
                       
@@ -234,8 +231,6 @@ export default function Landing() {
                             speed={70}
                             cursor={false}
                           />
-                          <Text component="span" fw={700} size="lg">Homework: </Text>
-                          <Text component="span" size="lg">Understand what your homework question is asking and how to solve it step by step</Text>
                         </Box>
                       )}
                       
@@ -244,14 +239,13 @@ export default function Landing() {
                         <Box>
                           <TypeAnimation
                             sequence={[
-                              "Test-Prep: Practice questions and customized review materials to help you ace your exams"
+                              'Test-Prep: Practice questions and customized review materials to help you ace your exams'
                             ]}
                             wrapper="div"
                             speed={70}
                             cursor={false}
+                            html={true}
                           />
-                          <Text component="span" fw={700} size="lg">Test-Prep: </Text>
-                          <Text component="span" size="lg">Practice questions and customized review materials to help you ace your exams</Text>
                         </Box>
                       )}
                     </Stack>

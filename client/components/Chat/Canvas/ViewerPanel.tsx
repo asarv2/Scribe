@@ -21,7 +21,7 @@ import { getExercises } from "@/utils/queries/get-exercises";
 
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
-    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>
+    setViewerMode: (viewerMode: ViewerMode) => void;
     classId: string;
 }
 
@@ -67,6 +67,22 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
         return "Document Viewer";
     };
 
+    // Modify the close handler to fully close the panel
+    const handleClose = () => {
+        // Pass an object with active:false to close the viewer
+        // The setViewerMode function in ChatCanvas will handle the complete closing
+        setViewerMode({
+            active: false,
+            // We keep other properties to maintain the ViewerMode type
+            documentId: viewerMode.documentId,
+            lectureId: viewerMode.lectureId,
+            chapterId: viewerMode.chapterId,
+            textbookId: viewerMode.textbookId,
+            homeworkId: viewerMode.homeworkId,
+            exerciseId: viewerMode.exerciseId,
+        });
+    };
+
     return (
         <Card
             shadow="sm"
@@ -86,7 +102,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
                         {getViewerTitle()}
                     </Text>
                     <ActionIcon
-                        onClick={() => setViewerMode({ active: false })}
+                        onClick={handleClose}
                         variant="subtle"
                         ml="auto"
                     >

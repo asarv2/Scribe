@@ -6,7 +6,7 @@
 import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus } from "@tabler/icons-react";
+import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMediaQuery } from "@mantine/hooks";
@@ -48,6 +48,23 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         active: false
     });
     const [loading, setLoading] = useState(false);
+    
+    // Add state for context panel visibility
+    const [isContextPanelVisible, setIsContextPanelVisible] = useState(() => {
+        // For new chats, show the panel by default
+        if (chatId === "new") return true;
+        
+        // For existing chats, check localStorage first, otherwise default based on if it's a new user session
+        const savedVisibility = localStorage.getItem(`context-panel-visible-${classId}`);
+        return savedVisibility === null ? true : savedVisibility === 'true';
+    });
+    
+    // Add state to track the animation of panel collapse/expand
+    const [isPanelAnimating, setIsPanelAnimating] = useState(false);
+    const [panelWidth, setPanelWidth] = useState(isContextPanelVisible ? 4 : 0);
+    
+    // Add state to track if user has sent their first message
+    const [hasUserSentFirstMessage, setHasUserSentFirstMessage] = useState(chatId !== "new");
 
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
@@ -240,6 +257,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             setLoading(true);
             let profileId = profile?.id;
             let newChatId = chatId;
+            
+            // Save current immersive mode state before potential navigation
+            const currentImmersiveMode = immersiveMode;
 
             const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
 
@@ -254,7 +274,19 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     responseUrl
                 );
                 newChatId = chat.id;
-                router.replace(`/classes/c/${classId}/chat/${chat.id}`);
+                
+                // Instead of directly using router.replace which causes a full page transition,
+                // use router.push with shallow option to preserve state
+                router.push(`/classes/c/${classId}/chat/${chat.id}`, undefined, { 
+                    shallow: true 
+                });
+                
+                // After the navigation, restore the immersive mode state
+                setTimeout(() => {
+                    if (currentImmersiveMode) {
+                        setImmersiveMode(true);
+                    }
+                }, 100);
             }
 
             const additionalContextForBareQuestion = getAdditionalContextForBareQuestion();
@@ -303,6 +335,13 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     homeworks: [],
                 }
             });
+            
+            // Only collapse the context panel on the first message
+            if (!hasUserSentFirstMessage) {
+                localStorage.setItem(`context-panel-visible-${classId}`, 'false');
+                animateContextPanel(false);
+                setHasUserSentFirstMessage(true);
+            }
 
         } catch (error) {
             console.error("Error in message processing:", error);
@@ -605,130 +644,276 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     };
 
+    // Handle panel visibility change with animation
+    const animateContextPanel = (shouldShow: boolean) => {
+        setIsPanelAnimating(true);
+        
+        // If we're showing the panel, make it visible immediately but animate the width
+        if (shouldShow) {
+            setIsContextPanelVisible(true);
+            // Start animation to expand
+            setTimeout(() => setPanelWidth(4), 50);
+        } else {
+            // Start animation to collapse
+            setPanelWidth(0);
+            // After animation completes, hide the panel completely
+            setTimeout(() => {
+                setIsContextPanelVisible(false);
+                setIsPanelAnimating(false);
+            }, 300); // Match this with the CSS transition duration
+        }
+    };
+
+    // Toggle context panel visibility and save to localStorage
+    const toggleContextPanel = () => {
+        const newVisibility = !isContextPanelVisible;
+        localStorage.setItem(`context-panel-visible-${classId}`, String(newVisibility));
+        animateContextPanel(newVisibility);
+    };
+
+    // Also update the useEffect to properly initialize hasUserSentFirstMessage based on messages
+    // and apply the correct panel visibility
+    useEffect(() => {
+        // If there are existing messages, we know the user has sent messages before
+        if (messages && messages.length > 0) {
+            setHasUserSentFirstMessage(true);
+        }
+    }, [messages]);
+
+    // Properly initialize panel width when component mounts or isContextPanelVisible changes
+    useEffect(() => {
+        setPanelWidth(isContextPanelVisible ? 4 : 0);
+    }, []);
+
+    const handleViewerModeChange = (newViewerMode: ViewerMode) => {
+        // When a viewer is activated, always show the panel
+        if (newViewerMode.active) {
+            // Ensure the panel is visible
+            setIsContextPanelVisible(true);
+            setPanelWidth(4);
+            
+            // Store this in localStorage too
+            localStorage.setItem(`context-panel-visible-${classId}`, 'true');
+            
+            // Remove animating state to avoid timing issues
+            setIsPanelAnimating(false);
+        } 
+        // When viewer is deactivated, close the entire panel
+        else if (viewerMode.active) { // This checks if we're actually closing an active viewer
+            // Start animation to collapse panel
+            animateContextPanel(false);
+            
+            // Store this state in localStorage
+            localStorage.setItem(`context-panel-visible-${classId}`, 'false');
+            setIsContextPanelVisible(false);
+        }
+        
+        // Update the viewer mode
+        setViewerMode(newViewerMode);
+    };
+
+    // Add state for immersive mode with persistence
+    const [immersiveMode, setImmersiveMode] = useState(() => {
+        // Try to retrieve the state from sessionStorage
+        if (typeof window !== 'undefined') {
+            const savedState = sessionStorage.getItem(`immersive-mode-${classId}`);
+            return savedState === 'true';
+        }
+        return false;
+    });
+    
+    // When immersive mode changes, save it to sessionStorage
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            sessionStorage.setItem(`immersive-mode-${classId}`, immersiveMode.toString());
+        }
+    }, [immersiveMode, classId]);
+    
+    const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
+    const [isUserInterrupting, setIsUserInterrupting] = useState(false);
+    
+    // Toggle immersive mode function with persistence
+    const toggleImmersiveMode = () => {
+        setImmersiveMode(prev => {
+            const newValue = !prev;
+            // Save to session storage immediately
+            if (typeof window !== 'undefined') {
+                sessionStorage.setItem(`immersive-mode-${classId}`, newValue.toString());
+            }
+            return newValue;
+        });
+        
+        // Reset chunk index when toggling mode
+        setCurrentChunkIndex(0);
+        setIsUserInterrupting(false);
+    };
+    
+    // Handle user interruption in immersive mode
+    const handleUserInterruption = (isInterrupting: boolean) => {
+        setIsUserInterrupting(isInterrupting);
+    };
+
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack>
                     <Flex justify="space-between" align="center">
-                        <Group>
-                            <Text size="xl" fw={700} mb={6}>
-                                {existingChat ? (
-                                    <TypeAnimation
-                                        key={`${existingChat.id}-${receivedRealtimeUpdate}`}
-                                        sequence={[
-                                            existingChat.name || '',
-                                        ]}
-                                        wrapper="span"
-                                        cursor={false}
-                                        repeat={0}
-                                        speed={50}
-                                        preRenderFirstString={!receivedRealtimeUpdate}
-                                        style={{
-                                            fontSize: '1.25rem',
-                                            fontWeight: 700,
-                                            display: 'inline-block',
-                                        }}
-                                    />
-                                ) : (
-                                    activeChat.title
+                        {/* Only show title and badges when not in immersive mode */}
+                        {!immersiveMode && (
+                            <>
+                                <Group>
+                                    <Text size="xl" fw={700} mb={6}>
+                                        {existingChat ? (
+                                            <TypeAnimation
+                                                key={`${existingChat.id}-${receivedRealtimeUpdate}`}
+                                                sequence={[
+                                                    existingChat.name || '',
+                                                ]}
+                                                wrapper="span"
+                                                cursor={false}
+                                                repeat={0}
+                                                speed={50}
+                                                preRenderFirstString={!receivedRealtimeUpdate}
+                                                style={{
+                                                    fontSize: '1.25rem',
+                                                    fontWeight: 700,
+                                                    display: 'inline-block',
+                                                }}
+                                            />
+                                        ) : (
+                                            activeChat.title
+                                        )}
+                                    </Text>
+
+                                    {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
+                                        <Badge color={
+                                            existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'blue' :
+                                                existingChat.type === 'concept' ? 'cyan' :
+                                                    existingChat.type === 'review' ? 'teal' :
+                                                        existingChat.type === 'method' ? 'green' :
+                                                            existingChat.type === 'generate' ? 'indigo' :
+                                                                existingChat.type === 'other' ? 'orange' :
+                                                                    'gray'
+                                        }>
+                                            {existingChat.type.startsWith('homework-')
+                                                ? 'Homework'
+                                                : existingChat.type === 'concept'
+                                                    ? 'Conceptual'
+                                                    : existingChat.type === 'method'
+                                                        ? 'Approach'
+                                                        : existingChat.type === 'generate'
+                                                            ? 'Generated'
+                                                            : existingChat.type === 'other'
+                                                                ? 'Other'
+                                                                : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
+                                        </Badge>
+                                    )}
+                                </Group>
+
+                                {existingChat && existingChat.rating !== null && (
+                                    <Group>
+                                        <Rating
+                                            value={existingChat.rating}
+                                            readOnly
+                                            size="md"
+                                        />
+                                    </Group>
                                 )}
-                            </Text>
-
-                            {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
-                                <Badge color={
-                                    existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'blue' :
-                                        existingChat.type === 'concept' ? 'cyan' :
-                                            existingChat.type === 'review' ? 'teal' :
-                                                existingChat.type === 'method' ? 'green' :
-                                                    existingChat.type === 'generate' ? 'indigo' :
-                                                        existingChat.type === 'other' ? 'orange' :
-                                                            'gray'
-                                }>
-                                    {existingChat.type.startsWith('homework-')
-                                        ? 'Homework'
-                                        : existingChat.type === 'concept'
-                                            ? 'Conceptual'
-                                            : existingChat.type === 'method'
-                                                ? 'Approach'
-                                                : existingChat.type === 'generate'
-                                                    ? 'Generated'
-                                                    : existingChat.type === 'other'
-                                                        ? 'Other'
-                                                        : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
-                                </Badge>
-                            )}
-                        </Group>
-
-                        {/* Show rating in top right corner only if it has been rated */}
-                        {existingChat && existingChat.rating !== null && (
-                            <Group>
-                                <Rating
-                                    value={existingChat.rating}
-                                    readOnly
-                                    size="md"
-                                />
-                            </Group>
+                            </>
                         )}
                     </Flex>
 
                     <Grid>
-                        <Grid.Col span={isMobile ? 12 : 8}>
+                        <Grid.Col 
+                            span={isMobile ? 12 : (viewerMode.active || isContextPanelVisible) && !immersiveMode ? 8 : 12} 
+                            style={{
+                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
+                            }}
+                        >
                             <Card
-                                shadow="sm"
-                                padding="lg"
+                                shadow={immersiveMode ? "none" : "sm"}
+                                padding={immersiveMode ? "0" : "lg"}
                                 radius="md"
-                                withBorder
+                                withBorder={!immersiveMode}
                                 style={{
-                                    height: "80vh"
+                                    height: immersiveMode ? "90vh" : "80vh",
+                                    background: immersiveMode ? "transparent" : undefined,
+                                    border: immersiveMode ? "none" : undefined
                                 }}
                             >
-                                {/* Add chat controls at the top right of the message list */}
-                                <Flex justify="space-between" align="center" mb={10}>
-                                    {/* Rating component - only show if not yet rated */}
-                                    {existingChat && existingChat.rating === null && (
-                                        <Group>
-                                            {showThankYou ? (
-                                                <Group gap="xs" style={{
-                                                    opacity: showThankYou ? 1 : 0,
-                                                    transition: 'opacity 0.8s ease-in-out'
-                                                }}>
-                                                    <IconCheck size={18} color="green" />
-                                                    <Text size="sm" c="green">Thanks for your feedback!</Text>
-                                                </Group>
-                                            ) : (
-                                                <>
-                                                    <Text size="sm">Rate this chat:</Text>
-                                                    <Rating
-                                                        value={0}
-                                                        onChange={handleRatingChange}
-                                                        size="md"
-                                                    />
-                                                </>
-                                            )}
-                                        </Group>
-                                    )}
-                                    
-                                    {/* Chat history and new chat buttons */}
-                                    <Group gap="xs" ml="auto">
-                                        <ChatHistoryDropdown 
-                                            currentChatId={chatId} 
-                                            onChatSelect={handleChatSelect} 
-                                            classId={classId}
-                                        />
+                                {/* Show controls only when not in immersive mode */}
+                                {!immersiveMode && (
+                                    <Flex justify="space-between" align="center" mb={10}>
+                                        {/* Rating component - only show if not yet rated */}
+                                        {existingChat && existingChat.rating === null && (
+                                            <Group>
+                                                {/* ...existing code... */}
+                                            </Group>
+                                        )}
                                         
-                                        <Tooltip label="Start a new chat">
-                                            <ActionIcon 
-                                                variant="subtle" 
-                                                size="md" 
-                                                aria-label="Start a new chat"
-                                                onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
-                                                disabled={chatId === "new"}
+                                        {/* Chat history, context toggle, and new chat buttons */}
+                                        <Group gap="xs" ml="auto">
+                                            {/* Add immersive mode toggle button */}
+                                            <Tooltip label="Enter immersive mode">
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    size="md"
+                                                    onClick={toggleImmersiveMode}
+                                                    aria-label="Toggle immersive mode"
+                                                >
+                                                    <IconEye size={18} />
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        
+                                            {/* Context panel toggle */}
+                                            <Tooltip label={isContextPanelVisible ? "Hide context panel" : "Show context panel"}>
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    size="md"
+                                                    onClick={toggleContextPanel}
+                                                    aria-label="Toggle context panel"
+                                                >
+                                                    <IconMenu2 size={18} />
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        
+                                            <ChatHistoryDropdown 
+                                                currentChatId={chatId} 
+                                                onChatSelect={handleChatSelect} 
+                                                classId={classId}
+                                            />
+                                            
+                                            <Tooltip label="Start a new chat">
+                                                <ActionIcon 
+                                                    variant="subtle" 
+                                                    size="md" 
+                                                    aria-label="Start a new chat"
+                                                    onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                                    disabled={chatId === "new"}
+                                                >
+                                                    <IconPlus size={18} />
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        </Group>
+                                    </Flex>
+                                )}
+                                
+                                {/* Add exit button when in immersive mode */}
+                                {immersiveMode && (
+                                    <Group position="right" p="sm">
+                                        <Tooltip label="Exit immersive mode">
+                                            <ActionIcon
+                                                variant="light"
+                                                color="gray"
+                                                size="md"
+                                                onClick={toggleImmersiveMode}
+                                                style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 100 }}
                                             >
-                                                <IconPlus size={18} />
+                                                <IconEyeOff size={18} />
                                             </ActionIcon>
                                         </Tooltip>
                                     </Group>
-                                </Flex>
+                                )}
 
                                 <MessageList
                                     chatId={chatId}
@@ -738,9 +923,13 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     activeChat={activeChat}
                                     setActiveChat={setActiveChat}
                                     onOptionClick={handleOptionClick}
-                                    setViewerMode={setViewerMode}
+                                    setViewerMode={handleViewerModeChange}
                                     isInitializing={isInitializing}
                                     loading={loading}
+                                    immersiveMode={immersiveMode}
+                                    currentChunkIndex={currentChunkIndex}
+                                    setCurrentChunkIndex={setCurrentChunkIndex}
+                                    isUserInterrupting={isUserInterrupting}
                                 />
 
                                 <ChatInput
@@ -754,36 +943,47 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     setViewerMode={setViewerMode}
                                     expandedSections={expandedSections}
                                     toggleSection={toggleSection}
-                                    // onDrop={handleDrop}
+                                    immersiveMode={immersiveMode}
+                                    onUserInterruption={handleUserInterruption}
                                 />
                             </Card>
                         </Grid.Col>
 
-                        {/* Context Panel or Document Viewer */}
-                        <Grid.Col span={isMobile ? 12 : 4}>
-                            {viewerMode.active ? (
-                                <ViewerPanel
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    classId={classId}
-                                />
-                            ) : (
-                                <ContextPanel
-                                    classId={classId}
-                                    isMobile={isMobile ?? false}
-                                    searchQuery={searchQuery}
-                                    setSearchQuery={setSearchQuery}
-                                    expandedSections={expandedSections}
-                                    toggleSection={toggleSection}
-                                    addContextToChat={addContextToChat}
-                                    expandedNodes={expandedNodes}
-                                    toggleNode={toggleNode}
-                                    activeChat={activeChat}
-                                    scrollToSection={scrollToSection}
-                                    makeDraggable={true}
-                                />
-                            )}
-                        </Grid.Col>
+                        {/* Only show context panel in normal mode */}
+                        {!immersiveMode && (
+                            <Grid.Col 
+                                span={isMobile ? 12 : 4} 
+                                style={{
+                                    display: (viewerMode.active || isContextPanelVisible || isPanelAnimating) ? 'block' : 'none',
+                                    transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
+                                    opacity: (viewerMode.active || panelWidth > 0) ? 1 : 0,
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                {viewerMode.active ? (
+                                    <ViewerPanel
+                                        viewerMode={viewerMode}
+                                        setViewerMode={handleViewerModeChange}
+                                        classId={classId}
+                                    />
+                                ) : (
+                                    <ContextPanel
+                                        classId={classId}
+                                        isMobile={isMobile ?? false}
+                                        searchQuery={searchQuery}
+                                        setSearchQuery={setSearchQuery}
+                                        expandedSections={expandedSections}
+                                        toggleSection={toggleSection}
+                                        addContextToChat={addContextToChat}
+                                        expandedNodes={expandedNodes}
+                                        toggleNode={toggleNode}
+                                        activeChat={activeChat}
+                                        scrollToSection={scrollToSection}
+                                        makeDraggable={true}
+                                    />
+                                )}
+                            </Grid.Col>
+                        )}
                     </Grid>
                 </Stack>
             </Container>

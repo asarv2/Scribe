@@ -619,6 +619,9 @@ export function ContextPanel({
             }}
         >
             <Stack>
+                <Text size="xs" c="dimmed" ta="center" mt="-10px" mb="-10px">
+                    Click or drag to add context
+                </Text>
                 <TextInput
                     placeholder="Search context..."
                     value={localSearchQuery}
@@ -631,7 +634,7 @@ export function ContextPanel({
                         }
                     })}
                 />
-
+                
                 {isLoading ? (
                     <>
                         <SectionSkeleton />
