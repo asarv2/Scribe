@@ -10,6 +10,8 @@ async def process_gpu_task_queue():
     while True:
         task_func, args, kwargs, future = await gpu_task_queue.get()
         try:
+            # Ensure GPU_WORKER environment variable is set before processing
+            os.environ['GPU_WORKER'] = 'true'
             result = await task_func(*args, **kwargs)
             future.set_result(result)
         except Exception as e:
@@ -19,7 +21,7 @@ async def process_gpu_task_queue():
 
 async def route_to_gpu_worker(task_func, *args, **kwargs):
     """Route a task to the GPU worker and wait for result"""
-    # If this is the GPU worker, execute directly
+    # If this is already the GPU worker, execute directly
     if os.environ.get('GPU_WORKER') == 'true':
         return await task_func(*args, **kwargs)
     

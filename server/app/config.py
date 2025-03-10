@@ -59,13 +59,13 @@ class ModelManager:
             if MODEL_REGISTRY["initialized"]:
                 return MODEL_REGISTRY["model"], MODEL_REGISTRY["processor"]
             
+            # Check if this is a GPU worker or if GPU is available
+            is_gpu_worker = os.environ.get('GPU_WORKER') == 'true'
+            has_gpu = torch.cuda.is_available()
             
-
-            # Only GPU worker should load the model
-            if os.environ.get('GPU_WORKER') != 'true':
-                raise RuntimeError("Non-GPU worker attempted to load model")
+            if not (is_gpu_worker and has_gpu):
+                raise RuntimeError("Model loading requires GPU worker with available GPU")
             
-
             total_free_gb = self.get_gpu_memory()
             if total_free_gb < 20:
                 raise RuntimeError("Insufficient GPU memory. Need at least 20GB available. Found: " + str
