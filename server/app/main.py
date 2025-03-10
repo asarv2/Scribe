@@ -14,14 +14,16 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
-from app.config import model, processor
+from app.config import MODEL_REGISTRY
 
-# Check if model is loaded
-if model is None:
-    print("Model not available - CUDA required")
+# Check model availability during startup
+if os.environ.get('GPU_WORKER') == 'true':
+    if MODEL_REGISTRY["initialized"]:
+        print("Model loaded successfully")
+    else:
+        print("Model not available - initialization failed")
 else:
-    # Use model and processor
-    print("Model loaded successfully")
+    print("Not a GPU worker - model loading skipped")
 
 # Create FastAPI app with lifespan
 app = FastAPI(title="Scribe API")

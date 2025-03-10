@@ -8,7 +8,7 @@ import torch
 import asyncio
 import time
 from app.services.task_router import route_to_gpu_worker
-from app.config import model, processor
+from app.config import MODEL_REGISTRY
 
 class LectureProcessor(BaseProcessor):
     def __init__(self, course_title: str):
@@ -62,7 +62,10 @@ class LectureProcessor(BaseProcessor):
                                       batch_callback=None) -> List[Optional[str]]:
         """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
-            # Get model from global manager
+            # Get model and processor directly from MODEL_REGISTRY instead of global imports
+            model = MODEL_REGISTRY["model"]
+            processor = MODEL_REGISTRY["processor"]
+            
             if model is None or processor is None:
                 raise RuntimeError("Model not available")
             

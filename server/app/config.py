@@ -158,8 +158,6 @@ class ModelManager:
 # Initialize model manager
 model_manager = ModelManager()
 
-model = None
-processor = None
 if os.environ.get('GPU_WORKER') == 'true':
     import torch
     if torch.cuda.is_available():
