@@ -51,6 +51,9 @@ class LectureProcessor(BaseProcessor):
                                      batch_callback=None) -> List[Optional[str]]:
         """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
+            # Get model from global registry - no need to reload
+            model_manager.get_model()
+            
             # Route this GPU-intensive task to the GPU worker
             return await route_to_gpu_worker(self._process_with_phi4_batch, images, prompts, min_batch_size, max_batch_size, batch_callback)
         except Exception as e:
@@ -61,10 +64,9 @@ class LectureProcessor(BaseProcessor):
                                       batch_callback=None) -> List[Optional[str]]:
         """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
+            # Get model from global registry - no need to reload
             model, processor = model_manager.get_model()
-            if not model or not processor:
-                return [None] * len(images)
-
+            
             # Preload and preprocess all images
             print("Preloading and preprocessing all images...")
             preprocess_start = time.time()

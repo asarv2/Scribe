@@ -10,7 +10,7 @@ worker_class = 'uvicorn.workers.UvicornWorker'
 # Threads per worker
 threads = 4
 
-# Longer timeout for GPU operations (increased from 600 to 1800 seconds)
+# Longer timeout for GPU operations
 timeout = 1800  # 30 minutes
 
 # Keep-alive settings
@@ -18,8 +18,8 @@ keepalive = 65
 
 import os
 
-# Set a file-based lock to ensure only one worker loads the model
-GPU_LOCK_FILE = "/tmp/gpu_worker.lock"
+# Set a persistent file-based lock in a shared location
+GPU_LOCK_FILE = "/var/run/gpu_worker.lock"
 
 def when_ready(server):
     print(f"Gunicorn server is ready. Running {workers} workers")
