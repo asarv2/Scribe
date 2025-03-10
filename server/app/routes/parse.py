@@ -43,6 +43,7 @@ async def parse_lecture(request: ParseRequest):
         # Get class title
         class_response = supabase.table("classes").select("*").eq("id", class_id).single().execute()
         class_title = class_response.data.get('title')
+        private_mode = class_response.data.get('privacy')
         print("Class query response:", class_response)
 
         # Get existing documents
@@ -152,7 +153,8 @@ async def parse_lecture(request: ParseRequest):
             class_title,
             num_pages,
             processed_documents,
-            after_generate
+            after_generate,
+            private_mode
         )
         print("Lecture processing complete, results:", results)
 

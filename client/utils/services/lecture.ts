@@ -33,3 +33,15 @@ export const deleteLecture = async (lectureId: string) => {
     return { success: true, error: "" };
 
 }
+
+export const updateLectureInfo = async (lectureId: string, aiInstructions: string) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("lectures")
+        .update({additional_info: aiInstructions})
+        .eq("id", lectureId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}

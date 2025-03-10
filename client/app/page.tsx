@@ -16,7 +16,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { HomeLayout } from "@/components/Home/HomeLayout";
 import { useRef, useEffect, useState } from "react";
 import { TypeAnimation } from 'react-type-animation';
-import { IconSchool, IconGraph, IconFileText, IconQuestionMark } from '@tabler/icons-react';
+import { IconSchool, IconGraph, IconFileText, IconQuestionMark, IconBrain, IconNotebook, IconWriting } from '@tabler/icons-react';
 
 export default function Landing() {
   const supabase = useSupabaseBrowser();
@@ -29,6 +29,7 @@ export default function Landing() {
   const [showHomework, setShowHomework] = useState(false);
   const [showTestPrep, setShowTestPrep] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
+  const [showRightColumn, setShowRightColumn] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ["user"],
@@ -166,12 +167,19 @@ export default function Landing() {
                     }}
                   >
                     <Stack gap="lg">
-                      {/* Buttons with animation */}
                       <TypeAnimation
                         sequence={[
                           "",
                           500,
-                          () => setShowButtons(true),
+                          () => {
+                            setShowButtons(true);
+                            setTimeout(() => {
+                              setShowLearn(true);
+                              setShowHomework(true);
+                              setShowTestPrep(true);
+                              setShowRightColumn(true);
+                            }, 1000);
+                          },
                           ""
                         ]}
                         wrapper="div"
@@ -191,7 +199,7 @@ export default function Landing() {
                             sequence={[
                               "",
                               100,
-                              "to find out how I can help you using your teacher's content",
+                              "to find out how I can help you using your teacher's content.",
                               1000,
                               () => setShowLearn(true)
                             ]}
@@ -202,51 +210,48 @@ export default function Landing() {
                         </Group>
                       )}
 
-                      {/* Then the Learn point */}
-                      {showLearn && (
-                        <Box>
-                          <TypeAnimation
-                            sequence={[
-                              "Learn: Conceptual and computational understanding along with visualization",
-                              1000,
-                              () => setShowHomework(true)
-                            ]}
-                            wrapper="div"
-                            speed={70}
-                            cursor={false}
-                          />
+                      <Stack gap="md">
+                        <Box
+                          style={{
+                            opacity: showLearn ? 1 : 0,
+                            transform: showLearn ? 'translateY(0)' : 'translateY(20px)',
+                            transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+                          }}
+                        >
+                          <Group>
+                            <IconBrain size={24} color="#228be6" />
+                            <Text>Learn: Conceptual and computational understanding along with visualization</Text>
+                          </Group>
                         </Box>
-                      )}
 
-                      {/* Homework point */}
-                      {showHomework && (
-                        <Box>
-                          <TypeAnimation
-                            sequence={[
-                              "Homework: Understand what your homework question is asking and how to solve it step by step",
-                              1000,
-                              () => setShowTestPrep(true)
-                            ]}
-                            wrapper="div"
-                            speed={70}
-                            cursor={false}
-                          />
+                        <Box
+                          style={{
+                            opacity: showHomework ? 1 : 0,
+                            transform: showHomework ? 'translateY(0)' : 'translateY(20px)',
+                            transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+                            transitionDelay: '0.2s',
+                          }}
+                        >
+                          <Group>
+                            <IconNotebook size={24} color="#228be6" />
+                            <Text>Homework: Understand what your homework question is asking and how to solve it step by step</Text>
+                          </Group>
                         </Box>
-                      )}
 
-                      {/* Test-Prep point */}
-                      {showTestPrep && (
-                        <Box>
-                          <TypeAnimation
-                            sequence={[
-                              "Test-Prep: Practice questions and customized review materials to help you ace your exams"
-                            ]}
-                            wrapper="div"
-                            speed={70}
-                            cursor={false}
-                          />
+                        <Box
+                          style={{
+                            opacity: showTestPrep ? 1 : 0,
+                            transform: showTestPrep ? 'translateY(0)' : 'translateY(20px)',
+                            transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+                            transitionDelay: '0.4s',
+                          }}
+                        >
+                          <Group>
+                            <IconWriting size={24} color="#228be6" />
+                            <Text>Test-Prep: Practice questions and customized review materials to help you ace your exams</Text>
+                          </Group>
                         </Box>
-                      )}
+                      </Stack>
                     </Stack>
                   </Box>
                 </Box>
@@ -261,8 +266,10 @@ export default function Landing() {
               width: isMobile ? "100%" : "25%",
               height: "120%",
               overflowY: "auto",
-              padding: isMobile ? "15px" : "20px",
               borderRadius: "8px",
+              opacity: showRightColumn ? 1 : 0,
+              transform: showRightColumn ? 'translateX(0)' : 'translateX(20px)',
+              transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
             }}
           >
 
@@ -271,7 +278,7 @@ export default function Landing() {
                 <IconGraph size={24} color="#228be6" />
                 <Text fw={700}>Graph</Text>
               </Group>
-              <Text size="sm" mb="md">The AI will create visualizations if applicable to help you understand and visualize your course material</Text>
+              <Text size="sm" mb="md">The AI can create graphs to help you understand your course material</Text>
               <Box
                 style={{
                   width: "100%",

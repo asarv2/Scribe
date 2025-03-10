@@ -111,7 +111,10 @@ export type Database = {
           course_link: string | null
           created_at: string | null
           deleted: boolean
+          download: boolean
+          download_time: string
           id: string
+          privacy: boolean
           title: string | null
           updated_at: string
         }
@@ -124,7 +127,10 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
+          download?: boolean
+          download_time?: string
           id?: string
+          privacy?: boolean
           title?: string | null
           updated_at?: string
         }
@@ -137,7 +143,10 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
+          download?: boolean
+          download_time?: string
           id?: string
+          privacy?: boolean
           title?: string | null
           updated_at?: string
         }
@@ -281,6 +290,59 @@ export type Database = {
             columns: ["textbook"]
             isOneToOne: false
             referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      downloads: {
+        Row: {
+          class: string
+          created_at: string
+          download_time: string
+          error_message: string
+          file_list: string[]
+          id: string
+          processed_files: number
+          response_url: string
+          status: string
+          toc_content: string
+          total_files: number
+          updated_at: string
+        }
+        Insert: {
+          class: string
+          created_at?: string
+          download_time?: string
+          error_message?: string
+          file_list?: string[]
+          id?: string
+          processed_files?: number
+          response_url?: string
+          status?: string
+          toc_content?: string
+          total_files?: number
+          updated_at?: string
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          download_time?: string
+          error_message?: string
+          file_list?: string[]
+          id?: string
+          processed_files?: number
+          response_url?: string
+          status?: string
+          toc_content?: string
+          total_files?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "downloads_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
         ]
@@ -625,6 +687,7 @@ export type Database = {
       }
       lectures: {
         Row: {
+          additional_info: string
           class: string
           created_at: string
           deleted: boolean
@@ -642,6 +705,7 @@ export type Database = {
           upload_progress: number
         }
         Insert: {
+          additional_info?: string
           class: string
           created_at?: string
           deleted?: boolean
@@ -659,6 +723,7 @@ export type Database = {
           upload_progress?: number
         }
         Update: {
+          additional_info?: string
           class?: string
           created_at?: string
           deleted?: boolean
@@ -924,32 +989,6 @@ export type Database = {
             columns: ["chapter"]
             isOneToOne: false
             referencedRelation: "chapters"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      syllabi: {
-        Row: {
-          class: string | null
-          created_at: string
-          id: string
-        }
-        Insert: {
-          class?: string | null
-          created_at?: string
-          id?: string
-        }
-        Update: {
-          class?: string | null
-          created_at?: string
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "syllabi_class_fkey"
-            columns: ["class"]
-            isOneToOne: false
-            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
         ]

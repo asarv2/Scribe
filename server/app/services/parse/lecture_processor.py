@@ -192,7 +192,8 @@ class LectureProcessor(BaseProcessor):
         lecture_name: str,
         num_slides: int,
         documents: List[Dict[str, Any]],
-        after_generate: Callable[[CleanedResponse], None]
+        after_generate: Callable[[CleanedResponse], None],
+        private_mode: bool = False
     ) -> List[CleanedResponse]:
         try:
             # Prepare all prompts and images
@@ -215,7 +216,7 @@ class LectureProcessor(BaseProcessor):
             # Create a callback for batch processing
             async def batch_callback(batch_responses, batch_indices):
                 for i, response in enumerate(batch_responses):
-                    if response:  # Only process successful responses from Phi-4
+                    if response:  # Only process successful responses
                         idx = batch_indices[i]
                         print(f"Processing batch result for page {page_numbers[idx]}")
                         result = self.clean_response(
@@ -226,58 +227,82 @@ class LectureProcessor(BaseProcessor):
                         )
                         # Call after_generate for each processed document in the batch
                         await after_generate(result)
-            
-            # Process all images in optimized batches with the callback
-            responses = await self.process_with_phi4_batch(images, prompts, batch_callback=batch_callback)
-            
-            # Process results (including any that failed with Phi-4)
-            results = []
-            for i, response in enumerate(responses):
-                if not response:
-                    # Fallback to Gemini for this specific image
-                    print(f"Falling back to Gemini for page {page_numbers[i]}")
-                    base64_image = base64.b64encode(images[i]).decode('utf-8')
-                    
-                    message = Message(content=[
-                        {
-                            "type": "image_url",
-                            "image_url": f"data:image/png;base64,{base64_image}"
-                        },
-                        {
-                            "type": "text",
-                            "text": prompts[i]
-                        },
-                        *([] if not text_contents[i] else [{"type": "text", "text": text_contents[i]}])
-                    ])
 
-                    self.conversation_history.append(message)
-                    
-                    response = await self.robust_generate(
-                        None,
-                        message,
-                        model="gemini-2.0-flash-lite"
-                    )
-                    
+            results = []
+            if private_mode:
+                # Process all images with Phi-4 in private mode
+                print("Processing in private mode using Phi-4")
+                responses = await self.process_with_phi4_batch(images, prompts, batch_callback=batch_callback)
+                
+                # Handle any failed responses
+                for i, response in enumerate(responses):
                     if not response:
-                        raise Exception(f"Empty response from both models for page {page_numbers[i]}")
-                    
-                    print(f"Successfully processed page {page_numbers[i]} with Gemini")
-                    
-                    self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
-                    
-                    # Process and update the Gemini result
-                    result = self.clean_response(
-                        response,
-                        lecture_name,
-                        page_numbers[i],
-                        text_contents[i]
-                    )
-                    results.append(result)
-                    await after_generate(result)
-                else:
-                    # For Phi-4 successful responses, we've already processed them in the batch callback
-                    result = self.notes[lecture_name][page_numbers[i]]
-                    results.append(result)
+                        print(f"Warning: Phi-4 failed for page {page_numbers[i]} in private mode")
+                        # In private mode, we don't fall back to Gemini - just store the failure
+                        result = self.clean_response(
+                            "Error: Failed to process in private mode",
+                            lecture_name,
+                            page_numbers[i],
+                            text_contents[i]
+                        )
+                        results.append(result)
+                        await after_generate(result)
+                    else:
+                        # For successful responses, we've already processed them in the batch callback
+                        result = self.notes[lecture_name][page_numbers[i]]
+                        results.append(result)
+            else:
+                # In non-private mode, use Gemini by default
+                print("Processing in standard mode using Gemini")
+                for i in range(len(images)):
+                    try:
+                        base64_image = base64.b64encode(images[i]).decode('utf-8')
+                        
+                        message = Message(content=[
+                            {
+                                "type": "image_url",
+                                "image_url": f"data:image/png;base64,{base64_image}"
+                            },
+                            {
+                                "type": "text",
+                                "text": prompts[i]
+                            },
+                            *([] if not text_contents[i] else [{"type": "text", "text": text_contents[i]}])
+                        ])
+
+                        self.conversation_history.append(message)
+                        
+                        response = await self.robust_generate(
+                            None,
+                            message,
+                            model="gemini-2.0-flash-lite"
+                        )
+                        
+                        if not response:
+                            raise Exception(f"Empty response from Gemini for page {page_numbers[i]}")
+                        
+                        print(f"Successfully processed page {page_numbers[i]} with Gemini")
+                        
+                        self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
+                        
+                        result = self.clean_response(
+                            response,
+                            lecture_name,
+                            page_numbers[i],
+                            text_contents[i]
+                        )
+                        results.append(result)
+                        await after_generate(result)
+                    except Exception as e:
+                        print(f"Error processing page {page_numbers[i]}: {str(e)}")
+                        result = self.clean_response(
+                            f"Error: {str(e)}",
+                            lecture_name,
+                            page_numbers[i],
+                            text_contents[i]
+                        )
+                        results.append(result)
+                        await after_generate(result)
             
             return results
         except Exception as error:

@@ -5,7 +5,7 @@
  * 03/06/2025
  */
 import { useState, useRef } from "react";
-import { Button, Card, Stack, Text, Group } from "@mantine/core";
+import { Button, Card, Stack, Text, Group, Skeleton } from "@mantine/core";
 import { IconRefresh, IconUpload } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -75,10 +75,10 @@ export default function HomeworkContent({
         return (
             <Card withBorder>
                 <Group align="flex-start">
-                    <div style={{ width: 150, height: 150, borderRadius: "10px", background: "#f0f0f0" }} />
+                    <Skeleton visible={true} height={150} width={150} />
                     <Stack gap="xs">
-                        <div style={{ height: 24, width: 200, background: "#f0f0f0", borderRadius: 4 }} />
-                        <div style={{ height: 16, width: 150, background: "#f0f0f0", borderRadius: 4 }} />
+                        <Skeleton visible={true} height={24} width={200} />
+                        <Skeleton visible={true} height={16} width={150} />
                     </Stack>
                 </Group>
             </Card>

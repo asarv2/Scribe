@@ -874,7 +874,7 @@ export default function ExerciseViewer({
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Skeleton visible={loadingChapter} height={32} width={500}>
+                            <Skeleton visible={loadingChapter} height={32} width={1000}>
                                 <Text size="xl" fw={700} mb={6}>{chapter?.title} - Exercises</Text>
                             </Skeleton>
                         </Group>
