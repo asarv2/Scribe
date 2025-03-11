@@ -593,7 +593,7 @@ export default function ChapterViewer({
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Skeleton visible={loadingTextbook} height={32} width={500}>
+                            <Skeleton visible={loadingTextbook} height={32} width={1000}>
                                 <Text size="xl" fw={700} mb={6}>{textbook?.title + " - " + chapter?.title}</Text>
                             </Skeleton>
                         </Group>

@@ -111,10 +111,12 @@ export type Database = {
           course_link: string | null
           created_at: string | null
           deleted: boolean
+          download: boolean
+          download_time: string
           id: string
-          map: string | null
-          menu: string[]
+          privacy: boolean
           title: string | null
+          updated_at: string
         }
         Insert: {
           active?: boolean
@@ -125,10 +127,12 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
+          download?: boolean
+          download_time?: string
           id?: string
-          map?: string | null
-          menu?: string[]
+          privacy?: boolean
           title?: string | null
+          updated_at?: string
         }
         Update: {
           active?: boolean
@@ -139,10 +143,12 @@ export type Database = {
           course_link?: string | null
           created_at?: string | null
           deleted?: boolean
+          download?: boolean
+          download_time?: string
           id?: string
-          map?: string | null
-          menu?: string[]
+          privacy?: boolean
           title?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -288,6 +294,59 @@ export type Database = {
           },
         ]
       }
+      downloads: {
+        Row: {
+          class: string
+          created_at: string
+          download_time: string
+          error_message: string
+          file_list: string[]
+          id: string
+          processed_files: number
+          response_url: string
+          status: string
+          toc_content: string
+          total_files: number
+          updated_at: string
+        }
+        Insert: {
+          class: string
+          created_at?: string
+          download_time?: string
+          error_message?: string
+          file_list?: string[]
+          id?: string
+          processed_files?: number
+          response_url?: string
+          status?: string
+          toc_content?: string
+          total_files?: number
+          updated_at?: string
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          download_time?: string
+          error_message?: string
+          file_list?: string[]
+          id?: string
+          processed_files?: number
+          response_url?: string
+          status?: string
+          toc_content?: string
+          total_files?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "downloads_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       evals_homework: {
         Row: {
           created_at: string
@@ -409,6 +468,7 @@ export type Database = {
           answer_enabled: boolean
           chapter: string | null
           created_at: string
+          description: string
           end_page: number
           exercise_number: number
           given: string
@@ -426,6 +486,7 @@ export type Database = {
           answer_enabled?: boolean
           chapter?: string | null
           created_at?: string
+          description?: string
           end_page?: number
           exercise_number?: number
           given?: string
@@ -443,6 +504,7 @@ export type Database = {
           answer_enabled?: boolean
           chapter?: string | null
           created_at?: string
+          description?: string
           end_page?: number
           exercise_number?: number
           given?: string
@@ -1039,7 +1101,13 @@ export type Database = {
         | "other"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
-      parse_status: "parsing" | "batching" | "complete" | "idle" | "error"
+      parse_status:
+        | "extracting"
+        | "uploading"
+        | "parsing"
+        | "complete"
+        | "idle"
+        | "error"
       topic_type: "group" | "term" | "problem" | "algorithm"
     }
     CompositeTypes: {

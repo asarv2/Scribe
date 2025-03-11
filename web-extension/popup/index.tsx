@@ -6,7 +6,7 @@ import {
 } from '@mantine/core'
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Providers } from "~providers"
-import type { Class, Homework, Lecture, Profile, Textbook } from "~types"
+import type { Class, Download, Homework, Lecture, Profile, Textbook } from "~types"
 import { useEffect, useState } from "react"
 import type { Course } from "~contents/dashboardDetector"
 import type { CourseHomepage } from "~contents/homepageDetector"
@@ -17,6 +17,7 @@ import Logout from "~components/Logout"
 import { Icons } from "~components/Icons"
 import CourseCard from "~components/CourseCard"
 import { getSupabaseClient } from "~utils/supabase/supabase-client"
+import NewCourseCard from "~components/NewCourseCard"
 
 // Define page types
 enum PageType {
@@ -63,6 +64,17 @@ function IndexPopupContent() {
         },
         enabled: !!user
     })
+
+    const { data: downloads, isLoading: isLoadingDownloads, error: downloadsError } = useQuery({
+        queryKey: ["downloads"],
+        queryFn: async () => {
+            const response = await sendToBackground<{}, { downloads: Download[] }>({
+                name: "get-downloads"
+            })
+            return response.downloads
+        }
+    })
+    
 
     // Query to get saved classes from database
     const { data: classes, isLoading: isLoadingSaved, error: savedError } = useQuery({
@@ -122,6 +134,9 @@ function IndexPopupContent() {
     const storage = new Storage();
 
     const queryClient = useQueryClient();
+
+    // Add this near the top of your component
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
 
     // Function to get the active tab
     const getActiveTab = async () => {
@@ -350,6 +365,35 @@ function IndexPopupContent() {
         };
     }, [user, queryClient]);
 
+    // Add realtime subscriptions for downloads
+    useEffect(() => {
+        if (!user) return;
+
+        const supabase = getSupabaseClient();
+
+        const channel = supabase
+            .channel('realtime-downloads')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'downloads'
+                },
+                () => {
+                    // Invalidate profile query to fetch fresh data
+                    queryClient.invalidateQueries({
+                        queryKey: ["downloads"]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [user, queryClient]);
+
     // Add realtime subscriptions for classes
     useEffect(() => {
         if (!user) return;
@@ -471,7 +515,15 @@ function IndexPopupContent() {
                         ) : (
                             <Stack>
                                 {/* Detected Courses Section */}
-                                {detectedCourses && detectedCourses.length > 0 && (
+                                {detectedCourses && detectedCourses.filter(course => {
+                                    // Only show courses that haven't been added yet
+                                    const courseIdNum = Number(course.courseId);
+                                    return !classes?.some(savedCourse => {
+                                        if (!savedCourse || !savedCourse.brightspace_course_id) return false;
+                                        const savedCourseId = Number(savedCourse.brightspace_course_id);
+                                        return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
+                                    });
+                                }).length > 0 && (
                                     <>
                                         <Group justify="space-between" align="center">
                                             <Text fw={600}>Detected Courses</Text>
@@ -489,50 +541,23 @@ function IndexPopupContent() {
                                         </Group>
 
                                         <Stack gap="md">
-                                            {detectedCourses.map((course) => {
-                                                if (!course || !course.courseId) return null;
-
-                                                // Parse course ID as number for comparison
+                                            {detectedCourses.filter(course => {
+                                                // Only show courses that haven't been added yet
                                                 const courseIdNum = Number(course.courseId);
-
-                                                // Check if this course is already downloaded
-                                                const isDownloaded = getFilteredClasses(classes, profile)?.some(savedCourse => {
+                                                return !classes?.some(savedCourse => {
                                                     if (!savedCourse || !savedCourse.brightspace_course_id) return false;
                                                     const savedCourseId = Number(savedCourse.brightspace_course_id);
                                                     return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
                                                 });
-
-                                                const action = {
-                                                    type: isDownloaded ? 'refresh' as const : 'download' as const,
-                                                    handler: () => downloadCourseContent(course.courseId, course.courseDescriptor)
-                                                };
-
-                                                return (
-                                                    <CourseCard
-                                                        key={course.courseId}
-                                                        course={course}
-                                                        action={action}
-                                                        isLoading={downloadingSessions[course.courseId]}
-                                                        courseId={course.courseId}
-                                                        isDetected={true}
-                                                        lectures={lectures?.filter(lecture => {
-                                                            if (!lecture || !lecture.class) return false;
-                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === lecture.class);
-                                                            return Number(classData?.brightspace_course_id) === Number(course.courseId);
-                                                        }) || []}
-                                                        textbooks={textbooks?.filter(textbook => {
-                                                            if (!textbook || !textbook.class) return false;
-                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === textbook.class);
-                                                            return Number(classData?.brightspace_course_id) === Number(course.courseId);
-                                                        }) || []}
-                                                        homeworks={homeworks?.filter(homework => {
-                                                            if (!homework || !homework.class) return false;
-                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
-                                                            return Number(classData?.brightspace_course_id) === Number(course.courseId);
-                                                        }) || []}
-                                                    />
-                                                );
-                                            })}
+                                            }).map((course) => (
+                                                <NewCourseCard
+                                                    key={course.courseId}
+                                                    course={course}
+                                                    isLoading={downloadingSessions[course.courseId]}
+                                                    courseId={course.courseId}
+                                                    profile={profile}
+                                                />
+                                            ))}
                                         </Stack>
                                     </>
                                 )}
@@ -547,16 +572,10 @@ function IndexPopupContent() {
                                     <>
                                         <Text fw={600}>My Courses</Text>
                                         <Stack gap="md">
-                                            {getFilteredClasses(classes, profile).filter(savedCourse => {
-                                                if (!savedCourse || !savedCourse.brightspace_course_id) return true;
-                                                const savedCourseId = Number(savedCourse.brightspace_course_id);
-
-                                                // Skip courses that are already shown in the detected section
-                                                return !detectedCourses.some(course => {
-                                                    if (!course || !course.courseId) return false;
-                                                    const courseIdNum = Number(course.courseId);
-                                                    return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
-                                                });
+                                            {getFilteredClasses(classes, profile).sort((a, b) => {
+                                                const aCreated = new Date(a.created_at);
+                                                const bCreated = new Date(b.created_at);
+                                                return bCreated.getTime() - aCreated.getTime();
                                             }).map((savedCourse) => (
                                                 <CourseCard
                                                     key={savedCourse.id}
@@ -577,6 +596,12 @@ function IndexPopupContent() {
                                                         const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
                                                         return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
                                                     }) || []}
+                                                    downloads={downloads?.filter(download => {
+                                                        if (!download || !download.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === download.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                    profile={profile}
                                                 />
                                             ))}
                                         </Stack>
@@ -604,70 +629,50 @@ function IndexPopupContent() {
                         ) : (
                             <Stack>
                                 {/* Detected Course Section */}
-                                {homepageInfo && (
-                                    <>
-                                        <Group justify="space-between" align="center">
-                                            <Text fw={600}>Detected Course</Text>
-                                            <Tooltip label="Refresh Detection">
-                                                <Button
-                                                    variant="subtle"
-                                                    size="xs"
-                                                    onClick={refreshData}
-                                                    loading={isLoading}
-                                                    p={4}
-                                                >
-                                                    <Icons.Refresh />
-                                                </Button>
-                                            </Tooltip>
-                                        </Group>
+                                {homepageInfo && (() => {
+                                    if (!homepageInfo || !homepageInfo.courseId) return null;
+                                    
+                                    // Parse course ID as number for comparison
+                                    const courseIdNum = Number(homepageInfo.courseId);
+                                    
+                                    // Check if this course is already downloaded
+                                    const isDownloaded = classes?.some(savedCourse => {
+                                        if (!savedCourse || !savedCourse.brightspace_course_id) return false;
+                                        const savedCourseId = Number(savedCourse.brightspace_course_id);
+                                        return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
+                                    });
+                                    
+                                    // Only show in detected section if not already downloaded
+                                    if (isDownloaded) return null;
+                                    
+                                    return (
+                                        <>
+                                            <Group justify="space-between" align="center">
+                                                <Text fw={600}>Detected Course</Text>
+                                                <Tooltip label="Refresh Detection">
+                                                    <Button
+                                                        variant="subtle"
+                                                        size="xs"
+                                                        onClick={refreshData}
+                                                        loading={isLoading}
+                                                        p={4}
+                                                    >
+                                                        <Icons.Refresh />
+                                                    </Button>
+                                                </Tooltip>
+                                            </Group>
 
-                                        <Stack gap="md">
-                                            {(() => {
-                                                if (!homepageInfo || !homepageInfo.courseId) return null;
-
-                                                // Parse course ID as number for comparison
-                                                const courseIdNum = Number(homepageInfo.courseId);
-
-                                                // Check if this course is already downloaded
-                                                const isDownloaded = classes?.some(savedCourse => {
-                                                    if (!savedCourse || !savedCourse.brightspace_course_id) return false;
-                                                    const savedCourseId = Number(savedCourse.brightspace_course_id);
-                                                    return !isNaN(savedCourseId) && !isNaN(courseIdNum) && savedCourseId === courseIdNum;
-                                                });
-
-                                                const action = {
-                                                    type: isDownloaded ? 'refresh' as const : 'download' as const,
-                                                    handler: () => downloadCourseContent(homepageInfo.courseId, homepageInfo.courseDescriptor)
-                                                };
-
-                                                return (
-                                                    <CourseCard
-                                                        course={homepageInfo}
-                                                        action={action}
-                                                        isLoading={downloadingSessions[homepageInfo.courseId]}
-                                                        courseId={homepageInfo.courseId}
-                                                        isDetected={true}
-                                                        lectures={lectures?.filter(lecture => {
-                                                            if (!lecture || !lecture.class) return false;
-                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === lecture.class);
-                                                            return Number(classData?.brightspace_course_id) === Number(homepageInfo.courseId);
-                                                        }) || []}
-                                                        textbooks={textbooks?.filter(textbook => {
-                                                            if (!textbook || !textbook.class) return false;
-                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === textbook.class);
-                                                            return Number(classData?.brightspace_course_id) === Number(homepageInfo.courseId);
-                                                        }) || []}
-                                                        homeworks={homeworks?.filter(homework => {
-                                                            if (!homework || !homework.class) return false;
-                                                            const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
-                                                            return Number(classData?.brightspace_course_id) === Number(homepageInfo.courseId);
-                                                        }) || []}
-                                                    />
-                                                );
-                                            })()}
-                                        </Stack>
-                                    </>
-                                )}
+                                            <Stack gap="md">
+                                                <NewCourseCard
+                                                    course={homepageInfo}
+                                                    isLoading={downloadingSessions[homepageInfo.courseId]}
+                                                    courseId={homepageInfo.courseId}
+                                                    profile={profile}
+                                                />
+                                            </Stack>
+                                        </>
+                                    );
+                                })()}
 
                                 {/* Divider between sections if both have content */}
                                 {homepageInfo && getFilteredClasses(classes, profile) && getFilteredClasses(classes, profile).length > 0 && (
@@ -679,15 +684,7 @@ function IndexPopupContent() {
                                     <>
                                         <Text fw={600}>My Courses</Text>
                                         <Stack gap="md">
-                                            {getFilteredClasses(classes, profile).filter(savedCourse => {
-                                                if (!savedCourse || !savedCourse.brightspace_course_id || !homepageInfo || !homepageInfo.courseId) return true;
-
-                                                const savedCourseId = Number(savedCourse.brightspace_course_id);
-                                                const homepageIdNum = Number(homepageInfo.courseId);
-
-                                                // Skip the course that is already shown in the detected section
-                                                return isNaN(savedCourseId) || isNaN(homepageIdNum) || savedCourseId !== homepageIdNum;
-                                            }).map((savedCourse) => (
+                                            {getFilteredClasses(classes, profile).map((savedCourse) => (
                                                 <CourseCard
                                                     key={savedCourse.id}
                                                     course={savedCourse}
@@ -707,6 +704,12 @@ function IndexPopupContent() {
                                                         const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
                                                         return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
                                                     }) || []}
+                                                    downloads={downloads?.filter(download => {
+                                                        if (!download || !download.class) return false;
+                                                        const classData = getFilteredClasses(classes, profile)?.find(c => c.id === download.class);
+                                                        return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                                    }) || []}
+                                                    profile={profile}
                                                 />
                                             ))}
                                         </Stack>
@@ -758,6 +761,12 @@ function IndexPopupContent() {
                                                 const classData = getFilteredClasses(classes, profile)?.find(c => c.id === homework.class);
                                                 return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
                                             }) || []}
+                                            downloads={downloads?.filter(download => {
+                                                if (!download || !download.class) return false;
+                                                const classData = getFilteredClasses(classes, profile)?.find(c => c.id === download.class);
+                                                return Number(classData?.brightspace_course_id) === Number(savedCourse.brightspace_course_id);
+                                            }) || []}
+                                            profile={profile}
                                         />
                                     ))}
                                 </Stack>
@@ -793,13 +802,14 @@ function IndexPopupContent() {
                         name={profile.first_name + " " + profile.last_name}
                         userId={user.id}
                         logoutIcon={<Icons.Logout />}
+                        onLogout={() => setIsLoggedIn(false)}
                     />
                 )}
 
                 <Divider />
 
                 {/* Show page content */}
-                {renderPageContent()}
+                {isLoggedIn ? renderPageContent() : <Login />}
 
                 {/* URL display at bottom */}
                 <Box mt="auto">

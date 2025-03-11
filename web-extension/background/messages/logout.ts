@@ -1,5 +1,5 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
-import { getSupabaseServer } from '~utils/supabase/supabase-server'
+import { Storage } from "@plasmohq/storage"
 
 interface LogoutResponse {
   success: boolean
@@ -8,25 +8,39 @@ interface LogoutResponse {
 
 const handler: PlasmoMessaging.MessageHandler<{}, LogoutResponse> = async (req, res) => {
   try {
-    // Create the server client in the background script
-    const client = getSupabaseServer()
+    console.log("Logout attempt - using direct storage clearing approach");
     
-    const { error } = await client.auth.signOut()
-    if (error) {
-        throw new Error(error.message);
+    // Directly clear all auth-related storage
+    const storage = new Storage({ area: "local" });
+    
+    // Clear all Supabase auth tokens
+    await storage.remove("sb-hmdqtnywfebxjugxzlvc-auth-token");
+    await storage.remove("supabase.auth.token");
+    await storage.remove("supabase.auth.refreshToken");
+    
+    // Clear any other auth-related keys
+    const allKeys = await storage.getAll();
+    for (const key of Object.keys(allKeys)) {
+      if (key.includes('auth') || key.includes('token')) {
+        await storage.remove(key);
+      }
     }
-
+    
+    console.log("Storage cleared successfully");
+    
+    // Send success response before any navigation happens
     res.send({
       success: true,
-      error: "",
-    })
+      error: ""
+    });
+    
+    // Instead of reloading the extension, we'll let the UI handle navigation
   } catch (error) {
-    console.error('Error in login handler:', error);
-    // Send an empty array with the error to prevent the extension from breaking
+    console.error('Error in logout handler:', error);
     res.send({
       success: false,
-      error: error.message,
-    })
+      error: error.message || "An unexpected error occurred"
+    });
   }
 }
 

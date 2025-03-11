@@ -887,7 +887,7 @@ export default function HomeworkViewer({
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Skeleton visible={loadingExercises} height={32} width={500}>
+                            <Skeleton visible={loadingExercises} height={32} width={1000}>
                                 <Text size="xl" fw={700} mb={6}>{homework?.title}</Text>
                             </Skeleton>
                         </Group>

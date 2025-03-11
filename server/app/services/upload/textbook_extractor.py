@@ -22,7 +22,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),  # Output to console
-        logging.FileHandler('textbook_processing.log')  # Also save to a file
     ]
 )
 

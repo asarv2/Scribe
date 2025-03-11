@@ -43,6 +43,7 @@ async def parse_lecture(request: ParseRequest):
         # Get class title
         class_response = supabase.table("classes").select("*").eq("id", class_id).single().execute()
         class_title = class_response.data.get('title')
+        private_mode = class_response.data.get('privacy')
         print("Class query response:", class_response)
 
         # Get existing documents
@@ -63,115 +64,111 @@ async def parse_lecture(request: ParseRequest):
             audio_processor = AudioProcessor()
             print("AudioProcessor created")
 
-        # Process in batches
-        batch_size = 15 if not has_audio else 7
-        batch_results = []
+        # Process all documents at once with dynamic batching
+        all_results = []
         
-        for i in range(0, len(documents_to_process), batch_size):
-            batch = documents_to_process[i:i + batch_size]
-            print("Processing batch:", batch)
-
-            # Get images from supabase
-            images = []
-            text_contents = []
-            
-            try:
-                for doc in batch:
-                    # Download image
-                    image_path = f"{class_id}/{lecture_id}/{doc['id']}.png"
-                    print(f"Trying to download: {image_path}")
-                    
-                    try:
-                        response = supabase.storage.from_("lectures").download(image_path)
-                    except Exception as e:
-                        print(f"Error downloading image {doc['page']}: {e}")
-                        continue
-                    
-                    if not response:
-                        print(f"No data received for image {doc['page']}")
-                        continue
-
-                    images.append(response)
-                    print(f"Successfully downloaded image {doc['page']}")
-
-                    if has_audio:
-                        # audio path
-                        audio_path = f"{class_id}/{lecture_id}/{doc['id']}.wav"
-                        print(f"Trying to download: {audio_path}")
-
-                        try:
-                            response = supabase.storage.from_("lectures").download(audio_path)
-                        except Exception as e:
-                            print(f"Error downloading audio {doc['page']}: {e}")
-                            continue
-
-                        if not response:
-                            print(f"No data received for audio {doc['page']}")
-                            continue
-
-                        transcript = audio_processor.transcribe(response)
-                        print(f"Transcript: {transcript}")
-                        text_contents.append(transcript)
-                        print(f"Successfully downloaded audio {doc['page']}")
-                    else:
-                        text_contents.append(doc.get("text", ""))
-
-            except Exception as error:
-                print("Error in image download process:", error)
-                raise error
-
-            print("Total images downloaded:", len(images))
-
-            # Prepare documents for processing
-            processed_documents = [
-                {
-                    "page": doc["page"],
-                    "image": img,
-                    "text": text_content,
-                }
-                for doc, img, text_content in zip(batch, images, text_contents)
-            ]
-            # print("Processed documents:", processed_documents)
-
-            # Process the batch
-            print("Starting lecture processing...")
-            
-            async def after_generate(result):
-                # Find document ID
-                document_id = next(
-                    (doc['id'] for doc in documents if doc['page'] == result.page),
-                    None
-                )
-                if not document_id:
-                    raise Exception(f"Document not found for page {result.page}")
-
-                # Update document
-                supabase.table("documents").update({
-                    "description": result.description,
-                    "processed": True
-                }).eq("id", document_id).execute()
+        # Get images and audio from supabase
+        images = []
+        text_contents = []
+        
+        try:
+            for doc in documents_to_process:
+                # Download image
+                image_path = f"{class_id}/{lecture_id}/{doc['id']}.png"
+                print(f"Trying to download: {image_path}")
                 
-                print("Document inserted:", result.description)
+                try:
+                    response = supabase.storage.from_("lectures").download(image_path)
+                except Exception as e:
+                    print(f"Error downloading image {doc['page']}: {e}")
+                    continue
+                
+                if not response:
+                    print(f"No data received for image {doc['page']}")
+                    continue
 
-            results = await lecture_processor.process_slides(
-                class_title,
-                num_pages,
-                processed_documents,
-                after_generate
+                images.append(response)
+                print(f"Successfully downloaded image {doc['page']}")
+
+                if has_audio:
+                    # audio path
+                    audio_path = f"{class_id}/{lecture_id}/{doc['id']}.wav"
+                    print(f"Trying to download: {audio_path}")
+
+                    try:
+                        response = supabase.storage.from_("lectures").download(audio_path)
+                    except Exception as e:
+                        print(f"Error downloading audio {doc['page']}: {e}")
+                        continue
+
+                    if not response:
+                        print(f"No data received for audio {doc['page']}")
+                        continue
+
+                    transcript = audio_processor.transcribe(response)
+                    print(f"Transcript: {transcript}")
+                    text_contents.append(transcript)
+                    print(f"Successfully downloaded audio {doc['page']}")
+                else:
+                    text_contents.append(doc.get("text", ""))
+
+        except Exception as error:
+            print("Error in image download process:", error)
+            raise error
+
+        print("Total images downloaded:", len(images))
+
+        # Prepare documents for processing
+        processed_documents = [
+            {
+                "page": doc["page"],
+                "image": img,
+                "text": text_content,
+            }
+            for doc, img, text_content in zip(documents_to_process, images, text_contents)
+        ]
+        # print("Processed documents:", processed_documents)
+
+        # Process all slides with dynamic batching
+        print("Starting lecture processing with dynamic batching...")
+        
+        async def after_generate(result):
+            # Find document ID
+            document_id = next(
+                (doc['id'] for doc in documents if doc['page'] == result.page),
+                None
             )
-            print("Lecture processing for batch complete, results:", results)
+            if not document_id:
+                raise Exception(f"Document not found for page {result.page}")
 
-            # Convert CleanedResponse objects to dictionaries
-            serializable_results = [
-                {
-                    "page": result.page,
-                    "description": result.description,
-                }
-                for result in results
-            ]
-            batch_results.append(serializable_results)
+            # Update document
+            supabase.table("documents").update({
+                "description": result.description,
+                "processed": True
+            }).eq("id", document_id).execute()
+            
+            print("Document inserted:", result.description)
 
-        print("Batch results:", batch_results)
+        results = await lecture_processor.process_slides(
+            class_title,
+            num_pages,
+            processed_documents,
+            after_generate,
+            private_mode
+        )
+        print("Lecture processing complete, results:", results)
+
+        # Convert CleanedResponse objects to dictionaries
+        serializable_results = [
+            {
+                "page": result.page,
+                "description": result.description,
+            }
+            for result in results
+        ]
+        all_results = serializable_results
+
+        print("All results:", all_results)
 
         # Update lecture status to complete
         supabase.table("lectures").update({
@@ -179,7 +176,7 @@ async def parse_lecture(request: ParseRequest):
             "parse_error": None
         }).eq("id", lecture_id).execute()
 
-        return {"results": batch_results}
+        return {"results": all_results}
 
     except Exception as error:
         print("Error in parse-lecture function:", {

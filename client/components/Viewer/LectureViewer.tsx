@@ -608,7 +608,7 @@ export default function LectureViewer({
                 <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
-                            <Skeleton visible={loadingLecture} height={32} width={500}>
+                            <Skeleton visible={loadingLecture} height={32} width={1000}>
                                 <Text size="xl" fw={700} mb={6}>{lecture?.name}</Text>
                             </Skeleton>
                         </Group>

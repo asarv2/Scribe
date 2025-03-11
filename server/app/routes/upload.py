@@ -1,3 +1,4 @@
+import re
 from fastapi import APIRouter, File, UploadFile, Form, Request, BackgroundTasks
 from fastapi.responses import JSONResponse
 import os
@@ -19,57 +20,36 @@ load_dotenv()
 router = APIRouter()
 
 
-@router.post("/course")
-async def upload_course(
+@router.post("/create")
+async def create_course(
     request: Request,
-    file: UploadFile = File(...), 
     course_id: str = Form(...),
     course_descriptor: str = Form(...),
-    filename: str = Form(...),
     syllabus_file: UploadFile = File(None),
     syllabus_filename: str = Form(None),
-    response_url: str = Form(None),
     profile_id: str = Form(None)
 ):
     """
-    Receive course files from D2L, extract content zip, and save syllabus if provided.
+    Create a new course from syllabus information.
     
     Parameters:
-    - file: The uploaded ZIP file from D2L containing course content
     - course_id: Course ID from Brightspace
     - course_descriptor: Course descriptor from Brightspace
-    - filename: Original filename from D2L
     - syllabus_file: Optional syllabus file
     - syllabus_filename: Optional syllabus filename
-    - response_url: Optional response url for the course
     - profile_id: Profile ID
     Returns:
-    - JSON with file information and storage paths
+    - JSON with course information
     """
     # Debug logging
-    print(f"Received course upload request:")
-    print(f"- Content File: {file.filename}")
+    print(f"Received course creation request:")
     print(f"- Course ID: {course_id}")
-    print(f"- Filename: {filename}")
     print(f"- Syllabus: {syllabus_filename if syllabus_file else 'None'}")
     
     if not course_id:
         return JSONResponse(
             status_code=400,
             content={"error": "No course_id provided"}
-        )
-        
-    if not filename:
-        return JSONResponse(
-            status_code=400,
-            content={"error": "No filename provided"}
-        )
-    
-    # Validate file type
-    if not filename.endswith('.zip'):
-        return JSONResponse(
-            status_code=400,
-            content={"error": "File must be a ZIP archive"}
         )
     
     # Create timestamp for file naming
@@ -103,7 +83,7 @@ async def upload_course(
             # Continue with default values if syllabus processing fails
             course_info = {
                 "course_code": "",
-                "course_title": filename,
+                "course_title": course_descriptor,
                 "course_description": "",
                 "instructor": "",
                 "term": ""
@@ -112,7 +92,7 @@ async def upload_course(
     if not class_response.data:
         # we should create a new class in the classes table
         insert_data = {
-            "title": course_info.get("course_title", filename),
+            "title": course_info.get("course_title", course_descriptor),
             "brightspace_course_id": course_id,
             "brightspace_course_descriptor": course_descriptor,
             "created_at": datetime.now().isoformat()
@@ -159,24 +139,17 @@ async def upload_course(
     os.makedirs(os.path.join(COURSES_DIR, class_id), exist_ok=True)  # Make sure class directory exists
     os.makedirs(zip_storage_folder, exist_ok=True)  # Make sure zip directory exists
     
-    # Remove existing directory contents but keep the directory
-    if os.path.exists(extract_folder):
-        shutil.rmtree(extract_folder)  # Remove the entire base folder
-    
-    # Create fresh base directory
+    # Create fresh base directory if it doesn't exist
     os.makedirs(extract_folder, exist_ok=True)
     
     result = {
         "status": "success",
-        "original_filename": filename,
         "course_id": course_id,
         "class_id": class_id,
-        "upload_time": datetime.now().isoformat(),
-        "extracted_to": f"/files/courses/{class_id}/base",
-        "zip_stored_at": f"/files/courses/{class_id}/zip/{timestamp}_{filename}"
+        "created_at": datetime.now().isoformat()
     }
 
-    # Save the syllabus file
+    # Save the syllabus file if provided
     if syllabus_file and syllabus_filename:
         syllabus_path = os.path.join(extract_folder, syllabus_filename)
         await syllabus_file.seek(0)
@@ -186,11 +159,123 @@ async def upload_course(
         # Add syllabus info to the result
         result["syllabus_stored_at"] = f"/files/courses/{class_id}/base/{syllabus_filename}"
     
-    try:
-        # Save the zip file with timestamp
-        zip_filename = f"{timestamp}_{filename}"
-        zip_path = os.path.join(zip_storage_folder, zip_filename)
+    return result
+
+@router.post("/content")
+async def upload_content(
+    request: Request,
+    file: UploadFile = File(...), 
+    class_id: str = Form(...),
+    filename: str = Form(...),
+    response_url: str = Form(None),
+    profile_id: str = Form(None),
+    download_id: str = Form(None)
+):
+    """
+    Receive course content files from D2L, extract content zip, and process files.
+    
+    Parameters:
+    - file: The uploaded ZIP file from D2L containing course content
+    - class_id: Class ID
+    - filename: Original filename from D2L
+    - response_url: Optional response url for the course
+    - profile_id: Profile ID
+    - download_id: ID of the download record in the database
+    Returns:
+    - JSON with file information and storage paths
+    """
+    # Debug logging
+    print(f"Received course content upload request:")
+    print(f"- Content File: {file.filename}")
+    print(f"- Class ID: {class_id}")
+    print(f"- Filename: {filename}")
+    print(f"- Download ID: {download_id}")
+    
+    # Update download status to 'received' if download_id is provided
+    if download_id:
+        try:
+            supabase.table("downloads").update({
+                "status": "received",
+                "updated_at": datetime.now().isoformat()
+            }).eq("id", download_id).execute()
+        except Exception as e:
+            print(f"Error updating download status: {str(e)}")
+    
+    if not class_id:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "No class_id provided"}
+        )
         
+    if not filename:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "No filename provided"}
+        )
+    
+    # Validate file type
+    if not filename.endswith('.zip'):
+        return JSONResponse(
+            status_code=400,
+            content={"error": "File must be a ZIP archive"}
+        )
+    
+    # Create timestamp for file naming
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Get class information
+    class_response = supabase.table("classes").select("*").eq("id", class_id).execute()
+    if not class_response.data:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Class not found"}
+        )
+    
+    # Update the class with the updated_at timestamp
+    supabase.table("classes").update({
+        "updated_at": datetime.now().isoformat()
+    }).eq("id", class_id).execute()
+    
+    # Create the class directory
+    class_dir = os.path.join(COURSES_DIR, class_id)
+    
+    # Create download-specific directory if download_id is provided
+    if download_id:
+        # Create download directory structure
+        download_dir = os.path.join(class_dir, download_id)
+        extract_folder = os.path.join(download_dir, "base")
+    else:
+        # Fallback to old structure if no download_id
+        download_dir = class_dir
+        extract_folder = os.path.join(class_dir, "base")
+    
+    # Ensure all directories exist
+    os.makedirs(COURSES_DIR, exist_ok=True)  # Make sure base courses directory exists
+    os.makedirs(class_dir, exist_ok=True)  # Make sure class directory exists
+    os.makedirs(download_dir, exist_ok=True)  # Make sure download directory exists
+    
+    # Remove existing directory contents but keep the directory
+    if os.path.exists(extract_folder):
+        shutil.rmtree(extract_folder)  # Remove the entire base folder
+    
+    # Create fresh base directory
+    os.makedirs(extract_folder, exist_ok=True)
+    
+    # Save the zip file at the root of the download directory
+    zip_filename = f"download_{timestamp}.zip"
+    zip_path = os.path.join(download_dir, zip_filename)
+    
+    result = {
+        "status": "success",
+        "original_filename": filename,
+        "class_id": class_id,
+        "download_id": download_id,
+        "upload_time": datetime.now().isoformat(),
+        "extracted_to": f"/files/courses/{class_id}/{download_id if download_id else ''}/base",
+        "zip_stored_at": f"/files/courses/{class_id}/{download_id if download_id else ''}/{zip_filename}"
+    }
+    
+    try:
         # Ensure the file content is at the beginning
         await file.seek(0)
         
@@ -212,17 +297,71 @@ async def upload_course(
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extract_folder)
         
+        # Get previous download information to compare files
+        previous_files = []
+        if download_id:
+            try:
+                # Find the most recent previous download for this class
+                previous_downloads = supabase.table("downloads").select("*").eq("class", class_id).order("updated_at", desc=True).limit(10).execute()
+                
+                for prev_download in previous_downloads.data:
+                    # Skip the current download
+                    if prev_download["id"] == download_id:
+                        continue
+                    
+                    # Check if this download has file_list data
+                    if prev_download.get("file_list"):
+                        previous_files = prev_download.get("file_list", [])
+                        print(f"Found previous download with {len(previous_files)} files")
+                        break
+            except Exception as e:
+                print(f"Error retrieving previous downloads: {str(e)}")
+        
+        # Check for Table of Contents.html and extract file list
+        toc_path = os.path.join(extract_folder, "Table of Contents.html")
+        current_files = []
+        
+        if os.path.exists(toc_path):
+            try:
+                with open(toc_path, 'r', encoding='utf-8') as f:
+                    toc_content = f.read()
+                
+                # Extract file links from the Table of Contents
+                file_links = re.findall(r'href="([^"]+)"', toc_content)
+                current_files = [link for link in file_links if link]
+                
+                # Store the Table of Contents content in Supabase for reference
+                if download_id:
+                    supabase.table("downloads").update({
+                        "file_list": current_files,
+                        "toc_content": toc_content
+                    }).eq("id", download_id).execute()
+                
+                print(f"Extracted {len(current_files)} files from Table of Contents")
+            except Exception as e:
+                print(f"Error processing Table of Contents: {str(e)}")
+        
+        # Determine new files by comparing with previous download
+        new_files = []
+        if previous_files:
+            new_files = [f for f in current_files if f not in previous_files]
+            print(f"Detected {len(new_files)} new files compared to previous download")
+        else:
+            # If no previous download data, treat all files as new
+            new_files = current_files
+            print(f"No previous download data found, treating all {len(new_files)} files as new")
+        
         # Process the course files to categorize them
         try:
             api_key = os.getenv("GEMINI_API_KEY")
             course_processor = InitialCourseProcessor(api_key, extract_folder, class_id)
             course_organization = course_processor.process_course()
             
+            # Override the new_files list with our more accurate TOC-based list
+            course_organization["new_files"] = new_files
+            
             # Add organization info to the result
             result["course_organization"] = course_organization
-            
-            # Get the list of new files
-            new_files = course_organization.get("new_files", [])
             
             # Process each categorized file only if it's new
             # Process lectures
@@ -233,12 +372,14 @@ async def upload_course(
                     lecture_path = lecture_path[len(base_name):].lstrip('/')
                 
                 full_path = os.path.join(extract_folder, lecture_path)
+                filename_only = os.path.basename(full_path)
 
                 # make sure the file is a pdf
                 if not full_path.endswith('.pdf'):
                     continue
 
-                if os.path.exists(full_path) and full_path in new_files:
+                # Check if this file is in the new_files list
+                if os.path.exists(full_path) and filename_only in new_files:
                     print(f"Processing new lecture: {full_path}")
                     # Add to task queue instead of background tasks
                     await request.app.state.add_task(
@@ -247,6 +388,8 @@ async def upload_course(
                         class_id,
                         response_url
                     )
+                else:
+                    print(f"Skipping already processed lecture: {filename_only}")
             
             # Process textbooks/readings
             for reading_path in course_organization.get("categories", {}).get("readings", []):
@@ -256,11 +399,14 @@ async def upload_course(
                     reading_path = reading_path[len(base_name):].lstrip('/')
                 
                 full_path = os.path.join(extract_folder, reading_path)
+                filename_only = os.path.basename(full_path)
+                
                 # make sure the file is a pdf
                 if not full_path.endswith('.pdf'):
                     continue
 
-                if os.path.exists(full_path) and full_path in new_files:
+                # Check if this file is in the new_files list
+                if os.path.exists(full_path) and filename_only in new_files:
                     print(f"Processing new reading: {full_path}")
                     # Add to task queue
                     await request.app.state.add_task(
@@ -269,6 +415,8 @@ async def upload_course(
                         class_id,
                         response_url
                     )
+                else:
+                    print(f"Skipping already processed reading: {filename_only}")
             
             # Process assignments/homework
             for assignment_path in course_organization.get("categories", {}).get("assignments", []):
@@ -278,11 +426,14 @@ async def upload_course(
                     assignment_path = assignment_path[len(base_name):].lstrip('/')
                 
                 full_path = os.path.join(extract_folder, assignment_path)
+                filename_only = os.path.basename(full_path)
+                
                 # make sure the file is a pdf, .txt or .docx
                 if not full_path.endswith('.pdf') and not full_path.endswith('.txt'):
                     continue
 
-                if os.path.exists(full_path) and full_path in new_files:
+                # Check if this file is in the new_files list
+                if os.path.exists(full_path) and filename_only in new_files:
                     print(f"Processing new assignment: {full_path}")
                     # Add to task queue
                     await request.app.state.add_task(
@@ -291,11 +442,33 @@ async def upload_course(
                         class_id,
                         response_url
                     )
+                else:
+                    print(f"Skipping already processed assignment: {filename_only}")
+            
+            # Update download status to 'completed' after all processing is done
+            if download_id:
+                try:
+                    supabase.table("downloads").update({
+                        "status": "completed",
+                        "updated_at": datetime.now().isoformat(),
+                        "processed_files": len(new_files),
+                        "total_files": len(current_files)
+                    }).eq("id", download_id).execute()
+                except Exception as e:
+                    print(f"Error updating download status: {str(e)}")
         
         except Exception as e:
             print(f"Error categorizing course files: {str(e)}")
-            # Continue even if categorization fails
-
+            # Update download status to reflect error in categorization
+            if download_id:
+                try:
+                    supabase.table("downloads").update({
+                        "status": "error",
+                        "error_message": f"Error categorizing files: {str(e)}",
+                        "updated_at": datetime.now().isoformat()
+                    }).eq("id", download_id).execute()
+                except Exception as db_e:
+                    print(f"Error updating download status: {str(db_e)}")
         
         # Return success response with file information
         return result
@@ -306,6 +479,17 @@ async def upload_course(
         print(f"Error processing course files: {str(e)}")
         print(traceback.format_exc())
         
+        # Update download status to reflect error
+        if download_id:
+            try:
+                supabase.table("downloads").update({
+                    "status": "error",
+                    "error_message": f"Failed to process course files: {str(e)}",
+                    "updated_at": datetime.now().isoformat()
+                }).eq("id", download_id).execute()
+            except Exception as db_e:
+                print(f"Error updating download status: {str(db_e)}")
+        
         return JSONResponse(
             status_code=500,
             content={
@@ -313,6 +497,8 @@ async def upload_course(
                 "message": f"Failed to process course files: {str(e)}"
             }
         )
+
+
 
 @router.post("/lecture")
 async def process_lecture(

@@ -89,34 +89,17 @@ export default function Class({ params }: { params: { classId: string } }) {
         enabled: !!faqs
     })
 
-    const {data: faqLectureDocuments, isLoading: loadingFaqLectureDocuments} = useQuery({
-        queryKey: ["faqLectureDocuments", classId],
-        queryFn: () => getLectureDocuments(supabase, Array.from(new Set(faqLectures?.flatMap(lecture => lecture.id)))),
-        enabled: !!faqLectures
-    })
-
     const {data: faqChapters, isLoading: loadingFaqChapters} = useQuery({
         queryKey: ["faqChapters", classId],
         queryFn: () => getChaptersById(supabase, Array.from(new Set(faqs?.flatMap(faq => faq.chapters)))),
         enabled: !!faqs
     })
 
-    const {data: faqChapterDocuments, isLoading: loadingFaqChapterDocuments} = useQuery({
-        queryKey: ["faqChapterDocuments", classId],
-        queryFn: () => getChapterDocuments(supabase, Array.from(new Set(faqChapters?.flatMap(chapter => chapter.id)))),
-        enabled: !!faqChapters
-    })
 
     const {data: faqHomeworks, isLoading: loadingFaqHomeworks} = useQuery({
         queryKey: ["faqHomeworks", classId],
         queryFn: () => getHomeworksById(supabase, Array.from(new Set(faqs?.flatMap(faq => faq.homeworks)))),
         enabled: !!faqs
-    })
-
-    const {data: faqHomeworkDocuments, isLoading: loadingFaqHomeworkDocuments} = useQuery({
-        queryKey: ["faqHomeworkDocuments", classId],
-        queryFn: () => getHomeworkDocuments(supabase, Array.from(new Set(faqHomeworks?.flatMap(homework => homework.id)))),
-        enabled: !!faqHomeworks
     })
 
     // Process chat data for visualization
@@ -231,13 +214,15 @@ export default function Class({ params }: { params: { classId: string } }) {
 
     // Add these new processing functions after the other processing functions
     const processFaqLecturesData = () => {
-        if (!faqs || !faqLectures || !faqLectureDocuments) return [];
+        if (!faqs || !faqLectures) return [];
         
         const lectureCounts = faqs.reduce((acc: { [key: string]: number }, faq) => {
             if (faq.lectures) {
                 const lecture = faqLectures.find(l => faq.lectures.includes(l.id));
-                const lectureName = lecture ? `${lecture.name}` : 'Unknown Lecture';
-                acc[lectureName] = (acc[lectureName] || 0) + 1;
+                if (lecture) {
+                    const lectureName = `${lecture.name}`;
+                    acc[lectureName] = (acc[lectureName] || 0) + 1;
+                }
             }
             return acc;
         }, {});
@@ -256,8 +241,10 @@ export default function Class({ params }: { params: { classId: string } }) {
         const chapterCounts = faqs.reduce((acc: { [key: string]: number }, faq) => {
             if (faq.chapters) {
                 const chapter = faqChapters.find(c => faq.chapters.includes(c.id));
-                const chapterName = chapter ? `${chapter.title}` : 'Unknown Chapter';
-                acc[chapterName] = (acc[chapterName] || 0) + 1;
+                if (chapter) {
+                    const chapterName = `${chapter.title}`;
+                    acc[chapterName] = (acc[chapterName] || 0) + 1;
+                }
             }
             return acc;
         }, {});
@@ -276,8 +263,10 @@ export default function Class({ params }: { params: { classId: string } }) {
         const homeworkCounts = faqs.reduce((acc: { [key: string]: number }, faq) => {
             if (faq.homeworks) {
                 const homework = faqHomeworks.find(h => faq.homeworks.includes(h.id));
-                const homeworkName = homework ? `${homework.title}` : 'Unknown Homework';
-                acc[homeworkName] = (acc[homeworkName] || 0) + 1;
+                if (homework) {
+                    const homeworkName = `${homework.title}`;
+                    acc[homeworkName] = (acc[homeworkName] || 0) + 1;
+                }
             }
             return acc;
         }, {});

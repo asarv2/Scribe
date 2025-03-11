@@ -1,6 +1,7 @@
 import os
 import sys
 import asyncio
+from contextlib import asynccontextmanager
 
 # Add app directory to Python path for local development
 if not os.getenv('DOCKER_ENV'):
@@ -13,8 +14,18 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
+from app.config import MODEL_REGISTRY
 
-# Create FastAPI app
+# Check model availability during startup
+if os.environ.get('GPU_WORKER') == 'true':
+    if MODEL_REGISTRY["initialized"]:
+        print("Model loaded successfully")
+    else:
+        print("Model not available - initialization failed")
+else:
+    print("Not a GPU worker - model loading skipped")
+
+# Create FastAPI app with lifespan
 app = FastAPI(title="Scribe API")
 
 # Create a simple task queue

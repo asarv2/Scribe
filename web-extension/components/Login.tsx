@@ -16,51 +16,56 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
-        setLoading(true)
+        setLoading(true);
         try {
             // Professor login logic
             if (!email || !password) {
-                throw new Error("Please enter email and password")
+                throw new Error("Please enter email and password");
             }
 
             if (!email.endsWith("@purdue.edu")) {
-                throw new Error("Please enter a valid Purdue email")
+                throw new Error("Please enter a valid Purdue email");
             }
 
-            const {success, error, user} = await sendToBackground<{ email: string, password: string }, { success: boolean, error: string, user: User | null }>({
+            console.log("Sending login request...");
+            const response = await sendToBackground<
+                { email: string; password: string },
+                { success: boolean; error: string; user: User | null }
+            >({
                 name: "login",
                 body: { email, password }
-            })
+            });
+            
+            console.log("Login response received:", response.success);
 
-            if (!success || !user) {
-                throw new Error(error)
+            if (!response.success || !response.user) {
+                throw new Error(response.error || "Login failed");
             } else {
+                console.log("Login successful, invalidating queries");
                 queryClient.invalidateQueries({
                     queryKey: ["user"]
-                })
+                });
                 queryClient.invalidateQueries({
                     queryKey: ["profile"]
-                })
+                });
                 queryClient.invalidateQueries({
                     queryKey: ["classes"]
-                })
+                });
                 queryClient.invalidateQueries({
                     queryKey: ["lectures"]
-                })
+                });
                 queryClient.invalidateQueries({
                     queryKey: ["textbooks"]
-                })
+                });
                 queryClient.invalidateQueries({
                     queryKey: ["homeworks"]
-                })
-                
-                
+                });
             }
-
         } catch (e: any) {
-            console.error(e)
+            console.error("Login error:", e);
+            // Add error notification here
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     }
 

@@ -23,7 +23,8 @@ import {
     Menu,
     Flex,
     Skeleton,
-    Container
+    Container,
+    Switch
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
 import { IconMoon, IconSun, IconUpload, IconUser, IconX, IconCopy, IconTrash, IconRefresh } from "@tabler/icons-react";
@@ -42,6 +43,7 @@ import { createCode, deleteCode } from "@/utils/services/code";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { ClassLayout } from "@/components/Class/ClassLayout";
+import { updateClassPrivacy } from "@/utils/services/class";
 
 export default function AccountPage() {
     const { colorScheme, setColorScheme } = useMantineColorScheme();
@@ -220,6 +222,27 @@ export default function AccountPage() {
             });
         }
     };
+
+    const handlePrivacyUpdate = async (classId: string, privacyStatus: boolean) => {
+        try {
+            const { success, error } = await updateClassPrivacy(classId, privacyStatus);
+            if (!success) {
+                throw new Error(error);
+            }
+            queryClient.invalidateQueries({ queryKey: ["classes"] });
+            notifications.show({
+                title: 'Success',
+                message: 'Class privacy updated successfully',
+                color: 'green'
+            });
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            });
+        }
+    }
 
 
     return (
@@ -430,7 +453,7 @@ export default function AccountPage() {
                                             <Text c="dimmed" size="sm">No classes available.</Text>
                                         ) : (
                                             <Stack gap="md">
-                                                {classes.map((classItem) => {
+                                                {classes.filter(classItem => profile?.classes?.includes(classItem.id)).map((classItem) => {
                                                     const classCode = codes?.find(c => c.classes.includes(classItem.id));
 
                                                     return (
@@ -493,6 +516,61 @@ export default function AccountPage() {
                                                         </Stack>
                                                     );
                                                 })}
+                                            </Stack>
+                                        )}
+                                    </Stack>
+                                </Card>
+                            </div>
+                        )}
+
+                        {/* Private Mode Settings Section */}
+                        {loadingProfile ? (
+                            <div>
+                                <Text size="lg" fw={500} mb="md">Private Mode</Text>
+                                <Card withBorder shadow="sm" radius="md" p="xl">
+                                    <Stack gap="md">
+                                        {[1, 2, 3].map((i) => (
+                                            <Stack key={i} gap="sm">
+                                                <Skeleton height={20} width="180px" />
+                                                <Group gap="sm">
+                                                    <Skeleton height={36} width="200px" />
+                                                    <Skeleton height={36} width={36} />
+                                                </Group>
+                                            </Stack>
+                                        ))}
+                                    </Stack>
+                                </Card>
+                            </div>
+                        ) : (profile?.professor || profile?.admin) && (
+                            <div>
+                                <Text size="lg" fw={500} mb="md">Private Mode Settings</Text>
+                                <Card withBorder shadow="sm" radius="md">
+                                    <Stack gap="md">
+                                        <Text size="sm" c="dimmed">
+                                            When private mode is enabled for a class, all content will be processed using our own models instead of external services, ensuring complete data privacy.
+                                        </Text>
+                                        {classesLoading ? (
+                                            <Stack gap="md">
+                                                {[1, 2, 3].map((i) => (
+                                                    <Stack key={i} gap="sm">
+                                                        <Skeleton height={20} width="180px" />
+                                                        <Skeleton height={36} width="200px" />
+                                                    </Stack>
+                                                ))}
+                                            </Stack>
+                                        ) : !classes || classes.length === 0 ? (
+                                            <Text c="dimmed" size="sm">No classes available.</Text>
+                                        ) : (
+                                            <Stack gap="md">
+                                                {classes.filter(classItem => profile?.classes?.includes(classItem.id)).map((classItem) => (
+                                                    <Switch
+                                                        key={classItem.id}
+                                                        checked={classItem.privacy}
+                                                        onChange={(event) => handlePrivacyUpdate(classItem.id, event.currentTarget.checked)}
+                                                        label={`${classItem.title}`}
+                                                        labelPosition="right"
+                                                    />
+                                                ))}
                                             </Stack>
                                         )}
                                     </Stack>

@@ -1,105 +1,170 @@
 # config.py
 import os
 import torch
-from transformers import AutoModelForCausalLM, AutoProcessor
-from typing import Optional, Tuple
+import threading
+from transformers import AutoModelForCausalLM, AutoProcessor, GenerationConfig
+import time
+import gc
+from app.extensions import MODEL_CACHE_DIR
 
-# Set models folder based on environment
-MODELS_FOLDER = "/app/models" if os.getenv('DOCKER_ENV') else os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
-
-# Define all directory paths
-os.makedirs(MODELS_FOLDER, exist_ok=True)
+# Global model registry - single source of truth
+MODEL_REGISTRY = {
+    "model": None,
+    "processor": None,
+    "initialized": False,
+    "lock": threading.Lock()
+}
 
 class ModelManager:
     def __init__(self):
-        self.model = None
-        self.processor = None
-        self.model_name = "microsoft/Phi-4-multimodal-instruct"
-        self.local_model_path = os.path.join(MODELS_FOLDER, "phi-4-multimodal-instruct")
+        self.model_path = "microsoft/Phi-4-multimodal-instruct"
+        self.cache_dir = MODEL_CACHE_DIR
+        self.model_save_path = os.path.join(self.cache_dir, "phi4_model")
+        
+        # Create cache directory if it doesn't exist
+        os.makedirs(self.cache_dir, exist_ok=True)
+        
+        # Prompt templates
+        self.user_prompt = "<|user|>\n"
+        self.assistant_prompt = "<|assistant|>\n"
+        self.prompt_suffix = "\n"
 
-    def download_model(self) -> None:
-        """Download the model from HuggingFace"""
+    def _get_gpu_memory(self) -> float:
+        """Get combined available GPU memory"""
         try:
-            print(f"Downloading model to {self.local_model_path}...")
-            
-            processor = AutoProcessor.from_pretrained(
-                self.model_name,
-                trust_remote_code=True
-            )
-            processor.save_pretrained(self.local_model_path)
-
-            model = AutoModelForCausalLM.from_pretrained(
-                self.model_name,
-                torch_dtype="auto",
-                trust_remote_code=True
-            )
-            model.save_pretrained(self.local_model_path)
-            
-            print("Model downloaded successfully")
-            
-        except Exception as e:
-            print(f"Error downloading model: {str(e)}")
-            raise
-
-    def load_model(self) -> Tuple[Optional[AutoModelForCausalLM], Optional[AutoProcessor]]:
-        try:
-            device = "cuda" if torch.cuda.is_available() else "cpu"
-            
-            if device == "cuda":
-                try:
-                    import flash_attn  # type: ignore
-                    import accelerate # type: ignore
-                    _ = flash_attn.__version__
-                    attn_implementation = "flash_attention_2"
-                except ImportError:
-                    print("Warning: GPU detected but flash-attention not installed. Using eager implementation.")
-                    attn_implementation = "eager"
-            else:
-                print("Warning: Running on CPU. This model performs best with NVIDIA GPUs")
-                attn_implementation = "eager"
-
-            if not os.path.exists(self.local_model_path):
-                print("Model not found locally. Downloading...")
-                self.download_model()
-
-            print("Loading model...")
-            
-            self.processor = AutoProcessor.from_pretrained(
-                self.local_model_path,
-                trust_remote_code=True
-            )
-
-            self.model = AutoModelForCausalLM.from_pretrained(
-                self.local_model_path,
-                device_map=device,
-                torch_dtype="auto",
-                trust_remote_code=True,
-                _attn_implementation=attn_implementation
-            )
-
-            if device == "cuda":
-                self.model.cuda()
+            if not torch.cuda.is_available():
+                return 0
                 
-            print("Model loaded successfully")
-            return self.model, self.processor
-
+            total_free_memory = 0
+            for i in range(torch.cuda.device_count()):
+                free_memory = torch.cuda.get_device_properties(i).total_memory - torch.cuda.memory_allocated(i)
+                total_free_memory += free_memory
+                
+            return total_free_memory / 1024**3  # Convert to GB
         except Exception as e:
-            print(f"Error loading model: {str(e)}")
-            self.model = None
-            self.processor = None
-            raise
+            print(f"Error getting GPU memory: {e}")
+            return 0
+    
+    def _get_model(self):
+        """Get model from global registry or load it if not available"""
+        global MODEL_REGISTRY
+        
+        # If model is already loaded in registry, return it
+        if MODEL_REGISTRY["initialized"]:
+            return MODEL_REGISTRY["model"], MODEL_REGISTRY["processor"]
+        
+        # Use lock to prevent multiple workers from loading the model simultaneously
+        with MODEL_REGISTRY["lock"]:
+            # Check again in case another thread loaded the model while waiting
+            if MODEL_REGISTRY["initialized"]:
+                return MODEL_REGISTRY["model"], MODEL_REGISTRY["processor"]
+            
+            # Check if this is a GPU worker or if GPU is available
+            is_gpu_worker = os.environ.get('GPU_WORKER') == 'true'
+            has_gpu = torch.cuda.is_available()
+            
+            if not (is_gpu_worker and has_gpu):
+                raise RuntimeError("Model loading requires GPU worker with available GPU")
+            
+            total_free_gb = self._get_gpu_memory()
+            if total_free_gb < 20:
+                raise RuntimeError("Insufficient GPU memory. Need at least 20GB available. Found: " + str
+                (total_free_gb))
+            
+            print("Downloading model and processor from Hugging Face hub...")
+            start_time = time.time()
 
-    def get_model(self) -> Tuple[Optional[AutoModelForCausalLM], Optional[AutoProcessor]]:
-        if self.model is None or self.processor is None:
-            return self.load_model()
-        return self.model, self.processor
+            # Force garbage collection before loading model
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                torch.cuda.memory.empty_cache()
+
+            # Check if model is already saved locally
+            if os.path.exists(self.model_save_path):
+                print("Loading model from local cache...")
+                processor = AutoProcessor.from_pretrained(self.model_path, trust_remote_code=True, use_fast=False)
+                model = AutoModelForCausalLM.from_pretrained(
+                    self.model_save_path,
+                    device_map="auto",
+                    max_memory={0: "12GiB", 1: "12GiB"},
+                    torch_dtype="auto",
+                    trust_remote_code=True,
+                    _attn_implementation='flash_attention_2',
+                )
+                
+                load_time = time.time() - start_time
+                print(f"Model loaded from cache in {load_time:.2f} seconds")
+            else:
+                # Download model from Hugging Face
+                processor = AutoProcessor.from_pretrained(self.model_path, trust_remote_code=True, use_fast=False)
+                model = AutoModelForCausalLM.from_pretrained(
+                    self.model_path,
+                    device_map="auto",
+                    max_memory={0: "12GiB", 1: "12GiB"},
+                    torch_dtype="auto",
+                    trust_remote_code=True,
+                    _attn_implementation='flash_attention_2',
+                    cache_dir=self.cache_dir
+                )
+                
+                download_time = time.time() - start_time
+                print(f"Model downloaded in {download_time:.2f} seconds")
+                
+                # Save model locally for faster loading next time
+                print("Saving model to local cache...")
+                save_start = time.time()
+                model.save_pretrained(self.model_save_path)
+                print(f"Model saved to cache in {time.time() - save_start:.2f} seconds")
+            
+            
+            # Store in global registry
+            MODEL_REGISTRY["model"] = model
+            MODEL_REGISTRY["processor"] = processor
+            MODEL_REGISTRY["initialized"] = True
+            
+            # Enable performance optimizations
+            if torch.cuda.is_available():
+                torch.backends.cuda.matmul.allow_tf32 = True
+                torch.backends.cudnn.allow_tf32 = True
+                torch.backends.cudnn.benchmark = True
+            
+            # Run garbage collection to free memory
+            gc.collect()
+            torch.cuda.empty_cache()
+            
+            return model, processor
+    
+    def _warm_up_model(self):
+        """Warm up the model with a simple inference to optimize first real request"""
+        if not MODEL_REGISTRY["initialized"]:
+            return
+            
+        print("Warming up model...")
+        warm_up_start = time.time()
+        
+        model = MODEL_REGISTRY["model"]
+        processor = MODEL_REGISTRY["processor"]
+        
+        with torch.no_grad():
+            # Use a simple prompt for warm-up
+            warm_up_text = f"{self.user_prompt}Describe a lecture slide.{self.prompt_suffix}{self.assistant_prompt}"
+            warm_up_inputs = processor(text=warm_up_text, return_tensors='pt').to(model.device)
+            _ = model(**warm_up_inputs)
+            
+        warm_up_time = time.time() - warm_up_start
+        print(f"Model warm-up completed in {warm_up_time:.2f} seconds")
 
 # Initialize model manager
 model_manager = ModelManager()
 
-# Attempt to load model on startup if GPU is available
-if torch.cuda.is_available():
-    try:
-        model_manager.load_model()
-    except Exception as e:
-        print(f"Warning: Could not load model on startup: {str(e)}")
+if os.environ.get('GPU_WORKER') == 'true':
+    import torch
+    if torch.cuda.is_available():
+        try:
+            print("Loading model in GPU worker at startup...")
+            model, processor = model_manager._get_model()
+            model_manager._warm_up_model()  # Add warm-up step
+            print("Model loaded successfully in GPU worker")
+        except Exception as e:
+            print(f"Warning: Could not load model on startup: {str(e)}")

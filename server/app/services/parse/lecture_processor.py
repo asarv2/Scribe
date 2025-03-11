@@ -2,9 +2,13 @@ from typing import List, Dict, Any, Optional, Callable
 import base64
 from app.services.base_processor import BaseProcessor, CleanedResponse, Message
 from app.config import model_manager
-import torch
 from PIL import Image
 import io
+import torch
+import asyncio
+import time
+from app.services.task_router import route_to_gpu_worker
+from app.config import MODEL_REGISTRY
 
 class LectureProcessor(BaseProcessor):
     def __init__(self, course_title: str):
@@ -43,132 +47,263 @@ class LectureProcessor(BaseProcessor):
         self.notes[lecture_name][page_number] = cleaned_response
 
         return cleaned_response
-
-    async def process_with_phi4(self, image: bytes, prompt: str) -> Optional[str]:
-        """Try to process with Phi-4 model first"""
+    
+    async def process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6, 
+                                     batch_callback=None) -> List[Optional[str]]:
+        """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
-            model, processor = model_manager.get_model()
-            if not model or not processor:
-                return None
-
-            # Convert bytes to PIL Image
-            pil_image = Image.open(io.BytesIO(image))
-            
-            # Use the prompt parameter in the formatted text
-            formatted_prompt = f"<|user|><|image_1|>{prompt}<|end|><|assistant|>"
-            
-            # Process image and text with Phi-4 format
-            inputs = processor(
-                text=formatted_prompt,
-                images=pil_image,
-                return_tensors="pt"
-            )
-
-            # Move to GPU if available
-            if torch.cuda.is_available():
-                inputs = {k: v.cuda() for k, v in inputs.items()}
-                model.cuda()
-
-            # Generate response
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=512,
-                do_sample=False
-            )
-            
-            response = processor.decode(outputs[0], skip_special_tokens=True)
-            return response
+            # Route this GPU-intensive task to the GPU worker
+            return await route_to_gpu_worker(self._process_with_phi4_batch, images, prompts, min_batch_size, max_batch_size, batch_callback)
         except Exception as e:
-            print(f"Phi-4 processing failed: {str(e)}")
-            return None
+            print(f"Phi-4 batch processing failed: {str(e)}")
+            return [None] * len(images)
 
-    async def process_page(
-        self,
-        image: bytes,
-        text: str,
-        page_number: int,
-        lecture_name: str,
-        num_pages: int,
-    ) -> CleanedResponse:
+    async def _process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6,
+                                      batch_callback=None) -> List[Optional[str]]:
+        """Process multiple images in parallel with Phi-4 model using optimized batching"""
         try:
-            # Get prompts
-            base_prompt = self._get_base_prompt()
-            additional_prompt = self._get_additional_prompt(page_number, num_pages)
-            combined_prompt = base_prompt + "\n\n" + additional_prompt
-
-            # Try Phi-4 first
-            phi4_response = await self.process_with_phi4(image, combined_prompt)
+            # Get model and processor directly from MODEL_REGISTRY instead of global imports
+            model = MODEL_REGISTRY["model"]
+            processor = MODEL_REGISTRY["processor"]
             
-            if phi4_response:
-                print(f"Successfully processed page {page_number} with Phi-4")
-                return self.clean_response(
-                    phi4_response,
-                    lecture_name,
-                    page_number,
-                    text
+            if model is None or processor is None:
+                raise RuntimeError("Model not available")
+            
+            # Preload and preprocess all images
+            print("Preloading and preprocessing all images...")
+            preprocess_start = time.time()
+            pil_images = []
+            for img_bytes in images:
+                img = Image.open(io.BytesIO(img_bytes))
+                # Convert to RGB if image has alpha channel or is not RGB
+                if img.mode != 'RGB':
+                    img = img.convert('RGB')
+                # Use a smaller target size to reduce memory and processing time
+                img = img.resize((384, 384), Image.LANCZOS)
+                pil_images.append(img)
+            preprocess_time = time.time() - preprocess_start
+            print(f"Preprocessing completed in {preprocess_time:.2f} seconds")
+
+            # Calculate optimal batch distribution
+            total_images = len(images)
+            batches = []
+            
+            # Determine optimal batch distribution to minimize forward passes
+            remaining = total_images
+            while remaining > 0:
+                if remaining <= max_batch_size:
+                    # Last batch with remaining images
+                    batches.append(remaining)
+                    break
+                elif remaining <= max_batch_size * 2:
+                    # Split remaining images into two balanced batches
+                    batch1 = remaining // 2
+                    batch2 = remaining - batch1
+                    if batch1 < min_batch_size:
+                        batch1 = min_batch_size
+                        batch2 = remaining - batch1
+                    batches.extend([batch1, batch2])
+                    break
+                else:
+                    # Add a max-sized batch and continue
+                    batches.append(max_batch_size)
+                    remaining -= max_batch_size
+            
+            print(f"Optimized batch distribution: {batches} (total: {sum(batches)} images)")
+            
+            # Process images according to the calculated batch sizes
+            all_responses = []
+            image_index = 0
+            
+            for batch_num, batch_size in enumerate(batches):
+                batch_images = pil_images[image_index:image_index+batch_size]
+                batch_prompts = [f"<|user|><|image_1|>{prompts[i+image_index]}<|end|><|assistant|>" for i in range(batch_size)]
+                
+                print(f"\n--- PROCESSING BATCH {batch_num + 1}/{len(batches)} ({batch_size} images) ---")
+                
+                print("Processing batch inputs")
+                # Time the input processing
+                input_start = time.time()
+                batch_inputs = processor(
+                    text=batch_prompts, 
+                    images=batch_images, 
+                    return_tensors='pt', 
+                    padding=True
                 )
-
-            # Fallback to Gemini
-            print(f"Falling back to Gemini for page {page_number}")
-            base64_image = base64.b64encode(image).decode('utf-8')
+                
+                # Move all input tensors to the same device as the model
+                device = model.device
+                for key in batch_inputs:
+                    if batch_inputs[key] is not None:
+                        batch_inputs[key] = batch_inputs[key].to(device)
+                input_time = time.time() - input_start
+                print(f"Input processing completed in {input_time:.2f} seconds")
+                
+                print("Generating responses for batch")
+                # Generate responses with optimized parameters
+                generation_start = time.time()
+                with torch.no_grad():
+                    generate_ids = model.generate(
+                        **batch_inputs,
+                        max_new_tokens=1000,  # Reduced from 2000
+                        num_beams=1,
+                        do_sample=False,
+                        pad_token_id=processor.tokenizer.pad_token_id,
+                        num_logits_to_keep=1,
+                        use_cache=True,  # Explicitly enable KV cache
+                        repetition_penalty=1.0  # Disable repetition penalty for speed
+                    )
+                generation_time = time.time() - generation_start
+                print(f"Generation completed in {generation_time:.2f} seconds")
+                
+                # Process each response in the batch
+                batch_responses = []
+                for j in range(batch_size):
+                    # Extract the response for this specific image
+                    response_ids = generate_ids[j, batch_inputs['input_ids'].shape[1]:]
+                    response = processor.batch_decode(
+                        [response_ids], skip_special_tokens=True, clean_up_tokenization_spaces=False
+                    )[0]
+                    batch_responses.append(response)
+                    print(f'>>> Processed image {image_index+j+1}')
+                
+                all_responses.extend(batch_responses)
+                
+                # Call the batch callback if provided
+                if batch_callback:
+                    # Create a list of indices for this batch
+                    batch_indices = list(range(image_index, image_index + batch_size))
+                    await batch_callback(batch_responses, batch_indices)
+                
+                image_index += batch_size
+                
+                # Clear CUDA cache between batches
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
             
-            message = Message(content=[
-                {
-                    "type": "image_url",
-                    "image_url": f"data:image/png;base64,{base64_image}"
-                },
-                {
-                    "type": "text",
-                    "text": combined_prompt
-                },
-                *([] if not text else [{"type": "text", "text": text}])
-            ])
-
-            self.conversation_history.append(message)
+            return all_responses
             
-            response = await self.robust_generate(
-                None,
-                message,
-                model="gemini-2.0-flash-lite"
-            )
-            
-            if not response:
-                raise Exception("Empty response from both models")
-            
-            print(f"Successfully processed page {page_number} with Gemini")
-            
-            self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
-
-            return self.clean_response(
-                response,
-                lecture_name,
-                page_number,
-                text
-            )
-
-        except Exception as error:
-            print(f"Error processing page {page_number}: {str(error)}")
-            raise error
+        except Exception as e:
+            print(f"Phi-4 batch processing failed: {str(e)}")
+            return [None] * len(images)
 
     async def process_slides(
         self,
         lecture_name: str,
         num_slides: int,
         documents: List[Dict[str, Any]],
-        after_generate: Callable[[CleanedResponse], None]
+        after_generate: Callable[[CleanedResponse], None],
+        private_mode: bool = False
     ) -> List[CleanedResponse]:
         try:
-            results = []
+            # Prepare all prompts and images
+            images = []
+            prompts = []
+            page_numbers = []
+            text_contents = []
+            
             for document in documents:
-                result = await self.process_page(
-                    document['image'],
-                    document['text'],
-                    document['page'],
-                    lecture_name,
-                    num_slides,
-                )
-                results.append(result)
-                await after_generate(result)
+                # Get prompts
+                base_prompt = self._get_base_prompt()
+                additional_prompt = self._get_additional_prompt(document['page'], num_slides)
+                combined_prompt = base_prompt + "\n\n" + additional_prompt
+                
+                images.append(document['image'])
+                prompts.append(combined_prompt)
+                page_numbers.append(document['page'])
+                text_contents.append(document['text'])
+            
+            # Create a callback for batch processing
+            async def batch_callback(batch_responses, batch_indices):
+                for i, response in enumerate(batch_responses):
+                    if response:  # Only process successful responses
+                        idx = batch_indices[i]
+                        print(f"Processing batch result for page {page_numbers[idx]}")
+                        result = self.clean_response(
+                            response,
+                            lecture_name,
+                            page_numbers[idx],
+                            text_contents[idx]
+                        )
+                        # Call after_generate for each processed document in the batch
+                        await after_generate(result)
+
+            results = []
+            if private_mode:
+                # Process all images with Phi-4 in private mode
+                print("Processing in private mode using Phi-4")
+                responses = await self.process_with_phi4_batch(images, prompts, batch_callback=batch_callback)
+                
+                # Handle any failed responses
+                for i, response in enumerate(responses):
+                    if not response:
+                        print(f"Warning: Phi-4 failed for page {page_numbers[i]} in private mode")
+                        # In private mode, we don't fall back to Gemini - just store the failure
+                        result = self.clean_response(
+                            "Error: Failed to process in private mode",
+                            lecture_name,
+                            page_numbers[i],
+                            text_contents[i]
+                        )
+                        results.append(result)
+                        await after_generate(result)
+                    else:
+                        # For successful responses, we've already processed them in the batch callback
+                        result = self.notes[lecture_name][page_numbers[i]]
+                        results.append(result)
+            else:
+                # In non-private mode, use Gemini by default
+                print("Processing in standard mode using Gemini")
+                for i in range(len(images)):
+                    try:
+                        base64_image = base64.b64encode(images[i]).decode('utf-8')
+                        
+                        message = Message(content=[
+                            {
+                                "type": "image_url",
+                                "image_url": f"data:image/png;base64,{base64_image}"
+                            },
+                            {
+                                "type": "text",
+                                "text": prompts[i]
+                            },
+                            *([] if not text_contents[i] else [{"type": "text", "text": text_contents[i]}])
+                        ])
+
+                        self.conversation_history.append(message)
+                        
+                        response = await self.robust_generate(
+                            None,
+                            message,
+                            model="gemini-2.0-flash-lite"
+                        )
+                        
+                        if not response:
+                            raise Exception(f"Empty response from Gemini for page {page_numbers[i]}")
+                        
+                        print(f"Successfully processed page {page_numbers[i]} with Gemini")
+                        
+                        self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
+                        
+                        result = self.clean_response(
+                            response,
+                            lecture_name,
+                            page_numbers[i],
+                            text_contents[i]
+                        )
+                        results.append(result)
+                        await after_generate(result)
+                    except Exception as e:
+                        print(f"Error processing page {page_numbers[i]}: {str(e)}")
+                        result = self.clean_response(
+                            f"Error: {str(e)}",
+                            lecture_name,
+                            page_numbers[i],
+                            text_contents[i]
+                        )
+                        results.append(result)
+                        await after_generate(result)
+            
             return results
         except Exception as error:
             print("Error processing PDF:", error)
