@@ -71,7 +71,7 @@ export const ChatInput = memo(({
   };
 
   return (
-    <Stack spacing={immersiveMode ? 8 : "md"}>
+    <Stack gap={immersiveMode ? 8 : "md"}>
       {/* Show context badges in normal mode only */}
       {!immersiveMode && (
         <Box>
