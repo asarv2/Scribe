@@ -277,9 +277,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 
                 // Instead of directly using router.replace which causes a full page transition,
                 // use router.push with shallow option to preserve state
-                router.push(`/classes/c/${classId}/chat/${chat.id}`, undefined, { 
-                    shallow: true 
-                });
+                router.push(`/classes/c/${classId}/chat/${chat.id}`);
                 
                 // After the navigation, restore the immersive mode state
                 setTimeout(() => {
@@ -900,7 +898,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                 
                                 {/* Add exit button when in immersive mode */}
                                 {immersiveMode && (
-                                    <Group position="right" p="sm">
+                                    <Group justify="flex-end" p="sm">
                                         <Tooltip label="Exit immersive mode">
                                             <ActionIcon
                                                 variant="light"

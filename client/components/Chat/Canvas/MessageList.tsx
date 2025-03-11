@@ -121,6 +121,12 @@ export const MessageList = memo(({
     enabled: !!chapters
   });
 
+  const { data: textbookDocuments } = useQuery({
+    queryKey: ["textbookDocuments", classId],
+    queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
+    enabled: !!textbooks
+  });
+
   const { data: homeworks } = useQuery({
     queryKey: ["homeworks", classId],
     queryFn: () => getHomeworks(supabase, classId),
@@ -168,7 +174,7 @@ export const MessageList = memo(({
     });
     
     // Calculate similarity score
-    const totalUniqueWords = new Set([...uniqueWords1, ...uniqueWords2]).size;
+    const totalUniqueWords = Array.from(uniqueWords1).concat(Array.from(uniqueWords2)).length;
     return totalUniqueWords > 0 ? matchCount / totalUniqueWords : 0;
   };
   
@@ -281,9 +287,9 @@ export const MessageList = memo(({
     }
     
     return (
-      <Stack mt="xs" spacing="xs">
-        <Group position="apart">
-          <Text size="xs" italic c="dimmed">AI automatically added relevant context:</Text>
+      <Stack mt="xs" gap="xs">
+        <Group justify="space-between">
+          <Text size="xs" c="dimmed">AI automatically added relevant context:</Text>
           <ActionIcon 
             size="xs" 
             color="gray" 
@@ -887,7 +893,7 @@ export const MessageList = memo(({
               color="orange"
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                const exercise = exercises?.find(e => e.homework === homeworkId);
+                const exercise = homeworkExercises?.find(e => e.homework === homeworkId);
                 if (exercise) {
                   handleEnhancedDocumentClick('homeworks', homeworkId, undefined, undefined, exercise.id);
                 }
@@ -1054,7 +1060,7 @@ export const MessageList = memo(({
     }
 
     return (
-      <Stack spacing="xl" align="center" justify="center" style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px' }}>
+      <Stack align="center" justify="center" style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px' }}>
         {messageChunks
           .filter((_, index) => visibleChunks.includes(index))
           .map((chunk, index) => {
