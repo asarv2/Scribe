@@ -177,7 +177,19 @@ const ItemCard = ({
                 )}
                 <Stack style={{ flex: 1 }}>
                     <Group justify="space-between">
-                        <Text size="sm">
+                        <Text 
+                            size="sm"
+                            lineClamp={2}
+                            title={item.newName}
+                            style={{
+                                wordBreak: 'break-word',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical'
+                            }}
+                        >
                             {item.newName}
                         </Text>
                     </Group>

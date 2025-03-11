@@ -448,7 +448,7 @@ export const MessageList = memo(({
                     <Text>
                       Hi {profile?.first_name || 'there'}, how can I assist you today?
                     </Text>
-                    {(profile?.admin || profile?.professor) && (
+                    {/* {(profile?.admin || profile?.professor) && (
                       <Group justify="flex-end">
                         <Group gap="xs" align="center">
                           <Badge size="xs" variant="light" color="blue">Teacher</Badge>
@@ -463,7 +463,7 @@ export const MessageList = memo(({
                           />
                         </Group>
                       </Group>
-                    )}
+                    )} */}
                   </Flex>
                   <Flex justify="space-between" align="center">
                     <Group gap="xs">
