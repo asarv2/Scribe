@@ -37,10 +37,21 @@ interface SSORefreshAlarmData {
 }
 
 const handler: PlasmoMessaging.MessageHandler<
-  { courseId: string; courseDescriptor: string; profileId: string; classId: string; scheduledTime?: string },
+  { courseId: string; courseDescriptor: string; profileId: string; classId: string; scheduledTime?: string; immediate?: boolean },
   DownloadCourseResponse
 > = async (req, res) => {
-  const { courseId, courseDescriptor, profileId, classId, scheduledTime = "08:00" } = req.body;
+  const { courseId, courseDescriptor, profileId, classId, scheduledTime = "08:00", immediate = false } = req.body;
+  
+  // If it's an immediate download, skip setting up the alarm and pending download
+  if (immediate) {
+    await performDownload(courseId, courseDescriptor, profileId, classId, immediate);
+    
+    res.send({
+      success: true,
+      message: `Download started`
+    });
+    return;
+  }
   
   // Set up the alarm to run daily at the specified time
   const alarmName = `download_course_${classId}`;
@@ -202,7 +213,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     console.log(`[Background] SSO refresh alarm triggered for ${alarm.name}, refreshing credentials`);
     
     // Perform the SSO refresh
-    await refreshSSO(ssoData.courseId);
+    await refreshSSO(ssoData.courseId, classId);
     
     // Update last refresh timestamp
     await storage.set(alarm.name, {
@@ -213,9 +224,10 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 // Function to refresh SSO credentials
-async function refreshSSO(courseId: string) {
+async function refreshSSO(courseId: string, classId: string) {
   try {
     console.log(`[Background] Refreshing SSO credentials for course ${courseId}`);
+    const client = getSupabaseClient();
     
     // Create a hidden tab to refresh SSO
     const contentPageUrl = `https://purdue.brightspace.com/d2l/le/content/${courseId}/Home`;
@@ -236,7 +248,15 @@ async function refreshSSO(courseId: string) {
         if (tabId === tab.id && changeInfo.status === 'complete') {
           chrome.tabs.onUpdated.removeListener(listener);
           clearTimeout(timeout);
-          setTimeout(() => {
+          setTimeout(async () => {
+            // Update the SSO refresh time for the download
+            await client
+              .from('downloads')
+              .update({
+                refreshed_at: new Date().toISOString()
+              })
+              .eq('class', classId);
+              
             chrome.tabs.remove(tab.id).catch(() => {});
             resolve(true);
           }, 5000); // Keep the page open for 5 seconds to ensure SSO is refreshed
@@ -280,9 +300,9 @@ async function checkShouldContinueDownload(classId: string): Promise<boolean> {
 }
 
 // Update performDownload to include classId
-async function performDownload(courseId: string, courseDescriptor: string, profileId: string, classId: string) {
+async function performDownload(courseId: string, courseDescriptor: string, profileId: string, classId: string, immediate: boolean = false) {
   // Check if we should download before starting
-  const shouldDownload = await checkShouldContinueDownload(classId);
+  const shouldDownload = (await checkShouldContinueDownload(classId)) || immediate;
   if (!shouldDownload) {
     console.log(`[Background] Download flag is false for class ${classId}, skipping download`);
     return;
@@ -368,7 +388,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
           await chrome.downloads.cancel(downloadItem.id);
           
           // Update status
-          await storage.set(`downloadStatus_${courseId}`, 'Uploading to server...');
+          await storage.set(`downloadStatus_${courseId}`, 'Adding content to Scribe...');
           
           // Update download status to 'sent'
           await client
@@ -412,7 +432,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
           });
           
           // Upload to server with progress tracking
-          await storage.set(`downloadStatus_${courseId}`, 'Uploading to server...');
+          await storage.set(`downloadStatus_${courseId}`, 'Adding content to Scribe...');
           await storage.set(`uploadProgress_${courseId}`, 0);
 
           const totalSize = blob.size;
@@ -464,7 +484,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
             // Use the debounced update function instead of direct storage updates
             await updateStorageWithProgress(
               estimatedProgress, 
-              `Uploading to server... ${estimatedProgress}%`
+              `Adding content to Scribe... ${estimatedProgress}%`
             );
           };
 

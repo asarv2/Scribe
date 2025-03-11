@@ -5,6 +5,7 @@ import { getSupabaseClient } from "~utils/supabase/supabase-client"
 interface UpdateDownloadsStatusRequest {
   classId: string
   enabled: boolean
+  responseUrl: string
 }
 
 interface UpdateDownloadsStatusResponse {
@@ -17,7 +18,7 @@ const handler: PlasmoMessaging.MessageHandler<
   UpdateDownloadsStatusRequest,
   UpdateDownloadsStatusResponse
 > = async (req, res) => {
-  const { classId, enabled } = req.body;
+  const { classId, enabled, responseUrl } = req.body;
   
   try {
     const client = getSupabaseClient();
@@ -48,6 +49,38 @@ const handler: PlasmoMessaging.MessageHandler<
         .eq('status', 'pending');
       
       console.log(`[Background] Cancelled all pending downloads for class ${classId}`);
+    } else {
+      // Get the class details to schedule next download
+      const { data: classData } = await client
+        .from('classes')
+        .select('*')
+        .eq('id', classId)
+        .single();
+
+      if (classData && classData.download_time) {
+        // Calculate the next occurrence of the scheduled time
+        const [hours, minutes] = classData.download_time.split(":").map(Number);
+        const now = new Date();
+        const scheduledDate = new Date(now);
+        scheduledDate.setHours(hours, minutes, 0, 0);
+        
+        // If the time has already passed today, schedule for tomorrow
+        if (scheduledDate <= now) {
+          scheduledDate.setDate(scheduledDate.getDate() + 1);
+        }
+
+        // Create a pending download for the next scheduled time
+        await client
+          .from('downloads')
+          .insert({
+            class: classId,
+            status: 'pending',
+            download_time: scheduledDate.toISOString(),
+            created_at: now.toISOString(),
+            updated_at: now.toISOString(),
+            response_url: responseUrl
+          });
+      }
     }
     
     // Update the class in the database
@@ -62,7 +95,7 @@ const handler: PlasmoMessaging.MessageHandler<
     res.send({
       success: true,
       message: enabled ? 
-        `Downloads enabled for class ${classId}` : 
+        `Downloads enabled and scheduled for class ${classId}` : 
         `Downloads disabled and pending downloads cancelled for class ${classId}`
     });
   } catch (error) {

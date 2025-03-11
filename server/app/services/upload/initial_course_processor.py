@@ -8,6 +8,8 @@ from datetime import datetime
 import json
 import shutil
 from dotenv import load_dotenv
+import fitz  # PyMuPDF
+import docx2txt
 
 load_dotenv()
 
@@ -352,9 +354,9 @@ class InitialCourseProcessor:
         
         # Define allowed file extensions for each category
         allowed_extensions = {
-            "lectures": [".pdf"],
-            "assignments": [".pdf", ".txt"],
-            "readings": [".pdf"],
+            "lectures": [".pdf", ".docx"],
+            "assignments": [".pdf", ".txt", ".docx"],
+            "readings": [".pdf", ".docx"],
             "exams": [],  # No restrictions
             "syllabus": [],  # No restrictions
             "other": []  # No restrictions

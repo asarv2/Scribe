@@ -1,5 +1,6 @@
 # syllabus_processor.py 
 
+from datetime import datetime
 import os
 from typing import Dict, Any
 import docx2txt
@@ -83,6 +84,7 @@ class SyllabusProcessor:
             </COURSE_DESCRIPTION>
             <INSTRUCTOR>Dr. Example Professor</INSTRUCTOR>
             <TERM>Fall 2023</TERM>
+            <COURSE_TIME>2:30 PM - 3:45 PM</COURSE_TIME>
         </COURSE_INFO>
 
         STRICT RULES:
@@ -107,6 +109,13 @@ class SyllabusProcessor:
         5. TERM: The academic term when the course is offered
            - Format as "Season Year" (e.g., "Fall 2023", "Spring 2024")
            - If not specified, make your best guess based on dates in the document
+        
+        6. COURSE_TIME: The time when the course meets
+           - Format as "START_TIME - END_TIME" in 12-hour format
+           - Include AM/PM
+           - Examples: "9:30 AM - 10:45 AM", "2:00 PM - 3:15 PM"
+           - If multiple meeting times exist, use the primary lecture time
+           - If no time specified, use "Time not specified"
 
         If you cannot find specific information, use these placeholders:
         - For missing COURSE_CODE: "UNKNOWN 000"
@@ -126,6 +135,26 @@ class SyllabusProcessor:
             return response.text
         except Exception as e:
             raise Exception(f"Error processing with Gemini: {str(e)}")
+        
+    def parse_course_time(self, course_time: str) -> str:
+        """Parse the course time into a structured format."""
+        try:
+
+            # Goal is to get a datetime time object from the course_time string
+            # Example course_time: "2:30 PM - 3:45 PM"
+            # We want to convert this to a datetime time object
+            # First, split the course_time string by the dash
+            parts = course_time.split(" - ")
+            start_time = parts[0]
+            end_time = parts[1]
+
+            # Convert the start_time and end_time to datetime time objects
+            start_time = datetime.strptime(start_time, "%I:%M %p")
+            end_time = datetime.strptime(end_time, "%I:%M %p")
+            return start_time, end_time
+        except Exception as e:
+            return None, None
+    
 
     def parse_course_info_xml(self, xml_string: str) -> Dict[str, Any]:
         """Parse the XML course info into a structured format."""
@@ -152,7 +181,8 @@ class SyllabusProcessor:
                 "course_title": self._extract_xml_element(cleaned_xml, 'COURSE_TITLE'),
                 "course_description": self._extract_xml_element(cleaned_xml, 'COURSE_DESCRIPTION'),
                 "instructor": self._extract_xml_element(cleaned_xml, 'INSTRUCTOR'),
-                "term": self._extract_xml_element(cleaned_xml, 'TERM')
+                "term": self._extract_xml_element(cleaned_xml, 'TERM'),
+                "course_time": self.parse_course_time(self._extract_xml_element(cleaned_xml, 'COURSE_TIME'))[0] if self.parse_course_time(self._extract_xml_element(cleaned_xml, 'COURSE_TIME')) else datetime.now()
             }
             
             return course_info
@@ -179,13 +209,13 @@ class SyllabusProcessor:
             return course_info
         except Exception as e:
             print(f"Error processing syllabus: {str(e)}")
-            # Return default values if processing fails
             return {
                 "course_code": "UNKNOWN 000",
                 "course_title": os.path.basename(self.file_path),
                 "course_description": "No description available.",
                 "instructor": "Instructor not specified",
-                "term": "Term not specified"
+                "term": "Term not specified",
+                "course_time": "Time not specified"
             }
 
 

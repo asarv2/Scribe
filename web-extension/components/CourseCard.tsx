@@ -50,17 +50,17 @@ export default function CourseCard({
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
     const storage = new Storage();
     const [scheduledTime, setScheduledTime] = useState<string>("08:00");
-    const [originalTime, setOriginalTime] = useState<string>("08:00");
     const [isScheduling, setIsScheduling] = useState<boolean>(false);
-    const [isScheduled, setIsScheduled] = useState<boolean>(false);
-    const [isSaving, setIsSaving] = useState<boolean>(false);
-    const [timeChanged, setTimeChanged] = useState<boolean>(false);
-    const supabase = getSupabaseClient();
-    
+    const [isScheduled, setIsScheduled] = useState<boolean>(course.download === true);
+
     // Filter pending downloads for this class
-    const pendingDownloads = downloads.filter(download => 
-        download.class === course.id && download.status === 'pending'
-    ).sort((a, b) => new Date(a.download_time).getTime() - new Date(b.download_time).getTime());
+    const pendingDownloads = downloads.filter(download => {
+        const downloadTime = new Date(download.download_time).getTime();
+        const now = new Date().getTime();
+        return download.class === course.id &&
+            download.status === 'pending' &&
+            downloadTime > now;
+    }).sort((a, b) => new Date(a.download_time).getTime() - new Date(b.download_time).getTime());
 
     // Get the title from the appropriate property
     const fullTitle = course.title || 'Unknown Course';
@@ -106,27 +106,71 @@ export default function CourseCard({
             const currentStatus = await storage.get(`downloadStatus_${courseId}`);
             const currentProgress = await storage.get(`uploadProgress_${courseId}`);
 
-            if (currentStatus) setDownloadStatus(currentStatus);
-            if (currentProgress !== undefined) setUploadProgress(Number(currentProgress));
+            // If upload is complete, get the status from the most recent download record
+            if (currentStatus?.includes("Upload complete!")) {
+                const latestDownload = downloads
+                    .filter(d => d.class === course.id)
+                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+
+                if (latestDownload) {
+                    let displayStatus = latestDownload.status;
+
+                    // Convert to title case
+                    displayStatus = displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1).toLowerCase();
+
+                    // Add error message if exists
+                    if (latestDownload.error_message) {
+                        displayStatus += `: ${latestDownload.error_message}`;
+                    }
+
+                    // Add ellipsis if not completed
+                    if (!displayStatus.toLowerCase().includes('complete')) {
+                        displayStatus += '...';
+                    }
+
+                    setDownloadStatus(displayStatus);
+
+                    // If status is completed, clear storage after 2 seconds
+                    if (displayStatus.toLowerCase().includes('complete')) {
+                        setTimeout(async () => {
+                            await storage.remove(`downloadStatus_${courseId}`);
+                            await storage.remove(`uploadProgress_${courseId}`);
+                            setDownloadStatus('');
+                            setUploadProgress(null);
+                        }, 2000);
+                    }
+                }
+            } else if (currentStatus) {
+                // Convert storage status to title case and add ellipsis
+                let displayStatus = currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1);
+                if (!displayStatus.includes('...')) {
+                    displayStatus += '...';
+                }
+                setDownloadStatus(displayStatus);
+            }
+
+            if (currentProgress !== undefined) {
+                setUploadProgress(Number(currentProgress));
+            }
         };
 
         const intervalId = setInterval(checkStatus, 500);
         return () => clearInterval(intervalId);
-    }, [courseId]);
+    }, [courseId, course.id, downloads]);
 
     // Check if course has scheduled downloads enabled and get the time
     useEffect(() => {
         const checkScheduleStatus = async () => {
             if (!course.id) return;
-            
+
             // Get download status from database
             setIsScheduled(course.download === true);
-            
+
             // Get scheduled time if available
             if (course.download_time) {
                 const timeStr = course.download_time;
                 let formattedTime = "08:00";
-                
+
                 // Convert from database format (could be ISO string or HH:MM) to HH:MM
                 if (timeStr.includes('T')) {
                     const date = new Date(timeStr);
@@ -134,11 +178,11 @@ export default function CourseCard({
                 } else if (timeStr.includes(':')) {
                     formattedTime = timeStr;
                 }
-                
+
                 setScheduledTime(formattedTime);
             }
         };
-        
+
         checkScheduleStatus();
     }, [course]);
 
@@ -153,9 +197,12 @@ export default function CourseCard({
     } else if (downloadStatus.includes("error") || downloadStatus.includes("❌")) {
         statusColor = "red";
         statusIcon = "❌";
+    } else if (downloadStatus.includes("processing") || downloadStatus.includes("parsing")) {
+        statusColor = "yellow";
+        statusIcon = "⏳";
     }
 
-    const isUploading = downloadStatus.includes("Uploading to server");
+    const isUploading = downloadStatus.includes("Adding content to Scribe");
     const hasStatus = downloadStatus && downloadStatus.trim() !== '';
 
     // Calculate parse status percentages
@@ -180,39 +227,26 @@ export default function CourseCard({
     // Determine if we should show the status indicators
     const hasContentItems = lectures.length > 0 || textbooks.length > 0 || homeworks.length > 0;
 
-    // Function to toggle scheduled downloads switch (doesn't enable in database yet)
-    const toggleScheduledSwitch = () => {
-        setIsScheduled(!isScheduled);
-        setTimeChanged(true);
-    };
-    
-    // Function to save scheduled time and enable downloads
-    const saveScheduledTime = async () => {
+    // Updated toggle function to immediately update database
+    const toggleScheduledSwitch = async () => {
         if (!course.id) return;
-        
-        setIsSaving(true);
+
+        const newStatus = !isScheduled;
+        setIsScheduled(newStatus);
+
         try {
-            // First update the download status (this will cancel pending downloads if disabling)
-            await sendToBackground({
+            // Update download status in background
+            const statusResult = await sendToBackground({
                 name: "update-download-status",
                 body: {
                     classId: course.id,
-                    enabled: isScheduled
+                    enabled: newStatus,
+                    responseUrl: `${process.env.PLASMO_PUBLIC_API_URL}`
                 }
             });
-            
-            // Update the time in the database
-            const { error } = await supabase
-                .from('classes')
-                .update({ 
-                    download_time: scheduledTime
-                })
-                .eq('id', course.id);
-                
-            if (error) throw error;
-            
-            // If downloads are enabled, update or create the schedule
-            if (isScheduled) {
+
+            // Only update schedule if enabling downloads and status update was successful
+            if (newStatus && statusResult.success) {
                 await sendToBackground({
                     name: "update-download-schedule",
                     body: {
@@ -224,20 +258,47 @@ export default function CourseCard({
                     }
                 });
             }
-            
-            // Update original time to match current time
-            setOriginalTime(scheduledTime);
-            setTimeChanged(false);
         } catch (error) {
-            console.error("Error saving scheduled time:", error);
-        } finally {
-            setIsSaving(false);
+            console.error("Error updating scheduled status:", error);
+            // Revert the switch if there's an error
+            setIsScheduled(!newStatus);
         }
     };
 
-    // Function to handle time change
-    const handleTimeChange = (event) => {
-        setScheduledTime(event.target.value);
+    // Updated time change handler to always update database
+    const handleTimeChange = async (event) => {
+        if (!course.id) return;
+        
+        const newTime = event.target.value;
+        setScheduledTime(newTime);
+        
+        try {
+            // Update the time in Supabase directly
+            const client = getSupabaseClient();
+            await client
+                .from('classes')
+                .update({
+                    download_time: newTime,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', course.id);
+            
+            // Only update the schedule in background if downloads are enabled
+            if (isScheduled) {
+                await sendToBackground({
+                    name: "update-download-schedule",
+                    body: {
+                        courseId: courseId,
+                        courseDescriptor: course.brightspace_course_descriptor,
+                        profileId: profile.id,
+                        classId: course.id,
+                        scheduledTime: newTime
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Error updating scheduled time:", error);
+        }
     };
 
     // Function to download now
@@ -251,7 +312,7 @@ export default function CourseCard({
                     courseDescriptor: course.brightspace_course_descriptor,
                     profileId: profile.id,
                     classId: course.id,
-                    scheduledTime
+                    immediate: true  // Add flag to indicate immediate download
                 }
             });
         } catch (error) {
@@ -372,28 +433,18 @@ export default function CourseCard({
                     </SimpleGrid>
                 )}
 
-                {/* Time picker with toggle and save button */}
+                {/* Updated time picker section without save button */}
                 <Group mt="md" align="center">
                     <Switch
                         checked={isScheduled}
                         onChange={toggleScheduledSwitch}
-                        label="Daily download time"
+                        label="Update daily"
                     />
                     <TimeInput
                         value={scheduledTime}
                         onChange={handleTimeChange}
                         withSeconds={false}
                     />
-                    {timeChanged && (
-                        <ActionIcon 
-                            color="blue" 
-                            variant="filled" 
-                            onClick={saveScheduledTime}
-                            loading={isSaving}
-                        >
-                            <Icons.Check />
-                        </ActionIcon>
-                    )}
                 </Group>
 
                 {/* Pending downloads section */}
@@ -422,7 +473,7 @@ export default function CourseCard({
                 {/* Download now button */}
                 <Button
                     onClick={handleDownloadNow}
-                    loading={isLoading}
+                    loading={isScheduling || isLoading}
                     leftSection={<Icons.Download />}
                     variant="filled"
                     color="blue"

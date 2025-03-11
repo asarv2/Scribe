@@ -102,6 +102,13 @@ async def create_course(
         if course_info:
             insert_data["class_code"] = course_info.get("course_code", "")
             insert_data["course_description"] = course_info.get("course_description", "")
+
+            course_time = course_info.get("course_time", "")
+            if course_time:
+                try:
+                    insert_data["download_time"] = course_time.strftime("%H:%M:%S")
+                except (ValueError, TypeError):
+                    print(f"Warning: Could not parse course time: {course_time}")
             # insert_data["instructor"] = course_info.get("instructor", "")
             # insert_data["term"] = course_info.get("term", "")
         

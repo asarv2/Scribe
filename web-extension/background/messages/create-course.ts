@@ -146,7 +146,7 @@ const handler: PlasmoMessaging.MessageHandler<CreateCourseRequest, CreateCourseR
     const responseData = await createResult.json();
     console.log('[Background] Course creation successful:', responseData);
     
-    await storage.set(`createStatus_${courseId}`, 'Course created successfully! ✅');
+    await storage.set(`createStatus_${courseId}`, 'Course created successfully!');
     
     res.send({
       success: true,

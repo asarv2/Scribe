@@ -113,8 +113,11 @@ export type Database = {
           deleted: boolean
           download: boolean
           download_time: string
+          homework_prompt: string
           id: string
+          lecture_prompt: string
           privacy: boolean
+          textbook_prompt: string
           title: string | null
           updated_at: string
         }
@@ -129,8 +132,11 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_prompt?: string
           id?: string
+          lecture_prompt?: string
           privacy?: boolean
+          textbook_prompt?: string
           title?: string | null
           updated_at?: string
         }
@@ -145,8 +151,11 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_prompt?: string
           id?: string
+          lecture_prompt?: string
           privacy?: boolean
+          textbook_prompt?: string
           title?: string | null
           updated_at?: string
         }
@@ -303,6 +312,7 @@ export type Database = {
           file_list: string[]
           id: string
           processed_files: number
+          refreshed_at: string
           response_url: string
           status: string
           toc_content: string
@@ -317,6 +327,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          refreshed_at?: string
           response_url?: string
           status?: string
           toc_content?: string
@@ -331,6 +342,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          refreshed_at?: string
           response_url?: string
           status?: string
           toc_content?: string
@@ -687,6 +699,7 @@ export type Database = {
       }
       lectures: {
         Row: {
+          additional_info: string
           class: string
           created_at: string
           deleted: boolean
@@ -704,6 +717,7 @@ export type Database = {
           upload_progress: number
         }
         Insert: {
+          additional_info?: string
           class: string
           created_at?: string
           deleted?: boolean
@@ -721,6 +735,7 @@ export type Database = {
           upload_progress?: number
         }
         Update: {
+          additional_info?: string
           class?: string
           created_at?: string
           deleted?: boolean
@@ -986,32 +1001,6 @@ export type Database = {
             columns: ["chapter"]
             isOneToOne: false
             referencedRelation: "chapters"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      syllabi: {
-        Row: {
-          class: string | null
-          created_at: string
-          id: string
-        }
-        Insert: {
-          class?: string | null
-          created_at?: string
-          id?: string
-        }
-        Update: {
-          class?: string | null
-          created_at?: string
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "syllabi_class_fkey"
-            columns: ["class"]
-            isOneToOne: false
-            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
         ]

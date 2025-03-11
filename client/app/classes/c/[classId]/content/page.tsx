@@ -9,8 +9,8 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton } from "@mantine/core";
-import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard } from "@tabler/icons-react";
+import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea } from "@mantine/core";
+import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard, IconSearch } from "@tabler/icons-react";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import Image from "next/image";
@@ -38,6 +38,22 @@ export default function ContentPage({ params }: { params: { classId: string } })
     const classId = params.classId;
     const [activeTab, setActiveTab] = useState<string | null>("lectures");
 
+    // File input refs
+    const lectureInputRef = useRef<HTMLInputElement>(null);
+    const textbookInputRef = useRef<HTMLInputElement>(null);
+    const homeworkInputRef = useRef<HTMLInputElement>(null);
+
+    // Search states
+    const [lectureSearch, setLectureSearch] = useState('');
+    const [textbookSearch, setTextbookSearch] = useState('');
+    const [homeworkSearch, setHomeworkSearch] = useState('');
+
+    // Sort states
+    const [lectureSortOrder, setLectureSortOrder] = useState('newest');
+    const [textbookSortOrder, setTextbookSortOrder] = useState('newest');
+    const [homeworkSortOrder, setHomeworkSortOrder] = useState('newest');
+
+    // Processing states
     const [parsingLectures, setParsingLectures] = useState<Set<string>>(new Set());
     const [parsingTextbooks, setParsingTextbooks] = useState<Set<string>>(new Set());
     const [processingHomeworks, setProcessingHomeworks] = useState<Set<string>>(new Set());
@@ -123,6 +139,57 @@ export default function ContentPage({ params }: { params: { classId: string } })
         return result;
     }, [allChapters]);
 
+    // Filtered data
+    const filteredLectures = useMemo(() => {
+        if (!lectures) return [];
+        return lectures
+            .filter(lecture => 
+                lecture.name?.toLowerCase().includes(lectureSearch.toLowerCase()) ?? false
+            )
+            .sort((a, b) => {
+                if (lectureSortOrder === 'newest') {
+                    return new Date(b.created_at ?? '').getTime() - new Date(a.created_at ?? '').getTime();
+                } else if (lectureSortOrder === 'oldest') {
+                    return new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime();
+                } else {
+                    return (a.name ?? '').localeCompare(b.name ?? '');
+                }
+            });
+    }, [lectures, lectureSearch, lectureSortOrder]);
+
+    const filteredTextbooks = useMemo(() => {
+        if (!textbooks) return [];
+        return textbooks
+            .filter(textbook => 
+                textbook.title.toLowerCase().includes(textbookSearch.toLowerCase())
+            )
+            .sort((a, b) => {
+                if (textbookSortOrder === 'newest') {
+                    return new Date(b.created_at ?? '').getTime() - new Date(a.created_at ?? '').getTime();
+                } else if (textbookSortOrder === 'oldest') {
+                    return new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime();
+                } else {
+                    return a.title.localeCompare(b.title);
+                }
+            });
+    }, [textbooks, textbookSearch, textbookSortOrder]);
+
+    const filteredHomeworks = useMemo(() => {
+        if (!homeworks) return [];
+        return homeworks
+            .filter(homework => 
+                homework.title.toLowerCase().includes(homeworkSearch.toLowerCase())
+            )
+            .sort((a, b) => {
+                if (homeworkSortOrder === 'newest') {
+                    return new Date(b.created_at ?? '').getTime() - new Date(a.created_at ?? '').getTime();
+                } else if (homeworkSortOrder === 'oldest') {
+                    return new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime();
+                } else {
+                    return a.title.localeCompare(b.title);
+                }
+            });
+    }, [homeworks, homeworkSearch, homeworkSortOrder]);
 
     const handleRetryLecture = async (classId: string, lecture: Lecture) => {
         try {
@@ -144,8 +211,6 @@ export default function ContentPage({ params }: { params: { classId: string } })
             });
         }
     };
-
-
 
     const handleRetryTextbook = async (classId: string, textbook: Textbook) => {
         try {
@@ -528,67 +593,192 @@ export default function ContentPage({ params }: { params: { classId: string } })
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
-                <Tabs value={activeTab} onChange={setActiveTab}>
-                    <Tabs.List>
-                        <Tabs.Tab value="lectures" leftSection={<IconNotebook size={16} />}>
-                            Lectures
-                        </Tabs.Tab>
-                        <Tabs.Tab value="textbooks" leftSection={<IconBook size={16} />}>
-                            Textbooks
-                        </Tabs.Tab>
-                        <Tabs.Tab value="homeworks" leftSection={<IconClipboard size={16} />}>
-                            Homework
-                        </Tabs.Tab>
-                    </Tabs.List>
+                <Stack gap="xl">
+                    {/* Lectures Section */}
+                    <Stack>
+                        <Group justify="space-between" align="center">
+                            <Text size="xl" fw={700}>Lectures</Text>
+                            <Button
+                                leftSection={<IconUpload size={14} />}
+                                onClick={() => lectureInputRef.current?.click()}
+                            >
+                                Upload Lecture
+                            </Button>
+                        </Group>
+                        
+                        <Card withBorder p="xs">
+                            <Group align="center" mb="md">
+                                <TextInput
+                                    placeholder="Search lectures..."
+                                    leftSection={<IconSearch size={14} />}
+                                    style={{ flexGrow: 1 }}
+                                    value={lectureSearch}
+                                    onChange={(e) => setLectureSearch(e.currentTarget.value)}
+                                />
+                                <Select
+                                    data={[
+                                        { value: 'newest', label: 'Newest First' },
+                                        { value: 'oldest', label: 'Oldest First' },
+                                        { value: 'name', label: 'Name' },
+                                    ]}
+                                    value={lectureSortOrder}
+                                    onChange={(value) => setLectureSortOrder(value || 'newest')}
+                                />
+                            </Group>
+                            
+                            <ScrollArea>
+                                <LectureContent 
+                                    classId={classId}
+                                    lectures={filteredLectures}
+                                    lectureDocuments={lectureDocuments}
+                                    loadingLectures={loadingLectures}
+                                    loadingLectureDocuments={loadingLectureDocuments}
+                                    parsingLectures={parsingLectures}
+                                    setParsingLectures={setParsingLectures}
+                                    handleRetryLecture={handleRetryLecture}
+                                    displayMode="horizontal"
+                                />
+                            </ScrollArea>
+                        </Card>
+                    </Stack>
 
-                    {/* Lectures Tab */}
-                    <Tabs.Panel value="lectures">
-                        <LectureContent 
-                            classId={classId}
-                            lectures={lectures}
-                            lectureDocuments={lectureDocuments}
-                            loadingLectures={loadingLectures}
-                            loadingLectureDocuments={loadingLectureDocuments}
-                            parsingLectures={parsingLectures}
-                            setParsingLectures={setParsingLectures}
-                            handleRetryLecture={handleRetryLecture}
-                            handleUploadLecture={handleUploadLecture}
-                        />
-                    </Tabs.Panel>
+                    {/* Textbooks Section */}
+                    <Stack>
+                        <Group justify="space-between" align="center">
+                            <Text size="xl" fw={700}>Textbooks</Text>
+                            <Button
+                                leftSection={<IconUpload size={14} />}
+                                onClick={() => textbookInputRef.current?.click()}
+                            >
+                                Upload Textbook
+                            </Button>
+                        </Group>
+                        
+                        <Card withBorder p="xs">
+                            <Group align="center" mb="md">
+                                <TextInput
+                                    placeholder="Search textbooks..."
+                                    leftSection={<IconSearch size={14} />}
+                                    style={{ flexGrow: 1 }}
+                                    value={textbookSearch}
+                                    onChange={(e) => setTextbookSearch(e.currentTarget.value)}
+                                />
+                                <Select
+                                    data={[
+                                        { value: 'newest', label: 'Newest First' },
+                                        { value: 'oldest', label: 'Oldest First' },
+                                        { value: 'name', label: 'Name' },
+                                    ]}
+                                    value={textbookSortOrder}
+                                    onChange={(value) => setTextbookSortOrder(value || 'newest')}
+                                />
+                            </Group>
+                            
+                            <ScrollArea>
+                                <TextbookContent 
+                                    classId={classId}
+                                    textbooks={filteredTextbooks}
+                                    textbookDocuments={textbookDocuments}
+                                    chapters={chaptersByTextbook}
+                                    loadingTextbooks={loadingTextbooks}
+                                    loadingTextbookDocuments={loadingTextbookDocuments}
+                                    parsingTextbooks={parsingTextbooks}
+                                    setParsingTextbooks={setParsingTextbooks}
+                                    handleRetryTextbook={handleRetryTextbook}
+                                    displayMode="horizontal"
+                                />
+                            </ScrollArea>
+                        </Card>
+                    </Stack>
 
-                    {/* Textbooks Tab */}
-                    <Tabs.Panel value="textbooks">
-                        <TextbookContent 
-                            classId={classId}
-                            textbooks={textbooks}
-                            textbookDocuments={textbookDocuments}
-                            chapters={chaptersByTextbook}
-                            loadingTextbooks={loadingTextbooks}
-                            loadingTextbookDocuments={loadingTextbookDocuments}
-                            parsingTextbooks={parsingTextbooks}
-                            setParsingTextbooks={setParsingTextbooks}
-                            handleRetryTextbook={handleRetryTextbook}
-                            handleUploadTextbook={handleUploadTextbook}
-                        />
-                    </Tabs.Panel>
+                    {/* Homeworks Section */}
+                    <Stack>
+                        <Group justify="space-between" align="center">
+                            <Text size="xl" fw={700}>Homework</Text>
+                            <Button
+                                leftSection={<IconUpload size={14} />}
+                                onClick={() => homeworkInputRef.current?.click()}
+                            >
+                                Upload Homework
+                            </Button>
+                        </Group>
+                        
+                        <Card withBorder p="xs">
+                            <Group align="center" mb="md">
+                                <TextInput
+                                    placeholder="Search homework..."
+                                    leftSection={<IconSearch size={14} />}
+                                    style={{ flexGrow: 1 }}
+                                    value={homeworkSearch}
+                                    onChange={(e) => setHomeworkSearch(e.currentTarget.value)}
+                                />
+                                <Select
+                                    data={[
+                                        { value: 'newest', label: 'Newest First' },
+                                        { value: 'oldest', label: 'Oldest First' },
+                                        { value: 'name', label: 'Name' },
+                                    ]}
+                                    value={homeworkSortOrder}
+                                    onChange={(value) => setHomeworkSortOrder(value || 'newest')}
+                                />
+                            </Group>
+                            
+                            <ScrollArea>
+                                <HomeworkContent 
+                                    classId={classId}
+                                    homeworks={filteredHomeworks}
+                                    exercises={exercises}
+                                    textbookDocuments={textbookDocsForHomework}
+                                    loadingHomeworks={loadingHomeworks}
+                                    loadingExercises={loadingExercises}
+                                    processingHomeworks={processingHomeworks}
+                                    setProcessingHomeworks={setProcessingHomeworks}
+                                    handleRetryHomework={handleRetryHomework}
+                                    displayMode="horizontal"
+                                />
+                            </ScrollArea>
+                        </Card>
+                    </Stack>
 
-                    {/* Homework Tab */}
-                    <Tabs.Panel value="homeworks">
-                        <HomeworkContent 
-                            classId={classId}
-                            homeworks={homeworks}
-                            exercises={exercises}
-                            textbookDocuments={textbookDocsForHomework}
-                            loadingHomeworks={loadingHomeworks}
-                            loadingExercises={loadingExercises}
-                            processingHomeworks={processingHomeworks}
-                            setProcessingHomeworks={setProcessingHomeworks}
-                            handleRetryHomework={handleRetryHomework}
-                            handleUploadHomework={handleUploadHomework}
-                        />
-                    </Tabs.Panel>
-                </Tabs>
+                    {/* Hidden file inputs */}
+                    <input
+                        type="file"
+                        ref={lectureInputRef}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            if (e.target.files?.[0]) {
+                                handleUploadLecture(e.target.files[0]);
+                            }
+                        }}
+                        accept="application/pdf"
+                        style={{ display: 'none' }}
+                    />
+                    <input
+                        type="file"
+                        ref={textbookInputRef}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            if (e.target.files?.[0]) {
+                                handleUploadTextbook(e.target.files[0]);
+                            }
+                        }}
+                        accept="application/pdf"
+                        style={{ display: 'none' }}
+                    />
+                    <input
+                        type="file"
+                        ref={homeworkInputRef}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            if (e.target.files?.[0]) {
+                                handleUploadHomework(e.target.files[0]);
+                            }
+                        }}
+                        accept="application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        style={{ display: 'none' }}
+                    />
+                </Stack>
             </Container>
-        </ClassLayout >
+        </ClassLayout>
     );
 }

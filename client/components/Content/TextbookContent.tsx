@@ -21,7 +21,7 @@ interface TextbookContentProps {
     parsingTextbooks: Set<string>;
     setParsingTextbooks: (value: React.SetStateAction<Set<string>>) => void;
     handleRetryTextbook: (classId: string, textbook: Textbook) => void;
-    handleUploadTextbook: (file: File) => void;
+    displayMode: 'horizontal' | 'vertical';
 }
 
 export default function TextbookContent({
@@ -34,26 +34,8 @@ export default function TextbookContent({
     parsingTextbooks,
     setParsingTextbooks,
     handleRetryTextbook,
-    handleUploadTextbook
+    displayMode
 }: TextbookContentProps) {
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    
-    // Handle file selection
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            handleUploadTextbook(file);
-        }
-        // Reset the input so the same file can be selected again if needed
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    };
-    
-    // Trigger file input click
-    const triggerFileInput = () => {
-        fileInputRef.current?.click();
-    };
     
     // Track which textbooks are expanded to show chapters
     const [expandedTextbooks, setExpandedTextbooks] = useState<Set<string>>(new Set());
@@ -197,252 +179,178 @@ export default function TextbookContent({
     // Skeleton component for content items
     function ContentSkeleton() {
         return (
-            <Card withBorder>
+            <Card withBorder style={{ width: displayMode === 'horizontal' ? '300px' : '100%', flexShrink: 0 }}>
                 <Group align="flex-start">
-                    <Skeleton visible={true} height={150} width={150} />
+                    <Skeleton height={150} width={150} />
                     <Stack gap="xs">
-                        <Skeleton visible={true} height={24} width={200} />
-                        <Skeleton visible={true} height={16} width={150} />
+                        <Skeleton height={24} width={200} />
+                        <Skeleton height={16} width={150} />
                     </Stack>
                 </Group>
             </Card>
         );
     }
 
-    return (
-        <Stack mt="md">
-            <Group justify="space-between" align="center">
-                <Text size="xl" fw={700} mb={6} pl={4}>Textbooks</Text>
-                <div>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="application/pdf"
-                        style={{ display: 'none' }}
-                    />
-                    <Button 
-                        leftSection={<IconUpload size={14} />} 
-                        onClick={triggerFileInput}
-                    >
-                        Upload Textbook
-                    </Button>
-                </div>
+    if (loadingTextbooks || loadingTextbookDocuments) {
+        return (
+            <Group wrap={displayMode === 'horizontal' ? 'nowrap' : 'wrap'}>
+                <ContentSkeleton />
+                <ContentSkeleton />
+                <ContentSkeleton />
             </Group>
+        );
+    }
 
-            <Stack>
-                {loadingTextbooks || loadingTextbookDocuments ? (
-                    <>
-                        <ContentSkeleton />
-                        <ContentSkeleton />
-                        <ContentSkeleton />
-                    </>
-                ) : textbooks?.length === 0 ? (
-                    <Text c="dimmed" ta="center">No textbooks found</Text>
-                ) : (
-                    textbooks?.sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()).map((textbook) => {
-                        const isExpanded = expandedTextbooks.has(textbook.id);
-                        const textbookChapters = chapters?.[textbook.id] || [];
-                        
-                        if (textbook.parse_status !== "complete") {
-                            return (
-                                <Card withBorder key={textbook.id}>
-                                    <Group align="flex-start" justify="space-between">
-                                        <Group align="flex-start">
-                                            <Image
-                                                src={getTextbookImage(textbook.id)}
-                                                alt={`First page of ${textbook.title}`}
-                                                width={150}
-                                                height={150}
-                                                style={{ objectFit: "contain", borderRadius: "10px" }}
-                                            />
-                                            <Stack gap="xs">
-                                                <Text size="lg" fw={500}>{textbook.title}</Text>
-                                                <Text size="sm" c="dimmed">
-                                                    {textbook.parse_status === 'parsing' ? 'Parsing...' :
-                                                        textbook.parse_status === 'extracting' ? 'Extracting content...' :
-                                                        textbook.parse_status === 'uploading' ? 'Uploading content...' :
-                                                        textbook.parse_status === 'error' ? 'Parse failed' :
-                                                        textbook.parse_status === 'idle' ? 'Waiting to parse' :
-                                                        'Could not find any topics.'}
-                                                </Text>
-                                                {textbook.parse_error && (
-                                                    <Text size="sm" c="red">
-                                                        Error: {textbook.parse_error}
-                                                    </Text>
-                                                )}
-                                                <Progress
-                                                    value={getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing')}
-                                                    size="sm"
-                                                    color="blue"
-                                                    animated={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status)}
-                                                    striped={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status)}
-                                                />
-                                                {(['parsing', 'extracting', 'uploading'].includes(textbook.parse_status)) && (
-                                                    <Text size="sm" c="dimmed">
-                                                        Estimated time remaining: ~{getTextbookEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds
-                                                    </Text>
-                                                )}
-                                            </Stack>
-                                        </Group>
-                                        <Button
-                                            variant="light"
+    if (!textbooks || textbooks.length === 0) {
+        return (
+            <Text c="dimmed" ta="center">No textbooks found</Text>
+        );
+    }
+
+    return (
+        <Group wrap={displayMode === 'horizontal' ? 'nowrap' : 'wrap'}>
+            {textbooks.sort((a, b) => 
+                new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime()
+            ).map((textbook) => {
+                const isExpanded = expandedTextbooks.has(textbook.id);
+                const textbookChapters = chapters?.[textbook.id] || [];
+                
+                if (textbook.parse_status !== "complete") {
+                    return (
+                        <Card 
+                            withBorder 
+                            key={textbook.id}
+                            style={{ 
+                                width: displayMode === 'horizontal' ? '300px' : '100%',
+                                flexShrink: 0
+                            }}
+                        >
+                            <Group align="flex-start" justify="space-between">
+                                <Group align="flex-start">
+                                    <Image
+                                        src={getTextbookImage(textbook.id)}
+                                        alt={`First page of ${textbook.title}`}
+                                        width={150}
+                                        height={150}
+                                        style={{ objectFit: "contain", borderRadius: "10px" }}
+                                    />
+                                    <Stack gap="xs">
+                                        <Text size="lg" fw={500}>{textbook.title}</Text>
+                                        <Text size="sm" c="dimmed">
+                                            {textbook.parse_status === 'parsing' ? 'Parsing...' :
+                                                textbook.parse_status === 'extracting' ? 'Extracting content...' :
+                                                textbook.parse_status === 'uploading' ? 'Uploading content...' :
+                                                textbook.parse_status === 'error' ? 'Parse failed' :
+                                                textbook.parse_status === 'idle' ? 'Waiting to parse' :
+                                                'Could not find any topics.'}
+                                        </Text>
+                                        {textbook.parse_error && (
+                                            <Text size="sm" c="red">
+                                                Error: {textbook.parse_error}
+                                            </Text>
+                                        )}
+                                        <Progress
+                                            value={getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing')}
+                                            size="sm"
                                             color="blue"
-                                            onClick={() => handleRetryTextbook(classId, textbook)}
-                                            leftSection={<IconRefresh size={16} />}
-                                            disabled={['parsing', 'extracting', 'uploading', 'idle'].includes(textbook.parse_status)}
-                                            loading={parsingTextbooks.has(textbook.id)}
-                                        >
-                                            {parsingTextbooks.has(textbook.id) ? 'Retrying...' :
-                                                textbook.parse_status === 'parsing' ? 'Parsing...' :
-                                                textbook.parse_status === 'extracting' ? 'Extracting...' :
-                                                textbook.parse_status === 'uploading' ? 'Uploading...' :
-                                                textbook.parse_status === 'error' ? 'Retry Parse' :
-                                                'Processing...'}
-                                        </Button>
-                                    </Group>
-                                </Card>
-                            );
-                        }
-                        
-                        return (
-                            <Stack key={textbook.id} gap={0}>
-                                <Card 
-                                    withBorder 
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={() => toggleTextbookExpansion(textbook.id)}
-                                >
-                                    <Group align="flex-start" justify="space-between">
-                                        <Group align="flex-start">
-                                            <Image
-                                                src={getTextbookImage(textbook.id)}
-                                                alt={`First page of ${textbook.title}`}
-                                                width={150}
-                                                height={150}
-                                                style={{ objectFit: "contain", borderRadius: "10px" }}
-                                            />
-                                            <Stack gap="xs">
-                                                <Text size="lg" fw={500}>{textbook.title}</Text>
-                                                <Text size="sm" c="dimmed">
-                                                    Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
-                                                </Text>
-                                                <Text size="sm" c="dimmed">
-                                                    {textbookChapters.length} chapters
-                                                </Text>
-                                            </Stack>
-                                        </Group>
-                                        {isExpanded ? <IconChevronUp size={20} /> : <IconChevronDown size={20} />}
-                                    </Group>
-                                </Card>
-                                
-                                <Collapse in={isExpanded}>
-                                    <Stack pl={20} pr={20} pt={10} pb={10} style={{ borderLeft: '1px solid #e9ecef', borderRight: '1px solid #e9ecef', borderBottom: '1px solid #e9ecef', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' }}>
-                                        {textbookChapters.length === 0 ? (
-                                            <Text c="dimmed" ta="center" py={10}>No chapters found</Text>
-                                        ) : (
-                                            textbookChapters.sort((a, b) => (a.chapter_number || 0) - (b.chapter_number || 0)).map((chapter) => {
-                                                const chapterStatus = chapterProcessingStatus[chapter.id];
-                                                const isChapterProcessed = chapterStatus?.processed;
-                                                const isProcessing = parsingChapters.has(chapter.id);
-                                                
-                                                return (
-                                                    <Card withBorder key={chapter.id}>
-                                                        <Box pos="relative">
-                                                            {isChapterProcessed ? (
-                                                                <>
-                                                                    <Link 
-                                                                        href={`/classes/c/${classId}/textbook/${textbook.id}/exercises/${chapter.id}`}
-                                                                        style={{ 
-                                                                            position: 'absolute', 
-                                                                            top: 8,
-                                                                            right: 8,
-                                                                            zIndex: 2,
-                                                                            textDecoration: 'none'
-                                                                        }}
-                                                                    >
-                                                                        <Button
-                                                                            variant="light"
-                                                                            size="sm"
-                                                                            leftSection={<IconPencil size={16} />}
-                                                                            radius="md"
-                                                                        >
-                                                                            Exercises
-                                                                        </Button>
-                                                                    </Link>
-                                                                    <Link
-                                                                        href={`/classes/c/${classId}/textbook/${textbook.id}/chapter/${chapter.id}`}
-                                                                        style={{ textDecoration: 'none', color: 'inherit' }}
-                                                                    >
-                                                                        <Group align="flex-start">
-                                                                            <Image
-                                                                                src={getChapterImage(textbook.id, chapter.id)}
-                                                                                alt={`Chapter ${chapter.chapter_number}`}
-                                                                                width={150}
-                                                                                height={150}
-                                                                                style={{ objectFit: "contain", borderRadius: "10px" }}
-                                                                            />
-                                                                            <Stack gap="xs">
-                                                                                <Text size="lg" fw={500}>{chapter.title}</Text>
-                                                                                <Text size="sm" c="dimmed">
-                                                                                    Chapter {chapter.chapter_number}
-                                                                                </Text>
-                                                                            </Stack>
-                                                                        </Group>
-                                                                    </Link>
-                                                                </>
-                                                            ) : (
-                                                                <Group align="flex-start" justify="space-between">
-                                                                    <Group align="flex-start">
-                                                                        <Image
-                                                                            src={getChapterImage(textbook.id, chapter.id)}
-                                                                            alt={`Chapter ${chapter.chapter_number}`}
-                                                                            width={150}
-                                                                            height={150}
-                                                                            style={{ objectFit: "contain", borderRadius: "10px" }}
-                                                                        />
-                                                                        <Stack gap="xs">
-                                                                            <Text size="lg" fw={500}>{chapter.title}</Text>
-                                                                            <Text size="sm" c="dimmed">
-                                                                                Chapter {chapter.chapter_number}
-                                                                            </Text>
-                                                                            <Text size="sm" c="dimmed">
-                                                                                Processing chapter content...
-                                                                            </Text>
-                                                                            <Progress
-                                                                                value={getChapterProgress(chapter.id)}
-                                                                                size="sm"
-                                                                                color="blue"
-                                                                                animated={isProcessing}
-                                                                                striped={isProcessing}
-                                                                            />
-                                                                            <Text size="sm" c="dimmed">
-                                                                                {chapterStatus?.processedCount || 0} of {chapterStatus?.total || 0} pages processed
-                                                                            </Text>
-                                                                        </Stack>
-                                                                    </Group>
-                                                                    <Button
-                                                                        variant="light"
-                                                                        color="blue"
-                                                                        onClick={() => handleRetryChapter(classId, textbook.id, chapter)}
-                                                                        leftSection={<IconRefresh size={16} />}
-                                                                        loading={isProcessing}
-                                                                    >
-                                                                        {isProcessing ? 'Processing...' : 'Retry Processing'}
-                                                                    </Button>
-                                                                </Group>
-                                                            )}
-                                                        </Box>
-                                                    </Card>
-                                                );
-                                            })
+                                            animated={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status)}
+                                            striped={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status)}
+                                        />
+                                        {(['parsing', 'extracting', 'uploading'].includes(textbook.parse_status)) && (
+                                            <Text size="sm" c="dimmed">
+                                                Estimated time remaining: ~{getTextbookEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds
+                                            </Text>
                                         )}
                                     </Stack>
-                                </Collapse>
+                                </Group>
+                                <Button
+                                    variant="light"
+                                    color="blue"
+                                    onClick={() => handleRetryTextbook(classId, textbook)}
+                                    leftSection={<IconRefresh size={16} />}
+                                    disabled={['parsing', 'extracting', 'uploading', 'idle'].includes(textbook.parse_status)}
+                                    loading={parsingTextbooks.has(textbook.id)}
+                                >
+                                    {parsingTextbooks.has(textbook.id) ? 'Retrying...' :
+                                        textbook.parse_status === 'parsing' ? 'Parsing...' :
+                                        textbook.parse_status === 'extracting' ? 'Extracting...' :
+                                        textbook.parse_status === 'uploading' ? 'Uploading...' :
+                                        textbook.parse_status === 'error' ? 'Retry Parse' :
+                                        'Processing...'}
+                                </Button>
+                            </Group>
+                        </Card>
+                    );
+                }
+                
+                return (
+                    <Stack key={textbook.id} gap={0} style={{ width: displayMode === 'horizontal' ? '300px' : '100%', flexShrink: 0 }}>
+                        <Card 
+                            withBorder 
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => toggleTextbookExpansion(textbook.id)}
+                        >
+                            <Group align="flex-start" justify="space-between">
+                                <Group align="flex-start">
+                                    <Image
+                                        src={getTextbookImage(textbook.id)}
+                                        alt={`First page of ${textbook.title}`}
+                                        width={150}
+                                        height={150}
+                                        style={{ objectFit: "contain", borderRadius: "10px" }}
+                                    />
+                                    <Stack gap="xs">
+                                        <Text size="lg" fw={500}>{textbook.title}</Text>
+                                        <Text size="sm" c="dimmed">
+                                            Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
+                                        </Text>
+                                        <Text size="sm" c="dimmed">
+                                            {textbookChapters.length} chapters
+                                        </Text>
+                                    </Stack>
+                                </Group>
+                                {isExpanded ? <IconChevronUp size={20} /> : <IconChevronDown size={20} />}
+                            </Group>
+                        </Card>
+                        
+                        <Collapse in={isExpanded}>
+                            <Stack gap="xs" p="md" style={{ borderLeft: '1px solid #e9ecef', borderRight: '1px solid #e9ecef', borderBottom: '1px solid #e9ecef', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' }}>
+                                {textbookChapters.length === 0 ? (
+                                    <Text c="dimmed" ta="center">No chapters found</Text>
+                                ) : (
+                                    textbookChapters
+                                        .sort((a, b) => (a.chapter_number || 0) - (b.chapter_number || 0))
+                                        .map((chapter) => (
+                                            <Link
+                                                key={chapter.id}
+                                                href={`/classes/c/${classId}/textbook/${textbook.id}/chapter/${chapter.id}`}
+                                                style={{ textDecoration: 'none', color: 'inherit' }}
+                                            >
+                                                <Card withBorder>
+                                                    <Group align="flex-start">
+                                                        <Image
+                                                            src={getChapterImage(textbook.id, chapter.id)}
+                                                            alt={`Chapter ${chapter.chapter_number}`}
+                                                            width={100}
+                                                            height={100}
+                                                            style={{ objectFit: "contain", borderRadius: "10px" }}
+                                                        />
+                                                        <Stack gap="xs">
+                                                            <Text size="md" fw={500}>{chapter.title}</Text>
+                                                            <Text size="sm" c="dimmed">
+                                                                Chapter {chapter.chapter_number}
+                                                            </Text>
+                                                        </Stack>
+                                                    </Group>
+                                                </Card>
+                                            </Link>
+                                        ))
+                                )}
                             </Stack>
-                        );
-                    })
-                )}
-            </Stack>
-        </Stack>
+                        </Collapse>
+                    </Stack>
+                );
+            })}
+        </Group>
     );
 }

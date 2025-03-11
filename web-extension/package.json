@@ -1,8 +1,8 @@
 {
-  "name": "scryb",
-  "displayName": "Scryb",
-  "version": "0.0.1",
-  "description": "Used to parse brightspace content and upload to scryb website.",
+  "name": "scribe",
+  "displayName": "Scribe",
+  "version": "0.0.2",
+  "description": "Used to download Brightspace content and upload to Scribe website.",
   "author": "Ashok Saravanan",
   "scripts": {
     "dev": "plasmo dev",
@@ -44,7 +44,6 @@
       "scripting",
       "cookies",
       "storage",
-      "webRequest",
       "alarms"
     ],
     "host_permissions": [
