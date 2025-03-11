@@ -544,15 +544,15 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         };
     }, [chatId, queryClient, supabase]);
 
-    useEffect(() => {
-        if (profile) {
-            setActiveChat(prev => ({
-                ...prev,
-                chatType: profile.admin || profile.professor ? 'general-teacher' : 'general-student',
-                teacher: profile.admin || profile.professor
-            }));
-        }
-    }, [profile]);
+    // useEffect(() => {
+    //     if (profile) {
+    //         setActiveChat(prev => ({
+    //             ...prev,
+    //             chatType: profile.admin || profile.professor ? 'general-teacher' : 'general-student',
+    //             teacher: profile.admin || profile.professor
+    //         }));
+    //     }
+    // }, [profile]);
 
     // Handle rating change
     const handleRatingChange = async (value: number) => {

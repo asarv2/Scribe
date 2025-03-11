@@ -113,8 +113,11 @@ export type Database = {
           deleted: boolean
           download: boolean
           download_time: string
+          homework_prompt: string
           id: string
+          lecture_prompt: string
           privacy: boolean
+          textbook_prompt: string
           title: string | null
           updated_at: string
         }
@@ -129,8 +132,11 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_prompt?: string
           id?: string
+          lecture_prompt?: string
           privacy?: boolean
+          textbook_prompt?: string
           title?: string | null
           updated_at?: string
         }
@@ -145,8 +151,11 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_prompt?: string
           id?: string
+          lecture_prompt?: string
           privacy?: boolean
+          textbook_prompt?: string
           title?: string | null
           updated_at?: string
         }
