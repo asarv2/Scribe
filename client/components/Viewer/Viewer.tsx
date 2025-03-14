@@ -23,20 +23,20 @@ interface ViewerProps {
     }>;
     initialImageId?: string;
     embedded?: boolean;
-    
+
     // Optional components/content
     title?: string;
     description?: string | React.ReactNode;
     DeleteComponent?: React.ReactNode;
-    
+
     // Layout
     classId?: string;
     showNavigation?: boolean;
-    
+
     // Loading states
     loading?: boolean;
     loadingTitle?: boolean;
-    
+
     // New prop for side component
     SideComponent?: React.ReactNode;
 }
@@ -61,25 +61,11 @@ export default function Viewer({
     const previewScrollRef = useRef<HTMLDivElement>(null);
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
-    // Handle keyboard navigation
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            const currentIndex = images.findIndex(img => img.id === activeImageId);
-            if (event.key === 'ArrowLeft' && currentIndex > 0) {
-                setActiveImageId(images[currentIndex - 1].id);
-            } else if (event.key === 'ArrowRight' && currentIndex < images.length - 1) {
-                setActiveImageId(images[currentIndex + 1].id);
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [activeImageId, images]);
-
     // Handle touch swipe
     const handleSwipe = (touchEndX: number) => {
         const swipeDistance = touchEndX - touchStartX;
         const currentIndex = images.findIndex(img => img.id === activeImageId);
-        
+
         if (Math.abs(swipeDistance) > 50) { // Minimum swipe distance
             if (swipeDistance > 0 && currentIndex > 0) {
                 setActiveImageId(images[currentIndex - 1].id);
@@ -96,6 +82,20 @@ export default function Viewer({
             activeThumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
     }, [activeImageId]);
+
+    // Handle keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            const currentIndex = images.findIndex(img => img.id === activeImageId);
+            if (event.key === 'ArrowLeft' && currentIndex > 0) {
+                setActiveImageId(images[currentIndex - 1].id);
+            } else if (event.key === 'ArrowRight' && currentIndex < images.length - 1) {
+                setActiveImageId(images[currentIndex + 1].id);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [activeImageId, images]);
 
     const MainViewer = () => {
         const currentImage = images.find(img => img.id === activeImageId);
@@ -115,8 +115,8 @@ export default function Viewer({
                     borderRadius: "10px",
                     flexShrink: 0
                 }}
-                onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
-                onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
+                    onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
+                    onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
                 >
                     {isImageLoading && (
                         <Skeleton height="100%" width="100%" radius="md" />
@@ -142,7 +142,7 @@ export default function Viewer({
                         onLoadStart={() => setIsImageLoading(true)}
                         priority
                     />
-                    
+
                     {showNavigation && (
                         <>
                             <ActionIcon
@@ -318,7 +318,7 @@ export default function Viewer({
                         )}
                     </Stack>
                 </Grid.Col>
-                
+
                 {/* Side component - only show if not embedded */}
                 {!embedded && SideComponent && (
                     <Grid.Col span={isMobile ? 12 : 6}>

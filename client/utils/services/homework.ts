@@ -33,3 +33,39 @@ export const deleteHomework = async (homeworkId: string) => {
     return { success: true, error: "" };
 
 }
+
+export const updateHomeworkDate = async (homeworkId: string, due: string) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("homeworks")
+        .update({ due: due })
+        .eq("id", homeworkId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
+
+export const updateHomeworkName = async (homeworkId: string, name: string) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("homeworks")
+        .update({ title: name })
+        .eq("id", homeworkId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
+
+export const updateHomeworkInstructions = async (homeworkId: string, instructions: string) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("homeworks")
+        .update({ additional_info: instructions })
+        .eq("id", homeworkId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}

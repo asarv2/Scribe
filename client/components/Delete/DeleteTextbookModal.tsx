@@ -20,10 +20,9 @@ type DeleteTextbookModalProps = {
     classId: string
     textbookId: string
     textbookTitle: string
-    profile: Profile | undefined
 }
 
-export default function DeleteTextbookModal({ textbookId, profile, textbookTitle, classId }: DeleteTextbookModalProps) {
+export default function DeleteTextbookModal({ textbookId, textbookTitle, classId }: DeleteTextbookModalProps) {
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
@@ -67,7 +66,7 @@ export default function DeleteTextbookModal({ textbookId, profile, textbookTitle
 
     return (
         <>
-            {profile && isProfessor(profile, classId) && <Tooltip label="Delete Textbook"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            <Tooltip label="Delete Textbook"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>
 
             <Modal opened={opened} onClose={close} title="Delete Textbook" centered>
                 <Stack>

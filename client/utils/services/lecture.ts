@@ -45,3 +45,27 @@ export const updateLectureInfo = async (lectureId: string, aiInstructions: strin
     }
     return { success: true, error: "" };
 }
+
+export const updateLectureName = async (lectureId: string, lectureName: string) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("lectures")
+        .update({name: lectureName})
+        .eq("id", lectureId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
+
+export const updateLectureDate = async (lectureId: string, lectureDate: string) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("lectures")
+        .update({lecture_date: lectureDate})
+        .eq("id", lectureId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}

@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       chapters: {
         Row: {
+          additional_info: string
           chapter_number: number
           created_at: string
           end_page: number
@@ -20,6 +21,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          additional_info?: string
           chapter_number?: number
           created_at?: string
           end_page?: number
@@ -29,6 +31,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          additional_info?: string
           chapter_number?: number
           created_at?: string
           end_page?: number
@@ -312,6 +315,7 @@ export type Database = {
           file_list: string[]
           id: string
           processed_files: number
+          refreshed_at: string
           response_url: string
           status: string
           toc_content: string
@@ -326,6 +330,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          refreshed_at?: string
           response_url?: string
           status?: string
           toc_content?: string
@@ -340,6 +345,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          refreshed_at?: string
           response_url?: string
           status?: string
           toc_content?: string
@@ -704,6 +710,7 @@ export type Database = {
           id: string
           last_parse_attempt: string | null
           last_upload_attempt: string | null
+          lecture_date: string
           name: string | null
           note_number: number | null
           pages: number
@@ -722,6 +729,7 @@ export type Database = {
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null
+          lecture_date?: string
           name?: string | null
           note_number?: number | null
           pages?: number
@@ -740,6 +748,7 @@ export type Database = {
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null
+          lecture_date?: string
           name?: string | null
           note_number?: number | null
           pages?: number
@@ -1004,6 +1013,7 @@ export type Database = {
       }
       textbooks: {
         Row: {
+          additional_info: string
           class: string
           created_at: string
           deleted: boolean
@@ -1017,6 +1027,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          additional_info?: string
           class: string
           created_at?: string
           deleted?: boolean
@@ -1030,6 +1041,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          additional_info?: string
           class?: string
           created_at?: string
           deleted?: boolean
