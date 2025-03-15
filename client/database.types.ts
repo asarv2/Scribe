@@ -490,6 +490,7 @@ export type Database = {
           homework: string | null
           id: string
           info: string
+          problem_multipart: boolean
           problem_number: number
           problem_part_number: number
           start_page: number
@@ -508,6 +509,7 @@ export type Database = {
           homework?: string | null
           id?: string
           info?: string
+          problem_multipart?: boolean
           problem_number?: number
           problem_part_number?: number
           start_page?: number
@@ -526,6 +528,7 @@ export type Database = {
           homework?: string | null
           id?: string
           info?: string
+          problem_multipart?: boolean
           problem_number?: number
           problem_part_number?: number
           start_page?: number

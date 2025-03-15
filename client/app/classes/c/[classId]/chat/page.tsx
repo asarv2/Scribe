@@ -5,9 +5,9 @@ import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
 import { getClass } from "@/utils/queries/get-class";
-import { IconArrowLeft, IconMessageCirclePlus, IconPlus, IconRefresh } from '@tabler/icons-react';
+import { IconArrowLeft, IconMessageCirclePlus, IconPlus, IconRefresh, IconChevronDown, IconChevronUp, IconSearch, IconSelector } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Button, Center, em, Flex, Group, Stack, Skeleton, Card, Badge, Tabs, SimpleGrid, Select } from "@mantine/core";
+import { ActionIcon, Box, Button, Center, em, Flex, Group, Stack, Skeleton, Card, Badge, Tabs, SimpleGrid, Select, Avatar, Table, ScrollArea, UnstyledButton, TextInput } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Container } from "@mantine/core";
 import { Text } from "@mantine/core";
@@ -26,6 +26,7 @@ import { getStudents } from "@/utils/queries/get-students";
 import { IconUser, IconUsers } from '@tabler/icons-react';
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
+import classes from "@components/TableSort.module.css";
 
 // Function to get badge color based on chat type
 const getBadgeColor = (type: string) => {
@@ -68,6 +69,123 @@ function ChatSkeleton() {
             </Stack>
         </Card>
     );
+}
+
+// Update the skeleton component for table view
+function ChatTableSkeleton() {
+    return (
+        <Table.Tbody>
+            {Array(5).fill(0).map((_, index) => (
+                <Table.Tr key={index}>
+                    <Table.Td><Skeleton height={40} circle /></Table.Td>
+                    <Table.Td><Skeleton height={20} width="80%" /></Table.Td>
+                    <Table.Td><Skeleton height={20} width={80} radius="xl" /></Table.Td>
+                    <Table.Td><Skeleton height={20} width={60} /></Table.Td>
+                    <Table.Td><Skeleton height={20} width={100} /></Table.Td>
+                </Table.Tr>
+            ))}
+        </Table.Tbody>
+    );
+}
+
+// Add this CSS module import at the top of your file
+const tableClasses = {
+    header: {
+        position: 'sticky',
+        top: 0,
+        backgroundColor: 'var(--mantine-color-body)',
+        transition: 'box-shadow 150ms ease',
+        zIndex: 1,
+    },
+    scrolled: {
+        boxShadow: 'var(--mantine-shadow-sm)',
+    },
+    clickableRow: {
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: 'var(--mantine-color-gray-0)',
+        }
+    }
+};
+
+// Define the interface for chat data sorting
+interface ChatSortData {
+  id: string;
+  name: string;
+  type: string;
+  rating: number | null;
+  created_at: string;
+}
+
+// Create a component for sortable table headers
+interface ThProps {
+  children: React.ReactNode;
+  reversed: boolean;
+  sorted: boolean;
+  onSort: () => void;
+}
+
+function Th({ children, reversed, sorted, onSort }: ThProps) {
+  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+  return (
+    <Table.Th>
+      <UnstyledButton onClick={onSort} style={{ display: 'flex', width: '100%' }}>
+        <Group justify="space-between" wrap="nowrap">
+          <Text fw={500} size="sm">
+            {children}
+          </Text>
+          <Center>
+            <Icon size={16} stroke={1.5} />
+          </Center>
+        </Group>
+      </UnstyledButton>
+    </Table.Th>
+  );
+}
+
+// Function to filter data based on search query
+function filterData(data: Chat[], search: string) {
+  const query = search.toLowerCase().trim();
+  return data.filter((item) => 
+    item.name?.toLowerCase().includes(query) || 
+    item.type?.toLowerCase().includes(query)
+  );
+}
+
+// Function to sort data based on field and direction
+function sortData(
+  data: Chat[],
+  payload: { sortBy: keyof ChatSortData | null; reversed: boolean; search: string }
+) {
+  const { sortBy } = payload;
+
+  if (!sortBy) {
+    return filterData(data, payload.search);
+  }
+
+  return filterData(
+    [...data].sort((a, b) => {
+      if (sortBy === 'created_at') {
+        const dateA = new Date(a.created_at || '').getTime();
+        const dateB = new Date(b.created_at || '').getTime();
+        return payload.reversed ? dateB - dateA : dateA - dateB;
+      }
+      
+      if (sortBy === 'rating') {
+        const ratingA = a.rating || 0;
+        const ratingB = b.rating || 0;
+        return payload.reversed ? ratingB - ratingA : ratingA - ratingB;
+      }
+      
+      const valueA = String(a[sortBy] || '');
+      const valueB = String(b[sortBy] || '');
+      
+      return payload.reversed 
+        ? valueB.localeCompare(valueA) 
+        : valueA.localeCompare(valueB);
+    }),
+    payload.search
+  );
 }
 
 export default function ChatPage({ params }: { params: { classId: string } }) {
@@ -309,94 +427,179 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
         );
     }, [userChats, profile]);
 
-    const renderChatList = (chatList: Chat[] | undefined, title: string) => {
+    // Add state for table scroll
+    const [scrolled, setScrolled] = useState(false);
+
+    // Add state for search and sorting
+    const [search, setSearch] = useState('');
+    const [sortBy, setSortBy] = useState<keyof ChatSortData | null>(null);
+    const [reverseSortDirection, setReverseSortDirection] = useState(false);
+
+    // Replace the renderChatTable function with this sortable version
+    const renderChatTable = (chatList: Chat[] | undefined, title: string) => {
         if (!chatList || chatList.length === 0) return null;
         
+        // Set up sorting function
+        const setSorting = (field: keyof ChatSortData) => {
+            const reversed = field === sortBy ? !reverseSortDirection : false;
+            setReverseSortDirection(reversed);
+            setSortBy(field);
+        };
+        
+        // Handle search input changes
+        const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setSearch(event.currentTarget.value);
+        };
+        
+        // Sort and filter the data
+        const sortedData = sortData(chatList, { 
+            sortBy, 
+            reversed: reverseSortDirection, 
+            search 
+        });
+        
+        const rows = sortedData.map((chat) => {
+            const messagesForChat = messages?.filter(message => message.chat === chat.id) ?? [];
+            const references = messagesForChat.map(message => getReferences(message) ?? []).flat();
+            const context = references?.[0];
+            
+            return (
+                <Table.Tr 
+                    key={chat.id} 
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => router.push(`/classes/c/${classId}/chat/${chat.id}`)}
+                >
+                    <Table.Td>
+                        <Avatar 
+                            src={getActiveImage(context)} 
+                            size={40} 
+                            radius="sm"
+                        />
+                    </Table.Td>
+                    <Table.Td>
+                        <Text lineClamp={1}>{chat.name}</Text>
+                    </Table.Td>
+                    <Table.Td>
+                        <Badge color={getBadgeColor(chat.type)}>
+                            {formatChatType(chat.type)}
+                        </Badge>
+                    </Table.Td>
+                    <Table.Td>
+                        {chat.rating ? (
+                            <Group gap={2}>
+                                {Array(5).fill(0).map((_, i) => (
+                                    <Box key={i} c={i < (chat.rating ?? 0) ? 'yellow.5' : 'gray.3'}>
+                                        ★
+                                    </Box>
+                                ))}
+                            </Group>
+                        ) : (
+                            <Text size="sm" c="dimmed">No rating</Text>
+                        )}
+                    </Table.Td>
+                    <Table.Td>
+                        <Text size="sm" c="dimmed">
+                            {new Date(chat.created_at ?? "").toLocaleDateString()}
+                        </Text>
+                    </Table.Td>
+                </Table.Tr>
+            );
+        });
+
         return (
             <Stack>
                 {title && <Text size="lg" fw={600}>{title}</Text>}
-                <SimpleGrid
-                    cols={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
-                    spacing="xl"
-                    verticalSpacing="xl"
-                    p="md"
-                >
-                    {chatList
-                        .sort((a, b) => new Date(b.created_at ?? "").getTime() - new Date(a.created_at ?? "").getTime())
-                        .map((chat) => {
-                            const messagesForChat = messages?.filter(message => message.chat === chat.id) ?? [];
-                            const references = messagesForChat.map(message => getReferences(message) ?? []).flat()
-                            const context = references?.[0]
-                            return (
-                                <Link
-                                    href={`/classes/c/${classId}/chat/${chat.id}`}
-                                    key={chat.id}
-                                    style={{ textDecoration: 'none' }}
+                
+                <TextInput
+                    placeholder="Search chats..."
+                    mb="md"
+                    leftSection={<IconSearch size={16} stroke={1.5} />}
+                    value={search}
+                    onChange={handleSearchChange}
+                />
+                
+                <ScrollArea h={Math.min(600, rows.length * 60 + 60)} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+                    <Table striped highlightOnHover>
+                        <Table.Thead style={{ 
+                            position: 'sticky' as const, 
+                            top: 0, 
+                            backgroundColor: 'var(--mantine-color-body)', 
+                            transition: 'box-shadow 150ms ease', 
+                            zIndex: 1 
+                        }}>
+                            <Table.Tr>
+                                <Table.Th style={{ width: 60 }}>Image</Table.Th>
+                                <Th
+                                    sorted={sortBy === 'name'}
+                                    reversed={reverseSortDirection}
+                                    onSort={() => setSorting('name')}
                                 >
-                                    <Card withBorder h="100%" padding="lg">
-                                        <Stack>
-                                            <Box pos="relative">
-                                                <Image
-                                                    src={getActiveImage(context)}
-                                                    alt={`Chat context`}
-                                                    width={0}
-                                                    height={0}
-                                                    sizes="100vw"
-                                                    style={{ 
-                                                        width: '100%', 
-                                                        height: '200px',
-                                                        objectFit: "contain", 
-                                                        borderRadius: "10px" 
-                                                    }}
-                                                />
-                                            </Box>
-                                            <Text 
-                                                size="lg" 
-                                                fw={500} 
-                                                lineClamp={2}
-                                                style={{ 
-                                                    height: '3em',  // Force exactly 2 lines height
-                                                    overflow: 'hidden',
-                                                    display: '-webkit-box',
-                                                    WebkitLineClamp: 2,
-                                                    WebkitBoxOrient: 'vertical'
-                                                }}
-                                            >
-                                                {chat.name}
-                                            </Text>
-                                            <Group justify="space-between" align="center">
-                                                <Text size="sm" c="dimmed">
-                                                    {new Date(chat.created_at ?? "").toLocaleDateString()}
-                                                </Text>
-                                                <Badge color={getBadgeColor(chat.type)}>
-                                                    {formatChatType(chat.type)}
-                                                </Badge>
-                                            </Group>
-                                        </Stack>
-                                    </Card>
-                                </Link>
-                            );
-                        })}
-                </SimpleGrid>
+                                    Chat Name
+                                </Th>
+                                <Th
+                                    sorted={sortBy === 'type'}
+                                    reversed={reverseSortDirection}
+                                    onSort={() => setSorting('type')}
+                                >
+                                    Type
+                                </Th>
+                                <Th
+                                    sorted={sortBy === 'rating'}
+                                    reversed={reverseSortDirection}
+                                    onSort={() => setSorting('rating')}
+                                >
+                                    Rating
+                                </Th>
+                                <Th
+                                    sorted={sortBy === 'created_at'}
+                                    reversed={reverseSortDirection}
+                                    onSort={() => setSorting('created_at')}
+                                >
+                                    Date
+                                </Th>
+                            </Table.Tr>
+                        </Table.Thead>
+                        <Table.Tbody>
+                            {rows.length > 0 ? (
+                                rows
+                            ) : (
+                                <Table.Tr>
+                                    <Table.Td colSpan={5}>
+                                        <Text fw={500} ta="center">
+                                            No chats found
+                                        </Text>
+                                    </Table.Td>
+                                </Table.Tr>
+                            )}
+                        </Table.Tbody>
+                    </Table>
+                </ScrollArea>
             </Stack>
         );
     };
 
-    // Update the loading skeleton display
+    // Update the renderSkeletons function for table view
     const renderSkeletons = () => (
-        <SimpleGrid
-            cols={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
-            spacing="xl"
-            verticalSpacing="xl"
-            p="md"
-        >
-            <ChatSkeleton />
-            <ChatSkeleton />
-            <ChatSkeleton />
-            <ChatSkeleton />
-            <ChatSkeleton />
-            <ChatSkeleton />
-        </SimpleGrid>
+        <ScrollArea h={400}>
+            <Table striped>
+                <Table.Thead style={{ 
+                    position: 'sticky' as const, 
+                    top: 0, 
+                    backgroundColor: 'var(--mantine-color-body)', 
+                    transition: 'box-shadow 150ms ease', 
+                    zIndex: 1 
+                }}>
+                    <Table.Tr>
+                        <Table.Th style={{ width: 60 }}>Image</Table.Th>
+                        <Table.Th>Chat Name</Table.Th>
+                        <Table.Th>Type</Table.Th>
+                        <Table.Th>Rating</Table.Th>
+                        <Table.Th>Date</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <ChatTableSkeleton />
+            </Table>
+        </ScrollArea>
     );
 
     // Add this function to check if the user is a student
@@ -406,8 +609,8 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
 
     return (
         <ClassLayout classId={classId}>
-            <Container fluid style={{ marginTop: "30px" }}>
-                <Stack gap="xl">
+            <Container fluid>
+                <Stack>
                     <Flex justify="space-between" align="center">
                         <Group>
                             <Text size="xl" fw={700} mb={6} pl={4}>History</Text>
@@ -419,7 +622,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                     ) : (chats && classData) && chats.length > 0 ? (
                         isStudent() ? (
                             // Student view - only show their chats
-                            renderChatList(userChats, "My Chats")
+                            renderChatTable(userChats, "My Chats")
                         ) : (
                             // Admin/Professor view - show only student chats without tabs
                             <Stack gap="md">
@@ -443,7 +646,7 @@ export default function ChatPage({ params }: { params: { classId: string } }) {
                                         clearable
                                     />
                                 </Group>
-                                {renderChatList(filteredStudentChats, "")}
+                                {renderChatTable(filteredStudentChats, "")}
                             </Stack>
                         )
                     ) : (

@@ -17,11 +17,12 @@ import { getAllChats } from "@/utils/queries/get-all-chats";
 import { getMessages } from "@/utils/queries/get-messages";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Tabs, TextInput, Button, Group, Card, Stack, Text, Badge, Accordion, ActionIcon, Modal, Box, Container, Flex, Grid, Skeleton, Textarea, Divider, em } from "@mantine/core";
+import { Tabs, TextInput, Button, Group, Card, Stack, Text, Badge, Accordion, ActionIcon, Modal, Box, Container, Flex, Grid, Skeleton, Textarea, Divider, em, Switch, NumberInput } from "@mantine/core";
 import { IconMessage, IconSettings, IconRuler, IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { useDisclosure, useIntersection, useMediaQuery } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { updateHomeworkDate, updateHomeworkName, updateHomeworkInstructions } from "@/utils/services/homework";
+import { updateExercise } from "@/utils/services/exercises";
 import { DateTimePicker } from '@mantine/dates';
 import { useMantineColorScheme } from "@mantine/core";
 import Image from "next/image";
@@ -43,13 +44,15 @@ export default function HomeworkPage({ params }: HomeworkProps) {
     const previewScrollRef = useRef<HTMLDivElement>(null);
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [homeworkName, setHomeworkName] = useState<string>("");
-    const [homeworkProblemNumber, setHomeworkProblemNumber] = useState<string | null>(null);
     const [homeworkDate, setHomeworkDate] = useState<Date | null>(null);
     const [homeworkInstructions, setHomeworkInstructions] = useState<string>("");
     const [isNameUpdating, setIsNameUpdating] = useState(false);
     const [isDateUpdating, setIsDateUpdating] = useState(false);
     const [isInstructionsUpdating, setIsInstructionsUpdating] = useState(false);
     const [isProblemNumberUpdating, setIsProblemNumberUpdating] = useState(false);
+    const [isMultipart, setIsMultipart] = useState<boolean>(false);
+    const [problemPartNumber, setProblemPartNumber] = useState<number | null>(1);
+    const [exerciseProblemNumber, setExerciseProblemNumber] = useState<number | null>(null);
     const { colorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
     const searchParams = useSearchParams();
@@ -184,11 +187,22 @@ export default function HomeworkPage({ params }: HomeworkProps) {
     useEffect(() => {
         if (homework) {
             setHomeworkName(homework.title || "");
-            setHomeworkProblemNumber(homework.homework_number.toString() || null);
             setHomeworkDate(homework.due ? new Date(homework.due) : null);
             setHomeworkInstructions(homework.additional_info || "");
         }
     }, [homework]);
+
+    // Update the exercise state when active exercise changes
+    useEffect(() => {
+        if (exercises && activeExerciseId) {
+            const currentExercise = exercises.find(ex => ex.id === activeExerciseId);
+            if (currentExercise) {
+                setExerciseProblemNumber(currentExercise.problem_number || null);
+                setIsMultipart(currentExercise.problem_multipart);
+                setProblemPartNumber(currentExercise.problem_part_number || 1);
+            }
+        }
+    }, [activeExerciseId, exercises]);
 
     // Skeleton components
     function MainViewerSkeleton() {
@@ -355,7 +369,7 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                         "0px 0px 4px rgba(255,255,255,0.5)"
                                 }}
                             >
-                                {currentExercise?.title}
+                                {`Problem ${currentExercise?.problem_number}${currentExercise?.problem_multipart ? `.${currentExercise?.problem_part_number}` : ""}`}
                             </Text>
                         </Box>
                     </Box>
@@ -439,6 +453,51 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                 <Text fw={500}>Problem {currentExercise.problem_number}{currentExercise.problem_part_number !== 1 ?
                     `${String.fromCharCode(96 + currentExercise.problem_part_number)})` :
                     ""}</Text>
+
+                {/* Add problem number editing UI */}
+                <Card withBorder p="md">
+                    <Stack gap="xs">
+                        <Group justify="space-between">
+                            <Text size="sm" fw={500}>Problem Number</Text>
+                            <Group>
+                                <Text size="xs">Multipart</Text>
+                                <Switch 
+                                    checked={isMultipart}
+                                    onChange={(event) => setIsMultipart(event.currentTarget.checked)}
+                                />
+                            </Group>
+                        </Group>
+                        <Group justify="space-between">
+                            <Group style={{ flex: 1 }}>
+                                <NumberInput
+                                    value={exerciseProblemNumber ?? ""}
+                                    onChange={(value) => setExerciseProblemNumber(Number(value))}
+                                    placeholder="Problem #"
+                                    min={1}
+                                    style={{ flex: isMultipart ? 0.5 : 1 }}
+                                />
+                                {isMultipart && (
+                                    <NumberInput
+                                        value={problemPartNumber ?? ""}
+                                        onChange={(value) => setProblemPartNumber(Number(value))}
+                                        placeholder="Part #"
+                                        min={1}
+                                        style={{ flex: 0.5 }}
+                                    />
+                                )}
+                            </Group>
+                            <Button
+                                onClick={handleUpdateExerciseProblemNumber}
+                                loading={isProblemNumberUpdating}
+                                disabled={exerciseProblemNumber === null || 
+                                    (exerciseProblemNumber === currentExercise.problem_number && 
+                                    (isMultipart ? problemPartNumber : 1) === currentExercise.problem_part_number)}
+                            >
+                                Save
+                            </Button>
+                        </Group>
+                    </Stack>
+                </Card>
 
                 {currentExercise.info && (
                     <Box>
@@ -634,6 +693,29 @@ export default function HomeworkPage({ params }: HomeworkProps) {
         }
     };
 
+    const handleUpdateExerciseProblemNumber = async () => {
+        if (!activeExerciseId || exerciseProblemNumber === null) return;
+
+        try {
+            setIsProblemNumberUpdating(true);
+            await updateExercise(activeExerciseId, exerciseProblemNumber, problemPartNumber ?? 1, isMultipart);
+            queryClient.invalidateQueries({ queryKey: ["homeworkExercises", homeworkId] });
+            notifications.show({
+                title: "Problem updated",
+                message: "Problem number has been updated successfully",
+                color: "green"
+            });
+        } catch (error) {
+            notifications.show({
+                title: "Error",
+                message: "Failed to update problem number",
+                color: "red"
+            });
+        } finally {
+            setIsProblemNumberUpdating(false);
+        }
+    };
+
     // Update the intersection observer settings
     const { ref: chatsIntersection, entry: chatsEntry } = useIntersection({
         root: null,
@@ -726,6 +808,48 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                                     </Group>
                                                 </Stack>
 
+                                                <Stack gap="xs">
+                                                    <Group justify="space-between">
+                                                        <Text size="sm" fw={500}>Problem Number</Text>
+                                                        <Group>
+                                                            <Text size="xs">Multipart</Text>
+                                                            <Switch 
+                                                                checked={isMultipart}
+                                                                onChange={(event) => setIsMultipart(event.currentTarget.checked)}
+                                                            />
+                                                        </Group>
+                                                    </Group>
+                                                    <Group justify="space-between">
+                                                        <Group style={{ flex: 1 }}>
+                                                            <NumberInput
+                                                                value={exerciseProblemNumber ?? ""}
+                                                                onChange={(value) => setExerciseProblemNumber(Number(value))}
+                                                                placeholder="Problem #"
+                                                                min={1}
+                                                                style={{ flex: isMultipart ? 0.5 : 1 }}
+                                                            />
+                                                            {isMultipart && (
+                                                                <NumberInput
+                                                                    value={problemPartNumber ?? ""}
+                                                                    onChange={(value) => setProblemPartNumber(Number(value))}
+                                                                    placeholder="Part #"
+                                                                    min={1}
+                                                                    style={{ flex: 0.5 }}
+                                                                />
+                                                            )}
+                                                        </Group>
+                                                        <Button
+                                                            onClick={handleUpdateExerciseProblemNumber}
+                                                            loading={isProblemNumberUpdating}
+                                                            disabled={exerciseProblemNumber === null || 
+                                                                (exerciseProblemNumber === exercises?.find(ex => ex.id === activeExerciseId)?.problem_number && 
+                                                                isMultipart === ((exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number ?? 1) !== 1) &&
+                                                                problemPartNumber === (exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number ?? 1))}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </Group>
+                                                </Stack>
 
                                                 <Stack gap="xs">
                                                     <Text size="sm" fw={500}>Due Date</Text>

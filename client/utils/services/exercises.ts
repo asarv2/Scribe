@@ -21,3 +21,16 @@ export const updateExerciseAnswerEnabled = async (enabled: boolean, exerciseId: 
     }
     return {success: true, error: ""};
 }
+
+export const updateExercise = async (exerciseId: string, problemNumber: number, problemPartNumber: number, problemMultipart: boolean) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("exercises")
+        .update({ problem_number: problemNumber, problem_part_number: problemPartNumber, problem_multipart: problemMultipart })
+        .eq("id", exerciseId);
+
+    if (error) {
+        return {success: false, error: error.message};
+    }
+    return {success: true, error: ""};
+}
