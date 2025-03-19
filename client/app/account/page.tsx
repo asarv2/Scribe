@@ -318,7 +318,7 @@ export default function AccountPage() {
                             <Text size="lg" fw={500} mb="md">Personal Information</Text>
                             <Card withBorder shadow="sm" radius="md" p="xl">
                                 <Group justify="flex-end" mb="md">
-                                    {/* {colorScheme === 'dark' ? (
+                                    {colorScheme === 'dark' ? (
                                 <ActionIcon
                                     variant="light"
                                     color="yellow"
@@ -334,7 +334,7 @@ export default function AccountPage() {
                                 >
                                     <IconMoon size={24} />
                                 </ActionIcon>
-                            )} */}
+                            )}
                                 </Group>
                                 <Stack gap="xl">
                                     <Group justify="center" style={{ width: '100%' }}>
