@@ -47,6 +47,7 @@ import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { updateClassPrivacy, updateClassPrompts } from "@/utils/services/class";
+import Management from "@/components/Account/Management";
 
 export default function AccountPage() {
     const { colorScheme, setColorScheme } = useMantineColorScheme();
@@ -271,18 +272,18 @@ export default function AccountPage() {
         try {
             const classToUpdate = classes?.find(c => c.id === classId);
             if (!classToUpdate) return;
-            
+
             const { success, error } = await updateClassPrompts(
-                classId, 
+                classId,
                 classPrompts[classId].lecture,
                 classPrompts[classId].textbook,
                 classPrompts[classId].homework
             );
-            
+
             if (!success) {
                 throw new Error(error);
             }
-            
+
             queryClient.invalidateQueries({ queryKey: ["classes"] });
             notifications.show({
                 title: 'Success',
@@ -462,9 +463,9 @@ export default function AccountPage() {
                                             <Text size="sm">
                                                 <b>Member since:</b> {user && new Date(user.created_at).toLocaleDateString()}
                                             </Text>
-                                            <Button 
-                                                variant="light" 
-                                                color="red" 
+                                            <Button
+                                                variant="light"
+                                                color="red"
                                                 onClick={() => setDeleteModalOpened(true)}
                                                 loading={deleteLoading}
                                             >
@@ -521,175 +522,12 @@ export default function AccountPage() {
                             </div>
                         )}
 
-                        {/* Class Management Section with Tabs */}
-                        {loadingProfile ? (
-                            <div>
-                                <Text size="lg" fw={500} mb="md">Class Management</Text>
-                                <Card withBorder shadow="sm" radius="md" p="xl">
-                                    <Skeleton height={40} mb="md" />
-                                    <Stack gap="md">
-                                        <Skeleton height={20} width="180px" />
-                                        <Skeleton height={36} width="200px" />
-                                        <Skeleton height={20} width="180px" />
-                                        <Skeleton height={36} width="200px" />
-                                    </Stack>
-                                </Card>
-                            </div>
-                        ) : (profile?.professor || profile?.admin) && (
-                            <div>
-                                <Text size="lg" fw={500} mb="md">Class Management</Text>
-                                <Card withBorder shadow="sm" radius="md" p="xl">
-                                    {classesLoading ? (
-                                        <Stack gap="md">
-                                            <Skeleton height={40} mb="md" />
-                                            <Skeleton height={20} width="180px" />
-                                            <Skeleton height={36} width="200px" />
-                                        </Stack>
-                                    ) : !classes || classes.length === 0 ? (
-                                        <Text c="dimmed" size="sm">No classes available.</Text>
-                                    ) : (
-                                        <Tabs defaultValue={classes[0]?.id}>
-                                            <Tabs.List mb="md">
-                                                {classes
-                                                    .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
-                                                    .map((classItem) => (
-                                                        <Tabs.Tab key={classItem.id} value={classItem.id}>
-                                                            {classItem.class_code}
-                                                        </Tabs.Tab>
-                                                    ))}
-                                            </Tabs.List>
-
-                                            {classes
-                                                .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
-                                                .map((classItem) => {
-                                                    const classCode = codes?.find(c => c.classes.includes(classItem.id));
-                                                    const promptsChanged = classPrompts[classItem.id] && (
-                                                        classPrompts[classItem.id].lecture !== (classItem.lecture_prompt || '') ||
-                                                        classPrompts[classItem.id].textbook !== (classItem.textbook_prompt || '') ||
-                                                        classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
-                                                    );
-                                                    
-                                                    return (
-                                                        <Tabs.Panel key={classItem.id} value={classItem.id}>
-                                                            <Stack gap="xl">
-                                                                {/* Access Code Section */}
-                                                                <Stack gap="md">
-                                                                    <Text fw={500} size="sm">Access Code</Text>
-                                                                    <Group gap="sm">
-                                                                        <PasswordInput
-                                                                            value={classCode?.code || ''}
-                                                                            readOnly
-                                                                            style={{ width: '200px' }}
-                                                                            placeholder="Create a code"
-                                                                        />
-                                                                        {!classCode ? (
-                                                                            <ActionIcon
-                                                                                variant="light"
-                                                                                color="blue"
-                                                                                onClick={() => handleGenerateCode([classItem.id])}
-                                                                                title="Generate Code"
-                                                                            >
-                                                                                <IconRefresh size={16} />
-                                                                            </ActionIcon>
-                                                                        ) : (
-                                                                            <CopyButton value={classCode.code}>
-                                                                                {({ copied, copy }) => (
-                                                                                    <ActionIcon
-                                                                                        variant="light"
-                                                                                        color={copied ? 'green' : 'blue'}
-                                                                                        onClick={() => {
-                                                                                            copy()
-                                                                                            notifications.show({
-                                                                                                title: 'Success',
-                                                                                                message: 'Code copied to clipboard',
-                                                                                                color: 'green'
-                                                                                            })
-                                                                                        }}
-                                                                                    >
-                                                                                        <IconCopy size={16} />
-                                                                                    </ActionIcon>
-                                                                                )}
-                                                                            </CopyButton>
-                                                                        )}
-                                                                        {classCode && (
-                                                                            <ActionIcon
-                                                                                color="red"
-                                                                                variant="light"
-                                                                                onClick={() => handleDeleteCode(classCode.id)}
-                                                                                title="Delete Code"
-                                                                            >
-                                                                                <IconTrash size={16} />
-                                                                            </ActionIcon>
-                                                                        )}
-                                                                    </Group>
-                                                                </Stack>
-
-                                                                {/* Private Mode Section */}
-                                                                <Stack gap="md">
-                                                                    <Text fw={500} size="sm">Private Mode</Text>
-                                                                    <Text size="xs" c="dimmed">
-                                                                        When private mode is enabled, all lecture content will be processed using our own models 
-                                                                        instead of external services, ensuring complete data privacy.
-                                                                    </Text>
-                                                                    <Switch
-                                                                        checked={classItem.privacy}
-                                                                        onChange={(event) => handlePrivacyUpdate(classItem.id, event.currentTarget.checked)}
-                                                                        label="Enable private mode"
-                                                                        labelPosition="right"
-                                                                    />
-                                                                </Stack>
-                                                                
-                                                                {/* Custom Prompts Section */}
-                                                                <Stack gap="md">
-                                                                    <Text fw={500} size="sm">Custom Prompts</Text>
-                                                                    <Text size="xs" c="dimmed">
-                                                                        Customize the AI prompts for different content types in this class.
-                                                                    </Text>
-                                                                    
-                                                                    {/* Lecture Prompt */}
-                                                                    <Textarea
-                                                                        label="Lecture Prompt"
-                                                                        placeholder="Enter custom prompt for lecture content"
-                                                                        minRows={3}
-                                                                        value={classPrompts[classItem.id]?.lecture || ''}
-                                                                        onChange={(event) => handlePromptChange(classItem.id, 'lecture', event.currentTarget.value)}
-                                                                    />
-                                                                    
-                                                                    {/* Textbook Prompt */}
-                                                                    <Textarea
-                                                                        label="Textbook Prompt"
-                                                                        placeholder="Enter custom prompt for textbook content"
-                                                                        minRows={3}
-                                                                        value={classPrompts[classItem.id]?.textbook || ''}
-                                                                        onChange={(event) => handlePromptChange(classItem.id, 'textbook', event.currentTarget.value)}
-                                                                    />
-                                                                    
-                                                                    {/* Homework Prompt */}
-                                                                    <Textarea
-                                                                        label="Homework Prompt"
-                                                                        placeholder="Enter custom prompt for homework content"
-                                                                        minRows={3}
-                                                                        value={classPrompts[classItem.id]?.homework || ''}
-                                                                        onChange={(event) => handlePromptChange(classItem.id, 'homework', event.currentTarget.value)}
-                                                                    />
-                                                                    
-                                                                    <Button 
-                                                                        onClick={() => handleSavePrompts(classItem.id)}
-                                                                        variant={promptsChanged ? "filled" : "light"}
-                                                                        loading={saveLoading[classItem.id]}
-                                                                    >
-                                                                        Save Prompts
-                                                                    </Button>
-                                                                </Stack>
-                                                            </Stack>
-                                                        </Tabs.Panel>
-                                                    );
-                                                })}
-                                        </Tabs>
-                                    )}
-                                </Card>
-                            </div>
-                        )}
+                        {/* Class Management Section */}
+                        <div>
+                            <Text size="lg" fw={500} mb="md">Class Management</Text>
+                            <Management />
+                        </div>
+                        
                     </Stack>
                 </Stack>
             </Container>
@@ -703,14 +541,14 @@ export default function AccountPage() {
                 <Stack>
                     <Text>Are you sure you want to delete your account? This action cannot be undone.</Text>
                     <Group justify="flex-end" mt="md">
-                        <Button 
-                            variant="light" 
+                        <Button
+                            variant="light"
                             onClick={() => setDeleteModalOpened(false)}
                         >
                             Cancel
                         </Button>
-                        <Button 
-                            color="red" 
+                        <Button
+                            color="red"
                             onClick={handleDeleteAccount}
                             loading={deleteLoading}
                         >

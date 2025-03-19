@@ -110,7 +110,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
         enabled: !!homeworks
     });
 
-    const {data: homeworkDocs, isLoading: loadingHomeworkDocs} = useQuery({
+    const { data: homeworkDocs, isLoading: loadingHomeworkDocs } = useQuery({
         queryKey: ["homeworkDocs", classId],
         queryFn: () => getHomeworkDocuments(supabase, homeworks?.map(h => h.id) ?? []),
         enabled: !!homeworks
@@ -643,9 +643,9 @@ export default function ContentPage({ params }: { params: { classId: string } })
     // Update the ContentSkeleton function
     function ContentSkeleton() {
         return (
-            <Card withBorder style={{ 
-                width: '350px', 
-                height: '320px', 
+            <Card withBorder style={{
+                width: '350px',
+                height: '320px',
                 flexShrink: 0,
                 display: 'flex',
                 flexDirection: 'column'
@@ -682,467 +682,473 @@ export default function ContentPage({ params }: { params: { classId: string } })
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack gap="xl">
                     {/* Lectures Section */}
-                    <Stack>
-                        <Group justify="space-between" align="center">
-                            <Text size="xl" fw={700}>Lectures</Text>
-                            <Button
-                                leftSection={<IconUpload size={14} />}
-                                onClick={() => lectureInputRef.current?.click()}
-                            >
-                                Upload Lecture
-                            </Button>
-                        </Group>
+                    {classData?.lecture_enabled &&
+                        <Stack>
+                            <Group justify="space-between" align="center">
+                                <Text size="xl" fw={700}>Lectures</Text>
+                                <Button
+                                    leftSection={<IconUpload size={14} />}
+                                    onClick={() => lectureInputRef.current?.click()}
+                                >
+                                    Upload Lecture
+                                </Button>
+                            </Group>
 
-                        <Group align="center" mb="md">
-                            <TextInput
-                                placeholder="Search lectures..."
-                                leftSection={<IconSearch size={14} />}
-                                style={{ flexGrow: 1 }}
-                                value={lectureSearch}
-                                onChange={(e) => setLectureSearch(e.currentTarget.value)}
-                            />
-                            <Select
-                                data={[
-                                    { value: 'newest', label: 'Newest First' },
-                                    { value: 'oldest', label: 'Oldest First' },
-                                    { value: 'name', label: 'Name' },
-                                ]}
-                                value={lectureSortOrder}
-                                onChange={(value) => setLectureSortOrder(value || 'newest')}
-                            />
-                        </Group>
+                            <Group align="center" mb="md">
+                                <TextInput
+                                    placeholder="Search lectures..."
+                                    leftSection={<IconSearch size={14} />}
+                                    style={{ flexGrow: 1 }}
+                                    value={lectureSearch}
+                                    onChange={(e) => setLectureSearch(e.currentTarget.value)}
+                                />
+                                <Select
+                                    data={[
+                                        { value: 'newest', label: 'Newest First' },
+                                        { value: 'oldest', label: 'Oldest First' },
+                                        { value: 'name', label: 'Name' },
+                                    ]}
+                                    value={lectureSortOrder}
+                                    onChange={(value) => setLectureSortOrder(value || 'newest')}
+                                />
+                            </Group>
 
-                        <ScrollArea scrollbarSize={0}>
-                            <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
-                                {loadingLectures || loadingLectureDocuments ? (
-                                    <>
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                    </>
-                                ) : !filteredLectures || filteredLectures.length === 0 ? (
-                                    <Text c="dimmed" ta="center">No lectures found</Text>
-                                ) : (
-                                    filteredLectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
-                                        if (lecture.parse_status !== "complete") {
+                            <ScrollArea scrollbarSize={0}>
+                                <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
+                                    {loadingLectures || loadingLectureDocuments ? (
+                                        <>
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                        </>
+                                    ) : !filteredLectures || filteredLectures.length === 0 ? (
+                                        <Text c="dimmed" ta="center">No lectures found</Text>
+                                    ) : (
+                                        filteredLectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
+                                            if (lecture.parse_status !== "complete") {
+                                                return (
+                                                    <Card
+                                                        withBorder
+                                                        key={lecture.id}
+                                                        style={{
+                                                            width: '350px',
+                                                            height: '320px',
+                                                            flexShrink: 0,
+                                                            display: 'flex',
+                                                            flexDirection: 'column'
+                                                        }}
+                                                    >
+                                                        <Stack style={{ width: '100%', height: '100%' }}>
+                                                            <Image
+                                                                src={getLectureImage(lecture.id)}
+                                                                alt={`First page of ${lecture.name}`}
+                                                                width={320}
+                                                                height={200}
+                                                                style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                                                            />
+                                                            <Group align="flex-start" justify="space-between">
+                                                                <Stack gap="xs" style={{ flex: 1 }}>
+                                                                    <Text size="lg" fw={500} lineClamp={1}>{lecture.name}</Text>
+                                                                    <Text size="sm" c={lecture.parse_error ? "red" : "dimmed"} lineClamp={2}>
+                                                                        {lecture.parse_error ?
+                                                                            `Error: ${lecture.parse_error}` :
+                                                                            lecture.parse_status === 'parsing' ? 'Parsing lecture content...' :
+                                                                                lecture.parse_status === 'error' ? 'Processing failed' :
+                                                                                    lecture.parse_status === 'idle' ? 'Waiting to process' :
+                                                                                        lecture.parse_status === 'extracting' ? 'Extracting content...' :
+                                                                                            lecture.parse_status === 'uploading' ? 'Uploading content...' :
+                                                                                                'Processing content...'}
+                                                                    </Text>
+                                                                </Stack>
+                                                                {lecture.parse_status === 'error' && (
+                                                                    <Tooltip label="Retry">
+                                                                        <Button
+                                                                            variant="subtle"
+                                                                            color="blue"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                handleRetryLecture(classId, lecture);
+                                                                            }}
+                                                                            p={8}
+                                                                            style={{ alignSelf: 'flex-start' }}
+                                                                            loading={parsingLectures.has(lecture.id)}
+                                                                        >
+                                                                            <IconRefresh size={18} />
+                                                                        </Button>
+                                                                    </Tooltip>
+                                                                )}
+                                                            </Group>
+                                                            <Progress
+                                                                value={getLectureProgress(lecture.id, lecture.parse_status !== 'parsing')}
+                                                                size="sm"
+                                                                color={lecture.parse_status === 'error' ? "red" : "blue"}
+                                                                animated={['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '')}
+                                                                striped={['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '')}
+                                                            />
+                                                            {['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '') && (
+                                                                <Text size="sm" c="dimmed">
+                                                                    ~{getLectureEstimatedTime(lecture.id, lecture.parse_status !== 'parsing')} seconds remaining
+                                                                </Text>
+                                                            )}
+                                                        </Stack>
+                                                    </Card>
+                                                );
+                                            }
                                             return (
-                                                <Card
-                                                    withBorder
+                                                <Link
+                                                    href={`/classes/c/${classId}/lecture/${lecture.id}`}
                                                     key={lecture.id}
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
+                                                    style={{ textDecoration: 'none' }}
                                                 >
-                                                    <Stack style={{ width: '100%', height: '100%' }}>
-                                                        <Image
-                                                            src={getLectureImage(lecture.id)}
-                                                            alt={`First page of ${lecture.name}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Group align="flex-start" justify="space-between">
-                                                            <Stack gap="xs" style={{ flex: 1 }}>
+                                                    <Card
+                                                        withBorder
+                                                        style={{
+                                                            width: '350px',
+                                                            height: '320px',
+                                                            flexShrink: 0,
+                                                            display: 'flex',
+                                                            flexDirection: 'column'
+                                                        }}
+                                                    >
+                                                        <Stack style={{ height: '100%' }}>
+                                                            <Image
+                                                                src={getLectureImage(lecture.id)}
+                                                                alt={`First page of ${lecture.name}`}
+                                                                width={320}
+                                                                height={200}
+                                                                style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                                                            />
+                                                            <Stack gap="xs" mt="auto">
                                                                 <Text size="lg" fw={500} lineClamp={1}>{lecture.name}</Text>
-                                                                <Text size="sm" c={lecture.parse_error ? "red" : "dimmed"} lineClamp={2}>
-                                                                    {lecture.parse_error ?
-                                                                        `Error: ${lecture.parse_error}` :
-                                                                        lecture.parse_status === 'parsing' ? 'Parsing lecture content...' :
-                                                                            lecture.parse_status === 'error' ? 'Processing failed' :
-                                                                                lecture.parse_status === 'idle' ? 'Waiting to process' :
-                                                                                    lecture.parse_status === 'extracting' ? 'Extracting content...' :
-                                                                                        lecture.parse_status === 'uploading' ? 'Uploading content...' :
-                                                                                            'Processing content...'}
+                                                                <Text size="sm" c="dimmed">
+                                                                    Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
                                                                 </Text>
                                                             </Stack>
-                                                            {lecture.parse_status === 'error' && (
-                                                                <Tooltip label="Retry">
-                                                                    <Button
-                                                                        variant="subtle"
-                                                                        color="blue"
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            handleRetryLecture(classId, lecture);
-                                                                        }}
-                                                                        p={8}
-                                                                        style={{ alignSelf: 'flex-start' }}
-                                                                        loading={parsingLectures.has(lecture.id)}
-                                                                    >
-                                                                        <IconRefresh size={18} />
-                                                                    </Button>
-                                                                </Tooltip>
-                                                            )}
-                                                        </Group>
-                                                        <Progress
-                                                            value={getLectureProgress(lecture.id, lecture.parse_status !== 'parsing')}
-                                                            size="sm"
-                                                            color={lecture.parse_status === 'error' ? "red" : "blue"}
-                                                            animated={['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '')}
-                                                            striped={['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '')}
-                                                        />
-                                                        {['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '') && (
-                                                            <Text size="sm" c="dimmed">
-                                                                ~{getLectureEstimatedTime(lecture.id, lecture.parse_status !== 'parsing')} seconds remaining
-                                                            </Text>
-                                                        )}
-                                                    </Stack>
-                                                </Card>
-                                            );
-                                        }
-                                        return (
-                                            <Link
-                                                href={`/classes/c/${classId}/lecture/${lecture.id}`}
-                                                key={lecture.id}
-                                                style={{ textDecoration: 'none' }}
-                                            >
-                                                <Card
-                                                    withBorder
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
-                                                >
-                                                    <Stack style={{ height: '100%' }}>
-                                                        <Image
-                                                            src={getLectureImage(lecture.id)}
-                                                            alt={`First page of ${lecture.name}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Stack gap="xs" mt="auto">
-                                                            <Text size="lg" fw={500} lineClamp={1}>{lecture.name}</Text>
-                                                            <Text size="sm" c="dimmed">
-                                                                Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
-                                                            </Text>
                                                         </Stack>
-                                                    </Stack>
-                                                </Card>
-                                            </Link>
-                                        );
-                                    })
-                                )}
-                            </Group>
-                        </ScrollArea>
-                    </Stack>
+                                                    </Card>
+                                                </Link>
+                                            );
+                                        })
+                                    )}
+                                </Group>
+                            </ScrollArea>
+                        </Stack>
+                    }
 
                     {/* Textbooks Section */}
-                    <Stack>
-                        <Group justify="space-between" align="center">
-                            <Text size="xl" fw={700}>Textbooks</Text>
-                            <Button
-                                leftSection={<IconUpload size={14} />}
-                                onClick={() => textbookInputRef.current?.click()}
-                            >
-                                Upload Textbook
-                            </Button>
-                        </Group>
+                    {classData?.textbook_enabled &&
+                        <Stack>
+                            <Group justify="space-between" align="center">
+                                <Text size="xl" fw={700}>Textbooks</Text>
+                                <Button
+                                    leftSection={<IconUpload size={14} />}
+                                    onClick={() => textbookInputRef.current?.click()}
+                                >
+                                    Upload Textbook
+                                </Button>
+                            </Group>
 
-                        <Group align="center" mb="md">
-                            <TextInput
-                                placeholder="Search textbooks..."
-                                leftSection={<IconSearch size={14} />}
-                                style={{ flexGrow: 1 }}
-                                value={textbookSearch}
-                                onChange={(e) => setTextbookSearch(e.currentTarget.value)}
-                            />
-                            <Select
-                                data={[
-                                    { value: 'newest', label: 'Newest First' },
-                                    { value: 'oldest', label: 'Oldest First' },
-                                    { value: 'name', label: 'Name' },
-                                ]}
-                                value={textbookSortOrder}
-                                onChange={(value) => setTextbookSortOrder(value || 'newest')}
-                            />
-                        </Group>
+                            <Group align="center" mb="md">
+                                <TextInput
+                                    placeholder="Search textbooks..."
+                                    leftSection={<IconSearch size={14} />}
+                                    style={{ flexGrow: 1 }}
+                                    value={textbookSearch}
+                                    onChange={(e) => setTextbookSearch(e.currentTarget.value)}
+                                />
+                                <Select
+                                    data={[
+                                        { value: 'newest', label: 'Newest First' },
+                                        { value: 'oldest', label: 'Oldest First' },
+                                        { value: 'name', label: 'Name' },
+                                    ]}
+                                    value={textbookSortOrder}
+                                    onChange={(value) => setTextbookSortOrder(value || 'newest')}
+                                />
+                            </Group>
 
-                        <ScrollArea>
-                            <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
-                                {loadingTextbooks || loadingTextbookDocuments ? (
-                                    <>
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                    </>
-                                ) : !filteredTextbooks || filteredTextbooks.length === 0 ? (
-                                    <Text c="dimmed" ta="center">No textbooks found</Text>
-                                ) : (
-                                    filteredTextbooks.map((textbook) => {
-                                        if (textbook.parse_status !== "complete") {
+                            <ScrollArea>
+                                <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
+                                    {loadingTextbooks || loadingTextbookDocuments ? (
+                                        <>
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                        </>
+                                    ) : !filteredTextbooks || filteredTextbooks.length === 0 ? (
+                                        <Text c="dimmed" ta="center">No textbooks found</Text>
+                                    ) : (
+                                        filteredTextbooks.map((textbook) => {
+                                            if (textbook.parse_status !== "complete") {
+                                                return (
+                                                    <Card
+                                                        withBorder
+                                                        key={textbook.id}
+                                                        style={{
+                                                            width: '350px',
+                                                            height: '320px',
+                                                            flexShrink: 0,
+                                                            display: 'flex',
+                                                            flexDirection: 'column'
+                                                        }}
+                                                    >
+                                                        <Stack style={{ width: '100%', height: '100%' }}>
+                                                            <Image
+                                                                src={getTextbookImage(textbook.id)}
+                                                                alt={`First page of ${textbook.title}`}
+                                                                width={320}
+                                                                height={200}
+                                                                style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                                                            />
+                                                            <Group align="flex-start" justify="space-between">
+                                                                <Stack gap="xs" style={{ flex: 1 }}>
+                                                                    <Text size="lg" fw={500} lineClamp={1}>{textbook.title}</Text>
+                                                                    <Text size="sm" c={textbook.parse_error ? "red" : "dimmed"} lineClamp={2}>
+                                                                        {textbook.parse_error ?
+                                                                            `Error: ${textbook.parse_error}` :
+                                                                            textbook.parse_status === 'parsing' ? 'Parsing textbook content...' :
+                                                                                textbook.parse_status === 'error' ? 'Processing failed' :
+                                                                                    textbook.parse_status === 'idle' ? 'Waiting to process' :
+                                                                                        textbook.parse_status === 'extracting' ? 'Extracting content...' :
+                                                                                            textbook.parse_status === 'uploading' ? 'Uploading content...' :
+                                                                                                'Processing content...'}
+                                                                    </Text>
+                                                                </Stack>
+                                                                {textbook.parse_status === 'error' && (
+                                                                    <Tooltip label="Retry">
+                                                                        <Button
+                                                                            variant="subtle"
+                                                                            color="blue"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                handleRetryTextbook(classId, textbook);
+                                                                            }}
+                                                                            p={8}
+                                                                            style={{ alignSelf: 'flex-start' }}
+                                                                            loading={parsingTextbooks.has(textbook.id)}
+                                                                        >
+                                                                            <IconRefresh size={18} />
+                                                                        </Button>
+                                                                    </Tooltip>
+                                                                )}
+                                                            </Group>
+                                                            <Progress
+                                                                value={getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing')}
+                                                                size="sm"
+                                                                color={textbook.parse_status === 'error' ? "red" : "blue"}
+                                                                animated={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '')}
+                                                                striped={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '')}
+                                                            />
+                                                            {['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '') && (
+                                                                <Text size="sm" c="dimmed">
+                                                                    ~{getTextbookEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds remaining
+                                                                </Text>
+                                                            )}
+                                                        </Stack>
+                                                    </Card>
+                                                );
+                                            }
                                             return (
-                                                <Card
-                                                    withBorder
+                                                <Link
+                                                    href={`/classes/c/${classId}/textbook/${textbook.id}`}
                                                     key={textbook.id}
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
+                                                    style={{ textDecoration: 'none' }}
                                                 >
-                                                    <Stack style={{ width: '100%', height: '100%' }}>
-                                                        <Image
-                                                            src={getTextbookImage(textbook.id)}
-                                                            alt={`First page of ${textbook.title}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Group align="flex-start" justify="space-between">
-                                                            <Stack gap="xs" style={{ flex: 1 }}>
+                                                    <Card
+                                                        withBorder
+                                                        style={{
+                                                            width: '350px',
+                                                            height: '320px',
+                                                            flexShrink: 0,
+                                                            display: 'flex',
+                                                            flexDirection: 'column'
+                                                        }}
+                                                    >
+                                                        <Stack style={{ height: '100%' }}>
+                                                            <Image
+                                                                src={getTextbookImage(textbook.id)}
+                                                                alt={`First page of ${textbook.title}`}
+                                                                width={320}
+                                                                height={200}
+                                                                style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                                                            />
+                                                            <Stack gap="xs" mt="auto">
                                                                 <Text size="lg" fw={500} lineClamp={1}>{textbook.title}</Text>
-                                                                <Text size="sm" c={textbook.parse_error ? "red" : "dimmed"} lineClamp={2}>
-                                                                    {textbook.parse_error ?
-                                                                        `Error: ${textbook.parse_error}` :
-                                                                        textbook.parse_status === 'parsing' ? 'Parsing textbook content...' :
-                                                                            textbook.parse_status === 'error' ? 'Processing failed' :
-                                                                                textbook.parse_status === 'idle' ? 'Waiting to process' :
-                                                                                    textbook.parse_status === 'extracting' ? 'Extracting content...' :
-                                                                                        textbook.parse_status === 'uploading' ? 'Uploading content...' :
-                                                                                            'Processing content...'}
+                                                                <Text size="sm" c="dimmed">
+                                                                    Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
                                                                 </Text>
                                                             </Stack>
-                                                            {textbook.parse_status === 'error' && (
-                                                                <Tooltip label="Retry">
-                                                                    <Button
-                                                                        variant="subtle"
-                                                                        color="blue"
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            handleRetryTextbook(classId, textbook);
-                                                                        }}
-                                                                        p={8}
-                                                                        style={{ alignSelf: 'flex-start' }}
-                                                                        loading={parsingTextbooks.has(textbook.id)}
-                                                                    >
-                                                                        <IconRefresh size={18} />
-                                                                    </Button>
-                                                                </Tooltip>
-                                                            )}
-                                                        </Group>
-                                                        <Progress
-                                                            value={getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing')}
-                                                            size="sm"
-                                                            color={textbook.parse_status === 'error' ? "red" : "blue"}
-                                                            animated={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '')}
-                                                            striped={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '')}
-                                                        />
-                                                        {['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '') && (
-                                                            <Text size="sm" c="dimmed">
-                                                                ~{getTextbookEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds remaining
-                                                            </Text>
-                                                        )}
-                                                    </Stack>
-                                                </Card>
-                                            );
-                                        }
-                                        return (
-                                            <Link
-                                                href={`/classes/c/${classId}/textbook/${textbook.id}`}
-                                                key={textbook.id}
-                                                style={{ textDecoration: 'none' }}
-                                            >
-                                                <Card
-                                                    withBorder
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
-                                                >
-                                                    <Stack style={{ height: '100%' }}>
-                                                        <Image
-                                                            src={getTextbookImage(textbook.id)}
-                                                            alt={`First page of ${textbook.title}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Stack gap="xs" mt="auto">
-                                                            <Text size="lg" fw={500} lineClamp={1}>{textbook.title}</Text>
-                                                            <Text size="sm" c="dimmed">
-                                                                Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
-                                                            </Text>
                                                         </Stack>
-                                                    </Stack>
-                                                </Card>
-                                            </Link>
-                                        );
-                                    })
-                                )}
-                            </Group>
-                        </ScrollArea>
-                    </Stack>
+                                                    </Card>
+                                                </Link>
+                                            );
+                                        })
+                                    )}
+                                </Group>
+                            </ScrollArea>
+                        </Stack>
+                    }
 
                     {/* Homeworks Section */}
-                    <Stack>
-                        <Group justify="space-between" align="center">
-                            <Text size="xl" fw={700}>Homework</Text>
-                            <Button
-                                leftSection={<IconUpload size={14} />}
-                                onClick={() => homeworkInputRef.current?.click()}
-                            >
-                                Upload Homework
-                            </Button>
-                        </Group>
+                    {classData?.homework_enabled &&
+                        <Stack>
+                            <Group justify="space-between" align="center">
+                                <Text size="xl" fw={700}>Homework</Text>
+                                <Button
+                                    leftSection={<IconUpload size={14} />}
+                                    onClick={() => homeworkInputRef.current?.click()}
+                                >
+                                    Upload Homework
+                                </Button>
+                            </Group>
 
-                        <Group align="center" mb="md">
-                            <TextInput
-                                placeholder="Search homework..."
-                                leftSection={<IconSearch size={14} />}
-                                style={{ flexGrow: 1 }}
-                                value={homeworkSearch}
-                                onChange={(e) => setHomeworkSearch(e.currentTarget.value)}
-                            />
-                            <Select
-                                data={[
-                                    { value: 'newest', label: 'Newest First' },
-                                    { value: 'oldest', label: 'Oldest First' },
-                                    { value: 'name', label: 'Name' },
-                                ]}
-                                value={homeworkSortOrder}
-                                onChange={(value) => setHomeworkSortOrder(value || 'newest')}
-                            />
-                        </Group>
+                            <Group align="center" mb="md">
+                                <TextInput
+                                    placeholder="Search homework..."
+                                    leftSection={<IconSearch size={14} />}
+                                    style={{ flexGrow: 1 }}
+                                    value={homeworkSearch}
+                                    onChange={(e) => setHomeworkSearch(e.currentTarget.value)}
+                                />
+                                <Select
+                                    data={[
+                                        { value: 'newest', label: 'Newest First' },
+                                        { value: 'oldest', label: 'Oldest First' },
+                                        { value: 'name', label: 'Name' },
+                                    ]}
+                                    value={homeworkSortOrder}
+                                    onChange={(value) => setHomeworkSortOrder(value || 'newest')}
+                                />
+                            </Group>
 
-                        <ScrollArea>
-                            <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
-                                {loadingHomeworks || loadingExercises ? (
-                                    <>
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                        <ContentSkeleton />
-                                    </>
-                                ) : !filteredHomeworks || filteredHomeworks.length === 0 ? (
-                                    <Text c="dimmed" ta="center">No homework assignments found</Text>
-                                ) : (
-                                    filteredHomeworks.map((homework) => {
-                                        const homeworkExercises = exercises?.filter(e => e.homework === homework.id) ?? [];
-                                        
-                                        if (homework.parse_status !== "complete") {
+                            <ScrollArea>
+                                <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
+                                    {loadingHomeworks || loadingExercises ? (
+                                        <>
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                            <ContentSkeleton />
+                                        </>
+                                    ) : !filteredHomeworks || filteredHomeworks.length === 0 ? (
+                                        <Text c="dimmed" ta="center">No homework assignments found</Text>
+                                    ) : (
+                                        filteredHomeworks.map((homework) => {
+                                            const homeworkExercises = exercises?.filter(e => e.homework === homework.id) ?? [];
+
+                                            if (homework.parse_status !== "complete") {
+                                                return (
+                                                    <Card
+                                                        withBorder
+                                                        key={homework.id}
+                                                        style={{
+                                                            width: '350px',
+                                                            height: '320px',
+                                                            flexShrink: 0,
+                                                            display: 'flex',
+                                                            flexDirection: 'column'
+                                                        }}
+                                                    >
+                                                        <Stack style={{ width: '100%', height: '100%' }}>
+                                                            <Image
+                                                                src={getHomeworkImageUrl(homework.id)}
+                                                                alt={`First page of ${homework.title}`}
+                                                                width={320}
+                                                                height={200}
+                                                                style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                                                            />
+                                                            <Group align="flex-start" justify="space-between">
+                                                                <Stack gap="xs" style={{ flex: 1 }}>
+                                                                    <Text size="lg" fw={500} lineClamp={1}>{homework.title}</Text>
+                                                                    <Text size="sm" c={homework.parse_error ? "red" : "dimmed"} lineClamp={2}>
+                                                                        {homework.parse_error ?
+                                                                            `Error: ${homework.parse_error}` :
+                                                                            homework.parse_status === 'parsing' ? 'Processing exercises...' :
+                                                                                homework.parse_status === 'error' ? 'Processing failed' :
+                                                                                    homework.parse_status === 'idle' ? 'Waiting to process' :
+                                                                                        'Processing content...'}
+                                                                    </Text>
+                                                                </Stack>
+                                                                {homework.parse_status === 'error' && (
+                                                                    <Tooltip label="Retry">
+                                                                        <Button
+                                                                            variant="subtle"
+                                                                            color="blue"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                handleRetryHomework(classId, homework);
+                                                                            }}
+                                                                            p={8}
+                                                                            style={{ alignSelf: 'flex-start' }}
+                                                                            loading={processingHomeworks.has(homework.id)}
+                                                                        >
+                                                                            <IconRefresh size={18} />
+                                                                        </Button>
+                                                                    </Tooltip>
+                                                                )}
+                                                            </Group>
+                                                            <Progress
+                                                                value={homework.parse_status === 'parsing' ? 70 : 0}
+                                                                size="sm"
+                                                                color={homework.parse_status === 'error' ? "red" : "blue"}
+                                                                animated={homework.parse_status === 'parsing'}
+                                                                striped={homework.parse_status === 'parsing'}
+                                                            />
+                                                            {homework.parse_status === 'parsing' && (
+                                                                <Text size="sm" c="dimmed">
+                                                                    ~10 seconds remaining
+                                                                </Text>
+                                                            )}
+                                                        </Stack>
+                                                    </Card>
+                                                );
+                                            }
                                             return (
-                                                <Card
-                                                    withBorder
+                                                <Link
+                                                    href={`/classes/c/${classId}/homework/${homework.id}`}
                                                     key={homework.id}
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
+                                                    style={{ textDecoration: 'none' }}
                                                 >
-                                                    <Stack style={{ width: '100%', height: '100%' }}>
-                                                        <Image
-                                                            src={getHomeworkImageUrl(homework.id)}
-                                                            alt={`First page of ${homework.title}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Group align="flex-start" justify="space-between">
-                                                            <Stack gap="xs" style={{ flex: 1 }}>
+                                                    <Card
+                                                        withBorder
+                                                        style={{
+                                                            width: '350px',
+                                                            height: '320px',
+                                                            flexShrink: 0,
+                                                            display: 'flex',
+                                                            flexDirection: 'column'
+                                                        }}
+                                                    >
+                                                        <Stack style={{ height: '100%' }}>
+                                                            <Image
+                                                                src={getHomeworkImageUrl(homework.id)}
+                                                                alt={`First page of ${homework.title}`}
+                                                                width={320}
+                                                                height={200}
+                                                                style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                                                            />
+                                                            <Stack gap="xs" mt="auto">
                                                                 <Text size="lg" fw={500} lineClamp={1}>{homework.title}</Text>
-                                                                <Text size="sm" c={homework.parse_error ? "red" : "dimmed"} lineClamp={2}>
-                                                                    {homework.parse_error ?
-                                                                        `Error: ${homework.parse_error}` :
-                                                                        homework.parse_status === 'parsing' ? 'Processing exercises...' :
-                                                                            homework.parse_status === 'error' ? 'Processing failed' :
-                                                                                homework.parse_status === 'idle' ? 'Waiting to process' :
-                                                                                    'Processing content...'}
+                                                                <Text size="sm" c="dimmed">
+                                                                    {homeworkExercises.length} exercises • Uploaded {new Date(homework.created_at ?? "").toLocaleDateString()}
                                                                 </Text>
                                                             </Stack>
-                                                            {homework.parse_status === 'error' && (
-                                                                <Tooltip label="Retry">
-                                                                    <Button
-                                                                        variant="subtle"
-                                                                        color="blue"
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            handleRetryHomework(classId, homework);
-                                                                        }}
-                                                                        p={8}
-                                                                        style={{ alignSelf: 'flex-start' }}
-                                                                        loading={processingHomeworks.has(homework.id)}
-                                                                    >
-                                                                        <IconRefresh size={18} />
-                                                                    </Button>
-                                                                </Tooltip>
-                                                            )}
-                                                        </Group>
-                                                        <Progress
-                                                            value={homework.parse_status === 'parsing' ? 70 : 0}
-                                                            size="sm"
-                                                            color={homework.parse_status === 'error' ? "red" : "blue"}
-                                                            animated={homework.parse_status === 'parsing'}
-                                                            striped={homework.parse_status === 'parsing'}
-                                                        />
-                                                        {homework.parse_status === 'parsing' && (
-                                                            <Text size="sm" c="dimmed">
-                                                                ~10 seconds remaining
-                                                            </Text>
-                                                        )}
-                                                    </Stack>
-                                                </Card>
-                                            );
-                                        }
-                                        return (
-                                            <Link
-                                                href={`/classes/c/${classId}/homework/${homework.id}`}
-                                                key={homework.id}
-                                                style={{ textDecoration: 'none' }}
-                                            >
-                                                <Card
-                                                    withBorder
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
-                                                >
-                                                    <Stack style={{ height: '100%' }}>
-                                                        <Image
-                                                            src={getHomeworkImageUrl(homework.id)}
-                                                            alt={`First page of ${homework.title}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Stack gap="xs" mt="auto">
-                                                            <Text size="lg" fw={500} lineClamp={1}>{homework.title}</Text>
-                                                            <Text size="sm" c="dimmed">
-                                                                {homeworkExercises.length} exercises • Uploaded {new Date(homework.created_at ?? "").toLocaleDateString()}
-                                                            </Text>
                                                         </Stack>
-                                                    </Stack>
-                                                </Card>
-                                            </Link>
-                                        );
-                                    })
-                                )}
-                            </Group>
-                        </ScrollArea>
-                    </Stack>
+                                                    </Card>
+                                                </Link>
+                                            );
+                                        })
+                                    )}
+                                </Group>
+                            </ScrollArea>
+                        </Stack>
+                    }
 
                     {/* Hidden file inputs */}
                     <input

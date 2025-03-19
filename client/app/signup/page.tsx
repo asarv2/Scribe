@@ -1,181 +1,253 @@
 /**
  * app/signup/page.tsx
- * Will be where the student signs up
+ * Will be where the professor signs up
  * @AshokSaravanan222
  * 11-15-2024
  */
 
 "use client"
 
-import { Button, Center, Container, Divider, Input, Stack, Text } from "@mantine/core"
-import { useState } from "react"
-import { notifications } from '@mantine/notifications';
-import { login, logout, createAnonymousUser } from "@/utils/services/auth";
+import { useState, useEffect } from "react";
+import {
+    Button,
+    Card,
+    Center,
+    Container,
+    Divider,
+    Group,
+    Paper,
+    Stack,
+    Switch,
+    Text,
+    Textarea,
+    TextInput,
+    Timeline,
+    Title,
+    Tabs
+} from "@mantine/core";
+import {
+    IconDownload,
+    IconPuzzle,
+    IconSettings,
+    IconPlus
+} from "@tabler/icons-react";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUser } from "@/utils/queries/get-user";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Class, Code } from "@/types";
 import { HomeLayout } from "@/components/Home/HomeLayout";
 import { getClasses } from "@/utils/queries/get-classes";
-import { getProfile } from "@/utils/queries/get-profile";
-import { checkCode } from "@/utils/services/code";
-import { checkEmail, updateClasses } from "@/utils/services/profile";
 import { User } from "@supabase/supabase-js";
-export default function Login() {
-    const supabase = useSupabaseBrowser()
-    const queryClient = useQueryClient()
-    const router = useRouter()
+import { useRouter } from "next/navigation";
+import MicrosoftIcon from "@/components/Icons/MicrosoftIcon";
+import { getProfile } from "@/utils/queries/get-profile";
+import { getUser } from "@/utils/queries/get-user";
+import { updateClassPrivacy, updateClassPrompts } from "@/utils/services/class";
+import { notifications } from "@mantine/notifications";
+import { signInWithMicrosoft } from "@/utils/services/auth";
+import Management from "@/components/Account/Management";
 
-    const [code, setCode] = useState("")
-    const [loading, setLoading] = useState(false)
-    const [errorText, setErrorText] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [email, setEmail] = useState("")
+export default function ProfessorSignup() {
+    const supabase = useSupabaseBrowser();
+    const router = useRouter();
+    const [activeStep, setActiveStep] = useState(0);
+    const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false);
+    const queryClient = useQueryClient();
 
-    const { data: classes, isLoading: classesLoading } = useQuery({
-        queryKey: ["classes"],
-        queryFn: () => getClasses(supabase)
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    });
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
     })
 
-    const handleSignup = async () => {
-        setLoading(true)
-        setErrorText("")
-        
-        try {
-            // Validate all fields are filled
-            if (!firstName || !lastName || !email || !code) {
-                throw new Error("Please fill in all fields")
-            }
+    const { data: classes, isLoading: loadingClasses } = useQuery({
+        queryKey: ["classes"],
+        queryFn: () => getClasses(supabase),
+    });
 
-            // Validate Purdue email
-            if (!email.endsWith('@purdue.edu')) {
-                throw new Error("Please use a valid Purdue email address")
+    // Determine active step based on user state
+    useEffect(() => {
+        if (!loadingProfile && profile) {
+            if (profile.professor) {
+                // Professor is logged in
+                if (profile.classes && profile.classes.length > 0) {
+                    setActiveStep(2); // Has classes, move to configure settings
+                } else {
+                    setActiveStep(1); // Logged in but no classes
+                }
             }
-
-            // Check if code is valid
-            const { success: codeSuccess, error: codeError, code: codeData } = await checkCode(code)
-            if (!codeSuccess) {
-                throw new Error(codeError || "Invalid class code")
-            }
-
-            // Check email
-            const { success: emailSuccess, error: emailError, profile: emailProfile } = await checkEmail(email)
-            if (!emailSuccess) {
-                throw new Error(emailError)
-            }
-
-            // Create or update user
-            const { success, error, user } = await createAnonymousUser(
-                firstName, 
-                lastName, 
-                email, 
-                Array.from(new Set([...emailProfile?.classes ?? [], ...codeData?.classes ?? []])), 
-                emailProfile?.id ?? undefined
-            )
-            
-            if (!success) {
-                throw new Error(error)
-            } else if (emailProfile) {
-                notifications.show({
-                    title: 'Success',
-                    message: `Welcome back, ${emailProfile.first_name}!`,
-                    color: 'green',
-                });
-            } else {
-                notifications.show({
-                    title: 'Success',
-                    message: 'Account created successfully!',
-                    color: 'green',
-                });
-            }
-
-            queryClient.invalidateQueries({
-                queryKey: ["user"]
-            })
-            
-            if (!user) {
-                throw new Error("User not found")
-            }
-            
-            const profile = await getProfile(supabase, user.id)
-            if (!profile) {
-                throw new Error("Profile not found")
-            }
-            
-            const filteredClasses = classes?.filter((c: Class) => profile.classes.includes(c.id))
-            if (filteredClasses?.length === 0) {
-                throw new Error("No classes found")
-            }
-            
-            const firstClass = filteredClasses?.[0]
-            if (!firstClass) {
-                throw new Error("No classes found")
-            }
-            
-            router.push(`/classes/c/${firstClass.id}/chat/new`)
-
-        } catch (e: any) {
-            console.error(e)
-            notifications.show({
-                title: 'Error',
-                message: e.message,
-                color: 'red',
-            });
-            setErrorText(e.message)
-        } finally {
-            setLoading(false)
         }
+    }, [profile, loadingProfile]);
+
+    const handleSignInWithMicrosoft = async () => {
+        setMicrosoftButtonLoading(true);
+        try {
+            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`);
+            if (success && url) {
+                router.push(url);
+            } else {
+                throw new Error(error);
+            }
+        } catch (error: any) {
+            notifications.show({
+                title: "Error",
+                message: error.message,
+                color: "red",
+            });
+        }
+        setMicrosoftButtonLoading(false);
     }
+
+    // Handle moving to final step
+    const handleProceedToDownload = () => {
+        setActiveStep(3);
+    };
 
     return (
         <HomeLayout>
-            <Container fluid style={{ marginTop: "30px" }}>
-                <Center>
+            <Container size="lg" style={{ marginTop: "50px", marginBottom: "50px" }}>
+                <Title order={1} mb="xl" ta="center">Welcome {profile?.first_name ?? "Professor"}! Let's get you started.</Title>
+
+                <Paper shadow="md" p="xl" withBorder>
                     <Stack>
-                        <Text size="xl">Create an Account</Text>
-                        <Stack>
-                            <Input
-                                placeholder="First Name"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                            />
-                            <Input
-                                placeholder="Last Name"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                            />
-                            <Input
-                                type="email"
-                                placeholder="Purdue Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <Input
-                                placeholder="Class Code"
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
-                            />
-                            <Button
-                                color="teal"
-                                onClick={handleSignup}
-                                loading={loading}
+                        {/* Timeline component */}
+                        <Timeline active={activeStep} bulletSize={30} lineWidth={2} mb="xl">
+                            <Timeline.Item
+                                bullet={<MicrosoftIcon />}
+                                title="Login with Microsoft"
+                                __active={activeStep >= 0}
                             >
-                                Signup
-                            </Button>
-                        </Stack>
-                        {errorText && <Text c="red">{errorText}</Text>}
-                        <Divider />
-                        <Link href="/login" style={{ width: "100%" }}>
-                            <Button color="blue" style={{ width: "100%" }}>
-                                I already have an account
-                            </Button>
-                        </Link>
+                                <Text c="dimmed" size="sm">
+                                    Sign in with your Microsoft account to get started
+                                </Text>
+                                {activeStep === 0 && !profile?.professor && (
+                                    <Stack gap="md">
+                                        <Button
+                                            onClick={handleSignInWithMicrosoft}
+                                            loading={microsoftButtonLoading}
+                                            variant="outline"
+                                            leftSection={
+                                                <MicrosoftIcon />
+                                            }
+                                            styles={{
+                                                root: {
+                                                    color: 'white',
+                                                    '&:hover': {
+                                                        backgroundColor: '#201F1F'
+                                                    }
+                                                }
+                                            }}
+                                        >
+                                            Login with Microsoft
+                                        </Button>
+                                    </Stack>
+                                )}
+                            </Timeline.Item>
+
+                            <Timeline.Item
+                                bullet={<IconPuzzle size={16} />}
+                                title="Create Class"
+                                __active={activeStep >= 1}
+                            >
+                                <Text c="dimmed" size="sm">
+                                    Create a class or import from Brightspace
+                                </Text>
+                                {activeStep === 1 && (
+                                    <Stack mt="md">
+                                        <Tabs defaultValue="brightspace">
+                                            <Tabs.List>
+                                                <Tabs.Tab value="brightspace">Import from Brightspace</Tabs.Tab>
+                                                <Tabs.Tab value="manual">Create Manually</Tabs.Tab>
+                                            </Tabs.List>
+
+                                            <Tabs.Panel value="brightspace" pt="md">
+                                                <Stack gap="md">
+                                                    <Text size="sm">
+                                                        1. Install our Brightspace extension from the Chrome Web Store
+                                                    </Text>
+                                                    <Button
+                                                        component="a"
+                                                        href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb"
+                                                        target="_blank"
+                                                        variant="outline"
+                                                        mb="md"
+                                                    >
+                                                        Get Scribe Extension
+                                                    </Button>
+                                                    <Text size="sm">
+                                                        2. Open Brightspace and use the extension to add your classes
+                                                    </Text>
+                                                    <Text size="sm" c="dimmed" mt="md">
+                                                        Once you've added classes, refresh this page to continue
+                                                    </Text>
+                                                    <Button onClick={() => window.location.reload()} mt="sm">
+                                                        Refresh Page
+                                                    </Button>
+                                                </Stack>
+                                            </Tabs.Panel>
+
+                                            <Tabs.Panel value="manual" pt="md">
+                                                <Management />
+                                            </Tabs.Panel>
+                                        </Tabs>
+                                    </Stack>
+                                )}
+                            </Timeline.Item>
+
+                            <Timeline.Item
+                                bullet={<IconSettings size={16} />}
+                                title="Configure Settings"
+                                __active={activeStep >= 2}
+                            >
+                                <Text c="dimmed" size="sm">
+                                    Configure your class settings and AI prompts
+                                </Text>
+                                {activeStep === 2 && !loadingClasses && classes && classes.length > 0 && (
+                                    <Stack mt="md">
+                                        <Management />
+                                        <Button onClick={handleProceedToDownload} mt="md">
+                                            Continue to Download Content
+                                            </Button>
+                                    </Stack>
+                                )}
+                            </Timeline.Item>
+
+                            <Timeline.Item
+                                bullet={<IconDownload size={16} />}
+                                title="Download Content"
+                                __active={activeStep >= 3}
+                            >
+                                <Text c="dimmed" size="sm">
+                                    Download and process your course content
+                                </Text>
+                                {activeStep === 3 && (
+                                    <Stack mt="md">
+                                        <Text size="sm">
+                                            Your content is being processed. You can view the progress in your account dashboard.
+                                        </Text>
+
+                                        {/* Here you would show progress indicators for each class */}
+                                        {!loadingClasses && classes && classes
+                                            .filter(classItem => profile?.classes?.includes(classItem.id))
+                                            .map((classItem) => (
+                                                <Card key={classItem.id} withBorder p="md" mb="sm">
+                                                    <Group justify="space-between">
+                                                        <Text fw={500}>{classItem.class_code}</Text>
+                                                        <Text size="sm" c="dimmed">Processing...</Text>
+                                                    </Group>
+                                                    {/* Add progress bars or status indicators here */}
+                                                </Card>
+                                            ))}
+                                    </Stack>
+                                )}
+                            </Timeline.Item>
+                        </Timeline>
                     </Stack>
-                </Center>
+                </Paper>
             </Container>
         </HomeLayout>
-    )
+    );
 } 

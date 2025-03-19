@@ -21,6 +21,7 @@ import { Class } from "@/types";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import { checkEmail } from "@/utils/services/profile";
+import MicrosoftIcon from "@/components/Icons/MicrosoftIcon";
 
 export default function Login() {
     const supabase = useSupabaseBrowser()
@@ -92,7 +93,7 @@ export default function Login() {
     const handleSignInWithMicrosoft = async () => {
         setMicrosoftButtonLoading(true);
         try {
-            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`, "c770c9bb-4de1-44be-aacb-b4bea3efbacf");
+            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`);
             if (success && url) {
                 router.push(url);
             } else {
@@ -139,12 +140,7 @@ export default function Login() {
                             loading={microsoftButtonLoading}
                             variant="outline"
                             leftSection={
-                                <svg width="21" height="21" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="1" y="1" width="9" height="9" fill="#F25022" />
-                                    <rect x="11" y="1" width="9" height="9" fill="#00A4EF" />
-                                    <rect x="1" y="11" width="9" height="9" fill="#7FBA00" />
-                                    <rect x="11" y="11" width="9" height="9" fill="#FFB900" />
-                                </svg>
+                                <MicrosoftIcon />
                             }
                             styles={{
                                 root: {

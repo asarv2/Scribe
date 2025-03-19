@@ -78,7 +78,7 @@ export const deleteAccount = async (userId: string): Promise<{ success: boolean,
     }
 }
 
-export const signInWithMicrosoft = async (redirectTo: string, classId: string): Promise<{ success: boolean, error: string, url: string | null }> => {
+export const signInWithMicrosoft = async (redirectTo: string): Promise<{ success: boolean, error: string, url: string | null }> => {
     const supabase = useSupabaseServer(cookies());
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'azure',
@@ -87,7 +87,7 @@ export const signInWithMicrosoft = async (redirectTo: string, classId: string): 
             queryParams: {
                 domain_hint: 'purdue.edu',
             },
-            redirectTo: `${redirectTo}?next=/classes/c/${classId}/chat/new`
+            redirectTo: `${redirectTo}`
         },
     });
     if (error) {

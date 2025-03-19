@@ -116,12 +116,15 @@ export type Database = {
           deleted: boolean
           download: boolean
           download_time: string
+          homework_enabled: boolean
           homework_prompt: string
           id: string
+          lecture_enabled: boolean
           lecture_prompt: string
           privacy: boolean
           professors: string[]
           students: string[]
+          textbook_enabled: boolean
           textbook_prompt: string
           title: string | null
           updated_at: string
@@ -137,12 +140,15 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_enabled?: boolean
           homework_prompt?: string
           id?: string
+          lecture_enabled?: boolean
           lecture_prompt?: string
           privacy?: boolean
           professors?: string[]
           students?: string[]
+          textbook_enabled?: boolean
           textbook_prompt?: string
           title?: string | null
           updated_at?: string
@@ -158,12 +164,15 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_enabled?: boolean
           homework_prompt?: string
           id?: string
+          lecture_enabled?: boolean
           lecture_prompt?: string
           privacy?: boolean
           professors?: string[]
           students?: string[]
+          textbook_enabled?: boolean
           textbook_prompt?: string
           title?: string | null
           updated_at?: string

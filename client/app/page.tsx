@@ -5,7 +5,7 @@
  * 09.01.2024
  */
 "use client"
-import { Box, Button, Container, Stack, Text, Group, Avatar, useMantineColorScheme, Flex, Title, Paper, Card } from "@mantine/core";
+import { Box, Button, Container, Stack, Text, Group, Avatar, useMantineColorScheme, Flex, Title, Paper, Card, Image, Grid, Center, Divider, Select, Textarea, ActionIcon } from "@mantine/core";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -14,25 +14,21 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getClasses } from "@/utils/queries/get-classes";
 import { useMediaQuery } from "@mantine/hooks";
 import { HomeLayout } from "@/components/Home/HomeLayout";
-import { useRef, useEffect, useState } from "react";
-import { TypeAnimation } from 'react-type-animation';
-import { IconSchool, IconGraph, IconFileText, IconQuestionMark, IconBrain, IconNotebook, IconWriting } from '@tabler/icons-react';
+import { IconSchool, IconGraph, IconFileText, IconQuestionMark, IconBrain, IconNotebook, IconWriting, IconRocket, IconUsers, IconDeviceLaptop, IconSend, IconLock, IconPuzzle, IconBrandGoogleDrive, IconEye, IconChartBar, IconSettings } from '@tabler/icons-react';
 import { signInWithMicrosoft } from "@/utils/services/auth";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Landing() {
   const supabase = useSupabaseBrowser();
   const { colorScheme } = useMantineColorScheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [showUserQuery, setShowUserQuery] = useState(false);
-  const [showAIResponse, setShowAIResponse] = useState(false);
-  const [showLearn, setShowLearn] = useState(false);
-  const [showHomework, setShowHomework] = useState(false);
-  const [showTestPrep, setShowTestPrep] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
-  const [showRightColumn, setShowRightColumn] = useState(false);
+  const router = useRouter();
+  const [selectedClass, setSelectedClass] = useState<string | null>("physics101");
+  const [userQuestion, setUserQuestion] = useState("");
+  const [demoResponse, setDemoResponse] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ["user"],
@@ -57,311 +53,437 @@ export default function Landing() {
 
   const firstClass = getFilteredClasses()?.[0];
 
+  const demoClasses = [
+    { value: "physics101", label: "PHYS 101: Introduction to Physics" },
+    { value: "calculus201", label: "MATH 201: Calculus II" },
+    { value: "chemistry110", label: "CHEM 110: General Chemistry" },
+  ];
+
+  const handleDemoSubmit = () => {
+    if (!userQuestion.trim()) return;
+
+    setIsTyping(true);
+    setDemoResponse("");
+
+    // Simulate typing effect
+    const responses = {
+      "physics101": "In Newton's Second Law (F = ma), the force (F) is directly proportional to the mass (m) and acceleration (a) of an object. This means that when you apply a force to an object, it will accelerate in the direction of the force at a rate proportional to the force and inversely proportional to the object's mass.\n\nFor example, if you push a shopping cart with a force of 50N, and it has a mass of 25kg, the acceleration would be:\na = F/m = 50N/25kg = 2 m/s²",
+      "calculus201": "The derivative of sin(x) is cos(x). This can be proven using the limit definition of the derivative:\n\nf'(x) = lim(h→0) [sin(x+h) - sin(x)]/h\n\nUsing the trigonometric identity sin(A+B) = sin(A)cos(B) + cos(A)sin(B), we can expand sin(x+h) and work through the limit to arrive at cos(x).",
+      "chemistry110": "Balancing chemical equations requires ensuring the same number of atoms for each element appears on both sides of the equation. For the combustion of methane (CH₄ + O₂ → CO₂ + H₂O), we need to balance:\n\nCH₄ + 2O₂ → CO₂ + 2H₂O\n\nThis ensures we have 1 carbon atom, 4 hydrogen atoms, and 4 oxygen atoms on each side of the equation."
+    };
+
+    const fullResponse = responses[selectedClass as keyof typeof responses] || "I don't have information about that class yet.";
+    let charIndex = 0;
+
+    const typingInterval = setInterval(() => {
+      if (charIndex < fullResponse.length) {
+        setDemoResponse(prev => prev + fullResponse.charAt(charIndex));
+        charIndex++;
+      } else {
+        clearInterval(typingInterval);
+        setIsTyping(false);
+      }
+    }, 20);
+  };
+
   return (
     <HomeLayout>
-      <Box style={{
-        height: 'calc(100vh - 120px)',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
-      }}>
-        {/* Two-column layout container */}
-        <Flex
-          style={{
-            width: "100%",
-            height: "100%",
-            gap: "20px",
-          }}
-          direction={isMobile ? "column" : "row"}
-        >
-          {/* Left column - Chat interface (3/4 width) */}
-          <Box
-            style={{
-              width: isMobile ? "100%" : "75%",
-              height: "100%",
-              overflowY: "auto",
-              padding: isMobile ? "15px" : "30px",
-            }}
-          >
-            {/* AI Welcome Message */}
-            <Flex justify="flex-start" align="flex-start" mb="md">
-              <Box style={{ maxWidth: "90%" }}>
-                <Group gap="xs" justify="flex-start" mb={4}>
-                  <Avatar radius="xl" size="md">
-                    <IconSchool size={24} />
-                  </Avatar>
-                  <Text size="lg" c="dimmed">AI Teacher</Text>
+      {/* Hero Section with Image */}
+      <Box
+        style={{
+          padding: isMobile ? "40px 20px" : "80px 40px",
+          background: colorScheme === "dark" ? "linear-gradient(45deg, #1A1B1E, #25262b)" : "linear-gradient(45deg, #f8f9fa, #e9ecef)",
+          position: "relative",
+          overflow: "hidden"
+        }}
+      >
+        <Container size="lg">
+          <Grid gutter={40} align="center">
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Stack gap="xl">
+                <Title order={1} size={isMobile ? 32 : 48}>
+                  Your AI-Powered Learning Assistant
+                </Title>
+                <Text size="xl" c="dimmed">
+                  Scribe helps students succeed by providing personalized learning support using your teacher's content.
+                </Text>
+                <Group mt="md">
+                {user && profile ? (
+                    // <AccountMenu profile={profile} />
+                    <>
+                        {profile?.professor || profile?.admin ? (
+                            <Link href={`/classes/c/${firstClass?.id}`}>
+                                <Button size="lg" radius="md">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
+                                <Button size="lg" radius="md">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        )}
+                    </>
+
+                ) : (
+                    <>
+                        <Link href="/login">
+                            <Button size="lg" radius="md">
+                                Get Started
+                            </Button>
+                        </Link>
+                        {/* <Link href="/signup" className={classes.link}>
+                            Sign Up
+                        </Link> */}
+                    </>
+                )}
                 </Group>
-                <Box
-                  style={{
-                    backgroundColor: colorScheme === "dark" ? "#2C2E33" : "#f1f3f5",
-                    padding: "16px 20px",
-                    borderRadius: "2px 16px 16px 16px",
-                    maxWidth: "100%",
-                  }}
-                >
-                  <TypeAnimation
-                    sequence={[
-                      "Welcome to Scribe!",
-                      1000,
-                      () => setShowUserQuery(true)
-                    ]}
-                    wrapper="div"
-                    speed={70}
-                    style={{ fontSize: '1.4em', fontWeight: 400 }}
-                    cursor={false}
+              </Stack>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Box
+                style={{
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+                }}
+              >
+                <Image
+                  src="/hero-image.jpg"
+                  alt="Students using Scribe AI"
+                  height={350}
+                  fallbackSrc="https://placehold.co/600x350?text=Scribe+AI+Learning+Assistant"
+                />
+              </Box>
+            </Grid.Col>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Benefits for Students Section */}
+      <Box py={60}>
+        <Container size="lg">
+          <Title order={2} ta="center" mb={20}>For Students</Title>
+          <Text ta="center" size="lg" c="dimmed" mb={50} maw={800} mx="auto">
+            Get personalized learning support that helps you master course material and excel in your classes.
+          </Text>
+
+          <Grid gutter={40}>
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Center mb="md">
+                  <Avatar size="xl" radius="xl" color="blue">
+                    <IconEye size={32} />
+                  </Avatar>
+                </Center>
+                <Title order={3} ta="center" mb="md">Ready Content</Title>
+                <Text ta="center">
+                  Access AI assistance that's already trained on your specific course materials, textbooks, and teacher's content.
+                </Text>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Center mb="md">
+                  <Avatar size="xl" radius="xl" color="blue">
+                    <IconChartBar size={32} />
+                  </Avatar>
+                </Center>
+                <Title order={3} ta="center" mb="md">Interactive Visualizations</Title>
+                <Text ta="center">
+                  Understand complex concepts through dynamic visualizations, graphs, and interactive models that bring learning to life.
+                </Text>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Center mb="md">
+                  <Avatar size="xl" radius="xl" color="blue">
+                    <IconDeviceLaptop size={32} />
+                  </Avatar>
+                </Center>
+                <Title order={3} ta="center" mb="md">Immersive Mode</Title>
+                <Text ta="center">
+                  Dive deep into focused learning sessions with distraction-free immersive mode that adapts to your learning style.
+                </Text>
+              </Card>
+            </Grid.Col>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Interactive Demo Section */}
+      <Box py={80}>
+        <Container size="lg">
+          <Title order={2} ta="center" mb={20}>Try Scribe AI</Title>
+          <Text ta="center" size="lg" c="dimmed" mb={50} maw={800} mx="auto">
+            Experience how Scribe helps students understand complex concepts with personalized explanations.
+          </Text>
+
+          <Card shadow="md" p={isMobile ? "md" : "xl"} radius="lg" withBorder>
+            <Stack>
+              <Select
+                label="Select your class"
+                placeholder="Choose a class"
+                data={demoClasses}
+                value={selectedClass}
+                onChange={setSelectedClass}
+                mb="md"
+              />
+
+              <Box mb="md">
+                <Text fw={500} mb="xs">Ask a question about your class</Text>
+                <Flex gap="md">
+                  <Textarea
+                    placeholder="e.g., Can you explain Newton's Second Law?"
+                    value={userQuestion}
+                    onChange={(e) => setUserQuestion(e.currentTarget.value)}
+                    minRows={2}
+                    style={{ flexGrow: 1 }}
                   />
-                </Box>
+                  <ActionIcon
+                    size="lg"
+                    variant="filled"
+                    color="blue"
+                    onClick={handleDemoSubmit}
+                    disabled={isTyping || !userQuestion.trim()}
+                    style={{ alignSelf: "flex-end" }}
+                  >
+                    <IconSend size={18} />
+                  </ActionIcon>
+                </Flex>
               </Box>
-            </Flex>
 
-            {/* User Message */}
-            {showUserQuery && (
-              <Flex justify="flex-end" align="flex-start" mb="md">
-                <Box style={{ maxWidth: "90%" }}>
-                  <Group justify="flex-end" gap="xs" mb={4}>
-                    <Text size="lg" c="dimmed">Student</Text>
-                    <Avatar radius="xl" size="md" color="blue" />
-                  </Group>
-                  <Box
-                    style={{
-                      backgroundColor: "#228be6",
-                      color: "white",
-                      padding: "16px 20px",
-                      borderRadius: "16px 16px 2px 16px",
-                      maxWidth: "100%",
-                    }}
-                  >
-                    <TypeAnimation
-                      sequence={[
-                        "How can I succeed in my classes?",
-                        1000,
-                        () => setShowAIResponse(true)
-                      ]}
-                      wrapper="span"
-                      speed={50}
-                      style={{ fontSize: '1.4em', fontWeight: 400 }}
-                      cursor={false}
-                    />
-                  </Box>
-                </Box>
-              </Flex>
-            )}
-
-            {/* AI Response */}
-            {showAIResponse && (
-              <Flex justify="flex-start" align="flex-start" mb="md">
-                <Box style={{ maxWidth: "90%" }}>
-                  <Group gap="xs" justify="flex-start" mb={4}>
-                    <Avatar radius="xl" size="md">
-                      <IconSchool size={24} />
-                    </Avatar>
-                    <Text size="lg" fw={600} c="dimmed">AI Teacher</Text>
-                  </Group>
-                  <Box
-                    style={{
-                      backgroundColor: colorScheme === "dark" ? "#2C2E33" : "#f1f3f5",
-                      padding: "16px 20px",
-                      borderRadius: "2px 16px 16px 16px",
-                      maxWidth: "100%",
-                      fontSize: '1.2em'
-                    }}
-                  >
-                    <Stack gap="lg">
-                      <TypeAnimation
-                        sequence={[
-                          "",
-                          500,
-                          () => {
-                            setShowButtons(true);
-                            setTimeout(() => {
-                              setShowLearn(true);
-                              setShowHomework(true);
-                              setShowTestPrep(true);
-                              setShowRightColumn(true);
-                            }, 1000);
-                          },
-                          ""
-                        ]}
-                        wrapper="div"
-                        cursor={false}
-                      />
-
-                      {showButtons && (
-                        <Group justify="center" gap="md" style={{ marginBottom: "20px" }}>
-                          <Link href="/login">
-                            <Button size="md" variant="filled">Log In</Button>
-                          </Link>
-                          <Text size="md" fw={500}>or</Text>
-                          <Link href="/signup">
-                            <Button size="md" variant="outline">Sign Up</Button>
-                          </Link>
-                          <TypeAnimation
-                            sequence={[
-                              "",
-                              100,
-                              "to find out how I can help you using your teacher's content.",
-                              1000,
-                              () => setShowLearn(true)
-                            ]}
-                            wrapper="div"
-                            speed={70}
-                            cursor={false}
-                          />
-                        </Group>
-                      )}
-
-                      <Stack gap="md">
-                        <Box
-                          style={{
-                            opacity: showLearn ? 1 : 0,
-                            transform: showLearn ? 'translateY(0)' : 'translateY(20px)',
-                            transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
-                          }}
-                        >
-                          <Group>
-                            <IconBrain size={24} color="#228be6" />
-                            <Text>Learn: Conceptual and computational understanding along with visualization</Text>
-                          </Group>
-                        </Box>
-
-                        <Box
-                          style={{
-                            opacity: showHomework ? 1 : 0,
-                            transform: showHomework ? 'translateY(0)' : 'translateY(20px)',
-                            transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
-                            transitionDelay: '0.2s',
-                          }}
-                        >
-                          <Group>
-                            <IconNotebook size={24} color="#228be6" />
-                            <Text>Homework: Understand what your homework question is asking and how to solve it step by step</Text>
-                          </Group>
-                        </Box>
-
-                        <Box
-                          style={{
-                            opacity: showTestPrep ? 1 : 0,
-                            transform: showTestPrep ? 'translateY(0)' : 'translateY(20px)',
-                            transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
-                            transitionDelay: '0.4s',
-                          }}
-                        >
-                          <Group>
-                            <IconWriting size={24} color="#228be6" />
-                            <Text>Test-Prep: Practice questions and customized review materials to help you ace your exams</Text>
-                          </Group>
-                        </Box>
-                      </Stack>
-                    </Stack>
-                  </Box>
-                </Box>
-              </Flex>
-            )}
-            <div ref={messagesEndRef} />
-          </Box>
-
-          {/* Right column - Features (1/4 width) */}
-          <Box
-            style={{
-              width: isMobile ? "100%" : "25%",
-              height: "120%",
-              overflowY: "auto",
-              borderRadius: "8px",
-              opacity: showRightColumn ? 1 : 0,
-              transform: showRightColumn ? 'translateX(0)' : 'translateX(20px)',
-              transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
-            }}
-          >
-
-            <Card mb="lg" p="md" withBorder shadow="sm">
-              <Group gap="xs" mb={10}>
-                <IconGraph size={24} color="#228be6" />
-                <Text fw={700}>Graph</Text>
-              </Group>
-              <Text size="sm" mb="md">The AI can create graphs to help you understand your course material</Text>
-              <Box
-                style={{
-                  width: "100%",
-                  height: "120px",
-                  backgroundColor: colorScheme === "dark" ? "#25262b" : "#e9ecef",
-                  borderRadius: "4px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "relative",
-                  overflow: "hidden"
-                }}
-              >
-                {/* Simple graph visualization */}
+              {demoResponse && (
                 <Box
+                  p="md"
                   style={{
-                    position: "absolute",
-                    width: "90%",
-                    height: "80%",
-                    display: "flex",
-                    alignItems: "flex-end"
+                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                    borderRadius: "8px",
+                    whiteSpace: "pre-wrap"
                   }}
                 >
-                  <Box style={{ width: "18%", height: "30%", backgroundColor: "#339af0", margin: "0 1%" }} />
-                  <Box style={{ width: "18%", height: "50%", backgroundColor: "#339af0", margin: "0 1%" }} />
-                  <Box style={{ width: "18%", height: "70%", backgroundColor: "#339af0", margin: "0 1%" }} />
-                  <Box style={{ width: "18%", height: "40%", backgroundColor: "#339af0", margin: "0 1%" }} />
-                  <Box style={{ width: "18%", height: "60%", backgroundColor: "#339af0", margin: "0 1%" }} />
+                  <Group mb="sm">
+                    <Avatar radius="xl" size="md">
+                      <IconSchool size={20} />
+                    </Avatar>
+                    <Text fw={600}>Scribe AI</Text>
+                  </Group>
+                  <Text>{demoResponse}</Text>
+                  {isTyping && <Text component="span" fw={600}>|</Text>}
                 </Box>
-              </Box>
-            </Card>
+              )}
+            </Stack>
+          </Card>
+        </Container>
+      </Box>
 
-            <Card mb="lg" p="md" withBorder shadow="sm">
-              <Group gap="xs" mb={10}>
-                <IconFileText size={24} color="#228be6" />
-                <Text fw={700}>Summary</Text>
-              </Group>
-              <Text size="sm" mb="md">The AI will create a summary of relevant course material to help you study</Text>
-              <Box
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  backgroundColor: colorScheme === "dark" ? "#25262b" : "#e9ecef",
-                  borderRadius: "4px",
-                  fontSize: "12px"
-                }}
-              >
-                <Text size="xs" style={{ lineHeight: 1.4 }}>
-                  Key concepts from Chapter 5:
-                  - Conservation of energy
-                  - Kinetic vs. potential energy
-                  - Work-energy theorem
-                  - Energy transformations
-                </Text>
-              </Box>
-            </Card>
+      {/* Benefits for Teachers Section */}
+      <Box py={60} bg={colorScheme === "dark" ? "#1A1B1E" : "#f8f9fa"}>
+        <Container size="lg">
+          <Title order={2} ta="center" mb={20}>For Teachers</Title>
+          <Text ta="center" size="lg" c="dimmed" mb={50} maw={800} mx="auto">
+            Empower your teaching with AI tools that align with your curriculum and teaching style.
+          </Text>
 
-            <Card p="md" withBorder shadow="sm">
-              <Group gap="xs" mb={10}>
-                <IconQuestionMark size={24} color="#228be6" />
-                <Text fw={700}>Questions</Text>
-              </Group>
-              <Text size="sm" mb="md">The AI will generate practice questions to help you prepare for exams</Text>
-              <Box
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  backgroundColor: colorScheme === "dark" ? "#25262b" : "#e9ecef",
-                  borderRadius: "4px",
-                  fontSize: "12px"
-                }}
-              >
-                <Text size="xs" fw={500} mb={5}>Practice Question:</Text>
-                <Text size="xs" style={{ lineHeight: 1.4 }}>
-                  A 2kg object falls from a height of 10m. Calculate its kinetic energy just before impact, assuming no air resistance.
+          <Grid gutter={40}>
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Center mb="md">
+                  <Avatar size="xl" radius="xl" color="indigo">
+                    <IconSettings size={32} />
+                  </Avatar>
+                </Center>
+                <Title order={3} ta="center" mb="md">Control AI Outputs</Title>
+                <Text ta="center">
+                  Customize what Scribe can and cannot help with, ensuring AI assistance aligns with your teaching goals and academic integrity policies.
                 </Text>
-              </Box>
-            </Card>
-          </Box>
-        </Flex>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Center mb="md">
+                  <Avatar size="xl" radius="xl" color="indigo">
+                    <IconPuzzle size={32} />
+                  </Avatar>
+                </Center>
+                <Title order={3} ta="center" mb="md">Generate Practice Problems</Title>
+                <Text ta="center">
+                  Create unlimited practice problems with solutions that match your teaching style and curriculum requirements.
+                </Text>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Center mb="md">
+                  <Avatar size="xl" radius="xl" color="indigo">
+                    <IconLock size={32} />
+                  </Avatar>
+                </Center>
+                <Title order={3} ta="center" mb="md">Private Mode</Title>
+                <Text ta="center">
+                  You can choose to keep your course content private, and we will use our own AI models to parse your content.
+                </Text>
+              </Card>
+            </Grid.Col>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* How It Works Section */}
+      <Box py={60} bg={colorScheme === "dark" ? "#1A1B1E" : "#f8f9fa"}>
+        <Container size="lg">
+          <Title order={2} ta="center" mb={20}>How It Works</Title>
+          <Text ta="center" size="lg" c="dimmed" mb={50} maw={800} mx="auto">
+            Get your course AI-ready in just a few simple steps.
+          </Text>
+
+          <Grid gutter={40}>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Group justify="space-between" mb="xl">
+                  <Avatar size="xl" radius="xl" color="green">
+                    <Text size="xl" fw={700}>1</Text>
+                  </Avatar>
+                  <Image
+                    src="/microsoft-login.png"
+                    alt="Microsoft Login"
+                    width={120}
+                    height={80}
+                    fit="contain"
+                    fallbackSrc="https://placehold.co/120x80?text=Microsoft+Login"
+                  />
+                </Group>
+                <Title order={3} mb="md">Sign Up with Microsoft</Title>
+                <Text>
+                  Create your account using your institutional Microsoft credentials for secure and seamless access to Scribe's teaching tools.
+                </Text>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Group justify="space-between" mb="xl">
+                  <Avatar size="xl" radius="xl" color="green">
+                    <Text size="xl" fw={700}>2</Text>
+                  </Avatar>
+                  <Image
+                    src="/brightspace-import.png"
+                    alt="Brightspace Import"
+                    width={120}
+                    height={80}
+                    fit="contain"
+                    fallbackSrc="https://placehold.co/120x80?text=Brightspace+Import"
+                  />
+                </Group>
+                <Title order={3} mb="md">Import Your Course</Title>
+                <Text>
+                  Connect to Brightspace and import your course materials, syllabus, assignments, and lecture notes with just a few clicks.
+                </Text>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Group justify="space-between" mb="xl">
+                  <Avatar size="xl" radius="xl" color="green">
+                    <Text size="xl" fw={700}>3</Text>
+                  </Avatar>
+                  <Image
+                    src="/ai-processing.png"
+                    alt="AI Processing"
+                    width={120}
+                    height={80}
+                    fit="contain"
+                    fallbackSrc="https://placehold.co/120x80?text=AI+Processing"
+                  />
+                </Group>
+                <Title order={3} mb="md">AI Processes Your Content</Title>
+                <Text>
+                  Our AI analyzes and organizes your course materials, creating a knowledge base that understands your specific teaching approach and curriculum.
+                </Text>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Card shadow="sm" p="xl" radius="md" withBorder h="100%">
+                <Group justify="space-between" mb="xl">
+                  <Avatar size="xl" radius="xl" color="green">
+                    <Text size="xl" fw={700}>4</Text>
+                  </Avatar>
+                  <Image
+                    src="/customize-settings.png"
+                    alt="Customize Settings"
+                    width={120}
+                    height={80}
+                    fit="contain"
+                    fallbackSrc="https://placehold.co/120x80?text=Customize+Settings"
+                  />
+                </Group>
+                <Title order={3} mb="md">Configure & Customize</Title>
+                <Text>
+                  Set instructions for how the AI should assist students, generate practice problems, and customize the learning experience to match your teaching goals.
+                </Text>
+              </Card>
+            </Grid.Col>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* CTA Section */}
+      <Box
+        py={80}
+        style={{
+          background: colorScheme === "dark" ? "linear-gradient(45deg, #1A1B1E, #25262b)" : "linear-gradient(45deg, #f8f9fa, #e9ecef)",
+        }}
+      >
+        <Container size="md">
+          <Card shadow="lg" p={isMobile ? "xl" : 40} radius="lg" withBorder>
+            <Stack align="center" gap="xl">
+              <Title order={2} ta="center">Ready to Transform Your Learning Experience?</Title>
+              <Text size="lg" ta="center" maw={600} mx="auto">
+                Join Scribe today and get the personalized academic support you need to excel in your classes.
+              </Text>
+              <Group mt="md">
+              {user && profile ? (
+                    // <AccountMenu profile={profile} />
+                    <>
+                        {profile?.professor || profile?.admin ? (
+                            <Link href={`/classes/c/${firstClass?.id}`}>
+                                <Button size="lg" radius="md">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
+                                <Button size="lg" radius="md">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        )}
+                    </>
+
+                ) : (
+                    <>
+                        <Link href="/login">
+                            <Button size="lg" radius="md">
+                                Get Started
+                            </Button>
+                        </Link>
+                        {/* <Link href="/signup" className={classes.link}>
+                            Sign Up
+                        </Link> */}
+                    </>
+                )}
+              </Group>
+            </Stack>
+          </Card>
+        </Container>
       </Box>
     </HomeLayout>
   );

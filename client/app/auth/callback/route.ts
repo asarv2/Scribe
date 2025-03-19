@@ -14,8 +14,6 @@ type DirectoryUser = {
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
-    // If "next" is in the params, use it as the redirect URL
-    const next = searchParams.get("next") ?? "/";
 
     if (code) {
         const supabase = useSupabaseServer(cookies());
@@ -61,6 +59,7 @@ export async function GET(request: Request) {
 
             const classes = await getClasses(supabase);
 
+            let next: string = "/";
             if (directoryUser) {
                 const splitNames = directoryUser.name.split(' ')
                 const firstName = (splitNames[0]).toLowerCase()
@@ -68,7 +67,7 @@ export async function GET(request: Request) {
                 const lastName = (splitNames[splitNames.length - 1]).toLowerCase()
                 const formattedLastName = lastName.charAt(0).toUpperCase() + lastName.slice(1)
                 // professor status update
-                const isProfessor = directoryUser.title !== null && directoryUser.title.toLowerCase().includes("professor");
+                const isProfessor = (directoryUser.title !== null && directoryUser.title.toLowerCase().includes("professor")) || classes.some((c) => c.professors.includes(email));
                 if (isProfessor) {
                     const filteredClasses = classes.filter((c) => c.professors.includes(email));
                     const { success, error } = await updateProfile(user.id, {
@@ -80,6 +79,11 @@ export async function GET(request: Request) {
                     if (!success || error) {
                         console.error(error);
                     }
+                    if (filteredClasses.length > 0) {
+                        next = `/classes/c/${filteredClasses[0].id}/chat/new`;
+                    } else {
+                        next = "/signup"; // they must complete the signup process
+                    }
                 } else {
                     const filteredClasses = classes.filter((c) => c.students.includes(email));
                     const { success, error } = await updateProfile(user.id, {
@@ -90,6 +94,12 @@ export async function GET(request: Request) {
                     });
                     if (!success || error) {
                         console.error(error);
+                    }
+                    if (filteredClasses.length > 0) {
+                        next = `/classes/c/${filteredClasses[0].id}/chat/new`;
+                    } else {
+                        // they do not have any courses, we need to handle this case
+                        next = "/";
                     }
                 }
             }
