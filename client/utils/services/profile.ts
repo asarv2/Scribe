@@ -38,3 +38,13 @@ export const updateClasses = async (userId: string, classes: string[]) => {
         return {success: true, error: ""};
     }
 }
+
+export const updateProfile = async (userId: string, data: any) => {
+    const supabase = useSupabaseServer(cookies());
+    const { error } = await supabase.from("profiles").update(data).eq("id", userId);
+    if (error) {
+        return {success: false, error: error.message};
+    } else {
+        return {success: true, error: ""};
+    }
+}

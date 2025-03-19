@@ -26,14 +26,15 @@ import {
     Container,
     Switch,
     Tabs,
-    Textarea
+    Textarea,
+    Modal
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
 import { IconMoon, IconSun, IconUpload, IconUser, IconX, IconCopy, IconTrash, IconRefresh } from "@tabler/icons-react";
 import { useRef, useState, useEffect } from "react";
 import { Dropzone, FileWithPath } from '@mantine/dropzone';
 import { updateAvatar } from "@/utils/services/profile";
-import { logout, updatePassword } from "@/utils/services/auth";
+import { deleteAccount, logout, updatePassword } from "@/utils/services/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
@@ -67,6 +68,8 @@ export default function AccountPage() {
         homework: string;
     }>>({});
     const [saveLoading, setSaveLoading] = useState<Record<string, boolean>>({});
+    const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const handlePromptChange = (classId: string, type: 'lecture' | 'textbook' | 'homework', value: string) => {
         setClassPrompts(prev => ({
@@ -297,20 +300,46 @@ export default function AccountPage() {
         }
     };
 
-        // Initialize prompts when classes data is loaded
-        useEffect(() => {
-            if (classes) {
-                const initialPrompts: Record<string, { lecture: string; textbook: string; homework: string }> = {};
-                classes.forEach(classItem => {
-                    initialPrompts[classItem.id] = {
-                        lecture: classItem.lecture_prompt || '',
-                        textbook: classItem.textbook_prompt || '',
-                        homework: classItem.homework_prompt || ''
-                    };
-                });
-                setClassPrompts(initialPrompts);
+    const handleDeleteAccount = async () => {
+        setDeleteLoading(true);
+        try {
+            const { success, error } = await deleteAccount(user!.id);
+            if (!success) {
+                throw new Error(error);
             }
-        }, [classes]);
+            notifications.show({
+                title: 'Success',
+                message: 'Your account has been successfully deleted',
+                color: 'green'
+            });
+            queryClient.clear();
+            router.push("/login");
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            });
+        } finally {
+            setDeleteLoading(false);
+            setDeleteModalOpened(false);
+        }
+    };
+
+    // Initialize prompts when classes data is loaded
+    useEffect(() => {
+        if (classes) {
+            const initialPrompts: Record<string, { lecture: string; textbook: string; homework: string }> = {};
+            classes.forEach(classItem => {
+                initialPrompts[classItem.id] = {
+                    lecture: classItem.lecture_prompt || '',
+                    textbook: classItem.textbook_prompt || '',
+                    homework: classItem.homework_prompt || ''
+                };
+            });
+            setClassPrompts(initialPrompts);
+        }
+    }, [classes]);
 
     return (
         <ClassLayout classId={null}>
@@ -424,11 +453,24 @@ export default function AccountPage() {
                                         </>
                                     )}
                                     {loadingUser ? (
-                                        <Skeleton height={20} width="250px" />
+                                        <>
+                                            <Skeleton height={20} width="250px" />
+                                            <Skeleton height={36} width="120px" />
+                                        </>
                                     ) : (
-                                        <Text size="sm">
-                                            <b>Member since:</b> {user && new Date(user.created_at).toLocaleDateString()}
-                                        </Text>
+                                        <>
+                                            <Text size="sm">
+                                                <b>Member since:</b> {user && new Date(user.created_at).toLocaleDateString()}
+                                            </Text>
+                                            <Button 
+                                                variant="light" 
+                                                color="red" 
+                                                onClick={() => setDeleteModalOpened(true)}
+                                                loading={deleteLoading}
+                                            >
+                                                Delete Account
+                                            </Button>
+                                        </>
                                     )}
                                 </Stack>
                             </Card>
@@ -466,7 +508,7 @@ export default function AccountPage() {
                                             required
                                         />
                                         {passwordError && (
-                                            <Text color="red" size="sm">{passwordError}</Text>
+                                            <Text c="red" size="sm">{passwordError}</Text>
                                         )}
                                         <Button
                                             onClick={handlePasswordUpdate}
@@ -651,6 +693,32 @@ export default function AccountPage() {
                     </Stack>
                 </Stack>
             </Container>
+
+            <Modal
+                opened={deleteModalOpened}
+                onClose={() => setDeleteModalOpened(false)}
+                title="Delete Account"
+                centered
+            >
+                <Stack>
+                    <Text>Are you sure you want to delete your account? This action cannot be undone.</Text>
+                    <Group justify="flex-end" mt="md">
+                        <Button 
+                            variant="light" 
+                            onClick={() => setDeleteModalOpened(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            color="red" 
+                            onClick={handleDeleteAccount}
+                            loading={deleteLoading}
+                        >
+                            Delete Account
+                        </Button>
+                    </Group>
+                </Stack>
+            </Modal>
         </ClassLayout>
     )
 }

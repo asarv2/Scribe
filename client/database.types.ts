@@ -120,6 +120,8 @@ export type Database = {
           id: string
           lecture_prompt: string
           privacy: boolean
+          professors: string[]
+          students: string[]
           textbook_prompt: string
           title: string | null
           updated_at: string
@@ -139,6 +141,8 @@ export type Database = {
           id?: string
           lecture_prompt?: string
           privacy?: boolean
+          professors?: string[]
+          students?: string[]
           textbook_prompt?: string
           title?: string | null
           updated_at?: string
@@ -158,6 +162,8 @@ export type Database = {
           id?: string
           lecture_prompt?: string
           privacy?: boolean
+          professors?: string[]
+          students?: string[]
           textbook_prompt?: string
           title?: string | null
           updated_at?: string

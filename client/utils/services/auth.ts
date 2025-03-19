@@ -67,3 +67,44 @@ export const updatePassword = async (userId: string, newPassword: string) => {
 export const isProfessor = (profile: Profile, classId: string) => {
     return (profile.professor && profile.classes.includes(classId)) || profile.admin;
 }
+
+export const deleteAccount = async (userId: string): Promise<{ success: boolean, error: string }> => {
+    const supabase = useSupabaseServer(cookies(), true);
+    const { error } = await supabase.auth.admin.deleteUser(userId);
+    if (error) {
+        return { success: false, error: error.message };
+    } else {
+        return { success: true, error: "" };
+    }
+}
+
+export const signInWithMicrosoft = async (redirectTo: string, classId: string): Promise<{ success: boolean, error: string, url: string | null }> => {
+    const supabase = useSupabaseServer(cookies());
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'azure',
+        options: {
+            scopes: 'email',
+            queryParams: {
+                domain_hint: 'purdue.edu',
+            },
+            redirectTo: `${redirectTo}?next=/classes/c/${classId}/chat/new`
+        },
+    });
+    if (error) {
+        return { success: false, error: error.message, url: null };
+    } else {
+        return { success: true, error: "", url: data.url };
+    }
+}
+
+export const signInWithSSO = async (): Promise<{ success: boolean, error: string, url: string | null }> => {
+    const supabase = useSupabaseServer(cookies());
+    const { data, error } = await supabase.auth.signInWithSSO({
+        domain: 'purdue.edu'
+    })
+    if (error) {
+        return { success: false, error: error.message, url: null };
+    } else {
+        return { success: true, error: "", url: data.url };
+    }
+}

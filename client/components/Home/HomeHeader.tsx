@@ -79,7 +79,7 @@ export function HomeHeader() {
 
                 ) : (
                     <>
-                        <Link href="/signup">
+                        <Link href="/login">
                             <Button size="sm">
                                 Get Started
                             </Button>

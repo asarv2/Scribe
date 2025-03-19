@@ -10,7 +10,7 @@
 import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
-import { login, createAnonymousUser } from "@/utils/services/auth";
+import { login, createAnonymousUser, signInWithMicrosoft } from "@/utils/services/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,13 +26,12 @@ export default function Login() {
     const supabase = useSupabaseBrowser()
     const queryClient = useQueryClient()
     const router = useRouter()
-    const [isProfessor, setIsProfessor] = useState(false)
 
     const [lastName, setLastName] = useState("") // used for student login
     const [email, setEmail] = useState("") // used for both student and professor login
     const [password, setPassword] = useState("") // used for professor login
     const [loading, setLoading] = useState(false)
-
+    const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false)
     const { data: classes, isLoading: classesLoading } = useQuery({
         queryKey: ["classes"],
         queryFn: () => getClasses(supabase)
@@ -41,80 +40,35 @@ export default function Login() {
     const handleLogin = async () => {
         setLoading(true)
         try {
-            if (isProfessor) {
-                // Professor login logic
-                if (!email || !password) {
-                    throw new Error("Please enter email and password")
-                }
+            // Professor login logic
+            if (!email || !password) {
+                throw new Error("Please enter email and password")
+            }
 
-                if (!email.endsWith("@purdue.edu")) {
-                    throw new Error("Please enter a valid Purdue email")
-                }
+            if (!email.endsWith("@purdue.edu")) {
+                throw new Error("Please enter a valid Purdue email")
+            }
 
-                const { success, error, user } = await login(email, password)
-                if (!success || !user) {
-                    throw new Error(error)
-                } else {
-                    queryClient.invalidateQueries({
-                        queryKey: ["user"]
-                    })
-                    const profile = await getProfile(supabase, user.id)
-                    if (!profile) {
-                        throw new Error("Profile not found")
-                    }
-                    const filteredClasses = classes?.filter((c: Class) => (profile.professor && profile.classes.includes(c.id)) || profile.admin)
-                    if (filteredClasses?.length === 0) {
-                        throw new Error("No classes found")
-                    }
-                    const firstClass = filteredClasses?.[0]
-                    if (!firstClass) {
-                        throw new Error("No classes found")
-                    }
-                    router.push(`/classes/c/${firstClass.id}`)
-                }
+            const { success, error, user } = await login(email, password)
+            if (!success || !user) {
+                throw new Error(error)
             } else {
-                // Student login logic
-                if (!lastName || !email) {
-                    throw new Error("Please enter last name and email")
-                }
-
-                if (!email.endsWith("@purdue.edu")) {
-                    throw new Error("Please enter a valid Purdue email")
-                }
-
-                // Check email
-                const { success: emailSuccess, error: emailError, profile: emailProfile } = await checkEmail(email)
-                if (!emailSuccess) {
-                    throw new Error(emailError)
-                }
-
-                if (!emailProfile) {
+                queryClient.invalidateQueries({
+                    queryKey: ["user"]
+                })
+                const profile = await getProfile(supabase, user.id)
+                if (!profile) {
                     throw new Error("Profile not found")
                 }
-
-                if (lastName.toLowerCase() !== emailProfile.last_name.toLowerCase()) {
-                    throw new Error("Last name could not be verified")
+                const filteredClasses = classes?.filter((c: Class) => (profile.professor && profile.classes.includes(c.id)) || profile.admin)
+                if (filteredClasses?.length === 0) {
+                    throw new Error("No classes found")
                 }
-
-                const { success, error, user } = await createAnonymousUser(emailProfile.first_name, emailProfile.last_name, email, emailProfile?.classes ?? [], emailProfile.id)
-                if (!success || !user) {
-                    throw new Error(error)
-                } else {
-                    queryClient.invalidateQueries({
-                        queryKey: ["user"]
-                    })
-                    const filteredClasses = classes?.filter((c: Class) => emailProfile.classes.includes(c.id))
-                    if (filteredClasses?.length === 0) {
-                        throw new Error("No classes found")
-                    }
-
-                    const firstClass = filteredClasses?.[0]
-                    if (!firstClass) {
-                        throw new Error("No classes found")
-                    }
-
-                    router.push(`/classes/c/${firstClass.id}/chat/new`)
+                const firstClass = filteredClasses?.[0]
+                if (!firstClass) {
+                    throw new Error("No classes found")
                 }
+                router.push(`/classes/c/${firstClass.id}`)
             }
 
             notifications.show({
@@ -135,51 +89,41 @@ export default function Login() {
         }
     }
 
+    const handleSignInWithMicrosoft = async () => {
+        setMicrosoftButtonLoading(true);
+        try {
+            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`, "c770c9bb-4de1-44be-aacb-b4bea3efbacf");
+            if (success && url) {
+                router.push(url);
+            } else {
+                throw new Error(error);
+            }
+        } catch (error: any) {
+            notifications.show({
+                title: "Error",
+                message: error.message,
+                color: "red",
+            });
+        }
+        setMicrosoftButtonLoading(false);
+    }
+
     return (
         <HomeLayout>
-            <Container fluid style={{ marginTop: "30px" }}>
+            <Container fluid style={{ height: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Center>
-                    <Stack>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                            <Text size="xl">{isProfessor ? "Professor Login" : "Student Login"}</Text>
-                            <Switch
-                                checked={isProfessor}
-                                onChange={(e) => setIsProfessor(e.target.checked)}
-                                size="sm"
-                                mt={"4"}
-                            />
-                        </div>
-
-                        {isProfessor ? (
-                            // Professor login form
-                            <>
-                                <Input
-                                    placeholder="Email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                                <PasswordInput
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </>
-                        ) : (
-                            // Student login form
-                            <>
-                                <Input
-                                    placeholder="Last name"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                />
-                                <Input
-                                    placeholder="Purdue Email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </>
-                        )}
-
+                    <Stack w={300} gap="md">
+                        <Text size="xl">Login</Text>
+                        <Input
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <PasswordInput
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                         <Button
                             color="teal"
                             onClick={handleLogin}
@@ -190,11 +134,29 @@ export default function Login() {
 
                         <Divider />
 
-                        <Link href="/signup" style={{ width: "100%" }}>
-                            <Button color="blue" style={{ width: "100%" }}>
-                                I don't have an account
-                            </Button>
-                        </Link>
+                        <Button
+                            onClick={handleSignInWithMicrosoft}
+                            loading={microsoftButtonLoading}
+                            variant="outline"
+                            leftSection={
+                                <svg width="21" height="21" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="1" width="9" height="9" fill="#F25022" />
+                                    <rect x="11" y="1" width="9" height="9" fill="#00A4EF" />
+                                    <rect x="1" y="11" width="9" height="9" fill="#7FBA00" />
+                                    <rect x="11" y="11" width="9" height="9" fill="#FFB900" />
+                                </svg>
+                            }
+                            styles={{
+                                root: {
+                                    color: 'white',
+                                    '&:hover': {
+                                        backgroundColor: '#201F1F'
+                                    }
+                                }
+                            }}
+                        >
+                            Login with Microsoft
+                        </Button>
                     </Stack>
                 </Center>
             </Container>

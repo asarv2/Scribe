@@ -17,6 +17,9 @@ import { HomeLayout } from "@/components/Home/HomeLayout";
 import { useRef, useEffect, useState } from "react";
 import { TypeAnimation } from 'react-type-animation';
 import { IconSchool, IconGraph, IconFileText, IconQuestionMark, IconBrain, IconNotebook, IconWriting } from '@tabler/icons-react';
+import { signInWithMicrosoft } from "@/utils/services/auth";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
 
 export default function Landing() {
   const supabase = useSupabaseBrowser();
