@@ -106,7 +106,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     // Queries for data
     const { data: lectures } = useQuery({
         queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, classId)
+        queryFn: () => getLectures(supabase, [classId])
     });
 
     const { data: lectureDocuments } = useQuery({
@@ -117,7 +117,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId),
+        queryFn: () => getTextbooks(supabase, [classId]),
     });
 
     const { data: textbookDocuments } = useQuery({
@@ -140,7 +140,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     const { data: homeworkData } = useQuery({
         queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, classId),
+        queryFn: () => getHomeworks(supabase, [classId]),
     });
 
     const { data: problems } = useQuery({

@@ -30,12 +30,12 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
 
     const { data: lectures } = useQuery({
         queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, classId)
+        queryFn: () => getLectures(supabase, [classId])
     });
 
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId),
+        queryFn: () => getTextbooks(supabase, [classId]),
     });
 
     const { data: chapters } = useQuery({
@@ -45,7 +45,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
 
     const { data: homeworks } = useQuery({
         queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, classId)
+        queryFn: () => getHomeworks(supabase, [classId])
     });
 
     // Helper function to get viewer title

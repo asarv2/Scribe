@@ -44,7 +44,7 @@ export const ContextBadges = memo(({
     // Queries for data
     const { data: lectures } = useQuery({
         queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, classId)
+        queryFn: () => getLectures(supabase, [classId])
     });
 
     const { data: lectureDocuments } = useQuery({
@@ -55,7 +55,7 @@ export const ContextBadges = memo(({
 
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId),
+        queryFn: () => getTextbooks(supabase, [classId]),
     });
 
     const { data: textbookDocuments } = useQuery({
@@ -78,7 +78,7 @@ export const ContextBadges = memo(({
 
     const { data: homeworkData } = useQuery({
         queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, classId),
+        queryFn: () => getHomeworks(supabase, [classId]),
     });
 
     const { data: problems } = useQuery({

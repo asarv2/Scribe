@@ -250,7 +250,7 @@ export function ContextPanel({
 
     const { data: lectures, isLoading: loadingLectures } = useQuery({
         queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, classId)
+        queryFn: () => getLectures(supabase, [classId])
     });
 
     const { data: lectureDocuments } = useQuery({
@@ -261,7 +261,7 @@ export function ContextPanel({
 
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId),
+        queryFn: () => getTextbooks(supabase, [classId]),
     });
 
     const { data: textbookDocuments } = useQuery({
@@ -278,7 +278,7 @@ export function ContextPanel({
 
     const { data: homeworks } = useQuery({
         queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, classId),
+        queryFn: () => getHomeworks(supabase, [classId]),
     });
 
     const { data: exercises } = useQuery({

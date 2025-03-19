@@ -55,13 +55,13 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
 
     const {data: lectures} = useQuery({
         queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, classId),
+        queryFn: () => getLectures(supabase, [classId]),
         enabled: !!classId
     })
 
     const {data: textbooks} = useQuery({
         queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId),
+        queryFn: () => getTextbooks(supabase, [classId]),
         enabled: !!classId
     })
 
@@ -73,7 +73,7 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
 
     const {data: homeworks} = useQuery({
         queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, classId),
+        queryFn: () => getHomeworks(supabase, [classId]),
         enabled: !!classId
     })
 

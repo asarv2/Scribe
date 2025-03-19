@@ -95,7 +95,7 @@ export const MessageList = memo(({
   // Queries for data
   const { data: lectures } = useQuery({
     queryKey: ["lectures", classId],
-    queryFn: () => getLectures(supabase, classId)
+    queryFn: () => getLectures(supabase, [classId])
   });
 
   const { data: lectureDocuments } = useQuery({
@@ -106,7 +106,7 @@ export const MessageList = memo(({
 
   const { data: textbooks } = useQuery({
     queryKey: ["textbooks", classId],
-    queryFn: () => getTextbooks(supabase, classId),
+    queryFn: () => getTextbooks(supabase, [classId]),
   });
 
   const { data: chapters } = useQuery({
@@ -129,7 +129,7 @@ export const MessageList = memo(({
 
   const { data: homeworks } = useQuery({
     queryKey: ["homeworks", classId],
-    queryFn: () => getHomeworks(supabase, classId),
+    queryFn: () => getHomeworks(supabase, [classId]),
   });
 
   const { data: chapterExercises } = useQuery({
