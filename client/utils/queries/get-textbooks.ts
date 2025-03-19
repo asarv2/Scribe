@@ -1,10 +1,10 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getTextbooks(client: TypedSupabaseClient, classId: string) {
+export async function getTextbooks(client: TypedSupabaseClient, classIds: string[]) {
     const {data, error} = await client
         .from("textbooks")
         .select("*")
-        .eq("class", classId)
+        .in("class", classIds)
         .eq("deleted", false)
     
     if (error) {

@@ -77,7 +77,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
     // Lectures data
     const { data: lectures, isLoading: loadingLectures } = useQuery({
         queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, classId, false)
+        queryFn: () => getLectures(supabase, [classId], false)
     });
 
     const { data: lectureDocuments, isLoading: loadingLectureDocuments } = useQuery({
@@ -89,7 +89,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
     // Textbooks data
     const { data: textbooks, isLoading: loadingTextbooks } = useQuery({
         queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId)
+        queryFn: () => getTextbooks(supabase, [classId])
     });
 
     const { data: textbookDocuments, isLoading: loadingTextbookDocuments } = useQuery({
@@ -101,7 +101,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
     // Homework data
     const { data: homeworks, isLoading: loadingHomeworks } = useQuery({
         queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, classId)
+        queryFn: () => getHomeworks(supabase, [classId])
     });
 
     const { data: exercises, isLoading: loadingExercises } = useQuery({

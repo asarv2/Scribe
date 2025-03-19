@@ -23,9 +23,9 @@ export default function Login() {
                 throw new Error("Please enter email and password");
             }
 
-            if (!email.endsWith("@purdue.edu")) {
-                throw new Error("Please enter a valid Purdue email");
-            }
+            // if (!email.endsWith("@purdue.edu")) {
+            //     throw new Error("Please enter a valid Purdue email");
+            // }
 
             console.log("Sending login request...");
             const response = await sendToBackground<

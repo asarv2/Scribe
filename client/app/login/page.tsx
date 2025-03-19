@@ -46,9 +46,9 @@ export default function Login() {
                 throw new Error("Please enter email and password")
             }
 
-            if (!email.endsWith("@purdue.edu")) {
-                throw new Error("Please enter a valid Purdue email")
-            }
+            // if (!email.endsWith("@purdue.edu")) {
+            //     throw new Error("Please enter a valid Purdue email")
+            // }
 
             const { success, error, user } = await login(email, password)
             if (!success || !user) {
@@ -106,7 +106,6 @@ export default function Login() {
                 color: "red",
             });
         }
-        setMicrosoftButtonLoading(false);
     }
 
     return (

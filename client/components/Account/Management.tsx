@@ -32,9 +32,18 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getClasses } from "@/utils/queries/get-classes";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
-import { createClass, updateClassPrivacy, updateClassPrompts } from "@/utils/services/class";
+import { createClass, updateClassPrivacy, updateClassPrompts, deleteClass } from "@/utils/services/class";
+import { TimeInput } from "@mantine/dates";
+import { Class } from "@/types";
 
-export default function Management() {
+interface ManagementProps {
+    showCreateClass?: boolean;
+    showExistingClasses?: boolean;
+    showOuterAccordion?: boolean;
+    showInitialClassInfo?: boolean;
+}
+
+export default function Management({ showCreateClass = true, showExistingClasses = true, showOuterAccordion = true, showInitialClassInfo = true }: ManagementProps) {
     const theme = useMantineTheme();
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
@@ -62,6 +71,18 @@ export default function Management() {
     }>>({});
 
     const [saveLoading, setSaveLoading] = useState<Record<string, boolean>>({});
+
+    const [editableClasses, setEditableClasses] = useState<Record<string, {
+        title: string;
+        class_code: string;
+        course_description: string;
+        download: boolean;
+        download_time: string;
+        privateMode: boolean;
+    }>>({});
+
+    const [deleteModalOpen, setDeleteModalOpen] = useState<string | null>(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -99,8 +120,21 @@ export default function Management() {
                 };
             });
 
+            const initialEditableClasses: Record<string, any> = {};
+            classes.forEach(classItem => {
+                initialEditableClasses[classItem.id] = {
+                    title: classItem.title || '',
+                    class_code: classItem.class_code || '',
+                    course_description: classItem.course_description || '',
+                    download: classItem.download || false,
+                    download_time: classItem.download_time || '',
+                    privateMode: classItem.privacy || false
+                };
+            });
+
             setClassPrompts(initialPrompts);
             setClassFeatures(initialFeatures);
+            setEditableClasses(initialEditableClasses);
         }
     }, [classes]);
 
@@ -124,27 +158,6 @@ export default function Management() {
         }));
     };
 
-    const handlePrivacyUpdate = async (classId: string, privacyStatus: boolean) => {
-        try {
-            const { success, error } = await updateClassPrivacy(classId, privacyStatus);
-            if (!success) {
-                throw new Error(error);
-            }
-            queryClient.invalidateQueries({ queryKey: ["classes"] });
-            notifications.show({
-                title: 'Success',
-                message: 'Class privacy updated successfully',
-                color: 'green'
-            });
-        } catch (error: any) {
-            notifications.show({
-                title: 'Error',
-                message: error.message,
-                color: 'red'
-            });
-        }
-    };
-
     const handleSavePrompts = async (classId: string) => {
         setSaveLoading(prev => ({ ...prev, [classId]: true }));
         try {
@@ -158,7 +171,13 @@ export default function Management() {
                 classPrompts[classId].homework,
                 classFeatures[classId].lectureEnabled,
                 classFeatures[classId].textbookEnabled,
-                classFeatures[classId].homeworkEnabled
+                classFeatures[classId].homeworkEnabled,
+                editableClasses[classId].title,
+                editableClasses[classId].class_code,
+                editableClasses[classId].course_description,
+                editableClasses[classId].download,
+                editableClasses[classId].download_time,
+                editableClasses[classId].privateMode
             );
 
             if (!success) {
@@ -166,7 +185,6 @@ export default function Management() {
             }
 
             queryClient.invalidateQueries({ queryKey: ["classes"] });
-            queryClient.invalidateQueries({ queryKey: ["class", classId] });
             notifications.show({
                 title: 'Success',
                 message: 'Class settings updated successfully',
@@ -198,8 +216,7 @@ export default function Management() {
             const { success, error } = await createClass(
                 newClassName,
                 newClassCode,
-                newClassDescription,
-                newClassTime
+                newClassDescription
             );
 
             if (!success) {
@@ -217,7 +234,6 @@ export default function Management() {
             setNewClassName("");
             setNewClassCode("");
             setNewClassDescription("");
-            setNewClassTime("");
             close();
         } catch (error: any) {
             notifications.show({
@@ -228,6 +244,193 @@ export default function Management() {
         } finally {
             setCreateLoading(false);
         }
+    };
+
+    const handleEditableChange = (classId: string, field: string, value: string) => {
+        setEditableClasses(prev => ({
+            ...prev,
+            [classId]: {
+                ...prev[classId],
+                [field]: value
+            }
+        }));
+    };
+
+    const handleDownloadToggle = (classId: string, value: boolean) => {
+        setEditableClasses(prev => ({
+            ...prev,
+            [classId]: {
+                ...prev[classId],
+                download: value,
+                download_time: value ? prev[classId].download_time : ''
+            }
+        }));
+    };
+
+    const handlePrivateModeToggle = (classId: string, value: boolean) => {
+        setEditableClasses(prev => ({
+            ...prev,
+            [classId]: {
+                ...prev[classId],
+                privateMode: value
+            }
+        }));
+    };
+
+    const handleDeleteClass = async (classId: string) => {
+        setDeleteLoading(true);
+        try {
+            const { success, error } = await deleteClass(classId);
+
+            if (!success) {
+                throw new Error(error);
+            }
+
+            queryClient.invalidateQueries({ queryKey: ["classes"] });
+            notifications.show({
+                title: 'Success',
+                message: 'Class deleted successfully',
+                color: 'green'
+            });
+            setDeleteModalOpen(null);
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            });
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
+
+    const renderClassInfo = (classItem: Class) => {
+        return (
+            <>
+                {/* Class Details Section */}
+                {showInitialClassInfo && <Stack gap="md">
+                    <Group grow>
+                        <TextInput
+                            label="Class Name"
+                            value={editableClasses[classItem.id]?.title}
+                            onChange={(e) => handleEditableChange(classItem.id, 'title', e.currentTarget.value)}
+                        />
+                        <TextInput
+                            label="Class Code"
+                            value={editableClasses[classItem.id]?.class_code}
+                            onChange={(e) => handleEditableChange(classItem.id, 'class_code', e.currentTarget.value)}
+                        />
+                    </Group>
+                    <Textarea
+                        label="Description"
+                        value={editableClasses[classItem.id]?.course_description}
+                        onChange={(e) => handleEditableChange(classItem.id, 'course_description', e.currentTarget.value)}
+                        autosize
+                    />
+
+                    {/* Download Settings Section */}
+                    {/* <Stack gap="xs">
+                                                    <Switch
+                                                        label="Download Daily"
+                                                        checked={editableClasses[classItem.id]?.download}
+                                                        onChange={(event) => handleDownloadToggle(classItem.id, event.currentTarget.checked)}
+                                                    />
+                                                    {editableClasses[classItem.id]?.download && (
+                                                        <TimeInput
+                                                            value={editableClasses[classItem.id]?.download_time}
+                                                            onChange={(e) => handleEditableChange(classItem.id, 'download_time', e.currentTarget.value)}
+                                                            withSeconds={false}
+                                                        />
+                                                    )}
+                                                    <Text size="xs" c="dimmed">
+                                                        If enabled, this is the time that the AI will download the content for this class every day.
+                                                    </Text>
+                                                </Stack> */}
+
+                </Stack>}
+
+                {/* Privacy Mode Section */}
+                <Stack gap="xs">
+                    <Switch
+                        checked={editableClasses[classItem.id]?.privateMode}
+                        onChange={(e) => handlePrivateModeToggle(classItem.id, e.currentTarget.checked)}
+                        label="Private mode"
+                        labelPosition="right"
+                    />
+                    <Text size="xs" c="dimmed">
+                        When private mode is enabled, all lecture content will be processed using our own models
+                        instead of external services, ensuring complete data privacy.
+                    </Text>
+                </Stack>
+
+                {/* Features Section */}
+                <Stack gap="md">
+                    <Text fw={500} size="sm">Enabled Features</Text>
+                    <Text size="xs" c="dimmed">
+                        Enable or disable specific features for this class.
+                    </Text>
+                    <Group>
+                        <Switch
+                            checked={classFeatures[classItem.id]?.lectureEnabled}
+                            onChange={(event) => handleFeatureToggle(classItem.id, 'lectureEnabled', event.currentTarget.checked)}
+                            label="Lecture"
+                            labelPosition="right"
+                        />
+                        <Switch
+                            checked={classFeatures[classItem.id]?.textbookEnabled}
+                            onChange={(event) => handleFeatureToggle(classItem.id, 'textbookEnabled', event.currentTarget.checked)}
+                            label="Textbook"
+                            labelPosition="right"
+                        />
+                        <Switch
+                            checked={classFeatures[classItem.id]?.homeworkEnabled}
+                            onChange={(event) => handleFeatureToggle(classItem.id, 'homeworkEnabled', event.currentTarget.checked)}
+                            label="Homework"
+                            labelPosition="right"
+                        />
+                    </Group>
+                </Stack>
+
+                {/* Custom Prompts Section */}
+                <Stack gap="md">
+                    <Text fw={500} size="sm">Custom Prompts</Text>
+                    <Text size="xs" c="dimmed">
+                        Customize the AI prompts for different content types in this class.
+                    </Text>
+
+                    {/* Only show prompts for enabled features */}
+                    {classFeatures[classItem.id]?.lectureEnabled && (
+                        <Textarea
+                            label="Lecture Prompt"
+                            placeholder="Enter custom prompt for lecture content"
+                            minRows={3}
+                            value={classPrompts[classItem.id]?.lecture || ''}
+                            onChange={(event) => handlePromptChange(classItem.id, 'lecture', event.currentTarget.value)}
+                        />
+                    )}
+
+                    {classFeatures[classItem.id]?.textbookEnabled && (
+                        <Textarea
+                            label="Textbook Prompt"
+                            placeholder="Enter custom prompt for textbook content"
+                            minRows={3}
+                            value={classPrompts[classItem.id]?.textbook || ''}
+                            onChange={(event) => handlePromptChange(classItem.id, 'textbook', event.currentTarget.value)}
+                        />
+                    )}
+
+                    {classFeatures[classItem.id]?.homeworkEnabled && (
+                        <Textarea
+                            label="Homework Prompt"
+                            placeholder="Enter custom prompt for homework content"
+                            minRows={3}
+                            value={classPrompts[classItem.id]?.homework || ''}
+                            onChange={(event) => handlePromptChange(classItem.id, 'homework', event.currentTarget.value)}
+                        />
+                    )}
+                </Stack>
+            </>
+        );
     };
 
     // Check if user is professor or admin
@@ -261,12 +464,17 @@ export default function Management() {
                     <Skeleton height={60} />
                 </Stack>
             ) : (
-                <Accordion variant="separated">
-
+                <Accordion
+                    variant="separated"
+                    defaultValue={classes
+                        ?.filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))?.[0]?.id
+                    }
+                    chevronPosition="left"
+                >
                     {/* Existing Classes */}
-                    {classes && classes
+                    {showExistingClasses && classes && classes
                         .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
-                        .map((classItem) => {
+                        .map((classItem: Class) => {
                             const promptsChanged = classPrompts[classItem.id] && (
                                 classPrompts[classItem.id].lecture !== (classItem.lecture_prompt || '') ||
                                 classPrompts[classItem.id].textbook !== (classItem.textbook_prompt || '') ||
@@ -281,127 +489,40 @@ export default function Management() {
 
                             const hasChanges = promptsChanged || featuresChanged;
 
+                            if (!showOuterAccordion) {
+                                return (
+                                    <Stack key={classItem.id}>
+                                        {renderClassInfo(classItem)}
+                                    </Stack>
+                                )
+                            }
+
                             return (
                                 <Accordion.Item key={classItem.id} value={classItem.id}>
                                     <Accordion.Control>
                                         <Group justify="space-between">
-                                            <Text fw={500}>{classItem.title} ({classItem.class_code})</Text>
-                                            {hasChanges && (
-                                                <Text size="xs" c="blue" fw={500}>Unsaved changes</Text>
-                                            )}
+                                            <Text fw={500}>{classItem.class_code}</Text>
+                                            <Group gap="xs">
+                                                {hasChanges && (
+                                                    <Text size="xs" c="blue" fw={500}>Unsaved changes</Text>
+                                                )}
+                                                <ActionIcon
+                                                    color="red"
+                                                    variant="subtle"
+                                                    size="md"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setDeleteModalOpen(classItem.id);
+                                                    }}
+                                                >
+                                                    <IconTrash size={16} />
+                                                </ActionIcon>
+                                            </Group>
                                         </Group>
                                     </Accordion.Control>
                                     <Accordion.Panel>
                                         <Stack gap="xl">
-                                            {/* Class Details Section */}
-                                            <Stack gap="md">
-                                                <Group grow>
-                                                    <TextInput
-                                                        label="Class Name"
-                                                        value={classItem.title || ''}
-                                                        readOnly
-                                                    />
-                                                    <TextInput
-                                                        label="Class Code"
-                                                        value={classItem.class_code || ''}
-                                                        readOnly
-                                                    />
-                                                </Group>
-                                                <Textarea
-                                                    label="Description"
-                                                    value={classItem.course_description || ''}
-                                                    readOnly
-                                                    minRows={2}
-                                                />
-                                                <TextInput
-                                                    label="Download Time"
-                                                    value={classItem.download_time || ''}
-                                                    readOnly
-                                                />
-                                            </Stack>
-
-                                            {/* Private Mode Section */}
-                                            <Stack gap="md">
-                                                <Text fw={500} size="sm">Private Mode</Text>
-                                                <Text size="xs" c="dimmed">
-                                                    When private mode is enabled, all lecture content will be processed using our own models
-                                                    instead of external services, ensuring complete data privacy.
-                                                </Text>
-                                                <Switch
-                                                    checked={classItem.privacy}
-                                                    onChange={(event) => handlePrivacyUpdate(classItem.id, event.currentTarget.checked)}
-                                                    label="Enable private mode"
-                                                    labelPosition="right"
-                                                />
-                                            </Stack>
-
-                                            {/* Features Section */}
-                                            <Stack gap="md">
-                                                <Text fw={500} size="sm">Enabled Features</Text>
-                                                <Text size="xs" c="dimmed">
-                                                    Enable or disable specific features for this class.
-                                                </Text>
-                                                <Group>
-                                                    <Switch
-                                                        checked={classFeatures[classItem.id]?.lectureEnabled}
-                                                        onChange={(event) => handleFeatureToggle(classItem.id, 'lectureEnabled', event.currentTarget.checked)}
-                                                        label="Lecture"
-                                                        labelPosition="right"
-                                                    />
-                                                    <Switch
-                                                        checked={classFeatures[classItem.id]?.textbookEnabled}
-                                                        onChange={(event) => handleFeatureToggle(classItem.id, 'textbookEnabled', event.currentTarget.checked)}
-                                                        label="Textbook"
-                                                        labelPosition="right"
-                                                    />
-                                                    <Switch
-                                                        checked={classFeatures[classItem.id]?.homeworkEnabled}
-                                                        onChange={(event) => handleFeatureToggle(classItem.id, 'homeworkEnabled', event.currentTarget.checked)}
-                                                        label="Homework"
-                                                        labelPosition="right"
-                                                    />
-                                                </Group>
-                                            </Stack>
-
-                                            {/* Custom Prompts Section */}
-                                            <Stack gap="md">
-                                                <Text fw={500} size="sm">Custom Prompts</Text>
-                                                <Text size="xs" c="dimmed">
-                                                    Customize the AI prompts for different content types in this class.
-                                                </Text>
-
-                                                {/* Only show prompts for enabled features */}
-                                                {classFeatures[classItem.id]?.lectureEnabled && (
-                                                    <Textarea
-                                                        label="Lecture Prompt"
-                                                        placeholder="Enter custom prompt for lecture content"
-                                                        minRows={3}
-                                                        value={classPrompts[classItem.id]?.lecture || ''}
-                                                        onChange={(event) => handlePromptChange(classItem.id, 'lecture', event.currentTarget.value)}
-                                                    />
-                                                )}
-
-                                                {classFeatures[classItem.id]?.textbookEnabled && (
-                                                    <Textarea
-                                                        label="Textbook Prompt"
-                                                        placeholder="Enter custom prompt for textbook content"
-                                                        minRows={3}
-                                                        value={classPrompts[classItem.id]?.textbook || ''}
-                                                        onChange={(event) => handlePromptChange(classItem.id, 'textbook', event.currentTarget.value)}
-                                                    />
-                                                )}
-
-                                                {classFeatures[classItem.id]?.homeworkEnabled && (
-                                                    <Textarea
-                                                        label="Homework Prompt"
-                                                        placeholder="Enter custom prompt for homework content"
-                                                        minRows={3}
-                                                        value={classPrompts[classItem.id]?.homework || ''}
-                                                        onChange={(event) => handlePromptChange(classItem.id, 'homework', event.currentTarget.value)}
-                                                    />
-                                                )}
-                                            </Stack>
-
+                                            {renderClassInfo(classItem)}
                                             <Group justify="flex-end">
                                                 <Button
                                                     onClick={() => handleSavePrompts(classItem.id)}
@@ -419,61 +540,93 @@ export default function Management() {
 
 
                     {/* Add New Class Accordion Item */}
-                    <Accordion.Item value="new-class">
-                        <Accordion.Control>
-                            <Group justify="space-between">
-                                <Text fw={500}>
-                                    <IconPlus size={16} style={{ marginRight: 8, display: 'inline-block' }} />
-                                    Add New Class
-                                </Text>
-                            </Group>
-                        </Accordion.Control>
-                        <Accordion.Panel>
-                            <Stack gap="xl">
-                                <Stack gap="md">
-                                    <Group grow>
-                                        <TextInput
-                                            label="Class Name"
-                                            placeholder="Introduction to Computer Science"
-                                            value={newClassName}
-                                            onChange={(e) => setNewClassName(e.currentTarget.value)}
-                                            required
-                                        />
-                                        <TextInput
-                                            label="Class Code"
-                                            placeholder="CS101"
-                                            value={newClassCode}
-                                            onChange={(e) => setNewClassCode(e.currentTarget.value)}
-                                            required
-                                        />
+                    {showCreateClass && (
+                        <Accordion.Item value="new-class">
+                            <Accordion.Control>
+                                <Group justify="space-between">
+                                    <Group gap="xs">
+                                        <ActionIcon
+                                            variant="light"
+                                            color="blue"
+                                            size="sm"
+                                            radius="xl"
+                                        >
+                                            <IconPlus size={16} />
+                                        </ActionIcon>
+                                        <Text fw={500} c="blue">Add New Class</Text>
                                     </Group>
-                                    <Textarea
-                                        label="Description"
-                                        placeholder="A brief description of the class"
-                                        value={newClassDescription}
-                                        onChange={(e) => setNewClassDescription(e.currentTarget.value)}
-                                        minRows={3}
-                                    />
-                                    <TextInput
-                                        label="Download Time"
-                                        placeholder="MWF 10:00-11:30 AM"
-                                        value={newClassTime}
-                                        onChange={(e) => setNewClassTime(e.currentTarget.value)}
-                                    />
-                                </Stack>
-                                <Group justify="flex-end">
-                                    <Button
-                                        onClick={handleCreateClass}
-                                        loading={createLoading}
-                                    >
-                                        Create Class
-                                    </Button>
                                 </Group>
-                            </Stack>
-                        </Accordion.Panel>
-                    </Accordion.Item>
+                            </Accordion.Control>
+                            <Accordion.Panel>
+                                <Card withBorder shadow="sm" radius="md" p="xl">
+                                    <Stack>
+                                        <Stack gap="md">
+                                            <Group grow>
+                                                <TextInput
+                                                    label="Class Name"
+                                                    placeholder="Introduction to Computer Science"
+                                                    value={newClassName}
+                                                    onChange={(e) => setNewClassName(e.currentTarget.value)}
+                                                    required
+                                                />
+                                                <TextInput
+                                                    label="Class Code"
+                                                    placeholder="CS101"
+                                                    value={newClassCode}
+                                                    onChange={(e) => setNewClassCode(e.currentTarget.value)}
+                                                    required
+                                                />
+                                            </Group>
+                                            <Textarea
+                                                label="Description"
+                                                placeholder="A brief description of the class"
+                                                value={newClassDescription}
+                                                onChange={(e) => setNewClassDescription(e.currentTarget.value)}
+                                                minRows={3}
+                                            />
+                                        </Stack>
+                                        <Group justify="flex-end">
+                                            <Button
+                                                onClick={handleCreateClass}
+                                                loading={createLoading}
+                                            >
+                                                Create Class
+                                            </Button>
+                                        </Group>
+                                    </Stack>
+                                </Card>
+                            </Accordion.Panel>
+                        </Accordion.Item>
+                    )}
                 </Accordion>
             )}
+            <Modal
+                opened={!!deleteModalOpen}
+                onClose={() => setDeleteModalOpen(null)}
+                title="Delete Class"
+                size="sm"
+            >
+                <Stack>
+                    <Text size="sm">
+                        Are you sure you want to delete this class? This action cannot be undone.
+                    </Text>
+                    <Group justify="flex-end">
+                        <Button
+                            variant="subtle"
+                            onClick={() => setDeleteModalOpen(null)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            color="red"
+                            loading={deleteLoading}
+                            onClick={() => deleteModalOpen && handleDeleteClass(deleteModalOpen)}
+                        >
+                            Delete
+                        </Button>
+                    </Group>
+                </Stack>
+            </Modal>
         </Stack>
     );
 }

@@ -1,10 +1,10 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getHomeworks(client: TypedSupabaseClient, classId: string) {
+export async function getHomeworks(client: TypedSupabaseClient, classIds: string[]) {
     const {data, error} = await client
         .from("homeworks")
         .select("*")
-        .eq("class", classId)
+        .in("class", classIds)
         .eq("deleted", false)
         .order("homework_number", {ascending: true})
     

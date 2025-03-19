@@ -267,40 +267,6 @@ export default function AccountPage() {
         }
     }
 
-    const handleSavePrompts = async (classId: string) => {
-        setSaveLoading(prev => ({ ...prev, [classId]: true }));
-        try {
-            const classToUpdate = classes?.find(c => c.id === classId);
-            if (!classToUpdate) return;
-
-            const { success, error } = await updateClassPrompts(
-                classId,
-                classPrompts[classId].lecture,
-                classPrompts[classId].textbook,
-                classPrompts[classId].homework
-            );
-
-            if (!success) {
-                throw new Error(error);
-            }
-
-            queryClient.invalidateQueries({ queryKey: ["classes"] });
-            notifications.show({
-                title: 'Success',
-                message: 'Prompts updated successfully',
-                color: 'green'
-            });
-        } catch (error: any) {
-            notifications.show({
-                title: 'Error',
-                message: error.message,
-                color: 'red'
-            });
-        } finally {
-            setSaveLoading(prev => ({ ...prev, [classId]: false }));
-        }
-    };
-
     const handleDeleteAccount = async () => {
         setDeleteLoading(true);
         try {
