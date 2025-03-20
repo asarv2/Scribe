@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea, Tooltip, RingProgress } from "@mantine/core";
+import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea, Tooltip, RingProgress, ActionIcon } from "@mantine/core";
 import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard, IconSearch } from "@tabler/icons-react";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { ClassLayout } from "@/components/Class/ClassLayout";
@@ -602,14 +602,6 @@ export default function ContentPage({ params }: { params: { classId: string } })
         };
     }, [lectureDocuments, lectures]);
 
-    const getLectureEstimatedTime = useMemo(() => {
-        return (lectureId: string, uploading: boolean = false) => {
-            const lecture = lectures?.find(lecture => lecture.id === lectureId);
-            if (!lecture || lecture.pages === 0) return 0;
-            return Number(((lecture.pages * 4)) * (100 - getLectureProgress(lectureId, uploading)) / 100).toFixed(2);
-        };
-    }, [lectures, getLectureProgress]);
-
     const getLectureImage = (lectureId: string) => {
         if (!lectureId) return '/placeholder_image.svg';
         const filteredDocuments = lectureDocuments?.filter(document => document?.lecture === lectureId);
@@ -636,7 +628,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
         return (homeworkId: string, uploading: boolean = false) => {
             if (!exercises || !homeworks) return 0;
             const filteredDocs = exercises.filter(exercise =>
-                exercise.homework === homeworkId && (uploading || exercise.description === "")
+                exercise.homework === homeworkId && (uploading || exercise.description !== "")
             ) || 0;
             const homework = homeworks.find(homework => homework.id === homeworkId);
             if (!homework) return 0;
@@ -771,16 +763,18 @@ export default function ContentPage({ params }: { params: { classId: string } })
                                                                                                 'Processing content...'}
                                                                     </Text>
                                                                 </Stack>
-                                                                <RingProgress
+                                                                {lecture.parse_status !== 'error' ? <RingProgress
                                                                     size={60}
                                                                     thickness={4}
-                                                                    sections={[{ value: getLectureProgress(lecture.id, lecture.parse_status !== 'parsing'), color: lecture.parse_status === 'error' ? "red" : "blue" }]}
+                                                                    sections={[{ value: getLectureProgress(lecture.id, lecture.parse_status !== 'parsing'), color: "blue" }]}
                                                                     label={
                                                                         <Text size="xs" ta="center">
                                                                             {Math.round(getLectureProgress(lecture.id, lecture.parse_status !== 'parsing'))}%
                                                                         </Text>
                                                                     }
-                                                                />
+                                                                /> : <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryLecture(classId, lecture)}>
+                                                                    <IconRefresh size={20} />
+                                                                </ActionIcon>}
                                                             </Group>
                                                         </Stack>
                                                     </Card>
@@ -906,16 +900,18 @@ export default function ContentPage({ params }: { params: { classId: string } })
                                                                                                 'Processing content...'}
                                                                     </Text>
                                                                 </Stack>
-                                                                <RingProgress
+                                                                {textbook.parse_status !== 'error' ? <RingProgress
                                                                     size={60}
                                                                     thickness={4}
-                                                                    sections={[{ value: getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing'), color: textbook.parse_status === 'error' ? "red" : "blue" }]}
+                                                                    sections={[{ value: getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing'), color: "blue" }]}
                                                                     label={
                                                                         <Text size="xs" ta="center">
                                                                             {Math.round(getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing'))}%
                                                                         </Text>
                                                                     }
-                                                                />
+                                                                /> : <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryTextbook(classId, textbook)}>
+                                                                    <IconRefresh size={20} />
+                                                                </ActionIcon>}
                                                             </Group>
                                                         </Stack>
                                                     </Card>
@@ -1041,16 +1037,18 @@ export default function ContentPage({ params }: { params: { classId: string } })
                                                                                         'Processing content...'}
                                                                     </Text>
                                                                 </Stack>
-                                                                <RingProgress
+                                                                {homework.parse_status !== 'error' ? <RingProgress
                                                                     size={60}
                                                                     thickness={4}
-                                                                    sections={[{ value: homework.parse_status === 'parsing' ? getHomeworkProgress(homework.id, homework.parse_status !== 'parsing') : 0, color: homework.parse_status === 'error' ? "red" : "blue" }]}
+                                                                    sections={[{ value: homework.parse_status === 'parsing' ? getHomeworkProgress(homework.id, homework.parse_status !== 'parsing') : 0, color: "blue" }]}
                                                                     label={
                                                                         <Text size="xs" ta="center">
                                                                             {Math.round(getHomeworkProgress(homework.id, homework.parse_status !== 'parsing'))}%
                                                                         </Text>
                                                                     }
-                                                                />
+                                                                /> : <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryHomework(classId, homework)}>
+                                                                    <IconRefresh size={20} />
+                                                                </ActionIcon>}
                                                             </Group>
                                                         </Stack>
                                                     </Card>
