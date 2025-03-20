@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea, Tooltip } from "@mantine/core";
+import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea, Tooltip, RingProgress } from "@mantine/core";
 import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard, IconSearch } from "@tabler/icons-react";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { ClassLayout } from "@/components/Class/ClassLayout";
@@ -632,13 +632,17 @@ export default function ContentPage({ params }: { params: { classId: string } })
         };
     }, [textbookDocuments, textbooks]);
 
-    const getTextbookEstimatedTime = useMemo(() => {
-        return (textbookId: string, uploading: boolean = false) => {
-            const textbook = textbooks?.find(textbook => textbook.id === textbookId);
-            if (!textbook || textbook.pages === 0) return 0;
-            return Number(((textbook.pages * 4)) * (100 - getTextbookProgress(textbookId, uploading)) / 100).toFixed(2);
+    const getHomeworkProgress = useMemo(() => {
+        return (homeworkId: string, uploading: boolean = false) => {
+            if (!exercises || !homeworks) return 0;
+            const filteredDocs = exercises.filter(exercise =>
+                exercise.homework === homeworkId && (uploading || exercise.description === "")
+            ) || 0;
+            const homework = homeworks.find(homework => homework.id === homeworkId);
+            if (!homework) return 0;
+            return (filteredDocs.length / (exercises.filter(e => e.homework === homeworkId).length)) * 100;
         };
-    }, [textbooks, getTextbookProgress]);
+    }, [exercises, homeworks]);
 
     // Update the ContentSkeleton function
     function ContentSkeleton() {
@@ -767,36 +771,17 @@ export default function ContentPage({ params }: { params: { classId: string } })
                                                                                                 'Processing content...'}
                                                                     </Text>
                                                                 </Stack>
-                                                                {lecture.parse_status === 'error' && (
-                                                                    <Tooltip label="Retry">
-                                                                        <Button
-                                                                            variant="subtle"
-                                                                            color="blue"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                handleRetryLecture(classId, lecture);
-                                                                            }}
-                                                                            p={8}
-                                                                            style={{ alignSelf: 'flex-start' }}
-                                                                            loading={parsingLectures.has(lecture.id)}
-                                                                        >
-                                                                            <IconRefresh size={18} />
-                                                                        </Button>
-                                                                    </Tooltip>
-                                                                )}
+                                                                <RingProgress
+                                                                    size={60}
+                                                                    thickness={4}
+                                                                    sections={[{ value: getLectureProgress(lecture.id, lecture.parse_status !== 'parsing'), color: lecture.parse_status === 'error' ? "red" : "blue" }]}
+                                                                    label={
+                                                                        <Text size="xs" ta="center">
+                                                                            {Math.round(getLectureProgress(lecture.id, lecture.parse_status !== 'parsing'))}%
+                                                                        </Text>
+                                                                    }
+                                                                />
                                                             </Group>
-                                                            <Progress
-                                                                value={getLectureProgress(lecture.id, lecture.parse_status !== 'parsing')}
-                                                                size="sm"
-                                                                color={lecture.parse_status === 'error' ? "red" : "blue"}
-                                                                animated={['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '')}
-                                                                striped={['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '')}
-                                                            />
-                                                            {['parsing', 'extracting', 'uploading'].includes(lecture.parse_status || '') && (
-                                                                <Text size="sm" c="dimmed">
-                                                                    ~{getLectureEstimatedTime(lecture.id, lecture.parse_status !== 'parsing')} seconds remaining
-                                                                </Text>
-                                                            )}
                                                         </Stack>
                                                     </Card>
                                                 );
@@ -921,36 +906,17 @@ export default function ContentPage({ params }: { params: { classId: string } })
                                                                                                 'Processing content...'}
                                                                     </Text>
                                                                 </Stack>
-                                                                {textbook.parse_status === 'error' && (
-                                                                    <Tooltip label="Retry">
-                                                                        <Button
-                                                                            variant="subtle"
-                                                                            color="blue"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                handleRetryTextbook(classId, textbook);
-                                                                            }}
-                                                                            p={8}
-                                                                            style={{ alignSelf: 'flex-start' }}
-                                                                            loading={parsingTextbooks.has(textbook.id)}
-                                                                        >
-                                                                            <IconRefresh size={18} />
-                                                                        </Button>
-                                                                    </Tooltip>
-                                                                )}
+                                                                <RingProgress
+                                                                    size={60}
+                                                                    thickness={4}
+                                                                    sections={[{ value: getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing'), color: textbook.parse_status === 'error' ? "red" : "blue" }]}
+                                                                    label={
+                                                                        <Text size="xs" ta="center">
+                                                                            {Math.round(getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing'))}%
+                                                                        </Text>
+                                                                    }
+                                                                />
                                                             </Group>
-                                                            <Progress
-                                                                value={getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing')}
-                                                                size="sm"
-                                                                color={textbook.parse_status === 'error' ? "red" : "blue"}
-                                                                animated={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '')}
-                                                                striped={['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '')}
-                                                            />
-                                                            {['parsing', 'extracting', 'uploading'].includes(textbook.parse_status || '') && (
-                                                                <Text size="sm" c="dimmed">
-                                                                    ~{getTextbookEstimatedTime(textbook.id, textbook.parse_status !== 'parsing')} seconds remaining
-                                                                </Text>
-                                                            )}
                                                         </Stack>
                                                     </Card>
                                                 );
@@ -1075,36 +1041,17 @@ export default function ContentPage({ params }: { params: { classId: string } })
                                                                                         'Processing content...'}
                                                                     </Text>
                                                                 </Stack>
-                                                                {homework.parse_status === 'error' && (
-                                                                    <Tooltip label="Retry">
-                                                                        <Button
-                                                                            variant="subtle"
-                                                                            color="blue"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                handleRetryHomework(classId, homework);
-                                                                            }}
-                                                                            p={8}
-                                                                            style={{ alignSelf: 'flex-start' }}
-                                                                            loading={processingHomeworks.has(homework.id)}
-                                                                        >
-                                                                            <IconRefresh size={18} />
-                                                                        </Button>
-                                                                    </Tooltip>
-                                                                )}
+                                                                <RingProgress
+                                                                    size={60}
+                                                                    thickness={4}
+                                                                    sections={[{ value: homework.parse_status === 'parsing' ? getHomeworkProgress(homework.id, homework.parse_status !== 'parsing') : 0, color: homework.parse_status === 'error' ? "red" : "blue" }]}
+                                                                    label={
+                                                                        <Text size="xs" ta="center">
+                                                                            {Math.round(getHomeworkProgress(homework.id, homework.parse_status !== 'parsing'))}%
+                                                                        </Text>
+                                                                    }
+                                                                />
                                                             </Group>
-                                                            <Progress
-                                                                value={homework.parse_status === 'parsing' ? 70 : 0}
-                                                                size="sm"
-                                                                color={homework.parse_status === 'error' ? "red" : "blue"}
-                                                                animated={homework.parse_status === 'parsing'}
-                                                                striped={homework.parse_status === 'parsing'}
-                                                            />
-                                                            {homework.parse_status === 'parsing' && (
-                                                                <Text size="sm" c="dimmed">
-                                                                    ~10 seconds remaining
-                                                                </Text>
-                                                            )}
                                                         </Stack>
                                                     </Card>
                                                 );
